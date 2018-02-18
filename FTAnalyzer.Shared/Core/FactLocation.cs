@@ -55,7 +55,9 @@ namespace FTAnalyzer
         public string FoundResultType { get; set; }
         public int FoundLevel { get; set; }
         public double PixelSize { get; set; }
+#if !__MACOS__
         public GeoResponse.CResult.CGeometry.CViewPort ViewPort { get; set; }
+#endif
         private List<Individual> individuals;
 
         private static Dictionary<string, string> COUNTRY_TYPOS = new Dictionary<string, string>();
@@ -72,9 +74,9 @@ namespace FTAnalyzer
         public static Dictionary<Geocode, string> Geocodes;
         public static FactLocation UNKNOWN_LOCATION;
         public static FactLocation TEMP = new FactLocation();
-        #endregion
+#endregion
 
-        #region Static Constructor
+#region Static Constructor
         static FactLocation()
         {
             SetupGeocodes();
@@ -85,7 +87,7 @@ namespace FTAnalyzer
         public static void LoadConversions(string startPath)
         {
             // load conversions from XML file
-            #region Fact Location Fixes
+#region Fact Location Fixes
             if (startPath == null) return;
             string filename = Path.Combine(startPath, @"Resources\FactLocationFixes.xml");
             if (File.Exists(filename))
@@ -194,7 +196,7 @@ namespace FTAnalyzer
             {
                 Console.WriteLine("Failed to find FactLocationFixes.xml File");
             }
-            #endregion
+#endregion
         }
 
         private static void ValidateTypoFixes()
@@ -295,9 +297,9 @@ namespace FTAnalyzer
                 { Geocode.OS_50KFUZZY, "Fuzzy Match (Ord Surv)" }
             };
         }
-        #endregion
+#endregion
 
-        #region Object Constructors
+#region Object Constructors
         private FactLocation()
         {
             this.GEDCOMLocation = string.Empty;
@@ -410,9 +412,9 @@ namespace FTAnalyzer
                 //    Console.WriteLine("Debug : '" + before + "'  converted to '" + after + "'");
             }
         }
-        #endregion
+#endregion
 
-        #region Static Functions
+#region Static Functions
         public static FactLocation GetLocation(string place, bool addLocation = true)
         {
             return GetLocation(place, string.Empty, string.Empty, Geocode.NOT_SEARCHED, addLocation);
@@ -564,9 +566,9 @@ namespace FTAnalyzer
             to.FoundResultType = from.FoundResultType;
             to.FoundLevel = from.FoundLevel;
         }
-        #endregion
+#endregion
 
-        #region Fix Location string routines
+#region Fix Location string routines
         private void FixEmptyFields()
         {
             // first remove extraneous spaces and extraneous commas
@@ -852,9 +854,9 @@ namespace FTAnalyzer
                 toChange = toChange.Substring(2);
             return toChange.Trim();
         }
-        #endregion
+#endregion
 
-        #region Properties
+#region Properties
 
         public string[] Parts
         {

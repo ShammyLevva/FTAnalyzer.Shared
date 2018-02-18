@@ -13,6 +13,8 @@ namespace FTAnalyzer
         string Geocoded { get; }
         string FoundLocation { get; }
         string FoundResultType { get; }
+#if !__MACOS__
         GeoResponse.CResult.CGeometry.CViewPort ViewPort { get; }
+#endif
     }
 }
