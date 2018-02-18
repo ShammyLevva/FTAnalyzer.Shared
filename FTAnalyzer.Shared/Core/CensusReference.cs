@@ -1,4 +1,5 @@
-﻿using FTAnalyzer.Utilities;
+﻿using FTAnalyzer.Properties;
+using FTAnalyzer.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -1148,14 +1149,14 @@ namespace FTAnalyzer
                 {
                     if (Roll.Length > 0)
                     {
-                        if (Properties.GeneralSettings.Default.UseCompactCensusRef)
+                        if (GeneralSettings.Default.UseCompactCensusRef)
                             return Roll + "/" + Page + "/" + Family;
                         else
                             return "Roll: " + Roll + ", Page: " + Page + ", Family: " + Family;
                     }
                     else
                     {
-                        if (Properties.GeneralSettings.Default.UseCompactCensusRef)
+                        if (GeneralSettings.Default.UseCompactCensusRef)
                             return ED + "/" + SD + "/" + Page + "/" + Family;
                         else
                             return "District: " + ED + ", Sub-District: " + SD + ", Page: " + Page + ", Family: " + Family;
@@ -1163,7 +1164,7 @@ namespace FTAnalyzer
                 }
                 if (Roll.Length > 0)
                 {
-                    if (Properties.GeneralSettings.Default.UseCompactCensusRef)
+                    if (GeneralSettings.Default.UseCompactCensusRef)
                         return Roll + (ED.Length > 0 ? "/" + ED : "") + "/" + Page;
                     else
                         return "Roll: " + Roll + (ED.Length > 0 ? ", ED: " + ED : "") + ", Page: " + Page;
@@ -1174,19 +1175,19 @@ namespace FTAnalyzer
                     {
                         if ((Fact.FactDate.Overlaps(CensusDate.UKCENSUS1851) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1861) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1871) ||
                             Fact.FactDate.Overlaps(CensusDate.UKCENSUS1881) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1891) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1901)))
-                            if (Properties.GeneralSettings.Default.UseCompactCensusRef)
+                            if (GeneralSettings.Default.UseCompactCensusRef)
                                 return Piece + "/" + Folio + "/" + Page;
                             else
                                 return "Piece: " + Piece + ", Folio: " + Folio + ", Page: " + Page;
                         if (Fact.FactDate.Overlaps(CensusDate.UKCENSUS1841))
                         {
                             if (Book.Length > 0)
-                                if (Properties.GeneralSettings.Default.UseCompactCensusRef)
+                                if (GeneralSettings.Default.UseCompactCensusRef)
                                     return Piece + "/" + Book + "/" + Folio + "/" + Page;
                                 else
                                     return "Piece: " + Piece + ", Book: " + Book + ", Folio: " + Folio + ", Page: " + Page;
                             else
-                                if (Properties.GeneralSettings.Default.UseCompactCensusRef)
+                                if (GeneralSettings.Default.UseCompactCensusRef)
                                     return Piece + "/see image/" + Folio + "/" + Page;
                                 else
                                     return "Piece: " + Piece + ", Book: see census image (stamped on the census page after the piece number), Folio: " + Folio + ", Page: " + Page;
@@ -1194,19 +1195,19 @@ namespace FTAnalyzer
                         if (Fact.FactDate.Overlaps(CensusDate.UKCENSUS1911))
                         {
                             if (Schedule.Length > 0)
-                                if (Properties.GeneralSettings.Default.UseCompactCensusRef)
+                                if (GeneralSettings.Default.UseCompactCensusRef)
                                     return Piece + "/" + Schedule;
                                 else
                                     return "Piece: " + Piece + ", Schedule: " + Schedule;
                             else
-                                if (Properties.GeneralSettings.Default.UseCompactCensusRef)
+                                if (GeneralSettings.Default.UseCompactCensusRef)
                                     return Piece + "/" + Page;
                                 else
                                     return "Piece: " + Piece + ", Page: " + Page;
                         }
                         if (Fact.FactDate.Overlaps(CensusDate.UKCENSUS1939))
                         {
-                            if (Properties.GeneralSettings.Default.UseCompactCensusRef)
+                            if (GeneralSettings.Default.UseCompactCensusRef)
                                 return "RG101/" + Piece + "/" + Page + "/" + Schedule + " (" + ED + ")";
                             else
                                 return "Piece: " + Piece + ", Page: " + Page + ", Schedule " + Schedule + ", ED: " + ED;
@@ -1221,7 +1222,7 @@ namespace FTAnalyzer
                         Fact.FactDate.Overlaps(CensusDate.UKCENSUS1891) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1901) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1911)))
                     {
                         ScottishParish sp = ScottishParish.FindParish(Parish);
-                        if (Properties.GeneralSettings.Default.UseCompactCensusRef)
+                        if (GeneralSettings.Default.UseCompactCensusRef)
                             if (sp == ScottishParish.UNKNOWN_PARISH)
                                 return Parish + "/" + ED + "/" + Page;
                             else
@@ -1236,7 +1237,7 @@ namespace FTAnalyzer
                 else if (RD.Length > 0)
                 {
                     if (Fact.Location.IsEnglandWales && Fact.FactDate.Overlaps(CensusDate.UKCENSUS1911))
-                        if (Properties.GeneralSettings.Default.UseCompactCensusRef)
+                        if (GeneralSettings.Default.UseCompactCensusRef)
                             return RD + "/" + ED + "/" + Schedule;
                         else
                             return "RD: " + RD + ", ED: " + ED + ", Schedule: " + Schedule;

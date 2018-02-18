@@ -4,6 +4,7 @@ using System.Text;
 using System.Xml;
 using System.IO;
 using FTAnalyzer.Utilities;
+using FTAnalyzer.Properties;
 
 namespace FTAnalyzer
 {
@@ -15,14 +16,14 @@ namespace FTAnalyzer
         public static XmlDocument Load(string path, Encoding encoding, IProgress<string> outputText)
         {
             StreamReader reader;
-            if (Properties.FileHandling.Default.LoadWithFilters)
+            if (FileHandling.Default.LoadWithFilters)
             {
-                if (Properties.FileHandling.Default.RetryFailedLines)
+                if (FileHandling.Default.RetryFailedLines)
                     reader = new AnselInputStreamReader(CheckInvalidLineEnds(path));
                 else
                     reader = new AnselInputStreamReader(new FileStream(path, FileMode.Open, FileAccess.Read));
             }
-            if (Properties.FileHandling.Default.RetryFailedLines)
+            if (FileHandling.Default.RetryFailedLines)
                 reader = new StreamReader(CheckInvalidLineEnds(path), encoding);
             else
                 reader = new StreamReader(new FileStream(path, FileMode.Open, FileAccess.Read), encoding);
@@ -107,7 +108,7 @@ namespace FTAnalyzer
                 {
                     lineNr++;
                     nextline = reader.ReadLine();
-                    if (Properties.FileHandling.Default.RetryFailedLines)
+                    if (FileHandling.Default.RetryFailedLines)
                     {
                         //need to check if nextline is valid if not line=line+nextline and nextline=reader.ReadLine();
                         while (nextline?.Length > 0 && !Char.IsNumber(nextline[0]))
@@ -237,7 +238,7 @@ namespace FTAnalyzer
                     //if (badLineCount > badLineMax)
                     //{
                     //    string message = "Found more than " + badLineMax + " consecutive errors in the GEDCOM file.";
-                    //    if (!Properties.FileHandling.Default.LoadWithFilters)
+                    //    if (!FileHandling.Default.LoadWithFilters)
                     //        message += "\n\nNB. You might get less errors if you turn on the option to 'Use Special Character Filters When Loading' from the Tools Options menu.";
                     //    message += "\n\nContinue Loading?";
                     //    DialogResult result = MessageBox.Show(message, "Continue Loading?", MessageBoxButtons.YesNo);

@@ -1,4 +1,5 @@
 using FTAnalyzer.Utilities;
+using FTAnalyzer.Properties;
 using GeoAPI.Geometries;
 using System;
 using System.Collections.Generic;
@@ -225,7 +226,7 @@ namespace FTAnalyzer
             LOCAL_GOOGLE_FIXES = new Dictionary<Tuple<int, string>, string>();
             try
             {
-                string filename = Path.Combine(Properties.MappingSettings.Default.CustomMapPath, "GoogleFixes.xml");
+                string filename = Path.Combine(MappingSettings.Default.CustomMapPath, "GoogleFixes.xml");
                 if (File.Exists(filename))
                 {
                     XmlDocument xmlDoc = new XmlDocument();
@@ -395,7 +396,7 @@ namespace FTAnalyzer
                     Level = COUNTRY;
                 }
                 string before = (SubRegion + ", " + Region + ", " + Country).ToUpper().Trim();
-                if (!Properties.GeneralSettings.Default.AllowEmptyLocations)
+                if (!GeneralSettings.Default.AllowEmptyLocations)
                     FixEmptyFields();
                 FixRegionFullStops();
                 FixCountryFullStops();
@@ -734,11 +735,11 @@ namespace FTAnalyzer
         private void SetFixedLocation()
         {
             fixedLocation = Country;
-            if (!Region.Equals(string.Empty) || Properties.GeneralSettings.Default.AllowEmptyLocations)
+            if (!Region.Equals(string.Empty) || GeneralSettings.Default.AllowEmptyLocations)
                 fixedLocation = Region + ", " + fixedLocation;
-            if (!SubRegion.Equals(string.Empty) || Properties.GeneralSettings.Default.AllowEmptyLocations)
+            if (!SubRegion.Equals(string.Empty) || GeneralSettings.Default.AllowEmptyLocations)
                 fixedLocation = SubRegion + ", " + fixedLocation;
-            if (!Address.Equals(string.Empty) || Properties.GeneralSettings.Default.AllowEmptyLocations)
+            if (!Address.Equals(string.Empty) || GeneralSettings.Default.AllowEmptyLocations)
                 fixedLocation = Address + ", " + fixedLocation;
             if (!Place.Equals(string.Empty))
                 fixedLocation = Place + ", " + fixedLocation;
@@ -748,11 +749,11 @@ namespace FTAnalyzer
         private void SetSortableLocation()
         {
             SortableLocation = Country;
-            if (!Region.Equals(string.Empty) || Properties.GeneralSettings.Default.AllowEmptyLocations)
+            if (!Region.Equals(string.Empty) || GeneralSettings.Default.AllowEmptyLocations)
                 SortableLocation = SortableLocation + ", " + Region;
-            if (!SubRegion.Equals(string.Empty) || Properties.GeneralSettings.Default.AllowEmptyLocations)
+            if (!SubRegion.Equals(string.Empty) || GeneralSettings.Default.AllowEmptyLocations)
                 SortableLocation = SortableLocation + ", " + SubRegion;
-            if (!Address.Equals(string.Empty) || Properties.GeneralSettings.Default.AllowEmptyLocations)
+            if (!Address.Equals(string.Empty) || GeneralSettings.Default.AllowEmptyLocations)
                 SortableLocation = SortableLocation + ", " + Address;
             if (!Place.Equals(string.Empty))
                 SortableLocation = SortableLocation + ", " + Place;
@@ -843,11 +844,11 @@ namespace FTAnalyzer
                         subRegionFix = SubRegion;
                 }
                 result = countryFix;
-                if (!regionFix.Equals(string.Empty) || Properties.GeneralSettings.Default.AllowEmptyLocations)
+                if (!regionFix.Equals(string.Empty) || GeneralSettings.Default.AllowEmptyLocations)
                     result = regionFix + ", " + result;
-                if (!subRegionFix.Equals(string.Empty) || Properties.GeneralSettings.Default.AllowEmptyLocations)
+                if (!subRegionFix.Equals(string.Empty) || GeneralSettings.Default.AllowEmptyLocations)
                     result = subRegionFix + ", " + result;
-                if (!Address.Equals(string.Empty) || Properties.GeneralSettings.Default.AllowEmptyLocations)
+                if (!Address.Equals(string.Empty) || GeneralSettings.Default.AllowEmptyLocations)
                     result = Address + ", " + result;
                 if (!Place.Equals(string.Empty))
                     result = Place + ", " + result;
@@ -979,11 +980,11 @@ namespace FTAnalyzer
         public FactLocation GetLocation(int level, bool fixNumerics)
         {
             StringBuilder location = new StringBuilder(this.Country);
-            if (level > COUNTRY && (Region.Length > 0 || Properties.GeneralSettings.Default.AllowEmptyLocations))
+            if (level > COUNTRY && (Region.Length > 0 || GeneralSettings.Default.AllowEmptyLocations))
                 location.Insert(0, this.Region + ", ");
-            if (level > REGION && (SubRegion.Length > 0 || Properties.GeneralSettings.Default.AllowEmptyLocations))
+            if (level > REGION && (SubRegion.Length > 0 || GeneralSettings.Default.AllowEmptyLocations))
                 location.Insert(0, this.SubRegion + ", ");
-            if (level > SUBREGION && (Address.Length > 0 || Properties.GeneralSettings.Default.AllowEmptyLocations))
+            if (level > SUBREGION && (Address.Length > 0 || GeneralSettings.Default.AllowEmptyLocations))
                 location.Insert(0, fixNumerics ? this.AddressNumeric : this.Address + ", ");
             if (level > ADDRESS && Place.Length > 0)
                 location.Insert(0, fixNumerics ? this.PlaceNumeric : this.Place + ", ");
@@ -1028,7 +1029,7 @@ namespace FTAnalyzer
                 return true;
             if (Longitude == 0.0 && Latitude == 0.0)
                 return false;
-            if (!recheckPartials && Properties.MappingSettings.Default.IncludePartials &&
+            if (!recheckPartials && MappingSettings.Default.IncludePartials &&
                 (GeocodeStatus == Geocode.PARTIAL_MATCH || GeocodeStatus == Geocode.LEVEL_MISMATCH || GeocodeStatus == Geocode.OS_50KPARTIAL))
                 return true;
             return GeocodeStatus == Geocode.MATCHED || GeocodeStatus == Geocode.GEDCOM_USER || 

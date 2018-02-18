@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FTAnalyzer.Properties;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -69,7 +70,7 @@ namespace FTAnalyzer
         {
             get
             {
-                if (Properties.GeneralSettings.Default.UseCompactCensusRef)
+                if (GeneralSettings.Default.UseCompactCensusRef)
                     return Name + "/" + RD;
                 else
                     return Name + ", RD: " + RD;

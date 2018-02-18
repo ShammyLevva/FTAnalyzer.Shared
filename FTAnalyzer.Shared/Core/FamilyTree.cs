@@ -8,6 +8,7 @@ using System.Web;
 using System.Xml;
 using FTAnalyzer.Filters;
 using FTAnalyzer.Utilities;
+using FTAnalyzer.Properties;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using GeoAPI.Geometries;
@@ -452,35 +453,35 @@ namespace FTAnalyzer
 
         private void ReportOptions(IProgress<string> outputText)
         {
-            if (Properties.GeneralSettings.Default.ReportOptions)
+            if (GeneralSettings.Default.ReportOptions)
             {
                 outputText.Report("\nThe current file handling options are set :");
-                outputText.Report("\n    Use Special Character Filters When Loading : " + Properties.FileHandling.Default.LoadWithFilters);
-                outputText.Report("\n    Retry failed lines by looking for bad line breaks : " + Properties.FileHandling.Default.RetryFailedLines);
+                outputText.Report("\n    Use Special Character Filters When Loading : " + FileHandling.Default.LoadWithFilters);
+                outputText.Report("\n    Retry failed lines by looking for bad line breaks : " + FileHandling.Default.RetryFailedLines);
 
                 outputText.Report("\nThe current general options are set :");
-                outputText.Report("\n    Use Baptism/Christening Date If No Birth Date : " + Properties.GeneralSettings.Default.UseBaptismDates);
-                outputText.Report("\n    Use Burial/Cremation Date If No Death Date : " + Properties.GeneralSettings.Default.UseBurialDates);
-                outputText.Report("\n    Allow Empty Values In Locations : " + Properties.GeneralSettings.Default.AllowEmptyLocations);
-                outputText.Report("\n    Treat Residence Facts As Census Facts : " + Properties.GeneralSettings.Default.UseResidenceAsCensus);
-                outputText.Report("\n    Tolerate Slightly Inaccurate Census Dates : " + Properties.GeneralSettings.Default.TolerateInaccurateCensusDate);
-                outputText.Report("\n    Family Census Facts Apply To Only Parents : " + Properties.GeneralSettings.Default.OnlyCensusParents);
-                outputText.Report("\n    Loose Birth Minimum Parental Age : " + Properties.GeneralSettings.Default.MinParentalAge);
-                outputText.Report("\n    Show Multiple Fact Forms When Viewing Duplicates : " + Properties.GeneralSettings.Default.MultipleFactForms);
-                outputText.Report("\n    Use Compact Census References : " + Properties.GeneralSettings.Default.UseCompactCensusRef);
-                outputText.Report("\n    Show Alias In Name Displays : " + Properties.GeneralSettings.Default.ShowAliasInName);
-                outputText.Report("\n    Hide People Tagged As Missing From Census : " + Properties.GeneralSettings.Default.HidePeopleWithMissingTag);
-                outputText.Report("\n    Files use Country First Locations : " + Properties.GeneralSettings.Default.ReverseLocations);
-                outputText.Report("\n    Show World Events on the 'On This Day' tab : " + Properties.GeneralSettings.Default.ShowWorldEvents);
-                outputText.Report("\n    Auto Create Census Events from Notes & Sources : " + Properties.GeneralSettings.Default.AutoCreateCensusFacts);
-                outputText.Report("\n    Add Auto Created Census Locations to Locations List : " + Properties.GeneralSettings.Default.AddCreatedLocations);
-                outputText.Report("\n    Ignore Unknown Fact Type Warnings : " + Properties.GeneralSettings.Default.IgnoreFactTypeWarnings);
+                outputText.Report("\n    Use Baptism/Christening Date If No Birth Date : " + GeneralSettings.Default.UseBaptismDates);
+                outputText.Report("\n    Use Burial/Cremation Date If No Death Date : " + GeneralSettings.Default.UseBurialDates);
+                outputText.Report("\n    Allow Empty Values In Locations : " + GeneralSettings.Default.AllowEmptyLocations);
+                outputText.Report("\n    Treat Residence Facts As Census Facts : " + GeneralSettings.Default.UseResidenceAsCensus);
+                outputText.Report("\n    Tolerate Slightly Inaccurate Census Dates : " + GeneralSettings.Default.TolerateInaccurateCensusDate);
+                outputText.Report("\n    Family Census Facts Apply To Only Parents : " + GeneralSettings.Default.OnlyCensusParents);
+                outputText.Report("\n    Loose Birth Minimum Parental Age : " + GeneralSettings.Default.MinParentalAge);
+                outputText.Report("\n    Show Multiple Fact Forms When Viewing Duplicates : " + GeneralSettings.Default.MultipleFactForms);
+                outputText.Report("\n    Use Compact Census References : " + GeneralSettings.Default.UseCompactCensusRef);
+                outputText.Report("\n    Show Alias In Name Displays : " + GeneralSettings.Default.ShowAliasInName);
+                outputText.Report("\n    Hide People Tagged As Missing From Census : " + GeneralSettings.Default.HidePeopleWithMissingTag);
+                outputText.Report("\n    Files use Country First Locations : " + GeneralSettings.Default.ReverseLocations);
+                outputText.Report("\n    Show World Events on the 'On This Day' tab : " + GeneralSettings.Default.ShowWorldEvents);
+                outputText.Report("\n    Auto Create Census Events from Notes & Sources : " + GeneralSettings.Default.AutoCreateCensusFacts);
+                outputText.Report("\n    Add Auto Created Census Locations to Locations List : " + GeneralSettings.Default.AddCreatedLocations);
+                outputText.Report("\n    Ignore Unknown Fact Type Warnings : " + GeneralSettings.Default.IgnoreFactTypeWarnings);
 
                 outputText.Report("\nThe current mapping options are set :");
-                outputText.Report("\n    Custom Maps Location : " + Properties.MappingSettings.Default.CustomMapPath);
-                outputText.Report("\n    Display British Parish Boundaries : " + Properties.MappingSettings.Default.UseParishBoundaries);
-                outputText.Report("\n    Hide Scale Bar : " + Properties.MappingSettings.Default.HideScaleBar);
-                outputText.Report("\n    Include Locations with Partial Match Status : " + Properties.MappingSettings.Default.IncludePartials);
+                outputText.Report("\n    Custom Maps Location : " + MappingSettings.Default.CustomMapPath);
+                outputText.Report("\n    Display British Parish Boundaries : " + MappingSettings.Default.UseParishBoundaries);
+                outputText.Report("\n    Hide Scale Bar : " + MappingSettings.Default.HideScaleBar);
+                outputText.Report("\n    Include Locations with Partial Match Status : " + MappingSettings.Default.IncludePartials);
                 outputText.Report("\n\n");
             }
         }
@@ -492,7 +493,7 @@ namespace FTAnalyzer
 
         private void CountUnknownFactTypes(IProgress<string> outputText)
         {
-            if (unknownFactTypes.Count > 0 && !Properties.GeneralSettings.Default.IgnoreFactTypeWarnings)
+            if (unknownFactTypes.Count > 0 && !GeneralSettings.Default.IgnoreFactTypeWarnings)
             {
                 foreach (string tag in unknownFactTypes)
                 {
@@ -568,7 +569,7 @@ namespace FTAnalyzer
             outputText.Report("\nFound " + resiTotal + " residence facts in GEDCOM File (" + resiCensus + " treated as census facts) ");
             if (resiWarnAllow > 0)
             {
-                if (Properties.GeneralSettings.Default.TolerateInaccurateCensusDate)
+                if (GeneralSettings.Default.TolerateInaccurateCensusDate)
                     outputText.Report(resiWarnAllow + " warnings (data tolerated), ");
                 else
                     outputText.Report(resiWarnAllow + " warnings (data ignored in strict mode), ");
@@ -829,9 +830,9 @@ namespace FTAnalyzer
                 foreach (Family fam in indiv.FamiliesAsParent)
                 {
                     FactDate marriageDate = fam.GetPreferredFactDate(Fact.MARRIAGE);
-                    if (marriageDate.StartDate.Year > Properties.GeneralSettings.Default.MinParentalAge && !marriageDate.IsLongYearSpan)
+                    if (marriageDate.StartDate.Year > GeneralSettings.Default.MinParentalAge && !marriageDate.IsLongYearSpan)
                     {  // set maximum birthdate as X years before earliest marriage
-                        DateTime preMarriage = CreateDate(marriageDate.StartDate.Year - Properties.GeneralSettings.Default.MinParentalAge, 12, 31);
+                        DateTime preMarriage = CreateDate(marriageDate.StartDate.Year - GeneralSettings.Default.MinParentalAge, 12, 31);
                         if (preMarriage < minEnd && preMarriage >= minStart)
                             minEnd = preMarriage;
                     }
@@ -842,7 +843,7 @@ namespace FTAnalyzer
                         if (childrenNoAFT.Count > 0)
                         {
                             int minChildYear = childrenNoAFT.Min(child => child.BirthDate.EndDate).Year;
-                            DateTime minChild = CreateDate(minChildYear - Properties.GeneralSettings.Default.MinParentalAge, 12, 31);
+                            DateTime minChild = CreateDate(minChildYear - GeneralSettings.Default.MinParentalAge, 12, 31);
                             if (minChild < minEnd && minChild >= minStart)
                                 minEnd = minChild;
                         }
@@ -863,7 +864,7 @@ namespace FTAnalyzer
                     Individual spouse = fam.Spouse(indiv);
                     if (spouse != null && spouse.DeathDate.IsKnown)
                     {
-                        DateTime maxMarried = CreateDate(spouse.DeathEnd.Year - Properties.GeneralSettings.Default.MinParentalAge, 12, 31);
+                        DateTime maxMarried = CreateDate(spouse.DeathEnd.Year - GeneralSettings.Default.MinParentalAge, 12, 31);
                         if (maxMarried < minEnd && maxMarried >= minStart)
                             minEnd = maxMarried;
                     }
@@ -874,8 +875,8 @@ namespace FTAnalyzer
                     if (fam.Husband != null)
                     {
                         if (fam.Husband.BirthDate.IsKnown && fam.Husband.BirthDate.StartDate != FactDate.MINDATE)
-                            if (fam.Husband.BirthDate.StartDate.TryAddYears(Properties.GeneralSettings.Default.MinParentalAge) > minStart)
-                                minStart = CreateDate(fam.Husband.BirthDate.StartDate.Year + Properties.GeneralSettings.Default.MinParentalAge, 1, 1);
+                            if (fam.Husband.BirthDate.StartDate.TryAddYears(GeneralSettings.Default.MinParentalAge) > minStart)
+                                minStart = CreateDate(fam.Husband.BirthDate.StartDate.Year + GeneralSettings.Default.MinParentalAge, 1, 1);
                         if (fam.Husband.DeathDate.IsKnown && fam.Husband.DeathDate.EndDate != FactDate.MAXDATE)
                             if (fam.Husband.DeathDate.EndDate.Year != FactDate.MAXDATE.Year && fam.Husband.DeathDate.EndDate.AddMonths(9) < minEnd)
                                 minEnd = CreateDate(fam.Husband.DeathDate.EndDate.AddMonths(9).Year, 1, 1);
@@ -883,8 +884,8 @@ namespace FTAnalyzer
                     if (fam.Wife != null)
                     {
                         if (fam.Wife.BirthDate.IsKnown && fam.Wife.BirthDate.StartDate != FactDate.MINDATE)
-                            if (fam.Wife.BirthDate.StartDate.TryAddYears(Properties.GeneralSettings.Default.MinParentalAge) > minStart)
-                                minStart = CreateDate(fam.Wife.BirthDate.StartDate.Year + Properties.GeneralSettings.Default.MinParentalAge, 1, 1);
+                            if (fam.Wife.BirthDate.StartDate.TryAddYears(GeneralSettings.Default.MinParentalAge) > minStart)
+                                minStart = CreateDate(fam.Wife.BirthDate.StartDate.Year + GeneralSettings.Default.MinParentalAge, 1, 1);
                         if (fam.Wife.DeathDate.IsKnown && fam.Wife.DeathDate.EndDate != FactDate.MAXDATE)
                             if (fam.Wife.DeathDate.EndDate.Year != FactDate.MAXDATE.Year && fam.Wife.DeathDate.EndDate < minEnd)
                                 minEnd = CreateDate(fam.Wife.DeathDate.EndDate.Year, 1, 1);
@@ -1662,7 +1663,7 @@ namespace FTAnalyzer
                         if (FactAfterDeath(ind, f))
                             errors[(int)Dataerror.FACTS_AFTER_DEATH].Add(
                                 new DataError((int)Dataerror.FACTS_AFTER_DEATH, ind, f.FactErrorMessage));
-                        if (!Properties.GeneralSettings.Default.IgnoreFactTypeWarnings)
+                        if (!GeneralSettings.Default.IgnoreFactTypeWarnings)
                         {
                             foreach (string tag in unknownFactTypes)
                             {
@@ -2640,7 +2641,7 @@ namespace FTAnalyzer
             try
             {
                 IFormatter formatter = new BinaryFormatter();
-                string file = Path.Combine(Properties.GeneralSettings.Default.SavePath, "NonDuplicates.xml");
+                string file = Path.Combine(GeneralSettings.Default.SavePath, "NonDuplicates.xml");
                 using (Stream stream = new FileStream(file, FileMode.Create, FileAccess.Write, FileShare.None))
                 {
                     formatter.Serialize(stream, NonDuplicates);
@@ -2658,7 +2659,7 @@ namespace FTAnalyzer
             try
             {
                 IFormatter formatter = new BinaryFormatter();
-                string file = Path.Combine(Properties.GeneralSettings.Default.SavePath, "NonDuplicates.xml");
+                string file = Path.Combine(GeneralSettings.Default.SavePath, "NonDuplicates.xml");
                 if (File.Exists(file))
                 {
                     using (Stream stream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read))
@@ -2730,7 +2731,7 @@ namespace FTAnalyzer
                             todaysFacts.Add(new DisplayFact(i, f));
             }
             todaysFacts.Sort();
-            if (Properties.GeneralSettings.Default.ShowWorldEvents)
+            if (GeneralSettings.Default.ShowWorldEvents)
             {
                 int earliestYear = todaysFacts.Count > 0 ? todaysFacts[0].FactDate.StartDate.Year : 1752; // if no facts show world events for Gregorian calendar to today
                 List<DisplayFact> worldEvents = AddWorldEvents(earliestYear, chosenDate, wholeMonth, stepSize, progress);

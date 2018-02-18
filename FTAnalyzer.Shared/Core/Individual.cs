@@ -1,3 +1,4 @@
+using FTAnalyzer.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -139,7 +140,7 @@ namespace FTAnalyzer
             AddFacts(node, Fact.CUSTOM_FACT, outputText);
             AddFacts(node, Fact.UNKNOWN, outputText);
 
-            if (Properties.GeneralSettings.Default.AutoCreateCensusFacts)
+            if (GeneralSettings.Default.AutoCreateCensusFacts)
             {
                 AddCensusSourceFacts();
                 AddCensusNoteFacts();
@@ -327,7 +328,7 @@ namespace FTAnalyzer
                 }
                 if (surname == "?" || surname.ToLower() == "mnu" || surname.Length == 0)
                     surname = Individual.UNKNOWN_NAME;
-                if (Properties.GeneralSettings.Default.TreatFemaleSurnamesAsUnknown && !IsMale && surname.StartsWith("(") && surname.EndsWith(")"))
+                if (GeneralSettings.Default.TreatFemaleSurnamesAsUnknown && !IsMale && surname.StartsWith("(") && surname.EndsWith(")"))
                     surname = Individual.UNKNOWN_NAME;
                 marriedName = surname;
                 fullname = SetFullName();
@@ -337,7 +338,7 @@ namespace FTAnalyzer
 
         public string SetFullName()
         {
-            if (Properties.GeneralSettings.Default.ShowAliasInName && Alias.Length > 0)
+            if (GeneralSettings.Default.ShowAliasInName && Alias.Length > 0)
                 return (forenames + (" '" + Alias + "' ") + surname).Trim();
             else
                 return (forenames + " " + surname).Trim();
@@ -366,7 +367,7 @@ namespace FTAnalyzer
         {
             get
             {
-                if (Properties.GeneralSettings.Default.ShowAliasInName && Alias.Length > 0)
+                if (GeneralSettings.Default.ShowAliasInName && Alias.Length > 0)
                     return forenames + " '" + Alias + "' ";
                 else
                     return forenames;
@@ -397,7 +398,7 @@ namespace FTAnalyzer
                 if (f != null)
                     return f;
                 f = GetPreferredFact(Fact.BIRTH_CALC);
-                if (Properties.GeneralSettings.Default.UseBaptismDates)
+                if (GeneralSettings.Default.UseBaptismDates)
                 {
                     if (f != null)
                         return f;
@@ -430,7 +431,7 @@ namespace FTAnalyzer
             get
             {
                 Fact f = GetPreferredFact(Fact.DEATH);
-                if (Properties.GeneralSettings.Default.UseBurialDates)
+                if (GeneralSettings.Default.UseBurialDates)
                 {
                     if (f != null)
                         return f;

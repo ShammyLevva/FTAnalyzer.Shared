@@ -5,6 +5,7 @@ using System.Text;
 using System.Xml;
 using FTAnalyzer.Utilities;
 using System.Text.RegularExpressions;
+using FTAnalyzer.Properties;
 
 namespace FTAnalyzer
 {
@@ -202,7 +203,7 @@ namespace FTAnalyzer
                 else
                 {
                     // Handle a census fact on a family.
-                    if (Properties.GeneralSettings.Default.OnlyCensusParents)
+                    if (GeneralSettings.Default.OnlyCensusParents)
                     {
                         if (Husband != null && Husband.IsAlive(f.FactDate))
                             Husband.AddFact(f);

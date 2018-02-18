@@ -5,6 +5,7 @@ using System.Text;
 using System.Xml;
 using FTAnalyzer.Utilities;
 using System.Text.RegularExpressions;
+using FTAnalyzer.Properties;
 
 namespace FTAnalyzer
 {
@@ -340,7 +341,7 @@ namespace FTAnalyzer
                         CheckCensusDate("Census");
 
                     // need to check residence after setting location
-                    if (FactType.Equals(RESIDENCE) && Properties.GeneralSettings.Default.UseResidenceAsCensus)
+                    if (FactType.Equals(RESIDENCE) && GeneralSettings.Default.UseResidenceAsCensus)
                         CheckResidenceCensusDate();
 
                     // check Children Status is valid
@@ -543,8 +544,8 @@ namespace FTAnalyzer
             get
             {
                 if (FactType == CENSUS || FactType == CENSUS_FTA) return true;
-                if (FactType == RESIDENCE && Properties.GeneralSettings.Default.UseResidenceAsCensus)
-                    return CensusDate.IsCensusYear(FactDate, Country, Properties.GeneralSettings.Default.TolerateInaccurateCensusDate);
+                if (FactType == RESIDENCE && GeneralSettings.Default.UseResidenceAsCensus)
+                    return CensusDate.IsCensusYear(FactDate, Country, GeneralSettings.Default.TolerateInaccurateCensusDate);
                 return false;
             }
         }
@@ -644,8 +645,8 @@ namespace FTAnalyzer
                 this.CensusReference = cr;
             if (Location.IsBlank)
                 Location = cl.Equals(CensusLocation.UNKNOWN) ?
-                    FactLocation.GetLocation(cr.Country, Properties.GeneralSettings.Default.AddCreatedLocations) :
-                    FactLocation.GetLocation(cl.Location, Properties.GeneralSettings.Default.AddCreatedLocations);
+                    FactLocation.GetLocation(cr.Country, GeneralSettings.Default.AddCreatedLocations) :
+                    FactLocation.GetLocation(cl.Location, GeneralSettings.Default.AddCreatedLocations);
             if (Comment.Length == 0 && comment.Length > 0)
                 Comment = comment;
         }
@@ -660,7 +661,7 @@ namespace FTAnalyzer
                     //                    this.FactErrorNumber = (int) FamilyTree.Dataerror.RESIDENCE_CENSUS_DATE;
                     this.FactErrorLevel = Fact.FactError.WARNINGALLOW;
                     this.FactErrorMessage = "Warning : Residence date " + FactDate + " is in a census year but doesn't overlap census date.";
-                    if (!Properties.GeneralSettings.Default.TolerateInaccurateCensusDate)
+                    if (!GeneralSettings.Default.TolerateInaccurateCensusDate)
                         this.FactErrorMessage += " This would be accepted as a census fact with Tolerate slightly inaccurate census dates option.";
                 }
             }
@@ -688,7 +689,7 @@ namespace FTAnalyzer
                 if (Int32.TryParse(year, out int result))
                 {
                     yearAdjusted = new FactDate(year);
-                    if (Properties.GeneralSettings.Default.TolerateInaccurateCensusDate)
+                    if (GeneralSettings.Default.TolerateInaccurateCensusDate)
                     {
                         //                        this.FactErrorNumber = (int)FamilyTree.Dataerror.RESIDENCE_CENSUS_DATE;
                         this.FactErrorMessage = "Warning: Inaccurate Census date '" + FactDate + "' treated as '" + yearAdjusted + "'";
@@ -737,7 +738,7 @@ namespace FTAnalyzer
                     this.FactErrorLevel = FactError.ERROR;
                     return;
                 }
-                if (Properties.GeneralSettings.Default.TolerateInaccurateCensusDate && yearAdjusted.IsKnown && !CensusDate.IsCensusYear(yearAdjusted, Country, true))
+                if (GeneralSettings.Default.TolerateInaccurateCensusDate && yearAdjusted.IsKnown && !CensusDate.IsCensusYear(yearAdjusted, Country, true))
                 {
                     //                    this.FactErrorNumber = (int)FamilyTree.Dataerror.CENSUS_COVERAGE;
                     this.FactErrorMessage = "Warning : Census fact error date '" + FactDate + "' overlaps census date but is vague. Check for incorrect date entered.";
@@ -748,7 +749,7 @@ namespace FTAnalyzer
             }
             if (tag == "Lost Cousins" || tag == "LostCousins")
             {
-                if (Properties.GeneralSettings.Default.TolerateInaccurateCensusDate && yearAdjusted.IsKnown && !CensusDate.IsLostCousinsCensusYear(yearAdjusted, true))
+                if (GeneralSettings.Default.TolerateInaccurateCensusDate && yearAdjusted.IsKnown && !CensusDate.IsLostCousinsCensusYear(yearAdjusted, true))
                 {
                     //                    this.FactErrorNumber = (int)FamilyTree.Dataerror.CENSUS_COVERAGE;
                     this.FactErrorMessage = "Lost Cousins fact error date '" + FactDate + "' overlaps Lost Cousins census year but is vague. Check for incorrect date entered.";
@@ -804,7 +805,7 @@ namespace FTAnalyzer
                     Comment = Comment.Replace("/", "");
             }
             Comment = EnhancedTextInfo.ToTitleCase(Comment).Trim();
-            if (Properties.GeneralSettings.Default.ReverseLocations)
+            if (GeneralSettings.Default.ReverseLocations)
                 Location = FactLocation.GetLocation(ReverseLocation(Place), latitude, longitude, FactLocation.Geocode.NOT_SEARCHED);
             else
                 Location = FactLocation.GetLocation(Place, latitude, longitude, FactLocation.Geocode.NOT_SEARCHED);
