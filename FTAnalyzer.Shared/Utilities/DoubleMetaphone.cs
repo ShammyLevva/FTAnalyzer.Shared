@@ -557,8 +557,8 @@ namespace FTAnalyzer
 						current	+= 1;
 					AddMetaphoneCharacter("N");
 					break;
-	
-				case 'Ñ':
+                    
+                case (char) 165: // 'Ñ'
 					current += 1;
 					AddMetaphoneCharacter("N");
 					break;
