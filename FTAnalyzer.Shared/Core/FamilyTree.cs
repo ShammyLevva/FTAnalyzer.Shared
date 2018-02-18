@@ -198,7 +198,9 @@ namespace FTAnalyzer
             ResetLooseFacts();
             duplicates = null;
             ClearLocations();
+#if !__MACOS__
             TreeViewHandler.Instance.ResetData();
+#endif
             noteNodes = null;
             maxAhnentafel = 0;
             FactLocation.ResetLocations();
@@ -369,6 +371,7 @@ namespace FTAnalyzer
 
         public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
         {
+#if !__MACOS__
             try
             {
                 DatabaseHelper.Instance.LoadGeoLocations();
@@ -379,6 +382,7 @@ namespace FTAnalyzer
                 outputText.Report("Error loading previously geocoded data. " + ex.Message);
                 return false;
             }
+#endif
             return true;
         }
 
@@ -1561,9 +1565,9 @@ namespace FTAnalyzer
             return individuals.Filter(filter).ToList<IDisplayMissingData>();
         }
 #endif
-#endregion
+        #endregion
 
-#region Data Errors
+        #region Data Errors
 
         private void SetDataErrorTypes()
         {
@@ -1573,12 +1577,12 @@ namespace FTAnalyzer
             for (int i = 0; i < DATA_ERROR_GROUPS; i++)
                 errors[i] = new List<DataError>();
             // calculate error lists
-#region Individual Fact Errors
+            #region Individual Fact Errors
             foreach (Individual ind in AllIndividuals)
             {
                 try
                 {
-#region Death facts
+                    #region Death facts
                     if (ind.DeathDate.IsKnown)
                     {
                         if (ind.BirthDate.IsAfter(ind.DeathDate))
@@ -1593,8 +1597,8 @@ namespace FTAnalyzer
                         if (ind.IsFlaggedAsLiving)
                             errors[(int)Dataerror.LIVING_WITH_DEATH_DATE].Add(new DataError((int)Dataerror.LIVING_WITH_DEATH_DATE, ind, "Flagged as living but has death date of " + ind.DeathDate));
                     }
-#endregion
-#region Error facts
+                    #endregion
+                    #region Error facts
                     foreach (Fact f in ind.ErrorFacts)
                     {
                         bool added = false;
@@ -1648,8 +1652,8 @@ namespace FTAnalyzer
                         if (!added)
                             errors[(int)Dataerror.FACT_ERROR].Add(new DataError((int)Dataerror.FACT_ERROR, f.FactErrorLevel, ind, f.FactErrorMessage));
                     }
-#endregion
-#region All Facts
+                    #endregion
+                    #region All Facts
                     foreach (Fact f in ind.AllFacts)
                     {
                         if (FactBeforeBirth(ind, f))
@@ -1671,8 +1675,8 @@ namespace FTAnalyzer
                             }
                         }
                     }
-#endregion
-#region Parents Facts
+                    #endregion
+                    #region Parents Facts
                     foreach (ParentalRelationship parents in ind.FamiliesAsChild)
                     {
                         Family asChild = parents.Family;
@@ -1729,19 +1733,21 @@ namespace FTAnalyzer
                             //}
                         }
                     }
-#endregion
+                    #endregion
                 }
                 catch (Exception e)
                 {
                     if (catchCount == 0) // prevent multiple displays of the same error - usually resource icon load failures
                     {
+#if !__MACOS__
                         ErrorHandler.Show("FTA_0001", e);
+#endif
                         catchCount++;
                     }
                 }
             }
-#endregion
-#region Family Fact Errors
+            #endregion
+            #region Family Fact Errors
             catchCount = 0;
             foreach (Family fam in AllFamilies)
             {
@@ -1764,7 +1770,9 @@ namespace FTAnalyzer
                 {
                     if (catchCount == 0) // prevent multiple displays of the same error - usually resource icon load failures
                     {
+#if !__MACOS__
                         ErrorHandler.Show("FTA_0001", e);
+#endif
                         catchCount++;
                     }
                 }
