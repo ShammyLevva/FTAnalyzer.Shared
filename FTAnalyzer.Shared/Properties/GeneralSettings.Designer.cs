@@ -274,5 +274,16 @@ namespace FTAnalyzer.Properties {
                 this["TreatFemaleSurnamesAsUnknown"] = value;
             }
         }
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool HideIgnoredDuplicates {
+            get {
+                return ((bool)(this["HideIgnoredDuplicates"]));
+            }
+            set {
+                this["HideIgnoredDuplicates"] = value;
+            }
+        }
     }
 }
