@@ -1,9 +1,10 @@
+#if !__MACOS__
 using FTAnalyzer.Mapping;
+#endif
 using FTAnalyzer.Utilities;
 using GeoAPI.Geometries;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -15,7 +16,7 @@ namespace FTAnalyzer
 {
     public class FactLocation : IComparable<FactLocation>, IDisplayLocation, IDisplayGeocodedLocation
     {
-        #region Variables
+#region Variables
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public const int UNKNOWN = -1, COUNTRY = 0, REGION = 1, SUBREGION = 2, ADDRESS = 3, PLACE = 4;
         public enum Geocode

@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using System.Net;
-using System.Windows;
 using System.Diagnostics;
 
 namespace System.Web
@@ -564,9 +563,19 @@ namespace System.Web
                 ProcessStartInfo info = new ProcessStartInfo(url);
                 Process.Start(url);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                MessageBox.Show("Error processing web request. Error was : " + e.Message + "\nSite was: " + url, "FTAnalyzer");
+                string message = "Error processing web request. Error was : " + e.Message + "\nSite was: " + url;
+#if __MACOS__
+                var alert = new AppKit.NSAlert
+                {
+                    MessageText = "FTAnalyzer",
+                    InformativeText = message
+                };
+                alert.RunModal();
+#else
+                System.Windows.MessageBox.Show(message, "FTAnalyzer");
+#endif
             }
         }
 
