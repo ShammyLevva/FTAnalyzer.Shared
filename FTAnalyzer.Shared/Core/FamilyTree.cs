@@ -788,7 +788,7 @@ namespace FTAnalyzer
 
         #region Loose Births
 
-            public SortableBindingList<IDisplayLooseBirth> LooseBirths()
+        public SortableBindingList<IDisplayLooseBirth> LooseBirths()
         {
             if (looseBirths != null)
                 return looseBirths;
@@ -1495,6 +1495,7 @@ namespace FTAnalyzer
             return new SortableBindingList<Individual>(occupations[job]);
         }
 
+#if !__MACOS__
         public List<IDisplayColourCensus> ColourCensus(string country, Controls.RelationTypes relType, string surname, ComboBoxFamily family)
         {
             Predicate<Individual> filter;
@@ -1559,10 +1560,10 @@ namespace FTAnalyzer
                 filter = x => family.Members.Contains<Individual>(x);
             return individuals.Filter(filter).ToList<IDisplayMissingData>();
         }
+#endif
+#endregion
 
-        #endregion
-
-        #region Data Errors
+#region Data Errors
 
         private void SetDataErrorTypes()
         {
@@ -1572,12 +1573,12 @@ namespace FTAnalyzer
             for (int i = 0; i < DATA_ERROR_GROUPS; i++)
                 errors[i] = new List<DataError>();
             // calculate error lists
-            #region Individual Fact Errors
+#region Individual Fact Errors
             foreach (Individual ind in AllIndividuals)
             {
                 try
                 {
-                    #region Death facts
+#region Death facts
                     if (ind.DeathDate.IsKnown)
                     {
                         if (ind.BirthDate.IsAfter(ind.DeathDate))
@@ -1592,8 +1593,8 @@ namespace FTAnalyzer
                         if (ind.IsFlaggedAsLiving)
                             errors[(int)Dataerror.LIVING_WITH_DEATH_DATE].Add(new DataError((int)Dataerror.LIVING_WITH_DEATH_DATE, ind, "Flagged as living but has death date of " + ind.DeathDate));
                     }
-                    #endregion
-                    #region Error facts
+#endregion
+#region Error facts
                     foreach (Fact f in ind.ErrorFacts)
                     {
                         bool added = false;
@@ -1647,8 +1648,8 @@ namespace FTAnalyzer
                         if (!added)
                             errors[(int)Dataerror.FACT_ERROR].Add(new DataError((int)Dataerror.FACT_ERROR, f.FactErrorLevel, ind, f.FactErrorMessage));
                     }
-                    #endregion
-                    #region All Facts
+#endregion
+#region All Facts
                     foreach (Fact f in ind.AllFacts)
                     {
                         if (FactBeforeBirth(ind, f))
@@ -1670,8 +1671,8 @@ namespace FTAnalyzer
                             }
                         }
                     }
-                    #endregion
-                    #region Parents Facts
+#endregion
+#region Parents Facts
                     foreach (ParentalRelationship parents in ind.FamiliesAsChild)
                     {
                         Family asChild = parents.Family;
@@ -1728,7 +1729,7 @@ namespace FTAnalyzer
                             //}
                         }
                     }
-                    #endregion
+#endregion
                 }
                 catch (Exception e)
                 {
@@ -1739,8 +1740,8 @@ namespace FTAnalyzer
                     }
                 }
             }
-            #endregion
-            #region Family Fact Errors
+#endregion
+#region Family Fact Errors
             catchCount = 0;
             foreach (Family fam in AllFamilies)
             {
@@ -1768,7 +1769,7 @@ namespace FTAnalyzer
                     }
                 }
             }
-            #endregion
+#endregion
 
             for (int i = 0; i < DATA_ERROR_GROUPS; i++)
                 dataErrorTypes.Add(new DataErrorGroup(i, errors[i]));
@@ -1806,9 +1807,9 @@ namespace FTAnalyzer
             UNKNOWN_FACT_TYPE = 20, LIVING_WITH_DEATH_DATE = 21, CHILDRENSTATUS_TOTAL_MISMATCH = 22
         };
 
-        #endregion
+#endregion
 
-        #region Census Searching
+#region Census Searching
 
         public void SearchCensus(string censusCountry, int censusYear, Individual person, int censusProvider)
         {
@@ -2169,9 +2170,9 @@ namespace FTAnalyzer
             return @"http://www.awin1.com/cread.php?awinmid=2114&awinaffid=88963&clickref=FTACensusSearch&p=" + uri.ToString();
         }
 
-        #endregion
+#endregion
 
-        #region Birth/Marriage/Death Searching
+#region Birth/Marriage/Death Searching
 
         public enum SearchType { BIRTH = 0, MARRIAGE = 1, DEATH = 2 };
 
@@ -2396,9 +2397,9 @@ namespace FTAnalyzer
             }
         }
 
-        #endregion
+#endregion
 
-        #region Geocoding
+#region Geocoding
 
         public void WriteGeocodeStatstoRTB(string title, IProgress<string> outputText)
         {
@@ -2430,9 +2431,9 @@ namespace FTAnalyzer
             }
         }
 
-        #endregion
+#endregion
 
-        #region Relationship Groups
+#region Relationship Groups
         public List<Individual> GetFamily(Individual startIndividiual)
         {
             List<Individual> results = new List<Individual>();
@@ -2512,9 +2513,9 @@ namespace FTAnalyzer
         {
             return GetFamily(ind).Union(GetAncestors(ind).Union(GetDescendants(ind))).ToList<Individual>();
         }
-        #endregion
+#endregion
 
-        #region Duplicates Processing
+#region Duplicates Processing
         int duplicateProgress = 0;
         int progressMaximum = 0;
 
@@ -2656,9 +2657,9 @@ namespace FTAnalyzer
                 NonDuplicates = new List<NonDuplicate>();
             }
         }
-        #endregion
+#endregion
 
-        #region Report Issues
+#region Report Issues
         public HashSet<string> UnrecognisedCensusReferences()
         {
             var result = new HashSet<string>();
@@ -2685,9 +2686,9 @@ namespace FTAnalyzer
                 result.Add(i.UnrecognisedCensusNotes + "\n--------------------------------------------------------------------------------\n");
             return result;
         }
-        #endregion
+#endregion
 
-        #region Today
+#region Today
         public void AddTodaysFacts(DateTime chosenDate, bool wholeMonth, int stepSize, IProgress<int> progress, IProgress<string> outputText)
         {
             string dateDesc;
@@ -2834,6 +2835,6 @@ namespace FTAnalyzer
             return doc;
         }
 
-        #endregion
+#endregion
     }
 }
