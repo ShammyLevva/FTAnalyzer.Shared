@@ -81,7 +81,7 @@ namespace FTAnalyzer
             ResetLocations();
             LoadConversions(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location));
         }
-        
+
         public static void LoadConversions(string startPath)
         {
             // load conversions from XML file
@@ -426,7 +426,7 @@ namespace FTAnalyzer
             longitude = longitude.Replace("W", "-").Replace("E", "");
             if (locations.TryGetValue(place, out FactLocation result))
             {  // found location now check if we need to update its geocoding
-                if(updateLatLong && !result.IsGeoCoded(true))
+                if (updateLatLong && !result.IsGeoCoded(true))
                 {  // we are updating and old value isn't geocoded
                     temp = new FactLocation(place, latitude, longitude, status);
                     if (temp.IsGeoCoded(true))
@@ -861,10 +861,12 @@ namespace FTAnalyzer
             get { return new string[] { Country, Region, SubRegion, Address, Place }; }
         }
 
+#if !__MACOS__
         public Image Icon
         {
             get { return FactLocationImage.ErrorIcon(GeocodeStatus).Icon; }
         }
+#endif
 
         public string AddressNumeric
         {
@@ -961,9 +963,9 @@ namespace FTAnalyzer
                     (GeocodeStatus == Geocode.GEDCOM_USER || GeocodeStatus == Geocode.OS_50KMATCH || GeocodeStatus == Geocode.OS_50KPARTIAL || GeocodeStatus == Geocode.OS_50KFUZZY);
             }
         }
-        #endregion
+#endregion
 
-        #region General Functions
+#region General Functions
         public FactLocation GetLocation(int level) { return GetLocation(level, false); }
         public FactLocation GetLocation(int level, bool fixNumerics)
         {
@@ -1062,9 +1064,9 @@ namespace FTAnalyzer
                 return true;
             return false;
         }
-        #endregion
+#endregion
 
-        #region Overrides
+#region Overrides
         public int CompareTo(FactLocation that)
         {
             return CompareTo(that, PLACE);
@@ -1145,6 +1147,6 @@ namespace FTAnalyzer
         {
             return base.GetHashCode();
         }
-        #endregion
+#endregion
     }
 }
