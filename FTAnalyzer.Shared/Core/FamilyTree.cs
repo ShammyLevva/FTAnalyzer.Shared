@@ -1735,16 +1735,21 @@ namespace FTAnalyzer
                     }
                     #endregion
                 }
+#if __MACOS__
+                catch (Exception)
+                {
+                    catchCount++;
+                }
+#else
                 catch (Exception e)
                 {
                     if (catchCount == 0) // prevent multiple displays of the same error - usually resource icon load failures
                     {
-#if !__MACOS__
                         ErrorHandler.Show("FTA_0001", e);
-#endif
                         catchCount++;
                     }
                 }
+#endif
             }
             #endregion
             #region Family Fact Errors
@@ -1766,16 +1771,21 @@ namespace FTAnalyzer
                         }
                     }
                 }
+#if __MACOS__
+                catch (Exception)
+                {
+                    catchCount++;
+                }
+#else
                 catch (Exception e)
                 {
                     if (catchCount == 0) // prevent multiple displays of the same error - usually resource icon load failures
                     {
-#if !__MACOS__
                         ErrorHandler.Show("FTA_0001", e);
-#endif
                         catchCount++;
                     }
                 }
+#endif
             }
 #endregion
 
