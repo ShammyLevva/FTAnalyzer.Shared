@@ -1,0 +1,18 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2026
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "FTAnalyzer.Shared", "FTAnalyzer.Shared.shproj", "{89621EBE-2416-4E13-BF69-F1C145908518}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		FTAnalyzer.Shared.projitems*{89621ebe-2416-4e13-bf69-f1c145908518}*SharedItemsImports = 13
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A7A1C77B-5462-4447-9E4F-5B4E9551593E}
+	EndGlobalSection
+EndGlobal
