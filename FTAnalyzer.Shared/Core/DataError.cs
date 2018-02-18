@@ -5,7 +5,9 @@
         public DataError(int errorType, Fact.FactError errorLevel, Individual ind, string description)
         {
             ErrorType = DataErrorGroup.ErrorDescription(errorType);
+#if !__MACOS__
             Icon = FactImage.ErrorIcon(errorLevel).Icon;
+#endif
             individual = ind;
             family = null;
             Description = description;

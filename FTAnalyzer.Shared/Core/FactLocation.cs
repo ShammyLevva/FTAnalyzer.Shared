@@ -1,9 +1,10 @@
+#if !__MACOS__
 using FTAnalyzer.Mapping;
+#endif
 using FTAnalyzer.Utilities;
 using GeoAPI.Geometries;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -74,9 +75,9 @@ namespace FTAnalyzer
         public static Dictionary<Geocode, string> Geocodes;
         public static FactLocation UNKNOWN_LOCATION;
         public static FactLocation TEMP = new FactLocation();
-#endregion
+        #endregion
 
-#region Static Constructor
+        #region Static Constructor
         static FactLocation()
         {
             SetupGeocodes();
@@ -87,7 +88,7 @@ namespace FTAnalyzer
         public static void LoadConversions(string startPath)
         {
             // load conversions from XML file
-#region Fact Location Fixes
+            #region Fact Location Fixes
             if (startPath == null) return;
             string filename = Path.Combine(startPath, @"Resources\FactLocationFixes.xml");
             if (File.Exists(filename))
@@ -196,7 +197,7 @@ namespace FTAnalyzer
             {
                 Console.WriteLine("Failed to find FactLocationFixes.xml File");
             }
-#endregion
+            #endregion
         }
 
         private static void ValidateTypoFixes()
@@ -297,9 +298,9 @@ namespace FTAnalyzer
                 { Geocode.OS_50KFUZZY, "Fuzzy Match (Ord Surv)" }
             };
         }
-#endregion
+        #endregion
 
-#region Object Constructors
+        #region Object Constructors
         private FactLocation()
         {
             this.GEDCOMLocation = string.Empty;
@@ -322,7 +323,9 @@ namespace FTAnalyzer
             this.FoundLocation = string.Empty;
             this.FoundResultType = string.Empty;
             this.FoundLevel = -2;
+#if !__MACOS__
             this.ViewPort = new GeoResponse.CResult.CGeometry.CViewPort();
+#endif
         }
 
         private FactLocation(string location, string latitude, string longitude, Geocode status)
@@ -330,10 +333,13 @@ namespace FTAnalyzer
         {
             this.Latitude = double.TryParse(latitude, out double temp) ? temp : 0;
             this.Longitude = double.TryParse(longitude, out temp) ? temp : 0;
+#if !__MACOS__
             Coordinate point = new Coordinate(Longitude, Latitude);
             Coordinate mpoint = MapTransforms.TransformCoordinate(point);
+
             this.LongitudeM = mpoint.X;
             this.LatitudeM = mpoint.Y;
+#endif
             this.GeocodeStatus = status;
             if (status == Geocode.NOT_SEARCHED && (Latitude != 0 || Longitude != 0))
                 status = Geocode.GEDCOM_USER;
@@ -412,9 +418,9 @@ namespace FTAnalyzer
                 //    Console.WriteLine("Debug : '" + before + "'  converted to '" + after + "'");
             }
         }
-#endregion
+        #endregion
 
-#region Static Functions
+        #region Static Functions
         public static FactLocation GetLocation(string place, bool addLocation = true)
         {
             return GetLocation(place, string.Empty, string.Empty, Geocode.NOT_SEARCHED, addLocation);
@@ -476,6 +482,7 @@ namespace FTAnalyzer
 
         private static void SaveLocationToDatabase(FactLocation loc)
         {
+#if !__MACOS__
             loc.GeocodeStatus = FactLocation.Geocode.GEDCOM_USER;
             loc.FoundLocation = string.Empty;
             loc.FoundLevel = -2;
@@ -489,6 +496,7 @@ namespace FTAnalyzer
             }
             else
                 DatabaseHelper.Instance.InsertGeocode(loc);
+#endif
         }
 
         public static FactLocation LookupLocation(string place)
@@ -557,10 +565,12 @@ namespace FTAnalyzer
             to.Longitude = from.Longitude;
             to.LatitudeM = from.LatitudeM;
             to.LongitudeM = from.LongitudeM;
+#if !__MACOS__
             to.ViewPort.NorthEast.Lat = from.ViewPort.NorthEast.Lat;
             to.ViewPort.NorthEast.Long = from.ViewPort.NorthEast.Long;
             to.ViewPort.SouthWest.Lat = from.ViewPort.SouthWest.Lat;
             to.ViewPort.SouthWest.Long = from.ViewPort.SouthWest.Long;
+#endif
             to.GeocodeStatus = from.GeocodeStatus;
             to.FoundLocation = from.FoundLocation;
             to.FoundResultType = from.FoundResultType;

@@ -1,4 +1,6 @@
-﻿using FTAnalyzer.Mapping;
+﻿#if !__MACOS__
+using FTAnalyzer.Mapping;
+#endif
 
 namespace FTAnalyzer
 {
