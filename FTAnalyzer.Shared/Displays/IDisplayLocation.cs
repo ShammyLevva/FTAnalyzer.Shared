@@ -1,8 +1,4 @@
-﻿#if !__MACOS__
-using System.Drawing;
-#endif
-
-namespace FTAnalyzer
+﻿namespace FTAnalyzer
 {
     public interface IDisplayLocation
     {
@@ -14,7 +10,7 @@ namespace FTAnalyzer
         double Latitude { get; }
         double Longitude { get; }
 #if !__MACOS__
-        Image Icon { get; }
+        System.Drawing.Image Icon { get; }
 #endif
         string Geocoded { get; }
         string FoundLocation { get; }

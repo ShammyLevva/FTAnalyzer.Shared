@@ -1,6 +1,3 @@
-#if !__MACOS__
-using FTAnalyzer.Mapping;
-#endif
 using FTAnalyzer.Utilities;
 using GeoAPI.Geometries;
 using System;
@@ -57,7 +54,7 @@ namespace FTAnalyzer
         public int FoundLevel { get; set; }
         public double PixelSize { get; set; }
 #if !__MACOS__
-        public GeoResponse.CResult.CGeometry.CViewPort ViewPort { get; set; }
+        public Mapping.GeoResponse.CResult.CGeometry.CViewPort ViewPort { get; set; }
 #endif
         private List<Individual> individuals;
 
@@ -324,7 +321,7 @@ namespace FTAnalyzer
             this.FoundResultType = string.Empty;
             this.FoundLevel = -2;
 #if !__MACOS__
-            this.ViewPort = new GeoResponse.CResult.CGeometry.CViewPort();
+            this.ViewPort = new Mapping.GeoResponse.CResult.CGeometry.CViewPort();
 #endif
         }
 
@@ -335,7 +332,7 @@ namespace FTAnalyzer
             this.Longitude = double.TryParse(longitude, out temp) ? temp : 0;
 #if !__MACOS__
             Coordinate point = new Coordinate(Longitude, Latitude);
-            Coordinate mpoint = MapTransforms.TransformCoordinate(point);
+            Coordinate mpoint = Mapping.MapTransforms.TransformCoordinate(point);
 
             this.LongitudeM = mpoint.X;
             this.LatitudeM = mpoint.Y;
@@ -486,7 +483,7 @@ namespace FTAnalyzer
             loc.GeocodeStatus = FactLocation.Geocode.GEDCOM_USER;
             loc.FoundLocation = string.Empty;
             loc.FoundLevel = -2;
-            loc.ViewPort = new GeoResponse.CResult.CGeometry.CViewPort();
+            loc.ViewPort = new Mapping.GeoResponse.CResult.CGeometry.CViewPort();
             if (DatabaseHelper.Instance.IsLocationInDatabase(loc.ToString()))
             {   // check whether the location in database is geocoded.
                 FactLocation inDatabase = new FactLocation(loc.ToString());
@@ -874,7 +871,7 @@ namespace FTAnalyzer
         }
 
 #if !__MACOS__
-        public Image Icon
+        public System.Drawing.Image Icon
         {
             get { return FactLocationImage.ErrorIcon(GeocodeStatus).Icon; }
         }
