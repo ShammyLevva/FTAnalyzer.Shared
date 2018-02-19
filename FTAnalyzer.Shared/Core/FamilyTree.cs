@@ -917,7 +917,7 @@ namespace FTAnalyzer
                 // range as the existing death date
                 Fact looseBirth = new Fact(indiv.IndividualID, Fact.LOOSEBIRTH, toAdd, FactLocation.UNKNOWN_LOCATION);
                 indiv.AddFact(looseBirth);
-                if (result == null)
+                if (result != null)
                     result.Add(indiv);
             }
         }
