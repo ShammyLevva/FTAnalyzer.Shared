@@ -11,7 +11,6 @@ using FTAnalyzer.Utilities;
 using FTAnalyzer.Properties;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using GeoAPI.Geometries;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;

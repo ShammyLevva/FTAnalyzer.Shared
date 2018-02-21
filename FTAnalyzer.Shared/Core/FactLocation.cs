@@ -1,6 +1,5 @@
 using FTAnalyzer.Utilities;
 using FTAnalyzer.Properties;
-using GeoAPI.Geometries;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -332,8 +331,8 @@ namespace FTAnalyzer
             this.Latitude = double.TryParse(latitude, out double temp) ? temp : 0;
             this.Longitude = double.TryParse(longitude, out temp) ? temp : 0;
 #if !__MACOS__
-            Coordinate point = new Coordinate(Longitude, Latitude);
-            Coordinate mpoint = Mapping.MapTransforms.TransformCoordinate(point);
+            GeoAPI.Geometries.Coordinate point = new GeoAPI.Geometries.Coordinate(Longitude, Latitude);
+            GeoAPI.Geometries.Coordinate mpoint = Mapping.MapTransforms.TransformCoordinate(point);
 
             this.LongitudeM = mpoint.X;
             this.LatitudeM = mpoint.Y;
