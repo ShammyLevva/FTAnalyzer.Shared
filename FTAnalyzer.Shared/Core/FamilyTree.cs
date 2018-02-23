@@ -1827,7 +1827,7 @@ namespace FTAnalyzer
 
 #endregion
 
-#region Census Searching
+        #region Census Searching
 
         public void SearchCensus(string censusCountry, int censusYear, Individual person, int censusProvider)
         {
@@ -2190,7 +2190,7 @@ namespace FTAnalyzer
 
 #endregion
 
-#region Birth/Marriage/Death Searching
+        #region Birth/Marriage/Death Searching
 
         public enum SearchType { BIRTH = 0, MARRIAGE = 1, DEATH = 2 };
 
@@ -2417,7 +2417,7 @@ namespace FTAnalyzer
 
 #endregion
 
-#region Geocoding
+        #region Geocoding
 
         public void WriteGeocodeStatstoRTB(string title, IProgress<string> outputText)
         {
@@ -2451,7 +2451,7 @@ namespace FTAnalyzer
 
 #endregion
 
-#region Relationship Groups
+        #region Relationship Groups
         public List<Individual> GetFamily(Individual startIndividiual)
         {
             List<Individual> results = new List<Individual>();
@@ -2533,7 +2533,7 @@ namespace FTAnalyzer
         }
 #endregion
 
-#region Duplicates Processing
+        #region Duplicates Processing
         int duplicateProgress = 0;
         int progressMaximum = 0;
 
@@ -2677,7 +2677,7 @@ namespace FTAnalyzer
         }
 #endregion
 
-#region Report Issues
+        #region Report Issues
         public HashSet<string> UnrecognisedCensusReferences()
         {
             var result = new HashSet<string>();
@@ -2706,7 +2706,7 @@ namespace FTAnalyzer
         }
 #endregion
 
-#region Today
+        #region Today
         public void AddTodaysFacts(DateTime chosenDate, bool wholeMonth, int stepSize, IProgress<int> progress, IProgress<string> outputText)
         {
             string dateDesc;
@@ -2714,32 +2714,35 @@ namespace FTAnalyzer
             if (wholeMonth)
             {
                 dateDesc = chosenDate.ToString("MMMM");
-                sb.Append(@"{\rtf1\ansi \b GEDCOM and World Events in " + dateDesc + @"\b0.}\n\n");
+                sb.Append(@"{\rtf1\ansi \b GEDCOM and World Events in " + dateDesc + @"\b0.\n\n}");
             }
             else
             {
                 dateDesc = chosenDate.ToString("d MMMM");
-                sb.Append(@"{\rtf1\ansi \b GEDCOM and World Events on " + dateDesc + @"\b0.}\n\n");
+                sb.Append(@"{\rtf1\ansi \b GEDCOM and World Events on " + dateDesc + @"\b0.\n\n}");
             }
             var todaysFacts = new List<DisplayFact>();
+            int indCount = IndividualCount;
+            int count = 0;
             foreach (Individual i in individuals)
             {
                 foreach (Fact f in i.AllFacts)
                     if (!f.Created && !f.IsCensusFact && f.FactType != Fact.OCCUPATION && f.FactDate.IsExact && f.FactDate.StartDate.Month == chosenDate.Month)
                         if (wholeMonth || f.FactDate.StartDate.Day == chosenDate.Day)
                             todaysFacts.Add(new DisplayFact(i, f));
+                progress.Report((50 * count) / indCount);
             }
-            todaysFacts.Sort();
             if (GeneralSettings.Default.ShowWorldEvents)
             {
                 int earliestYear = todaysFacts.Count > 0 ? todaysFacts[0].FactDate.StartDate.Year : 1752; // if no facts show world events for Gregorian calendar to today
                 List<DisplayFact> worldEvents = AddWorldEvents(earliestYear, chosenDate, wholeMonth, stepSize, progress);
                 todaysFacts.AddRange(worldEvents);
-                todaysFacts.Sort();
             }
+            todaysFacts.Sort();
             foreach (DisplayFact f in todaysFacts)
-                sb.Append(f.ToString() + "\n");
+                sb.Append(f.ToString() + "{\n}");
             outputText.Report(sb.ToString());
+            progress.Report(100);
         }
 
         public List<DisplayFact> AddWorldEvents(int earliestYear, DateTime chosenDate, bool wholeMonth, int stepSize, IProgress<int> progress)
@@ -2750,7 +2753,7 @@ namespace FTAnalyzer
             FactDate eventDate;
             int barMinimum = earliestYear;
             int barRange = chosenDate.Year - earliestYear;
-            progress.Report(0);
+            progress.Report(50);
             for (int year = earliestYear; year <= chosenDate.Year; year++)
             {
                 int diff = chosenDate.Year - year;
@@ -2783,7 +2786,7 @@ namespace FTAnalyzer
                         }
                     }
                 }
-                progress.Report((year - barMinimum) / barRange);
+                progress.Report(50 + (50 * (year - barMinimum)) / barRange);
             }
             return events;
         }
