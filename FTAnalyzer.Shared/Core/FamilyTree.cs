@@ -2714,12 +2714,12 @@ namespace FTAnalyzer
             if (wholeMonth)
             {
                 dateDesc = chosenDate.ToString("MMMM");
-                sb.Append(@"{\rtf1\ansi \b GEDCOM and World Events in " + dateDesc + @"\b0.\n\n}");
+                sb.Append(@"{\rtf1\ansi \b GEDCOM and World Events in " + dateDesc + @"\b0.\line\line ");
             }
             else
             {
                 dateDesc = chosenDate.ToString("d MMMM");
-                sb.Append(@"{\rtf1\ansi \b GEDCOM and World Events on " + dateDesc + @"\b0.\n\n}");
+                sb.Append(@"{\rtf1\ansi \b GEDCOM and World Events on " + dateDesc + @"\b0.\line\line ");
             }
             var todaysFacts = new List<DisplayFact>();
             int indCount = IndividualCount;
@@ -2730,17 +2730,19 @@ namespace FTAnalyzer
                     if (!f.Created && !f.IsCensusFact && f.FactType != Fact.OCCUPATION && f.FactDate.IsExact && f.FactDate.StartDate.Month == chosenDate.Month)
                         if (wholeMonth || f.FactDate.StartDate.Day == chosenDate.Day)
                             todaysFacts.Add(new DisplayFact(i, f));
-                progress.Report((50 * count) / indCount);
+                progress.Report((30 * count) / indCount);
             }
+            todaysFacts.Sort(); // need to sort facts to get correct earliest date
             if (GeneralSettings.Default.ShowWorldEvents)
             {
                 int earliestYear = todaysFacts.Count > 0 ? todaysFacts[0].FactDate.StartDate.Year : 1752; // if no facts show world events for Gregorian calendar to today
                 List<DisplayFact> worldEvents = AddWorldEvents(earliestYear, chosenDate, wholeMonth, stepSize, progress);
                 todaysFacts.AddRange(worldEvents);
+                todaysFacts.Sort();
             }
-            todaysFacts.Sort();
             foreach (DisplayFact f in todaysFacts)
-                sb.Append(f.ToString() + "{\n}");
+                sb.Append(f.ToString() + @"\line ");
+            sb.Append("}");
             outputText.Report(sb.ToString());
             progress.Report(100);
         }
@@ -2786,7 +2788,7 @@ namespace FTAnalyzer
                         }
                     }
                 }
-                progress.Report(50 + (50 * (year - barMinimum)) / barRange);
+                progress.Report(30 + (70 * (year - barMinimum)) / barRange);
             }
             return events;
         }
