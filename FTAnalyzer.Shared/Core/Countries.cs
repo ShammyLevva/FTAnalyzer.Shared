@@ -1,5 +1,5 @@
-﻿#if !__MACOS__
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+#if !__MACOS__
 using GeoAPI.Geometries;
 #endif
 
