@@ -87,7 +87,11 @@ namespace FTAnalyzer
             // load conversions from XML file
             #region Fact Location Fixes
             if (startPath == null) return;
+#if __MACOS__
+            string filename = Path.Combine(startPath, @"../Resources/FactLocationFixes.xml");
+#else
             string filename = Path.Combine(startPath, @"Resources\FactLocationFixes.xml");
+#endif
             if (File.Exists(filename))
             {
                 XmlDocument xmlDoc = new XmlDocument();
@@ -194,7 +198,7 @@ namespace FTAnalyzer
             {
                 Console.WriteLine("Failed to find FactLocationFixes.xml File");
             }
-            #endregion
+#endregion
         }
 
         private static void ValidateTypoFixes()
@@ -295,9 +299,9 @@ namespace FTAnalyzer
                 { Geocode.OS_50KFUZZY, "Fuzzy Match (Ord Surv)" }
             };
         }
-        #endregion
+#endregion
 
-        #region Object Constructors
+#region Object Constructors
         private FactLocation()
         {
             this.GEDCOMLocation = string.Empty;
@@ -337,7 +341,7 @@ namespace FTAnalyzer
             this.LongitudeM = mpoint.X;
             this.LatitudeM = mpoint.Y;
 #endif
-            this.GeocodeStatus = status;
+            GeocodeStatus = status;
             if (status == Geocode.NOT_SEARCHED && (Latitude != 0 || Longitude != 0))
                 status = Geocode.GEDCOM_USER;
         }
@@ -415,9 +419,9 @@ namespace FTAnalyzer
                 //    Console.WriteLine("Debug : '" + before + "'  converted to '" + after + "'");
             }
         }
-        #endregion
+#endregion
 
-        #region Static Functions
+#region Static Functions
         public static FactLocation GetLocation(string place, bool addLocation = true)
         {
             return GetLocation(place, string.Empty, string.Empty, Geocode.NOT_SEARCHED, addLocation);
@@ -1088,19 +1092,19 @@ namespace FTAnalyzer
 
         public virtual int CompareTo(FactLocation that, int level)
         {
-            int res = this.Country.CompareTo(that.Country);
+            int res = Country.CompareTo(that.Country);
             if (res == 0 && level > COUNTRY)
             {
-                res = this.Region.CompareTo(that.Region);
+                res = Region.CompareTo(that.Region);
                 if (res == 0 && level > REGION)
                 {
-                    res = this.SubRegion.CompareTo(that.SubRegion);
+                    res = SubRegion.CompareTo(that.SubRegion);
                     if (res == 0 && level > SUBREGION)
                     {
-                        res = this.AddressNumeric.CompareTo(that.AddressNumeric);
+                        res = AddressNumeric.CompareTo(that.AddressNumeric);
                         if (res == 0 && level > ADDRESS)
                         {
-                            res = this.PlaceNumeric.CompareTo(that.PlaceNumeric);
+                            res = PlaceNumeric.CompareTo(that.PlaceNumeric);
                         }
                     }
                 }
@@ -1114,22 +1118,19 @@ namespace FTAnalyzer
             return fixedLocation;
         }
 
-        public override bool Equals(Object that)
+        public override bool Equals(Object obj)
         {
-            if (that is FactLocation)
+            if (obj is FactLocation)
             {
-                return this.CompareTo((FactLocation)that) == 0 ? true : false;
+                return CompareTo((FactLocation)obj) == 0;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         public static bool operator ==(FactLocation a, FactLocation b)
         {
             // If both are null, or both are same instance, return true.
-            if (System.Object.ReferenceEquals(a, b))
+            if (object.ReferenceEquals(a, b))
             {
                 return true;
             }
