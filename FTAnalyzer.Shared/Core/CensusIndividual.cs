@@ -70,7 +70,7 @@ namespace FTAnalyzer
             }
         }
 
-#if !__MACOS__
+#if __PC__
         public System.Windows.Forms.DataGridViewCellStyle CellStyle { get; set; }
 #endif
 

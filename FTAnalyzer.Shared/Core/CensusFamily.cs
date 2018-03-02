@@ -17,22 +17,22 @@ namespace FTAnalyzer
         public CensusFamily(Family f, CensusDate censusDate)
             : base(f)
         {
-            this.BaseFamily = f;
+            BaseFamily = f;
             FamilyTree ft = FamilyTree.Instance;
-            this.CensusDate = censusDate;
-            this.BestLocation = null;
+            CensusDate = censusDate;
+            BestLocation = null;
             int position = 1;
             if (f.Wife != null)
-                this.Wife = new CensusIndividual(position++, f.Wife, this, CensusIndividual.WIFE);
+                Wife = new CensusIndividual(position++, f.Wife, this, CensusIndividual.WIFE);
             if (f.Husband != null)
-                this.Husband = new CensusIndividual(position++, f.Husband, this, CensusIndividual.HUSBAND);
-            this.Children = new List<CensusIndividual>();
+                Husband = new CensusIndividual(position++, f.Husband, this, CensusIndividual.HUSBAND);
+            Children = new List<CensusIndividual>();
             foreach (Individual child in f.Children)
             {
                 CensusIndividual toAdd = new CensusIndividual(position++, child, this, CensusIndividual.CHILD);
-                this.Children.Add(toAdd);
+                Children.Add(toAdd);
             }
-            this.FamilyChildren = new List<CensusIndividual>(Children); // Family children is all children alive or dead at census date
+            FamilyChildren = new List<CensusIndividual>(Children); // Family children is all children alive or dead at census date
         }
 
         public new IEnumerable<CensusIndividual> Members
@@ -49,11 +49,11 @@ namespace FTAnalyzer
         public bool Process(CensusDate censusDate, bool censusDone, bool checkCensus)
         {
             bool result = false;
-            this.CensusDate = censusDate;
+            CensusDate = censusDate;
             List<Fact> facts = new List<Fact>();
             if (IsValidFamily())
             {
-                if (IsValidIndividual(this.Wife, censusDone, true, checkCensus))
+                if (IsValidIndividual(Wife, censusDone, true, checkCensus))
                 {
                     result = true;
                     facts.AddRange(Wife.PersonalFacts);
@@ -74,7 +74,7 @@ namespace FTAnalyzer
                 Fact marriage = GetPreferredFact(Fact.MARRIAGE);
                 if (marriage != null)
                     facts.Add(marriage);
-                List<CensusIndividual> censusChildren = new List<CensusIndividual>();
+                var censusChildren = new List<CensusIndividual>();
                 // sort children oldest first
                 Children.Sort(new CensusAgeComparer());
                 foreach (CensusIndividual child in Children)
@@ -90,7 +90,7 @@ namespace FTAnalyzer
                     }
                 }
                 Children = censusChildren;
-                this.BestLocation = FactLocation.BestLocation(facts, censusDate);
+                BestLocation = FactLocation.BestLocation(facts, censusDate);
             }
             return result;
         }

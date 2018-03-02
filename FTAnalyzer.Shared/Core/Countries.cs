@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-#if !__MACOS__
+#if __PC__
 using GeoAPI.Geometries;
 #endif
 
@@ -93,14 +93,14 @@ namespace FTAnalyzer
             SCOTLAND, ENGLAND, WALES, ENG_WALES, UNITED_KINGDOM, UNITED_STATES, CANADA, ISLE_OF_MAN, IRELAND, CHANNEL_ISLANDS, OVERSEAS_UK
         });
 
-#if !__MACOS__
+#if __PC__
         private static Dictionary<string, Envelope> BOUNDING_BOXES;
         private static Envelope WHOLE_WORLD = new Envelope(-180, 180, -90, 90);
 #endif
 
         static Countries()
         {   // generate position at http://imeasuremap.com/?e=57.4552937099324,-4.98779296874996:0::rectangle:0
-#if !__MACOS__
+#if __PC__
             BOUNDING_BOXES = new Dictionary<string, Envelope>
             {
                 { SCOTLAND, new Envelope(-7.974074, -0.463426, 54.571547, 60.970872) },
@@ -144,7 +144,7 @@ namespace FTAnalyzer
             return country.Equals(ENG_WALES) || country.Equals(ENGLAND) || country.Equals(WALES) || country.Equals(ISLE_OF_MAN) || country.Equals(CHANNEL_ISLANDS) || country.Equals(OVERSEAS_UK);
         }
 
-#if !__MACOS__
+#if __PC__
         public static Envelope BoundingBox(string country)
         {
             if (BOUNDING_BOXES.ContainsKey(country))

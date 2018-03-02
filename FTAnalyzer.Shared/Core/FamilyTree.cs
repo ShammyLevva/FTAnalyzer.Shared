@@ -198,7 +198,7 @@ namespace FTAnalyzer
             ResetLooseFacts();
             duplicates = null;
             ClearLocations();
-#if !__MACOS__
+#if __PC__
             TreeViewHandler.Instance.ResetData();
 #endif
             noteNodes = null;
@@ -371,7 +371,7 @@ namespace FTAnalyzer
 
         public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
         {
-#if !__MACOS__
+#if __PC__
             try
             {
                 DatabaseHelper.Instance.LoadGeoLocations();
@@ -1499,7 +1499,7 @@ namespace FTAnalyzer
             return new SortableBindingList<Individual>(occupations[job]);
         }
 
-#if !__MACOS__
+#if __PC__
         public List<IDisplayColourCensus> ColourCensus(string country, Controls.RelationTypes relType, string surname, ComboBoxFamily family)
         {
             Predicate<Individual> filter;

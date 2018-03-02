@@ -53,7 +53,7 @@ namespace FTAnalyzer
         public string FoundResultType { get; set; }
         public int FoundLevel { get; set; }
         public double PixelSize { get; set; }
-#if !__MACOS__
+#if __PC__
         public Mapping.GeoResponse.CResult.CGeometry.CViewPort ViewPort { get; set; }
 #endif
         private List<Individual> individuals;
@@ -324,7 +324,7 @@ namespace FTAnalyzer
             this.FoundLocation = string.Empty;
             this.FoundResultType = string.Empty;
             this.FoundLevel = -2;
-#if !__MACOS__
+#if __PC__
             this.ViewPort = new Mapping.GeoResponse.CResult.CGeometry.CViewPort();
 #endif
         }
@@ -334,7 +334,7 @@ namespace FTAnalyzer
         {
             this.Latitude = double.TryParse(latitude, out double temp) ? temp : 0;
             this.Longitude = double.TryParse(longitude, out temp) ? temp : 0;
-#if !__MACOS__
+#if __PC__
             GeoAPI.Geometries.Coordinate point = new GeoAPI.Geometries.Coordinate(Longitude, Latitude);
             GeoAPI.Geometries.Coordinate mpoint = Mapping.MapTransforms.TransformCoordinate(point);
 
@@ -483,7 +483,7 @@ namespace FTAnalyzer
 
         private static void SaveLocationToDatabase(FactLocation loc)
         {
-#if !__MACOS__
+#if __PC__
             loc.GeocodeStatus = FactLocation.Geocode.GEDCOM_USER;
             loc.FoundLocation = string.Empty;
             loc.FoundLevel = -2;
@@ -566,7 +566,7 @@ namespace FTAnalyzer
             to.Longitude = from.Longitude;
             to.LatitudeM = from.LatitudeM;
             to.LongitudeM = from.LongitudeM;
-#if !__MACOS__
+#if __PC__
             to.ViewPort.NorthEast.Lat = from.ViewPort.NorthEast.Lat;
             to.ViewPort.NorthEast.Long = from.ViewPort.NorthEast.Long;
             to.ViewPort.SouthWest.Lat = from.ViewPort.SouthWest.Lat;
@@ -874,7 +874,7 @@ namespace FTAnalyzer
             get { return new string[] { Country, Region, SubRegion, Address, Place }; }
         }
 
-#if !__MACOS__
+#if __PC__
         public System.Drawing.Image Icon
         {
             get { return FactLocationImage.ErrorIcon(GeocodeStatus).Icon; }

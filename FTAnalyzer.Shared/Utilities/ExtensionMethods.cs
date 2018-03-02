@@ -5,7 +5,7 @@ namespace FTAnalyzer.Utilities
 {
     public static class ExtensionMethods
     {
-#if !__MACOS__
+#if __PC__
         public static void DoubleBuffered(this System.Windows.Forms.DataGridView dgv, bool setting)
         {
             Type dgvType = dgv.GetType();

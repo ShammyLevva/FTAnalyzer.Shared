@@ -9,7 +9,7 @@
         string Place { get; }
         double Latitude { get; }
         double Longitude { get; }
-#if !__MACOS__
+#if __PC__
         System.Drawing.Image Icon { get; }
 #endif
         string Geocoded { get; }

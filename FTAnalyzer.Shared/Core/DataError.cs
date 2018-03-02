@@ -5,7 +5,7 @@
         public DataError(int errorType, Fact.FactError errorLevel, Individual ind, string description)
         {
             ErrorType = DataErrorGroup.ErrorDescription(errorType);
-#if !__MACOS__
+#if __PC__
             Icon = FactImage.ErrorIcon(errorLevel).Icon;
 #endif
             individual = ind;
@@ -25,7 +25,7 @@
         private Individual individual;
         private Family family;
 
-#if !__MACOS__
+#if __PC__
         public System.Drawing.Image Icon { get; private set; }
 #endif
         public string ErrorType { get; private set; }
