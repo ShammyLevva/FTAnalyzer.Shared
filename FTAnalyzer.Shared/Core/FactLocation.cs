@@ -1,4 +1,4 @@
-using FTAnalyzer.Utilities;
+﻿using FTAnalyzer.Utilities;
 using FTAnalyzer.Properties;
 using System;
 using System.Collections.Generic;
@@ -87,7 +87,7 @@ namespace FTAnalyzer
             // load conversions from XML file
             #region Fact Location Fixes
             if (startPath == null) return;
-#if __MACOS__
+#if (__MACOS__ || __IOS__)
             string filename = Path.Combine(startPath, @"../Resources/FactLocationFixes.xml");
 #else
             string filename = Path.Combine(startPath, @"Resources\FactLocationFixes.xml");
@@ -1040,7 +1040,7 @@ namespace FTAnalyzer
             // remaining options return false ie: Geocode.OUT_OF_BOUNDS, Geocode.NO_MATCH, Geocode.NOT_SEARCHED, Geocode.INCORRECT
         }
 
-        static Regex numericFix = new Regex("\\d+[A-Za-z�]?", RegexOptions.Compiled);
+        static Regex numericFix = new Regex("\\d+[A-Za-z絔?", RegexOptions.Compiled);
 
         private string FixNumerics(string addressField, bool returnNumber)
         {

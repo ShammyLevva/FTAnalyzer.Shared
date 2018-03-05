@@ -1735,7 +1735,7 @@ namespace FTAnalyzer
                     }
                     #endregion
                 }
-#if __MACOS__
+#if (__MACOS__ || __IOS__)
                 catch (Exception)
                 {
                     catchCount++;
@@ -1771,7 +1771,7 @@ namespace FTAnalyzer
                         }
                     }
                 }
-#if __MACOS__
+#if (__MACOS__ || __IOS__)
                 catch (Exception)
                 {
                     catchCount++;

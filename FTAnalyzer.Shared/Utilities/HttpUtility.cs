@@ -573,6 +573,15 @@ namespace System.Web
                     InformativeText = message
                 };
                 alert.RunModal();
+#elif __IOS__
+                var alert = new UIKit.UIAlertView
+                {
+                    Title = "FTAnalyzer",
+                    Message = message,
+
+                };
+                alert.AddButton("OK");
+                alert.Show();
 #else
                 System.Windows.MessageBox.Show(message, "FTAnalyzer");
 #endif
