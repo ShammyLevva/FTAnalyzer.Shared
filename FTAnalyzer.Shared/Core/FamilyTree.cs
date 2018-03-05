@@ -1494,6 +1494,24 @@ namespace FTAnalyzer
             }
         }
 
+        public SortableBindingList<IDisplayFact> AllDisplayFacts
+        {
+            get
+            {
+                SortableBindingList<IDisplayFact> result = new SortableBindingList<IDisplayFact>();
+
+                foreach (Individual ind in individuals)
+                {
+                    foreach (Fact f in ind.PersonalFacts)
+                        result.Add(new DisplayFact(ind, f));
+                    foreach (Family fam in ind.FamiliesAsParent)
+                        foreach (Fact famfact in fam.Facts)
+                            result.Add(new DisplayFact(ind, famfact));
+                }
+                return result;
+            }
+        }
+
         public SortableBindingList<Individual> AllWorkers(string job)
         {
             return new SortableBindingList<Individual>(occupations[job]);
