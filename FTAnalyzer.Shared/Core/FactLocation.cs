@@ -1040,7 +1040,7 @@ namespace FTAnalyzer
             // remaining options return false ie: Geocode.OUT_OF_BOUNDS, Geocode.NO_MATCH, Geocode.NOT_SEARCHED, Geocode.INCORRECT
         }
 
-        static Regex numericFix = new Regex("\\d+[A-Za-z絔?", RegexOptions.Compiled);
+        static Regex numericFix = new Regex("\\d+[A-Za-z]?", RegexOptions.Compiled);
 
         private string FixNumerics(string addressField, bool returnNumber)
         {
