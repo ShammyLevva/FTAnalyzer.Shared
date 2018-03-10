@@ -15,6 +15,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Diagnostics.Contracts;
 
 namespace FTAnalyzer
 {
@@ -633,8 +634,7 @@ namespace FTAnalyzer
                 {
                     c.Infamily = true;
                     c.ReferralFamilyID = f.FamilyID;
-                    if (f.Husband != null || f.Wife != null)
-                        c.HasParents = true;
+                    c.HasParents = (f.Husband != null || f.Wife != null);
                 }
             }
             foreach (Individual ind in individuals)
@@ -1090,11 +1090,10 @@ namespace FTAnalyzer
                 return minDeath;
             if (deathDateType == FactDate.FactDateType.BEF && minDeath != FactDate.MAXDATE)
                 return minDeath;
-            else
-                return deathDate.EndDate;
+            return deathDate.EndDate;
         }
 
-        private void CheckLooseMarriage(Individual ind)
+        void CheckLooseMarriage(Individual ind)
         {
 
         }
@@ -1174,10 +1173,10 @@ namespace FTAnalyzer
             }
         }
 
-        private void AddChildrenToQueue(Individual indiv, Queue<Individual> queue, bool isRootPerson)
+        void AddChildrenToQueue(Individual indiv, Queue<Individual> queue, bool isRootPerson)
         {
-            IEnumerable<Family> families = indiv.FamiliesAsParent;
-            foreach (Family family in families)
+            IEnumerable<Family> parentFamilies = indiv.FamiliesAsParent;
+            foreach (Family family in parentFamilies)
             {
                 foreach (Individual child in family.Children)
                 {
@@ -1207,7 +1206,7 @@ namespace FTAnalyzer
             ind.RelationType = Individual.DIRECT;
             ind.Ahnentafel = 1;
             maxAhnentafel = 1;
-            Queue<Individual> queue = new Queue<Individual>();
+            var queue = new Queue<Individual>();
             queue.Enqueue(ind);
             while (queue.Count > 0)
             {
@@ -1232,8 +1231,8 @@ namespace FTAnalyzer
             {
                 // get the next person
                 ind = queue.Dequeue();
-                IEnumerable<Family> families = ind.FamiliesAsParent;
-                foreach (Family family in families)
+                var parentFamilies = ind.FamiliesAsParent;
+                foreach (Family family in parentFamilies)
                 {
                     // if the spouse of a direct ancestor is not a direct
                     // ancestor then they are only related by marriage
@@ -2206,7 +2205,7 @@ namespace FTAnalyzer
             return @"http://www.awin1.com/cread.php?awinmid=2114&awinaffid=88963&clickref=FTACensusSearch&p=" + uri.ToString();
         }
 
-#endregion
+        #endregion
 
         #region Birth/Marriage/Death Searching
 
