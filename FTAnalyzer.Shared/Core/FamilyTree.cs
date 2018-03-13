@@ -1539,7 +1539,7 @@ namespace FTAnalyzer
                     dateFilter = i => ((i.BirthDate.StartsBefore(CensusDate.IRELANDCENSUS1911) || !i.BirthDate.IsKnown) &&
                                                          (i.DeathDate.EndsAfter(CensusDate.IRELANDCENSUS1901) || !i.DeathDate.IsKnown));
                 else
-                    dateFilter = i => ((i.BirthDate.StartsBefore(CensusDate.UKCENSUS1911) || !i.BirthDate.IsKnown) &&
+                    dateFilter = i => ((i.BirthDate.StartsBefore(CensusDate.UKCENSUS1939) || !i.BirthDate.IsKnown) &&
                                                          (i.DeathDate.EndsAfter(CensusDate.UKCENSUS1841) || !i.DeathDate.IsKnown));
                 filter = FilterUtils.AndFilter<Individual>(filter, dateFilter, x => x.AliveOnAnyCensus(country) && !x.OutOfCountryOnAllCensus(country));
             }
