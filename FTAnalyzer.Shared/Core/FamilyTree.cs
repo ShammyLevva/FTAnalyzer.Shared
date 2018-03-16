@@ -22,31 +22,31 @@ namespace FTAnalyzer
     public class FamilyTree
     {
         #region Variables
-        private static FamilyTree instance;
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        static FamilyTree instance;
+        static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IList<FactSource> sources;
-        private IList<Individual> individuals;
-        private IList<Family> families;
-        private IList<Tuple<string, Fact>> sharedFacts;
-        private IDictionary<string, List<Individual>> occupations;
-        private IDictionary<StandardisedName, StandardisedName> names;
-        private ISet<string> unknownFactTypes;
-        private IList<DataErrorGroup> dataErrorTypes;
-        private SortableBindingList<IDisplayLocation>[] displayLocations;
-        private SortableBindingList<IDisplayLooseDeath> looseDeaths;
-        private SortableBindingList<IDisplayLooseBirth> looseBirths;
-        private SortableBindingList<DuplicateIndividual> duplicates;
-        private static int DATA_ERROR_GROUPS = 23;
-        private static XmlNodeList noteNodes = null;
-        private bool _loading = false;
-        private bool _dataloaded = false;
-        private Int64 maxAhnentafel = 0;
-        private Dictionary<string, Individual> individualLookup;
-        private string rootIndividualID = string.Empty;
+        IList<FactSource> sources;
+        IList<Individual> individuals;
+        IList<Family> families;
+        IList<Tuple<string, Fact>> sharedFacts;
+        IDictionary<string, List<Individual>> occupations;
+        IDictionary<StandardisedName, StandardisedName> names;
+        ISet<string> unknownFactTypes;
+        IList<DataErrorGroup> dataErrorTypes;
+        SortableBindingList<IDisplayLocation>[] displayLocations;
+        SortableBindingList<IDisplayLooseDeath> looseDeaths;
+        SortableBindingList<IDisplayLooseBirth> looseBirths;
+        SortableBindingList<DuplicateIndividual> duplicates;
+        static int DATA_ERROR_GROUPS = 23;
+        static XmlNodeList noteNodes = null;
+        bool _loading = false;
+        bool _dataloaded = false;
+        Int64 maxAhnentafel = 0;
+        Dictionary<string, Individual> individualLookup;
+        string rootIndividualID = string.Empty;
 
-        private int SoloFamilies { get; set; }
-        private int PreMarriageFamilies { get; set; }
+        int SoloFamilies { get; set; }
+        int PreMarriageFamilies { get; set; }
         public bool Geocoding { get; set; }
         public List<NonDuplicate> NonDuplicates { get; private set; }
         #endregion
@@ -225,7 +225,12 @@ namespace FTAnalyzer
             _loading = true;
             ResetData();
             rootIndividualID = string.Empty;
-            outputText.Report("Loading file " + filename + "\n");
+#if __IOS__
+            string file = HttpUtility.UrlDecode(Path.GetFileName(filename));
+            outputText.Report(string.Format("Loading file {0}\n", file));
+#else
+            outputText.Report(string.Format("Loading file {0}\n", filename));
+#endif
             XmlDocument doc = GedcomToXml.Load(filename, Encoding.UTF8, outputText);
             if (doc == null)
             {
@@ -238,7 +243,7 @@ namespace FTAnalyzer
             XmlNode header = doc.SelectSingleNode("GED/HEAD");
             if (header == null)
             {
-                outputText.Report("\n\nUnable to find GEDCOM 'HEAD' record in first line of file aborting load.\nIs " + filename + " really a GEDCOM file");
+                outputText.Report(string.Format("\n\nUnable to find GEDCOM 'HEAD' record in first line of file aborting load.\nIs {0} really a GEDCOM file", filename));
                 return null;
             }
             XmlNode charset = doc.SelectSingleNode("GED/HEAD/CHAR");
@@ -645,9 +650,9 @@ namespace FTAnalyzer
             if (SoloFamilies > 0)
                 outputText.Report("Added " + SoloFamilies + " lone individuals as single families.\n");
         }
-        #endregion
+#endregion
 
-        #region Properties
+#region Properties
 
         public bool Loading { get { return _loading; } }
 
@@ -692,9 +697,9 @@ namespace FTAnalyzer
         public string NextSoloFamily { get { return "SF" + ++SoloFamilies; } }
 
         public string NextPreMarriageFamily { get { return "PM" + ++PreMarriageFamilies; } }
-        #endregion
+#endregion
 
-        #region Property Functions
+#region Property Functions
 
         public IEnumerable<Individual> GetAllRelationsOfType(int relationType)
         {
@@ -788,9 +793,9 @@ namespace FTAnalyzer
                 ind.SetFullName();
             }
         }
-        #endregion
+#endregion
 
-        #region Loose Births
+#region Loose Births
 
         public SortableBindingList<IDisplayLooseBirth> LooseBirths()
         {
@@ -960,9 +965,9 @@ namespace FTAnalyzer
                 return FactDate.UNKNOWN_DATE;
         }
 
-        #endregion
+#endregion
 
-        #region Loose Deaths
+#region Loose Deaths
 
         public SortableBindingList<IDisplayLooseDeath> LooseDeaths()
         {
@@ -1098,27 +1103,27 @@ namespace FTAnalyzer
 
         }
 
-        #endregion
+#endregion
 
-        #region TreeTops
+#region TreeTops
 
         public IEnumerable<IDisplayIndividual> GetTreeTops(Predicate<Individual> filter)
         {
             return individuals.Filter(ind => !ind.HasParents && filter(ind));
         }
 
-        #endregion
+#endregion
 
-        #region WorldWars
+#region WorldWars
 
         public IEnumerable<IDisplayIndividual> GetWorldWars(Predicate<Individual> filter)
         {
             return individuals.Filter(ind => ind.IsMale && filter(ind));
         }
 
-        #endregion
+#endregion
 
-        #region Relationship Functions
+#region Relationship Functions
 
         private void ClearRelations()
         {
@@ -1323,9 +1328,9 @@ namespace FTAnalyzer
             return sb.ToString();
         }
 
-        #endregion
+#endregion
 
-        #region Displays
+#region Displays
 
         public IEnumerable<CensusFamily> GetAllCensusFamilies(CensusDate censusDate, bool censusDone, bool checkCensus)
         {
@@ -1582,9 +1587,9 @@ namespace FTAnalyzer
             return individuals.Filter(filter).ToList<IDisplayMissingData>();
         }
 #endif
-        #endregion
+#endregion
 
-        #region Data Errors
+#region Data Errors
 
         private void SetDataErrorTypes()
         {
@@ -1594,12 +1599,12 @@ namespace FTAnalyzer
             for (int i = 0; i < DATA_ERROR_GROUPS; i++)
                 errors[i] = new List<DataError>();
             // calculate error lists
-            #region Individual Fact Errors
+#region Individual Fact Errors
             foreach (Individual ind in AllIndividuals)
             {
                 try
                 {
-                    #region Death facts
+#region Death facts
                     if (ind.DeathDate.IsKnown)
                     {
                         if (ind.BirthDate.IsAfter(ind.DeathDate))
@@ -1614,8 +1619,8 @@ namespace FTAnalyzer
                         if (ind.IsFlaggedAsLiving)
                             errors[(int)Dataerror.LIVING_WITH_DEATH_DATE].Add(new DataError((int)Dataerror.LIVING_WITH_DEATH_DATE, ind, "Flagged as living but has death date of " + ind.DeathDate));
                     }
-                    #endregion
-                    #region Error facts
+#endregion
+#region Error facts
                     foreach (Fact f in ind.ErrorFacts)
                     {
                         bool added = false;
@@ -1669,8 +1674,8 @@ namespace FTAnalyzer
                         if (!added)
                             errors[(int)Dataerror.FACT_ERROR].Add(new DataError((int)Dataerror.FACT_ERROR, f.FactErrorLevel, ind, f.FactErrorMessage));
                     }
-                    #endregion
-                    #region All Facts
+#endregion
+#region All Facts
                     foreach (Fact f in ind.AllFacts)
                     {
                         if (FactBeforeBirth(ind, f))
@@ -1692,8 +1697,8 @@ namespace FTAnalyzer
                             }
                         }
                     }
-                    #endregion
-                    #region Parents Facts
+#endregion
+#region Parents Facts
                     foreach (ParentalRelationship parents in ind.FamiliesAsChild)
                     {
                         Family asChild = parents.Family;
@@ -1750,7 +1755,7 @@ namespace FTAnalyzer
                             //}
                         }
                     }
-                    #endregion
+#endregion
                 }
 #if (__MACOS__ || __IOS__)
                 catch (Exception)
@@ -1768,8 +1773,8 @@ namespace FTAnalyzer
                 }
 #endif
             }
-            #endregion
-            #region Family Fact Errors
+#endregion
+#region Family Fact Errors
             catchCount = 0;
             foreach (Family fam in AllFamilies)
             {
@@ -1844,7 +1849,7 @@ namespace FTAnalyzer
 
 #endregion
 
-        #region Census Searching
+#region Census Searching
 
         public void SearchCensus(string censusCountry, int censusYear, Individual person, int censusProvider)
         {
@@ -2205,9 +2210,9 @@ namespace FTAnalyzer
             return @"http://www.awin1.com/cread.php?awinmid=2114&awinaffid=88963&clickref=FTACensusSearch&p=" + uri.ToString();
         }
 
-        #endregion
+#endregion
 
-        #region Birth/Marriage/Death Searching
+#region Birth/Marriage/Death Searching
 
         public enum SearchType { BIRTH = 0, MARRIAGE = 1, DEATH = 2 };
 
@@ -2434,7 +2439,7 @@ namespace FTAnalyzer
 
 #endregion
 
-        #region Geocoding
+#region Geocoding
 
         public void WriteGeocodeStatstoRTB(string title, IProgress<string> outputText)
         {
@@ -2468,7 +2473,7 @@ namespace FTAnalyzer
 
 #endregion
 
-        #region Relationship Groups
+#region Relationship Groups
         public List<Individual> GetFamily(Individual startIndividiual)
         {
             List<Individual> results = new List<Individual>();
@@ -2550,7 +2555,7 @@ namespace FTAnalyzer
         }
 #endregion
 
-        #region Duplicates Processing
+#region Duplicates Processing
         int duplicateProgress = 0;
         int progressMaximum = 0;
 
@@ -2694,7 +2699,7 @@ namespace FTAnalyzer
         }
 #endregion
 
-        #region Report Issues
+#region Report Issues
         public HashSet<string> UnrecognisedCensusReferences()
         {
             var result = new HashSet<string>();
@@ -2723,7 +2728,7 @@ namespace FTAnalyzer
         }
 #endregion
 
-        #region Today
+#region Today
         public void AddTodaysFacts(DateTime chosenDate, bool wholeMonth, int stepSize, IProgress<int> progress, IProgress<string> outputText)
         {
             string dateDesc;
