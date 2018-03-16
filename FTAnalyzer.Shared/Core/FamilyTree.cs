@@ -220,11 +220,12 @@ namespace FTAnalyzer
                 unknownFactTypes.Add(factType);
         }
 
-        public XmlDocument LoadTreeHeader(MemoryStream stream, IProgress<string> outputText)
+        public XmlDocument LoadTreeHeader(string filename, MemoryStream stream, IProgress<string> outputText)
         {
             _loading = true;
             ResetData();
             rootIndividualID = string.Empty;
+            outputText.Report(string.Format("Loading file {0}\n", filename));
             XmlDocument doc = GedcomToXml.Load(stream, outputText);
             if (doc != null)
             {
