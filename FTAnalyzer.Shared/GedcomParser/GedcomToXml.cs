@@ -10,10 +10,27 @@ namespace FTAnalyzer
 {
     class GedcomToXml
     {
-        private static readonly Encoding isoWesternEuropean = Encoding.GetEncoding(28591);
+        static readonly Encoding isoWesternEuropean = Encoding.GetEncoding(28591);
 
-        public static XmlDocument Load(string path, IProgress<string> outputText) { return Load(path, isoWesternEuropean, outputText); }
-        public static XmlDocument Load(string path, Encoding encoding, IProgress<string> outputText)
+        public static XmlDocument Load(MemoryStream stream, IProgress<string> outputText)
+        {
+            var reader = new StreamReader(stream);
+            if (FileHandling.Default.LoadWithFilters)
+            {
+                if (FileHandling.Default.RetryFailedLines)
+                    reader = new AnselInputStreamReader(CheckInvalidCR(stream));
+                else
+                    reader = new AnselInputStreamReader(stream);
+            }
+            if (FileHandling.Default.RetryFailedLines)
+                reader = new StreamReader(CheckInvalidCR(stream));
+            else
+                reader = new StreamReader(stream);
+            return Parse(reader, outputText);
+        }
+
+        public static XmlDocument LoadFile(string path, IProgress<string> outputText) { return LoadFile(path, isoWesternEuropean, outputText); }
+        public static XmlDocument LoadFile(string path, Encoding encoding, IProgress<string> outputText)
         {
             StreamReader reader;
             if (FileHandling.Default.LoadWithFilters)
@@ -30,13 +47,13 @@ namespace FTAnalyzer
             return Parse(reader, outputText);
         }
 
-        private static MemoryStream CheckInvalidLineEnds(string path)
+        static MemoryStream CheckInvalidLineEnds(string path)
         {
             FileStream infs = new FileStream(path, FileMode.Open, FileAccess.Read);
             return CheckInvalidCR(infs);
         }
 
-        private static MemoryStream CheckInvalidCR(FileStream infs)
+        static MemoryStream CheckInvalidCR(Stream infs)
         {
             MemoryStream outfs = new MemoryStream();
             long streamLength = infs.Length;
@@ -142,9 +159,9 @@ namespace FTAnalyzer
                             token1 = FirstWord(line);
                             line = Remainder(line);
 
-                            if (token1.StartsWith("@"))
+                            if (token1.StartsWith("@", StringComparison.Ordinal))
                             {
-                                if (token1.Length == 1 || !token1.EndsWith("@"))
+                                if (token1.Length == 1 || !token1.EndsWith("@", StringComparison.Ordinal))
                                     throw new Exception("Bad xref_id");
 
                                 iden = token1.Substring(1, token1.Length - 2);
@@ -158,14 +175,14 @@ namespace FTAnalyzer
                             }
 
                             xref = "";
-                            if (line.StartsWith("@"))
+                            if (line.StartsWith("@", StringComparison.Ordinal))
                             {
                                 if (!token1.Equals("CONT") && !token1.Equals("CONC"))
                                 {
                                     token2 = FirstWord(line);
-                                    if (token2.Length == 1 || (!token2.EndsWith("@") && !token2.EndsWith("@,")))
+                                    if (token2.Length == 1 || (!token2.EndsWith("@", StringComparison.Ordinal) && !token2.EndsWith("@,", StringComparison.Ordinal)))
                                         throw new Exception("Bad pointer value");
-                                    if (token2.EndsWith("@,"))
+                                    if (token2.EndsWith("@,", StringComparison.Ordinal))
                                         xref = token2.Substring(1, token2.Length - 3);
                                     else
                                         xref = token2.Substring(1, token2.Length - 2);

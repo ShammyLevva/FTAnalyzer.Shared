@@ -220,21 +220,30 @@ namespace FTAnalyzer
                 unknownFactTypes.Add(factType);
         }
 
+        public XmlDocument LoadTreeHeader(MemoryStream stream, IProgress<string> outputText)
+        {
+            _loading = true;
+            ResetData();
+            rootIndividualID = string.Empty;
+            XmlDocument doc = GedcomToXml.Load(stream, outputText);
+            if (doc != null)
+            {
+                ReportOptions(outputText);
+                SetRootIndividual(doc);
+            }
+            return doc;
+        }
+
         public XmlDocument LoadTreeHeader(string filename, IProgress<string> outputText)
         {
             _loading = true;
             ResetData();
             rootIndividualID = string.Empty;
-#if __IOS__
-            string file = HttpUtility.UrlDecode(Path.GetFileName(filename));
-            outputText.Report(string.Format("Loading file {0}\n", file));
-#else
             outputText.Report(string.Format("Loading file {0}\n", filename));
-#endif
-            XmlDocument doc = GedcomToXml.Load(filename, Encoding.UTF8, outputText);
+            XmlDocument doc = GedcomToXml.LoadFile(filename, Encoding.UTF8, outputText);
             if (doc == null)
             {
-                doc = GedcomToXml.Load(filename, outputText);
+                doc = GedcomToXml.LoadFile(filename, outputText);
                 if (doc == null)
                     return null;
             }
@@ -248,14 +257,20 @@ namespace FTAnalyzer
             }
             XmlNode charset = doc.SelectSingleNode("GED/HEAD/CHAR");
             if (charset != null && charset.InnerText.Equals("ANSEL"))
-                doc = GedcomToXml.Load(filename, outputText);
+                doc = GedcomToXml.LoadFile(filename, outputText);
             if (charset != null && charset.InnerText.Equals("UNICODE"))
-                doc = GedcomToXml.Load(filename, Encoding.Unicode, outputText);
+                doc = GedcomToXml.LoadFile(filename, Encoding.Unicode, outputText);
             if (charset != null && charset.InnerText.Equals("ASCII"))
-                doc = GedcomToXml.Load(filename, Encoding.ASCII, outputText);
+                doc = GedcomToXml.LoadFile(filename, Encoding.ASCII, outputText);
             if (doc == null)
                 return null;
             ReportOptions(outputText);
+            SetRootIndividual(doc);
+            return doc;
+        }
+
+        void SetRootIndividual(XmlDocument doc)
+        {
             XmlNode root = doc.SelectSingleNode("GED/HEAD/_ROOT");
             if (root != null)
             {
@@ -267,7 +282,6 @@ namespace FTAnalyzer
                 catch (Exception)
                 { } // don't crash if can't set root individual
             }
-            return doc;
         }
 
         public void LoadTreeSources(XmlDocument doc, IProgress<int> progress, IProgress<string> outputText)
