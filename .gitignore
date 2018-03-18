@@ -297,3 +297,7 @@ __pycache__/
 *.btm.cs
 *.odx.cs
 *.xsd.cs
+FTAnalyzer.Shared/Core/FamilyTree_BASE_18756.cs
+FTAnalyzer.Shared/Core/FamilyTree_LOCAL_18756.cs
+FTAnalyzer.Shared/Core/FamilyTree_REMOTE_18756.cs
+FTAnalyzer.Shared/Core/FamilyTree_BACKUP_18756.cs
