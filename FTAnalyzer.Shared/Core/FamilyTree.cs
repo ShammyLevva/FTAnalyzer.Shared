@@ -15,7 +15,6 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Diagnostics.Contracts;
 
 namespace FTAnalyzer
 {
@@ -37,7 +36,7 @@ namespace FTAnalyzer
         SortableBindingList<IDisplayLooseDeath> looseDeaths;
         SortableBindingList<IDisplayLooseBirth> looseBirths;
         SortableBindingList<DuplicateIndividual> duplicates;
-        static int DATA_ERROR_GROUPS = 23;
+        static int DATA_ERROR_GROUPS = 25;
         static XmlNodeList noteNodes = null;
         bool _loading = false;
         bool _dataloaded = false;
@@ -191,7 +190,7 @@ namespace FTAnalyzer
             occupations = new Dictionary<string, List<Individual>>();
             names = new Dictionary<StandardisedName, StandardisedName>();
             unknownFactTypes = new HashSet<string>();
-            dataErrorTypes = new List<DataErrorGroup>();
+            DataErrorTypes = new List<DataErrorGroup>();
             displayLocations = new SortableBindingList<IDisplayLocation>[5];
             rootIndividualID = string.Empty;
             SoloFamilies = 0;
@@ -669,9 +668,8 @@ namespace FTAnalyzer
 
 #region Properties
 
-        public bool Loading { get { return _loading; } }
-
-        public bool DataLoaded { get { return _dataloaded; } }
+        public bool Loading => _loading;
+        public bool DataLoaded => _dataloaded;
 
         public List<ExportFact> AllExportFacts
         {
@@ -1609,7 +1607,7 @@ namespace FTAnalyzer
         private void SetDataErrorTypes()
         {
             int catchCount = 0;
-            dataErrorTypes = new List<DataErrorGroup>();
+            DataErrorTypes = new List<DataErrorGroup>();
             List<DataError>[] errors = new List<DataError>[DATA_ERROR_GROUPS];
             for (int i = 0; i < DATA_ERROR_GROUPS; i++)
                 errors[i] = new List<DataError>();
@@ -1827,10 +1825,10 @@ namespace FTAnalyzer
 #endregion
 
             for (int i = 0; i < DATA_ERROR_GROUPS; i++)
-                dataErrorTypes.Add(new DataErrorGroup(i, errors[i]));
+                DataErrorTypes.Add(new DataErrorGroup(i, errors[i]));
         }
 
-        public IList<DataErrorGroup> DataErrorTypes { get { return dataErrorTypes; } }
+        public IList<DataErrorGroup> DataErrorTypes { get => dataErrorTypes; private set => dataErrorTypes = value; }
 
         public bool FactBeforeBirth(Individual ind, Fact f)
         {
@@ -1859,7 +1857,8 @@ namespace FTAnalyzer
             AGED_MORE_THAN_110 = 8, FACTS_BEFORE_BIRTH = 9, FACTS_AFTER_DEATH = 10, MARRIAGE_AFTER_DEATH = 11,
             MARRIAGE_AFTER_SPOUSE_DEAD = 12, MARRIAGE_BEFORE_13 = 13, MARRIAGE_BEFORE_SPOUSE_13 = 14, LOST_COUSINS_NON_CENSUS = 15,
             LOST_COUSINS_NOT_SUPPORTED_YEAR = 16, RESIDENCE_CENSUS_DATE = 17, CENSUS_COVERAGE = 18, FACT_ERROR = 19,
-            UNKNOWN_FACT_TYPE = 20, LIVING_WITH_DEATH_DATE = 21, CHILDRENSTATUS_TOTAL_MISMATCH = 22
+            UNKNOWN_FACT_TYPE = 20, LIVING_WITH_DEATH_DATE = 21, CHILDRENSTATUS_TOTAL_MISMATCH = 22, DUPLICATE_FACT = 23, 
+            POSSIBLE_DUPLICATE_FACT = 24
         };
 
 #endregion

@@ -847,5 +847,18 @@ namespace FTAnalyzer
         {
             return FactTypeDescription + ": " + FactDate + (Location.ToString().Length > 0 ? " at " + Location : string.Empty) + (Comment.ToString().Length > 0 ? "  (" + Comment + ")" : string.Empty);
         }
+
+        public bool IsPossiblyEqual(Fact other)
+        {
+            if (FactType.Equals(other.FactType) && FactDate.Equals(other.FactDate))
+                return true; // possible duplicate as date and type are same
+            return false; // not a duplicate
+        }
+
+        public bool Equals(Fact other)
+        {
+            return FactType.Equals(other.FactType) && FactDate.Equals(other.FactDate) &&
+                Place.Equals(other.Place) && Comment.Equals(other.Comment) && Location.Equals(other.Location, other.Location.Level);
+        }
     }
 }

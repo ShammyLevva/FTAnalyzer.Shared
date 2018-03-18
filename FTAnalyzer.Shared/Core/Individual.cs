@@ -18,16 +18,17 @@ namespace FTAnalyzer
         public const string UNKNOWN_NAME = "UNKNOWN";
 
         public string IndividualID { get; private set; }
-        private string forenames;
-        private string surname;
-        private string marriedName;
-        private string fullname;
-        private string sortedname;
-        private string gender;
-        private string alias;
-        private int relationType;
-        private DoubleMetaphone surnameMetaphone;
-        private DoubleMetaphone forenameMetaphone;
+        string forenames;
+        string surname;
+        string marriedName;
+        string fullname;
+        string sortedname;
+        string gender;
+        string alias;
+        int relationType;
+        List<Fact> _allfacts;
+        DoubleMetaphone surnameMetaphone;
+        DoubleMetaphone forenameMetaphone;
         public string Notes { get; private set; }
         public string StandardisedName { get; private set; }
         public bool HasParents { get; set; }
@@ -75,6 +76,7 @@ namespace FTAnalyzer
             familiesAsChild = new List<ParentalRelationship>();
             familiesAsParent = new List<Family>();
             preferredFacts = new Dictionary<string, Fact>();
+            _allfacts = null;
         }
 
         public Individual(XmlNode node, IProgress<string> outputText)
@@ -245,15 +247,50 @@ namespace FTAnalyzer
             get { return this.errorFacts; }
         }
 
+        int _factcount = 0;
+
         public IList<Fact> AllFacts
         {
             get
             {
-                List<Fact> allfacts = new List<Fact>();
-                allfacts.AddRange(this.facts);
+                int currentFactCount = facts.Count + FamilyFacts.Count;
+                if (_allfacts == null || currentFactCount != _factcount)
+                {
+                    _allfacts = new List<Fact>();
+                    _allfacts.AddRange(facts);
+                    _allfacts.AddRange(FamilyFacts);
+                    _factcount = _allfacts.Count;
+                }
+                return _allfacts;
+            }
+        }
+
+        private IList<Fact> FamilyFacts
+        {
+            get
+            {
+                var familyfacts = new List<Fact>();
                 foreach (Family f in familiesAsParent)
-                    allfacts.AddRange(f.Facts);
-                return allfacts;
+                    familyfacts.AddRange(f.Facts);
+                return familyfacts;
+            }
+        }
+
+        public IList<Fact> DuplicateFacts
+        {
+            get
+            {
+                var duplicatefacts = new List<Fact>();
+                return duplicatefacts;
+            }
+        }
+
+        public IList<Fact> PossibleDuplicateFacts
+        {
+            get
+            {
+                var possibleDuplicatefacts = new List<Fact>();
+                return possibleDuplicatefacts;
             }
         }
 

@@ -27,7 +27,9 @@ namespace FTAnalyzer
                       "Fact warning/error detected",
                       "Unknown Fact Type",
                       "Flagged as living but has death date",
-                      "Children Status Total Mismatch"
+                      "Children Status Total Mismatch",
+                      "Duplicate Fact",
+                      "Possible Duplicate Fact"
                     };
 
         //"Later marriage before previous spouse died"
