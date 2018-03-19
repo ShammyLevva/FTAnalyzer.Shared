@@ -28,7 +28,7 @@ namespace FTAnalyzer
                 MILITARY = "_MILT", ELECTION = "_ELEC", DEGREE = "_DEG",
                 EMPLOYMENT = "_EMPLOY", MEDICAL_CONDITION = "_MDCL", NAME = "NAME",
                 CUSTOM_EVENT = "EVEN", CUSTOM_FACT = "FACT", SERVICE_NUMBER = "_MILTID",
-                REFERENCE = "REFN", UNKNOWN = "UNKN", ALIAS = "ALIA";
+                REFERENCE = "REFN", UNKNOWN = "UNKN", ALIAS = "ALIA", GENDER = "SEX";
 
         public const string CHILDLESS = "*CHILD", UNMARRIED = "*UNMAR", WITNESS = "*WITNE",
                 LOOSEDEATH = "*LOOSED", LOOSEBIRTH = "*LOOSEB", FAMILYSEARCH = "*IGI",
@@ -254,6 +254,7 @@ namespace FTAnalyzer
                 case REPORT: return "Fact Report";
                 case CUSTOM_EVENT: return "Event";
                 case WORLD_EVENT: return "World Event";
+                case GENDER: return "Gender";
                 case "": return "UNKNOWN";
                 default: return EnhancedTextInfo.ToTitleCase(factType);
             }
@@ -421,7 +422,7 @@ namespace FTAnalyzer
                 Comment = FamilyTree.GetNotes(node);
             if (Comment.IndexOf("ignore", StringComparison.OrdinalIgnoreCase) >= 0)
             {
-                this.FactErrorLevel = FactError.IGNORE;
+                FactErrorLevel = FactError.IGNORE;
                 return;
             }
             bool success = false;
@@ -510,12 +511,12 @@ namespace FTAnalyzer
         public Fact(string factRef, string factType, FactDate date, FactLocation loc, string comment = "", bool preferred = true, bool createdByFTA = false)
             : this(factRef, preferred)
         {
-            this.FactType = factType;
-            this.FactDate = date;
-            this.Comment = comment;
-            this.Created = createdByFTA;
-            this.Place = string.Empty;
-            this.Location = loc;
+            FactType = factType;
+            FactDate = date;
+            Comment = comment;
+            Created = createdByFTA;
+            Place = string.Empty;
+            Location = loc;
         }
 
         #endregion

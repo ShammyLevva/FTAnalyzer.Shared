@@ -30,7 +30,10 @@ namespace FTAnalyzer
                       "Children Status Total Mismatch",
                       "Duplicate Fact",
                       "Possible Duplicate Fact",
-                      "On 1939 Register no precise birthdate"
+                      "On 1939 Register no precise birthdate",
+                      "Male Wifes and Female Husbands",
+                      "Couples with same surnames",
+                      "Couples with over 15 years age gap"
                     };
 
         //"Later marriage before previous spouse died"

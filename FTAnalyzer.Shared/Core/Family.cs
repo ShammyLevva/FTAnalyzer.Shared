@@ -28,20 +28,20 @@ namespace FTAnalyzer
 
         private Family(string familyID)
         {
-            this.FamilyID = familyID;
-            this.Facts = new List<Fact>();
-            this.Children = new List<Individual>();
-            this.preferredFacts = new Dictionary<string, Fact>();
-            this.ExpectedTotal = 0;
-            this.ExpectedAlive = 0;
-            this.ExpectedDead = 0;
-            this.FamilyType = UNKNOWN;
+            FamilyID = familyID;
+            Facts = new List<Fact>();
+            Children = new List<Individual>();
+            preferredFacts = new Dictionary<string, Fact>();
+            ExpectedTotal = 0;
+            ExpectedAlive = 0;
+            ExpectedDead = 0;
+            FamilyType = UNKNOWN;
             if (familyID.Length>2)
             {
                 if (familyID.Substring(0, 2).Equals("SF"))
-                    this.FamilyType = SOLOINDIVIDUAL;
+                    FamilyType = SOLOINDIVIDUAL;
                 else if (familyID.Substring(0, 2).Equals("PM"))
-                    this.FamilyType = PRE_MARRIAGE;
+                    FamilyType = PRE_MARRIAGE;
             }
         }
 
@@ -54,17 +54,17 @@ namespace FTAnalyzer
             {
                 XmlNode eHusband = node.SelectSingleNode("HUSB");
                 XmlNode eWife = node.SelectSingleNode("WIFE");
-                this.FamilyID = node.Attributes["ID"].Value;
+                FamilyID = node.Attributes["ID"].Value;
                 string husbandID = eHusband == null || eHusband.Attributes["REF"] == null ? null : eHusband.Attributes["REF"].Value;
                 string wifeID = eWife == null || eWife.Attributes["REF"] == null ? null : eWife.Attributes["REF"].Value;
                 FamilyTree ft = FamilyTree.Instance;
-                this.Husband = ft.GetIndividual(husbandID);
-                this.Wife = ft.GetIndividual(wifeID);
+                Husband = ft.GetIndividual(husbandID);
+                Wife = ft.GetIndividual(wifeID);
                 if (Husband != null && Wife != null)
                     Wife.MarriedName = Husband.Surname;
-                if (Husband != null)
+                if(Husband !=null)
                     Husband.FamiliesAsParent.Add(this);
-                if (Wife != null)
+                if(Wife != null)
                     Wife.FamiliesAsParent.Add(this);
                 // now iterate through child elements of eChildren
                 // finding all individuals
@@ -78,10 +78,10 @@ namespace FTAnalyzer
                         {
                             XmlNode fatherNode = node.SelectSingleNode("CHIL/_FREL");
                             XmlNode motherNode = node.SelectSingleNode("CHIL/_MREL");
-                            ParentalRelationship.ParentalRelationshipType father = ParentalRelationship.GetRelationshipType(fatherNode);
-                            ParentalRelationship.ParentalRelationshipType mother = ParentalRelationship.GetRelationshipType(motherNode);
+                            var father = ParentalRelationship.GetRelationshipType(fatherNode);
+                            var mother = ParentalRelationship.GetRelationshipType(motherNode);
                             Children.Add(child);
-                            ParentalRelationship parent = new ParentalRelationship(this, father, mother);
+                            var parent = new ParentalRelationship(this, father, mother);
                             child.FamiliesAsChild.Add(parent);
                             AddParentAndChildrenFacts(child, Husband, father);
                             AddParentAndChildrenFacts(child, Wife, mother);
@@ -111,6 +111,10 @@ namespace FTAnalyzer
                 //TODO: need to think about family facts having AGE tags in GEDCOM
                 if (HasGoodChildrenStatus)
                     CheckChildrenStatusCounts();
+                if (Husband !=null && !Husband.IsMale)
+                    Husband.QuestionGender(this);
+                if (Wife != null && Wife.IsMale)
+                    Wife.QuestionGender(this);
             }
         }
 
@@ -168,23 +172,23 @@ namespace FTAnalyzer
             : this(familyID)
         {
             if (ind.IsMale)
-                this.Husband = ind;
+                Husband = ind;
             else
-                this.Wife = ind;
+                Wife = ind;
         }
 
         internal Family(Family f)
         {
-            this.FamilyID = f.FamilyID;
-            this.Facts = new List<Fact>(f.Facts);
-            this.Husband = f.Husband == null ? null : new Individual(f.Husband);
-            this.Wife = f.Wife == null ? null : new Individual(f.Wife);
-            this.Children = new List<Individual>(f.Children);
-            this.preferredFacts = new Dictionary<string, Fact>(f.preferredFacts);
-            this.ExpectedTotal = f.ExpectedTotal;
-            this.ExpectedAlive = f.ExpectedAlive;
-            this.ExpectedDead = f.ExpectedDead;
-            this.FamilyType = UNKNOWN;
+            FamilyID = f.FamilyID;
+            Facts = new List<Fact>(f.Facts);
+            Husband = f.Husband == null ? null : new Individual(f.Husband);
+            Wife = f.Wife == null ? null : new Individual(f.Wife);
+            Children = new List<Individual>(f.Children);
+            preferredFacts = new Dictionary<string, Fact>(f.preferredFacts);
+            ExpectedTotal = f.ExpectedTotal;
+            ExpectedAlive = f.ExpectedAlive;
+            ExpectedDead = f.ExpectedDead;
+            FamilyType = UNKNOWN;
         }
 
         private void AddFacts(XmlNode node, string factType, IProgress<string> outputText)
@@ -500,7 +504,7 @@ namespace FTAnalyzer
         {
             get
             {
-                return this.ToString();
+                return ToString();
             }
         }
 
