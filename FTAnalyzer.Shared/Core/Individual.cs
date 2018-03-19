@@ -27,6 +27,7 @@ namespace FTAnalyzer
         string alias;
         int relationType;
         List<Fact> _allfacts;
+        List<Fact> _allFileFacts;
         DoubleMetaphone surnameMetaphone;
         DoubleMetaphone forenameMetaphone;
         public string Notes { get; private set; }
@@ -77,6 +78,7 @@ namespace FTAnalyzer
             familiesAsParent = new List<Family>();
             preferredFacts = new Dictionary<string, Fact>();
             _allfacts = null;
+            _allFileFacts = null;
         }
 
         public Individual(XmlNode node, IProgress<string> outputText)
@@ -242,6 +244,17 @@ namespace FTAnalyzer
             get { return this.facts; }
         }
 
+        private IList<Fact> FamilyFacts
+        {
+            get
+            {
+                var familyfacts = new List<Fact>();
+                foreach (Family f in familiesAsParent)
+                    familyfacts.AddRange(f.Facts);
+                return familyfacts;
+            }
+        }
+
         public IList<Fact> ErrorFacts
         {
             get { return this.errorFacts; }
@@ -257,23 +270,18 @@ namespace FTAnalyzer
                 if (_allfacts == null || currentFactCount != _factcount)
                 {
                     _allfacts = new List<Fact>();
-                    _allfacts.AddRange(facts);
+                    _allfacts.AddRange(PersonalFacts);
                     _allfacts.AddRange(FamilyFacts);
+                    _allFileFacts = _allfacts.Where(x => !x.Created).ToList();
                     _factcount = _allfacts.Count;
                 }
                 return _allfacts;
             }
         }
 
-        private IList<Fact> FamilyFacts
+        public IList<Fact> AllFileFacts
         {
-            get
-            {
-                var familyfacts = new List<Fact>();
-                foreach (Family f in familiesAsParent)
-                    familyfacts.AddRange(f.Facts);
-                return familyfacts;
-            }
+            get { return _allFileFacts; }
         }
 
         public IList<Fact> DuplicateFacts

@@ -752,14 +752,14 @@ namespace FTAnalyzer
                 if (GeneralSettings.Default.TolerateInaccurateCensusDate && yearAdjusted.IsKnown && !CensusDate.IsLostCousinsCensusYear(yearAdjusted, true))
                 {
                     //                    this.FactErrorNumber = (int)FamilyTree.Dataerror.CENSUS_COVERAGE;
-                    this.FactErrorMessage = "Lost Cousins fact error date '" + FactDate + "' overlaps Lost Cousins census year but is vague. Check for incorrect date entered.";
-                    this.FactErrorLevel = Fact.FactError.WARNINGALLOW;
+                    FactErrorMessage = "Lost Cousins fact error date '" + FactDate + "' overlaps Lost Cousins census year but is vague. Check for incorrect date entered.";
+                    FactErrorLevel = Fact.FactError.WARNINGALLOW;
                 }
                 if (!CensusDate.IsLostCousinsCensusYear(yearAdjusted, false))
                 {
                     //                    this.FactErrorNumber = (int)FamilyTree.Dataerror.CENSUS_COVERAGE;
-                    this.FactErrorMessage = "Lost Cousins fact error date '" + FactDate + "' isn't a supported Lost Cousins census year. Check for incorrect date entered or try Tolerate slightly inaccurate census date option.";
-                    this.FactErrorLevel = Fact.FactError.ERROR;
+                    FactErrorMessage = "Lost Cousins fact error date '" + FactDate + "' isn't a supported Lost Cousins census year. Check for incorrect date entered or try Tolerate slightly inaccurate census date option.";
+                    FactErrorLevel = FactError.ERROR;
                 }
                 if (!FactDate.Equals(yearAdjusted))
                     FactDate = yearAdjusted;
@@ -815,27 +815,37 @@ namespace FTAnalyzer
         {
             return Sources.Any(fs =>
             {
-                return (FactType.Equals(Fact.BIRTH) && fs.IsBirthCert()) ||
-                    (FactType.Equals(Fact.DEATH) && fs.IsDeathCert()) ||
-                    (FactType.Equals(Fact.MARRIAGE) && fs.IsMarriageCert()) ||
-                    (FactType.Equals(Fact.CENSUS) && fs.IsCensusCert());
+                return (FactType.Equals(BIRTH) && fs.IsBirthCert()) ||
+                    (FactType.Equals(DEATH) && fs.IsDeathCert()) ||
+                    (FactType.Equals(MARRIAGE) && fs.IsMarriageCert()) ||
+                    (FactType.Equals(CENSUS) && fs.IsCensusCert());
             });
+        }
+
+        public string PossiblyEqualHash
+        {
+            get { return FactType + FactDate.ToString(); }
+        }
+
+        public string EqualHash
+        {
+            get { return FactType + FactDate.ToString() + Location.ToString() + Comment; }
         }
 
         public bool IsValidCensus(FactDate factDate)
         {
-            return FactDate.IsKnown && IsCensusFact && FactDate.FactYearMatches(factDate) && FactDate.IsNotBEForeOrAFTer && FactErrorLevel == Fact.FactError.GOOD;
+            return FactDate.IsKnown && IsCensusFact && FactDate.FactYearMatches(factDate) && FactDate.IsNotBEForeOrAFTer && FactErrorLevel == FactError.GOOD;
         }
 
         public bool IsValidCensus(CensusDate censusDate)
         {
-            return FactDate.IsKnown && IsCensusFact && FactDate.CensusYearMatches(censusDate) && FactDate.IsNotBEForeOrAFTer && FactErrorLevel == Fact.FactError.GOOD;
+            return FactDate.IsKnown && IsCensusFact && FactDate.CensusYearMatches(censusDate) && FactDate.IsNotBEForeOrAFTer && FactErrorLevel == FactError.GOOD;
         }
 
         public bool IsValidLostCousins(CensusDate censusDate)
         {
-            return FactDate.IsKnown && (FactType == Fact.LOSTCOUSINS || FactType == Fact.LC_FTA) 
-                && FactDate.CensusYearMatches(censusDate) && FactDate.IsNotBEForeOrAFTer && FactErrorLevel == Fact.FactError.GOOD;
+            return FactDate.IsKnown && (FactType == LOSTCOUSINS || FactType == LC_FTA) 
+                && FactDate.CensusYearMatches(censusDate) && FactDate.IsNotBEForeOrAFTer && FactErrorLevel == FactError.GOOD;
         }
 
         public bool IsOverseasUKCensus(string country)
@@ -846,19 +856,6 @@ namespace FTAnalyzer
         public override string ToString()
         {
             return FactTypeDescription + ": " + FactDate + (Location.ToString().Length > 0 ? " at " + Location : string.Empty) + (Comment.ToString().Length > 0 ? "  (" + Comment + ")" : string.Empty);
-        }
-
-        public bool IsPossiblyEqual(Fact other)
-        {
-            if (FactType.Equals(other.FactType) && FactDate.Equals(other.FactDate))
-                return true; // possible duplicate as date and type are same
-            return false; // not a duplicate
-        }
-
-        public bool Equals(Fact other)
-        {
-            return FactType.Equals(other.FactType) && FactDate.Equals(other.FactDate) &&
-                Place.Equals(other.Place) && Comment.Equals(other.Comment) && Location.Equals(other.Location, other.Location.Level);
         }
     }
 }

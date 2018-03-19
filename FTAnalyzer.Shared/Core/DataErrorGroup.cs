@@ -29,7 +29,8 @@ namespace FTAnalyzer
                       "Flagged as living but has death date",
                       "Children Status Total Mismatch",
                       "Duplicate Fact",
-                      "Possible Duplicate Fact"
+                      "Possible Duplicate Fact",
+                      "On 1939 Register no precise birthdate"
                     };
 
         //"Later marriage before previous spouse died"

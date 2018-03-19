@@ -36,7 +36,7 @@ namespace FTAnalyzer
         SortableBindingList<IDisplayLooseDeath> looseDeaths;
         SortableBindingList<IDisplayLooseBirth> looseBirths;
         SortableBindingList<DuplicateIndividual> duplicates;
-        static int DATA_ERROR_GROUPS = 25;
+        static int DATA_ERROR_GROUPS = 26;
         static XmlNodeList noteNodes = null;
         bool _loading = false;
         bool _dataloaded = false;
@@ -1708,10 +1708,34 @@ namespace FTAnalyzer
                                             ind, "Unknown fact type " + f.FactTypeDescription + " recorded"));
                                 }
                             }
+                        }                        
+                    }
+                    var dup = ind.AllFileFacts.GroupBy(x => x.EqualHash).Where(g => g.Count() > 1).Select(y => y.Key).ToList();
+                    var dupList = new List<Fact>();
+                    foreach(string dfs in dup)
+                    {
+                        var df = ind.AllFacts.Where(x => x.EqualHash.Equals(dfs)).First();
+                        if(df !=null)
+                        { 
+                            dupList.Add(df);
+                            errors[(int)Dataerror.DUPLICATE_FACT].Add(
+                                            new DataError((int)Dataerror.DUPLICATE_FACT, Fact.FactError.ERROR,
+                                                ind, "Duplicated " + df.FactTypeDescription + " fact recorded"));
                         }
                     }
-#endregion
-#region Parents Facts
+                    var possDuplicates = ind.AllFileFacts.GroupBy(x => x.PossiblyEqualHash).Where(g => g.Count() > 1).Select(y => y.Key).ToList();
+                    foreach (string pd in possDuplicates)
+                    {
+                        var pdf = ind.AllFacts.Where(x => x.PossiblyEqualHash.Equals(pd)).First();
+                        if(pdf != null && !dupList.Contains(pdf))
+                        {
+                            errors[(int)Dataerror.POSSIBLE_DUPLICATE_FACT].Add(
+                                            new DataError((int)Dataerror.POSSIBLE_DUPLICATE_FACT, Fact.FactError.QUESTIONABLE,
+                                                ind, "Possibly duplicated " + pdf.FactTypeDescription + " fact recorded"));
+                        }
+                    }
+                    #endregion
+                    #region Parents Facts
                     foreach (ParentalRelationship parents in ind.FamiliesAsChild)
                     {
                         Family asChild = parents.Family;
