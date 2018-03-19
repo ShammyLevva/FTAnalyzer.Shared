@@ -112,9 +112,9 @@ namespace FTAnalyzer
                 if (HasGoodChildrenStatus)
                     CheckChildrenStatusCounts();
                 if (Husband !=null && !Husband.IsMale)
-                    Husband.QuestionGender(this);
+                    Husband.QuestionGender(this, true);
                 if (Wife != null && Wife.IsMale)
-                    Wife.QuestionGender(this);
+                    Wife.QuestionGender(this, false);
             }
         }
 

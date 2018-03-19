@@ -1053,13 +1053,18 @@ namespace FTAnalyzer
             return name;
         }
 
-        public void QuestionGender(Family family)
+        public void QuestionGender(Family family, bool pHusband)
         {
             string description;
-            if (IsMale)
-                description = "Male but appears as a wife in family " + family.FamilyRef;
+            if (Gender.Equals("U"))
+                description = "Unknown gender but appears as a " + (pHusband ? "husband" : "wife") + " in family " + family.FamilyRef;
             else
-                description = "Female but appears as husband in family " + family.FamilyRef;
+            {
+                if (IsMale)
+                    description = "Male but appears as a wife in family " + family.FamilyRef;
+                else
+                    description = "Female but appears as husband in family " + family.FamilyRef;
+            }
             var gender = new Fact(family.FamilyID, Fact.GENDER, null, null, description, true, true);
             gender.SetError(26, Fact.FactError.ERROR, description);
             AddFact(gender);
