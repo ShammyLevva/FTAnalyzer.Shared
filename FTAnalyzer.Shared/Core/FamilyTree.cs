@@ -1708,7 +1708,13 @@ namespace FTAnalyzer
                                             ind, "Unknown fact type " + f.FactTypeDescription + " recorded"));
                                 }
                             }
-                        }                        
+                        }   
+                        if(f.IsCensusFact && f.FactDate.FactYearMatches(CensusDate.UKCENSUS1939) && !ind.BirthDate.IsExact)
+                        {
+                            errors[(int)Dataerror.NATREG1939_INEXACT_BIRTHDATE].Add(
+                                        new DataError((int)Dataerror.NATREG1939_INEXACT_BIRTHDATE, Fact.FactError.QUESTIONABLE,
+                                            ind, "On the 1939 National Register but birth date is not exact"));
+                        }
                     }
                     var dup = ind.AllFileFacts.GroupBy(x => x.EqualHash).Where(g => g.Count() > 1).Select(y => y.Key).ToList();
                     var dupList = new List<Fact>();
@@ -1882,7 +1888,7 @@ namespace FTAnalyzer
             MARRIAGE_AFTER_SPOUSE_DEAD = 12, MARRIAGE_BEFORE_13 = 13, MARRIAGE_BEFORE_SPOUSE_13 = 14, LOST_COUSINS_NON_CENSUS = 15,
             LOST_COUSINS_NOT_SUPPORTED_YEAR = 16, RESIDENCE_CENSUS_DATE = 17, CENSUS_COVERAGE = 18, FACT_ERROR = 19,
             UNKNOWN_FACT_TYPE = 20, LIVING_WITH_DEATH_DATE = 21, CHILDRENSTATUS_TOTAL_MISMATCH = 22, DUPLICATE_FACT = 23, 
-            POSSIBLE_DUPLICATE_FACT = 24
+            POSSIBLE_DUPLICATE_FACT = 24, NATREG1939_INEXACT_BIRTHDATE = 25
         };
 
 #endregion
