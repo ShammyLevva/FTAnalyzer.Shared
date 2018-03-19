@@ -36,7 +36,7 @@ namespace FTAnalyzer
         SortableBindingList<IDisplayLooseDeath> looseDeaths;
         SortableBindingList<IDisplayLooseBirth> looseBirths;
         SortableBindingList<DuplicateIndividual> duplicates;
-        static int DATA_ERROR_GROUPS = 29;
+        static int DATA_ERROR_GROUPS = 28;
         static XmlNodeList noteNodes = null;
         bool _loading = false;
         bool _dataloaded = false;
@@ -1716,6 +1716,7 @@ namespace FTAnalyzer
                                             ind, "On the 1939 National Register but birth date is not exact"));
                         }
                     }
+                    #region Duplicate Fact Check
                     var dup = ind.AllFileFacts.GroupBy(x => x.EqualHash).Where(g => g.Count() > 1).Select(y => y.Key).ToList();
                     var dupList = new List<Fact>();
                     foreach(string dfs in dup)
@@ -1740,6 +1741,7 @@ namespace FTAnalyzer
                                                 ind, "Possibly duplicated " + pdf.FactTypeDescription + " fact recorded"));
                         }
                     }
+                    #endregion
                     #endregion
                     #region Parents Facts
                     foreach (ParentalRelationship parents in ind.FamiliesAsChild)
@@ -1789,10 +1791,12 @@ namespace FTAnalyzer
                             maxAge = spouse.GetMaxAge(asParent.MarriageDate);
                             if (maxAge < 13 && spouse.BirthDate.IsAfter(FactDate.MARRIAGE_LESS_THAN_13))
                                 errors[(int)Dataerror.MARRIAGE_BEFORE_SPOUSE_13].Add(new DataError((int)Dataerror.MARRIAGE_BEFORE_SPOUSE_13, ind, "Marriage to " + spouse.Name + " in " + asParent.MarriageDate + " is before spouse born " + spouse.BirthDate + " was 13 years old"));
+                            if(ind.Surname.Equals(spouse.Surname))
+                                errors[(int)Dataerror.SAME_SURNAME_COUPLE].Add(new DataError((int)Dataerror.SAME_SURNAME_COUPLE, ind, "Spouse " + spouse.Name + " has same surname. Usually due to wife incorrectly recorded with married instead of maiden name."));
                             //if (ind.FirstMarriage != null && ind.FirstMarriage.MarriageDate != null)
                             //{
                             //    if (asParent.MarriageDate.isAfter(ind.FirstMarriage.MarriageDate))
-                            //    {  // we have a later marriage now see if first marriage wife
+                            //    {  // we have a later marriage now see if first marriage spouse is still alive
 
                             //    }
                             //}
@@ -1889,7 +1893,7 @@ namespace FTAnalyzer
             LOST_COUSINS_NOT_SUPPORTED_YEAR = 16, RESIDENCE_CENSUS_DATE = 17, CENSUS_COVERAGE = 18, FACT_ERROR = 19,
             UNKNOWN_FACT_TYPE = 20, LIVING_WITH_DEATH_DATE = 21, CHILDRENSTATUS_TOTAL_MISMATCH = 22, DUPLICATE_FACT = 23, 
             POSSIBLE_DUPLICATE_FACT = 24, NATREG1939_INEXACT_BIRTHDATE = 25, MALE_WIFE_FEMALE_HUSBAND = 26,
-            SAME_SURNAME_COUPLE = 27, LARGE_AGE_GAP_COUPLE = 28
+            SAME_SURNAME_COUPLE = 27
         };
 
 #endregion
