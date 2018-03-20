@@ -2201,7 +2201,7 @@ namespace FTAnalyzer
             //    query.Append("birthPlace=&country=&coIdList=");
             //}
             uri.Query = query.ToString();
-            return @"http://www.awin1.com/cread.php?awinmid=2114&awinaffid=88963&clickref=FTACensusSearch&p=" + uri.ToString();
+            return uri.ToString();
         }
 
         private string BuildFindMyPast1939Query(string censusCountry, Individual person)
@@ -2256,7 +2256,7 @@ namespace FTAnalyzer
                 query.Append("yearofbirth_offset=" + range + "&");
             }
             uri.Query = query.ToString();
-            return @"http://www.awin1.com/cread.php?awinmid=2114&awinaffid=88963&clickref=FTACensusSearch&p=" + uri.ToString();
+            return uri.ToString();
         }
 
 #endregion
