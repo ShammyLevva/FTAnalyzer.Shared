@@ -2605,8 +2605,9 @@ namespace FTAnalyzer
 #endregion
 
 #region Duplicates Processing
-        int duplicateProgress = 0;
-        int progressMaximum = 0;
+        UInt64 maleProgress = 0;
+        UInt64 femaleProgress = 0;
+        UInt64 progressMaximum = 0;
 
         public async Task<SortableBindingList<IDisplayDuplicateIndividual>> GenerateDuplicatesList(int value, IProgress<int> progress, IProgress<int> maximum, CancellationToken ct)
         {
@@ -2619,15 +2620,16 @@ namespace FTAnalyzer
             duplicates = new SortableBindingList<DuplicateIndividual>();
             IEnumerable<Individual> males = individuals.Filter<Individual>(x => (x.Gender == "M" || x.Gender == "U"));
             IEnumerable<Individual> females = individuals.Filter<Individual>(x => (x.Gender == "F" || x.Gender == "U"));
-            duplicateProgress = 0;
-            progressMaximum = (males.Count() * males.Count() + females.Count() * females.Count()) / 2;
-            progress.Report(duplicateProgress);
+            UInt64 nummales = (UInt64) males.Count();
+            UInt64 numfemales = (UInt64)males.Count();
+            progressMaximum = (nummales *nummales + numfemales * numfemales) / 2;
+            progress.Report(0);
             try
             {
                 var tasks = new List<Task>
                 {
-                    Task.Run(() => IdentifyDuplicates(ct, progress, males)),
-                    Task.Run(() => IdentifyDuplicates(ct, progress, females))
+                    Task.Run(() => IdentifyDuplicates(ct, progress, males, ref maleProgress)),
+                    Task.Run(() => IdentifyDuplicates(ct, progress, females, ref femaleProgress))
                 };
                 await Task.WhenAll(tasks);
             }
@@ -2654,7 +2656,7 @@ namespace FTAnalyzer
             return score;
         }
 
-        private void IdentifyDuplicates(CancellationToken ct, IProgress<int> progress, IEnumerable<Individual> enumerable)
+        private void IdentifyDuplicates(CancellationToken ct, IProgress<int> progress, IEnumerable<Individual> enumerable, ref UInt64 threadProgress)
         {
             log.Debug("FamilyTree.IdentifyDuplicates");
             var index = 0;
@@ -2675,9 +2677,12 @@ namespace FTAnalyzer
                         }
                     }
                     ct.ThrowIfCancellationRequested();
-                    duplicateProgress++;
-                    if (duplicateProgress % 1000 == 0)
-                        progress.Report((100 * duplicateProgress) / progressMaximum);
+                    threadProgress++;
+                    if (threadProgress % 500 == 0)
+                    {
+                        UInt64 val = (100 * (maleProgress + femaleProgress)) / progressMaximum;
+                        progress.Report((int)val);
+                    }
                 }
             }
         }

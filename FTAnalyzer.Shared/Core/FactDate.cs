@@ -120,7 +120,7 @@ namespace FTAnalyzer
 
         private string FixCommonDateFormats(string str)
         {
-            str = str.Trim().ToUpper();
+            str = EnhancedTextInfo.RemoveDiacritics(str.Trim().ToUpper());
             str = str.Replace(",", string.Empty);
             str = str.Replace("(", string.Empty);
             str = str.Replace(")", string.Empty);
@@ -136,15 +136,35 @@ namespace FTAnalyzer
             str = str.Replace("FEBRUARY", "FEB");
             str = str.Replace("MARCH", "MAR");
             str = str.Replace("APRIL", "APR");
+            str = str.Replace("APRL", "APR");
             str = str.Replace("JUNE", "JUN");
             str = str.Replace("JULY", "JUL");
             str = str.Replace("AUGUST", "AUG");
+            str = str.Replace("AUGT", "AUG");
             str = str.Replace("SEPTEMBER", "SEP");
-            str = str.Replace("SEPT", "SEP");
             str = str.Replace("OCTOBER", "OCT");
             str = str.Replace("NOVEMBER", "NOV");
             str = str.Replace("DECEMBER", "DEC");
 
+            // French
+            str = str.Replace("JANVIER", "JAN");
+            str = str.Replace("JANV", "JAN");
+            str = str.Replace("FEVRIER", "FEB");
+            str = str.Replace("FEVR", "FEB");
+            str = str.Replace("MARS", "MAR");
+            str = str.Replace("AVRIL", "APR");
+            str = str.Replace("AVRL", "APR");
+            str = str.Replace("JUIN", "JUN");
+            str = str.Replace("JUILLET", "JUL");
+            str = str.Replace("JUIL", "JUL");
+            str = str.Replace("AOUT", "AUG");
+            str = str.Replace("SEPTEMBRE", "SEP");
+            str = str.Replace("OCTOBRE", "OCT");
+            str = str.Replace("NOVEMBRE", "NOV");
+            str = str.Replace("DECEMBRE", "DEC");
+            str = str.Replace(" ET ", " AND ");
+
+            str = str.Replace("SEPT", "SEP"); // avoids confusing french translation by removing T before checking for french
             str = str.Replace("M01", "JAN");
             str = str.Replace("M02", "FEB");
             str = str.Replace("M03", "MAR");
@@ -158,18 +178,28 @@ namespace FTAnalyzer
             str = str.Replace("M11", "NOV");
             str = str.Replace("M12", "DEC");
 
-            str = str.Replace("CAL", "ABT");
-            str = str.Replace("EST", "ABT");
-            str = str.Replace("CIR", "ABT");
-            str = str.Replace("PRE", "BEF");
-            str = str.Replace("POST", "AFT");
-
             str = str.Replace("ABOUT", "ABT");
             str = str.Replace("AFTER", "AFT");
             str = str.Replace("BEFORE", "BEF");
             str = str.Replace("BETWEEN", "BET");
             str = str.Replace("BTW", "BET");
             str = str.Replace("UNTIL", "TO");
+            str = str.Replace("CIRCA", "ABT");
+            str = str.Replace("AROUND", "ABT");
+            str = str.Replace("APPROX", "ABT");
+
+            // French 
+            str = str.Replace("AVANT", "BEF");
+            str = str.Replace("ENTRE", "BET");
+            str = str.Replace("ENVIRON", "ABT");
+            str = str.Replace("VERS", "ABT");
+            str = str.Replace("APRES", "AFT");
+
+            str = str.Replace("CAL", "ABT");
+            str = str.Replace("EST", "ABT");
+            str = str.Replace("CIR", "ABT");
+            str = str.Replace("PRE", "BEF");
+            str = str.Replace("POST", "AFT");
 
             str = str.Replace("QUARTER", "QTR");
             str = str.Replace("MAR QTR", "ABT MAR");

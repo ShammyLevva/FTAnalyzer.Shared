@@ -251,9 +251,7 @@
     <Content Include="$(MSBuildThisFileDirectory)Resources\Mapping URLs.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="$(MSBuildThisFileDirectory)Resources\OS50kGazetteer.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)Resources\OS50kGazetteer.txt" />
     <Content Include="$(MSBuildThisFileDirectory)Resources\ScottishParishes.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
