@@ -163,6 +163,7 @@ namespace FTAnalyzer
             str = str.Replace("NOVEMBRE", "NOV");
             str = str.Replace("DECEMBRE", "DEC");
             str = str.Replace(" ET ", " AND ");
+            str = str.Replace("DATE INCONNUE", "UNKNOWN");
 
             str = str.Replace("SEPT", "SEP"); // avoids confusing french translation by removing T before checking for french
             str = str.Replace("M01", "JAN");
