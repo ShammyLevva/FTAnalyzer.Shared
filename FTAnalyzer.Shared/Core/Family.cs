@@ -127,7 +127,7 @@ namespace FTAnalyzer
                     SetChildrenStatusCounts(matcher, 1, 2, 4);
                 else
                 {
-                    matcher = Fact.regexChildren1.Match(f.Comment);
+                    matcher = Fact.regexChildren2.Match(f.Comment);
                     if (matcher.Success)
                         SetChildrenStatusCounts(matcher, 1, 3, 4);
                 }

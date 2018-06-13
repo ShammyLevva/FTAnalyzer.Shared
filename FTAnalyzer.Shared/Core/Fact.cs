@@ -504,7 +504,7 @@ namespace FTAnalyzer
             //+1 POST <ADDRESS_POSTAL_CODE> {0:1} p.41
             //+1 CTRY <ADDRESS_COUNTRY> 
 
-            if (!Fact.COMMENT_FACTS.Contains(factType))
+            if (!COMMENT_FACTS.Contains(factType))
                 Location = FactLocation.GetLocation(result);
         }
 
@@ -512,7 +512,7 @@ namespace FTAnalyzer
             : this(factRef, preferred)
         {
             FactType = factType;
-            FactDate = date;
+            FactDate = date == null ? date : FactDate.UNKNOWN_DATE;
             Comment = comment;
             Created = createdByFTA;
             Place = string.Empty;

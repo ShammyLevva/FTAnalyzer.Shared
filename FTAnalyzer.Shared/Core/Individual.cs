@@ -1065,7 +1065,7 @@ namespace FTAnalyzer
                 else
                     description = "Female but appears as husband in family " + family.FamilyRef;
             }
-            var gender = new Fact(family.FamilyID, Fact.GENDER, null, null, description, true, true);
+            var gender = new Fact(family.FamilyID, Fact.GENDER, FactDate.UNKNOWN_DATE, null, description, true, true);
             gender.SetError(26, Fact.FactError.ERROR, description);
             AddFact(gender);
         }
