@@ -83,7 +83,7 @@ namespace FTAnalyzer.Utilities
             StringBuilder sb = new StringBuilder();
 
             int previousIndex = 0;
-            int index = str.IndexOf(oldValue, comparison);
+            int index = str.IndexOf(oldValue, StringComparison.CurrentCulture);
             while (index != -1)
             {
                 sb.Append(str.Substring(previousIndex, index - previousIndex));

@@ -371,6 +371,7 @@ namespace FTAnalyzer
         {
             int max = list.Count / 2; // /2 to make locations load account for 50% of bar
             int counter = 0;
+            int value = 0;
             int beforeCount = FactLocation.AllLocations.Count();
             foreach (XmlNode node in list)
             {
@@ -383,7 +384,9 @@ namespace FTAnalyzer
                     string lng = long_node.InnerText;
                     FactLocation loc = FactLocation.GetLocation(place, lat, lng, FactLocation.Geocode.GEDCOM_USER, true, true);
                 }
-                progress.Report(30 + (70 * counter++) / max);
+                value = 30 + (70 * counter++) / max;
+                if (value > 100) value = 100;
+                progress.Report(value);
             }
             int afterCount = FactLocation.AllLocations.Count();
             progress.Report(100);

@@ -14,7 +14,7 @@ namespace FTAnalyzer
     public class FactLocation : IComparable<FactLocation>, IDisplayLocation, IDisplayGeocodedLocation
     {
         #region Variables
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         public const int UNKNOWN = -1, COUNTRY = 0, REGION = 1, SUBREGION = 2, ADDRESS = 3, PLACE = 4;
         public enum Geocode
         {
@@ -307,28 +307,28 @@ namespace FTAnalyzer
         #region Object Constructors
         private FactLocation()
         {
-            this.GEDCOMLocation = string.Empty;
-            this.fixedLocation = string.Empty;
-            this.SortableLocation = string.Empty;
-            this.Country = string.Empty;
-            this.Region = string.Empty;
-            this.SubRegion = string.Empty;
-            this.Address = string.Empty;
-            this.Place = string.Empty;
-            this.ParishID = null;
-            this.FuzzyMatch = string.Empty;
-            this.individuals = new List<Individual>();
-            this.Latitude = 0;
-            this.Longitude = 0;
-            this.LatitudeM = 0;
-            this.LongitudeM = 0;
-            this.Level = UNKNOWN;
-            this.GeocodeStatus = Geocode.NOT_SEARCHED;
-            this.FoundLocation = string.Empty;
-            this.FoundResultType = string.Empty;
-            this.FoundLevel = -2;
+            GEDCOMLocation = string.Empty;
+            fixedLocation = string.Empty;
+            SortableLocation = string.Empty;
+            Country = string.Empty;
+            Region = string.Empty;
+            SubRegion = string.Empty;
+            Address = string.Empty;
+            Place = string.Empty;
+            ParishID = null;
+            FuzzyMatch = string.Empty;
+            individuals = new List<Individual>();
+            Latitude = 0;
+            Longitude = 0;
+            LatitudeM = 0;
+            LongitudeM = 0;
+            Level = UNKNOWN;
+            GeocodeStatus = Geocode.NOT_SEARCHED;
+            FoundLocation = string.Empty;
+            FoundResultType = string.Empty;
+            FoundLevel = -2;
 #if __PC__
-            this.ViewPort = new Mapping.GeoResponse.CResult.CGeometry.CViewPort();
+            ViewPort = new Mapping.GeoResponse.CResult.CGeometry.CViewPort();
 #endif
         }
 
@@ -404,6 +404,7 @@ namespace FTAnalyzer
                 string before = (SubRegion + ", " + Region + ", " + Country).ToUpper().Trim();
                 if (!GeneralSettings.Default.AllowEmptyLocations)
                     FixEmptyFields();
+                RemoveDiacritics();
                 FixRegionFullStops();
                 FixCountryFullStops();
                 FixMultipleSpacesAmpersandsCommas();
@@ -620,6 +621,15 @@ namespace FTAnalyzer
             }
         }
 
+        private void RemoveDiacritics()
+        {
+            Country = EnhancedTextInfo.RemoveDiacritics(Country);
+            Region = EnhancedTextInfo.RemoveDiacritics(Region);
+            SubRegion = EnhancedTextInfo.RemoveDiacritics(SubRegion);
+            Address = EnhancedTextInfo.RemoveDiacritics(Address);
+            Place = EnhancedTextInfo.RemoveDiacritics(Place);
+        }
+
         private void FixCapitalisation()
         {
             if (Country.Length > 1)
@@ -653,7 +663,7 @@ namespace FTAnalyzer
             while (SubRegion.IndexOf("  ") != -1)
                 SubRegion = SubRegion.Replace("  ", " ");
             while (Address.IndexOf("  ") != -1)
-                Address = Address.Replace("  ", " ");
+                Address = Address.Replace("  ", " ",StringComparison.InvariantCulture);
             while (Place.IndexOf("  ") != -1)
                 Place = Place.Replace("  ", " ");
             Country = Country.Replace("&", "and").Replace(",", "").Trim();
