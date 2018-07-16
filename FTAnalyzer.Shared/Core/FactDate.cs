@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using FTAnalyzer.Utilities;
 using static FTAnalyzer.ColourValues;
+using static FTAnalyzer.UserControls.NonGedcomDateSettingsUI;
 
 namespace FTAnalyzer
 {
@@ -63,16 +64,13 @@ namespace FTAnalyzer
                 ["BETWEENFIX4"] = new Regex(BETWEENFIX4, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["BETWEENFIX5"] = new Regex(BETWEENFIX5, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["USDATEFIX"] = new Regex(USDATEFIX, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["SPACEFIX"] = new Regex(SPACEFIX, RegexOptions.Compiled | RegexOptions.IgnoreCase)
+                ["SPACEFIX"] = new Regex(SPACEFIX, RegexOptions.Compiled | RegexOptions.IgnoreCase),
             };
             UNKNOWN_DATE = new FactDate("UNKNOWN");
             MARRIAGE_LESS_THAN_13 = new FactDate("1600");
-    }
-
-    public enum FactDateType
-        {
-            BEF, AFT, BET, ABT, UNK, EXT,
         }
+
+        public enum FactDateType { BEF, AFT, BET, ABT, UNK, EXT }
 
         public string DateString { get; private set; }
         public DateTime StartDate { get; private set; }
@@ -86,31 +84,31 @@ namespace FTAnalyzer
 
         public FactDate(string str, string factRef = "")
         {
-            this.DoubleDate = false;
+            DoubleDate = false;
             if (str == null)
                 str = string.Empty;
-            this.OriginalString = str;
+            OriginalString = str;
             // remove any commas in date string
-            this.yearfix = 0;
+            yearfix = 0;
             str = FixCommonDateFormats(str);
-            this.DateType = FactDateType.UNK;
+            DateType = FactDateType.UNK;
             if (str == null || str.Length == 0)
-                this.DateString = "UNKNOWN";
+                DateString = "UNKNOWN";
             else
-                this.DateString = str.ToUpper();
+                DateString = str.ToUpper();
             StartDate = MINDATE;
             EndDate = MAXDATE;
-            if (!this.DateString.Equals("UNKNOWN"))
-                ProcessDate(this.DateString, factRef);
+            if (!DateString.Equals("UNKNOWN"))
+                ProcessDate(DateString, factRef);
         }
 
         public FactDate(DateTime startdate, DateTime enddate)
         {
-            this.DateType = FactDateType.UNK;
-            this.StartDate = startdate;
-            this.EndDate = enddate;
-            this.DateString = CalculateDateString();
-            this.OriginalString = string.Empty;
+            DateType = FactDateType.UNK;
+            StartDate = startdate;
+            EndDate = enddate;
+            DateString = CalculateDateString();
+            OriginalString = string.Empty;
         }
 
         public static string Format(string format, DateTime date)
@@ -291,35 +289,39 @@ namespace FTAnalyzer
                 string result = matcher.Groups[1].ToString() + matcher.Groups[2].ToString();
                 return result.Trim();
             }
-            matcher = datePatterns["BETWEENFIX"].Match(str);
-            if (matcher.Success)
+            matcher = NonGEDCOMDateFormatRegex.Match(str);
+            if (!matcher.Success) // match string is not a non gedcom format with dashes so proceed with between fixes
             {
-                string result = "BET " + matcher.Groups[1].ToString() + " AND " + matcher.Groups[2].ToString();
-                return result.Trim();
-            }
-            matcher = datePatterns["BETWEENFIX2"].Match(str);
-            if (matcher.Success)
-            {
-                string result = "BET " + matcher.Groups[1].ToString() + " " + matcher.Groups[2].ToString() + " AND " + matcher.Groups[3].ToString() + " " + matcher.Groups[4].ToString();
-                return result.Trim();
-            }
-            matcher = datePatterns["BETWEENFIX3"].Match(str);
-            if (matcher.Success)
-            {
-                string result = "BET " + matcher.Groups[1].ToString() + matcher.Groups[2].ToString() + " " + matcher.Groups[3].ToString() + " AND " + matcher.Groups[4].ToString() + matcher.Groups[5].ToString() + " " + matcher.Groups[6].ToString();
-                return result.Trim();
-            }
-            matcher = datePatterns["BETWEENFIX4"].Match(str);
-            if (matcher.Success)
-            {
-                string result = "BET " + matcher.Groups[1].ToString() + " " + matcher.Groups[3].ToString() + " " + matcher.Groups[4].ToString() + " AND " + matcher.Groups[2].ToString() + matcher.Groups[3].ToString() + " " + matcher.Groups[4].ToString();
-                return result.Trim();
-            }
-            matcher = datePatterns["BETWEENFIX5"].Match(str);
-            if (matcher.Success)
-            {
-                string result = "BET " + matcher.Groups[1].ToString() + matcher.Groups[2].ToString() + " " + matcher.Groups[5].ToString() + " AND " + matcher.Groups[3].ToString() + matcher.Groups[4].ToString() + " " + matcher.Groups[5].ToString();
-                return result.Trim();
+                matcher = datePatterns["BETWEENFIX"].Match(str);
+                if (matcher.Success)
+                {
+                    string result = "BET " + matcher.Groups[1].ToString() + " AND " + matcher.Groups[2].ToString();
+                    return result.Trim();
+                }
+                matcher = datePatterns["BETWEENFIX2"].Match(str);
+                if (matcher.Success)
+                {
+                    string result = "BET " + matcher.Groups[1].ToString() + " " + matcher.Groups[2].ToString() + " AND " + matcher.Groups[3].ToString() + " " + matcher.Groups[4].ToString();
+                    return result.Trim();
+                }
+                matcher = datePatterns["BETWEENFIX3"].Match(str);
+                if (matcher.Success)
+                {
+                    string result = "BET " + matcher.Groups[1].ToString() + matcher.Groups[2].ToString() + " " + matcher.Groups[3].ToString() + " AND " + matcher.Groups[4].ToString() + matcher.Groups[5].ToString() + " " + matcher.Groups[6].ToString();
+                    return result.Trim();
+                }
+                matcher = datePatterns["BETWEENFIX4"].Match(str);
+                if (matcher.Success)
+                {
+                    string result = "BET " + matcher.Groups[1].ToString() + " " + matcher.Groups[3].ToString() + " " + matcher.Groups[4].ToString() + " AND " + matcher.Groups[2].ToString() + matcher.Groups[3].ToString() + " " + matcher.Groups[4].ToString();
+                    return result.Trim();
+                }
+                matcher = datePatterns["BETWEENFIX5"].Match(str);
+                if (matcher.Success)
+                {
+                    string result = "BET " + matcher.Groups[1].ToString() + matcher.Groups[2].ToString() + " " + matcher.Groups[5].ToString() + " AND " + matcher.Groups[3].ToString() + matcher.Groups[4].ToString() + " " + matcher.Groups[5].ToString();
+                    return result.Trim();
+                }
             }
             matcher = datePatterns["USDATEFIX"].Match(str);
             if (matcher.Success)
@@ -496,7 +498,7 @@ namespace FTAnalyzer
         private DateTime ParseDate(string dateValue, int highlow, int adjustment, int defaultYear)
         {
             DateTime date;
-            Group gDay, gMonth, gYear, gDouble;
+            Group gDay = null, gMonth = null, gYear = null, gDouble = null;
             DateTime dt = MINDATE;
             dateValue = dateValue.Trim();
             if (dateValue == string.Empty)
@@ -543,6 +545,45 @@ namespace FTAnalyzer
                         gDouble = matcher2.Groups[4];
                         if (dateValue.Length > 5)
                             dateValue = dateValue.Substring(0, dateValue.Length - 5); // remove the trailing / and 4 digits
+                    }
+                    else if (Properties.NonGedcomDate.Default.UseNonGedcomDates)
+                    {
+                        matcher2 = NonGEDCOMDateFormatRegex.Match(dateValue);
+                        if (matcher2.Success)
+                        {
+                            switch ((FormatSelected)Properties.NonGedcomDate.Default.FormatSelected)
+                            {
+                                case FormatSelected.DD_MM_YYYY:
+                                    gDay = matcher2.Groups[1];
+                                    gMonth = matcher2.Groups[2];
+                                    gYear = matcher2.Groups[3];
+                                    gDouble = null;
+                                    break;
+                                case FormatSelected.MM_DD_YYYY:
+                                    gDay = matcher2.Groups[2];
+                                    gMonth = matcher2.Groups[1];
+                                    gYear = matcher2.Groups[3];
+                                    gDouble = null;
+                                    break;
+                                case FormatSelected.YYYY_DD_MM:
+                                    gDay = matcher2.Groups[2];
+                                    gMonth = matcher2.Groups[3];
+                                    gYear = matcher2.Groups[1];
+                                    gDouble = null;
+                                    break;
+                                case FormatSelected.YYYY_MM_DD:
+                                    gDay = matcher2.Groups[3];
+                                    gMonth = matcher2.Groups[2];
+                                    gYear = matcher2.Groups[1];
+                                    gDouble = null;
+                                    break;
+                            }
+                            string standardFormat = new DateTime(int.Parse(gYear.Value), int.Parse(gMonth.Value), int.Parse(gDay.Value)).ToString("dd MMM yyyy").ToString().ToUpper();
+                            if (dateValue.Length > matcher2.Length)
+                                dateValue = dateValue.Substring(0, matcher2.Index) + standardFormat + dateValue.Substring(matcher2.Index + matcher2.Length, dateValue.Length);
+                            else
+                                dateValue = standardFormat;
+                        }
                     }
                     else
                         throw new Exception("Unrecognised date format for : " + dateValue);
@@ -614,7 +655,7 @@ namespace FTAnalyzer
                 if (gDouble != null)
                     dt = dt.TryAddYears(1); // use upper year for double dates
             }
-            catch (System.FormatException)
+            catch (FormatException)
             {
                 throw;
             }
