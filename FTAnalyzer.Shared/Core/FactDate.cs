@@ -152,6 +152,7 @@ namespace FTAnalyzer
             str = str.Replace("MARS", "MAR");
             str = str.Replace("AVRIL", "APR");
             str = str.Replace("AVRL", "APR");
+            str = str.Replace("MAI", "MAY");
             str = str.Replace("JUIN", "JUN");
             str = str.Replace("JUILLET", "JUL");
             str = str.Replace("JUIL", "JUL");
