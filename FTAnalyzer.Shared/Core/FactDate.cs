@@ -205,6 +205,7 @@ namespace FTAnalyzer
             str = str.Replace("MAR QTR", "ABT MAR");
             str = str.Replace("MAR Q ", "ABT MAR ");
             str = str.Replace("JAN FEB MAR", "ABT MAR");
+            str = str.Replace("JAN-MAR", "ABT MAR");
             str = str.Replace("JAN-FEB-MAR", "ABT MAR");
             str = str.Replace("JAN/FEB/MAR", "ABT MAR");
             str = str.Replace("JAN\\FEB\\MAR", "ABT MAR");
@@ -215,6 +216,7 @@ namespace FTAnalyzer
             str = str.Replace("JUN QTR", "ABT JUN");
             str = str.Replace("JUN Q ", "ABT JUN ");
             str = str.Replace("APR MAY JUN", "ABT JUN");
+            str = str.Replace("APR-JUN", "ABT JUN");
             str = str.Replace("APR-MAY-JUN", "ABT JUN");
             str = str.Replace("APR/MAY/JUN", "ABT JUN");
             str = str.Replace("APR\\MAY\\JUN", "ABT JUN");
@@ -225,6 +227,7 @@ namespace FTAnalyzer
             str = str.Replace("SEP QTR", "ABT SEP");
             str = str.Replace("SEP Q ", "ABT SEP ");
             str = str.Replace("JUL AUG SEP", "ABT SEP");
+            str = str.Replace("JUL-SEP", "ABT SEP");
             str = str.Replace("JUL-AUG-SEP", "ABT SEP");
             str = str.Replace("JUL/AUG/SEP", "ABT SEP");
             str = str.Replace("JUL\\AUG\\SEP", "ABT SEP");
@@ -235,6 +238,7 @@ namespace FTAnalyzer
             str = str.Replace("DEC QTR", "ABT DEC");
             str = str.Replace("DEC Q ", "ABT DEC ");
             str = str.Replace("OCT NOV DEC", "ABT DEC");
+            str = str.Replace("OCT-DEC", "ABT DEC");
             str = str.Replace("OCT-NOV-DEC", "ABT DEC");
             str = str.Replace("OCT/NOV/DEC", "ABT DEC");
             str = str.Replace("OCT\\NOV\\DEC", "ABT DEC");
@@ -244,8 +248,9 @@ namespace FTAnalyzer
             str = str.Replace("QTR 4 ", "ABT DEC ");
 
             str = str.Replace("ABT ABT", "ABT"); // fix any ABT X QTR's that will have been changed to ABT ABT
+            str = str.Replace("BET ABT", "ABT"); // fix any BET XXX-XXX QTR's that will have been changed to BET ABT
 
-            if(str.IndexOf("TO") > 1)
+            if (str.IndexOf("TO") > 1)
             {  // contains TO but doesn't start with TO
                 if (!str.StartsWith("FROM"))
                     str = "FROM " + str;
