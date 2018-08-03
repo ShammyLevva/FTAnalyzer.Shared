@@ -424,7 +424,7 @@ namespace FTAnalyzer
 
             // When the user changes the root individual, no location processing is taking place
             int locationCount = locationsToFollow ? FactLocation.AllLocations.Count() : 0;
-            SetRelations(rootIndividualID);
+            SetRelations(rootIndividualID, outputText);
             progress?.Report(10);
             SetRelationDescriptions(rootIndividualID);
             outputText.Report(PrintRelationCount());
@@ -667,9 +667,9 @@ namespace FTAnalyzer
             if (SoloFamilies > 0)
                 outputText.Report("Added " + SoloFamilies + " lone individuals as single families.\n");
         }
-#endregion
+        #endregion
 
-#region Properties
+        #region Properties
 
         public bool Loading => _loading;
         public bool DataLoaded => _dataloaded;
@@ -713,9 +713,9 @@ namespace FTAnalyzer
         public string NextSoloFamily { get { return "SF" + ++SoloFamilies; } }
 
         public string NextPreMarriageFamily { get { return "PM" + ++PreMarriageFamilies; } }
-#endregion
+        #endregion
 
-#region Property Functions
+        #region Property Functions
 
         public IEnumerable<Individual> GetAllRelationsOfType(int relationType)
         {
@@ -809,9 +809,9 @@ namespace FTAnalyzer
                 ind.SetFullName();
             }
         }
-#endregion
+        #endregion
 
-#region Loose Births
+        #region Loose Births
 
         public SortableBindingList<IDisplayLooseBirth> LooseBirths()
         {
@@ -981,9 +981,9 @@ namespace FTAnalyzer
                 return FactDate.UNKNOWN_DATE;
         }
 
-#endregion
+        #endregion
 
-#region Loose Deaths
+        #region Loose Deaths
 
         public SortableBindingList<IDisplayLooseDeath> LooseDeaths()
         {
@@ -1119,27 +1119,27 @@ namespace FTAnalyzer
 
         }
 
-#endregion
+        #endregion
 
-#region TreeTops
+        #region TreeTops
 
         public IEnumerable<IDisplayIndividual> GetTreeTops(Predicate<Individual> filter)
         {
             return individuals.Filter(ind => !ind.HasParents && filter(ind));
         }
 
-#endregion
+        #endregion
 
-#region WorldWars
+        #region WorldWars
 
         public IEnumerable<IDisplayIndividual> GetWorldWars(Predicate<Individual> filter)
         {
             return individuals.Filter(ind => ind.IsMale && filter(ind));
         }
 
-#endregion
+        #endregion
 
-#region Relationship Functions
+        #region Relationship Functions
 
         private void ClearRelations()
         {
@@ -1161,40 +1161,70 @@ namespace FTAnalyzer
             }
         }
 
-        private void AddParentsToQueue(Individual indiv, Queue<Individual> queue, bool setAhnenfatel)
+        private void AddDirectParentsToQueue(Individual indiv, Queue<Individual> queue, IProgress<string> outputText)
         {
             foreach (ParentalRelationship parents in indiv.FamiliesAsChild)
             {
                 Family family = parents.Family;
                 // add parents to queue
-                if (family.Husband != null && family.Husband.RelationType == Individual.UNKNOWN)
+                if (family.Husband != null && parents.IsNaturalFather && indiv.RelationType == Individual.DIRECT)
                 {
-                    if (setAhnenfatel && indiv.RelationType == Individual.DIRECT && parents.IsNaturalFather)
+                    if (family.Husband.RelationType != Individual.UNKNOWN && family.Husband.Ahnentafel != indiv.Ahnentafel * 2)
+                        AlreadyDirect(family.Husband, indiv.Ahnentafel * 2, outputText);
+                    else
                     {
                         family.Husband.Ahnentafel = indiv.Ahnentafel * 2;
                         if (family.Husband.Ahnentafel > maxAhnentafel)
                             maxAhnentafel = family.Husband.Ahnentafel;
                         queue.Enqueue(family.Husband); // add to directs queue only if natural father of direct
                     }
-                    if (!setAhnenfatel)
-                        queue.Enqueue(family.Husband); // add if not checking directs
                 }
-                if (family.Wife != null && family.Wife.RelationType == Individual.UNKNOWN)
+
+                if (family.Wife != null && parents.IsNaturalMother && indiv.RelationType == Individual.DIRECT)
                 {
-                    if (setAhnenfatel && indiv.RelationType == Individual.DIRECT && parents.IsNaturalMother)
+                    if (family.Wife.RelationType != Individual.UNKNOWN && family.Wife.Ahnentafel != indiv.Ahnentafel * 2 + 1)
+                        AlreadyDirect(family.Wife, indiv.Ahnentafel * 2 + 1, outputText);
+                    else
                     {
                         family.Wife.Ahnentafel = indiv.Ahnentafel * 2 + 1;
                         if (family.Wife.Ahnentafel > maxAhnentafel)
                             maxAhnentafel = family.Wife.Ahnentafel;
-                        queue.Enqueue(family.Wife);
+                        queue.Enqueue(family.Wife); // add to directs queue only if natural mother of direct
                     }
-                    if (!setAhnenfatel) // add to directs queue only if natural father of direct
-                        queue.Enqueue(family.Wife); // add if not checking directs
                 }
             }
         }
 
-        void AddChildrenToQueue(Individual indiv, Queue<Individual> queue, bool isRootPerson)
+        private void AlreadyDirect(Individual parent, long newAhnatafel, IProgress<string> outputText)
+        {
+            // Hmm interesting a direct parent who is already a direct
+            string currentRelationship = Relationship.CalculateRelationship(RootPerson, parent);
+            string currentLine = Relationship.AhnentafelToString(parent.Ahnentafel);
+            string newLine = Relationship.AhnentafelToString(newAhnatafel);
+            if (parent.Ahnentafel > newAhnatafel)
+                parent.Ahnentafel = newAhnatafel; // set to lower line if new direct
+            if(outputText != null)
+            {
+                outputText.Report(parent.Name + " detected as a direct ancestor more than once as:\n");
+                outputText.Report(currentLine + " and as:\n");
+                outputText.Report(newLine + "\n\n");
+            }
+        }
+
+        private void AddParentsToQueue(Individual indiv, Queue<Individual> queue)
+        {
+            foreach (ParentalRelationship parents in indiv.FamiliesAsChild)
+            {
+                Family family = parents.Family;
+                // add parents to queue
+                if (family?.Husband?.RelationType == Individual.UNKNOWN)
+                    queue.Enqueue(family.Husband);
+                if (family?.Wife?.RelationType == Individual.UNKNOWN)
+                    queue.Enqueue(family.Wife);
+            }
+        }
+
+        private void AddChildrenToQueue(Individual indiv, Queue<Individual> queue, bool isRootPerson)
         {
             IEnumerable<Family> parentFamilies = indiv.FamiliesAsParent;
             foreach (Family family in parentFamilies)
@@ -1219,7 +1249,7 @@ namespace FTAnalyzer
 
         public Individual RootPerson { get; set; }
 
-        public void SetRelations(string startID)
+        public void SetRelations(string startID, IProgress<string> outputText)
         {
             ClearRelations();
             RootPerson = GetIndividual(startID);
@@ -1235,18 +1265,15 @@ namespace FTAnalyzer
                 ind = queue.Dequeue();
                 // set them as a direct relation
                 ind.RelationType = Individual.DIRECT;
-                AddParentsToQueue(ind, queue, true);
+                ind.CommonAncestor = new CommonAncestor(ind, 0, false); // set direct as common ancestor
+                AddDirectParentsToQueue(ind, queue, outputText);
             }
             int lenAhnentafel = maxAhnentafel.ToString().Length;
             // we have now added all direct ancestors
             IEnumerable<Individual> directs = GetAllRelationsOfType(Individual.DIRECT);
+            // add all direct ancestors budgie codes
             foreach (Individual i in directs)
-            {
-                // add all direct ancestors budgie codes
                 i.BudgieCode = (i.Ahnentafel).ToString().PadLeft(lenAhnentafel, '0') + "d";
-                // set all directs as common ancestor
-                i.CommonAncestor = new CommonAncestor(i, 0, false);
-            }
             AddToQueue(queue, directs);
             while (queue.Count > 0)
             {
@@ -1283,7 +1310,7 @@ namespace FTAnalyzer
                     // set this individual to be related by marriage
                     if (relationship == Individual.UNKNOWN)
                         ind.RelationType = Individual.MARRIAGE;
-                    AddParentsToQueue(ind, queue, false);
+                    AddParentsToQueue(ind, queue);
                     IEnumerable<Family> families = ind.FamiliesAsParent;
                     foreach (Family family in families)
                     {
@@ -1344,9 +1371,9 @@ namespace FTAnalyzer
             return sb.ToString();
         }
 
-#endregion
+        #endregion
 
-#region Displays
+        #region Displays
 
         public IEnumerable<CensusFamily> GetAllCensusFamilies(CensusDate censusDate, bool censusDone, bool checkCensus)
         {
@@ -1603,9 +1630,9 @@ namespace FTAnalyzer
             return individuals.Filter(filter).ToList<IDisplayMissingData>();
         }
 #endif
-#endregion
+        #endregion
 
-#region Data Errors
+        #region Data Errors
 
         private void SetDataErrorTypes()
         {
@@ -1615,12 +1642,12 @@ namespace FTAnalyzer
             for (int i = 0; i < DATA_ERROR_GROUPS; i++)
                 errors[i] = new List<DataError>();
             // calculate error lists
-#region Individual Fact Errors
+            #region Individual Fact Errors
             foreach (Individual ind in AllIndividuals)
             {
                 try
                 {
-#region Death facts
+                    #region Death facts
                     if (ind.DeathDate.IsKnown)
                     {
                         if (ind.BirthDate.IsAfter(ind.DeathDate))
@@ -1635,8 +1662,8 @@ namespace FTAnalyzer
                         if (ind.IsFlaggedAsLiving)
                             errors[(int)Dataerror.LIVING_WITH_DEATH_DATE].Add(new DataError((int)Dataerror.LIVING_WITH_DEATH_DATE, ind, "Flagged as living but has death date of " + ind.DeathDate));
                     }
-#endregion
-#region Error facts
+                    #endregion
+                    #region Error facts
                     foreach (Fact f in ind.ErrorFacts)
                     {
                         bool added = false;
@@ -1690,8 +1717,8 @@ namespace FTAnalyzer
                         if (!added)
                             errors[(int)Dataerror.FACT_ERROR].Add(new DataError((int)Dataerror.FACT_ERROR, f.FactErrorLevel, ind, f.FactErrorMessage));
                     }
-#endregion
-#region All Facts
+                    #endregion
+                    #region All Facts
                     foreach (Fact f in ind.AllFacts)
                     {
                         if (FactBeforeBirth(ind, f))
@@ -1711,8 +1738,8 @@ namespace FTAnalyzer
                                             ind, "Unknown fact type " + f.FactTypeDescription + " recorded"));
                                 }
                             }
-                        }   
-                        if(f.IsCensusFact && f.FactDate.FactYearMatches(CensusDate.UKCENSUS1939) && !ind.BirthDate.IsExact)
+                        }
+                        if (f.IsCensusFact && f.FactDate.FactYearMatches(CensusDate.UKCENSUS1939) && !ind.BirthDate.IsExact)
                         {
                             errors[(int)Dataerror.NATREG1939_INEXACT_BIRTHDATE].Add(
                                         new DataError((int)Dataerror.NATREG1939_INEXACT_BIRTHDATE, Fact.FactError.QUESTIONABLE,
@@ -1722,11 +1749,11 @@ namespace FTAnalyzer
                     #region Duplicate Fact Check
                     var dup = ind.AllFileFacts.GroupBy(x => x.EqualHash).Where(g => g.Count() > 1).Select(y => y.Key).ToList();
                     var dupList = new List<Fact>();
-                    foreach(string dfs in dup)
+                    foreach (string dfs in dup)
                     {
                         var df = ind.AllFacts.Where(x => x.EqualHash.Equals(dfs)).First();
-                        if(df !=null)
-                        { 
+                        if (df != null)
+                        {
                             dupList.Add(df);
                             errors[(int)Dataerror.DUPLICATE_FACT].Add(
                                             new DataError((int)Dataerror.DUPLICATE_FACT, Fact.FactError.ERROR,
@@ -1737,7 +1764,7 @@ namespace FTAnalyzer
                     foreach (string pd in possDuplicates)
                     {
                         var pdf = ind.AllFacts.Where(x => x.PossiblyEqualHash.Equals(pd)).First();
-                        if(pdf != null && !dupList.Contains(pdf))
+                        if (pdf != null && !dupList.Contains(pdf))
                         {
                             errors[(int)Dataerror.POSSIBLE_DUPLICATE_FACT].Add(
                                             new DataError((int)Dataerror.POSSIBLE_DUPLICATE_FACT, Fact.FactError.QUESTIONABLE,
@@ -1794,7 +1821,7 @@ namespace FTAnalyzer
                             maxAge = spouse.GetMaxAge(asParent.MarriageDate);
                             if (maxAge < 13 && spouse.BirthDate.IsAfter(FactDate.MARRIAGE_LESS_THAN_13))
                                 errors[(int)Dataerror.MARRIAGE_BEFORE_SPOUSE_13].Add(new DataError((int)Dataerror.MARRIAGE_BEFORE_SPOUSE_13, ind, "Marriage to " + spouse.Name + " in " + asParent.MarriageDate + " is before spouse born " + spouse.BirthDate + " was 13 years old"));
-                            if(ind.Surname.Equals(spouse.Surname))
+                            if (ind.Surname.Equals(spouse.Surname))
                                 errors[(int)Dataerror.SAME_SURNAME_COUPLE].Add(new DataError((int)Dataerror.SAME_SURNAME_COUPLE, ind, "Spouse " + spouse.Name + " has same surname. Usually due to wife incorrectly recorded with married instead of maiden name."));
                             //if (ind.FirstMarriage != null && ind.FirstMarriage.MarriageDate != null)
                             //{
@@ -1805,7 +1832,7 @@ namespace FTAnalyzer
                             //}
                         }
                     }
-#endregion
+                    #endregion
                 }
 #if (__MACOS__ || __IOS__)
                 catch (Exception)
@@ -1823,8 +1850,8 @@ namespace FTAnalyzer
                 }
 #endif
             }
-#endregion
-#region Family Fact Errors
+            #endregion
+            #region Family Fact Errors
             catchCount = 0;
             foreach (Family fam in AllFamilies)
             {
@@ -1859,7 +1886,7 @@ namespace FTAnalyzer
                 }
 #endif
             }
-#endregion
+            #endregion
 
             for (int i = 0; i < DATA_ERROR_GROUPS; i++)
                 DataErrorTypes.Add(new DataErrorGroup(i, errors[i]));
@@ -1894,14 +1921,14 @@ namespace FTAnalyzer
             AGED_MORE_THAN_110 = 8, FACTS_BEFORE_BIRTH = 9, FACTS_AFTER_DEATH = 10, MARRIAGE_AFTER_DEATH = 11,
             MARRIAGE_AFTER_SPOUSE_DEAD = 12, MARRIAGE_BEFORE_13 = 13, MARRIAGE_BEFORE_SPOUSE_13 = 14, LOST_COUSINS_NON_CENSUS = 15,
             LOST_COUSINS_NOT_SUPPORTED_YEAR = 16, RESIDENCE_CENSUS_DATE = 17, CENSUS_COVERAGE = 18, FACT_ERROR = 19,
-            UNKNOWN_FACT_TYPE = 20, LIVING_WITH_DEATH_DATE = 21, CHILDRENSTATUS_TOTAL_MISMATCH = 22, DUPLICATE_FACT = 23, 
+            UNKNOWN_FACT_TYPE = 20, LIVING_WITH_DEATH_DATE = 21, CHILDRENSTATUS_TOTAL_MISMATCH = 22, DUPLICATE_FACT = 23,
             POSSIBLE_DUPLICATE_FACT = 24, NATREG1939_INEXACT_BIRTHDATE = 25, MALE_WIFE_FEMALE_HUSBAND = 26,
             SAME_SURNAME_COUPLE = 27
         };
 
-#endregion
+        #endregion
 
-#region Census Searching
+        #region Census Searching
 
         public void SearchCensus(string censusCountry, int censusYear, Individual person, int censusProvider)
         {
@@ -2262,9 +2289,9 @@ namespace FTAnalyzer
             return uri.ToString();
         }
 
-#endregion
+        #endregion
 
-#region Birth/Marriage/Death Searching
+        #region Birth/Marriage/Death Searching
 
         public enum SearchType { BIRTH = 0, MARRIAGE = 1, DEATH = 2 };
 
@@ -2489,9 +2516,9 @@ namespace FTAnalyzer
             }
         }
 
-#endregion
+        #endregion
 
-#region Geocoding
+        #region Geocoding
 
         public void WriteGeocodeStatstoRTB(string title, IProgress<string> outputText)
         {
@@ -2523,9 +2550,9 @@ namespace FTAnalyzer
             }
         }
 
-#endregion
+        #endregion
 
-#region Relationship Groups
+        #region Relationship Groups
         public List<Individual> GetFamily(Individual startIndividiual)
         {
             List<Individual> results = new List<Individual>();
@@ -2605,9 +2632,9 @@ namespace FTAnalyzer
         {
             return GetFamily(ind).Union(GetAncestors(ind).Union(GetDescendants(ind))).ToList<Individual>();
         }
-#endregion
+        #endregion
 
-#region Duplicates Processing
+        #region Duplicates Processing
         UInt64 maleProgress = 0;
         UInt64 femaleProgress = 0;
         UInt64 progressMaximum = 0;
@@ -2623,9 +2650,9 @@ namespace FTAnalyzer
             duplicates = new SortableBindingList<DuplicateIndividual>();
             IEnumerable<Individual> males = individuals.Filter<Individual>(x => (x.Gender == "M" || x.Gender == "U"));
             IEnumerable<Individual> females = individuals.Filter<Individual>(x => (x.Gender == "F" || x.Gender == "U"));
-            UInt64 nummales = (UInt64) males.Count();
+            UInt64 nummales = (UInt64)males.Count();
             UInt64 numfemales = (UInt64)males.Count();
-            progressMaximum = (nummales *nummales + numfemales * numfemales) / 2;
+            progressMaximum = (nummales * nummales + numfemales * numfemales) / 2;
             progress.Report(0);
             try
             {
@@ -2754,9 +2781,9 @@ namespace FTAnalyzer
                 NonDuplicates = new List<NonDuplicate>();
             }
         }
-#endregion
+        #endregion
 
-#region Report Issues
+        #region Report Issues
         public HashSet<string> UnrecognisedCensusReferences()
         {
             var result = new HashSet<string>();
@@ -2783,9 +2810,9 @@ namespace FTAnalyzer
                 result.Add(i.UnrecognisedCensusNotes + "\n--------------------------------------------------------------------------------\n");
             return result;
         }
-#endregion
+        #endregion
 
-#region Today
+        #region Today
         public void AddTodaysFacts(DateTime chosenDate, bool wholeMonth, int stepSize, IProgress<int> progress, IProgress<string> outputText)
         {
             string dateDesc;
@@ -2937,6 +2964,6 @@ namespace FTAnalyzer
             return doc;
         }
 
-#endregion
+        #endregion
     }
 }

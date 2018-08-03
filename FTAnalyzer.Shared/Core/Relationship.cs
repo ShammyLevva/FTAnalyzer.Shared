@@ -1,27 +1,29 @@
 ﻿using System;
+using System.Linq;
+using System.Text;
 
 namespace FTAnalyzer
 {
     public class Relationship
     {
-        public static string CalculateRelationship(Individual rootPerson, Individual toFind)
+        public static string CalculateRelationship(Individual rootPerson, Individual indToFind)
         {
-            if (rootPerson.Equals(toFind))
+            if (rootPerson.Equals(indToFind))
                 return "root person";
-            CommonAncestor commonAncestor = toFind.CommonAncestor;
+            CommonAncestor commonAncestor = indToFind.CommonAncestor;
             Int64 rootDistance = (Int64)(Math.Log(commonAncestor.Ind.Ahnentafel) / Math.Log(2.0));
             Int64 toFindDistance = commonAncestor.Distance;
 
             // DIRECT DESCENDANT - PARENT
             if (toFindDistance == 0)
             {
-                string relation = toFind.IsMale ? "father" : "mother";
+                string relation = indToFind.IsMale ? "father" : "mother";
                 return (commonAncestor.Step ? "step " : string.Empty) + AggrandiseRelationship(relation, rootDistance, 0);
             }
             // DIRECT DESCENDANT - CHILD
             if (rootDistance == 0)
             {
-                string relation = toFind.IsMale ? "son" : "daughter";
+                string relation = indToFind.IsMale ? "son" : "daughter";
                 return (commonAncestor.Step ? "step " : string.Empty) + AggrandiseRelationship(relation, toFindDistance, 0);
             }
             // EQUAL DISTANCE - SIBLINGS / PERFECT COUSINS
@@ -30,7 +32,7 @@ namespace FTAnalyzer
                 switch (toFindDistance)
                 {
                     case 1:
-                        return (commonAncestor.Step ? "half " : string.Empty) + (toFind.IsMale ? "brother" : "sister");
+                        return (commonAncestor.Step ? "half " : string.Empty) + (indToFind.IsMale ? "brother" : "sister");
                     case 2:
                         return "cousin";
                     default:
@@ -40,13 +42,13 @@ namespace FTAnalyzer
             // AUNT / UNCLE
             if (toFindDistance == 1)
             {
-                string relation = toFind.IsMale ? "uncle" : "aunt";
+                string relation = indToFind.IsMale ? "uncle" : "aunt";
                 return AggrandiseRelationship(relation, rootDistance, 1);
             }
             // NEPHEW / NIECE
             if (rootDistance == 1)
             {
-                string relation = toFind.IsMale ? "nephew" : "niece";
+                string relation = indToFind.IsMale ? "nephew" : "niece";
                 return AggrandiseRelationship(relation, toFindDistance, 1);
             }
             // COUSINS, GENERATIONALLY REMOVED
@@ -107,6 +109,29 @@ namespace FTAnalyzer
                 }
             }
             return number + os;
+        }
+
+        public static string AhnentafelToString(long ahnentafel)
+        {
+            StringBuilder output = new StringBuilder();
+            StringBuilder relations = new StringBuilder();
+            output.Append(FamilyTree.Instance.RootPerson.Name);
+            if(ahnentafel !=1) output.Append("'s ");
+            while (ahnentafel != 1)
+            {
+                if (ahnentafel % 2 == 0)
+                    relations.Append("father's ");
+                else
+                {
+                    ahnentafel -= 1;
+                    relations.Append("mother's ");
+                }
+                ahnentafel /= 2;
+            }
+            output.Append(String.Join(" ", relations.ToString().Split(' ').Reverse()));
+            output.Replace("  ", " ");
+            //remove last 's
+            return output.ToString().Substring(0,output.Length -2);
         }
     }
 }
