@@ -302,14 +302,14 @@ namespace FTAnalyzer
                 {
                     Tuple<bool, string> result = BetweenFixes(str);
                     if (result.Item1)
-                        return result.Item2.ToString();
+                        return result.Item2.ToString().Trim();
                 }
             }
             else
             {
                 Tuple<bool, string> result = BetweenFixes(str);
                 if (result.Item1)
-                    return result.Item2.ToString();
+                    return result.Item2.ToString().Trim();
             }
             matcher = datePatterns["USDATEFIX"].Match(str);
             if (matcher.Success)
@@ -328,26 +328,23 @@ namespace FTAnalyzer
 
         private Tuple<bool,string> BetweenFixes(string str)
         {
-            Tuple<bool, string> result = new Tuple<bool, string>(false, string.Empty);
             Match matcher = datePatterns["BETWEENFIX"].Match(str);
             if (matcher.Success)
-                result = new Tuple<bool, string>(true, "BET " + matcher.Groups[1].ToString() + " AND " + matcher.Groups[2].ToString());
+                return new Tuple<bool, string>(true, "BET " + matcher.Groups[1].ToString() + " AND " + matcher.Groups[2].ToString());
             matcher = datePatterns["BETWEENFIX2"].Match(str);
             if (matcher.Success)
-                result = new Tuple<bool, string>(true, "BET " + matcher.Groups[1].ToString() + " " + matcher.Groups[2].ToString() + " AND " + matcher.Groups[3].ToString() + " " + matcher.Groups[4].ToString());
+                return new Tuple<bool, string>(true, "BET " + matcher.Groups[1].ToString() + " " + matcher.Groups[2].ToString() + " AND " + matcher.Groups[3].ToString() + " " + matcher.Groups[4].ToString());
             matcher = datePatterns["BETWEENFIX3"].Match(str);
             if (matcher.Success)
-                result = new Tuple<bool, string>(true, "BET " + matcher.Groups[1].ToString() + matcher.Groups[2].ToString() + " " + matcher.Groups[3].ToString() + " AND " + matcher.Groups[4].ToString() + matcher.Groups[5].ToString() + " " + matcher.Groups[6].ToString());
+                return new Tuple<bool, string>(true, "BET " + matcher.Groups[1].ToString() + matcher.Groups[2].ToString() + " " + matcher.Groups[3].ToString() + " AND " + matcher.Groups[4].ToString() + matcher.Groups[5].ToString() + " " + matcher.Groups[6].ToString());
             matcher = datePatterns["BETWEENFIX4"].Match(str);
             if (matcher.Success)
-                result = new Tuple<bool, string>(true, "BET " + matcher.Groups[1].ToString() + " " + matcher.Groups[3].ToString() + " " + matcher.Groups[4].ToString() + " AND " + matcher.Groups[2].ToString() + matcher.Groups[3].ToString() + " " + matcher.Groups[4].ToString());
+                return  new Tuple<bool, string>(true, "BET " + matcher.Groups[1].ToString() + " " + matcher.Groups[3].ToString() + " " + matcher.Groups[4].ToString() + " AND " + matcher.Groups[2].ToString() + matcher.Groups[3].ToString() + " " + matcher.Groups[4].ToString());
             matcher = datePatterns["BETWEENFIX5"].Match(str);
             if (matcher.Success)
-                result = new Tuple<bool, string>(true, "BET " + matcher.Groups[1].ToString() + matcher.Groups[2].ToString() + " " + matcher.Groups[5].ToString() + " AND " + matcher.Groups[3].ToString() + matcher.Groups[4].ToString() + " " + matcher.Groups[5].ToString());
-            return result;
+                return new Tuple<bool, string>(true, "BET " + matcher.Groups[1].ToString() + matcher.Groups[2].ToString() + " " + matcher.Groups[5].ToString() + " AND " + matcher.Groups[3].ToString() + matcher.Groups[4].ToString() + " " + matcher.Groups[5].ToString());
+            return new Tuple<bool, string>(false, string.Empty);
         }
-
-
 
         #region Process Dates
 
