@@ -71,7 +71,7 @@ namespace FTAnalyzer.Utilities
 
         public static string ClearWhiteSpace(this String text)
         {
-            return text.Replace(System.Environment.NewLine, " ").Replace("\n", " ")
+            return text.Replace(Environment.NewLine, " ").Replace("\n", " ")
                        .Replace("\t", " ").Replace("   ", " ").Replace("  ", " ")
                        .Replace("  ", " ").Replace("  ", " ").Replace("  ", " ")
                        .Replace(";", " ").Replace(":", " ").Replace("~", " ")

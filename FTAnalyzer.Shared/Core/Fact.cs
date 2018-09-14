@@ -785,7 +785,7 @@ namespace FTAnalyzer
                         // If slash occurs at end of string, location is empty.
                         Place = (slash == factPlace.Length - 1) ? string.Empty : factPlace.Substring(slash + 1).Trim();
                     }
-                    else if (Fact.COMMENT_FACTS.Contains(factType))
+                    else if (COMMENT_FACTS.Contains(factType))
                     {
                         // we have a comment rather than a location
                         Comment = factPlace;
@@ -807,9 +807,9 @@ namespace FTAnalyzer
             }
             Comment = EnhancedTextInfo.ToTitleCase(Comment).Trim();
             if (GeneralSettings.Default.ReverseLocations)
-                Location = FactLocation.GetLocation(ReverseLocation(Place), latitude, longitude, FactLocation.Geocode.NOT_SEARCHED);
+                Location = FactLocation.GetLocation(ReverseLocation(Place), latitude, longitude, FactLocation.Geocode.NOT_SEARCHED, true, true);
             else
-                Location = FactLocation.GetLocation(Place, latitude, longitude, FactLocation.Geocode.NOT_SEARCHED);
+                Location = FactLocation.GetLocation(Place, latitude, longitude, FactLocation.Geocode.NOT_SEARCHED, true, true);
         }
 
         private bool SetCertificatePresent()

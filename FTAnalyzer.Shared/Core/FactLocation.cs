@@ -335,14 +335,14 @@ namespace FTAnalyzer
         FactLocation(string location, string latitude, string longitude, Geocode status)
             : this(location)
         {
-            this.Latitude = double.TryParse(latitude, out double temp) ? temp : 0;
-            this.Longitude = double.TryParse(longitude, out temp) ? temp : 0;
+            Latitude = double.TryParse(latitude, out double temp) ? temp : 0;
+            Longitude = double.TryParse(longitude, out temp) ? temp : 0;
 #if __PC__
             GeoAPI.Geometries.Coordinate point = new GeoAPI.Geometries.Coordinate(Longitude, Latitude);
             GeoAPI.Geometries.Coordinate mpoint = Mapping.MapTransforms.TransformCoordinate(point);
 
-            this.LongitudeM = mpoint.X;
-            this.LatitudeM = mpoint.Y;
+            LongitudeM = mpoint.X;
+            LatitudeM = mpoint.Y;
 #endif
             GeocodeStatus = status;
             if (status == Geocode.NOT_SEARCHED && (Latitude != 0 || Longitude != 0))
@@ -354,7 +354,7 @@ namespace FTAnalyzer
         {
             if (location != null)
             {
-                this.GEDCOMLocation = location;
+                GEDCOMLocation = location;
                 // we need to parse the location string from a little injun to a big injun
                 int comma = location.LastIndexOf(",", StringComparison.Ordinal);
                 if (comma > 0)
@@ -487,7 +487,7 @@ namespace FTAnalyzer
 
         private static void SaveLocationToDatabase(FactLocation loc)
         {
-            loc.GeocodeStatus = FactLocation.Geocode.GEDCOM_USER;
+            loc.GeocodeStatus = Geocode.GEDCOM_USER;
             loc.FoundLocation = string.Empty;
             loc.FoundLevel = -2;
 #if __PC__
@@ -534,7 +534,7 @@ namespace FTAnalyzer
         public static Fact BestLocationFact(IEnumerable<Fact> facts, FactDate when, int limit)
         {
             // this returns a Fact for a FactLocation a person was at for a given period
-            Fact result = new Fact("Unknown", Fact.UNKNOWN, FactDate.UNKNOWN_DATE, FactLocation.UNKNOWN_LOCATION);
+            Fact result = new Fact("Unknown", Fact.UNKNOWN, FactDate.UNKNOWN_DATE, UNKNOWN_LOCATION);
             double minDistance = float.MaxValue;
             double distance;
             foreach (Fact f in facts)
