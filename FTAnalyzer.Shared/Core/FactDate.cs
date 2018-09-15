@@ -761,7 +761,7 @@ namespace FTAnalyzer
          */
         public bool StartsBefore(FactDate that)
         {
-            if (!this.DoubleDate && that != null && that.DoubleDate)
+            if (!DoubleDate && that != null && that.DoubleDate)
                 return StartDate < that.StartDate || StartDate < that.StartDate.TryAddYears(-1);
             return (that == null) ? true : StartDate < that.StartDate;
         }
@@ -771,7 +771,7 @@ namespace FTAnalyzer
          */
         public bool IsAfter(FactDate that)
         {
-            if (this.DoubleDate && that != null && !that.DoubleDate)
+            if (DoubleDate && that != null && !that.DoubleDate)
                 return StartDate > that.EndDate || StartDate.TryAddYears(-1) > that.EndDate;
             // easy case is extremes whole of date after other
             return (that == null) ? true : StartDate > that.EndDate;
@@ -782,7 +782,7 @@ namespace FTAnalyzer
          */
         public bool EndsAfter(FactDate that)
         {
-            if (this.DoubleDate && that != null && !that.DoubleDate)
+            if (DoubleDate && that != null && !that.DoubleDate)
                 return EndDate > that.EndDate || EndDate.TryAddYears(-1) > that.EndDate;
             return (that == null) ? true : EndDate > that.EndDate;
         }
@@ -888,20 +888,20 @@ namespace FTAnalyzer
         #endregion
 
         #region Overrides
-        public override bool Equals(Object that)
+        public override bool Equals(object that)
         {
             if (that == null || !(that is FactDate))
                 return false;
             FactDate f = (FactDate)that;
             // two FactDates are equal if same datestring or same start and- enddates
-            return (this.DateString.ToUpper().Equals(f.DateString.ToUpper())) ||
-                   (this.StartDate.Equals(f.StartDate) && this.EndDate.Equals(f.EndDate));
+            return (DateString.ToUpper().Equals(f.DateString.ToUpper())) ||
+                   (StartDate.Equals(f.StartDate) && EndDate.Equals(f.EndDate));
         }
 
         public static bool operator ==(FactDate a, FactDate b)
         {
             // If both are null, or both are same instance, return true.
-            if (System.Object.ReferenceEquals(a, b))
+            if (ReferenceEquals(a, b))
             {
                 return true;
             }
@@ -926,12 +926,12 @@ namespace FTAnalyzer
 
         public int CompareTo(FactDate that)
         {
-            if (this.Equals(that))
+            if (Equals(that))
                 return 0;
-            else if (this.StartDate.Equals(that.StartDate))
-                return this.EndDate.CompareTo(that.EndDate);
+            else if (StartDate.Equals(that.StartDate))
+                return EndDate.CompareTo(that.EndDate);
             else
-                return this.StartDate.CompareTo(that.StartDate);
+                return StartDate.CompareTo(that.StartDate);
         }
 
         public override string ToString()
