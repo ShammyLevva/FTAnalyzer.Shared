@@ -229,6 +229,7 @@ namespace FTAnalyzer
 
         public static void LoadGoogleFixesXMLFile(IProgress<string> progress)
         {
+#if __PC__
             LOCAL_GOOGLE_FIXES = new Dictionary<Tuple<int, string>, string>();
             try
             {
@@ -253,6 +254,7 @@ namespace FTAnalyzer
                 LOCAL_GOOGLE_FIXES = new Dictionary<Tuple<int, string>, string>();
                 progress.Report(string.Format("Error processing user defined GoogleFixes.xml file. File will be ignored.\n\nError was : {0}", e.Message));
             }
+#endif
         }
 
         private static void AddGoogleFixes(Dictionary<Tuple<int, string>, string> dictionary, XmlNode n, int level)
