@@ -806,10 +806,12 @@ namespace FTAnalyzer
                     Comment = Comment.Replace("/", "");
             }
             Comment = EnhancedTextInfo.ToTitleCase(Comment).Trim();
+            FactLocation.Geocode geocode = 
+                (latitude.Equals("0.0") && longitude.Equals("0.0")) ? FactLocation.Geocode.NOT_SEARCHED : FactLocation.Geocode.GEDCOM_USER;
             if (GeneralSettings.Default.ReverseLocations)
-                Location = FactLocation.GetLocation(ReverseLocation(Place), latitude, longitude, FactLocation.Geocode.NOT_SEARCHED, true, true);
+                Location = FactLocation.GetLocation(ReverseLocation(Place), latitude, longitude, geocode);
             else
-                Location = FactLocation.GetLocation(Place, latitude, longitude, FactLocation.Geocode.NOT_SEARCHED, true, true);
+                Location = FactLocation.GetLocation(Place, latitude, longitude, geocode);
         }
 
         private bool SetCertificatePresent()

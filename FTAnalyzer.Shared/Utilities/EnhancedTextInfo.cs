@@ -78,12 +78,12 @@ namespace FTAnalyzer.Utilities
                        .Trim();
         }
 
-        public static string Replace(this String str, string oldValue, string newValue, StringComparison comparison)
+        public static string Replace(this string str, string oldValue, string newValue, StringComparison comparison)
         {
             StringBuilder sb = new StringBuilder();
 
             int previousIndex = 0;
-            int index = str.IndexOf(oldValue, StringComparison.CurrentCulture);
+            int index = str.IndexOf(oldValue, comparison);
             while (index != -1)
             {
                 sb.Append(str.Substring(previousIndex, index - previousIndex));

@@ -658,13 +658,13 @@ namespace FTAnalyzer
         {
             while (Country.IndexOf("  ", StringComparison.Ordinal) != -1)
                 Country = Country.Replace("  ", " ");
-            while (Region.IndexOf("  ") != -1)
+            while (Region.IndexOf("  ", StringComparison.Ordinal) != -1)
                 Region = Region.Replace("  ", " ");
-            while (SubRegion.IndexOf("  ") != -1)
+            while (SubRegion.IndexOf("  ", StringComparison.Ordinal) != -1)
                 SubRegion = SubRegion.Replace("  ", " ");
-            while (Address.IndexOf("  ") != -1)
-                Address = Address.Replace("  ", " ",StringComparison.InvariantCulture);
-            while (Place.IndexOf("  ") != -1)
+            while (Address.IndexOf("  ", StringComparison.Ordinal) != -1)
+                Address = Address.Replace("  ", " ");
+            while (Place.IndexOf("  ", StringComparison.Ordinal) != -1)
                 Place = Place.Replace("  ", " ");
             Country = Country.Replace("&", "and").Replace(",", "").Trim();
             Region = Region.Replace("&", "and").Replace(",", "").Trim();
