@@ -1,11 +1,10 @@
-﻿using System;
+﻿using FTAnalyzer.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
-using FTAnalyzer.Utilities;
 using static FTAnalyzer.ColourValues;
-using static FTAnalyzer.UserControls.NonGedcomDateSettingsUI;
 
 namespace FTAnalyzer
 {
@@ -46,11 +45,12 @@ namespace FTAnalyzer
         public static readonly FactDate UNKNOWN_DATE;
         public static readonly FactDate MARRIAGE_LESS_THAN_13;
 
-        private static Dictionary<string, Regex> datePatterns;
+        private static Dictionary<string, Regex> _datePatterns;
+        private static Regex _regex;
 
         static FactDate()
         {
-            datePatterns = new Dictionary<string, Regex>
+            _datePatterns = new Dictionary<string, Regex>
             {
                 ["DATE_PATTERN"] = new Regex(DATE_PATTERN, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["INTERPRETED_DATE_PATTERN"] = new Regex(INTERPRETED_DATE_PATTERN, RegexOptions.Compiled | RegexOptions.IgnoreCase),
@@ -71,6 +71,7 @@ namespace FTAnalyzer
         }
 
         public enum FactDateType { BEF, AFT, BET, ABT, UNK, EXT }
+        public enum NonGEDCOMFormatSelected { DD_MM_YYYY = 1, MM_DD_YYYY = 2, YYYY_MM_DD = 3, YYYY_DD_MM = 4 }
 
         public string DateString { get; private set; }
         public DateTime StartDate { get; private set; }
@@ -282,14 +283,14 @@ namespace FTAnalyzer
             Match matcher;
             if (str.StartsWith("INT")) // Interpreted date but we can discard <<Date_Phrase>>
             {
-                matcher = datePatterns["INTERPRETED_DATE_PATTERN"].Match(str);
+                matcher = _datePatterns["INTERPRETED_DATE_PATTERN"].Match(str);
                 if (matcher.Success)
                 {
                     string result = matcher.Groups[1].ToString() + matcher.Groups[2].ToString() + " " + matcher.Groups[3].ToString();
                     return result.Trim();
                 }
             }
-            matcher = datePatterns["POSTFIX"].Match(str);
+            matcher = _datePatterns["POSTFIX"].Match(str);
             if (matcher.Success)
             {
                 string result = matcher.Groups[1].ToString() + matcher.Groups[2].ToString();
@@ -311,13 +312,13 @@ namespace FTAnalyzer
                 if (result.Item1)
                     return result.Item2.ToString().Trim();
             }
-            matcher = datePatterns["USDATEFIX"].Match(str);
+            matcher = _datePatterns["USDATEFIX"].Match(str);
             if (matcher.Success)
             {
                 string result = matcher.Groups[2].ToString() + matcher.Groups[1].ToString() + " " + matcher.Groups[3].ToString();
                 return result.Trim();
             }
-            matcher = datePatterns["SPACEFIX"].Match(str);
+            matcher = _datePatterns["SPACEFIX"].Match(str);
             if (matcher.Success)
             {
                 string result = matcher.Groups[1].ToString() + " " + matcher.Groups[2].ToString() + " " + matcher.Groups[3].ToString();
@@ -328,19 +329,19 @@ namespace FTAnalyzer
 
         private Tuple<bool,string> BetweenFixes(string str)
         {
-            Match matcher = datePatterns["BETWEENFIX"].Match(str);
+            Match matcher = _datePatterns["BETWEENFIX"].Match(str);
             if (matcher.Success)
                 return new Tuple<bool, string>(true, "BET " + matcher.Groups[1].ToString() + " AND " + matcher.Groups[2].ToString());
-            matcher = datePatterns["BETWEENFIX2"].Match(str);
+            matcher = _datePatterns["BETWEENFIX2"].Match(str);
             if (matcher.Success)
                 return new Tuple<bool, string>(true, "BET " + matcher.Groups[1].ToString() + " " + matcher.Groups[2].ToString() + " AND " + matcher.Groups[3].ToString() + " " + matcher.Groups[4].ToString());
-            matcher = datePatterns["BETWEENFIX3"].Match(str);
+            matcher = _datePatterns["BETWEENFIX3"].Match(str);
             if (matcher.Success)
                 return new Tuple<bool, string>(true, "BET " + matcher.Groups[1].ToString() + matcher.Groups[2].ToString() + " " + matcher.Groups[3].ToString() + " AND " + matcher.Groups[4].ToString() + matcher.Groups[5].ToString() + " " + matcher.Groups[6].ToString());
-            matcher = datePatterns["BETWEENFIX4"].Match(str);
+            matcher = _datePatterns["BETWEENFIX4"].Match(str);
             if (matcher.Success)
                 return  new Tuple<bool, string>(true, "BET " + matcher.Groups[1].ToString() + " " + matcher.Groups[3].ToString() + " " + matcher.Groups[4].ToString() + " AND " + matcher.Groups[2].ToString() + matcher.Groups[3].ToString() + " " + matcher.Groups[4].ToString());
-            matcher = datePatterns["BETWEENFIX5"].Match(str);
+            matcher = _datePatterns["BETWEENFIX5"].Match(str);
             if (matcher.Success)
                 return new Tuple<bool, string>(true, "BET " + matcher.Groups[1].ToString() + matcher.Groups[2].ToString() + " " + matcher.Groups[5].ToString() + " AND " + matcher.Groups[3].ToString() + matcher.Groups[4].ToString() + " " + matcher.Groups[5].ToString());
             return new Tuple<bool, string>(false, string.Empty);
@@ -514,8 +515,8 @@ namespace FTAnalyzer
             try
             {
                 // Match the regular expression pattern against a text string.
-                Match matcher = datePatterns["DATE_PATTERN"].Match(dateValue);
-                Match matcher2 = datePatterns["EARLY_DATE_PATTERN"].Match(dateValue);
+                Match matcher = _datePatterns["DATE_PATTERN"].Match(dateValue);
+                Match matcher2 = _datePatterns["EARLY_DATE_PATTERN"].Match(dateValue);
                 if (matcher2.Success)
                 {  // first check match vs 
                     gDay = null;
@@ -532,8 +533,8 @@ namespace FTAnalyzer
                 }
                 else
                 {   // Try matching double date pattern
-                    matcher = datePatterns["DOUBLE_DATE_PATTERN"].Match(dateValue);
-                    matcher2 = datePatterns["DOUBLE_DATE_PATTERN2"].Match(dateValue);
+                    matcher = _datePatterns["DOUBLE_DATE_PATTERN"].Match(dateValue);
+                    matcher2 = _datePatterns["DOUBLE_DATE_PATTERN2"].Match(dateValue);
                     matcher = Regex.Match(dateValue, DOUBLE_DATE_PATTERN);
                     matcher2 = Regex.Match(dateValue, DOUBLE_DATE_PATTERN2);
                     if (matcher.Success)
@@ -559,27 +560,27 @@ namespace FTAnalyzer
                         matcher2 = NonGEDCOMDateFormatRegex.Match(dateValue);
                         if (matcher2.Success)
                         {
-                            switch ((FormatSelected)Properties.NonGedcomDate.Default.FormatSelected)
+                            switch ((NonGEDCOMFormatSelected)Properties.NonGedcomDate.Default.FormatSelected)
                             {
-                                case FormatSelected.DD_MM_YYYY:
+                                case NonGEDCOMFormatSelected.DD_MM_YYYY:
                                     gDay = matcher2.Groups[1];
                                     gMonth = matcher2.Groups[2];
                                     gYear = matcher2.Groups[3];
                                     gDouble = null;
                                     break;
-                                case FormatSelected.MM_DD_YYYY:
+                                case NonGEDCOMFormatSelected.MM_DD_YYYY:
                                     gDay = matcher2.Groups[2];
                                     gMonth = matcher2.Groups[1];
                                     gYear = matcher2.Groups[3];
                                     gDouble = null;
                                     break;
-                                case FormatSelected.YYYY_DD_MM:
+                                case NonGEDCOMFormatSelected.YYYY_DD_MM:
                                     gDay = matcher2.Groups[2];
                                     gMonth = matcher2.Groups[3];
                                     gYear = matcher2.Groups[1];
                                     gDouble = null;
                                     break;
-                                case FormatSelected.YYYY_MM_DD:
+                                case NonGEDCOMFormatSelected.YYYY_MM_DD:
                                     gDay = matcher2.Groups[3];
                                     gMonth = matcher2.Groups[2];
                                     gYear = matcher2.Groups[1];
@@ -944,5 +945,19 @@ namespace FTAnalyzer
         }
         #endregion
 
+        public static Regex NonGEDCOMDateFormatRegex
+        {
+            get
+            {
+                if (_regex == null)
+                    _regex = new Regex(Properties.NonGedcomDate.Default.Regex, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                return _regex;
+            }
+
+            set
+            {
+                _regex = value;
+            }
+        }
     }
 }
