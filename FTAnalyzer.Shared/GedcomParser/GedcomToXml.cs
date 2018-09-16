@@ -128,8 +128,8 @@ namespace FTAnalyzer
                     if (FileHandling.Default.RetryFailedLines)
                     {
                         //need to check if nextline is valid if not line=line+nextline and nextline=reader.ReadLine();
-                        while (nextline?.Length > 0 && !Char.IsNumber(nextline[0]))
-                        {
+                        while (nextline?.Length <= 1 || (nextline?.Length > 1 && (!char.IsNumber(nextline[0]) || !nextline[1].Equals(' '))))
+                        {  // concat if next line not a number space combo
                             line = line + nextline;
                             lineNr++;
                             nextline = reader.ReadLine();
@@ -146,7 +146,7 @@ namespace FTAnalyzer
                             if (cpos1 < 0) throw new Exception("No space in line");
 
                             level = FirstWord(line);
-                            thislevel = Int32.Parse(level);
+                            thislevel = int.Parse(level);
 
                             // check the level number
 
