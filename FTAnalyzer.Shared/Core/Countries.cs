@@ -9,7 +9,7 @@ namespace FTAnalyzer
     {
         private static IDictionary<string, FactLocation> locationCache = new Dictionary<string, FactLocation>();
 
-        public static readonly string SCOTLAND = "Scotland", ENGLAND = "England", CANADA = "Canada", UNITED_STATES = "United States",
+        public static string SCOTLAND = "Scotland", ENGLAND = "England", CANADA = "Canada", UNITED_STATES = "United States",
             WALES = "Wales", IRELAND = "Ireland", UNITED_KINGDOM = "United Kingdom", NEW_ZEALAND = "New Zealand", AUSTRALIA = "Australia",
             UNKNOWN_COUNTRY = "Unknown", ENG_WALES = "England and Wales", INDIA = "India", FRANCE = "France", GERMANY = "Germany",
             ITALY = "Italy", SPAIN = "Spain", BELGIUM = "Belgium", SOUTH_AFRICA = "South Africa", NORTHERN_IRELAND = "Northern Ireland",
@@ -62,7 +62,7 @@ namespace FTAnalyzer
             NEW_CALEDONIA = "New Caledonia", NIEU = "Nieu", PUERTO_RICO = "Puerto Rico", 
             FRENCH_POLYNESIA = "French Polynesia", SAINT_HELENA = "Saint Helena", AT_SEA = "At Sea", OVERSEAS_UK = "Vessels UK and Overseas";
 
-        private static readonly ISet<string> KNOWN_COUNTRIES = new HashSet<string>(new string[] {
+        private static ISet<string> KNOWN_COUNTRIES = new HashSet<string>(new string[] {
             SCOTLAND, ENGLAND, CANADA, UNITED_STATES, WALES, IRELAND, UNITED_KINGDOM, NEW_ZEALAND, AUSTRALIA, INDIA, FRANCE, GERMANY,
             ITALY, SPAIN, BELGIUM, SOUTH_AFRICA, NORTHERN_IRELAND, EGYPT, HUNGARY, MALTA, DENMARK, SWEDEN, NORWAY, FINLAND, ICELAND,
             SWITZERLAND, AUSTRIA, NETHERLANDS, CHINA, ZIMBABWE, JAPAN, RUSSIA, POLAND, ST_LUCIA, LUXEMBOURG, ISLE_OF_MAN, GREECE,
@@ -85,11 +85,11 @@ namespace FTAnalyzer
             MARTINIQUE, MAYOTTE, NEW_CALEDONIA, NIEU, PUERTO_RICO, FRENCH_POLYNESIA, SAINT_HELENA, AT_SEA, OVERSEAS_UK
         });
 
-        private static readonly ISet<string> UK_COUNTRIES = new HashSet<string>(new string[] { 
+        private static ISet<string> UK_COUNTRIES = new HashSet<string>(new string[] { 
             SCOTLAND, ENGLAND, WALES, ENG_WALES, UNITED_KINGDOM, NORTHERN_IRELAND, ISLE_OF_MAN, CHANNEL_ISLANDS, OVERSEAS_UK
         });
 
-        private static readonly ISet<string> CENSUS_COUNTRIES = new HashSet<string>(new string[] { 
+        private static ISet<string> CENSUS_COUNTRIES = new HashSet<string>(new string[] { 
             SCOTLAND, ENGLAND, WALES, ENG_WALES, UNITED_KINGDOM, UNITED_STATES, CANADA, ISLE_OF_MAN, IRELAND, CHANNEL_ISLANDS, OVERSEAS_UK
         });
 

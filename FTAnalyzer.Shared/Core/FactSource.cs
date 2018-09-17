@@ -7,7 +7,7 @@ namespace FTAnalyzer
 {
     public class FactSource : IDisplaySource
     {
-        private static readonly string BIRTHCERT = "BIRTH", DEATHCERT = "DEATH",
+        private static string BIRTHCERT = "BIRTH", DEATHCERT = "DEATH",
                 MARRIAGECERT = "MARRIAGE", CENSUSCERT = "CENSUS";
 
         public string SourceID { get; private set; }

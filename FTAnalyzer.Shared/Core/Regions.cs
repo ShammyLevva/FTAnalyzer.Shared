@@ -25,8 +25,8 @@ namespace FTAnalyzer
         public static IList<Region> PREFERRED_REGIONS;
         public static IDictionary<string, Region> VALID_REGIONS;
 
-        public static readonly Dictionary<Region, List<ModernCounty>> CONVERSIONS = new Dictionary<Region, List<ModernCounty>>();
-        public static readonly List<ModernCounty> MODERN_COUNTIES;
+        public static Dictionary<Region, List<ModernCounty>> CONVERSIONS = new Dictionary<Region, List<ModernCounty>>();
+        public static List<ModernCounty> MODERN_COUNTIES;
 
         #region Modern County List
         public static ModernCounty OS_ABERDEENSHIRE = new ModernCounty("AB", "Aberdeenshire", Countries.SCOTLAND);

@@ -10,7 +10,7 @@ namespace FTAnalyzer
 {
     class GedcomToXml
     {
-        static readonly Encoding isoWesternEuropean = Encoding.GetEncoding(28591);
+        static Encoding isoWesternEuropean = Encoding.GetEncoding(28591);
 
         public static XmlDocument Load(MemoryStream stream, IProgress<string> outputText)
         {

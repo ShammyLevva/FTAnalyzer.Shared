@@ -37,7 +37,7 @@ namespace FTAnalyzer
                 DIED_SINGLE = "*SINGLE", MISSING = "*MISSING", CHILDREN1911 = "CHILDREN1911",
                 REPORT = "*REPORT", WORLD_EVENT = "*WORLD_EVENT", BIRTH_CALC = "_BIRTHCALC";
 
-        public static readonly ISet<string> LOOSE_BIRTH_FACTS = new HashSet<string>(new string[] {
+        public static ISet<string> LOOSE_BIRTH_FACTS = new HashSet<string>(new string[] {
             CHRISTENING, BAPTISM, RESIDENCE, WITNESS, EMIGRATION, IMMIGRATION, ARRIVAL, DEPARTURE, 
             EDUCATION, DEGREE, ADOPTION, BAR_MITZVAH, BAS_MITZVAH, ADULT_CHRISTENING, CONFIRMATION, 
             FIRST_COMMUNION, ORDINATION, NATURALIZATION, GRADUATION, RETIREMENT, LOSTCOUSINS, 
@@ -45,26 +45,26 @@ namespace FTAnalyzer
             CREMATION, BURIAL, CENSUS, BIRTH_CALC
                     });
 
-        public static readonly ISet<string> LOOSE_DEATH_FACTS = new HashSet<string>(new string[] {
+        public static ISet<string> LOOSE_DEATH_FACTS = new HashSet<string>(new string[] {
             CENSUS, RESIDENCE, WITNESS, EMIGRATION, IMMIGRATION, ARRIVAL, DEPARTURE, EDUCATION,
             DEGREE, ADOPTION, BAR_MITZVAH, BAS_MITZVAH, ADULT_CHRISTENING, CONFIRMATION, FIRST_COMMUNION,
             ORDINATION, NATURALIZATION, GRADUATION, RETIREMENT, LOSTCOUSINS, LC_FTA
                     });
 
-        public static readonly ISet<string> RANGED_DATE_FACTS = new HashSet<string>(new string[] {
+        public static ISet<string> RANGED_DATE_FACTS = new HashSet<string>(new string[] {
             EDUCATION, OCCUPATION, RESIDENCE, RETIREMENT, MILITARY, ELECTION, DEGREE, EMPLOYMENT, MEDICAL_CONDITION
                     });
 
-        public static readonly ISet<string> IGNORE_LONG_RANGE = new HashSet<string>(new string[] {
+        public static ISet<string> IGNORE_LONG_RANGE = new HashSet<string>(new string[] {
             MARRIAGE, CHILDREN
                     });
 
-        public static readonly ISet<string> CREATED_FACTS = new HashSet<string>(new string[] {
+        public static ISet<string> CREATED_FACTS = new HashSet<string>(new string[] {
             CENSUS_FTA, CHILDREN, PARENT, BIRTH_CALC
                     });
 
-        private static readonly Dictionary<string, string> CUSTOM_TAGS = new Dictionary<string, string>();
-        private static readonly HashSet<string> COMMENT_FACTS = new HashSet<string>();
+        private static Dictionary<string, string> CUSTOM_TAGS = new Dictionary<string, string>();
+        private static HashSet<string> COMMENT_FACTS = new HashSet<string>();
 
         static Fact()
         {
@@ -411,8 +411,8 @@ namespace FTAnalyzer
             }
         }
 
-        static readonly string CHILDREN_STATUS_PATTERN1 = @"(\d{1,2}) Total ?,? ?(\d{1,2}) (Alive|Living) ?,? ?(\d{1,2}) Dead";
-        static readonly string CHILDREN_STATUS_PATTERN2 = @"Total:? (\d{1,2}) ?,? ?(Alive|Living):? (\d{1,2}) ?,? ?Dead:? (\d{1,2})";
+        static string CHILDREN_STATUS_PATTERN1 = @"(\d{1,2}) Total ?,? ?(\d{1,2}) (Alive|Living) ?,? ?(\d{1,2}) Dead";
+        static string CHILDREN_STATUS_PATTERN2 = @"Total:? (\d{1,2}) ?,? ?(Alive|Living):? (\d{1,2}) ?,? ?Dead:? (\d{1,2})";
         public readonly static Regex regexChildren1 = new Regex(CHILDREN_STATUS_PATTERN1, RegexOptions.Compiled);
         public readonly static Regex regexChildren2 = new Regex(CHILDREN_STATUS_PATTERN2, RegexOptions.Compiled);
 

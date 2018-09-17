@@ -22,7 +22,7 @@ namespace FTAnalyzer
     {
         #region Variables
         static FamilyTree instance;
-        static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        static log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         IList<FactSource> sources;
         IList<Individual> individuals;

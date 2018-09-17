@@ -10,8 +10,8 @@ namespace FTAnalyzer
         public override int Compare(IDisplayIndividual x, IDisplayIndividual y)
         {
             // change the + for older to an Z and - for younger to a A to force sort to be right
-            string x1 = x.BudgieCode == string.Empty ? "X" : x.BudgieCode.Replace('+', 'z').Replace('-', 'a');
-            string y1 = y.BudgieCode == string.Empty ? "X" : y.BudgieCode.Replace('+', 'z').Replace('-', 'a');
+            string x1 = x.BudgieCode.Length == 0 ? "X" : x.BudgieCode.Replace('+', 'z').Replace('-', 'a');
+            string y1 = y.BudgieCode.Length == 0 ? "X" : y.BudgieCode.Replace('+', 'z').Replace('-', 'a');
             return x1.CompareTo(y1);
         }
     }

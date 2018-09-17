@@ -14,7 +14,7 @@ namespace FTAnalyzer
     public class FactLocation : IComparable<FactLocation>, IDisplayLocation, IDisplayGeocodedLocation
     {
         #region Variables
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static log4net.ILog log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         public const int UNKNOWN = -1, COUNTRY = 0, REGION = 1, SUBREGION = 2, ADDRESS = 3, PLACE = 4;
         public enum Geocode
         {
@@ -753,13 +753,13 @@ namespace FTAnalyzer
         private void SetFixedLocation()
         {
             fixedLocation = Country;
-            if (!Region.Equals(string.Empty) || GeneralSettings.Default.AllowEmptyLocations)
+            if (Region.Length > 0 || GeneralSettings.Default.AllowEmptyLocations)
                 fixedLocation = Region + ", " + fixedLocation;
-            if (!SubRegion.Equals(string.Empty) || GeneralSettings.Default.AllowEmptyLocations)
+            if (SubRegion.Length > 0 || GeneralSettings.Default.AllowEmptyLocations)
                 fixedLocation = SubRegion + ", " + fixedLocation;
-            if (!Address.Equals(string.Empty) || GeneralSettings.Default.AllowEmptyLocations)
+            if (Address.Length > 0 || GeneralSettings.Default.AllowEmptyLocations)
                 fixedLocation = Address + ", " + fixedLocation;
-            if (!Place.Equals(string.Empty))
+            if (Place.Length > 0)
                 fixedLocation = Place + ", " + fixedLocation;
             fixedLocation = TrimLeadingCommas(fixedLocation);
         }
@@ -767,13 +767,13 @@ namespace FTAnalyzer
         private void SetSortableLocation()
         {
             SortableLocation = Country;
-            if (!Region.Equals(string.Empty) || GeneralSettings.Default.AllowEmptyLocations)
+            if (Region.Length > 0 || GeneralSettings.Default.AllowEmptyLocations)
                 SortableLocation = SortableLocation + ", " + Region;
-            if (!SubRegion.Equals(string.Empty) || GeneralSettings.Default.AllowEmptyLocations)
+            if (SubRegion.Length > 0 || GeneralSettings.Default.AllowEmptyLocations)
                 SortableLocation = SortableLocation + ", " + SubRegion;
-            if (!Address.Equals(string.Empty) || GeneralSettings.Default.AllowEmptyLocations)
+            if (Address.Length > 0 || GeneralSettings.Default.AllowEmptyLocations)
                 SortableLocation = SortableLocation + ", " + Address;
-            if (!Place.Equals(string.Empty))
+            if (Place.Length > 0)
                 SortableLocation = SortableLocation + ", " + Place;
             SortableLocation = TrimLeadingCommas(SortableLocation);
         }

@@ -9,10 +9,10 @@ namespace FTAnalyzer
     public class CensusLocation
     {
         private static Dictionary<Tuple<string, string>, CensusLocation> CENSUSLOCATIONS = new Dictionary<Tuple<string, string>, CensusLocation>();
-        public static readonly CensusLocation UNKNOWN = new CensusLocation(string.Empty);
-        public static readonly CensusLocation SCOTLAND = new CensusLocation(Countries.SCOTLAND);
-        public static readonly CensusLocation UNITED_STATES = new CensusLocation(Countries.UNITED_STATES);
-        public static readonly CensusLocation CANADA = new CensusLocation(Countries.CANADA);
+        public static CensusLocation UNKNOWN = new CensusLocation(string.Empty);
+        public static CensusLocation SCOTLAND = new CensusLocation(Countries.SCOTLAND);
+        public static CensusLocation UNITED_STATES = new CensusLocation(Countries.UNITED_STATES);
+        public static CensusLocation CANADA = new CensusLocation(Countries.CANADA);
         public string Year { get; private set; }
         public string Piece { get; private set; }
         public string RegistrationDistrict { get; private set; }
@@ -61,24 +61,24 @@ namespace FTAnalyzer
 
         public CensusLocation(string year, string piece, string rd, string parish, string county, string location)
         {
-            this.Year = year;
-            this.Piece = piece;
-            this.RegistrationDistrict = rd;
-            this.Parish = parish;
-            this.County = county;
-            this.Location = location;
+            Year = year;
+            Piece = piece;
+            RegistrationDistrict = rd;
+            Parish = parish;
+            County = county;
+            Location = location;
         }
 
         public static CensusLocation GetCensusLocation(string year, string piece)
         {
             Tuple<string, string> key = new Tuple<string, string>(year, piece);
             CENSUSLOCATIONS.TryGetValue(key, out CensusLocation result);
-            return result ?? CensusLocation.UNKNOWN;
+            return result ?? UNKNOWN;
         }
 
         public override string ToString()
         {
-            return this.Location.Equals(string.Empty) ? "UNKNOWN" : this.Location;
+            return Location.Length == 0 ? "UNKNOWN" : Location;
         }
     }
 }

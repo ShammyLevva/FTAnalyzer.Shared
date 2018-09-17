@@ -4,7 +4,7 @@ namespace FTAnalyzer
 {
     public class CensusIndividual : Individual, IDisplayCensus
     {
-        public static readonly string HUSBAND = "Husband", WIFE = "Wife", CHILD = "Child", UNKNOWNSTATUS = "Unknown";
+        public static string HUSBAND = "Husband", WIFE = "Wife", CHILD = "Child", UNKNOWNSTATUS = "Unknown";
         
         private CensusFamily family;
         public int Position { get; private set; }

@@ -6,7 +6,7 @@ namespace FTAnalyzer
 {
     public class Age : IComparable<Age>
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public int MinAge { get; private set; }
         public int MaxAge { get; private set; }
         public FactDate CalculatedBirthDate { get; private set; }

@@ -2,7 +2,7 @@
 {
     class FamilySearch
     {
-        public static readonly string
+        public static string
             FATHER_GIVENNAME = "father_givenname",
             FATHER_SURNAME = "father_surname",
             GIVENNAME = "givenname",
