@@ -1565,7 +1565,8 @@ namespace FTAnalyzer
         }
 
 #if __PC__
-        public List<IDisplayColourCensus> ColourCensus(string country, Controls.RelationTypes relType, string surname, ComboBoxFamily family)
+        public List<IDisplayColourCensus> ColourCensus(string country, Controls.RelationTypes relType, string surname, 
+                                                       ComboBoxFamily family, bool IgnoreMissingBirthDates, bool IgnoreMissingDeathDates)
         {
             Predicate<Individual> filter;
             if (family == null)
@@ -1578,21 +1579,29 @@ namespace FTAnalyzer
                 }
                 Predicate<Individual> dateFilter;
                 if (country.Equals(Countries.UNITED_STATES))
-                    dateFilter = i => ((i.BirthDate.StartsBefore(CensusDate.USCENSUS1940) || !i.BirthDate.IsKnown) &&
-                                                         (i.DeathDate.EndsAfter(CensusDate.USCENSUS1790) || !i.DeathDate.IsKnown));
+                    dateFilter = i => (i.BirthDate.StartsBefore(CensusDate.USCENSUS1940) || !i.BirthDate.IsKnown) &&
+                                      (i.DeathDate.EndsAfter(CensusDate.USCENSUS1790) || !i.DeathDate.IsKnown) &&
+                                      (i.BirthDate.IsKnown || !IgnoreMissingBirthDates) &&
+                                      (i.DeathDate.IsKnown || !IgnoreMissingDeathDates);
                 else if (country.Equals(Countries.CANADA))
-                    dateFilter = i => ((i.BirthDate.StartsBefore(CensusDate.CANADACENSUS1921) || !i.BirthDate.IsKnown) &&
-                                                         (i.DeathDate.EndsAfter(CensusDate.CANADACENSUS1851) || !i.DeathDate.IsKnown));
+                    dateFilter = i => (i.BirthDate.StartsBefore(CensusDate.CANADACENSUS1921) || !i.BirthDate.IsKnown) &&
+                                      (i.DeathDate.EndsAfter(CensusDate.CANADACENSUS1851) || !i.DeathDate.IsKnown) &&
+                                      (i.BirthDate.IsKnown || !IgnoreMissingBirthDates) &&
+                                      (i.DeathDate.IsKnown || !IgnoreMissingDeathDates);
                 else if (country.Equals(Countries.IRELAND))
-                    dateFilter = i => ((i.BirthDate.StartsBefore(CensusDate.IRELANDCENSUS1911) || !i.BirthDate.IsKnown) &&
-                                                         (i.DeathDate.EndsAfter(CensusDate.IRELANDCENSUS1901) || !i.DeathDate.IsKnown));
+                    dateFilter = i => (i.BirthDate.StartsBefore(CensusDate.IRELANDCENSUS1911) || !i.BirthDate.IsKnown) &&
+                                      (i.DeathDate.EndsAfter(CensusDate.IRELANDCENSUS1901) || !i.DeathDate.IsKnown) &&
+                                      (i.BirthDate.IsKnown || !IgnoreMissingBirthDates) &&
+                                      (i.DeathDate.IsKnown || !IgnoreMissingDeathDates);
                 else
-                    dateFilter = i => ((i.BirthDate.StartsBefore(CensusDate.UKCENSUS1939) || !i.BirthDate.IsKnown) &&
-                                                         (i.DeathDate.EndsAfter(CensusDate.UKCENSUS1841) || !i.DeathDate.IsKnown));
-                filter = FilterUtils.AndFilter<Individual>(filter, dateFilter, x => x.AliveOnAnyCensus(country) && !x.OutOfCountryOnAllCensus(country));
+                    dateFilter = i => (i.BirthDate.StartsBefore(CensusDate.UKCENSUS1939) || !i.BirthDate.IsKnown) &&
+                                      (i.DeathDate.EndsAfter(CensusDate.UKCENSUS1841) || !i.DeathDate.IsKnown) &&
+                                      (i.BirthDate.IsKnown || !IgnoreMissingBirthDates) &&
+                                      (i.DeathDate.IsKnown || !IgnoreMissingDeathDates);
+                filter = FilterUtils.AndFilter(filter, dateFilter, x => x.AliveOnAnyCensus(country) && !x.OutOfCountryOnAllCensus(country));
             }
             else
-                filter = x => family.Members.Contains<Individual>(x);
+                filter = x => family.Members.Contains(x);
             return individuals.Filter(filter).ToList<IDisplayColourCensus>();
         }
 
