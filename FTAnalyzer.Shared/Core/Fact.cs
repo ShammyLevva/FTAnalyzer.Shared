@@ -512,7 +512,7 @@ namespace FTAnalyzer
             : this(factRef, preferred)
         {
             FactType = factType;
-            FactDate = date == null ? date : FactDate.UNKNOWN_DATE;
+            FactDate = date ?? FactDate.UNKNOWN_DATE;
             Comment = comment;
             Created = createdByFTA;
             Place = string.Empty;
