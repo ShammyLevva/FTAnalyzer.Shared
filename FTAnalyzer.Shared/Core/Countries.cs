@@ -5,11 +5,11 @@ using GeoAPI.Geometries;
 
 namespace FTAnalyzer
 {
-    public class Countries
+    public static class Countries
     {
-        private static IDictionary<string, FactLocation> locationCache = new Dictionary<string, FactLocation>();
+        static readonly IDictionary<string, FactLocation> locationCache = new Dictionary<string, FactLocation>();
 
-        public static string SCOTLAND = "Scotland", ENGLAND = "England", CANADA = "Canada", UNITED_STATES = "United States",
+        public const string SCOTLAND = "Scotland", ENGLAND = "England", CANADA = "Canada", UNITED_STATES = "United States",
             WALES = "Wales", IRELAND = "Ireland", UNITED_KINGDOM = "United Kingdom", NEW_ZEALAND = "New Zealand", AUSTRALIA = "Australia",
             UNKNOWN_COUNTRY = "Unknown", ENG_WALES = "England and Wales", INDIA = "India", FRANCE = "France", GERMANY = "Germany",
             ITALY = "Italy", SPAIN = "Spain", BELGIUM = "Belgium", SOUTH_AFRICA = "South Africa", NORTHERN_IRELAND = "Northern Ireland",
@@ -58,44 +58,44 @@ namespace FTAnalyzer
             SAINT_VINCENT_FULL = "Saint Vincent and the Grenadines", ANTARTICA = "Antartica", CAYMAN = "Cayman Islands",
             WESTERN_SAHARA = "Western Sahara", FALKLAND_ISLANDS = "Falkland Islands", FAROES = "Faroe Islands",
             GUADELOUPE = "Guadeloupe", GREENLAND = "Greenland", FRENCH_GUIANA = "French Guiana", GUAM = "Guam",
-            MACAO = "Macao", MONSERRAT ="Monserrat", MARTINIQUE = "Martinique", MAYOTTE = "Mayotte", 
-            NEW_CALEDONIA = "New Caledonia", NIEU = "Nieu", PUERTO_RICO = "Puerto Rico", 
+            MACAO = "Macao", MONSERRAT = "Monserrat", MARTINIQUE = "Martinique", MAYOTTE = "Mayotte",
+            NEW_CALEDONIA = "New Caledonia", NIEU = "Nieu", PUERTO_RICO = "Puerto Rico",
             FRENCH_POLYNESIA = "French Polynesia", SAINT_HELENA = "Saint Helena", AT_SEA = "At Sea", OVERSEAS_UK = "Vessels UK and Overseas";
 
-        private static ISet<string> KNOWN_COUNTRIES = new HashSet<string>(new string[] {
+        static readonly ISet<string> KNOWN_COUNTRIES = new HashSet<string>(new string[] {
             SCOTLAND, ENGLAND, CANADA, UNITED_STATES, WALES, IRELAND, UNITED_KINGDOM, NEW_ZEALAND, AUSTRALIA, INDIA, FRANCE, GERMANY,
             ITALY, SPAIN, BELGIUM, SOUTH_AFRICA, NORTHERN_IRELAND, EGYPT, HUNGARY, MALTA, DENMARK, SWEDEN, NORWAY, FINLAND, ICELAND,
             SWITZERLAND, AUSTRIA, NETHERLANDS, CHINA, ZIMBABWE, JAPAN, RUSSIA, POLAND, ST_LUCIA, LUXEMBOURG, ISLE_OF_MAN, GREECE,
-            LIBYA, NIGERIA, BULGARIA, CYPRUS, ESTONIA, LATVIA, LIECHTENSTIEN, LITHUANIA, ALBANIA, ARMENIA, ANDORRA, AZERBAIJAN, 
-            BELARUS, MOLDOVA, MONACO, MONTENEGRO, PORTUGAL, ROMANIA, SAN_MARINO, TURKEY, UKRAINE, BRAZIL, MAURITIUS, UAE, AFGHANISTAN, 
+            LIBYA, NIGERIA, BULGARIA, CYPRUS, ESTONIA, LATVIA, LIECHTENSTIEN, LITHUANIA, ALBANIA, ARMENIA, ANDORRA, AZERBAIJAN,
+            BELARUS, MOLDOVA, MONACO, MONTENEGRO, PORTUGAL, ROMANIA, SAN_MARINO, TURKEY, UKRAINE, BRAZIL, MAURITIUS, UAE, AFGHANISTAN,
             ARGENTINA, BARBADOS, BANGLADESH, BAHAMAS, SRI_LANKA, CUBA, INDONESIA, ISRAEL, IRAN, IRAQ, JORDAN, JAMAICA, KENYA, MEXICO,
             SINGAPORE, PAKISTAN, ANGOLA, BAHRAIN, BURUNDI, BENIN, BOLIVIA, BHUTAN, BOTSWANA, BELIZE, CONGO, CENTRAL_AFRICAN_REPUBLIC,
-            CHILE, CAMEROON, COLOMBIA, COSTA_RICA, CAPE_VERDE, DOMINICA, DOMINICAN_REPUBLIC, ALGERIA, ECUADOR, ERITREA, ETHIOPIA, 
+            CHILE, CAMEROON, COLOMBIA, COSTA_RICA, CAPE_VERDE, DOMINICA, DOMINICAN_REPUBLIC, ALGERIA, ECUADOR, ERITREA, ETHIOPIA,
             FIJI, DJIBOUTI, MICRONESIA, GABON, GAMBIA, GRENADA, GHANA, GUINEA, EQUATORIAL_GUINEA, GUATEMALA, GUYANA, HONDURAS, CROATIA,
             HAITI, KYRGYZSTAN, CAMBODIA, KIRIBATI, COMOROS, KUWAIT, KAZAKHSTAN, LEBANON, LIBERIA, LESOTHO, MOROCCO, MADAGASCAR,
             MALI, MACEDONIA, MARSHALL_ISLANDS, MYANMAR, MONGOLIA, MAURITANIA, MALDIVES, MALAWI, MALAYSIA, MOZAMBIQUE, NAMIBIA, NIGER,
-            NICARAGUA, NEPAL, NAURU, OMAN, PANAMA, PERU, PAPUA_NEW_GUINEA, PHILIPPINES, PALAU, PARAGUAY, QATAR, SERBIA, RWANDA, 
+            NICARAGUA, NEPAL, NAURU, OMAN, PANAMA, PERU, PAPUA_NEW_GUINEA, PHILIPPINES, PALAU, PARAGUAY, QATAR, SERBIA, RWANDA,
             SAUDI_ARABIA, SOLOMON_ISLANDS, SEYSCHELLES, SUDAN, SLOVAKIA, SLOVENIA, CZECH_REPUBLIC, CZECHOSLOVAKIA, SENEGAL, SIERRA_LEONE,
-            SOMALIA, SURINAME, SOUTH_SUDAN, EL_SALVADOR, SYRIA, SWAZILAND, CHAD, SOUTH_KOREA, NORTH_KOREA, KOREA, IVORY_COAST, TOGO, 
+            SOMALIA, SURINAME, SOUTH_SUDAN, EL_SALVADOR, SYRIA, SWAZILAND, CHAD, SOUTH_KOREA, NORTH_KOREA, KOREA, IVORY_COAST, TOGO,
             THAILAND, TAJIKISTAN, TURKMENISTAN, TUNISIA, TONGA, TUVALU, TRINIDAD_TOBAGO, TANZANIA, UGANDA, URUGUAY, UZBEKISTAN, VENEZUELA,
             VIETNAM, VANUATU, SAMOA, YEMEN, ZAMBIA, BURKINA_FASO, BOSNIA, CHANNEL_ISLANDS, GIBRALTAR, HONG_KONG, ARUBA, IVORY_COAST_FR,
-            IVORY_COAST_FR2, ANGUILLA, AMERICAN_SAMOA, ANTIGUA_BARBUDA, BERMUDA, BRUNEI, BRUNEI_FULL, DR_CONGO, COOK_ISLANDS, STKITTS, 
+            IVORY_COAST_FR2, ANGUILLA, AMERICAN_SAMOA, ANTIGUA_BARBUDA, BERMUDA, BRUNEI, BRUNEI_FULL, DR_CONGO, COOK_ISLANDS, STKITTS,
             LAO, LAO_FULL, PALESTINE, TIMOR_LESTE, TAIWAN, GUINEA_BISSAU, SAO_TOME_PRINCIPE, TOKELAU, SAINT_VINCENT, SAINT_VINCENT_FULL,
             ANTARTICA, CAYMAN, WESTERN_SAHARA, FALKLAND_ISLANDS, FAROES, GUADELOUPE, GREENLAND, FRENCH_GUIANA, GUAM, MACAO, MONSERRAT,
             MARTINIQUE, MAYOTTE, NEW_CALEDONIA, NIEU, PUERTO_RICO, FRENCH_POLYNESIA, SAINT_HELENA, AT_SEA, OVERSEAS_UK
         });
 
-        private static ISet<string> UK_COUNTRIES = new HashSet<string>(new string[] { 
+        static readonly ISet<string> UK_COUNTRIES = new HashSet<string>(new string[] {
             SCOTLAND, ENGLAND, WALES, ENG_WALES, UNITED_KINGDOM, NORTHERN_IRELAND, ISLE_OF_MAN, CHANNEL_ISLANDS, OVERSEAS_UK
         });
 
-        private static ISet<string> CENSUS_COUNTRIES = new HashSet<string>(new string[] { 
+        static readonly ISet<string> CENSUS_COUNTRIES = new HashSet<string>(new string[] {
             SCOTLAND, ENGLAND, WALES, ENG_WALES, UNITED_KINGDOM, UNITED_STATES, CANADA, ISLE_OF_MAN, IRELAND, CHANNEL_ISLANDS, OVERSEAS_UK
         });
 
 #if __PC__
-        private static Dictionary<string, Envelope> BOUNDING_BOXES;
-        private static Envelope WHOLE_WORLD = new Envelope(-180, 180, -90, 90);
+        static Dictionary<string, Envelope> BOUNDING_BOXES;
+        static Envelope WHOLE_WORLD = new Envelope(-180, 180, -90, 90);
 #endif
 
         static Countries()
@@ -124,25 +124,15 @@ namespace FTAnalyzer
 #endif
         }
 
-        public static bool IsUnitedKingdom(string country)
-        {
-            return UK_COUNTRIES.Contains(country);
-        }
+        public static bool IsUnitedKingdom(string country) => UK_COUNTRIES.Contains(country);
 
-        public static bool IsKnownCountry(string country)
-        {
-            return KNOWN_COUNTRIES.Contains(country);
-        }
+        public static bool IsKnownCountry(string country) => KNOWN_COUNTRIES.Contains(country);
 
-        public static bool IsCensusCountry(string country)
-        {
-            return CENSUS_COUNTRIES.Contains(country);
-        }
+        public static bool IsCensusCountry(string country) => CENSUS_COUNTRIES.Contains(country);
 
-        public static bool IsEnglandWales(string country)
-        {
-            return country.Equals(ENG_WALES) || country.Equals(ENGLAND) || country.Equals(WALES) || country.Equals(ISLE_OF_MAN) || country.Equals(CHANNEL_ISLANDS) || country.Equals(OVERSEAS_UK);
-        }
+        public static bool IsEnglandWales(string country) =>
+            country == ENG_WALES || country == ENGLAND || country == WALES ||
+            country == ISLE_OF_MAN || country == CHANNEL_ISLANDS || country == OVERSEAS_UK;
 
 #if __PC__
         public static Envelope BoundingBox(string country)
@@ -154,4 +144,4 @@ namespace FTAnalyzer
         }
 #endif
     }
-    }
+}
