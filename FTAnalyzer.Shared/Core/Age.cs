@@ -6,14 +6,14 @@ namespace FTAnalyzer
 {
     public class Age : IComparable<Age>
     {
-        static log4net.ILog log = log4net.LogManager.GetLogger(typeof(Age));
+        static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(typeof(Age));
 
         public int MinAge { get; private set; }
         public int MaxAge { get; private set; }
         public FactDate CalculatedBirthDate { get; private set; }
         public string GEDCOM_Age { get; private set; }
 
-        readonly string age;
+        readonly string _age;
 
         public static Age BIRTH = new Age();
 
@@ -21,7 +21,7 @@ namespace FTAnalyzer
         {
             MinAge = 0;
             MaxAge = 0;
-            age = "0";
+            _age = "0";
             GEDCOM_Age = string.Empty;
             CalculatedBirthDate = FactDate.UNKNOWN_DATE;
         }
@@ -34,27 +34,27 @@ namespace FTAnalyzer
                 when = ind.DeathDate;
             }
 
-            log.Debug($"Calculating Age for {ind.Name} on {when}");
-            log.Debug($"Min age: birth enddate: {ind.BirthDate.EndDate} to startdate: {when.StartDate}");
-            log.Debug($"Max age: birth startdate: {ind.BirthDate.StartDate} to enddate: {when.EndDate}");
+            Logger.Debug($"Calculating Age for {ind.Name} on {when}");
+            Logger.Debug($"Min age: birth enddate: {ind.BirthDate.EndDate} to startdate: {when.StartDate}");
+            Logger.Debug($"Max age: birth startdate: {ind.BirthDate.StartDate} to enddate: {when.EndDate}");
 
             MinAge = GetAge(ind.BirthDate.EndDate, when.StartDate);
             MaxAge = GetAge(ind.BirthDate.StartDate, when.EndDate);
 
-            log.Debug($"Calculated minage: {MinAge} calculated maxage: {MaxAge}");
+            Logger.Debug($"Calculated minage: {MinAge} calculated maxage: {MaxAge}");
             if (MinAge == FactDate.MINYEARS)
             {
-                age = (MaxAge == FactDate.MAXYEARS) ? "Unknown" :
+                _age = (MaxAge == FactDate.MAXYEARS) ? "Unknown" :
                     MaxAge == 0 ? "< 1" : $"<= {MaxAge}";
             }
             else if (MaxAge < FactDate.MAXYEARS)
             {
-                age = MinAge == MaxAge ? $"{MinAge}" : $"{MinAge} to ${MaxAge}";
+                _age = MinAge == MaxAge ? $"{MinAge}" : $"{MinAge} to ${MaxAge}";
             }
             else
             {
                 // if age over maximum return maximum
-                age = $">= {MinAge}";
+                _age = $">= {MinAge}";
             }
         }
 
@@ -129,7 +129,7 @@ namespace FTAnalyzer
             return new FactDate(startDate, endDate);
         }
 
-        public override string ToString() => age;
+        public override string ToString() => _age;
 
         public int CompareTo(Age that) =>
             MinAge == that.MinAge ? MaxAge - that.MaxAge :
