@@ -49,7 +49,7 @@ namespace FTAnalyzer
             }
             else if (MaxAge < FactDate.MAXYEARS)
             {
-                _age = MinAge == MaxAge ? $"{MinAge}" : $"{MinAge} to ${MaxAge}";
+                _age = MinAge == MaxAge ? $"{MinAge}" : $"{MinAge} to {MaxAge}";
             }
             else
             {
@@ -106,15 +106,15 @@ namespace FTAnalyzer
 
         int GetAge(DateTime birthDate, DateTime laterDate)
         {
-            var result = laterDate.Year - birthDate.Year;
-            if (laterDate.DayOfYear <= birthDate.DayOfYear)
+            var age = laterDate.Year - birthDate.Year;
+            if (laterDate.DayOfYear < birthDate.DayOfYear)
             {
-                result++;
+                age--;
             }
 
-            result = Math.Max(0, Math.Min(result, FactDate.MAXYEARS));
+            age = Math.Max(0, Math.Min(age, FactDate.MAXYEARS));
 
-            return result;
+            return age;
         }
 
         public FactDate GetBirthDate(FactDate when)
