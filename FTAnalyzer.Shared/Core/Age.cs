@@ -53,7 +53,7 @@ namespace FTAnalyzer
             : this()
         {
             // parse ages from gedcom
-            var matcher = ydm.Match(gedcomAge);
+            Match matcher = ydm.Match(gedcomAge);
             if (matcher.Success)
             {
                 GEDCOM_Age = gedcomAge;
