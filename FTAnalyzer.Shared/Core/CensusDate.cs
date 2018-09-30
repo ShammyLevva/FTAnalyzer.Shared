@@ -5,7 +5,8 @@ namespace FTAnalyzer
 {
     public class CensusDate : FactDate
     {
-        private string displayName;
+        readonly string _displayName;
+
         public string Country { get; private set; }
         public string PropertyName { get; private set; }
 
@@ -66,21 +67,21 @@ namespace FTAnalyzer
         public static CensusDate CANADACENSUS1921 = new CensusDate("1 JUN 1921", "Canadian Census 1921", Countries.CANADA, "Can1921");
         public static CensusDate CANADACENSUS1911 = new CensusDate("1 JUN 1911", "Canadian Census 1911", Countries.CANADA, "Can1911");
 
-        private static ISet<CensusDate> UK_CENSUS = new HashSet<CensusDate>(new CensusDate[] { 
+        static readonly ISet<CensusDate> UK_CENSUS = new HashSet<CensusDate>(new CensusDate[] {
             UKCENSUS1841, UKCENSUS1851, UKCENSUS1861, UKCENSUS1871, UKCENSUS1881, UKCENSUS1891, UKCENSUS1901, UKCENSUS1911, UKCENSUS1939
         });
 
-        private static ISet<CensusDate> US_FEDERAL_CENSUS = new HashSet<CensusDate>(new CensusDate[] { 
+        static readonly ISet<CensusDate> US_FEDERAL_CENSUS = new HashSet<CensusDate>(new CensusDate[] {
             USCENSUS1790, USCENSUS1800, USCENSUS1810, USCENSUS1820, USCENSUS1830, USCENSUS1840, USCENSUS1850, USCENSUS1860, USCENSUS1870, USCENSUS1880, USCENSUS1890,
-            USCENSUS1900, USCENSUS1910, USCENSUS1920, USCENSUS1930, USCENSUS1940 
+            USCENSUS1900, USCENSUS1910, USCENSUS1920, USCENSUS1930, USCENSUS1940
         });
 
-        private static ISet<CensusDate> CANADIAN_CENSUS = new HashSet<CensusDate>(new CensusDate[] { 
-            CANADACENSUS1851, CANADACENSUS1861, CANADACENSUS1871, CANADACENSUS1881, CANADACENSUS1891, CANADACENSUS1901, CANADACENSUS1906, 
-            CANADACENSUS1911, CANADACENSUS1916, CANADACENSUS1921 
+        static readonly ISet<CensusDate> CANADIAN_CENSUS = new HashSet<CensusDate>(new CensusDate[] {
+            CANADACENSUS1851, CANADACENSUS1861, CANADACENSUS1871, CANADACENSUS1881, CANADACENSUS1891, CANADACENSUS1901, CANADACENSUS1906,
+            CANADACENSUS1911, CANADACENSUS1916, CANADACENSUS1921
         });
 
-        public static ISet<CensusDate> SUPPORTED_CENSUS = new HashSet<CensusDate>(new CensusDate[] { 
+        public static ISet<CensusDate> SUPPORTED_CENSUS = new HashSet<CensusDate>(new CensusDate[] {
             UKCENSUS1841, UKCENSUS1851, UKCENSUS1861, UKCENSUS1871, UKCENSUS1881, UKCENSUS1891, UKCENSUS1901, UKCENSUS1911, UKCENSUS1939,
             USCENSUS1790, USCENSUS1800, USCENSUS1810, USCENSUS1820, USCENSUS1830, USCENSUS1840, USCENSUS1850, USCENSUS1860,
             USCENSUS1870, USCENSUS1880, USCENSUS1890, USCENSUS1900, USCENSUS1910, USCENSUS1920, USCENSUS1930, USCENSUS1940,
@@ -89,7 +90,7 @@ namespace FTAnalyzer
             EWCENSUS1841, EWCENSUS1881, EWCENSUS1911, SCOTCENSUS1881
         });
 
-        public static ISet<CensusDate> LOSTCOUSINS_CENSUS = new HashSet<CensusDate>(new CensusDate[] { 
+        public static ISet<CensusDate> LOSTCOUSINS_CENSUS = new HashSet<CensusDate>(new CensusDate[] {
             EWCENSUS1841, EWCENSUS1881, SCOTCENSUS1881, EWCENSUS1911, USCENSUS1880, USCENSUS1940, CANADACENSUS1881, IRELANDCENSUS1911
         });
 
@@ -97,12 +98,12 @@ namespace FTAnalyzer
              SCOTVALUATION1865, SCOTVALUATION1875, SCOTVALUATION1885, SCOTVALUATION1895, SCOTVALUATION1905, SCOTVALUATION1915, SCOTVALUATION1920, SCOTVALUATION1925
         });
 
-        private CensusDate(string str, string displayName, string country, string propertyName)
+        CensusDate(string str, string displayName, string country, string propertyName)
             : base(str)
         {
-            this.displayName = displayName;
-            this.Country = country;
-            this.PropertyName = propertyName;
+            _displayName = displayName;
+            Country = country;
+            PropertyName = propertyName;
         }
 
         public CensusDate EquivalentUSCensus
@@ -136,99 +137,45 @@ namespace FTAnalyzer
 
         public static bool IsCensusYear(FactDate fd, string Country, bool exactYear)
         {
-            foreach (CensusDate cd in SUPPORTED_CENSUS)
+            switch (Country)
             {
-                if (cd.Country.Equals(Country) && (cd.Country.Equals(Countries.UNITED_STATES) || cd.Country.Equals(Countries.CANADA)))
-                    if (fd.Overlaps(cd))
-                        return true;
-                if (exactYear && fd.CensusYearMatches(cd))
-                    return true;
-                if (!exactYear && fd.Overlaps(cd))
-                    return true;
+                case Countries.UNITED_STATES:
+                    return US_FEDERAL_CENSUS.Any(cd => fd.Overlaps(cd));
+
+                case Countries.CANADA:
+                    return CANADIAN_CENSUS.Any(cd => fd.Overlaps(cd));
+
+                default:
+                    return SUPPORTED_CENSUS.Any(cd =>
+                        (exactYear && fd.CensusYearMatches(cd)) || (!exactYear && fd.Overlaps(cd)));
             }
-            return false;
         }
 
-        public static bool IsUKCensusYear(FactDate fd, bool exactYear)
-        {
-            foreach (CensusDate cd in UK_CENSUS)
-            {
-                if (exactYear && fd.CensusYearMatches(cd))
-                    return true;
-                if (!exactYear && fd.Overlaps(cd))
-                    return true;
-            }
-            return false;
-        }
+        public static bool IsUKCensusYear(FactDate fd, bool exactYear) =>
+            UK_CENSUS.Any(cd =>
+                (exactYear && fd.CensusYearMatches(cd)) || (!exactYear && fd.Overlaps(cd))
+            );
 
-        public static bool IsLostCousinsCensusYear(FactDate fd, bool exactYear)
-        {
-            foreach (CensusDate cd in LOSTCOUSINS_CENSUS)
-            {
-                if (exactYear && fd.CensusYearMatches(cd))
-                    return true;
-                if (!exactYear && fd.Overlaps(cd))
-                    return true;
-            }
-            return false;
-        }
+        public static bool IsLostCousinsCensusYear(FactDate fd, bool exactYear) =>
+            GetLostCousinsCensusYear(fd, exactYear) != null;
 
-        public static bool IsCensusCountry(FactDate fd, FactLocation location)
-        {
-            List<CensusDate> matches = SUPPORTED_CENSUS.Where(cd => cd.Country.Equals(location.CensusCountry)).ToList();
-            foreach (CensusDate cd in matches)
-            {
-                if (fd.CensusYearMatches(cd))
-                    return true;
-            }
-            return false;
-        }
+        public static bool IsCensusCountry(FactDate fd, FactLocation location) =>
+            SUPPORTED_CENSUS.Any(cd => cd.Country == location.CensusCountry && fd.CensusYearMatches(cd));
 
-        public static CensusDate GetLostCousinsCensusYear(FactDate fd, bool exactYear)
-        {
-            foreach (CensusDate cd in LOSTCOUSINS_CENSUS)
-            {
-                if (exactYear && fd.CensusYearMatches(cd))
-                    return cd;
-                if (!exactYear && fd.Overlaps(cd))
-                    return cd;
-            }
-            return null;
-        }
+        public static CensusDate GetLostCousinsCensusYear(FactDate fd, bool exactYear) =>
+            LOSTCOUSINS_CENSUS.FirstOrDefault(
+                cd => (exactYear && fd.CensusYearMatches(cd)) || (!exactYear && fd.Overlaps(cd))
+            );
 
-        public static FactDate GetUSCensusDateFromReference(string reference)
-        {
-            foreach(CensusDate cd in US_FEDERAL_CENSUS)
-            {
-                if (cd.PropertyName.Equals(reference))
-                    return cd;
-            }
-            return FactDate.UNKNOWN_DATE;
-        }
+        public static FactDate GetUSCensusDateFromReference(string reference) =>
+            US_FEDERAL_CENSUS.FirstOrDefault(cd => cd.PropertyName == reference) ?? FactDate.UNKNOWN_DATE;
 
-        public static FactDate GetCanadianCensusDateFromReference(string reference)
-        {
-            foreach (CensusDate cd in CANADIAN_CENSUS)
-            {
-                if (cd.PropertyName.ToUpper().Equals(reference))
-                    return cd;
-            }
-            return FactDate.UNKNOWN_DATE;
-        }
+        public static FactDate GetCanadianCensusDateFromReference(string reference) =>
+            CANADIAN_CENSUS.FirstOrDefault(cd => cd.PropertyName.ToUpper() == reference) ?? FactDate.UNKNOWN_DATE;
 
-        public static FactDate GetUKCensusDateFromYear(string year)
-        {
-            foreach(CensusDate cd in UK_CENSUS)
-            {
-                if (cd.PropertyName.Equals("C" + year))
-                    return cd;
-            }
-            return FactDate.UNKNOWN_DATE;
-        }
+        public static FactDate GetUKCensusDateFromYear(string year) =>
+            UK_CENSUS.FirstOrDefault(cd => cd.PropertyName == $"C{year}") ?? FactDate.UNKNOWN_DATE;
 
-        public override string ToString()
-        {
-            return displayName;
-        }
+        public override string ToString() => _displayName;
     }
 }
