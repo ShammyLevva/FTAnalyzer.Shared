@@ -2241,7 +2241,7 @@ namespace FTAnalyzer
                 CONVERSIONS.Add(region, counties);
             }
             if (counties.Contains(county))
-                Console.WriteLine("Duplicate county: " + region.PreferredName + " mapped to " + county.CountyName);
+                Console.WriteLine($"Duplicate county: {region.PreferredName} mapped to {county.CountyName}");
             else
                 counties.Add(county);
         }
@@ -2249,7 +2249,7 @@ namespace FTAnalyzer
         private static void SetRegionsConversions()
         {
             foreach (Region region in PREFERRED_REGIONS)
-                region.CountyCodes = GetCounties(region);
+                region.SetCountyCodes(GetCounties(region));
         }
         #endregion
         #endregion

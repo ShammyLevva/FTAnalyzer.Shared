@@ -560,12 +560,12 @@ namespace System.Web
         {
             try
             {
-                ProcessStartInfo info = new ProcessStartInfo(url);
+                //ProcessStartInfo info = new ProcessStartInfo(url);
                 Process.Start(url);
             }
             catch (Exception e)
             {
-                string message = "Error processing web request. Error was : " + e.Message + "\nSite was: " + url;
+                string message = $"Error processing web request. Error was : {e.Message}\nSite was: {url}";
 #if __MACOS__
                 var alert = new AppKit.NSAlert
                 {
@@ -583,7 +583,7 @@ namespace System.Web
                 alert.AddButton("OK");
                 alert.Show();
 #else
-                System.Windows.MessageBox.Show(message, "FTAnalyzer");
+                Windows.MessageBox.Show(message, "FTAnalyzer");
 #endif
             }
         }

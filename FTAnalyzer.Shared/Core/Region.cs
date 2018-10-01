@@ -11,7 +11,7 @@ namespace FTAnalyzer
         public List<string> AlternativeNames { get; private set; }
         public string ISOcode { get; set; }
         public Creation RegionType { get; private set; }
-        public List<ModernCounty> CountyCodes { get; set; }
+        public List<ModernCounty> CountyCodes { get; private set; }
         
         public Region(string region, string country, Creation regionType)
         {
@@ -23,15 +23,11 @@ namespace FTAnalyzer
             CountyCodes = null;
         }
 
-        public void AddAlternateName(string name)
-        {
-            AlternativeNames.Add(name);
-        }
+        public void AddAlternateName(string name) => AlternativeNames.Add(name);
 
-        public override string ToString()
-        {
-            return PreferredName + ", " + Country;
-        }
+        public void SetCountyCodes(List<ModernCounty> codes) => CountyCodes = codes;
+
+        public override string ToString() => $"{PreferredName}, {Country}";
     }
 
     public class ModernCounty
@@ -47,9 +43,6 @@ namespace FTAnalyzer
             CountryName = country;
         }
 
-        public override string ToString()
-        {
-            return CountyCode + ": " + CountyName + ", " + CountryName;
-        }
+        public override string ToString() => $"{CountyCode}: {CountyName}, {CountryName}";
     }
 }

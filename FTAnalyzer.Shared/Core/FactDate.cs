@@ -71,7 +71,7 @@ namespace FTAnalyzer
         }
 
         public enum FactDateType { BEF, AFT, BET, ABT, UNK, EXT }
-        public enum NonGEDCOMFormatSelected { DD_MM_YYYY = 1, MM_DD_YYYY = 2, YYYY_MM_DD = 3, YYYY_DD_MM = 4 }
+        public enum NonGEDCOMFormatSelected { NONE = 0, DD_MM_YYYY = 1, MM_DD_YYYY = 2, YYYY_MM_DD = 3, YYYY_DD_MM = 4 }
 
         public string DateString { get; private set; }
         public DateTime StartDate { get; private set; }

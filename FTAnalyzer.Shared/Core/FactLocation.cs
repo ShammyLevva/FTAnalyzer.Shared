@@ -57,6 +57,7 @@ namespace FTAnalyzer
         public Mapping.GeoResponse.CResult.CGeometry.CViewPort ViewPort { get; set; }
 #endif
         private List<Individual> individuals;
+        private string[] _Parts;
 
         private static Dictionary<string, string> COUNTRY_TYPOS = new Dictionary<string, string>();
         private static Dictionary<string, string> REGION_TYPOS = new Dictionary<string, string>();
@@ -329,6 +330,7 @@ namespace FTAnalyzer
             FoundLocation = string.Empty;
             FoundResultType = string.Empty;
             FoundLevel = -2;
+            _Parts = new string[] { Country, Region, SubRegion, Address, Place };
 #if __PC__
             ViewPort = new Mapping.GeoResponse.CResult.CGeometry.CViewPort();
 #endif
@@ -424,6 +426,7 @@ namespace FTAnalyzer
                 //if (!before.Equals(after))
                 //    Console.WriteLine("Debug : '" + before + "'  converted to '" + after + "'");
             }
+            _Parts = new string[] { Country, Region, SubRegion, Address, Place };
         }
         #endregion
 
@@ -880,11 +883,14 @@ namespace FTAnalyzer
                 toChange = toChange.Substring(2);
             return toChange.Trim();
         }
+
+        #endregion
+        #region Properties
         #endregion
 
         #region Properties
 
-        public string[] Parts => new string[] { Country, Region, SubRegion, Address, Place };
+        public string[] GetParts() => (string[])_Parts.Clone();
 
 #if __PC__
         public System.Drawing.Image Icon => FactLocationImage.ErrorIcon(GeocodeStatus).Icon;

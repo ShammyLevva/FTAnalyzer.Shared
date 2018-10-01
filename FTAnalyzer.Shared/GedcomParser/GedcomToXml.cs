@@ -223,13 +223,13 @@ namespace FTAnalyzer
                                 node.AppendChild(newNode);
                                 node = newNode;
 
-                                if (!iden.Equals(""))
+                                if (!string.IsNullOrEmpty(iden))
                                 {
                                     XmlAttribute attr = document.CreateAttribute("ID");
                                     attr.Value = iden;
                                     node.Attributes.Append(attr);
                                 }
-                                if (!xref.Equals(""))
+                                if (!string.IsNullOrEmpty(xref))
                                 {
                                     XmlAttribute attr = document.CreateAttribute("REF");
                                     attr.Value = xref;
