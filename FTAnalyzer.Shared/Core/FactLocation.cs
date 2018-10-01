@@ -94,7 +94,7 @@ namespace FTAnalyzer
 #else
             string filename = Path.Combine(startPath, @"Resources\FactLocationFixes.xml");
 #endif
-            Console.WriteLine(string.Format("Loading factlocation fixes from: {0}", filename));
+            Console.WriteLine($"Loading factlocation fixes from: {filename}");
             if (File.Exists(filename))
             {
                 XmlDocument xmlDoc = new XmlDocument();
@@ -211,10 +211,10 @@ namespace FTAnalyzer
             //        Console.WriteLine("Country typo: " + typo + " is not a known country.");
             foreach (string typo in REGION_TYPOS.Values)
                 if (!Regions.IsPreferredRegion(typo))
-                    Console.WriteLine(string.Format("Region typo: {0} is not a preferred region.", typo));
+                    Console.WriteLine($"Region typo: {typo} is not a preferred region.");
             foreach (string shift in COUNTRY_SHIFTS.Keys)
                 if (!Regions.IsPreferredRegion(shift))
-                    Console.WriteLine(string.Format("Country shift: {0} is not a preferred region.", shift));
+                    Console.WriteLine($"Country shift: {shift} is not a preferred region.");
         }
 
         private static void ValidateCounties()
@@ -223,7 +223,7 @@ namespace FTAnalyzer
             {
                 if (region.CountyCodes.Count == 0 &&
                     (region.Country == Countries.ENGLAND || region.Country == Countries.WALES || region.Country == Countries.SCOTLAND))
-                    Console.WriteLine(string.Format("Missing Conversions for region: {0}", region));
+                    Console.WriteLine($"Missing Conversions for region: {region}");
             }
         }
 
@@ -403,7 +403,7 @@ namespace FTAnalyzer
                     Country = location.Trim();
                     Level = COUNTRY;
                 }
-                string before = (SubRegion + ", " + Region + ", " + Country).ToUpper().Trim();
+                string before = $"{SubRegion}, {Region}, {Country}".ToUpper().Trim();
                 if (!GeneralSettings.Default.AllowEmptyLocations)
                     FixEmptyFields();
                 RemoveDiacritics();
