@@ -504,6 +504,7 @@ namespace FTAnalyzer
             return ParseDate(dateValue, highlow, adjustment, 1);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "System.DateTime.TryParseExact(System.String,System.String,System.IFormatProvider,System.Globalization.DateTimeStyles,System.DateTime@)")]
         private DateTime ParseDate(string dateValue, int highlow, int adjustment, int defaultYear)
         {
             DateTime date;

@@ -964,8 +964,8 @@ namespace FTAnalyzer
                 return FactDate.UNKNOWN_DATE;
             if (Class.Equals("HO107"))
             {
-                int.TryParse(Piece, out int piecenumber);
-                if (piecenumber > 1465) // piece numbers go 1-1465 for 1841 and 1466+ for 1851.
+                bool success = int.TryParse(Piece, out int piecenumber);
+                if (success && piecenumber > 1465) // piece numbers go 1-1465 for 1841 and 1466+ for 1851.
                     return CensusDate.UKCENSUS1851;
                 else
                     return CensusDate.UKCENSUS1841;
@@ -1030,8 +1030,8 @@ namespace FTAnalyzer
 
         private string GetCensusReferenceCountry(string censusClass, string censusPiece)
         {
-            Int32.TryParse(censusPiece, out int piece);
-            if (censusClass.Length > 0 && censusPiece.Length > 0 && piece > 0)
+            bool success = int.TryParse(censusPiece, out int piece);
+            if (success && censusClass.Length > 0 && censusPiece.Length > 0 && piece > 0)
             {
                 if (censusClass.Equals("HO107")) //1841 & 1851
                 {
