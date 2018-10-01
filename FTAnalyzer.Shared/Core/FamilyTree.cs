@@ -352,7 +352,7 @@ namespace FTAnalyzer
 
         public void LoadTreeRelationships(XmlDocument doc, IProgress<int> progress, IProgress<string> outputText)
         {
-            if (rootIndividualID == string.Empty)
+            if (string.IsNullOrEmpty(rootIndividualID))
                 rootIndividualID = individuals[0].IndividualID;
             UpdateRootIndividual(rootIndividualID, progress, outputText, true);
             CreateSharedFacts();
@@ -1421,7 +1421,7 @@ namespace FTAnalyzer
             foreach (FactLocation loc in allLocations)
             {
                 FactLocation c = loc.GetLocation(level);
-                if (c.Country != string.Empty && !result.Contains(c))
+                if (!string.IsNullOrEmpty(c.Country) && !result.Contains(c))
                     result.Add(c);
             }
             result.Sort(new FactLocationComparer(level));
@@ -1429,31 +1429,15 @@ namespace FTAnalyzer
             return displayLocations[level];
         }
 
-        public SortableBindingList<IDisplayLocation> AllDisplayCountries
-        {
-            get { return displayLocations[FactLocation.COUNTRY] ?? GetDisplayLocations(FactLocation.COUNTRY); }
-        }
+        public SortableBindingList<IDisplayLocation> AllDisplayCountries => displayLocations[FactLocation.COUNTRY] ?? GetDisplayLocations(FactLocation.COUNTRY);
 
-        public SortableBindingList<IDisplayLocation> AllDisplayRegions
-        {
-            get { return displayLocations[FactLocation.REGION] ?? GetDisplayLocations(FactLocation.REGION); }
-        }
+        public SortableBindingList<IDisplayLocation> AllDisplayRegions => displayLocations[FactLocation.REGION] ?? GetDisplayLocations(FactLocation.REGION);
 
-        public SortableBindingList<IDisplayLocation> AllDisplaySubRegions
-        {
-            get { return displayLocations[FactLocation.SUBREGION] ?? GetDisplayLocations(FactLocation.SUBREGION); }
+        public SortableBindingList<IDisplayLocation> AllDisplaySubRegions => displayLocations[FactLocation.SUBREGION] ?? GetDisplayLocations(FactLocation.SUBREGION);
 
-        }
+        public SortableBindingList<IDisplayLocation> AllDisplayAddresses => displayLocations[FactLocation.ADDRESS] ?? GetDisplayLocations(FactLocation.ADDRESS);
 
-        public SortableBindingList<IDisplayLocation> AllDisplayAddresses
-        {
-            get { return displayLocations[FactLocation.ADDRESS] ?? GetDisplayLocations(FactLocation.ADDRESS); }
-        }
-
-        public SortableBindingList<IDisplayLocation> AllDisplayPlaces
-        {
-            get { return displayLocations[FactLocation.PLACE] ?? GetDisplayLocations(FactLocation.PLACE); }
-        }
+        public SortableBindingList<IDisplayLocation> AllDisplayPlaces => displayLocations[FactLocation.PLACE] ?? GetDisplayLocations(FactLocation.PLACE);
 
         public List<IDisplayGeocodedLocation> AllGeocodingLocations
         {

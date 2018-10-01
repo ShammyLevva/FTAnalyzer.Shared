@@ -612,15 +612,9 @@ namespace FTAnalyzer
             return facts.Count(f => f.FactType == factType && f.FactErrorLevel == Fact.FactError.GOOD);
         }
 
-        public int ResidenceCensusFactCount
-        {
-            get { return facts.Count(f => f.FactType == Fact.RESIDENCE && f.IsCensusFact); }
-        }
+        public int ResidenceCensusFactCount => facts.Count(f => f.FactType == Fact.RESIDENCE && f.IsCensusFact);
 
-        public int ErrorFactCount(string factType, Fact.FactError errorLevel)
-        {
-            return errorFacts.Count(f => f.FactType == factType && f.FactErrorLevel == errorLevel);
-        }
+        public int ErrorFactCount(string factType, Fact.FactError errorLevel) => errorFacts.Count(f => f.FactType == factType && f.FactErrorLevel == errorLevel);
 
         public string MarriageDates
         {
@@ -628,12 +622,9 @@ namespace FTAnalyzer
             {
                 string output = string.Empty;
                 foreach (Family f in familiesAsParent)
-                    if (f.MarriageDate.ToString() != string.Empty)
-                        output += f.MarriageDate + "; ";
-                if (output.Length > 0)
-                    return output.Substring(0, output.Length - 2); // remove trailing ;
-                else
-                    return output;
+                    if (!string.IsNullOrEmpty(f.MarriageDate?.ToString()))
+                        output += $"{f.MarriageDate}; ";
+                return output.Length > 0 ? output.Substring(0, output.Length - 2) : output; // remove trailing ;
             }
         }
 
@@ -643,18 +634,15 @@ namespace FTAnalyzer
             {
                 string output = string.Empty;
                 foreach (Family f in familiesAsParent)
-                    if (f.MarriageLocation.ToString() != string.Empty)
-                        output += f.MarriageLocation + "; ";
-                if (output.Length > 0)
-                    return output.Substring(0, output.Length - 2); // remove trailing ;
-                else
-                    return output;
+                    if (!string.IsNullOrEmpty(f.MarriageLocation))
+                        output += $"{f.MarriageLocation}; ";
+                return output.Length > 0 ? output.Substring(0, output.Length - 2) : output; // remove trailing ;
             }
         }
 
-        public int MarriageCount { get { return familiesAsParent.Count; } }
+        public int MarriageCount => familiesAsParent.Count;
 
-        public int ChildrenCount { get { return familiesAsParent.Sum(x => x.Children.Count); } }
+        public int ChildrenCount => familiesAsParent.Sum(x => x.Children.Count);
 
         #endregion
 
@@ -871,7 +859,7 @@ namespace FTAnalyzer
                         AddFact(f);
                         if (f.GedcomAge != null && f.GedcomAge.CalculatedBirthDate != FactDate.UNKNOWN_DATE)
                         {
-                            string reason = "Calculated from " + f.ToString() + " with Age: " + f.GedcomAge.GEDCOM_Age;
+                            string reason = $"Calculated from {f} with Age: {f.GedcomAge.GEDCOM_Age}";
                             Fact calculatedBirth = new Fact(IndividualID, Fact.BIRTH_CALC, f.GedcomAge.CalculatedBirthDate, FactLocation.UNKNOWN_LOCATION, reason, false, true);
                             AddFact(calculatedBirth);
                         }
@@ -880,7 +868,7 @@ namespace FTAnalyzer
                 catch (InvalidXMLFactException ex)
                 {
                     FamilyTree ft = FamilyTree.Instance;
-                    outputText.Report("Error with Individual : " + IndividualRef + "\n" + "       Invalid fact : " + ex.Message);
+                    outputText.Report($"Error with Individual : {IndividualRef}\n       Invalid fact : {ex.Message}");
                 }
                 preferredFact = false;
             }
@@ -891,10 +879,10 @@ namespace FTAnalyzer
             FamilyTree ft = FamilyTree.Instance;
             if (ft.FactBeforeBirth(this, fact))
                 fact.SetError((int)FamilyTree.Dataerror.FACTS_BEFORE_BIRTH, Fact.FactError.ERROR,
-                    fact.FactTypeDescription + " fact recorded: " + fact.FactDate + " before individual was born");
+                    $"{fact.FactTypeDescription} fact recorded: {fact.FactDate} before individual was born");
             if (ft.FactAfterDeath(this, fact))
                 fact.SetError((int)FamilyTree.Dataerror.FACTS_AFTER_DEATH, Fact.FactError.ERROR,
-                    fact.FactTypeDescription + " fact recorded: " + fact.FactDate + " after individual died");
+                    $"{fact.FactTypeDescription} fact recorded: {fact.FactDate} after individual died");
 
             switch (fact.FactErrorLevel)
             {
@@ -1057,13 +1045,16 @@ namespace FTAnalyzer
         {
             string description;
             if (Gender.Equals("U"))
-                description = "Unknown gender but appears as a " + (pHusband ? "husband" : "wife") + " in family " + family.FamilyRef;
+            {
+                string spouse = pHusband ? "husband" : "wife";
+                description = $"Unknown gender but appears as a {spouse} in family {family.FamilyRef} check gender setting";
+            }
             else
             {
                 if (IsMale)
-                    description = "Male but appears as a wife in family " + family.FamilyRef;
+                    description = $"Male but appears as a wife in family {family.FamilyRef} check gender setting";
                 else
-                    description = "Female but appears as husband in family " + family.FamilyRef;
+                    description = $"Female but appears as husband in family {family.FamilyRef} check gender setting";
             }
             var gender = new Fact(family.FamilyID, Fact.GENDER, FactDate.UNKNOWN_DATE, null, description, true, true);
             gender.SetError(26, Fact.FactError.ERROR, description);

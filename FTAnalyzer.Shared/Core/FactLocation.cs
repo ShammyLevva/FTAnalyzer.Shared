@@ -403,7 +403,7 @@ namespace FTAnalyzer
                     Country = location.Trim();
                     Level = COUNTRY;
                 }
-                string before = $"{SubRegion}, {Region}, {Country}".ToUpper().Trim();
+                //string before = $"{SubRegion}, {Region}, {Country}".ToUpper().Trim();
                 if (!GeneralSettings.Default.AllowEmptyLocations)
                     FixEmptyFields();
                 RemoveDiacritics();
@@ -541,7 +541,7 @@ namespace FTAnalyzer
             double distance;
             foreach (Fact f in facts)
             {
-                if (f.FactDate.IsKnown && !f.Location.GEDCOMLocation.Equals(string.Empty))
+                if (f.FactDate.IsKnown && !string.IsNullOrEmpty(f.Location.GEDCOMLocation))
                 {  // only deal with known dates and non empty locations
                     if (Fact.RANGED_DATE_FACTS.Contains(f.FactType) && f.FactDate.StartDate.Year != f.FactDate.EndDate.Year) // If fact type is ranged year use least end of range
                     {
@@ -862,13 +862,13 @@ namespace FTAnalyzer
                         subRegionFix = SubRegion;
                 }
                 result = countryFix;
-                if (!regionFix.Equals(string.Empty) || GeneralSettings.Default.AllowEmptyLocations)
+                if (!string.IsNullOrEmpty(regionFix) || GeneralSettings.Default.AllowEmptyLocations)
                     result = regionFix + ", " + result;
-                if (!subRegionFix.Equals(string.Empty) || GeneralSettings.Default.AllowEmptyLocations)
+                if (!string.IsNullOrEmpty(subRegionFix) || GeneralSettings.Default.AllowEmptyLocations)
                     result = subRegionFix + ", " + result;
-                if (!Address.Equals(string.Empty) || GeneralSettings.Default.AllowEmptyLocations)
+                if (!string.IsNullOrEmpty(Address) || GeneralSettings.Default.AllowEmptyLocations)
                     result = Address + ", " + result;
-                if (!Place.Equals(string.Empty))
+                if (!string.IsNullOrEmpty(Place))
                     result = Place + ", " + result;
                 return TrimLeadingCommas(result);
             }
@@ -884,42 +884,21 @@ namespace FTAnalyzer
 
         #region Properties
 
-        public string[] Parts
-        {
-            get { return new string[] { Country, Region, SubRegion, Address, Place }; }
-        }
+        public string[] Parts => new string[] { Country, Region, SubRegion, Address, Place };
 
 #if __PC__
-        public System.Drawing.Image Icon
-        {
-            get { return FactLocationImage.ErrorIcon(GeocodeStatus).Icon; }
-        }
+        public System.Drawing.Image Icon => FactLocationImage.ErrorIcon(GeocodeStatus).Icon;
 #endif
 
-        public string AddressNumeric
-        {
-            get { return FixNumerics(this.Address, true); }
-        }
+        public string AddressNumeric => FixNumerics(Address, true);
 
-        public string PlaceNumeric
-        {
-            get { return FixNumerics(this.Place, true); }
-        }
+        public string PlaceNumeric => FixNumerics(Place, true);
 
-        public bool IsKnownCountry
-        {
-            get { return Countries.IsKnownCountry(Country); }
-        }
+        public bool IsKnownCountry => Countries.IsKnownCountry(Country);
 
-        public bool IsUnitedKingdom
-        {
-            get { return Countries.IsUnitedKingdom(Country); }
-        }
+        public bool IsUnitedKingdom => Countries.IsUnitedKingdom(Country);
 
-        public bool IsEnglandWales
-        {
-            get { return Countries.IsEnglandWales(Country); }
-        }
+        public bool IsEnglandWales => Countries.IsEnglandWales(Country);
 
         public string Geocoded
         {
@@ -932,18 +911,9 @@ namespace FTAnalyzer
             }
         }
 
-        public static int GeocodedLocations
-        {
-            get
-            {
-                return FactLocation.AllLocations.Count(l => l.IsGeoCoded(false));
-            }
-        }
+        public static int GeocodedLocations => AllLocations.Count(l => l.IsGeoCoded(false));
 
-        public static int LocationsCount
-        {   // discount the empty location
-            get { return FactLocation.AllLocations.Count() - 1; }
-        }
+        public static int LocationsCount => AllLocations.Count() - 1;
 
         public string CensusCountry
         {
