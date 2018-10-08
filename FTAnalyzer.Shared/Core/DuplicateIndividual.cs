@@ -26,7 +26,7 @@
             Score += SharedParents() + SharedChildren() + DifferentParentsPenalty();
         }
 
-        private void LocationScore()
+        void LocationScore()
         {
             if (IndividualA.BirthLocation.IsBlank || IndividualB.BirthLocation.IsBlank)
                 return;
@@ -59,7 +59,7 @@
                 Score -= 250;
         }
 
-        private void ScoreDates(FactDate dateA, FactDate dateB)
+        void ScoreDates(FactDate dateA, FactDate dateB)
         {
             if (dateA.IsKnown && dateB.IsKnown)
             {
@@ -83,7 +83,7 @@
             }
         }
 
-        private int SharedParents()
+        int SharedParents()
         {
             int score = 0;
             foreach (ParentalRelationship parentA in IndividualA.FamiliesAsChild)
@@ -99,7 +99,7 @@
             return score;
         }
 
-        private int DifferentParentsPenalty()
+        int DifferentParentsPenalty()
         {
             int score = 0;
             if (IndividualA.FamiliesAsChild.Count == 1 && IndividualB.FamiliesAsChild.Count == 1)
@@ -118,7 +118,7 @@
             return score;
         }
 
-        private int SharedChildren()
+        int SharedChildren()
         {
             int score = 0;
             foreach (Family familyA in IndividualA.FamiliesAsParent)
@@ -136,8 +136,8 @@
         public override bool Equals(object that)
         {
             if (that is DuplicateIndividual)
-                return (this.IndividualA.Equals(((DuplicateIndividual)that).IndividualA) && this.IndividualB.Equals(((DuplicateIndividual)that).IndividualB))
-                    || (this.IndividualA.Equals(((DuplicateIndividual)that).IndividualB) && this.IndividualB.Equals(((DuplicateIndividual)that).IndividualA));
+                return (IndividualA.Equals(((DuplicateIndividual)that).IndividualA) && IndividualB.Equals(((DuplicateIndividual)that).IndividualB))
+                    || (IndividualA.Equals(((DuplicateIndividual)that).IndividualB) && IndividualB.Equals(((DuplicateIndividual)that).IndividualA));
             else
                 return false;
         }

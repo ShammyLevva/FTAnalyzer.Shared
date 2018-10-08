@@ -43,7 +43,10 @@ namespace FTAnalyzer
             get
             {
                 if (CensusStatus == WIFE)
-                    return Forenames + " " + MarriedName + (Surname.Length > 0 ? " (" + Surname + ")" : string.Empty);
+                {
+                    string surname = Surname.Length > 0 ? $" ({Surname})" : string.Empty;
+                    return $"{Forenames} {MarriedName} {surname}";
+                }
                 else
                     return Name;
             }
@@ -86,7 +89,7 @@ namespace FTAnalyzer
 
         public override string ToString()
         {
-            return IndividualID + ": " + Name + " b." + BirthDate;
+            return $"{IndividualID}: {Name} b.{BirthDate}";
         }
     }
 }

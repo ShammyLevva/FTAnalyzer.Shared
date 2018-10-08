@@ -363,7 +363,7 @@ namespace FTAnalyzer
                                 source.AddFact(this);
                             }
                             else
-                                outputText.Report("Source " + srcref + " not found." + "\n");
+                                outputText.Report($"Source {srcref} not found.\n");
                         }
                         if (IsCensusFact)
                             CensusReference = new CensusReference(this, n);
@@ -394,7 +394,7 @@ namespace FTAnalyzer
                 catch (Exception ex)
                 {
                     string message = (node == null) ? string.Empty : node.InnerText + ". ";
-                    throw new InvalidXMLFactException(message + "\n            Error " + ex.Message + "\n");
+                    throw new InvalidXMLFactException(message + $"\n            Error {ex.Message}\n");
                 }
             }
         }
@@ -539,7 +539,7 @@ namespace FTAnalyzer
         public string FactErrorMessage { get; private set; }
         public Individual Individual { get; private set; }
         public Family Family { get; private set; }
-        public string FactTypeDescription { get { return (FactType == Fact.UNKNOWN && Tag.Length > 0) ? Tag : GetFactTypeDescription(FactType); } }
+        public string FactTypeDescription { get { return (FactType == UNKNOWN && Tag.Length > 0) ? Tag : GetFactTypeDescription(FactType); } }
 
         public bool IsCensusFact
         {
@@ -688,19 +688,19 @@ namespace FTAnalyzer
             {
                 // if not a census overlay then set date to year and try that instead
                 string year = FactDate.DateString.Substring(FactDate.DateString.Length - 4);
-                if (Int32.TryParse(year, out int result))
+                if (int.TryParse(year, out int result))
                 {
                     yearAdjusted = new FactDate(year);
                     if (GeneralSettings.Default.TolerateInaccurateCensusDate)
                     {
                         //                        FactErrorNumber = (int)FamilyTree.Dataerror.RESIDENCE_CENSUS_DATE;
                         FactErrorMessage = "Warning: Inaccurate Census date '" + FactDate + "' treated as '" + yearAdjusted + "'";
-                        FactErrorLevel = Fact.FactError.WARNINGALLOW;
+                        FactErrorLevel = FactError.WARNINGALLOW;
                     }
                     else
                     {
                         //                        FactErrorNumber = (int)FamilyTree.Dataerror.RESIDENCE_CENSUS_DATE;
-                        FactErrorLevel = Fact.FactError.WARNINGIGNORE;
+                        FactErrorLevel = FactError.WARNINGIGNORE;
                         FactErrorMessage = "Inaccurate Census date '" + FactDate + "' fact ignored in strict mode. Check for incorrect date entered or try Tolerate slightly inaccurate census date option.";
                     }
                 }

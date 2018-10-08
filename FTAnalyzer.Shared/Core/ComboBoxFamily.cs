@@ -16,9 +16,9 @@ namespace FTAnalyzer
             if(Wife != null)
                 result.Append(Husband == null ? Wife.Name : " and " + Wife.Name);
             if(result.Length > 0)
-                return FamilyID + ": " + result.ToString() + " " + base.ToString();
+                return $"{FamilyID}: {result.ToString()} {base.ToString()}";
             else
-                return FamilyID + ": " + base.ToString();
+                return $"{FamilyID}: {base.ToString()}";
         }
 
         public override bool Equals(object obj)

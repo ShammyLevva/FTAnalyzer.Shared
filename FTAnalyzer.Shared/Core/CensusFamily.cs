@@ -135,11 +135,9 @@ namespace FTAnalyzer
                 return true; // allow solo individual families to be processed
 
             // don't process family if either parent is under 16
-            //if(Husband != null) rtb.AppendText("Husband : " + Husband.getAge(censusDate) + "\n");
             if (Husband != null && Husband.GetMaxAge(CensusDate) < 16)
                 return false;
 
-            //if(Wife  != null) rtb.AppendText("Wife : " + Wife.getAge(censusDate) + "\n");
             if (Wife != null && Wife.GetMaxAge(CensusDate) < 16)
                 return false;
             return true;
