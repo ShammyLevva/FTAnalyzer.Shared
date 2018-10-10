@@ -1087,7 +1087,7 @@ namespace FTAnalyzer
         }
         #endregion
 
-        private FactComparer factComparer = new FactComparer();
+        readonly FactComparer factComparer = new FactComparer();
 
         public int DuplicateLCFacts
         {
@@ -1109,10 +1109,7 @@ namespace FTAnalyzer
             }
         }
 
-        public int LostCousinsFacts
-        {
-            get { return facts.Count(f => f.FactType == Fact.LOSTCOUSINS || f.FactType == Fact.LC_FTA); }
-        }
+        public int LostCousinsFacts => facts.Count(f => f.FactType == Fact.LOSTCOUSINS || f.FactType == Fact.LC_FTA);
 
         public string ReferralFamilyID { get; set; }
 

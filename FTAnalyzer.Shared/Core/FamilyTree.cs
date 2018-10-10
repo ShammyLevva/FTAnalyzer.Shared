@@ -36,7 +36,7 @@ namespace FTAnalyzer
         SortableBindingList<IDisplayLooseDeath> looseDeaths;
         SortableBindingList<IDisplayLooseBirth> looseBirths;
         SortableBindingList<DuplicateIndividual> duplicates;
-        static int DATA_ERROR_GROUPS = 28;
+        readonly static int DATA_ERROR_GROUPS = 28;
         static XmlNodeList noteNodes = null;
         bool _loading = false;
         bool _dataloaded = false;
@@ -1345,10 +1345,13 @@ namespace FTAnalyzer
                 {
                     if (i.RelationToRoot == null && f.Spouse(i) != null && f.Spouse(i).IsBloodDirect)
                     {
+                        string relation = string.Empty;
                         if (f.MaritalStatus != Family.MARRIED)
-                            i.RelationToRoot = "partner of " + f.Spouse(i).RelationToRoot;
+                            relation = "partner";
                         else
-                            i.RelationToRoot = (i.IsMale ? "husband of " : "wife of ") + f.Spouse(i).RelationToRoot;
+                            relation = (i.IsMale ? "husband" : "wife");
+
+                        i.RelationToRoot = $"{relation} of {f.Spouse(i).RelationToRoot}";
                         break;
                     }
                 }
@@ -1361,13 +1364,13 @@ namespace FTAnalyzer
             int[] relations = new int[Individual.UNSET + 1];
             foreach (Individual i in individuals)
                 relations[i.RelationType]++;
-            sb.Append("Direct Ancestors : " + relations[Individual.DIRECT] + "\n");
-            sb.Append("Blood Relations : " + relations[Individual.BLOOD] + "\n");
-            sb.Append("Married to Blood or Direct Relation : " + relations[Individual.MARRIEDTODB] + "\n");
-            sb.Append("Related by Marriage : " + relations[Individual.MARRIAGE] + "\n");
-            sb.Append("Unknown relation : " + relations[Individual.UNKNOWN] + "\n");
+            sb.Append($"Direct Ancestors: {relations[Individual.DIRECT]}\n");
+            sb.Append($"Blood Relations: {relations[Individual.BLOOD]}\n");
+            sb.Append($"Married to Blood or Direct Relation: {relations[Individual.MARRIEDTODB]}\n");
+            sb.Append($"Related by Marriage: {relations[Individual.MARRIAGE]}\n");
+            sb.Append($"Unknown relation: {relations[Individual.UNKNOWN]}\n");
             if (relations[Individual.UNSET] > 0)
-                sb.Append("Failed to set relationship : " + relations[Individual.UNSET] + "\n");
+                sb.Append($"Failed to set relationship: {relations[Individual.UNSET]}\n");
             return sb.ToString();
         }
 
@@ -1396,7 +1399,7 @@ namespace FTAnalyzer
                 {
                     //if (ind.IndividualID == "I0282")
                     //    Console.WriteLine("found it");
-                    CensusFamily cf = new CensusFamily(new Family(ind, FamilyTree.Instance.NextPreMarriageFamily), censusDate);
+                    CensusFamily cf = new CensusFamily(new Family(ind, Instance.NextPreMarriageFamily), censusDate);
                     if (!individualIDs.Contains(ind.IndividualID) && cf.Process(censusDate, censusDone, checkCensus))
                     {
                         individualIDs.Add(ind.IndividualID);
@@ -1543,10 +1546,7 @@ namespace FTAnalyzer
             }
         }
 
-        public SortableBindingList<Individual> AllWorkers(string job)
-        {
-            return new SortableBindingList<Individual>(occupations[job]);
-        }
+        public SortableBindingList<Individual> AllWorkers(string job) => new SortableBindingList<Individual>(occupations[job]);
 
 #if __PC__
         public List<IDisplayColourCensus> ColourCensus(string country, Controls.RelationTypes relType, string surname, 
@@ -1997,6 +1997,8 @@ namespace FTAnalyzer
 
         private string BuildAncestryQuery(string censusCountry, int censusYear, Individual person)
         {
+            if (censusYear == 1939 && censusCountry.Equals(Countries.UNITED_KINGDOM))
+                return BuildAncestry1939Query(censusCountry, person);
             UriBuilder uri = new UriBuilder
             {
                 Host = "search.ancestry.co.uk",
@@ -2072,6 +2074,58 @@ namespace FTAnalyzer
                 query.Append("msbpn__ftp=" + HttpUtility.UrlEncode(location) + "&");
             }
             query.Append("uidh=2t2");
+            uri.Query = query.ToString();
+            return uri.ToString();
+        }
+        private string BuildAncestry1939Query(string censusCountry, Individual person)
+        {
+            UriBuilder uri = new UriBuilder
+            {
+                Host = "search.ancestry.co.uk",
+                Path = "search/collections/1939ukregister/"
+            };
+            StringBuilder query = new StringBuilder();
+            string forename = string.Empty;
+            string surname = string.Empty;
+            if (person.Forenames != "?" && person.Forenames.ToUpper() != Individual.UNKNOWN_NAME)
+                forename = HttpUtility.UrlEncode(person.Forenames);
+            if (person.Surname != "?" && person.Surname.ToUpper() != Individual.UNKNOWN_NAME)
+                surname = person.Surname;
+            if (person.MarriedName != "?" && person.MarriedName.ToUpper() != Individual.UNKNOWN_NAME && person.MarriedName != person.Surname)
+                surname += " " + person.MarriedName;
+            surname = HttpUtility.UrlEncode(surname.Trim());
+            query.Append($"name={forename}_{surname}&name_x=ps_ps&");
+            if (person.BirthDate.IsKnown)
+            {
+                int startYear = person.BirthDate.StartDate.Year;
+                int endYear = person.BirthDate.EndDate.Year;
+                int year, range;
+                if (startYear == FactDate.MINDATE.Year)
+                {
+                    year = endYear - 9;
+                    range = 10;
+                }
+                else if (endYear == FactDate.MAXDATE.Year)
+                {
+                    year = startYear + 9;
+                    range = 10;
+                }
+                else
+                {
+                    year = (endYear + startYear + 1) / 2;
+                    range = (endYear - startYear + 1) / 2;
+                    if (2 < range && range < 5) range = 5;
+                    if (range > 5) range = 10;
+                }
+                query.Append($"birth={year}&");
+                query.Append($"birth_x={range}-0-0&");
+            }
+            FactLocation bestLocation = person.BestLocation(CensusDate.UKCENSUS1939);
+            if (bestLocation != FactLocation.UNKNOWN_LOCATION)
+            {
+                string location = HttpUtility.UrlEncode(bestLocation.ToString());
+                query.Append($"residence={location}");
+            }
             uri.Query = query.ToString();
             return uri.ToString();
         }
@@ -2623,14 +2677,14 @@ namespace FTAnalyzer
 
         public List<Individual> GetAllRelations(Individual ind)
         {
-            return GetFamily(ind).Union(GetAncestors(ind).Union(GetDescendants(ind))).ToList<Individual>();
+            return GetFamily(ind).Union(GetAncestors(ind).Union(GetDescendants(ind))).ToList();
         }
         #endregion
 
         #region Duplicates Processing
-        UInt64 maleProgress = 0;
-        UInt64 femaleProgress = 0;
-        UInt64 progressMaximum = 0;
+        ulong maleProgress = 0;
+        ulong femaleProgress = 0;
+        ulong progressMaximum = 0;
 
         public async Task<SortableBindingList<IDisplayDuplicateIndividual>> GenerateDuplicatesList(int value, IProgress<int> progress, IProgress<int> maximum, CancellationToken ct)
         {
@@ -2641,10 +2695,10 @@ namespace FTAnalyzer
                 return BuildDuplicateList(value); // we have already processed the duplicates since the file was loaded
             }
             duplicates = new SortableBindingList<DuplicateIndividual>();
-            IEnumerable<Individual> males = individuals.Filter<Individual>(x => (x.Gender == "M" || x.Gender == "U"));
-            IEnumerable<Individual> females = individuals.Filter<Individual>(x => (x.Gender == "F" || x.Gender == "U"));
-            UInt64 nummales = (UInt64)males.Count();
-            UInt64 numfemales = (UInt64)males.Count();
+            IEnumerable<Individual> males = individuals.Filter(x => (x.Gender == "M" || x.Gender == "U"));
+            IEnumerable<Individual> females = individuals.Filter(x => (x.Gender == "F" || x.Gender == "U"));
+            ulong nummales = (ulong)males.Count();
+            ulong numfemales = (ulong)males.Count();
             progressMaximum = (nummales * nummales + numfemales * numfemales) / 2;
             progress.Report(0);
             try
@@ -2703,7 +2757,7 @@ namespace FTAnalyzer
                     threadProgress++;
                     if (threadProgress % 500 == 0)
                     {
-                        UInt64 val = (100 * (maleProgress + femaleProgress)) / progressMaximum;
+                        ulong val = (100 * (maleProgress + femaleProgress)) / progressMaximum;
                         progress.Report((int)val);
                     }
                 }
@@ -2747,7 +2801,7 @@ namespace FTAnalyzer
             }
             catch (Exception e)
             {
-                log.Error("Error " + e.Message + " writing NonDuplicates.xml");
+                log.Error($"Error {e.Message} writing NonDuplicates.xml");
             }
         }
 
@@ -2914,9 +2968,9 @@ namespace FTAnalyzer
             try
             {
                 string[] dateFields = dateNode.InnerText.Split(new Char[] { '/' });
-                int nodeyear = Int32.Parse(dateFields[0]);
-                int nodemonth = Int32.Parse(dateFields[1]);
-                int nodeday = Int32.Parse(dateFields[2]);
+                int nodeyear = int.Parse(dateFields[0]);
+                int nodemonth = int.Parse(dateFields[1]);
+                int nodeday = int.Parse(dateFields[2]);
                 fd = new FactDate(new DateTime(nodeyear, nodemonth, nodeday).ToString("dd MMM yyyy"));
             }
             catch (Exception)
@@ -2952,7 +3006,7 @@ namespace FTAnalyzer
             }
             catch (Exception e)
             {
-                log.Error("Error trying to load data from " + URL + "\n\n" + e.Message);
+                log.Error($"Error trying to load data from {URL}\n\n{e.Message}");
             }
             return doc;
         }

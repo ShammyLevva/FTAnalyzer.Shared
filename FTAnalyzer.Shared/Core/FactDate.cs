@@ -730,15 +730,15 @@ namespace FTAnalyzer
         {
             get
             {
-                if (this.DateString.Equals("UNKNOWN"))
+                if (DateString.Equals("UNKNOWN"))
                     return UNKNOWN_DATE;
-                if (this.StartDate == MINDATE)
-                    return new FactDate(this.EndDate, this.EndDate);
-                if (this.EndDate == MAXDATE)
-                    return new FactDate(this.StartDate, this.StartDate);
-                TimeSpan ts = this.EndDate.Subtract(this.StartDate);
+                if (StartDate == MINDATE)
+                    return new FactDate(EndDate, EndDate);
+                if (EndDate == MAXDATE)
+                    return new FactDate(StartDate, StartDate);
+                TimeSpan ts = EndDate.Subtract(StartDate);
                 double midPointSeconds = ts.TotalSeconds / 2.0;
-                DateTime average = this.StartDate.AddSeconds(midPointSeconds);
+                DateTime average = StartDate.AddSeconds(midPointSeconds);
                 return new FactDate(average, average);
             }
         }
