@@ -327,7 +327,7 @@ namespace FTAnalyzer
                         }
                         else
                         {
-                            FactType = Fact.UNKNOWN;
+                            FactType = UNKNOWN;
                             FamilyTree.Instance.CheckUnknownFactTypes(tag);
                             Tag = tag;
                         }
@@ -530,7 +530,7 @@ namespace FTAnalyzer
         public CensusReference CensusReference { get; private set; }
         public FactLocation Location { get; private set; }
         public string Place { get; private set; }
-        public string Comment { get; private set; }
+        public string Comment { get; set; }
         public FactDate FactDate { get; private set; }
         public string FactType { get; private set; }
         public int FactErrorNumber { get; private set; }
@@ -539,6 +539,10 @@ namespace FTAnalyzer
         public Individual Individual { get; private set; }
         public Family Family { get; private set; }
         public string FactTypeDescription { get { return (FactType == UNKNOWN && Tag.Length > 0) ? Tag : GetFactTypeDescription(FactType); } }
+
+        public bool IsMarriageFact =>  
+            FactType == MARR_CONTRACT || FactType == MARR_LICENSE || 
+            FactType == MARR_SETTLEMENT || FactType == MARRIAGE || FactType == MARRIAGE_BANN;
 
         public bool IsCensusFact
         {
@@ -825,40 +829,22 @@ namespace FTAnalyzer
             });
         }
 
-        public string PossiblyEqualHash
-        {
-            get { return FactType + FactDate.ToString(); }
-        }
+        public string PossiblyEqualHash => FactType + FactDate.ToString();
 
-        public string EqualHash
-        {
-            get { return FactType + FactDate.ToString() + Location.ToString() + Comment; }
-        }
+        public string EqualHash => FactType + FactDate.ToString() + Location.ToString() + Comment;
 
-        public bool IsValidCensus(FactDate factDate)
-        {
-            return FactDate.IsKnown && IsCensusFact && FactDate.FactYearMatches(factDate) && FactDate.IsNotBEForeOrAFTer && FactErrorLevel == FactError.GOOD;
-        }
+        public bool IsValidCensus(FactDate factDate) => FactDate.IsKnown && IsCensusFact && FactDate.FactYearMatches(factDate) && FactDate.IsNotBEForeOrAFTer && FactErrorLevel == FactError.GOOD;
 
-        public bool IsValidCensus(CensusDate censusDate)
-        {
-            return FactDate.IsKnown && IsCensusFact && FactDate.CensusYearMatches(censusDate) && FactDate.IsNotBEForeOrAFTer && FactErrorLevel == FactError.GOOD;
-        }
+        public bool IsValidCensus(CensusDate censusDate) => FactDate.IsKnown && IsCensusFact && FactDate.CensusYearMatches(censusDate) && FactDate.IsNotBEForeOrAFTer && FactErrorLevel == FactError.GOOD;
 
-        public bool IsValidLostCousins(CensusDate censusDate)
-        {
-            return FactDate.IsKnown && (FactType == LOSTCOUSINS || FactType == LC_FTA) 
-                && FactDate.CensusYearMatches(censusDate) && FactDate.IsNotBEForeOrAFTer && FactErrorLevel == FactError.GOOD;
-        }
+        public bool IsValidLostCousins(CensusDate censusDate) => 
+            FactDate.IsKnown && (FactType == LOSTCOUSINS || FactType == LC_FTA) &&
+            FactDate.CensusYearMatches(censusDate) && FactDate.IsNotBEForeOrAFTer && FactErrorLevel == FactError.GOOD;
 
-        public bool IsOverseasUKCensus(string country)
-        {
-            return country.Equals(Countries.OVERSEAS_UK) || (!Countries.IsUnitedKingdom(country) && CensusReference != null && CensusReference.IsUKCensus);
-        }
+        public bool IsOverseasUKCensus(string country) =>
+            country.Equals(Countries.OVERSEAS_UK) || (!Countries.IsUnitedKingdom(country) && CensusReference != null && CensusReference.IsUKCensus);
 
-        public override string ToString()
-        {
-            return FactTypeDescription + ": " + FactDate + (Location.ToString().Length > 0 ? " at " + Location : string.Empty) + (Comment.ToString().Length > 0 ? "  (" + Comment + ")" : string.Empty);
-        }
+        public override string ToString() => 
+            FactTypeDescription + ": " + FactDate + (Location.ToString().Length > 0 ? " at " + Location : string.Empty) + (Comment.ToString().Length > 0 ? "  (" + Comment + ")" : string.Empty);
     }
 }

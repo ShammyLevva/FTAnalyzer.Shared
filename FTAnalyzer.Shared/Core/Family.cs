@@ -119,6 +119,7 @@ namespace FTAnalyzer
             }
         }
 
+
         void CheckChildrenStatusCounts()
         {
             foreach (Fact f in GoodChildrenStatusFacts)
@@ -201,6 +202,11 @@ namespace FTAnalyzer
             foreach (XmlNode n in list)
             {
                 Fact f = new Fact(n, this, preferredFact, outputText);
+                if (string.IsNullOrEmpty(f.Comment) && Husband != null && Wife != null && f.IsMarriageFact)
+                {
+                    string description = Fact.GetFactTypeDescription(factType);
+                    f.Comment = $"{description} of {Husband.Name} and {Wife.Name}";
+                }
                 if (f.FactType != Fact.CENSUS)
                 {
                     Facts.Add(f);
@@ -290,11 +296,8 @@ namespace FTAnalyzer
                 else
                 {
                     foreach (Fact f in Facts)
-                    {
-                        if (f.FactType == Fact.MARR_CONTRACT || f.FactType == Fact.MARR_LICENSE || f.FactType == Fact.MARR_SETTLEMENT ||
-                            f.FactType == Fact.MARRIAGE || f.FactType == Fact.MARRIAGE_BANN)
+                        if(f.IsMarriageFact)
                             return MARRIED;
-                    }
                     return UNMARRIED;
                 }
             }
@@ -327,11 +330,9 @@ namespace FTAnalyzer
             }
         }
 
-        public string MarriageFilename =>
-            FamilyTree.ValidFilename($"{FamilyID} - Marriage of {FamilyName}.html");
+        public string MarriageFilename => FamilyTree.ValidFilename($"{FamilyID} - Marriage of {FamilyName}.html");
 
-        public string ChildrenFilename =>
-            FamilyTree.ValidFilename($"{FamilyID} - Children of {FamilyName}.html");
+        public string ChildrenFilename => FamilyTree.ValidFilename($"{FamilyID} - Children of {FamilyName}.html");
 
         public string FamilyRef
         {

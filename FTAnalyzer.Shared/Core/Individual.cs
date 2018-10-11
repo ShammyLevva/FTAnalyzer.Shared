@@ -20,7 +20,6 @@ namespace FTAnalyzer
         public string IndividualID { get; private set; }
         string _forenames;
         string _surname;
-        string _marriedName;
         string _fullname;
         string _sortedname;
         string gender;
@@ -56,7 +55,7 @@ namespace FTAnalyzer
             _surname = string.Empty;
             forenameMetaphone = new DoubleMetaphone();
             surnameMetaphone = new DoubleMetaphone();
-            _marriedName = string.Empty;
+            MarriedName = string.Empty;
             StandardisedName = string.Empty;
             UnrecognisedCensusNotes = string.Empty;
             IsFlaggedAsLiving = false;
@@ -71,7 +70,7 @@ namespace FTAnalyzer
             Notes = string.Empty;
             HasParents = false;
             ReferralFamilyID = string.Empty;
-            facts = new List<Fact>();
+            Facts = new List<Fact>();
             errorFacts = new List<Fact>();
             locations = new List<FactLocation>();
             familiesAsChild = new List<ParentalRelationship>();
@@ -160,7 +159,7 @@ namespace FTAnalyzer
                 _surname = i._surname;
                 forenameMetaphone = i.forenameMetaphone;
                 surnameMetaphone = i.surnameMetaphone;
-                _marriedName = i._marriedName;
+                MarriedName = i.MarriedName;
                 _fullname = i._fullname;
                 _sortedname = i._sortedname;
                 StandardisedName = i.StandardisedName;
@@ -176,7 +175,7 @@ namespace FTAnalyzer
                 HasParents = i.HasParents;
                 ReferralFamilyID = i.ReferralFamilyID;
                 CommonAncestor = i.CommonAncestor;
-                facts = new List<Fact>(i.facts);
+                Facts = new List<Fact>(i.Facts);
                 errorFacts = new List<Fact>(i.errorFacts);
                 locations = new List<FactLocation>(i.locations);
                 familiesAsChild = new List<ParentalRelationship>(i.familiesAsChild);
@@ -188,10 +187,7 @@ namespace FTAnalyzer
 
         #region Properties
 
-        public bool HasRangedBirthDate
-        {
-            get { return BirthDate.DateType == FactDate.FactDateType.BET && BirthDate.StartDate.Year != BirthDate.EndDate.Year; }
-        }
+        public bool HasRangedBirthDate => BirthDate.DateType == FactDate.FactDateType.BET && BirthDate.StartDate.Year != BirthDate.EndDate.Year;
 
         public bool HasLostCousinsFact
         {
@@ -239,10 +235,7 @@ namespace FTAnalyzer
             }
         }
 
-        public IList<Fact> PersonalFacts
-        {
-            get { return facts; }
-        }
+        public IList<Fact> PersonalFacts => Facts;
 
         private IList<Fact> FamilyFacts
         {
@@ -255,10 +248,7 @@ namespace FTAnalyzer
             }
         }
 
-        public IList<Fact> ErrorFacts
-        {
-            get { return errorFacts; }
-        }
+        public IList<Fact> ErrorFacts => errorFacts;
 
         int _factcount = 0;
 
@@ -266,7 +256,7 @@ namespace FTAnalyzer
         {
             get
             {
-                int currentFactCount = facts.Count + FamilyFacts.Count;
+                int currentFactCount = Facts.Count + FamilyFacts.Count;
                 if (_allfacts == null || currentFactCount != _factcount)
                 {
                     _allfacts = new List<Fact>();
@@ -279,10 +269,7 @@ namespace FTAnalyzer
             }
         }
 
-        public IList<Fact> AllFileFacts
-        {
-            get { return _allFileFacts; }
-        }
+        public IList<Fact> AllFileFacts => _allFileFacts;
 
         public IList<Fact> DuplicateFacts
         {
@@ -298,6 +285,7 @@ namespace FTAnalyzer
             get
             {
                 var possibleDuplicatefacts = new List<Fact>();
+                //TODO check if a fact might be duplicated
                 return possibleDuplicatefacts;
             }
         }
@@ -315,24 +303,15 @@ namespace FTAnalyzer
             }
         }
 
-        public int GeoLocationCount
-        {
-            get { return AllGeocodedFacts.Count; }
-        }
+        public int GeoLocationCount => AllGeocodedFacts.Count;
 
-        public IList<FactLocation> Locations
-        {
-            get { return locations; }
-        }
+        public IList<FactLocation> Locations => locations;
 
-        public string Alias
-        {
-            get { return _alias; }
-        }
+        public string Alias => _alias;
 
         public string Gender
         {
-            get { return gender; }
+            get => gender;
             private set
             {
                 gender = value;
@@ -375,7 +354,7 @@ namespace FTAnalyzer
                     _surname = Individual.UNKNOWN_NAME;
                 if (GeneralSettings.Default.TreatFemaleSurnamesAsUnknown && !IsMale && _surname.StartsWith("(") && _surname.EndsWith(")"))
                     _surname = Individual.UNKNOWN_NAME;
-                _marriedName = _surname;
+                MarriedName = _surname;
                 _fullname = SetFullName();
                 _sortedname = (_forenames + " " + _surname).Trim();
             }
@@ -403,10 +382,7 @@ namespace FTAnalyzer
             }
         }
 
-        public string ForenameMetaphone
-        {
-            get { return forenameMetaphone.PrimaryKey; }
-        }
+        public string ForenameMetaphone => forenameMetaphone.PrimaryKey;
 
         public string Forenames
         {
@@ -419,21 +395,11 @@ namespace FTAnalyzer
             }
         }
 
-        public string Surname
-        {
-            get { return _surname; }
-        }
+        public string Surname => _surname;
 
-        public string SurnameMetaphone
-        {
-            get { return surnameMetaphone.PrimaryKey; }
-        }
+        public string SurnameMetaphone => surnameMetaphone.PrimaryKey;
 
-        public string MarriedName
-        {
-            get { return _marriedName; }
-            set { _marriedName = value; }
-        }
+        public string MarriedName { get; set; }
 
         public Fact BirthFact
         {
@@ -456,20 +422,11 @@ namespace FTAnalyzer
             }
         }
 
-        public FactDate BirthDate
-        {
-            get { return BirthFact == null ? FactDate.UNKNOWN_DATE : BirthFact.FactDate; }
-        }
+        public FactDate BirthDate => BirthFact == null ? FactDate.UNKNOWN_DATE : BirthFact.FactDate;
 
-        public DateTime BirthStart
-        {
-            get { return BirthDate.StartDate != FactDate.MINDATE ? BirthDate.StartDate : BirthDate.EndDate; }
-        }
+        public DateTime BirthStart => BirthDate.StartDate != FactDate.MINDATE ? BirthDate.StartDate : BirthDate.EndDate;
 
-        public FactLocation BirthLocation
-        {
-            get { return (BirthFact == null) ? FactLocation.UNKNOWN_LOCATION : BirthFact.Location; }
-        }
+        public FactLocation BirthLocation => (BirthFact == null) ? FactLocation.UNKNOWN_LOCATION : BirthFact.Location;
 
         public Fact DeathFact
         {
@@ -489,20 +446,11 @@ namespace FTAnalyzer
             }
         }
 
-        public FactDate DeathDate
-        {
-            get { return DeathFact == null ? FactDate.UNKNOWN_DATE : DeathFact.FactDate; }
-        }
+        public FactDate DeathDate => DeathFact == null ? FactDate.UNKNOWN_DATE : DeathFact.FactDate;
 
-        public DateTime DeathEnd
-        {
-            get { return DeathDate.EndDate != FactDate.MAXDATE ? DeathDate.EndDate : DeathDate.StartDate; }
-        }
+        public DateTime DeathEnd => DeathDate.EndDate != FactDate.MAXDATE ? DeathDate.EndDate : DeathDate.StartDate;
 
-        public FactLocation DeathLocation
-        {
-            get { return DeathFact == null ? FactLocation.UNKNOWN_LOCATION : DeathFact.Location; }
-        }
+        public FactLocation DeathLocation => DeathFact == null ? FactLocation.UNKNOWN_LOCATION : DeathFact.Location;
 
         public FactDate BurialDate
         {
@@ -522,15 +470,9 @@ namespace FTAnalyzer
             }
         }
 
-        private int MaxAgeAtDeath
-        {
-            get { return GetAge(DeathDate).MaxAge; }
-        }
+        private int MaxAgeAtDeath => GetAge(DeathDate).MaxAge;
 
-        public Age LifeSpan
-        {
-            get { return GetAge(DateTime.Now); }
-        }
+        public Age LifeSpan => GetAge(DateTime.Now);
 
         public FactDate LooseBirthDate
         {
@@ -568,10 +510,7 @@ namespace FTAnalyzer
             }
         }
 
-        public string IndividualRef
-        {
-            get { return IndividualID + ": " + Name; }
-        }
+        public string IndividualRef => IndividualID + ": " + Name;
 
         public string ServiceNumber
         {
@@ -582,15 +521,9 @@ namespace FTAnalyzer
             }
         }
 
-        public IList<Family> FamiliesAsParent
-        {
-            get { return familiesAsParent; }
-        }
+        public IList<Family> FamiliesAsParent => familiesAsParent;
 
-        public IList<ParentalRelationship> FamiliesAsChild
-        {
-            get { return familiesAsChild; }
-        }
+        public IList<ParentalRelationship> FamiliesAsChild => familiesAsChild;
 
         public bool IsNaturalChildOf(Individual parent)
         {
@@ -607,12 +540,9 @@ namespace FTAnalyzer
             return false;
         }
 
-        public int FactCount(string factType)
-        {
-            return facts.Count(f => f.FactType == factType && f.FactErrorLevel == Fact.FactError.GOOD);
-        }
+        public int FactCount(string factType) => Facts.Count(f => f.FactType == factType && f.FactErrorLevel == Fact.FactError.GOOD);
 
-        public int ResidenceCensusFactCount => facts.Count(f => f.FactType == Fact.RESIDENCE && f.IsCensusFact);
+        public int ResidenceCensusFactCount => Facts.Count(f => f.FactType == Fact.RESIDENCE && f.IsCensusFact);
 
         public int ErrorFactCount(string factType, Fact.FactError errorLevel) => errorFacts.Count(f => f.FactType == factType && f.FactErrorLevel == errorLevel);
 
@@ -648,15 +578,9 @@ namespace FTAnalyzer
 
         #region Boolean Tests
 
-        public bool IsMale
-        {
-            get { return gender.Equals("M"); }
-        }
+        public bool IsMale => gender.Equals("M");
 
-        public bool IsInFamily
-        {
-            get { return Infamily; }
-        }
+        public bool IsInFamily => Infamily;
 
         public bool IsMarried(FactDate fd)
         {
@@ -669,15 +593,12 @@ namespace FTAnalyzer
             });
         }
 
-        public bool HasMilitaryFacts
-        {
-            get { return facts.Any(f => f.FactType == Fact.MILITARY || f.FactType == Fact.SERVICE_NUMBER); }
-        }
+        public bool HasMilitaryFacts => Facts.Any(f => f.FactType == Fact.MILITARY || f.FactType == Fact.SERVICE_NUMBER);
 
         public bool HasCensusLocation(CensusDate when)
         {
             if (when == null) return false;
-            foreach (Fact f in facts)
+            foreach (Fact f in Facts)
             {
                 if (f.IsValidCensus(when) && f.Location.ToString().Length > 0)
                     return true;
@@ -688,7 +609,7 @@ namespace FTAnalyzer
         public bool CensusFactExists(FactDate factDate, bool includeCreated)
         {
             if (factDate == null) return false;
-            foreach (Fact f in facts)
+            foreach (Fact f in Facts)
             {
                 if (f.IsValidCensus(factDate))
                 {
@@ -701,12 +622,12 @@ namespace FTAnalyzer
             return false;
         }
 
-        public bool IsCensusDone(CensusDate when) { return IsCensusDone(when, true, true); }
-        public bool IsCensusDone(CensusDate when, bool includeUnknownCountries) { return IsCensusDone(when, includeUnknownCountries, true); }
+        public bool IsCensusDone(CensusDate when) => IsCensusDone(when, true, true);
+        public bool IsCensusDone(CensusDate when, bool includeUnknownCountries) => IsCensusDone(when, includeUnknownCountries, true);
         public bool IsCensusDone(CensusDate when, bool includeUnknownCountries, bool checkCountry)
         {
             if (when == null) return false;
-            foreach (Fact f in facts)
+            foreach (Fact f in Facts)
             {
                 if (f.IsValidCensus(when))
                 {
@@ -724,13 +645,13 @@ namespace FTAnalyzer
         public bool IsTaggedMissingCensus(CensusDate when)
         {
             if (when == null) return false;
-            return facts.Any(x => x.FactType == Fact.MISSING && x.FactDate.Overlaps(when));
+            return Facts.Any(x => x.FactType == Fact.MISSING && x.FactDate.Overlaps(when));
         }
 
-        public bool IsLostCousinsEntered(CensusDate when) { return IsLostCousinsEntered(when, true); }
+        public bool IsLostCousinsEntered(CensusDate when) => IsLostCousinsEntered(when, true);
         public bool IsLostCousinsEntered(CensusDate when, bool includeUnknownCountries)
         {
-            foreach (Fact f in facts)
+            foreach (Fact f in Facts)
             {
                 if (f.IsValidLostCousins(when))
                 {
@@ -769,20 +690,11 @@ namespace FTAnalyzer
             return isCensusDone && !isLostCousinsEntered;
         }
 
-        public bool IsAlive(FactDate when)
-        {
-            return IsBorn(when) && !IsDeceased(when);
-        }
+        public bool IsAlive(FactDate when) => IsBorn(when) && !IsDeceased(when);
 
-        public bool IsBorn(FactDate when)
-        {
-            return !BirthDate.IsKnown || BirthDate.StartsBefore(when); // assume born if birthdate is unknown
-        }
+        public bool IsBorn(FactDate when) => !BirthDate.IsKnown || BirthDate.StartsBefore(when); // assume born if birthdate is unknown
 
-        public bool IsDeceased(FactDate when)
-        {
-            return DeathDate.IsKnown && DeathDate.IsBefore(when);
-        }
+        public bool IsDeceased(FactDate when) => DeathDate.IsKnown && DeathDate.IsBefore(when);
 
         public bool IsSingleAtDeath()
         {
@@ -790,15 +702,9 @@ namespace FTAnalyzer
             return single != null || MaxAgeAtDeath < 16 || LifeSpan.MaxAge < 16;
         }
 
-        public bool IsBirthKnown()
-        {
-            return BirthDate.IsKnown && BirthDate.IsExact;
-        }
+        public bool IsBirthKnown() => BirthDate.IsKnown && BirthDate.IsExact;
 
-        public bool IsDeathKnown()
-        {
-            return DeathDate.IsKnown && DeathDate.IsExact;
-        }
+        public bool IsDeathKnown() => DeathDate.IsKnown && DeathDate.IsExact;
 
         #endregion
 
@@ -902,7 +808,7 @@ namespace FTAnalyzer
 
         private void AddGoodFact(Fact fact)
         {
-            facts.Add(fact);
+            Facts.Add(fact);
             if (fact.Preferred && !preferredFacts.ContainsKey(fact.FactType))
                 preferredFacts.Add(fact.FactType, fact);
             AddLocation(fact);
@@ -914,7 +820,7 @@ namespace FTAnalyzer
         private void AddCensusSourceFacts()
         {
             List<Fact> toAdd = new List<Fact>(); // we can't vary the facts collection whilst looping
-            foreach (Fact f in facts)
+            foreach (Fact f in Facts)
             {
                 if (!f.IsCensusFact && !CensusFactExists(f.FactDate, true))
                 {
@@ -985,19 +891,16 @@ namespace FTAnalyzer
             }
         }
 
-        private void UpdateCensusFactReference(CensusReference cr)
+        void UpdateCensusFactReference(CensusReference cr)
         {
             Fact censusFact = GetCensusFact(cr.Fact, false);
             if (censusFact != null && censusFact.CensusReference.Status.Equals(CensusReference.ReferenceStatus.BLANK) && (cr.IsKnownStatus))
                 censusFact.SetCensusReferenceDetails(cr, CensusLocation.UNKNOWN, string.Empty);
         }
 
-        private bool OKtoAddReference(CensusReference cr, bool includeCreated)
-        {
-            return cr.IsKnownStatus && !CensusFactExists(cr.Fact.FactDate, includeCreated);
-        }
+        bool OKtoAddReference(CensusReference cr, bool includeCreated) => cr.IsKnownStatus && !CensusFactExists(cr.Fact.FactDate, includeCreated);
 
-        private void AddLocation(Fact fact)
+        void AddLocation(Fact fact)
         {
             FactLocation loc = fact.Location;
             if (loc != null && !locations.Contains(loc))
@@ -1011,7 +914,7 @@ namespace FTAnalyzer
         {
             if (preferredFacts.ContainsKey(factType))
                 return preferredFacts[factType];
-            return facts.FirstOrDefault(f => f.FactType == factType);
+            return Facts.FirstOrDefault(f => f.FactType == factType);
         }
 
         public FactDate GetPreferredFactDate(string factType)
@@ -1019,12 +922,9 @@ namespace FTAnalyzer
             Fact f = GetPreferredFact(factType);
             return (f == null || f.FactDate == null) ? FactDate.UNKNOWN_DATE : f.FactDate;
         }
-
-        public IEnumerable<Fact> GetFacts(string factType)
-        {
-            // Returns all facts of the given type.
-            return facts.Where(f => f.FactType == factType);
-        }
+        
+        // Returns all facts of the given type.
+        public IEnumerable<Fact> GetFacts(string factType) => Facts.Where(f => f.FactType == factType);
 
         public string SurnameAtDate(FactDate date)
         {
@@ -1109,16 +1009,16 @@ namespace FTAnalyzer
             }
         }
 
-        public int LostCousinsFacts => facts.Count(f => f.FactType == Fact.LOSTCOUSINS || f.FactType == Fact.LC_FTA);
+        public int LostCousinsFacts => Facts.Count(f => f.FactType == Fact.LOSTCOUSINS || f.FactType == Fact.LC_FTA);
 
         public string ReferralFamilyID { get; set; }
 
         public Fact GetCensusFact(Fact lcFact, bool includeCreated = true)
         {
             if (includeCreated)
-                return facts.FirstOrDefault(x => x.IsCensusFact && x.FactDate.Overlaps(lcFact.FactDate));
+                return Facts.FirstOrDefault(x => x.IsCensusFact && x.FactDate.Overlaps(lcFact.FactDate));
             else
-                return facts.FirstOrDefault(x => x.IsCensusFact && !x.Created && x.FactDate.Overlaps(lcFact.FactDate));
+                return Facts.FirstOrDefault(x => x.IsCensusFact && !x.Created && x.FactDate.Overlaps(lcFact.FactDate));
         }
 
         public void FixIndividualID(int length)
@@ -1462,10 +1362,7 @@ namespace FTAnalyzer
 
         #region Colour BMD Values
 
-        public BMDColour Birth
-        {
-            get { return BirthDate.DateStatus(false); }
-        }
+        public BMDColour Birth => BirthDate.DateStatus(false);
 
         public BMDColour BaptChri
         {
@@ -1538,20 +1435,11 @@ namespace FTAnalyzer
             }
         }
 
-        public string FirstMarriage
-        {
-            get { return MarriageString(0); }
-        }
+        public string FirstMarriage => MarriageString(0);
 
-        public string SecondMarriage
-        {
-            get { return MarriageString(1); }
-        }
+        public string SecondMarriage => MarriageString(1);
 
-        public string ThirdMarriage
-        {
-            get { return MarriageString(2); }
-        }
+        public string ThirdMarriage => MarriageString(2);
 
         public FactDate FirstMarriageDate
         {
@@ -1629,30 +1517,19 @@ namespace FTAnalyzer
             // TODO Add scoring mechanism
         }
 
-        public int LostCousinsCensusFactCount
-        {
-            get { return facts.Count(f => f.IsLCCensusFact); }
-        }
+        public int LostCousinsCensusFactCount => Facts.Count(f => f.IsLCCensusFact);
 
-        public int CensusFactCount
-        {
-            get { return facts.Count(f => f.IsCensusFact); }
-        }
+        public int CensusFactCount => Facts.Count(f => f.IsCensusFact);
 
-        public int CensusDateFactCount(CensusDate censusDate)
-        {
-            return facts.Count(f => f.IsValidCensus(censusDate));
-        }
+        public int CensusDateFactCount(CensusDate censusDate) => Facts.Count(f => f.IsValidCensus(censusDate));
 
-        public bool IsLivingError
-        {
-            get { return IsFlaggedAsLiving && DeathDate.IsKnown; }
-        }
+        public bool IsLivingError => IsFlaggedAsLiving && DeathDate.IsKnown;
 
-        public int CensusReferenceCount(CensusReference.ReferenceStatus referenceStatus)
-        {
-            return AllFacts.Count(f => f.IsCensusFact && f.CensusReference != null && f.CensusReference.Status.Equals(referenceStatus));
-        }
+        public IList<Fact> Facts { get => Facts1; set => Facts1 = value; }
+        public IList<Fact> Facts1 { get => facts; set => facts = value; }
+
+        public int CensusReferenceCount(CensusReference.ReferenceStatus referenceStatus) 
+            => AllFacts.Count(f => f.IsCensusFact && f.CensusReference != null && f.CensusReference.Status.Equals(referenceStatus));
 
         private Family Marriages(int number)
         {
@@ -1672,11 +1549,11 @@ namespace FTAnalyzer
             else
             {
                 if (IndividualID == marriage.HusbandID && marriage.Wife != null)
-                    return "To " + marriage.Wife.Name + " : " + marriage.ToString();
+                    return $"To {marriage.Wife.Name}: {marriage.ToString()}";
                 else if (IndividualID == marriage.WifeID && marriage.Husband != null)
-                    return "To " + marriage.Husband.Name + " : " + marriage.ToString();
+                    return $"To {marriage.Husband.Name}: {marriage.ToString()}";
                 else
-                    return "Married : " + marriage.ToString();
+                    return $"Married: {marriage.ToString()}";
             }
         }
 
@@ -1696,15 +1573,9 @@ namespace FTAnalyzer
                 return false;
         }
 
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
+        public override int GetHashCode() => base.GetHashCode();
 
-        public override string ToString()
-        {
-            return IndividualID + ": " + Name + " b." + BirthDate;
-        }
+        public override string ToString() => $"{IndividualID}: {Name} b.{BirthDate}";
 
         public int CompareTo(Individual that)
         {
