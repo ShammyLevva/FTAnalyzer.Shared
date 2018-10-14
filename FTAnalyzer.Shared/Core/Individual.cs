@@ -86,74 +86,71 @@ namespace FTAnalyzer
 
             // Individual attributes
             AddFacts(node, Fact.NAME, outputText);
-            AddFacts(node, Fact.ALIAS, outputText);
-            AddFacts(node, Fact.SOCIAL_SECURITY, outputText);
             AddFacts(node, Fact.AFN, outputText);
-            AddFacts(node, Fact.PHYSICAL_DESC, outputText);
-            AddFacts(node, Fact.EDUCATION, outputText);
+            AddFacts(node, Fact.ALIAS, outputText);
             AddFacts(node, Fact.DEGREE, outputText);
-            AddFacts(node, Fact.NAT_ID_NO, outputText);
+            AddFacts(node, Fact.EDUCATION, outputText);
+            AddFacts(node, Fact.EMAIL, outputText);
+            AddFacts(node, Fact.HEIGHT, outputText);
+            AddFacts(node, Fact.MEDICAL_CONDITION, outputText);
+            AddFacts(node, Fact.NAMESAKE, outputText);
             AddFacts(node, Fact.NATIONALITY, outputText);
+            AddFacts(node, Fact.NAT_ID_NO, outputText);
             AddFacts(node, Fact.NUM_CHILDREN, outputText);
             AddFacts(node, Fact.NUM_MARRIAGE, outputText);
             AddFacts(node, Fact.OCCUPATION, outputText);
-            AddFacts(node, Fact.PROPERTY, outputText);
-            AddFacts(node, Fact.MEDICAL_CONDITION, outputText);
-            AddFacts(node, Fact.REFERENCE, outputText);
-            AddFacts(node, Fact.EMAIL, outputText);
-            AddFacts(node, Fact.CONTACT, outputText);
             AddFacts(node, Fact.ORIGIN, outputText);
-            AddFacts(node, Fact.HEIGHT, outputText);
-            AddFacts(node, Fact.WEIGHT, outputText);
-            AddFacts(node, Fact.TITLE, outputText);
             AddFacts(node, Fact.PHONE, outputText);
-            AddFacts(node, Fact.NAMESAKE, outputText);
+            AddFacts(node, Fact.PHYSICAL_DESC, outputText);
+            AddFacts(node, Fact.PROPERTY, outputText);
+            AddFacts(node, Fact.REFERENCE, outputText);
+            AddFacts(node, Fact.SOCIAL_SECURITY, outputText);
+            AddFacts(node, Fact.TITLE, outputText);
+            AddFacts(node, Fact.WEIGHT, outputText);
 
             // Individual events
-            AddFacts(node, Fact.ARRIVAL, outputText);
-            AddFacts(node, Fact.BIRTH, outputText);
-            AddFacts(node, Fact.BIRTH_CALC, outputText);
-            AddFacts(node, Fact.CHRISTENING, outputText);
-            AddFacts(node, Fact.DEATH, outputText);
-            AddFacts(node, Fact.BURIAL, outputText);
-            AddFacts(node, Fact.CASTE, outputText);
-            AddFacts(node, Fact.CREMATION, outputText);
             AddFacts(node, Fact.ADOPTION, outputText);
+            AddFacts(node, Fact.ADULT_CHRISTENING, outputText);
             AddFacts(node, Fact.BAPTISM, outputText);
             AddFacts(node, Fact.BAPTISM_LDS, outputText);
             AddFacts(node, Fact.BAR_MITZVAH, outputText);
             AddFacts(node, Fact.BAS_MITZVAH, outputText);
+            AddFacts(node, Fact.BIRTH, outputText);
+            AddFacts(node, Fact.BIRTH_CALC, outputText);
             AddFacts(node, Fact.BLESSING, outputText);
-            AddFacts(node, Fact.ADULT_CHRISTENING, outputText);
+            AddFacts(node, Fact.BURIAL, outputText);
+            AddFacts(node, Fact.CASTE, outputText);
+            AddFacts(node, Fact.CENSUS, outputText);
+            AddFacts(node, Fact.CHRISTENING, outputText);
             AddFacts(node, Fact.CIRCUMCISION, outputText);
             AddFacts(node, Fact.CONFIRMATION, outputText);
             AddFacts(node, Fact.CONFIRMATION_LDS, outputText);
-            AddFacts(node, Fact.FIRST_COMMUNION, outputText);
-            AddFacts(node, Fact.ORDINATION, outputText);
-            AddFacts(node, Fact.ORDINANCE, outputText);
-            AddFacts(node, Fact.NATURALIZATION, outputText);
-            AddFacts(node, Fact.EMIGRATION, outputText);
-            AddFacts(node, Fact.IMMIGRATION, outputText);
-            AddFacts(node, Fact.CENSUS, outputText);
-            AddFacts(node, Fact.RESIDENCE, outputText);
-            AddFacts(node, Fact.PROBATE, outputText);
-            AddFacts(node, Fact.WILL, outputText);
-            AddFacts(node, Fact.LEGATEE, outputText);
-            AddFacts(node, Fact.GRADUATION, outputText);
-            AddFacts(node, Fact.RETIREMENT, outputText);
-            AddFacts(node, Fact.MILITARY, outputText);
-            AddFacts(node, Fact.SERVICE_NUMBER, outputText);
-            AddFacts(node, Fact.ELECTION, outputText);
-            AddFacts(node, Fact.EMPLOYMENT, outputText);
-            AddFacts(node, Fact.SEALED_TO_PARENTS, outputText);
-            AddFacts(node, Fact.DEPARTURE, outputText);
+            AddFacts(node, Fact.CREMATION, outputText);
+            AddFacts(node, Fact.DEATH, outputText);
             AddFacts(node, Fact.DESTINATION, outputText);
             AddFacts(node, Fact.DNA, outputText);
-            AddFacts(node, Fact.EXCOMMUNICATION, outputText);
-            AddFacts(node, Fact.RELIGION, outputText);
+            AddFacts(node, Fact.ELECTION, outputText);
+            AddFacts(node, Fact.EMIGRATION, outputText);
+            AddFacts(node, Fact.EMPLOYMENT, outputText);
             AddFacts(node, Fact.ENDOWMENT_LDS, outputText);
+            AddFacts(node, Fact.EXCOMMUNICATION, outputText);
+            AddFacts(node, Fact.FIRST_COMMUNION, outputText);
+            AddFacts(node, Fact.GRADUATION, outputText);
+            AddFacts(node, Fact.IMMIGRATION, outputText);
             AddFacts(node, Fact.INITIATORY_LDS, outputText);
+            AddFacts(node, Fact.LEGATEE, outputText);
+            AddFacts(node, Fact.MILITARY, outputText);
             AddFacts(node, Fact.MISSION_LDS, outputText);
+            AddFacts(node, Fact.NATURALIZATION, outputText);
+            AddFacts(node, Fact.ORDINANCE, outputText);
+            AddFacts(node, Fact.ORDINATION, outputText);
+            AddFacts(node, Fact.PROBATE, outputText);
+            AddFacts(node, Fact.RELIGION, outputText);
+            AddFacts(node, Fact.RESIDENCE, outputText);
+            AddFacts(node, Fact.RETIREMENT, outputText);
+            AddFacts(node, Fact.SEALED_TO_PARENTS, outputText);
+            AddFacts(node, Fact.SERVICE_NUMBER, outputText);
+            AddFacts(node, Fact.WILL, outputText);
 
             // Custom facts
             AddFacts(node, Fact.CUSTOM_EVENT, outputText);
@@ -531,7 +528,7 @@ namespace FTAnalyzer
             get
             {
                 Fact service = GetPreferredFact(Fact.SERVICE_NUMBER);
-                return service == null ? "" : service.Comment;
+                return service == null ? string.Empty : service.Comment;
             }
         }
 
@@ -775,7 +772,7 @@ namespace FTAnalyzer
                 {
                     if (factType != Fact.NAME || !preferredFact)
                     {  // don't add first name in file as a fact 
-                        Fact f = new Fact(n, this, preferredFact, outputText);
+                        Fact f = new Fact(n, this, preferredFact, null, outputText);
                         AddFact(f);
                         if (f.GedcomAge != null && f.GedcomAge.CalculatedBirthDate != FactDate.UNKNOWN_DATE)
                         {
@@ -789,6 +786,31 @@ namespace FTAnalyzer
                 {
                     FamilyTree ft = FamilyTree.Instance;
                     outputText.Report($"Error with Individual : {IndividualRef}\n       Invalid fact : {ex.Message}");
+                }
+                catch (TextFactDateException te)
+                {
+                    if (BirthDate.IsKnown)
+                    {
+                        int years = 0;
+                        switch (te.Message)
+                        {
+                            case "STILLBORN":
+                                years = 0;
+                                break;
+                            case "INFANT":
+                                years = 5;
+                                break;
+                            case "CHILD":
+                                years = 14;
+                                break;
+                            case "YOUNG":
+                                years = 21;
+                                break;
+                        }
+                        FactDate deathdate = BirthDate.AddEndDateYears(years);
+                        Fact f = new Fact(n, this, preferredFact, deathdate, outputText);
+                        AddFact(f);
+                    }
                 }
                 preferredFact = false;
             }

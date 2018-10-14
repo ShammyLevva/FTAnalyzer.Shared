@@ -12,26 +12,28 @@ namespace FTAnalyzer
     public class Fact
     {
         public const string ADOPTION = "ADOP", ADULT_CHRISTENING = "CHRA", AFN = "AFN", ALIAS = "ALIA", ANNULMENT = "ANUL",
-                ARRIVAL = "*ARRI", BAPTISM = "BAPM", BAPTISM_LDS = "BAPL", BAR_MITZVAH = "BARM", BAS_MITZVAH = "BASM",
-                BIRTH = "BIRT", BIRTH_CALC = "_BIRTHCALC", BLESSING = "BLESS", BURIAL = "BURI", CASTE = "CAST",
-                CAUSE_OF_DEATH = "_DCAUSE", CENSUS = "CENS", CENSUS_FTA = "_CENSFTA", CHANGE = "*CHNG", CHILDLESS = "*CHILD",
-                CHILDREN = "*CHILDREN", CHILDREN1911 = "CHILDREN1911", CHRISTENING = "CHR", CIRCUMCISION = "_CIRC",
-                CONFIRMATION = "CONF", CONFIRMATION_LDS = "CONL", CONTACT = "*CONT", CREMATION = "CREM", CUSTOM_EVENT = "EVEN",
-                CUSTOM_FACT = "FACT", DEATH = "DEAT", DEGREE = "_DEG", DEPARTURE = "*DEPT", DESTINATION = "_DEST",
-                DIED_SINGLE = "*SINGLE", DIVORCE = "DIV", DIVORCE_FILED = "DIVF", DNA = "_DNA", EDUCATION = "EDUC",
-                ELECTION = "_ELEC", EMAIL = "EMAIL", EMIGRATION = "EMIG", EMPLOYMENT = "_EMPLOY", ENDOWMENT_LDS = "ENDL",
-                ENGAGEMENT = "ENGA", EXCOMMUNICATION = "_EXCM", FAMILYSEARCH = "*IGI", FIRST_COMMUNION = "FCOM", FUNERAL = "_FUN",
-                GENDER = "SEX", GRADUATION = "GRAD", HEIGHT = "_HEIG", IMMIGRATION = "IMMI", INITIATORY_LDS = "_INIT",
-                LC_FTA = "*LOST_FTA", LEGATEE = "LEGA", LOOSEBIRTH = "*LOOSEB", LOOSEDEATH = "*LOOSED", LOSTCOUSINS = "*LOST", 
-                MARRIAGE = "MARR", MARRIAGE_BANN = "MARB", MARR_CONTRACT = "MARC", MARR_LICENSE = "MARL", MARR_SETTLEMENT = "MARS", 
-                MEDICAL_CONDITION = "_MDCL", MILITARY = "_MILT", MISSING = "*MISSING", MISSION_LDS = "_MISN", NAME = "NAME",
-                NAMESAKE = "_NAMS", NATIONALITY = "NATI", NATURALIZATION = "NATU", NAT_ID_NO = "IDNO", NUM_CHILDREN = "NCHI", 
-                NUM_MARRIAGE = "NMR", OCCUPATION = "OCCU", ORDINATION = "ORDN", ORDINANCE = "_ORDI", ORIGIN = "_ORIG", 
-                PARENT = "*PARENT", PHONE = "PHON", PHYSICAL_DESC = "DSCR", PROBATE = "PROB", PROPERTY = "PROP", REFERENCE = "REFN", 
-                RELIGION = "RELI", REPORT = "*REPORT", RESIDENCE = "RESI", RETIREMENT = "RETI", SEALED_TO_PARENTS = "SLGC", 
-                SEALED_TO_SPOUSE = "SLGS", SEPARATION = "_SEPR", SERVICE_NUMBER = "_MILTID", SOCIAL_SECURITY = "SSN", TITLE = "TITL", 
-                UNKNOWN = "UNKN", UNMARRIED = "*UNMAR", WEBSITE = "*WEBSITE", WEIGHT = "_WEIG", WILL = "WILL",  WITNESS = "*WITNE", 
-                WORLD_EVENT = "*WORLD_EVENT";
+                BAPTISM = "BAPM", BAPTISM_LDS = "BAPL", BAR_MITZVAH = "BARM", BAS_MITZVAH = "BASM", BIRTH = "BIRT",
+                BIRTH_CALC = "_BIRTHCALC", BLESSING = "BLESS", BURIAL = "BURI", CASTE = "CAST", CAUSE_OF_DEATH = "_DCAUSE",
+                CENSUS = "CENS", CENSUS_FTA = "_CENSFTA", CHILDREN1911 = "CHILDREN1911", CHRISTENING = "CHR",
+                CIRCUMCISION = "_CIRC", CONFIRMATION = "CONF", CONFIRMATION_LDS = "CONL", CREMATION = "CREM",
+                CUSTOM_EVENT = "EVEN", CUSTOM_FACT = "FACT", DEATH = "DEAT", DEGREE = "_DEG", DESTINATION = "_DEST",
+                DIVORCE = "DIV", DIVORCE_FILED = "DIVF", DNA = "_DNA", EDUCATION = "EDUC", ELECTION = "_ELEC",
+                EMAIL = "EMAIL", EMIGRATION = "EMIG", EMPLOYMENT = "_EMPLOY", ENDOWMENT_LDS = "ENDL", ENGAGEMENT = "ENGA",
+                EXCOMMUNICATION = "_EXCM", FIRST_COMMUNION = "FCOM", FUNERAL = "_FUN", GENDER = "SEX", GRADUATION = "GRAD",
+                HEIGHT = "_HEIG", IMMIGRATION = "IMMI", INITIATORY_LDS = "_INIT", LEGATEE = "LEGA", MARRIAGE = "MARR",
+                MARRIAGE_BANN = "MARB", MARR_CONTRACT = "MARC", MARR_LICENSE = "MARL", MARR_SETTLEMENT = "MARS",
+                MEDICAL_CONDITION = "_MDCL", MILITARY = "_MILT", MISSION_LDS = "_MISN", NAME = "NAME",
+                NAMESAKE = "_NAMS", NATIONALITY = "NATI", NATURALIZATION = "NATU", NAT_ID_NO = "IDNO", NUM_CHILDREN = "NCHI",
+                NUM_MARRIAGE = "NMR", OCCUPATION = "OCCU", ORDINATION = "ORDN", ORDINANCE = "_ORDI", ORIGIN = "_ORIG",
+                PHONE = "PHON", PHYSICAL_DESC = "DSCR", PROBATE = "PROB", PROPERTY = "PROP", REFERENCE = "REFN",
+                RELIGION = "RELI", RESIDENCE = "RESI", RETIREMENT = "RETI", SEALED_TO_PARENTS = "SLGC",
+                SEALED_TO_SPOUSE = "SLGS", SEPARATION = "_SEPR", SERVICE_NUMBER = "_MILTID", SOCIAL_SECURITY = "SSN", TITLE = "TITL",
+                UNKNOWN = "UNKN", WEIGHT = "_WEIG", WILL = "WILL";
+
+        public const string ARRIVAL = "*ARRI", CHANGE = "*CHNG", CHILDLESS = "*CHILD", CHILDREN = "*CHILDREN", CONTACT = "*CONT", 
+                DIED_SINGLE = "*SINGLE", DEPARTURE = "*DEPT", FAMILYSEARCH = "*IGI", LC_FTA = "*LOST_FTA", LOOSEBIRTH = "*LOOSEB",
+                LOOSEDEATH = "*LOOSED", LOSTCOUSINS = "*LOST", MISSING = "*MISSING", PARENT = "*PARENT", REPORT = "*REPORT",
+                UNMARRIED = "*UNMAR", WEBSITE = "*WEBSITE", WITNESS = "*WITNE", WORLD_EVENT = "*WORLD_EVENT";
 
         public static ISet<string> LOOSE_BIRTH_FACTS = new HashSet<string>(new string[] {
             CHRISTENING, BAPTISM, RESIDENCE, WITNESS, EMIGRATION, IMMIGRATION, ARRIVAL, DEPARTURE, 
@@ -308,18 +310,18 @@ namespace FTAnalyzer
         {
             Individual = null;
             Family = family;
-            CreateFact(node, family.FamilyRef, preferred, outputText);
+            CreateFact(node, family.FamilyRef, preferred, null, outputText);
         }
 
-        public Fact(XmlNode node, Individual ind, bool preferred, IProgress<string> outputText)
+        public Fact(XmlNode node, Individual ind, bool preferred, FactDate deathdate, IProgress<string> outputText)
             : this(ind.IndividualID, preferred)
         {
             Individual = ind;
             Family = null;
-            CreateFact(node, ind.IndividualRef, preferred, outputText);
+            CreateFact(node, ind.IndividualRef, preferred, deathdate, outputText);
         }
 
-        private void CreateFact(XmlNode node, string reference, bool preferred, IProgress<string> outputText)
+        private void CreateFact(XmlNode node, string reference, bool preferred, FactDate deathdate, IProgress<string> outputText)
         {
             if (node != null)
             {
@@ -327,14 +329,19 @@ namespace FTAnalyzer
                 try
                 {
                     FactType = FixFactTypes(node.Name);
-                    string factDate = FamilyTree.GetText(node, "DATE", false);
-                    try
+                    if (deathdate != null)
+                        FactDate = deathdate;
+                    else
                     {
-                        FactDate = new FactDate(factDate, reference);
-                    } 
-                    catch(FactDateException e)
-                    {
-                        outputText.Report(e.Message);
+                        string factDate = FamilyTree.GetText(node, "DATE", false);
+                        try
+                        {
+                            FactDate = new FactDate(factDate, reference);
+                        }
+                        catch (FactDateException e)
+                        {
+                            outputText.Report(e.Message);
+                        }
                     }
                     Preferred = preferred;
                     if (FactType.Equals(CUSTOM_EVENT) || FactType.Equals(CUSTOM_FACT))
@@ -410,6 +417,16 @@ namespace FTAnalyzer
                     if (age.Length > 0)
                         GedcomAge = new Age(age, FactDate);
                     CertificatePresent = SetCertificatePresent();
+                }
+                catch (TextFactDateException te)
+                {
+                    if (FactType == DEATH)
+                        throw te;
+                    else
+                    {
+                        string message = (node == null) ? string.Empty : node.InnerText + ". ";
+                        throw new InvalidXMLFactException(message + $"\n            Error {te.Message} text in non death fact.\n");
+                    }
                 }
                 catch (Exception ex)
                 {

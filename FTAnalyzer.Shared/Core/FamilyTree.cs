@@ -520,7 +520,7 @@ namespace FTAnalyzer
                 foreach (string tag in unknownFactTypes)
                 {
                     int count = AllExportFacts.Count(f => f.FactType == tag);
-                    outputText.Report("\nFound " + count + " facts of unknown fact type " + tag);
+                    outputText.Report($"\nFound {count} facts of unknown fact type {tag}");
                 }
                 outputText.Report("\n");
             }

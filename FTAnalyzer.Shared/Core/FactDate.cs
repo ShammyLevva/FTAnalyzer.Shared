@@ -91,6 +91,7 @@ namespace FTAnalyzer
             OriginalString = str;
             // remove any commas in date string
             yearfix = 0;
+            str = FixTextDateFormats(str);
             str = FixCommonDateFormats(str);
             DateType = FactDateType.UNK;
             if (str == null || str.Length == 0)
@@ -112,9 +113,24 @@ namespace FTAnalyzer
             OriginalString = string.Empty;
         }
 
-        public static string Format(string format, DateTime date)
+        public static string Format(string format, DateTime date) => string.Format("{0:" + format + "}", date).ToUpper();
+
+        private string FixTextDateFormats(string str)
         {
-            return string.Format("{0:" + format + "}", date).ToUpper();
+            switch(str)
+            {
+                case "DECEASED":
+                case "DEAD":
+                    string today = DateTime.Now.ToString("dd MMM yyyy").ToUpper();
+                    str = $"BEF {today}";
+                    break;
+                case "STILLBORN":
+                case "INFANT":
+                case "CHILD":
+                case "YOUNG":
+                    throw new TextFactDateException(str);
+            }
+            return str;
         }
 
         private string FixCommonDateFormats(string str)
@@ -280,11 +296,6 @@ namespace FTAnalyzer
             if (str.StartsWith("C1") || str.StartsWith("C2") || str.StartsWith("C 1") || str.StartsWith("C 2"))
                 str = "ABT " + str.Substring(1);
             str = str.Replace("  ", " "); // fix issue if > or < or Cxxx has already got a space
-            if (str == "DECEASED")
-            {
-                string today = DateTime.Now.ToString("dd MMM yyyy").ToUpper();
-                str = $"BEF {today}";
-            }
             Match matcher;
             if (str.StartsWith("INT")) // Interpreted date but we can discard <<Date_Phrase>>
             {
@@ -365,6 +376,16 @@ namespace FTAnalyzer
             end = end.AddMonths(-months);
             if (start < MINDATE)
                 start = MINDATE;
+            return new FactDate(start, end);
+        }
+
+        public FactDate AddEndDateYears(int years)
+        {
+            DateTime start = new DateTime(StartDate.Year, StartDate.Month, StartDate.Day);
+            DateTime end = new DateTime(EndDate.Year, EndDate.Month, EndDate.Day);
+            end = end.AddMonths(years*12);
+            if (end > MAXDATE)
+                end = MAXDATE;
             return new FactDate(start, end);
         }
 
@@ -500,7 +521,7 @@ namespace FTAnalyzer
             }
             catch (Exception e)
             {
-                throw new FactDateException("Error parsing date '" + OriginalString + "' for " + factRef + "' error message was : " + e.Message + "\n");
+                throw new FactDateException($"Error parsing date '{OriginalString}' for {factRef}. Error message was : {e.Message}\n");
             }
         }
 
@@ -794,10 +815,7 @@ namespace FTAnalyzer
             return (that == null) ? true : !(IsBefore(that) || IsAfter(that));
         }
 
-        public bool IsNotBEForeOrAFTer
-        {
-            get { return StartDate != MINDATE && EndDate != MAXDATE; }
-        }
+        public bool IsNotBEForeOrAFTer => StartDate != MINDATE && EndDate != MAXDATE;
 
         public bool FactYearMatches(FactDate factDate)
         {
@@ -831,15 +849,9 @@ namespace FTAnalyzer
             }
         }
 
-        public bool IsExact
-        {
-            get { return this.StartDate.Equals(this.EndDate); }
-        }
+        public bool IsExact => StartDate.Equals(EndDate);
 
-        public bool IsKnown
-        {
-            get { return !this.Equals(UNKNOWN_DATE); }
-        }
+        public bool IsKnown => !Equals(UNKNOWN_DATE);
 
         public int BestYear
         {
@@ -857,8 +869,8 @@ namespace FTAnalyzer
 
         public double Distance(FactDate when)
         {
-            double startDiff = ((this.StartDate.Year - when.StartDate.Year) * 12) + (this.StartDate.Month - when.StartDate.Month);
-            double endDiff = ((this.EndDate.Year - when.EndDate.Year) * 12) + (this.EndDate.Month - when.EndDate.Month);
+            double startDiff = ((StartDate.Year - when.StartDate.Year) * 12) + (StartDate.Month - when.StartDate.Month);
+            double endDiff = ((EndDate.Year - when.EndDate.Year) * 12) + (EndDate.Month - when.EndDate.Month);
             double difference = Math.Sqrt(Math.Pow(startDiff, 2.0) + Math.Pow(endDiff, 2.0));
             return difference;
         }
