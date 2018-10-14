@@ -11,31 +11,27 @@ namespace FTAnalyzer
 {
     public class Fact
     {
-        public const string ADOPTION = "ADOP", ANNULMENT = "ANUL", BAPTISM = "BAPM",
-                BAR_MITZVAH = "BARM", BAS_MITZVAH = "BASM", BIRTH = "BIRT",
-                BLESSING = "BLESS", BURIAL = "BURI", CENSUS = "CENS", CENSUS_FTA = "_CENSFTA",
-                CHRISTENING = "CHR", ADULT_CHRISTENING = "CHRA", CONFIRMATION = "CONF",
-                CREMATION = "CREM", DEATH = "DEAT", PHYSICAL_DESC = "DSCR",
-                DIVORCE = "DIV", DIVORCE_FILED = "DIVF", EDUCATION = "EDUC",
-                EMIGRATION = "EMIG", ENGAGEMENT = "ENGA", FIRST_COMMUNION = "FCOM",
-                GRADUATION = "GRAD", IMMIGRATION = "IMMI", NAT_ID_NO = "IDNO",
-                NATIONAL_TRIBAL = "NATI", NUM_CHILDREN = "NCHI", NUM_MARRIAGE = "NMR",
-                LEGATEE = "LEGA", MARRIAGE_BANN = "MARB", MARR_CONTRACT = "MARC",
-                MARR_LICENSE = "MARL", MARRIAGE = "MARR", MARR_SETTLEMENT = "MARS",
-                NATURALIZATION = "NATU", OCCUPATION = "OCCU", PROPERTY = "PROP",
-                ORDINATION = "ORDN", PROBATE = "PROB", RESIDENCE = "RESI",
-                RETIREMENT = "RETI", WILL = "WILL", SEPARATION = "_SEPR",
-                MILITARY = "_MILT", ELECTION = "_ELEC", DEGREE = "_DEG",
-                EMPLOYMENT = "_EMPLOY", MEDICAL_CONDITION = "_MDCL", NAME = "NAME",
-                CUSTOM_EVENT = "EVEN", CUSTOM_FACT = "FACT", SERVICE_NUMBER = "_MILTID",
-                REFERENCE = "REFN", UNKNOWN = "UNKN", ALIAS = "ALIA", GENDER = "SEX";
-
-        public const string CHILDLESS = "*CHILD", UNMARRIED = "*UNMAR", WITNESS = "*WITNE",
-                LOOSEDEATH = "*LOOSED", LOOSEBIRTH = "*LOOSEB", FAMILYSEARCH = "*IGI",
-                CONTACT = "*CONT", ARRIVAL = "*ARRI", DEPARTURE = "*DEPT", PARENT = "*PARENT",
-                CHILDREN = "*CHILDREN", CHANGE = "*CHNG", LOSTCOUSINS = "*LOST", LC_FTA = "*LOST_FTA",
-                DIED_SINGLE = "*SINGLE", MISSING = "*MISSING", CHILDREN1911 = "CHILDREN1911",
-                REPORT = "*REPORT", WORLD_EVENT = "*WORLD_EVENT", BIRTH_CALC = "_BIRTHCALC";
+        public const string ADOPTION = "ADOP", ADULT_CHRISTENING = "CHRA", AFN = "AFN", ALIAS = "ALIA", ANNULMENT = "ANUL",
+                ARRIVAL = "*ARRI", BAPTISM = "BAPM", BAPTISM_LDS = "BAPL", BAR_MITZVAH = "BARM", BAS_MITZVAH = "BASM",
+                BIRTH = "BIRT", BIRTH_CALC = "_BIRTHCALC", BLESSING = "BLESS", BURIAL = "BURI", CASTE = "CAST",
+                CAUSE_OF_DEATH = "_DCAUSE", CENSUS = "CENS", CENSUS_FTA = "_CENSFTA", CHANGE = "*CHNG", CHILDLESS = "*CHILD",
+                CHILDREN = "*CHILDREN", CHILDREN1911 = "CHILDREN1911", CHRISTENING = "CHR", CIRCUMCISION = "_CIRC",
+                CONFIRMATION = "CONF", CONFIRMATION_LDS = "CONL", CONTACT = "*CONT", CREMATION = "CREM", CUSTOM_EVENT = "EVEN",
+                CUSTOM_FACT = "FACT", DEATH = "DEAT", DEGREE = "_DEG", DEPARTURE = "*DEPT", DESTINATION = "_DEST",
+                DIED_SINGLE = "*SINGLE", DIVORCE = "DIV", DIVORCE_FILED = "DIVF", DNA = "_DNA", EDUCATION = "EDUC",
+                ELECTION = "_ELEC", EMAIL = "EMAIL", EMIGRATION = "EMIG", EMPLOYMENT = "_EMPLOY", ENDOWMENT_LDS = "ENDL",
+                ENGAGEMENT = "ENGA", EXCOMMUNICATION = "_EXCM", FAMILYSEARCH = "*IGI", FIRST_COMMUNION = "FCOM", FUNERAL = "_FUN",
+                GENDER = "SEX", GRADUATION = "GRAD", HEIGHT = "_HEIG", IMMIGRATION = "IMMI", INITIATORY_LDS = "_INIT",
+                LC_FTA = "*LOST_FTA", LEGATEE = "LEGA", LOOSEBIRTH = "*LOOSEB", LOOSEDEATH = "*LOOSED", LOSTCOUSINS = "*LOST", 
+                MARRIAGE = "MARR", MARRIAGE_BANN = "MARB", MARR_CONTRACT = "MARC", MARR_LICENSE = "MARL", MARR_SETTLEMENT = "MARS", 
+                MEDICAL_CONDITION = "_MDCL", MILITARY = "_MILT", MISSING = "*MISSING", MISSION_LDS = "_MISN", NAME = "NAME",
+                NAMESAKE = "_NAMS", NATIONALITY = "NATI", NATURALIZATION = "NATU", NAT_ID_NO = "IDNO", NUM_CHILDREN = "NCHI", 
+                NUM_MARRIAGE = "NMR", OCCUPATION = "OCCU", ORDINATION = "ORDN", ORDINANCE = "_ORDI", ORIGIN = "_ORIG", 
+                PARENT = "*PARENT", PHONE = "PHON", PHYSICAL_DESC = "DSCR", PROBATE = "PROB", PROPERTY = "PROP", REFERENCE = "REFN", 
+                RELIGION = "RELI", REPORT = "*REPORT", RESIDENCE = "RESI", RETIREMENT = "RETI", SEALED_TO_PARENTS = "SLGC", 
+                SEALED_TO_SPOUSE = "SLGS", SEPARATION = "_SEPR", SERVICE_NUMBER = "_MILTID", SOCIAL_SECURITY = "SSN", TITLE = "TITL", 
+                UNKNOWN = "UNKN", UNMARRIED = "*UNMAR", WEBSITE = "*WEBSITE", WEIGHT = "_WEIG", WILL = "WILL",  WITNESS = "*WITNE", 
+                WORLD_EVENT = "*WORLD_EVENT";
 
         public static ISet<string> LOOSE_BIRTH_FACTS = new HashSet<string>(new string[] {
             CHRISTENING, BAPTISM, RESIDENCE, WITNESS, EMIGRATION, IMMIGRATION, ARRIVAL, DEPARTURE, 
@@ -87,6 +83,7 @@ namespace FTAnalyzer
             CUSTOM_TAGS.Add("DIED SINGLE", DIED_SINGLE);
             CUSTOM_TAGS.Add("MISSING", MISSING);
             CUSTOM_TAGS.Add("CHILDREN STATUS", CHILDREN1911);
+            CUSTOM_TAGS.Add("WEBSITE", WEBSITE);
 
             // convert custom tags to normal tags
             CUSTOM_TAGS.Add("CENSUS 1841", CENSUS);
@@ -148,113 +145,136 @@ namespace FTAnalyzer
             CUSTOM_TAGS.Add("MILITARY SERVICE", MILITARY);
             CUSTOM_TAGS.Add("PROPERTY", PROPERTY);
 
-            // Create list of Comment facts
-            COMMENT_FACTS.Add(NAME);
-            COMMENT_FACTS.Add(OCCUPATION);
-            COMMENT_FACTS.Add(MILITARY);
-            COMMENT_FACTS.Add(SERVICE_NUMBER);
-            COMMENT_FACTS.Add(RETIREMENT);
-            COMMENT_FACTS.Add(WILL);
-            COMMENT_FACTS.Add(ELECTION);
-            COMMENT_FACTS.Add(CHILDLESS);
-            COMMENT_FACTS.Add(WITNESS);
-            COMMENT_FACTS.Add(UNMARRIED);
-            COMMENT_FACTS.Add(UNKNOWN);
-            COMMENT_FACTS.Add(FAMILYSEARCH);
-            COMMENT_FACTS.Add(MISSING);
-            COMMENT_FACTS.Add(DEGREE);
-            COMMENT_FACTS.Add(EDUCATION);
-            COMMENT_FACTS.Add(GRADUATION);
-            COMMENT_FACTS.Add(EMPLOYMENT);
-            COMMENT_FACTS.Add(MEDICAL_CONDITION);
-            COMMENT_FACTS.Add(ORDINATION);
-            COMMENT_FACTS.Add(PHYSICAL_DESC);
-            COMMENT_FACTS.Add(PROPERTY);
-            COMMENT_FACTS.Add(PARENT);
-            COMMENT_FACTS.Add(CHILDREN);
+            // Create list of Comment facts treat text as comment rather than location
+            COMMENT_FACTS.Add(AFN);
             COMMENT_FACTS.Add(ALIAS);
+            COMMENT_FACTS.Add(CASTE);
+            COMMENT_FACTS.Add(CAUSE_OF_DEATH);
+            COMMENT_FACTS.Add(CHILDLESS);
+            COMMENT_FACTS.Add(CHILDREN);
             COMMENT_FACTS.Add(CHILDREN1911);
+            COMMENT_FACTS.Add(DESTINATION);
+            COMMENT_FACTS.Add(FAMILYSEARCH);
+            COMMENT_FACTS.Add(HEIGHT);
+            COMMENT_FACTS.Add(MISSING);
+            COMMENT_FACTS.Add(NAME);
+            COMMENT_FACTS.Add(NATIONALITY);
+            COMMENT_FACTS.Add(NAMESAKE);
+            COMMENT_FACTS.Add(PARENT);
+            COMMENT_FACTS.Add(REFERENCE);
+            COMMENT_FACTS.Add(RELIGION);
+            COMMENT_FACTS.Add(SOCIAL_SECURITY);
+            COMMENT_FACTS.Add(TITLE);
+            COMMENT_FACTS.Add(UNKNOWN);
+            COMMENT_FACTS.Add(UNMARRIED);
+            COMMENT_FACTS.Add(WEIGHT);
+            COMMENT_FACTS.Add(WITNESS);
         }
 
         internal static string GetFactTypeDescription(string factType)
         {
             switch (factType)
             {
-                case NAME: return "Alternate Name";
-                case ALIAS: return "Also known as";
                 case ADOPTION: return "Adoption";
+                case ADULT_CHRISTENING: return "Adult christening";
+                case AFN: return "Ancestral File Number";
+                case ALIAS: return "Also known as";
                 case ANNULMENT: return "Annulment";
+                case ARRIVAL: return "Arrival";
                 case BAPTISM: return "Baptism";
+                case BAPTISM_LDS: return "Baptism (LDS)";
                 case BAR_MITZVAH: return "Bar mitzvah";
                 case BAS_MITZVAH: return "Bas mitzvah";
                 case BIRTH: return "Birth";
                 case BIRTH_CALC: return "Birth (Calc from Age)";
                 case BLESSING: return "Blessing";
                 case BURIAL: return "Burial";
+                case CASTE: return "Caste";
+                case CAUSE_OF_DEATH: return "Cause of Death";
                 case CENSUS: return "Census";
                 case CENSUS_FTA: return "Census (FTAnalyzer)";
+                case CHANGE: return "Record change";
+                case CHILDLESS: return "Childless";
+                case CHILDREN1911: return "Children Status";
+                case CHILDREN: return "Child Born";
                 case CHRISTENING: return "Christening";
-                case ADULT_CHRISTENING: return "Adult christening";
+                case CIRCUMCISION: return "Circumcision";
                 case CONFIRMATION: return "Confirmation";
+                case CONFIRMATION_LDS: return "Confirmation (LDS)";
+                case CONTACT: return "Contact";
                 case CREMATION: return "Cremation";
+                case CUSTOM_EVENT: return "Event";
+                case CUSTOM_FACT: return "Custom Fact";
                 case DEATH: return "Death";
-                case PHYSICAL_DESC: return "Physical description";
+                case DEGREE: return "Degree";
+                case DEPARTURE: return "Departure";
+                case DESTINATION: return "Destination";
+                case DIED_SINGLE: return "Died Single";
                 case DIVORCE: return "Divorce";
                 case DIVORCE_FILED: return "Divorce filed";
+                case DNA: return "DNA Markers";
                 case EDUCATION: return "Education";
+                case ELECTION: return "Election";
+                case EMAIL: return "Email Address";
                 case EMIGRATION: return "Emigration";
+                case EMPLOYMENT: return "Employment";
+                case ENDOWMENT_LDS: return "Endowment (LDS)";
                 case ENGAGEMENT: return "Engagement";
+                case EXCOMMUNICATION: return "Excommunication";
+                case FAMILYSEARCH: return "Familysearch";
                 case FIRST_COMMUNION: return "First communion";
+                case FUNERAL: return "Funeral";
+                case GENDER: return "Gender";
                 case GRADUATION: return "Graduation";
+                case HEIGHT: return "Height";
                 case IMMIGRATION: return "Immigration";
-                case NAT_ID_NO: return "National identity no.";
-                case NATIONAL_TRIBAL: return "Nationality";
-                case NUM_CHILDREN: return "Number of children";
-                case NUM_MARRIAGE: return "Number of marriages";
+                case INITIATORY_LDS: return "Initiatory (LDS)";
+                case LC_FTA: return "Lost Cousins (FTAnalyzer)";
                 case LEGATEE: return "Legatee";
+                case LOOSEBIRTH: return "Loose birth";
+                case LOOSEDEATH: return "Loose death";
+                case LOSTCOUSINS: return "Lost Cousins";
+                case MARRIAGE: return "Marriage";
                 case MARRIAGE_BANN: return "Marriage banns";
                 case MARR_CONTRACT: return "Marriage contract";
                 case MARR_LICENSE: return "Marriage license";
-                case MARRIAGE: return "Marriage";
                 case MARR_SETTLEMENT: return "Marriage settlement";
+                case MEDICAL_CONDITION: return "Medical condition";
+                case MILITARY: return "Military service";
+                case MISSING: return "Missing";
+                case MISSION_LDS: return "Mission (LDS)";
+                case NAME: return "Alternate Name";
+                case NAMESAKE: return "Namesake";
+                case NATIONALITY: return "Nationality";
                 case NATURALIZATION: return "Naturalization";
+                case NAT_ID_NO: return "National identity no.";
+                case NUM_CHILDREN: return "Number of children";
+                case NUM_MARRIAGE: return "Number of marriages";
                 case OCCUPATION: return "Occupation";
-                case PROPERTY: return "Property";
                 case ORDINATION: return "Ordination";
+                case ORDINANCE: return "Ordinance";
+                case PARENT: return "Parental Info";
+                case PHONE: return "Phone";
+                case PHYSICAL_DESC: return "Physical description";
                 case PROBATE: return "Probate";
+                case PROPERTY: return "Property";
+                case REFERENCE: return "Reference ID";
+                case RELIGION: return "Religion";
+                case REPORT: return "Fact Report";
                 case RESIDENCE: return "Residence";
                 case RETIREMENT: return "Retirement";
-                case WILL: return "Will";
+                case SEALED_TO_PARENTS: return "Sealed to Parents (LDS)";
+                case SEALED_TO_SPOUSE: return "Sealed to Spouse (LDS)";
                 case SEPARATION: return "Separation";
-                case MILITARY: return "Military service";
                 case SERVICE_NUMBER: return "Military service number";
-                case ELECTION: return "Election";
-                case DEGREE: return "Degree";
-                case EMPLOYMENT: return "Employment";
-                case MEDICAL_CONDITION: return "Medical condition";
-                case CHILDLESS: return "Childless";
-                case UNMARRIED: return "Unmarried";
-                case WITNESS: return "Witness";
-                case LOOSEDEATH: return "Loose death";
-                case LOOSEBIRTH: return "Loose birth";
-                case FAMILYSEARCH: return "Familysearch";
-                case CONTACT: return "Contact";
-                case ARRIVAL: return "Arrival";
-                case DEPARTURE: return "Departure";
-                case CHANGE: return "Record change";
-                case LOSTCOUSINS: return "Lost Cousins";
-                case LC_FTA: return "Lost Cousins (FTAnalyzer)";
-                case DIED_SINGLE: return "Died Single";
+                case SOCIAL_SECURITY: return "Social Security number";
+                case TITLE: return "Title";
                 case UNKNOWN: return "UNKNOWN";
-                case PARENT: return "Parental Info";
-                case CHILDREN: return "Child Born";
-                case REFERENCE: return "Reference ID";
-                case MISSING: return "Missing";
-                case CHILDREN1911: return "Children Status";
-                case REPORT: return "Fact Report";
-                case CUSTOM_EVENT: return "Event";
+                case UNMARRIED: return "Unmarried";
+                case WEIGHT: return "Weight";
+                case WILL: return "Will";
+                case WITNESS: return "Witness";
                 case WORLD_EVENT: return "World Event";
-                case GENDER: return "Gender";
                 case "": return "UNKNOWN";
                 default: return EnhancedTextInfo.ToTitleCase(factType);
             }

@@ -107,6 +107,7 @@ namespace FTAnalyzer
                 AddFacts(node, Fact.CUSTOM_EVENT, outputText);
                 AddFacts(node, Fact.CUSTOM_FACT, outputText);
                 AddFacts(node, Fact.REFERENCE, outputText);
+                AddFacts(node, Fact.SEALED_TO_SPOUSE, outputText);
                 AddFacts(node, Fact.UNKNOWN, outputText);
 
                 //TODO: need to think about family facts having AGE tags in GEDCOM

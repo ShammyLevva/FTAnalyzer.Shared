@@ -19,40 +19,31 @@ namespace FTAnalyzer
 
         public string IndividualID { get; private set; }
         string _forenames;
-        string _surname;
         string _fullname;
-        string _sortedname;
-        string gender;
-        string _alias;
-        int relationType;
+        string _gender;
+        int _relationType;
         List<Fact> _allfacts;
         List<Fact> _allFileFacts;
         DoubleMetaphone surnameMetaphone;
         DoubleMetaphone forenameMetaphone;
+        Dictionary<string, Fact> preferredFacts;
         public string Notes { get; private set; }
         public string StandardisedName { get; private set; }
         public bool HasParents { get; set; }
         public bool Infamily { get; set; }
         public bool IsFlaggedAsLiving { get; private set; }
-        public Int64 Ahnentafel { get; set; }
+        public long Ahnentafel { get; set; }
         public string BudgieCode { get; set; }
         public string RelationToRoot { get; set; }
         public CommonAncestor CommonAncestor { get; set; }
         public string UnrecognisedCensusNotes { get; private set; }
-
-        private IList<Fact> facts;
-        private IList<Fact> errorFacts;
-        private IList<FactLocation> locations;
-        private IList<Family> familiesAsParent;
-        private IList<ParentalRelationship> familiesAsChild;
-        private Dictionary<string, Fact> preferredFacts;
 
         #region Constructors
         private Individual()
         {
             IndividualID = string.Empty;
             _forenames = string.Empty;
-            _surname = string.Empty;
+            Surname = string.Empty;
             forenameMetaphone = new DoubleMetaphone();
             surnameMetaphone = new DoubleMetaphone();
             MarriedName = string.Empty;
@@ -60,10 +51,10 @@ namespace FTAnalyzer
             UnrecognisedCensusNotes = string.Empty;
             IsFlaggedAsLiving = false;
             Gender = "U";
-            _alias = string.Empty;
+            Alias1 = string.Empty;
             Ahnentafel = 0;
             BudgieCode = string.Empty;
-            relationType = UNSET;
+            _relationType = UNSET;
             RelationToRoot = string.Empty;
             CommonAncestor = null;
             Infamily = false;
@@ -71,10 +62,10 @@ namespace FTAnalyzer
             HasParents = false;
             ReferralFamilyID = string.Empty;
             Facts = new List<Fact>();
-            errorFacts = new List<Fact>();
-            locations = new List<FactLocation>();
-            familiesAsChild = new List<ParentalRelationship>();
-            familiesAsParent = new List<Family>();
+            ErrorFacts = new List<Fact>();
+            Locations = new List<FactLocation>();
+            FamiliesAsChild = new List<ParentalRelationship>();
+            FamiliesAsParent = new List<Family>();
             preferredFacts = new Dictionary<string, Fact>();
             _allfacts = null;
             _allFileFacts = null;
@@ -86,7 +77,7 @@ namespace FTAnalyzer
             IndividualID = node.Attributes["ID"].Value;
             Name = FamilyTree.GetText(node, "NAME", false);
             Gender = FamilyTree.GetText(node, "SEX", false);
-            _alias = FamilyTree.GetText(node, "ALIA", false);
+            Alias1 = FamilyTree.GetText(node, "ALIA", false);
             IsFlaggedAsLiving = node.SelectSingleNode("_FLGS/__LIVING") != null;
             forenameMetaphone = new DoubleMetaphone(Forename);
             surnameMetaphone = new DoubleMetaphone(Surname);
@@ -96,33 +87,50 @@ namespace FTAnalyzer
             // Individual attributes
             AddFacts(node, Fact.NAME, outputText);
             AddFacts(node, Fact.ALIAS, outputText);
+            AddFacts(node, Fact.SOCIAL_SECURITY, outputText);
+            AddFacts(node, Fact.AFN, outputText);
             AddFacts(node, Fact.PHYSICAL_DESC, outputText);
             AddFacts(node, Fact.EDUCATION, outputText);
             AddFacts(node, Fact.DEGREE, outputText);
             AddFacts(node, Fact.NAT_ID_NO, outputText);
-            AddFacts(node, Fact.NATIONAL_TRIBAL, outputText);
+            AddFacts(node, Fact.NATIONALITY, outputText);
             AddFacts(node, Fact.NUM_CHILDREN, outputText);
             AddFacts(node, Fact.NUM_MARRIAGE, outputText);
             AddFacts(node, Fact.OCCUPATION, outputText);
             AddFacts(node, Fact.PROPERTY, outputText);
             AddFacts(node, Fact.MEDICAL_CONDITION, outputText);
             AddFacts(node, Fact.REFERENCE, outputText);
+            AddFacts(node, Fact.EMAIL, outputText);
+            AddFacts(node, Fact.CONTACT, outputText);
+            AddFacts(node, Fact.ORIGIN, outputText);
+            AddFacts(node, Fact.HEIGHT, outputText);
+            AddFacts(node, Fact.WEIGHT, outputText);
+            AddFacts(node, Fact.TITLE, outputText);
+            AddFacts(node, Fact.PHONE, outputText);
+            AddFacts(node, Fact.NAMESAKE, outputText);
 
             // Individual events
+            AddFacts(node, Fact.ARRIVAL, outputText);
             AddFacts(node, Fact.BIRTH, outputText);
+            AddFacts(node, Fact.BIRTH_CALC, outputText);
             AddFacts(node, Fact.CHRISTENING, outputText);
             AddFacts(node, Fact.DEATH, outputText);
             AddFacts(node, Fact.BURIAL, outputText);
+            AddFacts(node, Fact.CASTE, outputText);
             AddFacts(node, Fact.CREMATION, outputText);
             AddFacts(node, Fact.ADOPTION, outputText);
             AddFacts(node, Fact.BAPTISM, outputText);
+            AddFacts(node, Fact.BAPTISM_LDS, outputText);
             AddFacts(node, Fact.BAR_MITZVAH, outputText);
             AddFacts(node, Fact.BAS_MITZVAH, outputText);
             AddFacts(node, Fact.BLESSING, outputText);
             AddFacts(node, Fact.ADULT_CHRISTENING, outputText);
+            AddFacts(node, Fact.CIRCUMCISION, outputText);
             AddFacts(node, Fact.CONFIRMATION, outputText);
+            AddFacts(node, Fact.CONFIRMATION_LDS, outputText);
             AddFacts(node, Fact.FIRST_COMMUNION, outputText);
             AddFacts(node, Fact.ORDINATION, outputText);
+            AddFacts(node, Fact.ORDINANCE, outputText);
             AddFacts(node, Fact.NATURALIZATION, outputText);
             AddFacts(node, Fact.EMIGRATION, outputText);
             AddFacts(node, Fact.IMMIGRATION, outputText);
@@ -137,6 +145,15 @@ namespace FTAnalyzer
             AddFacts(node, Fact.SERVICE_NUMBER, outputText);
             AddFacts(node, Fact.ELECTION, outputText);
             AddFacts(node, Fact.EMPLOYMENT, outputText);
+            AddFacts(node, Fact.SEALED_TO_PARENTS, outputText);
+            AddFacts(node, Fact.DEPARTURE, outputText);
+            AddFacts(node, Fact.DESTINATION, outputText);
+            AddFacts(node, Fact.DNA, outputText);
+            AddFacts(node, Fact.EXCOMMUNICATION, outputText);
+            AddFacts(node, Fact.RELIGION, outputText);
+            AddFacts(node, Fact.ENDOWMENT_LDS, outputText);
+            AddFacts(node, Fact.INITIATORY_LDS, outputText);
+            AddFacts(node, Fact.MISSION_LDS, outputText);
 
             // Custom facts
             AddFacts(node, Fact.CUSTOM_EVENT, outputText);
@@ -156,19 +173,19 @@ namespace FTAnalyzer
             {
                 IndividualID = i.IndividualID;
                 _forenames = i._forenames;
-                _surname = i._surname;
+                Surname = i.Surname;
                 forenameMetaphone = i.forenameMetaphone;
                 surnameMetaphone = i.surnameMetaphone;
                 MarriedName = i.MarriedName;
                 _fullname = i._fullname;
-                _sortedname = i._sortedname;
+                SortedName = i.SortedName;
                 StandardisedName = i.StandardisedName;
                 IsFlaggedAsLiving = i.IsFlaggedAsLiving;
-                gender = i.gender;
-                _alias = i._alias;
+                _gender = i._gender;
+                Alias1 = i.Alias1;
                 Ahnentafel = i.Ahnentafel;
                 BudgieCode = i.BudgieCode;
-                relationType = i.relationType;
+                _relationType = i._relationType;
                 RelationToRoot = i.RelationToRoot;
                 Infamily = i.Infamily;
                 Notes = i.Notes;
@@ -176,10 +193,10 @@ namespace FTAnalyzer
                 ReferralFamilyID = i.ReferralFamilyID;
                 CommonAncestor = i.CommonAncestor;
                 Facts = new List<Fact>(i.Facts);
-                errorFacts = new List<Fact>(i.errorFacts);
-                locations = new List<FactLocation>(i.locations);
-                familiesAsChild = new List<ParentalRelationship>(i.familiesAsChild);
-                familiesAsParent = new List<Family>(i.familiesAsParent);
+                ErrorFacts = new List<Fact>(i.ErrorFacts);
+                Locations = new List<FactLocation>(i.Locations);
+                FamiliesAsChild = new List<ParentalRelationship>(i.FamiliesAsChild);
+                FamiliesAsParent = new List<Family>(i.FamiliesAsParent);
                 preferredFacts = new Dictionary<string, Fact>(i.preferredFacts);
             }
         }
@@ -202,17 +219,17 @@ namespace FTAnalyzer
 
         public int RelationType
         {
-            get { return relationType; }
+            get { return _relationType; }
             set
             {
-                if (relationType == UNKNOWN || relationType > value)
-                    relationType = value;
+                if (_relationType == UNKNOWN || _relationType > value)
+                    _relationType = value;
             }
         }
 
         public bool IsBloodDirect
         {
-            get { return relationType == BLOOD || relationType == DIRECT || relationType == MARRIEDTODB; }
+            get { return _relationType == BLOOD || _relationType == DIRECT || _relationType == MARRIEDTODB; }
         }
 
         public bool HasNotes
@@ -224,7 +241,7 @@ namespace FTAnalyzer
         {
             get
             {
-                switch (relationType)
+                switch (_relationType)
                 {
                     case DIRECT: return Ahnentafel == 1 ? "Root Person" : "Direct Ancestor";
                     case BLOOD: return "Blood Relation";
@@ -242,13 +259,13 @@ namespace FTAnalyzer
             get
             {
                 var familyfacts = new List<Fact>();
-                foreach (Family f in familiesAsParent)
+                foreach (Family f in FamiliesAsParent)
                     familyfacts.AddRange(f.Facts);
                 return familyfacts;
             }
         }
 
-        public IList<Fact> ErrorFacts => errorFacts;
+        public IList<Fact> ErrorFacts { get; }
 
         int _factcount = 0;
 
@@ -305,18 +322,18 @@ namespace FTAnalyzer
 
         public int GeoLocationCount => AllGeocodedFacts.Count;
 
-        public IList<FactLocation> Locations => locations;
+        public IList<FactLocation> Locations { get; }
 
-        public string Alias => _alias;
+        public string Alias => Alias1;
 
         public string Gender
         {
-            get => gender;
+            get => _gender;
             private set
             {
-                gender = value;
-                if (gender.Length == 0)
-                    gender = "U";
+                _gender = value;
+                if (_gender.Length == 0)
+                    _gender = "U";
             }
         }
 
@@ -325,10 +342,7 @@ namespace FTAnalyzer
             return Gender == that.Gender || Gender == "U" || that.Gender == "U";
         }
 
-        public string SortedName
-        {
-            get { return _sortedname; }
-        }
+        public string SortedName { get; private set; }
 
         public string Name
         {
@@ -342,30 +356,30 @@ namespace FTAnalyzer
                 int startPos = name.IndexOf("/"), endPos = name.LastIndexOf("/");
                 if (startPos >= 0 && endPos > startPos)
                 {
-                    _surname = name.Substring(startPos + 1, endPos - startPos - 1);
+                    Surname = name.Substring(startPos + 1, endPos - startPos - 1);
                     _forenames = startPos == 0 ? Individual.UNKNOWN_NAME : name.Substring(0, startPos).Trim();
                 }
                 else
                 {
-                    _surname = Individual.UNKNOWN_NAME;
+                    Surname = Individual.UNKNOWN_NAME;
                     _forenames = name;
                 }
-                if (_surname == "?" || _surname.ToLower() == "mnu" || _surname.Length == 0)
-                    _surname = Individual.UNKNOWN_NAME;
-                if (GeneralSettings.Default.TreatFemaleSurnamesAsUnknown && !IsMale && _surname.StartsWith("(") && _surname.EndsWith(")"))
-                    _surname = Individual.UNKNOWN_NAME;
-                MarriedName = _surname;
+                if (Surname == "?" || Surname.ToLower() == "mnu" || Surname.Length == 0)
+                    Surname = Individual.UNKNOWN_NAME;
+                if (GeneralSettings.Default.TreatFemaleSurnamesAsUnknown && !IsMale && Surname.StartsWith("(") && Surname.EndsWith(")"))
+                    Surname = Individual.UNKNOWN_NAME;
+                MarriedName = Surname;
                 _fullname = SetFullName();
-                _sortedname = (_forenames + " " + _surname).Trim();
+                SortedName = (_forenames + " " + Surname).Trim();
             }
         }
 
         public string SetFullName()
         {
             if (GeneralSettings.Default.ShowAliasInName && Alias.Length > 0)
-                return (_forenames + (" '" + Alias + "' ") + _surname).Trim();
+                return (_forenames + (" '" + Alias + "' ") + Surname).Trim();
             else
-                return (_forenames + " " + _surname).Trim();
+                return (_forenames + " " + Surname).Trim();
         }
 
         public string Forename
@@ -395,7 +409,7 @@ namespace FTAnalyzer
             }
         }
 
-        public string Surname => _surname;
+        public string Surname { get; private set; }
 
         public string SurnameMetaphone => surnameMetaphone.PrimaryKey;
 
@@ -521,9 +535,9 @@ namespace FTAnalyzer
             }
         }
 
-        public IList<Family> FamiliesAsParent => familiesAsParent;
+        public IList<Family> FamiliesAsParent { get; }
 
-        public IList<ParentalRelationship> FamiliesAsChild => familiesAsChild;
+        public IList<ParentalRelationship> FamiliesAsChild { get; }
 
         public bool IsNaturalChildOf(Individual parent)
         {
@@ -544,14 +558,14 @@ namespace FTAnalyzer
 
         public int ResidenceCensusFactCount => Facts.Count(f => f.FactType == Fact.RESIDENCE && f.IsCensusFact);
 
-        public int ErrorFactCount(string factType, Fact.FactError errorLevel) => errorFacts.Count(f => f.FactType == factType && f.FactErrorLevel == errorLevel);
+        public int ErrorFactCount(string factType, Fact.FactError errorLevel) => ErrorFacts.Count(f => f.FactType == factType && f.FactErrorLevel == errorLevel);
 
         public string MarriageDates
         {
             get
             {
                 string output = string.Empty;
-                foreach (Family f in familiesAsParent)
+                foreach (Family f in FamiliesAsParent)
                     if (!string.IsNullOrEmpty(f.MarriageDate?.ToString()))
                         output += $"{f.MarriageDate}; ";
                 return output.Length > 0 ? output.Substring(0, output.Length - 2) : output; // remove trailing ;
@@ -563,22 +577,22 @@ namespace FTAnalyzer
             get
             {
                 string output = string.Empty;
-                foreach (Family f in familiesAsParent)
+                foreach (Family f in FamiliesAsParent)
                     if (!string.IsNullOrEmpty(f.MarriageLocation))
                         output += $"{f.MarriageLocation}; ";
                 return output.Length > 0 ? output.Substring(0, output.Length - 2) : output; // remove trailing ;
             }
         }
 
-        public int MarriageCount => familiesAsParent.Count;
+        public int MarriageCount => FamiliesAsParent.Count;
 
-        public int ChildrenCount => familiesAsParent.Sum(x => x.Children.Count);
+        public int ChildrenCount => FamiliesAsParent.Sum(x => x.Children.Count);
 
         #endregion
 
         #region Boolean Tests
 
-        public bool IsMale => gender.Equals("M");
+        public bool IsMale => _gender.Equals("M");
 
         public bool IsInFamily => Infamily;
 
@@ -797,11 +811,11 @@ namespace FTAnalyzer
                     break;
                 case Fact.FactError.WARNINGALLOW:
                     AddGoodFact(fact);
-                    errorFacts.Add(fact);
+                    ErrorFacts.Add(fact);
                     break;
                 case Fact.FactError.WARNINGIGNORE:
                 case Fact.FactError.ERROR:
-                    errorFacts.Add(fact);
+                    ErrorFacts.Add(fact);
                     break;
             }
         }
@@ -903,9 +917,9 @@ namespace FTAnalyzer
         void AddLocation(Fact fact)
         {
             FactLocation loc = fact.Location;
-            if (loc != null && !locations.Contains(loc))
+            if (loc != null && !Locations.Contains(loc))
             {
-                locations.Add(loc);
+                Locations.Add(loc);
                 loc.AddIndividual(this);
             }
         }
@@ -928,14 +942,14 @@ namespace FTAnalyzer
 
         public string SurnameAtDate(FactDate date)
         {
-            string name = _surname;
+            string name = Surname;
             if (!IsMale)
             {
-                foreach (Family marriage in familiesAsParent.OrderBy(f => f.MarriageDate))
+                foreach (Family marriage in FamiliesAsParent.OrderBy(f => f.MarriageDate))
                 {
                     if ((marriage.MarriageDate.Equals(date) || marriage.MarriageDate.IsBefore(date)) && marriage.Husband != null)
 
-                        name = marriage.Husband._surname;
+                        name = marriage.Husband.Surname;
                 }
             }
             return name;
@@ -1526,7 +1540,8 @@ namespace FTAnalyzer
         public bool IsLivingError => IsFlaggedAsLiving && DeathDate.IsKnown;
 
         public IList<Fact> Facts { get => Facts1; set => Facts1 = value; }
-        public IList<Fact> Facts1 { get => facts; set => facts = value; }
+        public IList<Fact> Facts1 { get; set; }
+        public string Alias1 { get; set; }
 
         public int CensusReferenceCount(CensusReference.ReferenceStatus referenceStatus) 
             => AllFacts.Count(f => f.IsCensusFact && f.CensusReference != null && f.CensusReference.Status.Equals(referenceStatus));
@@ -1583,7 +1598,7 @@ namespace FTAnalyzer
             // then date of birth.
             if (that == null)
                 return -1;
-            int res = _surname.CompareTo(that._surname);
+            int res = Surname.CompareTo(that.Surname);
             if (res == 0)
             {
                 res = _forenames.CompareTo(that._forenames);
