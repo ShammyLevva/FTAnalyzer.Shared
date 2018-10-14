@@ -14,38 +14,38 @@ namespace FTAnalyzer
         public static DateTime MAXDATE = new DateTime(9999, 12, 31);
         public static int MAXYEARS = 110;
         public static int MINYEARS = 0;
-        private static int LOW = 0;
-        private static int HIGH = 1;
-        private static IFormatProvider CULTURE = new CultureInfo("en-GB", true);
+        private static readonly int LOW = 0;
+        private static readonly int HIGH = 1;
+        private static readonly IFormatProvider CULTURE = new CultureInfo("en-GB", true);
 
-        private static string YEAR = "yyyy";
-        private static string EARLYYEAR = "yyy";
-        private static string MONTHYEAR = "MMM yyyy";
-        private static string MONTHYEAREARLY = "MMM yyy";
-        private static string DAYMONTH = "d MMM";
-        private static string MONTH = "MMM";
+        private static readonly string YEAR = "yyyy";
+        private static readonly string EARLYYEAR = "yyy";
+        private static readonly string MONTHYEAR = "MMM yyyy";
+        private static readonly string MONTHYEAREARLY = "MMM yyy";
+        private static readonly string DAYMONTH = "d MMM";
+        private static readonly string MONTH = "MMM";
         public static string FULL = "d MMM yyyy";
-        private static string FULLEARLY = "d MMM yyy";
-        private static string DISPLAY = "d MMM yyyy";
-        private static string CHECKING = "d MMM";
-        private static string DATE_PATTERN = "^(\\d{0,2} )?([A-Za-z]{0,3}) *(\\d{0,4})$";
-        private static string INTERPRETED_DATE_PATTERN = "^INT (\\d{0,2} )?([A-Za-z]{0,3}) *(\\d{0,4}) .*$";
-        private static string EARLY_DATE_PATTERN = "^(\\d{3})$";
-        private static string DOUBLE_DATE_PATTERN = "^(\\d{0,2} )?([A-Za-z]{0,3}) *(\\d{0,4})/(\\d{0,2})$";
-        private static string DOUBLE_DATE_PATTERN2 = "^(\\d{0,2} )?([A-Za-z]{0,3}) *(\\d{4})/(\\d{4})$";
-        private static string POSTFIX = "(\\d{1,2})(?:ST|ND|RD|TH)(.*)";
-        private static string BETWEENFIX = "(\\d{4}) *- *(\\d{4})";
-        private static string BETWEENFIX2 = "([A-Za-z]{0,3}) *(\\d{4}) *- *([A-Za-z]{0,3}) *(\\d{4})";
-        private static string BETWEENFIX3 = "(\\d{0,2} )?([A-Za-z]{0,3}) *(\\d{4}) *- *(\\d{0,2} )?([A-Za-z]{0,3}) *(\\d{4})";
-        private static string BETWEENFIX4 = "(\\d{1,2}) *- *(\\d{1,2} )?([A-Za-z]{0,3}) *(\\d{4})";
-        private static string BETWEENFIX5 = "(\\d{1,2} )?([A-Za-z]{0,3}) *- *(\\d{1,2} )?([A-Za-z]{0,3}) *(\\d{4})";
-        private static string USDATEFIX = "^([A-Za-z]{3}) *(\\d{1,2} )(\\d{4})$";
-        private static string SPACEFIX = "^(\\d{1,2}) *([A-Za-z]{3}) *(\\d{0,4})$";
+        private static readonly string FULLEARLY = "d MMM yyy";
+        private static readonly string DISPLAY = "d MMM yyyy";
+        private static readonly string CHECKING = "d MMM";
+        private static readonly string DATE_PATTERN = "^(\\d{0,2} )?([A-Za-z]{0,3}) *(\\d{0,4})$";
+        private static readonly string INTERPRETED_DATE_PATTERN = "^INT (\\d{0,2} )?([A-Za-z]{0,3}) *(\\d{0,4}) .*$";
+        private static readonly string EARLY_DATE_PATTERN = "^(\\d{3})$";
+        private static readonly string DOUBLE_DATE_PATTERN = "^(\\d{0,2} )?([A-Za-z]{0,3}) *(\\d{0,4})/(\\d{0,2})$";
+        private static readonly string DOUBLE_DATE_PATTERN2 = "^(\\d{0,2} )?([A-Za-z]{0,3}) *(\\d{4})/(\\d{4})$";
+        private static readonly string POSTFIX = "(\\d{1,2})(?:ST|ND|RD|TH)(.*)";
+        private static readonly string BETWEENFIX = "(\\d{4}) *- *(\\d{4})";
+        private static readonly string BETWEENFIX2 = "([A-Za-z]{0,3}) *(\\d{4}) *- *([A-Za-z]{0,3}) *(\\d{4})";
+        private static readonly string BETWEENFIX3 = "(\\d{0,2} )?([A-Za-z]{0,3}) *(\\d{4}) *- *(\\d{0,2} )?([A-Za-z]{0,3}) *(\\d{4})";
+        private static readonly string BETWEENFIX4 = "(\\d{1,2}) *- *(\\d{1,2} )?([A-Za-z]{0,3}) *(\\d{4})";
+        private static readonly string BETWEENFIX5 = "(\\d{1,2} )?([A-Za-z]{0,3}) *- *(\\d{1,2} )?([A-Za-z]{0,3}) *(\\d{4})";
+        private static readonly string USDATEFIX = "^([A-Za-z]{3}) *(\\d{1,2} )(\\d{4})$";
+        private static readonly string SPACEFIX = "^(\\d{1,2}) *([A-Za-z]{3}) *(\\d{0,4})$";
 
         public static FactDate UNKNOWN_DATE;
         public static FactDate MARRIAGE_LESS_THAN_13;
 
-        private static Dictionary<string, Regex> _datePatterns;
+        private static readonly Dictionary<string, Regex> _datePatterns;
         private static Regex _regex;
 
         static FactDate()
@@ -77,7 +77,7 @@ namespace FTAnalyzer
         public DateTime StartDate { get; private set; }
         public DateTime EndDate { get; private set; }
         public FactDateType DateType { get; private set; }
-        private string OriginalString;
+        private readonly string OriginalString;
         private string DoubleDateError;
 
         public bool DoubleDate { get; private set; } // Is a pre 1752 date bet 1 Jan and 25 Mar eg: 1735/36.
@@ -280,6 +280,11 @@ namespace FTAnalyzer
             if (str.StartsWith("C1") || str.StartsWith("C2") || str.StartsWith("C 1") || str.StartsWith("C 2"))
                 str = "ABT " + str.Substring(1);
             str = str.Replace("  ", " "); // fix issue if > or < or Cxxx has already got a space
+            if (str == "DECEASED")
+            {
+                string today = DateTime.Now.ToString("dd MMM yyyy").ToUpper();
+                str = $"BEF {today}";
+            }
             Match matcher;
             if (str.StartsWith("INT")) // Interpreted date but we can discard <<Date_Phrase>>
             {
@@ -504,7 +509,6 @@ namespace FTAnalyzer
             return ParseDate(dateValue, highlow, adjustment, 1);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "System.DateTime.TryParseExact(System.String,System.String,System.IFormatProvider,System.Globalization.DateTimeStyles,System.DateTime@)")]
         private DateTime ParseDate(string dateValue, int highlow, int adjustment, int defaultYear)
         {
             DateTime date;
@@ -596,7 +600,7 @@ namespace FTAnalyzer
                         }
                     }
                     else
-                        throw new Exception("Unrecognised date format for : " + dateValue);
+                        throw new Exception($"Unrecognised date format for: {dateValue}");
                 }
                 // Now process matched string - if gDouble is not null we have a double date to check
                 string day = gDay == null ? string.Empty : gDay.ToString().Trim();
@@ -612,13 +616,9 @@ namespace FTAnalyzer
                     else
                         date = DateTime.ParseExact(dateValue, EARLYYEAR, CULTURE);
                     if (highlow == HIGH)
-                    {
                         dt = new DateTime(date.Year + adjustment, 12, 31);
-                    }
                     else
-                    {
                         dt = new DateTime(date.Year + adjustment, 1, 1);
-                    }
                 }
                 else if (day.Length == 0 && year.Length > 0)
                 {
@@ -667,12 +667,12 @@ namespace FTAnalyzer
             }
             catch (FormatException)
             {
-                throw;
+                throw new Exception($"Unrecognised date format for: {dateValue}");
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 dt = (highlow == HIGH) ? MAXDATE : MINDATE;
-                throw;
+                throw new Exception($"Problem with date format for: {dateValue} system said: {e.Message}");
             }
             return dt;
         }
@@ -907,7 +907,7 @@ namespace FTAnalyzer
                 return true;
             }
             // If one is null, but not both, return false.
-            if (((object)a == null) || ((object)b == null))
+            if ((a is null) || (b is null))
             {
                 return false;
             }
