@@ -31,16 +31,13 @@ namespace FTAnalyzer
         IDictionary<string, List<Individual>> occupations;
         IDictionary<StandardisedName, StandardisedName> names;
         ISet<string> unknownFactTypes;
-        IList<DataErrorGroup> dataErrorTypes;
         SortableBindingList<IDisplayLocation>[] displayLocations;
         SortableBindingList<IDisplayLooseDeath> looseDeaths;
         SortableBindingList<IDisplayLooseBirth> looseBirths;
         SortableBindingList<DuplicateIndividual> duplicates;
         readonly static int DATA_ERROR_GROUPS = 28;
         static XmlNodeList noteNodes = null;
-        bool _loading = false;
-        bool _dataloaded = false;
-        Int64 maxAhnentafel = 0;
+        long maxAhnentafel = 0;
         Dictionary<string, Individual> individualLookup;
         string rootIndividualID = string.Empty;
 
@@ -182,7 +179,7 @@ namespace FTAnalyzer
         #region Load Gedcom XML
         public void ResetData()
         {
-            _dataloaded = false;
+            DataLoaded = false;
             sources = new List<FactSource>();
             individuals = new List<Individual>();
             families = new List<Family>();
@@ -221,7 +218,7 @@ namespace FTAnalyzer
 
         public XmlDocument LoadTreeHeader(string filename, MemoryStream stream, IProgress<string> outputText)
         {
-            _loading = true;
+            Loading = true;
             ResetData();
             rootIndividualID = string.Empty;
             outputText.Report(string.Format("Loading file {0}\n", filename));
@@ -236,7 +233,7 @@ namespace FTAnalyzer
 
         public XmlDocument LoadTreeHeader(string filename, IProgress<string> outputText)
         {
-            _loading = true;
+            Loading = true;
             ResetData();
             rootIndividualID = string.Empty;
             outputText.Report(string.Format("Loading file {0}\n", filename));
@@ -363,8 +360,8 @@ namespace FTAnalyzer
             FactLocation.LoadGoogleFixesXMLFile(outputText);
             LoadLegacyLocations(doc.SelectNodes("GED/_PLAC_DEFN/PLAC"), progress);
             LoadGeoLocationsFromDataBase(outputText);
-            _loading = false;
-            _dataloaded = true;
+            Loading = false;
+            DataLoaded = true;
         }
 
         private void LoadLegacyLocations(XmlNodeList list, IProgress<int> progress)
@@ -671,8 +668,8 @@ namespace FTAnalyzer
 
         #region Properties
 
-        public bool Loading => _loading;
-        public bool DataLoaded => _dataloaded;
+        public bool Loading { get; private set; } = false;
+        public bool DataLoaded { get; private set; } = false;
 
         public List<ExportFact> AllExportFacts
         {
@@ -691,24 +688,15 @@ namespace FTAnalyzer
             }
         }
 
-        public IEnumerable<Family> AllFamilies
-        {
-            get { return families; }
-        }
+        public IEnumerable<Family> AllFamilies => families;
 
-        public IEnumerable<Individual> AllIndividuals
-        {
-            get { return individuals; }
-        }
+        public IEnumerable<Individual> AllIndividuals => individuals;
 
-        public IEnumerable<FactSource> AllSources
-        {
-            get { return sources; }
-        }
+        public IEnumerable<FactSource> AllSources => sources;
 
-        public int IndividualCount { get { return individuals.Count; } }
+        public int IndividualCount => individuals.Count;
 
-        public List<Individual> DeadOrAlive { get { return individuals.Filter(x => x.DeathDate.IsKnown && x.IsFlaggedAsLiving).ToList<Individual>(); } }
+        public List<Individual> DeadOrAlive => individuals.Filter(x => x.DeathDate.IsKnown && x.IsFlaggedAsLiving).ToList();
 
         public string NextSoloFamily { get { return "SF" + ++SoloFamilies; } }
 
@@ -717,10 +705,7 @@ namespace FTAnalyzer
 
         #region Property Functions
 
-        public IEnumerable<Individual> GetAllRelationsOfType(int relationType)
-        {
-            return individuals.Filter(ind => ind.RelationType == relationType);
-        }
+        public IEnumerable<Individual> GetAllRelationsOfType(int relationType) => individuals.Filter(ind => ind.RelationType == relationType);
 
         public IEnumerable<Individual> GetUncertifiedFacts(string factType, int relationType)
         {
@@ -735,10 +720,7 @@ namespace FTAnalyzer
             });
         }
 
-        public FactSource GetSourceID(string sourceID)
-        {
-            return sources.FirstOrDefault(s => s.SourceID == sourceID);
-        }
+        public FactSource GetSourceID(string sourceID) => sources.FirstOrDefault(s => s.SourceID == sourceID);
 
         public Individual GetIndividual(string individualID)
         {
@@ -749,26 +731,13 @@ namespace FTAnalyzer
             return person;
         }
 
-        public Family GetFamily(string familyID)
-        {
-            return families.FirstOrDefault(f => f.FamilyID == familyID);
-        }
+        public Family GetFamily(string familyID) => families.FirstOrDefault(f => f.FamilyID == familyID);
 
-        public void AddSharedFact(string individual, Fact fact)
-        {
-            Tuple<string, Fact> sf = new Tuple<string, Fact>(individual, fact);
-            sharedFacts.Add(sf);
-        }
+        public void AddSharedFact(string individual, Fact fact) => sharedFacts.Add(new Tuple<string, Fact>(individual, fact));
 
-        public IEnumerable<Individual> GetIndividualsAtLocation(FactLocation loc, int level)
-        {
-            return individuals.Filter(i => i.IsAtLocation(loc, level));
-        }
+        public IEnumerable<Individual> GetIndividualsAtLocation(FactLocation loc, int level) => individuals.Filter(i => i.IsAtLocation(loc, level));
 
-        public IEnumerable<Family> GetFamiliesAtLocation(FactLocation loc, int level)
-        {
-            return families.Filter(f => f.IsAtLocation(loc, level));
-        }
+        public IEnumerable<Family> GetFamiliesAtLocation(FactLocation loc, int level) => families.Filter(f => f.IsAtLocation(loc, level));
 
         public List<string> GetSurnamesAtLocation(FactLocation loc) { return GetSurnamesAtLocation(loc, FactLocation.SUBREGION); }
         public List<string> GetSurnamesAtLocation(FactLocation loc, int level)
@@ -805,9 +774,7 @@ namespace FTAnalyzer
         public void SetFullNames()
         {
             foreach (Individual ind in individuals)
-            {
                 ind.SetFullName();
-            }
         }
         #endregion
 
@@ -1885,7 +1852,7 @@ namespace FTAnalyzer
                 DataErrorTypes.Add(new DataErrorGroup(i, errors[i]));
         }
 
-        public IList<DataErrorGroup> DataErrorTypes { get => dataErrorTypes; private set => dataErrorTypes = value; }
+        public IList<DataErrorGroup> DataErrorTypes { get; private set; }
 
         public bool FactBeforeBirth(Individual ind, Fact f)
         {
