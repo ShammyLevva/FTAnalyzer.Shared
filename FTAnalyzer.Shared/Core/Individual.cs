@@ -30,6 +30,7 @@ namespace FTAnalyzer
         public string Notes { get; private set; }
         public string StandardisedName { get; private set; }
         public bool HasParents { get; set; }
+        public bool HasOnlyOneParent { get; set; }
         public bool Infamily { get; set; }
         public bool IsFlaggedAsLiving { get; private set; }
         public long Ahnentafel { get; set; }
@@ -60,6 +61,7 @@ namespace FTAnalyzer
             Infamily = false;
             Notes = string.Empty;
             HasParents = false;
+            HasOnlyOneParent = false;
             ReferralFamilyID = string.Empty;
             Facts = new List<Fact>();
             ErrorFacts = new List<Fact>();
@@ -187,6 +189,7 @@ namespace FTAnalyzer
                 Infamily = i.Infamily;
                 Notes = i.Notes;
                 HasParents = i.HasParents;
+                HasOnlyOneParent = i.HasOnlyOneParent;
                 ReferralFamilyID = i.ReferralFamilyID;
                 CommonAncestor = i.CommonAncestor;
                 Facts = new List<Fact>(i.Facts);

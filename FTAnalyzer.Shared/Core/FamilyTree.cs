@@ -653,7 +653,8 @@ namespace FTAnalyzer
                 {
                     c.Infamily = true;
                     c.ReferralFamilyID = f.FamilyID;
-                    c.HasParents = (f.Husband != null || f.Wife != null);
+                    c.HasParents = f.Husband != null || f.Wife != null;
+                    c.HasOnlyOneParent = (f.Husband != null && f.Wife == null) || (f.Husband == null && f.Wife !=null);
                 }
             }
             foreach (Individual ind in individuals)
@@ -1090,10 +1091,7 @@ namespace FTAnalyzer
 
         #region TreeTops
 
-        public IEnumerable<IDisplayIndividual> GetTreeTops(Predicate<Individual> filter)
-        {
-            return individuals.Filter(ind => !ind.HasParents && filter(ind));
-        }
+        public IEnumerable<IDisplayIndividual> GetTreeTops(Predicate<Individual> filter) => individuals.Filter(ind => filter(ind));
 
         #endregion
 
@@ -1123,9 +1121,7 @@ namespace FTAnalyzer
         private void AddToQueue(Queue<Individual> queue, IEnumerable<Individual> list)
         {
             foreach (Individual i in list)
-            {
                 queue.Enqueue(i);
-            }
         }
 
         private void AddDirectParentsToQueue(Individual indiv, Queue<Individual> queue, IProgress<string> outputText)
@@ -1526,7 +1522,7 @@ namespace FTAnalyzer
                 if (surname.Length > 0)
                 {
                     Predicate<Individual> surnameFilter = FilterUtils.StringFilter<Individual>(x => x.Surname, surname);
-                    filter = FilterUtils.AndFilter<Individual>(filter, surnameFilter);
+                    filter = FilterUtils.AndFilter(filter, surnameFilter);
                 }
                 Predicate<Individual> dateFilter;
                 if (country.Equals(Countries.UNITED_STATES))
@@ -1549,7 +1545,8 @@ namespace FTAnalyzer
                                       (i.DeathDate.EndsAfter(CensusDate.UKCENSUS1841) || !i.DeathDate.IsKnown) &&
                                       (i.BirthDate.IsKnown || !IgnoreMissingBirthDates) &&
                                       (i.DeathDate.IsKnown || !IgnoreMissingDeathDates);
-                filter = FilterUtils.AndFilter(filter, dateFilter, x => x.AliveOnAnyCensus(country) && !x.OutOfCountryOnAllCensus(country));
+                filter = FilterUtils.AndFilter(filter, dateFilter);
+                filter = FilterUtils.AndFilter(filter, x => x.AliveOnAnyCensus(country) && !x.OutOfCountryOnAllCensus(country));
             }
             else
                 filter = x => family.Members.Contains(x);
@@ -1565,11 +1562,11 @@ namespace FTAnalyzer
                 if (surname.Length > 0)
                 {
                     Predicate<Individual> surnameFilter = FilterUtils.StringFilter<Individual>(x => x.Surname, surname);
-                    filter = FilterUtils.AndFilter<Individual>(filter, surnameFilter);
+                    filter = FilterUtils.AndFilter(filter, surnameFilter);
                 }
             }
             else
-                filter = x => family.Members.Contains<Individual>(x);
+                filter = x => family.Members.Contains(x);
             return individuals.Filter(filter).ToList<IDisplayColourBMD>();
         }
 
@@ -1582,11 +1579,11 @@ namespace FTAnalyzer
                 if (surname.Length > 0)
                 {
                     Predicate<Individual> surnameFilter = FilterUtils.StringFilter<Individual>(x => x.Surname, surname);
-                    filter = FilterUtils.AndFilter<Individual>(filter, surnameFilter);
+                    filter = FilterUtils.AndFilter(filter, surnameFilter);
                 }
             }
             else
-                filter = x => family.Members.Contains<Individual>(x);
+                filter = x => family.Members.Contains(x);
             return individuals.Filter(filter).ToList<IDisplayMissingData>();
         }
 #endif
