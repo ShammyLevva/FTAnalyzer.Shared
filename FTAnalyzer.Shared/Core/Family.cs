@@ -457,11 +457,9 @@ namespace FTAnalyzer
 
         #region IDisplayFamily Members
 
-        string IDisplayFamily.Husband =>
-                Husband == null ? string.Empty : $"{Husband.Name} (b.{Husband.BirthDate})";
+        string IDisplayFamily.Husband => Husband == null ? string.Empty : $"{Husband.Name} (b.{Husband.BirthDate})";
 
-        string IDisplayFamily.Wife =>
-                Wife == null ? string.Empty : $"{Wife.Name} (b. {Wife.BirthDate})";
+        string IDisplayFamily.Wife => Wife == null ? string.Empty : $"{Wife.Name} (b. {Wife.BirthDate})";
 
         public string Marriage => ToString();
 
@@ -474,7 +472,7 @@ namespace FTAnalyzer
                 {
                     if (result.Length > 0)
                         result.Append(", ");
-                    result.Append($"{c.Name} (b. {c.BirthDate})");
+                    result.Append($"{c.IndividualID}: {c.Name} (b. {c.BirthDate})");
                 }
                 return result.ToString();
             }
