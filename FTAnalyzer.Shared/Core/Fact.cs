@@ -128,6 +128,9 @@ namespace FTAnalyzer
             CUSTOM_TAGS.Add("PROBATE DATE", PROBATE);
             CUSTOM_TAGS.Add("RESIDENCE", RESIDENCE);
             CUSTOM_TAGS.Add("CENSUS", CENSUS);
+            CUSTOM_TAGS.Add("OCCUPATION", OCCUPATION);
+            CUSTOM_TAGS.Add("NATURALIZATION", NATURALIZATION);
+            CUSTOM_TAGS.Add("NATURALISATION", NATURALIZATION);
 
             // Legacy 8 default fact types
             CUSTOM_TAGS.Add("ALT. BIRTH", BIRTH);
