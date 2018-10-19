@@ -22,16 +22,13 @@ namespace FTAnalyzer
             INCORRECT = 5, OUT_OF_BOUNDS = 6, LEVEL_MISMATCH = 7, OS_50KMATCH = 8, OS_50KPARTIAL = 9, OS_50KFUZZY = 10
         };
 
-        private string fixedLocation;
-        private string address;
-        private string place;
         public string GEDCOMLocation { get; private set; }
         public string SortableLocation { get; private set; }
         public string Country { get; set; }
         public string Region { get; set; }
         public string SubRegion { get; set; }
-        public string Address { get { return address; } set { address = value; AddressNoNumerics = FixNumerics(value, false); } }
-        public string Place { get { return place; } set { place = value; PlaceNoNumerics = FixNumerics(value, false); } }
+        public string Address { get => Address1; set { Address1 = value; AddressNoNumerics = FixNumerics(value, false); } }
+        public string Place { get => Place1; set { Place1 = value; PlaceNoNumerics = FixNumerics(value, false); } }
         public string CountryMetaphone { get; private set; }
         public string RegionMetaphone { get; private set; }
         public string SubRegionMetaphone { get; private set; }
@@ -311,7 +308,7 @@ namespace FTAnalyzer
         private FactLocation()
         {
             GEDCOMLocation = string.Empty;
-            fixedLocation = string.Empty;
+            FixedLocation = string.Empty;
             SortableLocation = string.Empty;
             Country = string.Empty;
             Region = string.Empty;
@@ -755,16 +752,16 @@ namespace FTAnalyzer
 
         private void SetFixedLocation()
         {
-            fixedLocation = Country;
+            FixedLocation = Country;
             if (Region.Length > 0 || GeneralSettings.Default.AllowEmptyLocations)
-                fixedLocation = Region + ", " + fixedLocation;
+                FixedLocation = Region + ", " + FixedLocation;
             if (SubRegion.Length > 0 || GeneralSettings.Default.AllowEmptyLocations)
-                fixedLocation = SubRegion + ", " + fixedLocation;
+                FixedLocation = SubRegion + ", " + FixedLocation;
             if (Address.Length > 0 || GeneralSettings.Default.AllowEmptyLocations)
-                fixedLocation = Address + ", " + fixedLocation;
+                FixedLocation = Address + ", " + FixedLocation;
             if (Place.Length > 0)
-                fixedLocation = Place + ", " + fixedLocation;
-            fixedLocation = TrimLeadingCommas(fixedLocation);
+                FixedLocation = Place + ", " + FixedLocation;
+            FixedLocation = TrimLeadingCommas(FixedLocation);
         }
 
         private void SetSortableLocation()
@@ -822,13 +819,13 @@ namespace FTAnalyzer
             get
             {
                 // first check the multifixes
-                string result = fixedLocation;
+                string result = FixedLocation;
                 foreach (KeyValuePair<Tuple<int, string>, string> fix in LOCAL_GOOGLE_FIXES)
                 {
                     if (fix.Key.Item1 == UNKNOWN)
                         result = ReplaceString(result, fix.Key.Item2, fix.Value, StringComparison.InvariantCultureIgnoreCase);
                 }
-                if (result != fixedLocation)
+                if (result != FixedLocation)
                     return result;
 
                 foreach (KeyValuePair<Tuple<int, string>, string> fix in GOOGLE_FIXES)
@@ -836,7 +833,7 @@ namespace FTAnalyzer
                     if (fix.Key.Item1 == UNKNOWN)
                         result = ReplaceString(result, fix.Key.Item2, fix.Value, StringComparison.InvariantCultureIgnoreCase);
                 }
-                if (result != fixedLocation)
+                if (result != FixedLocation)
                     return result;
 
                 // now check the individual part fixes
@@ -954,23 +951,18 @@ namespace FTAnalyzer
             }
         }
 
-        public bool IsBlank
-        {
-            get { return this.Country.Length == 0; }
-        }
+        public bool IsBlank => Country.Length == 0;
 
-        public bool NeedsReverseGeocoding
-        {
-            get
-            {
-                return FoundLocation.Length == 0 &&
+        public bool NeedsReverseGeocoding => FoundLocation.Length == 0 &&
                     (GeocodeStatus == Geocode.GEDCOM_USER || GeocodeStatus == Geocode.OS_50KMATCH || GeocodeStatus == Geocode.OS_50KPARTIAL || GeocodeStatus == Geocode.OS_50KFUZZY);
-            }
-        }
+
+        public string FixedLocation { get; set; }
+        public string Address1 { get; set; }
+        public string Place1 { get; set; }
         #endregion
 
         #region General Functions
-        public FactLocation GetLocation(int level) { return GetLocation(level, false); }
+        public FactLocation GetLocation(int level) => GetLocation(level, false);
         public FactLocation GetLocation(int level, bool fixNumerics)
         {
             StringBuilder location = new StringBuilder(this.Country);
@@ -989,9 +981,7 @@ namespace FTAnalyzer
         public void AddIndividual(Individual ind)
         {
             if (ind != null && !individuals.Contains(ind))
-            {
                 individuals.Add(ind);
-            }
         }
 
         public IList<string> GetSurnames()
@@ -1006,16 +996,7 @@ namespace FTAnalyzer
             return result;
         }
 
-        public bool SupportedLocation(int level)
-        {
-            if (Countries.IsCensusCountry(Country))
-            {
-                if (level == COUNTRY) return true;
-                // check region is valid if so return true
-                return true;
-            }
-            return false;
-        }
+        public bool SupportedLocation(int level) => Countries.IsCensusCountry(Country) && level == COUNTRY;
 
         public bool IsGeoCoded(bool recheckPartials)
         {
@@ -1076,10 +1057,7 @@ namespace FTAnalyzer
             return CompareTo(that, PLACE);
         }
 
-        public int CompareTo(IDisplayLocation that, int level)
-        {
-            return CompareTo((FactLocation)that, level);
-        }
+        public int CompareTo(IDisplayLocation that, int level) => CompareTo((FactLocation)that, level);
 
         public virtual int CompareTo(FactLocation that, int level)
         {
@@ -1103,51 +1081,33 @@ namespace FTAnalyzer
             return res;
         }
 
-        public override string ToString()
-        {
-            //return location;
-            return fixedLocation;
-        }
+        public override string ToString() => FixedLocation; //return location;
 
-        public override bool Equals(Object obj)
+        public override bool Equals(object obj)
         {
             if (obj is FactLocation)
-            {
                 return CompareTo((FactLocation)obj) == 0;
-            }
             return false;
         }
 
         public static bool operator ==(FactLocation a, FactLocation b)
         {
             // If both are null, or both are same instance, return true.
-            if (object.ReferenceEquals(a, b))
+            if (ReferenceEquals(a, b))
             {
                 return true;
             }
             // If one is null, but not both, return false.
-            if (((object)a == null) || ((object)b == null))
-            {
+            if ((a is null) || (b is null))
                 return false;
-            }
             return a.Equals(b);
         }
 
+        public static bool operator !=(FactLocation a, FactLocation b) => !(a == b);
 
-        public static bool operator !=(FactLocation a, FactLocation b)
-        {
-            return !(a == b);
-        }
+        public bool Equals(FactLocation that, int level) => CompareTo(that, level) == 0;
 
-        public bool Equals(FactLocation that, int level)
-        {
-            return this.CompareTo(that, level) == 0 ? true : false;
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
-#endregion
+        public override int GetHashCode() => base.GetHashCode();
+        #endregion
     }
 }
