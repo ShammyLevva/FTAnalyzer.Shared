@@ -392,12 +392,55 @@
       <RegionTypo from="Yorkshire West Riding"      to="West Yorkshire" />
       <RegionTypo from="Yorkshire-West Riding"      to="West Yorkshire" />
       <RegionTypo from="West Riding of Yorkshire"   to="West Yorkshire" />
-      <RegionTypo from="Yorkshire (West)"    to="West Yorkshire" />
+      <RegionTypo from="Yorkshire (West)"           to="West Yorkshire" />
       <RegionTypo from="Yorkshire (West Riding)"    to="West Yorkshire" />
-      <RegionTypo from="W Yorks"             to="West Yorkshire" />
-      <RegionTypo from="South Yorkshire"     to="South Yorkshire" />
+      <RegionTypo from="W Yorks"                    to="West Yorkshire" />
+      <RegionTypo from="South Yorkshire"            to="South Yorkshire" />
       <RegionTypo from="Yorkshire (South)"          to="South Yorkshire" />
-      <RegionTypo from="S Yorks"             to="South Yorkshire" />
+      <RegionTypo from="S Yorks"                    to="South Yorkshire" />
+      <RegionTypo from="Bedfordshire county"        to="Bedfordshire" />
+      <RegionTypo from="Berkshire county"           to="Berkshire" />
+      <RegionTypo from="Buckinghamshire county"     to="Buckinghamshire" />
+      <RegionTypo from="Cambridgeshire county"      to="Cambridgeshire" />
+      <RegionTypo from="Cheshire county"            to="Cheshire" />
+      <RegionTypo from="Cornwall county"            to="Cornwall" />
+      <RegionTypo from="Cumberland county"          to="Cumberland" />
+      <RegionTypo from="Cumbria county"             to="Cumbria" />
+      <RegionTypo from="Derbyshire county"          to="Derbyshire" />
+      <RegionTypo from="Devon county"               to="Devon" />
+      <RegionTypo from="Dorset county"              to="Dorset" />
+      <RegionTypo from="County Durham county"       to="County Durham" />
+      <RegionTypo from="Essex county"               to="Essex" />
+      <RegionTypo from="Gloucestershire county"     to="Gloucestershire" />
+      <RegionTypo from="Hampshire county"           to="Hampshire" />
+      <RegionTypo from="Herefordshire county"       to="Herefordshire" />
+      <RegionTypo from="Hertfordshire county"       to="Hertfordshire" />
+      <RegionTypo from="Huntingdonshire county"     to="Huntingdonshire" />
+      <RegionTypo from="Kent county"                to="Kent" />
+      <RegionTypo from="Lancashire county"          to="Lancashire" />
+      <RegionTypo from="Leicestershire county"      to="Leicestershire" />
+      <RegionTypo from="Lincolnshire county"        to="Lincolnshire" />
+      <RegionTypo from="Middlesex county"           to="Middlesex" />
+      <RegionTypo from="Norfolk county"             to="Norfolk" />
+      <RegionTypo from="Northamptonshire county"    to="Northamptonshire" />
+      <RegionTypo from="Northumberland county"      to="Northumberland" />
+      <RegionTypo from="Nottinghamshire county"     to="Nottinghamshire" />
+      <RegionTypo from="Oxfordshire county"         to="Oxfordshire" />
+      <RegionTypo from="Rutland county"             to="Rutland" />
+      <RegionTypo from="Shropshire county"          to="Shropshire" />
+      <RegionTypo from="Somerset county"            to="Somerset" />
+      <RegionTypo from="Staffordshire county"       to="Staffordshire" />
+      <RegionTypo from="Suffolk county"             to="Suffolk" />
+      <RegionTypo from="Sussex county"              to="Sussex" />
+      <RegionTypo from="Surrey county"              to="Surrey" />
+      <RegionTypo from="Warwickshire county"        to="Warwickshire" />
+      <RegionTypo from="Westmorland county"         to="Westmorland" />
+      <RegionTypo from="Wiltshire county"           to="Wiltshire" />
+      <RegionTypo from="Worcestershire county"      to="Worcestershire" />
+      <RegionTypo from="Yorkshire county"           to="Yorkshire" />
+      <RegionTypo from="East Yorkshire county"      to="East Yorkshire" />
+      <RegionTypo from="North Yorkshire county"     to="North Yorkshire" />
+      <RegionTypo from="West Yorkshire county"      to="West Yorkshire" />
 
       <!-- Ireland -->
       <RegionTypo from="Co Antrim"        to="Antrim" />
@@ -928,7 +971,13 @@
       <CountryToRegion region="Wyoming"               country="United States" />
 
       <!-- Australian Territories -->
-      <CountryToRegion region="New South Wales"          country="Australia" />
+      <CountryToRegion region="New South Wales"       country="Australia" />
+      <CountryToRegion region="Southern Australia"    country="Australia" />
+      <CountryToRegion region="Western Australia"     country="Australia" />
+      <CountryToRegion region="Northern Territory"    country="Australia" />
+      <CountryToRegion region="Tasmania"              country="Australia" />
+      <CountryToRegion region="Queensland"            country="Australia" />
+      <CountryToRegion region="Victoria"              country="Australia" />
 
       <!-- Scottish Cities add the Country -->
       <CityAddCountry city="Aberdeen"            country="Scotland" />
