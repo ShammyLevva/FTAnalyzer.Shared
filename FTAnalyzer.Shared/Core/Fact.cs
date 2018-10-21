@@ -85,6 +85,7 @@ namespace FTAnalyzer
             CUSTOM_TAGS.Add("DIED SINGLE", DIED_SINGLE);
             CUSTOM_TAGS.Add("MISSING", MISSING);
             CUSTOM_TAGS.Add("CHILDREN STATUS", CHILDREN1911);
+            CUSTOM_TAGS.Add("CHILDREN1911", CHILDREN1911);
             CUSTOM_TAGS.Add("WEBSITE", WEBSITE);
 
             // convert custom tags to normal tags
@@ -853,9 +854,9 @@ namespace FTAnalyzer
             FactLocation.Geocode geocode = 
                 (latitude.Equals("0.0") && longitude.Equals("0.0")) ? FactLocation.Geocode.NOT_SEARCHED : FactLocation.Geocode.GEDCOM_USER;
             if (GeneralSettings.Default.ReverseLocations)
-                Location = FactLocation.GetLocation(ReverseLocation(Place), latitude, longitude, geocode);
+                Location = FactLocation.GetLocation(ReverseLocation(Place), latitude, longitude, geocode, true, true);
             else
-                Location = FactLocation.GetLocation(Place, latitude, longitude, geocode);
+                Location = FactLocation.GetLocation(Place, latitude, longitude, geocode, true, true);
         }
 
         private bool SetCertificatePresent()

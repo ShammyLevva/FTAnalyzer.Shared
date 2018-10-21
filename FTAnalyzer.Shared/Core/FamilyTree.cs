@@ -49,19 +49,14 @@ namespace FTAnalyzer
 
         #region Static Functions
 
-        private FamilyTree()
-        {
-            ResetData();
-        }
+        FamilyTree() => ResetData();
 
         public static FamilyTree Instance
         {
             get
             {
                 if (instance == null)
-                {
                     instance = new FamilyTree();
-                }
                 return instance;
             }
         }
@@ -84,15 +79,9 @@ namespace FTAnalyzer
             }
         }
 
-        public static string GetText(XmlNode node, string tag, bool lookForText)
-        {
-            return GetText(GetChildNode(node, tag), lookForText);
-        }
+        public static string GetText(XmlNode node, string tag, bool lookForText) => GetText(GetChildNode(node, tag), lookForText);
 
-        public static XmlNode GetChildNode(XmlNode node, String tag)
-        {
-            return node?.SelectSingleNode(tag);
-        }
+        public static XmlNode GetChildNode(XmlNode node, String tag) => node?.SelectSingleNode(tag);
 
         public static string GetNotes(XmlNode node)
         {
