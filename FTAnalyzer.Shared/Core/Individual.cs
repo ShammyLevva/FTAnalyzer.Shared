@@ -38,6 +38,8 @@ namespace FTAnalyzer
         public string RelationToRoot { get; set; }
         public CommonAncestor CommonAncestor { get; set; }
         public string UnrecognisedCensusNotes { get; private set; }
+        public IList<Fact> Facts { get; set; }
+        public string Alias { get; set; }
 
         #region Constructors
         private Individual()
@@ -52,7 +54,7 @@ namespace FTAnalyzer
             UnrecognisedCensusNotes = string.Empty;
             IsFlaggedAsLiving = false;
             Gender = "U";
-            Alias1 = string.Empty;
+            Alias = string.Empty;
             Ahnentafel = 0;
             BudgieCode = string.Empty;
             _relationType = UNSET;
@@ -79,7 +81,7 @@ namespace FTAnalyzer
             IndividualID = node.Attributes["ID"].Value;
             Name = FamilyTree.GetText(node, "NAME", false);
             Gender = FamilyTree.GetText(node, "SEX", false);
-            Alias1 = FamilyTree.GetText(node, "ALIA", false);
+            Alias = FamilyTree.GetText(node, "ALIA", false);
             IsFlaggedAsLiving = node.SelectSingleNode("_FLGS/__LIVING") != null;
             forenameMetaphone = new DoubleMetaphone(Forename);
             surnameMetaphone = new DoubleMetaphone(Surname);
@@ -181,7 +183,7 @@ namespace FTAnalyzer
                 StandardisedName = i.StandardisedName;
                 IsFlaggedAsLiving = i.IsFlaggedAsLiving;
                 _gender = i._gender;
-                Alias1 = i.Alias1;
+                Alias = i.Alias;
                 Ahnentafel = i.Ahnentafel;
                 BudgieCode = i.BudgieCode;
                 _relationType = i._relationType;
@@ -227,15 +229,9 @@ namespace FTAnalyzer
             }
         }
 
-        public bool IsBloodDirect
-        {
-            get { return _relationType == BLOOD || _relationType == DIRECT || _relationType == MARRIEDTODB; }
-        }
+        public bool IsBloodDirect => _relationType == BLOOD || _relationType == DIRECT || _relationType == MARRIEDTODB;
 
-        public bool HasNotes
-        {
-            get { return Notes.Length > 0; }
-        }
+        public bool HasNotes => Notes.Length > 0;
 
         public string Relation
         {
@@ -293,6 +289,7 @@ namespace FTAnalyzer
             get
             {
                 var duplicatefacts = new List<Fact>();
+                //TODO check if fact is duplicated
                 return duplicatefacts;
             }
         }
@@ -324,8 +321,6 @@ namespace FTAnalyzer
 
         public IList<FactLocation> Locations { get; }
 
-        public string Alias => Alias1;
-
         public string Gender
         {
             get => _gender;
@@ -337,19 +332,13 @@ namespace FTAnalyzer
             }
         }
 
-        public bool GenderMatches(Individual that)
-        {
-            return Gender == that.Gender || Gender == "U" || that.Gender == "U";
-        }
+        public bool GenderMatches(Individual that) => Gender == that.Gender || Gender == "U" || that.Gender == "U";
 
         public string SortedName { get; private set; }
 
         public string Name
         {
-            get
-            {
-                return _fullname;
-            }
+            get => _fullname;
             private set
             {
                 string name = value;
@@ -357,17 +346,17 @@ namespace FTAnalyzer
                 if (startPos >= 0 && endPos > startPos)
                 {
                     Surname = name.Substring(startPos + 1, endPos - startPos - 1);
-                    _forenames = startPos == 0 ? Individual.UNKNOWN_NAME : name.Substring(0, startPos).Trim();
+                    _forenames = startPos == 0 ? UNKNOWN_NAME : name.Substring(0, startPos).Trim();
                 }
                 else
                 {
-                    Surname = Individual.UNKNOWN_NAME;
+                    Surname = UNKNOWN_NAME;
                     _forenames = name;
                 }
                 if (Surname == "?" || Surname.ToLower() == "mnu" || Surname.Length == 0)
-                    Surname = Individual.UNKNOWN_NAME;
+                    Surname = UNKNOWN_NAME;
                 if (GeneralSettings.Default.TreatFemaleSurnamesAsUnknown && !IsMale && Surname.StartsWith("(") && Surname.EndsWith(")"))
-                    Surname = Individual.UNKNOWN_NAME;
+                    Surname = UNKNOWN_NAME;
                 MarriedName = Surname;
                 _fullname = SetFullName();
                 SortedName = (_forenames + " " + Surname).Trim();
@@ -403,7 +392,7 @@ namespace FTAnalyzer
             get
             {
                 if (GeneralSettings.Default.ShowAliasInName && Alias.Length > 0)
-                    return _forenames + " '" + Alias + "' ";
+                    return $"{_forenames} '{Alias}' ";
                 else
                     return _forenames;
             }
@@ -710,11 +699,7 @@ namespace FTAnalyzer
 
         public bool IsDeceased(FactDate when) => DeathDate.IsKnown && DeathDate.IsBefore(when);
 
-        public bool IsSingleAtDeath()
-        {
-            Fact single = GetPreferredFact(Fact.UNMARRIED);
-            return single != null || MaxAgeAtDeath < 16 || LifeSpan.MaxAge < 16;
-        }
+        public bool IsSingleAtDeath() => GetPreferredFact(Fact.UNMARRIED) != null || MaxAgeAtDeath < 16 || LifeSpan.MaxAge < 16;
 
         public bool IsBirthKnown() => BirthDate.IsKnown && BirthDate.IsExact;
 
@@ -794,7 +779,7 @@ namespace FTAnalyzer
                 {
                     if (BirthDate.IsKnown)
                     {
-                        int years = 0;
+                        int years;
                         switch (te.Message)
                         {
                             case "STILLBORN":
@@ -809,10 +794,26 @@ namespace FTAnalyzer
                             case "YOUNG":
                                 years = 21;
                                 break;
+                            case "UNMARRIED":
+                                years = -1;
+                                break;
+                            default:
+                                years = -1;
+                                break;
                         }
-                        FactDate deathdate = BirthDate.AddEndDateYears(years);
-                        Fact f = new Fact(n, this, preferredFact, deathdate, outputText);
-                        AddFact(f);
+                        if (years >= 0)  //only add a death fact if text is one of the death types
+                        {
+                            FactDate deathdate = BirthDate.AddEndDateYears(years);
+                            Fact f = new Fact(n, this, preferredFact, deathdate, outputText);
+                            AddFact(f);
+                        }
+                        else
+                        {
+                            Fact f = new Fact(n, this, preferredFact, FactDate.UNKNOWN_DATE, outputText); // write out death fact with unknown date
+                            AddFact(f);
+                            f = new Fact(string.Empty, "UNMARRIED", FactDate.UNKNOWN_DATE, FactLocation.UNKNOWN_LOCATION, string.Empty, true, true);
+                            AddFact(f);
+                        }
                     }
                 }
                 preferredFact = false;
@@ -973,7 +974,6 @@ namespace FTAnalyzer
                 foreach (Family marriage in FamiliesAsParent.OrderBy(f => f.MarriageDate))
                 {
                     if ((marriage.MarriageDate.Equals(date) || marriage.MarriageDate.IsBefore(date)) && marriage.Husband != null)
-
                         name = marriage.Husband.Surname;
                 }
             }
@@ -1563,10 +1563,6 @@ namespace FTAnalyzer
         public int CensusDateFactCount(CensusDate censusDate) => Facts.Count(f => f.IsValidCensus(censusDate));
 
         public bool IsLivingError => IsFlaggedAsLiving && DeathDate.IsKnown;
-
-        public IList<Fact> Facts { get => Facts1; set => Facts1 = value; }
-        public IList<Fact> Facts1 { get; set; }
-        public string Alias1 { get; set; }
 
         public int CensusReferenceCount(CensusReference.ReferenceStatus referenceStatus) 
             => AllFacts.Count(f => f.IsCensusFact && f.CensusReference != null && f.CensusReference.Status.Equals(referenceStatus));

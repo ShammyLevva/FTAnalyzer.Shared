@@ -307,6 +307,7 @@ namespace FTAnalyzer
             Created = false;
             Tag = string.Empty;
             Preferred = preferred;
+            Reference = reference;
         }
 
         public Fact(XmlNode node, Family family, bool preferred, IProgress<string> outputText)
@@ -564,10 +565,11 @@ namespace FTAnalyzer
 
         #region Properties
 
+        string Reference { get; set; }
+        string Tag { get; set; }
         public Age GedcomAge { get; private set; }
         public bool Created { get; protected set; }
         public bool Preferred { get; private set; }
-        private string Tag { get; set; }
         public CensusReference CensusReference { get; private set; }
         public FactLocation Location { get; private set; }
         public string Place { get; private set; }
@@ -579,7 +581,7 @@ namespace FTAnalyzer
         public string FactErrorMessage { get; private set; }
         public Individual Individual { get; private set; }
         public Family Family { get; private set; }
-        public string FactTypeDescription { get { return (FactType == UNKNOWN && Tag.Length > 0) ? Tag : GetFactTypeDescription(FactType); } }
+        public string FactTypeDescription => (FactType == UNKNOWN && Tag.Length > 0) ? Tag : GetFactTypeDescription(FactType);
 
         public bool IsMarriageFact =>  
             FactType == MARR_CONTRACT || FactType == MARR_LICENSE || 
