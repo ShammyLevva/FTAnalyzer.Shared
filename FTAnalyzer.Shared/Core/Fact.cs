@@ -31,7 +31,7 @@ namespace FTAnalyzer
                 UNKNOWN = "UNKN", WEIGHT = "_WEIG", WILL = "WILL";
 
         public const string ARRIVAL = "*ARRI", CHANGE = "*CHNG", CHILDLESS = "*CHILD", CHILDREN = "*CHILDREN", CONTACT = "*CONT", 
-                DIED_SINGLE = "*SINGLE", DEPARTURE = "*DEPT", FAMILYSEARCH = "*IGI", LC_FTA = "*LOST_FTA", LOOSEBIRTH = "*LOOSEB",
+                DEPARTURE = "*DEPT", FAMILYSEARCH = "*IGI", LC_FTA = "*LOST_FTA", LOOSEBIRTH = "*LOOSEB",
                 LOOSEDEATH = "*LOOSED", LOSTCOUSINS = "*LOST", MISSING = "*MISSING", PARENT = "*PARENT", REPORT = "*REPORT",
                 UNMARRIED = "*UNMAR", WEBSITE = "*WEBSITE", WITNESS = "*WITNE", WORLD_EVENT = "*WORLD_EVENT";
 
@@ -82,7 +82,7 @@ namespace FTAnalyzer
             CUSTOM_TAGS.Add("RECORD CHANGE", CHANGE);
             CUSTOM_TAGS.Add("LOST COUSINS", LOSTCOUSINS);
             CUSTOM_TAGS.Add("LOSTCOUSINS", LOSTCOUSINS);
-            CUSTOM_TAGS.Add("DIED SINGLE", DIED_SINGLE);
+            CUSTOM_TAGS.Add("DIED SINGLE", UNMARRIED);
             CUSTOM_TAGS.Add("MISSING", MISSING);
             CUSTOM_TAGS.Add("CHILDREN STATUS", CHILDREN1911);
             CUSTOM_TAGS.Add("CHILDREN1911", CHILDREN1911);
@@ -215,7 +215,6 @@ namespace FTAnalyzer
                 case DEGREE: return "Degree";
                 case DEPARTURE: return "Departure";
                 case DESTINATION: return "Destination";
-                case DIED_SINGLE: return "Died Single";
                 case DIVORCE: return "Divorce";
                 case DIVORCE_FILED: return "Divorce filed";
                 case DNA: return "DNA Markers";

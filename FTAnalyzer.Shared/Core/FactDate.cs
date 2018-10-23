@@ -91,7 +91,7 @@ namespace FTAnalyzer
             OriginalString = str;
             // remove any commas in date string
             yearfix = 0;
-            str = FixTextDateFormats(str);
+            str = FixTextDateFormats(str.ToUpper());
             str = FixCommonDateFormats(str);
             DateType = FactDateType.UNK;
             if (str == null || str.Length == 0)
@@ -128,6 +128,8 @@ namespace FTAnalyzer
                 case "INFANT":
                 case "CHILD":
                 case "YOUNG":
+                case "UNMARRIED":
+                case "NEVER MARRIED":
                     throw new TextFactDateException(str);
             }
             return str;

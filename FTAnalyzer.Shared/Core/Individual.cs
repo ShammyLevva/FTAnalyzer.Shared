@@ -795,7 +795,8 @@ namespace FTAnalyzer
                                 years = 21;
                                 break;
                             case "UNMARRIED":
-                                years = -1;
+                            case "NEVER MARRIED":
+                                years = -2;
                                 break;
                             default:
                                 years = -1;
@@ -811,7 +812,7 @@ namespace FTAnalyzer
                         {
                             Fact f = new Fact(n, this, preferredFact, FactDate.UNKNOWN_DATE, outputText); // write out death fact with unknown date
                             AddFact(f);
-                            f = new Fact(string.Empty, "UNMARRIED", FactDate.UNKNOWN_DATE, FactLocation.UNKNOWN_LOCATION, string.Empty, true, true);
+                            f = new Fact(string.Empty, Fact.UNMARRIED, FactDate.UNKNOWN_DATE, FactLocation.UNKNOWN_LOCATION, string.Empty, true, true);
                             AddFact(f);
                         }
                     }
@@ -1438,8 +1439,8 @@ namespace FTAnalyzer
                 Family fam = Marriages(0);
                 if (fam == null)
                 {
-                    if (MaxAgeAtDeath > 13 && GetPreferredFact(Fact.DIED_SINGLE) == null)
-                        return BMDColour.NO_SPOUSE; // of marrying age but hasn't a partner nor died single
+                    if (MaxAgeAtDeath > 13 && GetPreferredFact(Fact.UNMARRIED) == null)
+                        return BMDColour.NO_SPOUSE; // of marrying age but hasn't a partner or unmarried
                     else
                         return BMDColour.EMPTY;
                 }
