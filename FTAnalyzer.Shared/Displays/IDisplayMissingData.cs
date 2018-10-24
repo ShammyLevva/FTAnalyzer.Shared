@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace FTAnalyzer
+﻿namespace FTAnalyzer
 {
     public interface IDisplayMissingData
     {
@@ -26,7 +24,7 @@ namespace FTAnalyzer
         FactLocation BirthLocation { get; }
         FactLocation DeathLocation { get; }
         FactLocation BestLocation(FactDate when);
-        Int64 Ahnentafel { get; }
+        long Ahnentafel { get; }
         float Score { get; }
     }
 }

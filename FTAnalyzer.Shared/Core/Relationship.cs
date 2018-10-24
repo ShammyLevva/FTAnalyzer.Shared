@@ -11,8 +11,8 @@ namespace FTAnalyzer
             if (rootPerson.Equals(indToFind))
                 return "root person";
             CommonAncestor commonAncestor = indToFind.CommonAncestor;
-            Int64 rootDistance = (Int64)(Math.Log(commonAncestor.Ind.Ahnentafel) / Math.Log(2.0));
-            Int64 toFindDistance = commonAncestor.Distance;
+            long rootDistance = (long)(Math.Log(commonAncestor.Ind.Ahnentafel) / Math.Log(2.0));
+            long toFindDistance = commonAncestor.Distance;
 
             // DIRECT DESCENDANT - PARENT
             if (toFindDistance == 0)
@@ -52,12 +52,12 @@ namespace FTAnalyzer
                 return AggrandiseRelationship(relation, toFindDistance, 1);
             }
             // COUSINS, GENERATIONALLY REMOVED
-            Int64 cousinOrdinal = Math.Min(rootDistance, toFindDistance) - 1;
-            Int64 cousinGenerations = Math.Abs(rootDistance - toFindDistance);
+            long cousinOrdinal = Math.Min(rootDistance, toFindDistance) - 1;
+            long cousinGenerations = Math.Abs(rootDistance - toFindDistance);
             return OrdinalSuffix(cousinOrdinal) + " cousin " + FormatPlural(cousinGenerations) + " removed";
         }
 
-        private static string FormatPlural(Int64 count)
+        private static string FormatPlural(long count)
         {
             if (Math.Abs(count) == 1)
                 return "once";
@@ -66,7 +66,7 @@ namespace FTAnalyzer
             return count + " times";
         }
 
-        private static string AggrandiseRelationship(string relation, Int64 distance, int offset)
+        private static string AggrandiseRelationship(string relation, long distance, int offset)
         {
             distance -= offset;
             switch (distance)
@@ -82,7 +82,7 @@ namespace FTAnalyzer
             }
         }
 
-        private static string OrdinalSuffix(Int64 number)
+        private static string OrdinalSuffix(long number)
         {
             string os = string.Empty;
             if (number % 100 > 10 && number % 100 < 14)
@@ -91,7 +91,7 @@ namespace FTAnalyzer
                 os = "";
             else
             {
-                Int64 last = number % 10;
+                long last = number % 10;
                 switch (last)
                 {
                     case 1:
@@ -128,7 +128,7 @@ namespace FTAnalyzer
                 }
                 ahnentafel /= 2;
             }
-            output.Append(String.Join(" ", relations.ToString().Split(' ').Reverse()));
+            output.Append(string.Join(" ", relations.ToString().Split(' ').Reverse()));
             output.Replace("  ", " ");
             //remove last 's
             return output.ToString().Substring(0,output.Length -2);

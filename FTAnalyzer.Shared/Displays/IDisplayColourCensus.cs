@@ -1,5 +1,4 @@
-﻿using System;
-using static FTAnalyzer.ColourValues;
+﻿using static FTAnalyzer.ColourValues;
 
 namespace FTAnalyzer
 {
@@ -66,6 +65,6 @@ namespace FTAnalyzer
         FactDate DeathDate { get; }
         FactLocation DeathLocation { get; }
         FactLocation BestLocation(FactDate when);
-        Int64 Ahnentafel { get; }
+        long Ahnentafel { get; }
     }
 }

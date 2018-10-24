@@ -17,12 +17,16 @@ namespace FTAnalyzer
         Age LifeSpan { get; }
         string Relation { get; }
         string BudgieCode { get; }
-        Int64 Ahnentafel { get; }
+        long Ahnentafel { get; }
         bool HasRangedBirthDate { get; }
         bool HasParents { get; }
         int CensusFactCount { get; }
         string MarriageDates { get; }
         string MarriageLocations { get; }
         string RelationToRoot { get; set; }
+        DateTime BirthStart { get; }
+        DateTime BirthEnd { get; }
+        DateTime DeathStart { get; }
+        DateTime DeathEnd { get; }
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace FTAnalyzer
+﻿namespace FTAnalyzer
 {
     public interface IDisplayIndividual
     {
@@ -19,7 +17,7 @@ namespace FTAnalyzer
         int MarriageCount { get; }
         int ChildrenCount { get; }
         string BudgieCode { get; }
-        Int64 Ahnentafel { get; }
+        long Ahnentafel { get; }
         bool HasNotes { get; }
     }
 }

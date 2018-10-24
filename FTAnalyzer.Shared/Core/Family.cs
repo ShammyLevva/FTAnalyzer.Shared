@@ -1,11 +1,11 @@
+using FTAnalyzer.Properties;
+using FTAnalyzer.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Xml;
-using FTAnalyzer.Utilities;
 using System.Text.RegularExpressions;
-using FTAnalyzer.Properties;
+using System.Xml;
 
 namespace FTAnalyzer
 {
@@ -410,7 +410,7 @@ namespace FTAnalyzer
                     {
                         string prefix = (directChild < childcount) ? "+" : "-";
                         var code = Math.Abs(directChild - childcount);
-                        var ahnentafel = ((Int64)Math.Floor(ind.Ahnentafel / 2.0)).ToString();
+                        var ahnentafel = ((long)Math.Floor(ind.Ahnentafel / 2.0)).ToString();
                         child.BudgieCode = ahnentafel.PadLeft(lenAhnentafel, '0') + prefix + code.ToString("D2");
                     }
                 }

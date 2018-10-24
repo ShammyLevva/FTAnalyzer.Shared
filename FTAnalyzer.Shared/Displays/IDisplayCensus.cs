@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace FTAnalyzer
+﻿namespace FTAnalyzer
 {
     public interface IDisplayCensus
     {
@@ -19,6 +17,6 @@ namespace FTAnalyzer
         string CensusReference { get; }
         string Relation { get; }
         string RelationToRoot { get; }
-        Int64 Ahnentafel { get; }
+        long Ahnentafel { get; }
     }
 }

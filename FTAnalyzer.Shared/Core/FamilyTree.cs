@@ -1,20 +1,20 @@
-﻿using System;
+﻿using FTAnalyzer.Filters;
+using FTAnalyzer.Properties;
+using FTAnalyzer.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Web;
-using System.Xml;
-using FTAnalyzer.Filters;
-using FTAnalyzer.Utilities;
-using FTAnalyzer.Properties;
+using System.Net;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Net;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
+using System.Xml;
 
 namespace FTAnalyzer
 {
@@ -2686,7 +2686,7 @@ namespace FTAnalyzer
             return score;
         }
 
-        private void IdentifyDuplicates(CancellationToken ct, IProgress<int> progress, IEnumerable<Individual> enumerable, ref UInt64 threadProgress)
+        private void IdentifyDuplicates(CancellationToken ct, IProgress<int> progress, IEnumerable<Individual> enumerable, ref ulong threadProgress)
         {
             log.Debug("FamilyTree.IdentifyDuplicates");
             var index = 0;
