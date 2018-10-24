@@ -1081,15 +1081,14 @@ namespace FTAnalyzer
         #region TreeTops
 
         public IEnumerable<IDisplayIndividual> GetTreeTops(Predicate<Individual> filter) => individuals.Filter(ind => filter(ind));
+        public IEnumerable<IExportIndividual>  GetExportTreeTops(Predicate<Individual> filter) => individuals.Filter(ind => filter(ind));
 
         #endregion
 
         #region WorldWars
 
-        public IEnumerable<IDisplayIndividual> GetWorldWars(Predicate<Individual> filter)
-        {
-            return individuals.Filter(ind => ind.IsMale && filter(ind));
-        }
+        public IEnumerable<IDisplayIndividual> GetWorldWars(Predicate<Individual> filter) => individuals.Filter(ind => ind.IsMale && filter(ind));
+        public IEnumerable<IExportIndividual>  GetExportWorldWars(Predicate<Individual> filter) => individuals.Filter(ind => ind.IsMale && filter(ind));
 
         #endregion
 

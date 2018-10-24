@@ -117,7 +117,7 @@ namespace FTAnalyzer
                     Husband.QuestionGender(this, true);
                 if (Wife != null && Wife.IsMale)
                     Wife.QuestionGender(this, false);
-                Children.Sort(new BirthDateComparer(BirthDateComparer.DESCENDING));
+                Children.Sort(new BirthDateComparer());
             }
         }
 

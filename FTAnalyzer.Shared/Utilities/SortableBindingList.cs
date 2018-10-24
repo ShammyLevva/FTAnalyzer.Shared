@@ -12,84 +12,61 @@ namespace FTAnalyzer.Utilities
         private PropertyDescriptor propertyDescriptor;
 
         public SortableBindingList()
-            : base(new List<T>())
-        {
-            this.comparers = new Dictionary<Type, PropertyComparer<T>>();
-        }
+            : base(new List<T>()) => comparers = new Dictionary<Type, PropertyComparer<T>>();
 
         public SortableBindingList(IEnumerable<T> enumeration)
-            : base(new List<T>(enumeration))
-        {
-            this.comparers = new Dictionary<Type, PropertyComparer<T>>();
-        }
+            : base(new List<T>(enumeration)) => comparers = new Dictionary<Type, PropertyComparer<T>>();
 
-        protected override bool SupportsSortingCore
-        {
-            get { return true; }
-        }
+        protected override bool SupportsSortingCore => true;
 
-        protected override bool IsSortedCore
-        {
-            get { return this.isSorted; }
-        }
+        protected override bool IsSortedCore => isSorted;
 
-        protected override PropertyDescriptor SortPropertyCore
-        {
-            get { return this.propertyDescriptor; }
-        }
+        protected override PropertyDescriptor SortPropertyCore => propertyDescriptor;
 
-        protected override ListSortDirection SortDirectionCore
-        {
-            get { return this.listSortDirection; }
-        }
+        protected override ListSortDirection SortDirectionCore => listSortDirection;
 
-        protected override bool SupportsSearchingCore
-        {
-            get { return true; }
-        }
+        protected override bool SupportsSearchingCore => true;
 
         protected override void ApplySortCore(PropertyDescriptor property, ListSortDirection direction)
         {
-            this.OnSortStarted();
-            List<T> itemsList = (List<T>)this.Items;
+            OnSortStarted();
+            List<T> itemsList = (List<T>)Items;
 
             Type propertyType = property.PropertyType;
-            if (!this.comparers.TryGetValue(propertyType, out PropertyComparer<T> comparer))
+            if (!comparers.TryGetValue(propertyType, out PropertyComparer<T> comparer))
             {
                 comparer = new PropertyComparer<T>(property, direction);
-                this.comparers.Add(propertyType, comparer);
+                comparers.Add(propertyType, comparer);
             }
 
             comparer.SetPropertyAndDirection(property, direction);
             MergeSort(itemsList, comparer);
 
-            this.propertyDescriptor = property;
-            this.listSortDirection = direction;
-            this.isSorted = true;
+           propertyDescriptor = property;
+           listSortDirection = direction;
+           isSorted = true;
 
-            this.OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
-            this.OnSortFinished();
+           OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+           OnSortFinished();
         }
 
         protected override void RemoveSortCore()
         {
-            this.isSorted = false;
-            this.propertyDescriptor = base.SortPropertyCore;
-            this.listSortDirection = base.SortDirectionCore;
+            isSorted = false;
+            propertyDescriptor = base.SortPropertyCore;
+            listSortDirection = base.SortDirectionCore;
 
-            this.OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+            OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
         }
 
         protected override int FindCore(PropertyDescriptor property, object key)
         {
-            int count = this.Count;
+            int count = Count;
             for (int i = 0; i < count; ++i)
             {
                 T element = this[i];
                 if (property.GetValue(element).Equals(key))
-                {
                     return i;
-                }
             }
 
             return -1;
@@ -125,13 +102,9 @@ namespace FTAnalyzer.Utilities
             while ((left <= mid) && right_start <= right)
             {
                 if (comparer.Compare(inputList[left], inputList[right_start]) <= 0)
-                {
                     tempList.Add(inputList[left++]);
-                }
                 else
-                {
                     tempList.Add(inputList[right_start++]);
-                }
             }
 
             if (left > mid)

@@ -2,28 +2,28 @@
 
 namespace FTAnalyzer
 {
-    public interface IExportIndividual
+    public interface IExportIndividual : IDisplayIndividual
     {
-        string IndividualID { get; }
-        string Forenames { get; }
-        string Surname { get; }
+        new string IndividualID { get; }
+        new string Forenames { get; }
+        new string Surname { get; }
         string Alias { get; }
-        string Gender { get; }
-        FactDate BirthDate { get; }
-        FactLocation BirthLocation { get; }
-        FactDate DeathDate { get; }
-        FactLocation DeathLocation { get; }
-        string Occupation { get; }
-        Age LifeSpan { get; }
-        string Relation { get; }
-        string BudgieCode { get; }
-        long Ahnentafel { get; }
+        new string Gender { get; }
+        new FactDate BirthDate { get; }
+        new FactLocation BirthLocation { get; }
+        new FactDate DeathDate { get; }
+        new FactLocation DeathLocation { get; }
+        new string Occupation { get; }
+        new Age LifeSpan { get; }
+        new string Relation { get; }
+        new string BudgieCode { get; }
+        new long Ahnentafel { get; }
         bool HasRangedBirthDate { get; }
         bool HasParents { get; }
         int CensusFactCount { get; }
         string MarriageDates { get; }
         string MarriageLocations { get; }
-        string RelationToRoot { get; set; }
+        new string RelationToRoot { get; set; }
         DateTime BirthStart { get; }
         DateTime BirthEnd { get; }
         DateTime DeathStart { get; }
