@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace FTAnalyzer
 {
@@ -9,19 +6,17 @@ namespace FTAnalyzer
     {
         public static bool ASCENDING = true;
         public static bool DESCENDING = false;
-        private bool direction = ASCENDING;
 
         public BirthDateComparer() : this(ASCENDING) { }
 
-        public BirthDateComparer(bool direction)
-        {
-            this.direction = direction;
-        }
+        public BirthDateComparer(bool direction) => Direction = direction;
+
+        public bool Direction { get; set; } = ASCENDING;
 
         public override int Compare(IDisplayIndividual x, IDisplayIndividual y)
         {
             IDisplayIndividual a = x, b=y;
-            if(direction == DESCENDING)
+            if(Direction == DESCENDING)
             {
                 a = y;
                 b = x;

@@ -81,7 +81,7 @@ namespace FTAnalyzer
 
         public static string GetText(XmlNode node, string tag, bool lookForText) => GetText(GetChildNode(node, tag), lookForText);
 
-        public static XmlNode GetChildNode(XmlNode node, String tag) => node?.SelectSingleNode(tag);
+        public static XmlNode GetChildNode(XmlNode node, string tag) => node?.SelectSingleNode(tag);
 
         public static string GetNotes(XmlNode node)
         {

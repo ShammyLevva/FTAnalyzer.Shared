@@ -38,7 +38,7 @@ namespace FTAnalyzer
         public string RelationToRoot { get; set; }
         public CommonAncestor CommonAncestor { get; set; }
         public string UnrecognisedCensusNotes { get; private set; }
-        public IList<Fact> Facts { get; set; }
+        public IList<Fact> Facts { get; private set; }
         public string Alias { get; set; }
 
         #region Constructors
@@ -428,6 +428,7 @@ namespace FTAnalyzer
         public FactDate BirthDate => BirthFact == null ? FactDate.UNKNOWN_DATE : BirthFact.FactDate;
 
         public DateTime BirthStart => BirthDate.StartDate != FactDate.MINDATE ? BirthDate.StartDate : BirthDate.EndDate;
+        public DateTime BirthEnd => BirthDate.StartDate != FactDate.MAXDATE ? BirthDate.EndDate : BirthDate.StartDate;
 
         public FactLocation BirthLocation => (BirthFact == null) ? FactLocation.UNKNOWN_LOCATION : BirthFact.Location;
 
@@ -451,6 +452,7 @@ namespace FTAnalyzer
 
         public FactDate DeathDate => DeathFact == null ? FactDate.UNKNOWN_DATE : DeathFact.FactDate;
 
+        public DateTime DeathStart => DeathDate.StartDate != FactDate.MINDATE ? DeathDate.StartDate : DeathDate.EndDate;
         public DateTime DeathEnd => DeathDate.EndDate != FactDate.MAXDATE ? DeathDate.EndDate : DeathDate.StartDate;
 
         public FactLocation DeathLocation => DeathFact == null ? FactLocation.UNKNOWN_LOCATION : DeathFact.Location;

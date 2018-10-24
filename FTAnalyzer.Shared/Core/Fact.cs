@@ -425,7 +425,7 @@ namespace FTAnalyzer
                 catch (TextFactDateException te)
                 {
                     if (FactType == DEATH)
-                        throw te;
+                        throw;
                     else
                     {
                         string message = (node == null) ? string.Empty : node.InnerText + ". ";
