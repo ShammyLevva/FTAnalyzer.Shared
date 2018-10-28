@@ -53,9 +53,9 @@ namespace FTAnalyzer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("00000000-0000-0000-0000-000000000000")]
-        public global::System.Guid GUID {
+        public string GUID {
             get {
-                return ((global::System.Guid)(this["GUID"]));
+                return ((string)(this["GUID"]));
             }
             set {
                 this["GUID"] = value;
