@@ -1878,22 +1878,33 @@ namespace FTAnalyzer
         public void SearchCensus(string censusCountry, int censusYear, Individual person, int censusProvider)
         {
             string uri = null;
-
+            string provider = string.Empty;
             switch (censusProvider)
             {
-                case 0: uri = BuildAncestryQuery(censusCountry, censusYear, person); break;
+                case 0:
+                    uri = BuildAncestryQuery(censusCountry, censusYear, person);
+                    provider = "Ancestry";
+                    break;
                 case 1:
                     if (censusYear == 1939)
                         uri = BuildFindMyPast1939Query(censusCountry, person);
                     else
                         uri = BuildFindMyPastQuery(censusCountry, censusYear, person);
+                    provider = "FindMyPast";
                     break;
-                case 2: uri = BuildFreeCenQuery(censusCountry, censusYear, person); break;
-                case 3: uri = BuildFamilySearchQuery(censusCountry, censusYear, person); break;
+                case 2:
+                    uri = BuildFreeCenQuery(censusCountry, censusYear, person);
+                    provider = "FreeCen";
+                    break;
+                case 3:
+                    uri = BuildFamilySearchQuery(censusCountry, censusYear, person);
+                    provider = "FamilySearch";
+                    break;
             }
             if (uri != null)
             {
                 HttpUtility.VisitWebsite(uri);
+                Analytics.TrackAction(Analytics.CensusSearchAction, $"Searching {provider} {censusYear}");
             }
         }
 
@@ -2317,15 +2328,19 @@ namespace FTAnalyzer
                 if (factdate.StartDate > factdate.EndDate)
                     factdate = FactDate.UNKNOWN_DATE; // errors in facts corrupts loose births or deaths
             }
+            string provider = string.Empty;
             switch (searchProvider)
             {
-                case 0: uri = BuildAncestryQuery(st, individual, factdate); break;
-                case 1: uri = BuildFindMyPastQuery(st, individual, factdate); break;
-                case 2: uri = BuildFreeBMDQuery(st, individual, factdate); break;
-                case 3: uri = BuildFamilySearchQuery(st, individual, factdate); break;
+                case 0: uri = BuildAncestryQuery(st, individual, factdate); provider = "Ancestry"; break;
+                case 1: uri = BuildFindMyPastQuery(st, individual, factdate); provider = "FindMyPast"; break;
+                case 2: uri = BuildFreeBMDQuery(st, individual, factdate); provider = "FreeBMD"; break;
+                case 3: uri = BuildFamilySearchQuery(st, individual, factdate); provider = "FamilySearch"; break;
             }
             if (uri != null)
+            {
                 HttpUtility.VisitWebsite(uri);
+                Analytics.TrackAction(Analytics.BMDSearchAction, $"Searching {provider} BMDs");
+            }
         }
 
         private string BuildFamilySearchQuery(SearchType st, Individual individual, FactDate factdate)
