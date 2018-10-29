@@ -117,10 +117,6 @@
       <DependentUpon>NonGedcomDate.settings</DependentUpon>
       <AutoGen>True</AutoGen>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Properties\Settings.Designer.cs">
-      <DependentUpon>Settings.settings</DependentUpon>
-      <AutoGen>True</AutoGen>
-    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\DoubleMetaphone.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\EnhancedTextInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\ExtensionMethods.cs" />
@@ -285,10 +281,6 @@
     </None>
     <None Include="$(MSBuildThisFileDirectory)Properties\NonGedcomDate.settings">
       <LastGenOutput>NonGedcomDate.Designer.cs</LastGenOutput>
-      <Generator>SettingsSingleFileGenerator</Generator>
-    </None>
-    <None Include="$(MSBuildThisFileDirectory)Properties\Settings.settings">
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
       <Generator>SettingsSingleFileGenerator</Generator>
     </None>
   </ItemGroup>
