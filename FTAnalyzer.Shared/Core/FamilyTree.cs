@@ -1843,7 +1843,7 @@ namespace FTAnalyzer
         {
             if (f.FactType != Fact.BIRTH & f.FactType != Fact.BIRTH_CALC && Fact.LOOSE_BIRTH_FACTS.Contains(f.FactType) && f.FactDate.IsBefore(ind.BirthDate))
             {
-                if ((f.FactType == Fact.CHRISTENING || f.FactType == Fact.BAPTISM))
+                if (f.FactType == Fact.CHRISTENING || f.FactType == Fact.BAPTISM)
                 {  //due to possible late birth abt qtr reporting use 3 month fudge factor for bapm/chr
                     if (f.FactDate.IsBefore(ind.BirthDate.SubtractMonths(4)))
                         return true;

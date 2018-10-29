@@ -112,25 +112,27 @@ namespace FTAnalyzer
             AddFacts(node, Fact.TITLE, outputText);
             AddFacts(node, Fact.WEIGHT, outputText);
 
-            // Individual events
+            // Individual events - key facts first
+            AddFacts(node, Fact.BIRTH, outputText);
+            AddFacts(node, Fact.BIRTH_CALC, outputText);
+            AddFacts(node, Fact.DEATH, outputText);
+            AddFacts(node, Fact.CENSUS, outputText);
+
+            // Individuals events non key facts
             AddFacts(node, Fact.ADOPTION, outputText);
             AddFacts(node, Fact.ADULT_CHRISTENING, outputText);
             AddFacts(node, Fact.BAPTISM, outputText);
             AddFacts(node, Fact.BAPTISM_LDS, outputText);
             AddFacts(node, Fact.BAR_MITZVAH, outputText);
             AddFacts(node, Fact.BAS_MITZVAH, outputText);
-            AddFacts(node, Fact.BIRTH, outputText);
-            AddFacts(node, Fact.BIRTH_CALC, outputText);
             AddFacts(node, Fact.BLESSING, outputText);
             AddFacts(node, Fact.BURIAL, outputText);
             AddFacts(node, Fact.CASTE, outputText);
-            AddFacts(node, Fact.CENSUS, outputText);
             AddFacts(node, Fact.CHRISTENING, outputText);
             AddFacts(node, Fact.CIRCUMCISION, outputText);
             AddFacts(node, Fact.CONFIRMATION, outputText);
             AddFacts(node, Fact.CONFIRMATION_LDS, outputText);
             AddFacts(node, Fact.CREMATION, outputText);
-            AddFacts(node, Fact.DEATH, outputText);
             AddFacts(node, Fact.DESTINATION, outputText);
             AddFacts(node, Fact.DNA, outputText);
             AddFacts(node, Fact.ELECTION, outputText);

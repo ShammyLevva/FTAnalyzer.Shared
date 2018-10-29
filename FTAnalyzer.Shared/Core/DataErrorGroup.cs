@@ -4,7 +4,7 @@ namespace FTAnalyzer
 {
     public class DataErrorGroup
     {
-        static string[] DATAERROR = new string[] 
+        static readonly string[] DATAERROR = new string[] 
             { "Birth after death/burial",
                 "Birth after father aged 90+", 
                 "Birth after mother aged 60+", 
@@ -13,7 +13,7 @@ namespace FTAnalyzer
                 "Birth before father aged 13", 
                 "Birth before mother aged 13", 
                 "Burial before death", 
-                "Aged more than " + FactDate.MAXYEARS + " at death", 
+                $"Aged more than {FactDate.MAXYEARS} at death", 
                 "Facts dated before birth", 
                 "Facts dated after death", 
                 "Marriage after death", 
