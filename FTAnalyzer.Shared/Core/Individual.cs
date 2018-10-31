@@ -361,16 +361,16 @@ namespace FTAnalyzer
                     Surname = UNKNOWN_NAME;
                 MarriedName = Surname;
                 _fullname = SetFullName();
-                SortedName = (_forenames + " " + Surname).Trim();
+                SortedName = $"{_forenames} {Surname}".Trim();
             }
         }
 
         public string SetFullName()
         {
             if (GeneralSettings.Default.ShowAliasInName && Alias.Length > 0)
-                return (_forenames + (" '" + Alias + "' ") + Surname).Trim();
+                return $"{_forenames}  '{Alias}' {Surname}".Trim();
             else
-                return (_forenames + " " + Surname).Trim();
+                return $"{_forenames} {Surname}".Trim();
         }
 
         public string Forename
@@ -517,7 +517,7 @@ namespace FTAnalyzer
             }
         }
 
-        public string IndividualRef => IndividualID + ": " + Name;
+        public string IndividualRef => $"{IndividualID}: {Name}";
 
         public string ServiceNumber
         {

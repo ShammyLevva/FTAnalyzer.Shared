@@ -971,14 +971,17 @@ namespace FTAnalyzer
                 individuals.Add(ind);
         }
 
-        public IList<string> GetSurnames()
+        public IList<string> Surnames
         {
-            HashSet<string> names = new HashSet<string>();
-            foreach (Individual i in individuals)
-                names.Add(i.Surname);
-            List<string> result = names.ToList();
-            result.Sort();
-            return result;
+            get
+            {
+                HashSet<string> names = new HashSet<string>();
+                foreach (Individual i in individuals)
+                    names.Add(i.Surname);
+                List<string> result = names.ToList();
+                result.Sort();
+                return result;
+            }
         }
 
         public bool SupportedLocation(int level) => Countries.IsCensusCountry(Country) && level == COUNTRY;
