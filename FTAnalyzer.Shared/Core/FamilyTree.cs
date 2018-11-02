@@ -1209,7 +1209,7 @@ namespace FTAnalyzer
             ind.Ahnentafel = 1;
             maxAhnentafel = 1;
             var queue = new Queue<Individual>();
-            queue.Enqueue(ind);
+            queue.Enqueue(RootPerson);
             while (queue.Count > 0)
             {
                 // now take an item from the queue
@@ -1316,6 +1316,7 @@ namespace FTAnalyzer
             foreach (Individual i in individuals)
                 relations[i.RelationType]++;
             sb.Append($"Direct Ancestors: {relations[Individual.DIRECT]}\n");
+            sb.Append($"Descendants: {relations[Individual.DESCENDANT]}\n");
             sb.Append($"Blood Relations: {relations[Individual.BLOOD]}\n");
             sb.Append($"Married to Blood or Direct Relation: {relations[Individual.MARRIEDTODB]}\n");
             sb.Append($"Related by Marriage: {relations[Individual.MARRIAGE]}\n");

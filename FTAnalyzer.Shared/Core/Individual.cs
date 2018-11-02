@@ -14,7 +14,7 @@ namespace FTAnalyzer
     {
         // define relation type from direct ancestor to related by marriage and 
         // MARRIAGEDB ie: married to a direct or blood relation
-        public const int UNKNOWN = 1, DIRECT = 2, BLOOD = 4, MARRIEDTODB = 8, MARRIAGE = 16, UNSET = 32;
+        public const int UNKNOWN = 1, DIRECT = 2, DESCENDANT = 3, BLOOD = 4, MARRIEDTODB = 8, MARRIAGE = 16, UNSET = 32;
         public const string UNKNOWN_NAME = "UNKNOWN";
 
         public string IndividualID { get; private set; }
@@ -36,6 +36,7 @@ namespace FTAnalyzer
         public long Ahnentafel { get; set; }
         public string BudgieCode { get; set; }
         public string RelationToRoot { get; set; }
+        public long RelationSort { get; set; }
         public CommonAncestor CommonAncestor { get; set; }
         public string UnrecognisedCensusNotes { get; private set; }
         public IList<Fact> Facts { get; private set; }
@@ -223,7 +224,7 @@ namespace FTAnalyzer
 
         public int RelationType
         {
-            get { return _relationType; }
+            get => _relationType;
             set
             {
                 if (_relationType == UNKNOWN || _relationType > value)
@@ -231,7 +232,7 @@ namespace FTAnalyzer
             }
         }
 
-        public bool IsBloodDirect => _relationType == BLOOD || _relationType == DIRECT || _relationType == MARRIEDTODB;
+        public bool IsBloodDirect => _relationType == BLOOD || _relationType == DIRECT || _relationType == DESCENDANT || _relationType == MARRIEDTODB;
 
         public bool HasNotes => Notes.Length > 0;
 
@@ -245,6 +246,7 @@ namespace FTAnalyzer
                     case BLOOD: return "Blood Relation";
                     case MARRIAGE: return "By Marriage";
                     case MARRIEDTODB: return "Marr to Direct/Blood";
+                    case DESCENDANT: return "Descendant";
                     default: return "Unknown";
                 }
             }

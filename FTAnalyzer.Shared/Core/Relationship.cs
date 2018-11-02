@@ -18,12 +18,15 @@ namespace FTAnalyzer
             if (toFindDistance == 0)
             {
                 string relation = indToFind.IsMale ? "father" : "mother";
+                indToFind.RelationSort = rootDistance;
                 return (commonAncestor.Step ? "step " : string.Empty) + AggrandiseRelationship(relation, rootDistance, 0);
             }
             // DIRECT DESCENDANT - CHILD
             if (rootDistance == 0)
             {
                 string relation = indToFind.IsMale ? "son" : "daughter";
+                indToFind.RelationSort = -toFindDistance;
+                indToFind.RelationType = Individual.DESCENDANT;
                 return (commonAncestor.Step ? "step " : string.Empty) + AggrandiseRelationship(relation, toFindDistance, 0);
             }
             // EQUAL DISTANCE - SIBLINGS / PERFECT COUSINS

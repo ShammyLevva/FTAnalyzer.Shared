@@ -194,7 +194,18 @@ namespace FTAnalyzer.Properties {
                 return ResourceManager.GetString("Referral_Direct", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Direct Ancestor.
+        /// </summary>
+        internal static string Referral_Descendant
+        {
+            get
+            {
+                return ResourceManager.GetString("Referral_Descendant", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Marriage.
         /// </summary>

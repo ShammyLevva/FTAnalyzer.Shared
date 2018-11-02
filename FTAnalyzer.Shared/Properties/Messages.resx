@@ -159,6 +159,9 @@
   <data name="Referral_Blood" xml:space="preserve">
     <value>Blood Relation</value>
   </data>
+  <data name="Referral_Descendant" xml:space="preserve">
+    <value>Descendant</value>
+  </data>
   <data name="Referral_Direct" xml:space="preserve">
     <value>Direct Ancestor</value>
   </data>

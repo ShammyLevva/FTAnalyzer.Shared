@@ -39,8 +39,10 @@
                     return Properties.Messages.Referral_Direct;
                 if (ind.RelationType == Individual.BLOOD)
                     return Properties.Messages.Referral_Blood;
-                else if (ind.RelationType == Individual.MARRIEDTODB)
+                if (ind.RelationType == Individual.MARRIEDTODB)
                     return Properties.Messages.Referral_Marriage;
+                if (ind.RelationType == Individual.DESCENDANT)
+                    return Properties.Messages.Referral_Descendant;
                 else return string.Empty;
             }
         }

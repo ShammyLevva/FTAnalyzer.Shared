@@ -50,6 +50,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Displays\IDisplayFact.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Displays\IDisplayFamily.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Displays\IDisplayGeocodedLocation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Displays\DisplayGreatStats.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Displays\IDisplayIndividual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Displays\IDisplayLocation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Displays\IDisplayLooseBirth.cs" />
