@@ -438,8 +438,8 @@ namespace FTAnalyzer
             longitude = longitude.Replace("W", "-").Replace("E", "");
             if (LOCATIONS.TryGetValue(place, out FactLocation result))
             {  // found location now check if we need to update its geocoding
-                if (updateLatLong && !result.IsGeoCoded(true) && result.IsGeoCoded(true))
-                {  // we are updating and old value isn't geocoded
+                if (updateLatLong && !result.IsGeoCoded(true))
+                {  // we are updating and old value isn't geocoded 
                     temp = new FactLocation(place, latitude, longitude, status);
                     if (temp.IsGeoCoded(true))
                     {
@@ -457,13 +457,16 @@ namespace FTAnalyzer
                 result = new FactLocation(place, latitude, longitude, status);
                 if (LOCATIONS.TryGetValue(result.ToString(), out temp))
                 {
-                    if (updateLatLong && !temp.IsGeoCoded(true) && result.IsGeoCoded(true))
-                    {  // we are updating the old value isn't geocoded so we can overwrite
-                        temp.Latitude = result.Latitude;
-                        temp.LatitudeM = result.LatitudeM;
-                        temp.Longitude = result.Longitude;
-                        temp.LongitudeM = result.LongitudeM;
-                        SaveLocationToDatabase(temp);
+                    if (updateLatLong)
+                    {
+                        if ((!temp.IsGeoCoded(true) && result.IsGeoCoded(true)) || !result.GecodingMatches(temp))
+                        {  // we are updating the old value isn't geocoded so we can overwrite or the new value doesn't match old database value so overwrite
+                            temp.Latitude = result.Latitude;
+                            temp.LatitudeM = result.LatitudeM;
+                            temp.Longitude = result.Longitude;
+                            temp.LongitudeM = result.LongitudeM;
+                            SaveLocationToDatabase(temp);
+                        }
                     }
                     return temp;
                 }
@@ -484,6 +487,9 @@ namespace FTAnalyzer
             return result; // should return object that is in list of locations 
         }
 
+        private bool GecodingMatches(FactLocation temp) 
+            => Latitude == temp.Latitude && Longitude == temp.Longitude && LatitudeM == temp.LatitudeM && LongitudeM == temp.LongitudeM;
+
         public static List<FactLocation> ExposeFactLocations => LOCATIONS.Values.ToList();
 
         static void SaveLocationToDatabase(FactLocation loc)
@@ -497,8 +503,8 @@ namespace FTAnalyzer
             {   // check whether the location in database is geocoded.
                 FactLocation inDatabase = new FactLocation(loc.ToString());
                 DatabaseHelper.Instance.GetLocationDetails(inDatabase);
-                if (!inDatabase.IsGeoCoded(true))
-                    DatabaseHelper.Instance.UpdateGeocode(loc); // only update if existing record wasn't geocoded
+                if (!inDatabase.IsGeoCoded(true) || !loc.GecodingMatches(inDatabase))
+                    DatabaseHelper.Instance.UpdateGeocode(loc); // only update if existing record wasn't geocoded or doesn't match database contents
             }
             else
                 DatabaseHelper.Instance.InsertGeocode(loc);
