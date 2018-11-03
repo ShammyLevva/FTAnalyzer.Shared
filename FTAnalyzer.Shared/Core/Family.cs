@@ -203,33 +203,51 @@ namespace FTAnalyzer
             bool preferredFact = true;
             foreach (XmlNode n in list)
             {
-                Fact f = new Fact(n, this, preferredFact, outputText);
-                if (string.IsNullOrEmpty(f.Comment) && Husband != null && Wife != null && f.IsMarriageFact)
+                try
                 {
-                    string description = Fact.GetFactTypeDescription(factType);
-                    f.Comment = $"{description} of {Husband.Name} and {Wife.Name}";
-                }
-                if (f.FactType != Fact.CENSUS)
-                {
-                    Facts.Add(f);
-                    if (!_preferredFacts.ContainsKey(f.FactType))
-                        _preferredFacts.Add(f.FactType, f);
-                }
-                else
-                {
-                    // Handle a census fact on a family.
-                    if (GeneralSettings.Default.OnlyCensusParents)
+                    Fact f = new Fact(n, this, preferredFact, outputText);
+                    if (string.IsNullOrEmpty(f.Comment) && Husband != null && Wife != null && f.IsMarriageFact)
                     {
-                        if (Husband != null && Husband.IsAlive(f.FactDate))
-                            Husband.AddFact(f);
-                        if (Wife != null && Wife.IsAlive(f.FactDate))
-                            Wife.AddFact(f);
+                        string description = Fact.GetFactTypeDescription(factType);
+                        f.Comment = $"{description} of {Husband.Name} and {Wife.Name}";
+                    }
+                    if (f.FactType != Fact.CENSUS)
+                    {
+                        Facts.Add(f);
+                        if (!_preferredFacts.ContainsKey(f.FactType))
+                            _preferredFacts.Add(f.FactType, f);
                     }
                     else
                     {
-                        // all members of the family who are alive get the census fact
-                        foreach (Individual person in Members.Where(p => p.IsAlive(f.FactDate)))
-                            person.AddFact(f);
+                        // Handle a census fact on a family.
+                        if (GeneralSettings.Default.OnlyCensusParents)
+                        {
+                            if (Husband != null && Husband.IsAlive(f.FactDate))
+                                Husband.AddFact(f);
+                            if (Wife != null && Wife.IsAlive(f.FactDate))
+                                Wife.AddFact(f);
+                        }
+                        else
+                        {
+                            // all members of the family who are alive get the census fact
+                            foreach (Individual person in Members.Where(p => p.IsAlive(f.FactDate)))
+                                person.AddFact(f);
+                        }
+                    }
+                }
+                catch (InvalidXMLFactException ex)
+                {
+                    FamilyTree ft = FamilyTree.Instance;
+                    outputText.Report($"Error with Family : {FamilyID}\n       Invalid fact : {ex.Message}");
+                }
+                catch (TextFactDateException te)
+                {
+                    if (te.Message == "UNMARRIED" || te.Message == "NEVER MARRIED" || te.Message == "NOT MARRIED")
+                    {
+                        Fact f = new Fact(string.Empty, Fact.UNMARRIED, FactDate.UNKNOWN_DATE, FactLocation.UNKNOWN_LOCATION, string.Empty, true, true);
+                        Husband?.AddFact(f);
+                        Wife?.AddFact(f);
+                        Facts.Add(f);
                     }
                 }
                 preferredFact = false;
@@ -298,7 +316,7 @@ namespace FTAnalyzer
                 else
                 {
                     foreach (Fact f in Facts)
-                        if(f.IsMarriageFact)
+                        if (f.IsMarriageFact)
                             return MARRIED;
                     return UNMARRIED;
                 }

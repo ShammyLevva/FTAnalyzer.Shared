@@ -802,13 +802,14 @@ namespace FTAnalyzer
                                 break;
                             case "UNMARRIED":
                             case "NEVER MARRIED":
+                            case "NOT MARRIED":
                                 years = -2;
                                 break;
                             default:
                                 years = -1;
                                 break;
                         }
-                        if (years >= 0)  //only add a death fact if text is one of the death types
+                        if (years >= 0 && factType == Fact.DEATH)  //only add a death fact if text is one of the death types
                         {
                             FactDate deathdate = BirthDate.AddEndDateYears(years);
                             Fact f = new Fact(n, this, preferredFact, deathdate, outputText);

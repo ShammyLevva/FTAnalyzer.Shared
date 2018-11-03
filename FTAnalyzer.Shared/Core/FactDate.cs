@@ -130,6 +130,7 @@ namespace FTAnalyzer
                 case "YOUNG":
                 case "UNMARRIED":
                 case "NEVER MARRIED":
+                case "NOT MARRIED":
                     throw new TextFactDateException(str);
             }
             return str;

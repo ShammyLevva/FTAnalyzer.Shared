@@ -424,7 +424,7 @@ namespace FTAnalyzer
                 }
                 catch (TextFactDateException te)
                 {
-                    if (FactType == DEATH)
+                    if (FactType == DEATH || FactType == MARRIAGE)
                         throw;
                     else
                     {
