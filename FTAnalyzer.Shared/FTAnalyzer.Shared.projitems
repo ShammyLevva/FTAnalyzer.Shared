@@ -118,7 +118,6 @@
       <DependentUpon>NonGedcomDate.settings</DependentUpon>
       <AutoGen>True</AutoGen>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Utilities\Analytics.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\DoubleMetaphone.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\EnhancedTextInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\ExtensionMethods.cs" />
@@ -129,6 +128,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\ReadWriteCSV.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\ShortDoubleMetaphone.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\SortableBindingList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilities\Analytics.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\SpecialMethods.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -184,9 +184,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="$(MSBuildThisFileDirectory)Resources\Icons\Flagged.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="$(MSBuildThisFileDirectory)Resources\Icons\flogo_rgb_hex-brc-site-250.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="$(MSBuildThisFileDirectory)Resources\Icons\FTAnalyzer.ico">

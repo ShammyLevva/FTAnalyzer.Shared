@@ -1,12 +1,16 @@
 ﻿using GoogleAnalyticsTracker.Core;
 using GoogleAnalyticsTracker.Core.TrackerParameters;
 using GoogleAnalyticsTracker.Simple;
+using System.Globalization;
+using System.Threading.Tasks;
+#if __PC__
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+#elif __MACOS__
+using AppKit;
+#endif
 
 namespace FTAnalyzer.Utilities
 {
