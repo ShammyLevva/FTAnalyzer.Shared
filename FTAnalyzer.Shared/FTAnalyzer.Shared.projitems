@@ -129,6 +129,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\ReadWriteCSV.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\ShortDoubleMetaphone.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\SortableBindingList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilities\SpecialMethods.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)Resources\BingOSMaps.htm">
