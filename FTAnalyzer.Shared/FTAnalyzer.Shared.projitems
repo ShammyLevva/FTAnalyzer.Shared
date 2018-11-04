@@ -262,6 +262,7 @@
     <Content Include="$(MSBuildThisFileDirectory)Resources\ScottishParishes.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="$(MSBuildThisFileDirectory)Resources\Icons\flogo_rgb_hex-brc-site-250.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Properties\Messages.resx">
