@@ -30,9 +30,7 @@ namespace FTAnalyzer.Utilities
         public static string AppVersion { get; }
         public static string OSVersion { get; }
         public static string DeploymentType { get; }
-#if __MACOS__
         public static string GUID { get; }
-#endif
 
         static Analytics()
         {
@@ -42,6 +40,7 @@ namespace FTAnalyzer.Utilities
                 Settings.Default.GUID = Guid.NewGuid().ToString();
                 Settings.Default.Save();
             }
+            GUID = Settings.Default.GUID;
             OperatingSystem os = Environment.OSVersion;
             trackerEnvironment = new SimpleTrackerEnvironment(os.Platform.ToString(), os.Version.ToString(), os.VersionString);
             analyticsSession = new AnalyticsSession();
