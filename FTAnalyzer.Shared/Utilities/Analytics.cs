@@ -59,12 +59,12 @@ namespace FTAnalyzer.Utilities
                 userDefaults.Synchronize();
             }
             NSProcessInfo info = new NSProcessInfo();
+            OSVersion = $"MacOSX {info.OperatingSystemVersionString}";
             trackerEnvironment = new SimpleTrackerEnvironment("Mac OSX", info.OperatingSystemVersion.ToString(), OSVersion);
             analyticsSession = new AnalyticsSession();
             tracker = new SimpleTracker("UA-125850339-2", analyticsSession, trackerEnvironment);
             var app = (AppDelegate)NSApplication.SharedApplication.Delegate;
             AppVersion = app.Version;
-            OSVersion = $"MacOSX {info.OperatingSystemVersionString}";
             DeploymentType = "Mac Website";
 #endif
         }
