@@ -41,7 +41,7 @@ namespace FTAnalyzer.Utilities
         public static async Task<TrackingResult> TrackEventAsync(this SimpleTracker tracker, string category, string action, string label, long value = 1)
         {
 #if __PC__
-            string resolution = Screen.PrimaryScreen.Bounds.ToString()
+            string resolution = Screen.PrimaryScreen.Bounds.ToString();
 #elif __MACOS__
             string resolution = NSScreen.MainScreen.Frame.ToString();
 #endif
@@ -69,7 +69,7 @@ namespace FTAnalyzer.Utilities
         public static async Task<TrackingResult> TrackScreenviewAsync(this SimpleTracker tracker, string screen)
         {
 #if __PC__
-            string resolution = Screen.PrimaryScreen.Bounds.ToString()
+            string resolution = Screen.PrimaryScreen.Bounds.ToString();
 #elif __MACOS__
             string resolution = NSScreen.MainScreen.Frame.ToString();
 #endif

@@ -23,9 +23,33 @@ namespace FTAnalyzer.Utilities
         public const string MainFormAction = "Main Form Action", FactsFormAction = "Facts Form Action", CensusTabAction = "Census Tab Action",
                             ReportsAction = "Reports Action", LostCousinsAction = "Lost Cousins Action", GeocodingAction = "Geocoding Action",
                             ExportAction = "Export Action", MapsAction = "Maps Action", CensusSearchAction = "Census Search Action",
-                            BMDSearchAction = "BMD Search Action", FTAStartupAction = "FTAnalyzer Startup", FTAShutdownAction = "FTAnalyzer Shutdown";
+                            BMDSearchAction = "BMD Search Action", FTAStartupAction = "FTAnalyzer Startup", FTAShutdownAction = "FTAnalyzer Shutdown",
+                            MainListsAction = "Main Lists Action", ErrorsFixesAction = "Error Fixes Action";
 
-        public const string LoadEvent = "Load Program", UsageEvent = "Usage Time";
+        public const string LoadProgramEvent = "Load Program", UsageEvent = "Usage Time", LoadGEDCOMEvent = "Load GEDCOM", TreetopsEvent = "Treetops Report Clicked",
+                            WWIReportEvent = "WWI Report Clicked", WWIIReportEvent = "WWII Report Clicked", BirthProfileEvent = "Birth Profiles Viewed",
+                            OnlineManualEvent = "Online Manual Viewed", OnlineGuideEvent = "Online Guides Viewed", PrivacyEvent = "Privacy Policy Viewed",
+                            OlderParentsEvent = "Older Parents Viewed", ReportIssueEvent = "Report Issue Visited", WhatsNewEvent = "Whats New Viewed",
+                            ShowTimelinesEvent = "Show Timelines Viewed", GoogleGeocodingEvent = "Google Geocoding Clicked", OSGeocodingEvent = "OS Geocoding Clicked",
+                            ReverseGeocodingEvent = "Reverse Geocoding Clicked", GeocodesEvent = "Geocodes Viewed", LifelinesEvent = "Show Lifelines Viewed",
+                            ShowPlacesEvent = "Show Places Viewed", ViewAllSurnameEvent = "View all with Surname Clicked", GOONSEvent = "Show Guild of One Name Studies",
+                            PossibleCensusEvent = "Possible Census Facts Viewed", MainListsEvent = "Main Lists Tab Viewed", ErrorsFixesEvent = "Errors Fixes Tab Viewed",
+                            FactsTabEvent = "Facts Tab Viewed", SurnamesTabEvent = "Surnames Tab Viewed", CensusTabEvent = "Census Tab Viewed",
+                            TreetopsTabEvent = "Treetops Tab Viewed", WorldWarsTabEvent = "World Wars Tab Viewed", TodayTabEvent = "Today Tab Viewed",
+                            LostCousinsTabEvent = "Lost Cousins Tab Viewed", LocationTabViewed = "Locations Tab Viewed", IndividualsTabEvent = "Individuals Tab Viewed",
+                            FamilyTabEvent = "Families Tab Viewed", SourcesTabEvent = "Sources Tab Viewed", OccupationsTabEvent = "Occupations Tab Viewed",
+                            DuplicatesTabEvent = "Duplicates Tab Viewed", LooseBirthsEvent = "Loose Births Tab Viewed", LooseDeathsEvent = "Loose Deaths Tab Viewed",
+                            LCReportYearEvent = "LC Year Report Run", NoLCCountryEvent = "No LC Country Clicked", LCDuplicatesEvent = "LC Duplicates Clicked",
+                            NoLCCensusEvent = "No LC Census Clicked", LCWebLinkEvent = "LC Weblink Clicked", OptionsEvent = "Options Viewed", DBBackupEvent = "Database Backedup",
+                            DBRestoreEvent = "Database Restored", ShowCensusEvent = "Show on Census", MissingCensusEvent = "Show Missing from Census", 
+                            MissingCensusLocationEvent = "Missing Census Location Clicked", DuplicateCensusEvent = "Duplicate Census Clicked",
+                            NoChildrenStatusEvent = "No Children Status Clicked", MisMatchedEvent = "Mismatched Children Clicked", UnrecognisedCensusEvent = "Unrecognised Census Ref",
+                            ColourBMDEvent = "Colour BMD Report Clicked", ColourCensusEvent = "Colour Census Report Clicked", ExportIndEvent = "Individuals Exported",
+                            ExportFamEvent = "Families Exported", ExportFactsEvent = "Facts Exported", ExportLooseBirthsEvent = "Loose Births Exported", 
+                            ExportLooseDeathsEvent = "Loose Deaths Exported", ExportSourcesEvent = "Sources Exported", ExportTreeTopsEvent = "Treetops Exported",
+                            ExportWorldWarsEvent = "World Wars Exported", TodayClickedEvent = "Todays Events Clicked", ShowSurnamesEvent = "Show Surnames Clicked",
+                            CousinCountEvent = "Cousins Count Viewed", DirectsReportEvent = "How Many Directs Viewed", FacebookSupportEvent = "Visited Facebook Support",
+                            FacebookUsersEvent = "Visited Facebook Usergroup";
 
         public static string AppVersion { get; }
         public static string OSVersion { get; }
@@ -72,7 +96,7 @@ namespace FTAnalyzer.Utilities
         {
             try
             {
-                await SpecialMethods.TrackEventAsync(tracker, FTAStartupAction, LoadEvent, AppVersion).ConfigureAwait(false);
+                await SpecialMethods.TrackEventAsync(tracker, FTAStartupAction, LoadProgramEvent, AppVersion).ConfigureAwait(false);
                 await SpecialMethods.TrackScreenviewAsync(tracker, FTAStartupAction).ConfigureAwait(false);
             }
             catch (Exception e)
