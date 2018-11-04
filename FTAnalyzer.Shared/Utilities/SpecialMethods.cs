@@ -47,8 +47,8 @@ namespace FTAnalyzer.Utilities
 #endif
             var eventTrackingParameters = new EventTracking
             {
-                ClientId = Properties.Settings.Default.GUID.ToString(),
-                UserId = Properties.Settings.Default.GUID.ToString(),
+                ClientId = Analytics.GUID,
+                UserId = Analytics.GUID,
                 ApplicationName = "FTAnalyzer",
                 ApplicationVersion = Analytics.AppVersion,
                 Category = category,
@@ -75,9 +75,8 @@ namespace FTAnalyzer.Utilities
 #endif
             var screenViewTrackingParameters = new ScreenviewTracking
             {
-                ClientId = Properties.Settings.Default.GUID.ToString(),
-                UserId = Properties.Settings.Default.GUID.ToString(),
-
+                ClientId = Analytics.GUID,
+                UserId = Analytics.GUID,
                 ApplicationName = "FTAnalyzer",
                 ApplicationVersion = Analytics.AppVersion,
                 ScreenName = screen,
