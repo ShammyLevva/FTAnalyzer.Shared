@@ -30,9 +30,7 @@ namespace FTAnalyzer.Utilities
         public static string AppVersion { get; }
         public static string OSVersion { get; }
         public static string DeploymentType { get; }
-#if __MACOS__
         public static string GUID { get; }
-#endif
 
         static Analytics()
         {
@@ -42,6 +40,7 @@ namespace FTAnalyzer.Utilities
                 Settings.Default.GUID = Guid.NewGuid().ToString();
                 Settings.Default.Save();
             }
+            GUID = Settings.Default.GUID;
             OperatingSystem os = Environment.OSVersion;
             trackerEnvironment = new SimpleTrackerEnvironment(os.Platform.ToString(), os.Version.ToString(), os.VersionString);
             analyticsSession = new AnalyticsSession();
@@ -59,12 +58,12 @@ namespace FTAnalyzer.Utilities
                 userDefaults.Synchronize();
             }
             NSProcessInfo info = new NSProcessInfo();
+            OSVersion = $"MacOSX {info.OperatingSystemVersionString}";
             trackerEnvironment = new SimpleTrackerEnvironment("Mac OSX", info.OperatingSystemVersion.ToString(), OSVersion);
             analyticsSession = new AnalyticsSession();
             tracker = new SimpleTracker("UA-125850339-2", analyticsSession, trackerEnvironment);
             var app = (AppDelegate)NSApplication.SharedApplication.Delegate;
             AppVersion = app.Version;
-            OSVersion = $"MacOSX {info.OperatingSystemVersionString}";
             DeploymentType = "Mac Website";
 #endif
         }
