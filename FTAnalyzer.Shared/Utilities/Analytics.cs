@@ -96,8 +96,8 @@ namespace FTAnalyzer.Utilities
         {
             try
             {
-                await SpecialMethods.TrackEventAsync(tracker, FTAStartupAction, LoadProgramEvent, AppVersion).ConfigureAwait(false);
-                await SpecialMethods.TrackScreenviewAsync(tracker, FTAStartupAction).ConfigureAwait(false);
+                await tracker.TrackEventAsync(FTAStartupAction, LoadProgramEvent, AppVersion).ConfigureAwait(false);
+                await tracker.TrackScreenviewAsync(FTAStartupAction).ConfigureAwait(false);
             }
             catch (Exception e)
                 { Console.WriteLine(e.Message); }
@@ -108,8 +108,8 @@ namespace FTAnalyzer.Utilities
         {
             try
             {
-                await SpecialMethods.TrackEventAsync(tracker, category, action, value).ConfigureAwait(false);
-                await SpecialMethods.TrackScreenviewAsync(tracker, category).ConfigureAwait(false);
+                await tracker.TrackEventAsync(category, action, value).ConfigureAwait(false);
+                await tracker.TrackScreenviewAsync(category).ConfigureAwait(false);
             }
             catch (Exception e)
                 { Console.WriteLine(e.Message); }
