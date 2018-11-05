@@ -18,6 +18,7 @@ namespace FTAnalyzer.Utilities
         {
             // Make sure adding/subtracting years won't put date 
             // over DateTime.MaxValue or below DateTime.MinValue
+            if ((date == FactDate.MINDATE && years < 0) || (date == FactDate.MAXDATE && years > 0)) return date;
             try
             {
                 date = date.AddYears(years);
@@ -31,7 +32,7 @@ namespace FTAnalyzer.Utilities
             return date;
         }
 
-        public static Boolean StartsWithNumeric(this String input)
+        public static bool StartsWithNumeric(this string input)
         {
             if (input.Length == 0) return false;
             char first = input[0];

@@ -429,13 +429,13 @@ namespace FTAnalyzer
                     else
                     {
                         string message = (node == null) ? string.Empty : node.InnerText + ". ";
-                        throw new InvalidXMLFactException(message + $"\n            Error {te.Message} text in non death fact.\n");
+                        throw new InvalidXMLFactException(message + $"\n            Error {te.Message} text in {FactTypeDescription} fact - a non death fact.\n");
                     }
                 }
                 catch (Exception ex)
                 {
                     string message = (node == null) ? string.Empty : node.InnerText + ". ";
-                    throw new InvalidXMLFactException(message + $"\n            Error {ex.Message}\n");
+                    throw new InvalidXMLFactException(message + $"\n            Error {ex.Message} in {FactTypeDescription} fact\n");
                 }
             }
         }

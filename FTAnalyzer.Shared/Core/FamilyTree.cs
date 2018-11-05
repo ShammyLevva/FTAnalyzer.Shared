@@ -1148,17 +1148,20 @@ namespace FTAnalyzer
 
         private void AlreadyDirect(Individual parent, long newAhnatafel, IProgress<string> outputText)
         {
-            // Hmm interesting a direct parent who is already a direct
-            string currentRelationship = Relationship.CalculateRelationship(RootPerson, parent);
-            string currentLine = Relationship.AhnentafelToString(parent.Ahnentafel);
-            string newLine = Relationship.AhnentafelToString(newAhnatafel);
-            if (parent.Ahnentafel > newAhnatafel)
-                parent.Ahnentafel = newAhnatafel; // set to lower line if new direct
-            if(outputText != null)
+            if (GeneralSettings.Default.ShowMultiAncestors)
             {
-                outputText.Report(parent.Name + " detected as a direct ancestor more than once as:\n");
-                outputText.Report(currentLine + " and as:\n");
-                outputText.Report(newLine + "\n\n");
+                // Hmm interesting a direct parent who is already a direct
+                string currentRelationship = Relationship.CalculateRelationship(RootPerson, parent);
+                string currentLine = Relationship.AhnentafelToString(parent.Ahnentafel);
+                string newLine = Relationship.AhnentafelToString(newAhnatafel);
+                if (parent.Ahnentafel > newAhnatafel)
+                    parent.Ahnentafel = newAhnatafel; // set to lower line if new direct
+                if (outputText != null)
+                {
+                    outputText.Report(parent.Name + " detected as a direct ancestor more than once as:\n");
+                    outputText.Report(currentLine + " and as:\n");
+                    outputText.Report(newLine + "\n\n");
+                }
             }
         }
 

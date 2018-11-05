@@ -274,7 +274,22 @@ namespace FTAnalyzer.Properties {
                 this["TreatFemaleSurnamesAsUnknown"] = value;
             }
         }
-        
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowMultiAncestors
+        {
+            get
+            {
+                return ((bool)(this["ShowMultiAncestors"]));
+            }
+            set
+            {
+                this["ShowMultiAncestors"] = value;
+            }
+        }
+
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]

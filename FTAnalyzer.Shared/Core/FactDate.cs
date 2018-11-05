@@ -33,6 +33,7 @@ namespace FTAnalyzer
         private static readonly string EARLY_DATE_PATTERN = "^(\\d{3})$";
         private static readonly string DOUBLE_DATE_PATTERN = "^(\\d{0,2} )?([A-Za-z]{0,3}) *(\\d{0,4})/(\\d{0,2})$";
         private static readonly string DOUBLE_DATE_PATTERN2 = "^(\\d{0,2} )?([A-Za-z]{0,3}) *(\\d{4})/(\\d{4})$";
+        private static readonly string DOUBLE_DATE_PATTERN3 = "^(\\d{0,2} )?([A-Za-z]{0,3}) *(\\d{3})/(\\d{2,3})$";
         private static readonly string POSTFIX = "(\\d{1,2})(?:ST|ND|RD|TH)(.*)";
         private static readonly string BETWEENFIX = "(\\d{4}) *- *(\\d{4})";
         private static readonly string BETWEENFIX2 = "([A-Za-z]{0,3}) *(\\d{4}) *- *([A-Za-z]{0,3}) *(\\d{4})";
@@ -57,6 +58,7 @@ namespace FTAnalyzer
                 ["EARLY_DATE_PATTERN"] = new Regex(EARLY_DATE_PATTERN, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["DOUBLE_DATE_PATTERN"] = new Regex(DOUBLE_DATE_PATTERN, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["DOUBLE_DATE_PATTERN2"] = new Regex(DOUBLE_DATE_PATTERN2, RegexOptions.Compiled | RegexOptions.IgnoreCase),
+                ["DOUBLE_DATE_PATTERN3"] = new Regex(DOUBLE_DATE_PATTERN3, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["POSTFIX"] = new Regex(POSTFIX, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["BETWEENFIX"] = new Regex(BETWEENFIX, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["BETWEENFIX2"] = new Regex(BETWEENFIX2, RegexOptions.Compiled | RegexOptions.IgnoreCase),
@@ -564,16 +566,15 @@ namespace FTAnalyzer
                 {   // Try matching double date pattern
                     matcher = _datePatterns["DOUBLE_DATE_PATTERN"].Match(dateValue);
                     matcher2 = _datePatterns["DOUBLE_DATE_PATTERN2"].Match(dateValue);
-                    matcher = Regex.Match(dateValue, DOUBLE_DATE_PATTERN);
-                    matcher2 = Regex.Match(dateValue, DOUBLE_DATE_PATTERN2);
+                    Match matcher3 = _datePatterns["DOUBLE_DATE_PATTERN3"].Match(dateValue);
                     if (matcher.Success)
                     {
                         gDay = matcher.Groups[1];
                         gMonth = matcher.Groups[2];
                         gYear = matcher.Groups[3];
                         gDouble = matcher.Groups[4];
-                        if (dateValue.Length > 3)
-                            dateValue = dateValue.Substring(0, dateValue.Length - gDouble.ToString().Length - 1); // remove the trailing / and 1 or 2 digits
+                        if (dateValue.IndexOf("/") > 0)
+                            dateValue = dateValue.Substring(0, dateValue.IndexOf("/")); // remove the trailing / and 1 or 2 digits
                     }
                     else if (matcher2.Success)
                     {
@@ -583,6 +584,15 @@ namespace FTAnalyzer
                         gDouble = matcher2.Groups[4];
                         if (dateValue.Length > 5)
                             dateValue = dateValue.Substring(0, dateValue.Length - 5); // remove the trailing / and 4 digits
+                    }
+                    else if (matcher3.Success)
+                    {
+                        gDay = matcher3.Groups[1];
+                        gMonth = matcher3.Groups[2];
+                        gYear = matcher3.Groups[3];
+                        gDouble = matcher3.Groups[4];
+                        if (dateValue.IndexOf("/") > 0)
+                            dateValue = dateValue.Substring(0, dateValue.IndexOf("/")); // remove the trailing / and 1 or 2 digits
                     }
                     else if (Properties.NonGedcomDate.Default.UseNonGedcomDates)
                     {
@@ -711,9 +721,11 @@ namespace FTAnalyzer
             string doubleyear = gDouble.ToString().Trim();
             if (doubleyear.Length == 4)
                 doubleyear = doubleyear.Substring(2);
+            if (doubleyear.Length == 3)
+                doubleyear = doubleyear.Substring(1, 2);
             if (doubleyear.Length == 1 && year.Length >= 2)
                 doubleyear = year.Substring(year.Length - 2, 1) + doubleyear;
-            if (doubleyear == null || (doubleyear.Length != 2 && doubleyear.Length != 4) || year.Length < 3)
+            if (doubleyear == null || doubleyear.Length < 2 || doubleyear.Length > 4 || year.Length < 3)
             {
                 DoubleDateError = "Year part of double date is an invalid length.";
                 return false;
@@ -734,9 +746,18 @@ namespace FTAnalyzer
                 DoubleDateError = "Double date year should be 99/00 if it crosses century.";
                 return false; // check for change of century year
             }
-            int iDoubleYear = doubleyear == "00" ?
+            int iDoubleYear;
+            if (year.Length == 3)
+            {
+                iDoubleYear = doubleyear == "00" ?
+               Convert.ToInt32((Convert.ToInt32(year.Substring(0, 1)) + 1).ToString() + doubleyear) :
+               Convert.ToInt32(year.Substring(0, 1) + doubleyear);
+            } else
+            {
+                iDoubleYear = doubleyear == "00" ?
                 Convert.ToInt32((Convert.ToInt32(year.Substring(0, 2)) + 1).ToString() + doubleyear) :
                 Convert.ToInt32(year.Substring(0, 2) + doubleyear);
+            }
             if (iDoubleYear - iYear != 1)
             {
                 DoubleDateError = "Double date years must be for adjacent years.";
