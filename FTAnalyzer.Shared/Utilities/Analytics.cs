@@ -51,6 +51,10 @@ namespace FTAnalyzer.Utilities
                             CousinCountEvent = "Cousins Count Viewed", DirectsReportEvent = "How Many Directs Viewed", FacebookSupportEvent = "Visited Facebook Support",
                             FacebookUsersEvent = "Visited Facebook Usergroup";
 
+        public const string FactsIndividualsEvent = "Individual Facts Viewed", FactsFamiliesEvent = "Family Facts Viewed", 
+                            FactsGroupIndividualsEvent = "Various Individuals Facts Viewed", FactsDuplicatesEvent = "Duplicate Facts Viewed", 
+                            FactsCensusRefEvent = "Census References Facts Viewed", FactsSourceEvent = "Facts for Source Viewed", FactsCensusRefIssueEvent = "Census Ref Issue Viewed";
+
         public static string AppVersion { get; }
         public static string OSVersion { get; }
         public static string DeploymentType { get; }
