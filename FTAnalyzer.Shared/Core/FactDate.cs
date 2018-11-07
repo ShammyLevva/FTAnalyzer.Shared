@@ -151,6 +151,9 @@ namespace FTAnalyzer
             str = str.Replace("   ", " ");
             str = str.Replace("  ", " ");
             str = str.Replace("  ", " ");
+            str = str.Replace("\'", "");
+            str = str.Replace("\"", "");
+            str = str.Replace("`", "");
 
             str = str.Replace("JANUARY", "JAN");
             str = str.Replace("FEBRUARY", "FEB");
@@ -272,9 +275,17 @@ namespace FTAnalyzer
             str = str.Replace("ABT ABT", "ABT"); // fix any ABT X QTR's that will have been changed to ABT ABT
             str = str.Replace("BET ABT", "ABT"); // fix any BET XXX-XXX QTR's that will have been changed to BET ABT
 
-            if (str.IndexOf("TO") > 1)
+            str = str.Replace("MON", "");
+            str = str.Replace("TUE", "");
+            str = str.Replace("WED", "");
+            str = str.Replace("THU", "");
+            str = str.Replace("FRI", "");
+            str = str.Replace("SAT", "");
+            str = str.Replace("SUN", "");
+
+            if (str.IndexOf("TO", StringComparison.Ordinal) > 1)
             {  // contains TO but doesn't start with TO
-                if (!str.StartsWith("FROM"))
+                if (!str.StartsWith("FROM", StringComparison.Ordinal))
                     str = "FROM " + str;
             }
             if (str.StartsWith("FROM"))
