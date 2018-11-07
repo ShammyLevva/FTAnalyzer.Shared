@@ -25,45 +25,45 @@ namespace FTAnalyzer
             Icon = FactImage.ErrorIcon(fact.FactErrorLevel).Icon;
 #endif
         }
-        public FactDate DateofBirth { get { return Ind == null ? FactDate.UNKNOWN_DATE : Ind.BirthDate; } }
-        public string TypeOfFact { get { return Fact.FactTypeDescription; } }
-        public FactDate FactDate { get { return Fact.FactDate; } }
-        public FactLocation Location { get { return Fact.Location; } }
-        public IList<FactSource> Sources { get { return Fact.Sources; } }
-        public double Latitude { get { return Fact.Location.Latitude; } }
-        public double Longitude { get { return Fact.Location.Longitude; } }
-        public string Comment { get { return Fact.Comment; } }
-        public string IndividualID { get { return Ind == null ? string.Empty : Ind.IndividualID; } }
-        public Age AgeAtFact { get { return Ind?.GetAge(Fact.FactDate, Fact.FactType); } }
-        public string SourceList { get { return Fact.SourceList;  } }
-        public CensusReference CensusReference { get { return Fact.CensusReference; } }
-        public string CensusRefYear { get { return Fact.CensusReference.CensusYear.IsKnown ? Fact.CensusReference.CensusYear.ToString() : string.Empty; } }
-        public string FoundLocation { get { return Fact.Location.FoundLocation; } }
-        public string FoundResultType { get { return Fact.Location.FoundResultType; } }
-        public string GeocodeStatus { get { return Fact.Location.Geocoded; } }
+        public FactDate DateofBirth => Ind == null ? FactDate.UNKNOWN_DATE : Ind.BirthDate;
+        public string TypeOfFact => Fact.FactTypeDescription;
+        public FactDate FactDate => Fact.FactDate;
+        public FactLocation Location => Fact.Location;
+        public IList<FactSource> Sources => Fact.Sources;
+        public double Latitude => Fact.Location.Latitude;
+        public double Longitude => Fact.Location.Longitude;
+        public string Comment => Fact.Comment;
+        public string IndividualID => Ind == null ? string.Empty : Ind.IndividualID;
+        public Age AgeAtFact => Ind?.GetAge(Fact.FactDate, Fact.FactType);
+        public string SourceList => Fact.SourceList;
+        public CensusReference CensusReference => Fact.CensusReference;
+        public string CensusRefYear => Fact.CensusReference.CensusYear.IsKnown ? Fact.CensusReference.CensusYear.ToString() : string.Empty;
+        public string FoundLocation => Fact.Location.FoundLocation;
+        public string FoundResultType => Fact.Location.FoundResultType;
+        public string GeocodeStatus => Fact.Location.Geocoded;
 #if __PC__
-        public System.Drawing.Image LocationIcon { get { return FactLocationImage.ErrorIcon(Fact.Location.GeocodeStatus).Icon; } }
+        public System.Drawing.Image LocationIcon => FactLocationImage.ErrorIcon(Fact.Location.GeocodeStatus).Icon;
 #endif
-        public string Relation { get { return Ind == null ? string.Empty : Ind.Relation; } }
-        public string RelationToRoot { get { return Ind == null ? string.Empty : Ind.RelationToRoot; } }
-        public string SurnameAtDate { get { return Ind == null ? string.Empty : Ind.SurnameAtDate(FactDate); } }
-        public bool Preferred { get { return Fact.Preferred; } }
+        public string Relation => Ind == null ? string.Empty : Ind.Relation;
+        public string RelationToRoot => Ind == null ? string.Empty : Ind.RelationToRoot;
+        public string SurnameAtDate => Ind == null ? string.Empty : Ind.SurnameAtDate(FactDate);
+        public bool Preferred => Fact.Preferred;
         public bool IgnoreFact { get; set; }
-        public string FactHash { get { return Ind == null ? Fact.Preferred + Fact.FactTypeDescription + Fact.DateString + Fact.Location.GEDCOMLocation :
-                                                            Ind.IndividualID + Fact.Preferred + Fact.FactTypeDescription + Fact.DateString + Fact.Location.GEDCOMLocation; } }
-        
+        public string FactHash => Ind == null ? Fact.Preferred + Fact.FactTypeDescription + Fact.DateString + Fact.Location.GEDCOMLocation :
+                                              Ind.IndividualID + Fact.Preferred + Fact.FactTypeDescription + Fact.DateString + Fact.Location.GEDCOMLocation;
+
         public int CompareTo(object obj)
         {
             DisplayFact that = (DisplayFact)obj;
-            if (this.FactDate == that.FactDate && Ind != null)
-                return this.Ind.CompareTo(that.Ind);
-            return this.FactDate.CompareTo(that.FactDate);
+            if (FactDate == that.FactDate && Ind != null)
+                return Ind.CompareTo(that.Ind);
+            return FactDate.CompareTo(that.FactDate);
         }
 
         public override bool Equals(object obj)
         {
             DisplayFact that = (DisplayFact)obj;
-            return this.FactHash.Equals(that.FactHash); //this.Ind.Equals(that.Ind) && this.Fact.Equals(that.Fact);
+            return FactHash.Equals(that.FactHash); //this.Ind.Equals(that.Ind) && this.Fact.Equals(that.Fact);
         }
 
         public override int GetHashCode()
