@@ -3,7 +3,6 @@ using GoogleAnalyticsTracker.Core.TrackerParameters;
 using GoogleAnalyticsTracker.Simple;
 using System.Globalization;
 using System.Threading.Tasks;
-using FTAnalyzer.Mac;
 #if __PC__
 using System;
 using System.Collections.Generic;
@@ -11,6 +10,7 @@ using System.Linq;
 using System.Windows.Forms;
 #elif __MACOS__
 using AppKit;
+using FTAnalyzer.Mac;
 #endif
 
 namespace FTAnalyzer.Utilities

@@ -169,6 +169,30 @@ namespace FTAnalyzer
             str = str.Replace("NOVEMBER", "NOV");
             str = str.Replace("DECEMBER", "DEC");
 
+            // fix missing space between month and year for 1000-2999
+            str = str.Replace("JAN1", "JAN 1");
+            str = str.Replace("FEB1", "FEB 1");
+            str = str.Replace("MAR1", "MAR 1");
+            str = str.Replace("APR1", "APR 1");
+            str = str.Replace("JUN1", "JUN 1");
+            str = str.Replace("JUL1", "JUL 1");
+            str = str.Replace("AUG1", "AUG 1");
+            str = str.Replace("SEP1", "SEP 1");
+            str = str.Replace("OCT1", "OCT 1");
+            str = str.Replace("NOV1", "NOV 1");
+            str = str.Replace("DEC1", "DEC 1");
+            str = str.Replace("JAN2", "JAN 2");
+            str = str.Replace("FEB2", "FEB 2");
+            str = str.Replace("MAR2", "MAR 2");
+            str = str.Replace("APR2", "APR 2");
+            str = str.Replace("JUN2", "JUN 2");
+            str = str.Replace("JUL2", "JUL 2");
+            str = str.Replace("AUG2", "AUG 2");
+            str = str.Replace("SEP2", "SEP 2");
+            str = str.Replace("OCT2", "OCT 2");
+            str = str.Replace("NOV2", "NOV 2");
+            str = str.Replace("DEC2", "DEC 2");
+
             // French
             str = str.Replace("JANVIER", "JAN");
             str = str.Replace("JANV", "JAN");
@@ -238,6 +262,7 @@ namespace FTAnalyzer
             str = str.Replace("1Q", "ABT MAR");
             str = str.Replace("QTR1", "ABT MAR");
             str = str.Replace("QTR 1 ", "ABT MAR ");
+            str = str.Replace("1 QTR ", "ABT MAR ");
             str = str.Replace("JUN QTR", "ABT JUN");
             str = str.Replace("JUN Q ", "ABT JUN ");
             str = str.Replace("APR MAY JUN", "ABT JUN");
@@ -249,6 +274,7 @@ namespace FTAnalyzer
             str = str.Replace("2Q", "ABT JUN");
             str = str.Replace("QTR2", "ABT JUN");
             str = str.Replace("QTR 2 ", "ABT JUN ");
+            str = str.Replace("2 QTR ", "ABT JUN ");
             str = str.Replace("SEP QTR", "ABT SEP");
             str = str.Replace("SEP Q ", "ABT SEP ");
             str = str.Replace("JUL AUG SEP", "ABT SEP");
@@ -260,6 +286,7 @@ namespace FTAnalyzer
             str = str.Replace("3Q", "ABT SEP");
             str = str.Replace("QTR3", "ABT SEP");
             str = str.Replace("QTR 3 ", "ABT SEP ");
+            str = str.Replace("3 QTR ", "ABT SEP ");
             str = str.Replace("DEC QTR", "ABT DEC");
             str = str.Replace("DEC Q ", "ABT DEC ");
             str = str.Replace("OCT NOV DEC", "ABT DEC");
@@ -271,6 +298,7 @@ namespace FTAnalyzer
             str = str.Replace("4Q", "ABT DEC");
             str = str.Replace("QTR4", "ABT DEC");
             str = str.Replace("QTR 4 ", "ABT DEC ");
+            str = str.Replace("4 QTR ", "ABT DEC ");
 
             str = str.Replace("ABT ABT", "ABT"); // fix any ABT X QTR's that will have been changed to ABT ABT
             str = str.Replace("BET ABT", "ABT"); // fix any BET XXX-XXX QTR's that will have been changed to BET ABT
