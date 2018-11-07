@@ -3,6 +3,7 @@ using GoogleAnalyticsTracker.Core.TrackerParameters;
 using GoogleAnalyticsTracker.Simple;
 using System.Globalization;
 using System.Threading.Tasks;
+using FTAnalyzer.Mac;
 #if __PC__
 using System;
 using System.Collections.Generic;
@@ -43,7 +44,7 @@ namespace FTAnalyzer.Utilities
 #if __PC__
             string resolution = Screen.PrimaryScreen.Bounds.ToString();
 #elif __MACOS__
-            string resolution = NSScreen.MainScreen.Frame.ToString();
+            string resolution = string.Empty;
 #endif
             var eventTrackingParameters = new EventTracking
             {
@@ -71,7 +72,7 @@ namespace FTAnalyzer.Utilities
 #if __PC__
             string resolution = Screen.PrimaryScreen.Bounds.ToString();
 #elif __MACOS__
-            string resolution = NSScreen.MainScreen.Frame.ToString();
+            string resolution = string.Empty;
 #endif
             var screenViewTrackingParameters = new ScreenviewTracking
             {
