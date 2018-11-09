@@ -42,6 +42,7 @@ namespace FTAnalyzer
         private static readonly string BETWEENFIX5 = "(\\d{1,2} )?([A-Za-z]{0,3}) *- *(\\d{1,2} )?([A-Za-z]{0,3}) *(\\d{4})";
         private static readonly string USDATEFIX = "^([A-Za-z]{3}) *(\\d{1,2} )(\\d{4})$";
         private static readonly string SPACEFIX = "^(\\d{1,2}) *([A-Za-z]{3}) *(\\d{0,4})$";
+        private static readonly string QUAKERFIX = "^(\\d{1,2})D (\\d{1,2})M (\\d{0,4})$";
 
         public static FactDate UNKNOWN_DATE;
         public static FactDate MARRIAGE_LESS_THAN_13;
@@ -67,6 +68,7 @@ namespace FTAnalyzer
                 ["BETWEENFIX5"] = new Regex(BETWEENFIX5, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["USDATEFIX"] = new Regex(USDATEFIX, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["SPACEFIX"] = new Regex(SPACEFIX, RegexOptions.Compiled | RegexOptions.IgnoreCase),
+                ["QUAKERFIX"] = new Regex(QUAKERFIX, RegexOptions.Compiled | RegexOptions.IgnoreCase),
             };
             UNKNOWN_DATE = new FactDate("UNKNOWN");
             MARRIAGE_LESS_THAN_13 = new FactDate("1600");
@@ -383,6 +385,15 @@ namespace FTAnalyzer
             {
                 string result = matcher.Groups[1].ToString() + " " + matcher.Groups[2].ToString() + " " + matcher.Groups[3].ToString();
                 return result.Trim();
+            }
+            matcher = _datePatterns["QUAKERFIX"].Match(str);
+            if (matcher.Success)
+            {
+                int day = int.Parse(matcher.Groups[1].ToString());
+                int month = 2 + int.Parse(matcher.Groups[2].ToString());
+                if (month > 12) month -= 12;
+                int year = int.Parse(matcher.Groups[3].ToString());
+                return new DateTime(year,month, day).ToString("dd MMMM yyyy");
             }
             return str.Trim();
         }
