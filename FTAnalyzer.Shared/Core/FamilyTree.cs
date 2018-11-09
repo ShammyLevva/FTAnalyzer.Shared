@@ -2400,7 +2400,7 @@ namespace FTAnalyzer
 
         private string BuildFreeBMDQuery(SearchType st, Individual individual, FactDate factdate)
         {
-            throw new CensusSearchException(Properties.Messages.NotYet);
+            throw new CensusSearchException(Messages.NotYet);
         }
 
         private string BuildFindMyPastQuery(SearchType st, Individual individual, FactDate factdate)
