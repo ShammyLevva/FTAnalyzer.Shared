@@ -181,9 +181,9 @@ namespace FTAnalyzer
                 forenameMetaphone = i.forenameMetaphone;
                 surnameMetaphone = i.surnameMetaphone;
                 MarriedName = i.MarriedName;
+                StandardisedName = i.StandardisedName;
                 _fullname = i._fullname;
                 SortedName = i.SortedName;
-                StandardisedName = i.StandardisedName;
                 IsFlaggedAsLiving = i.IsFlaggedAsLiving;
                 _gender = i._gender;
                 Alias = i.Alias;
@@ -267,20 +267,19 @@ namespace FTAnalyzer
 
         public IList<Fact> ErrorFacts { get; }
 
-        int _factcount = 0;
-
+        int Factcount { get; set; }
         public IList<Fact> AllFacts
         {
             get
             {
                 int currentFactCount = Facts.Count + FamilyFacts.Count;
-                if (_allfacts == null || currentFactCount != _factcount)
+                if (_allfacts == null || currentFactCount != Factcount)
                 {
                     _allfacts = new List<Fact>();
                     _allfacts.AddRange(PersonalFacts);
                     _allfacts.AddRange(FamilyFacts);
                     _allFileFacts = _allfacts.Where(x => !x.Created).ToList();
-                    _factcount = _allfacts.Count;
+                    Factcount = _allfacts.Count;
                 }
                 return _allfacts;
             }
@@ -357,7 +356,7 @@ namespace FTAnalyzer
                     Surname = UNKNOWN_NAME;
                     _forenames = name;
                 }
-                if (Surname == "?" || Surname.ToLower() == "mnu" || Surname.Length == 0)
+                if (Surname == "?" || Surname.ToLower() == "mnu" || Surname.ToLower() == "lnu" || Surname.ToLower() == "_____" || Surname.Length == 0)
                     Surname = UNKNOWN_NAME;
                 if (GeneralSettings.Default.TreatFemaleSurnamesAsUnknown && !IsMale && Surname.StartsWith("(") && Surname.EndsWith(")"))
                     Surname = UNKNOWN_NAME;
