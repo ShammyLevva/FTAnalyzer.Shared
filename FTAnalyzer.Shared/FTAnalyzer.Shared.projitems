@@ -109,11 +109,6 @@
       <DependentUpon>MappingSettings.settings</DependentUpon>
       <AutoGen>True</AutoGen>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Properties\Messages.Designer.cs">
-      <DependentUpon>Messages.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Properties\NonGedcomDate.Designer.cs">
       <DependentUpon>NonGedcomDate.settings</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -263,12 +258,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="$(MSBuildThisFileDirectory)Resources\Icons\flogo_rgb_hex-brc-site-250.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Properties\Messages.resx">
-      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
-      <Generator>ResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)Properties\FileHandling.settings">
