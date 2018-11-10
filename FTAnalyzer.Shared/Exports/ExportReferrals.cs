@@ -31,19 +31,19 @@
         public string CensusDate => f.FactDate.ToString();
         public bool Include => ind.IsBloodDirect;
 
-        public string RelationType
+        string IExportReferrals.RelationType
         {
             get
             {
                 if (ind.RelationType == Individual.DIRECT)
-                    return Properties.Messages.Referral_Direct;
+                    return "Direct Ancestor";
                 if (ind.RelationType == Individual.BLOOD)
-                    return Properties.Messages.Referral_Blood;
+                    return "Blood Relation";
                 if (ind.RelationType == Individual.MARRIEDTODB)
-                    return Properties.Messages.Referral_Marriage;
+                    return "Marriage";
                 if (ind.RelationType == Individual.DESCENDANT)
-                    return Properties.Messages.Referral_Descendant;
-                else return string.Empty;
+                    return "Descendant";
+                return string.Empty;
             }
         }
 

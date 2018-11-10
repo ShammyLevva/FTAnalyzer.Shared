@@ -387,7 +387,7 @@ namespace FTAnalyzer
                         if (n.Attributes["REF"] != null)
                         {   // only process sources with a reference
                             string srcref = n.Attributes["REF"].Value;
-                            FactSource source = ft.GetSourceID(srcref);
+                            FactSource source = ft.GetSource(srcref);
                             if (source != null)
                             {
                                 Sources.Add(source);
@@ -817,14 +817,14 @@ namespace FTAnalyzer
         {
             if (factComment.Length == 0 && factPlace.Length > 0)
             {
-                if (factPlace.EndsWith("/"))
+                if (factPlace.EndsWith("/", StringComparison.Ordinal))
                 {
                     Comment = factPlace.Substring(0, factPlace.Length - 1);
                     Place = string.Empty;
                 }
                 else
                 {
-                    int slash = factPlace.IndexOf("/");
+                    int slash = factPlace.IndexOf("/", StringComparison.Ordinal);
                     if (slash >= 0)
                     {
                         Comment = factPlace.Substring(0, slash).Trim();

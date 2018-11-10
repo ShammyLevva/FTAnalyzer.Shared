@@ -1,7 +1,4 @@
-﻿using FTAnalyzer.Filters;
-using FTAnalyzer.Properties;
-using FTAnalyzer.Utilities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -15,6 +12,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Xml;
+using FTAnalyzer.Filters;
+using FTAnalyzer.Properties;
+using FTAnalyzer.Utilities;
 
 namespace FTAnalyzer
 {
@@ -36,8 +36,8 @@ namespace FTAnalyzer
         SortableBindingList<IDisplayLooseBirth> looseBirths;
         SortableBindingList<DuplicateIndividual> duplicates;
         readonly static int DATA_ERROR_GROUPS = 28;
-        static XmlNodeList noteNodes = null;
-        long maxAhnentafel = 0;
+        static XmlNodeList noteNodes;
+        long maxAhnentafel;
         Dictionary<string, Individual> individualLookup;
         string rootIndividualID = string.Empty;
 
@@ -353,7 +353,7 @@ namespace FTAnalyzer
             DataLoaded = true;
         }
 
-        private void LoadLegacyLocations(XmlNodeList list, IProgress<int> progress)
+        void LoadLegacyLocations(XmlNodeList list, IProgress<int> progress)
         {
             int max = list.Count / 2; // /2 to make locations load account for 50% of bar
             int counter = 0;
@@ -380,6 +380,7 @@ namespace FTAnalyzer
 
         public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
         {
+            outputText.Report("");
 #if __PC__
             try
             {
@@ -710,7 +711,7 @@ namespace FTAnalyzer
             });
         }
 
-        public FactSource GetSourceID(string sourceID) => sources.FirstOrDefault(s => s.SourceID == sourceID);
+        public FactSource GetSource(string sourceID) => sources.FirstOrDefault(s => s.SourceID == sourceID);
 
         public Individual GetIndividual(string individualID)
         {
@@ -743,7 +744,7 @@ namespace FTAnalyzer
             return ls;
         }
 
-        private void FixIDs()
+        void FixIDs()
         {
             int indLen = individuals.Count.ToString().Length;
             foreach (Individual ind in individuals)
@@ -932,7 +933,7 @@ namespace FTAnalyzer
             }
             if (startdate.Year != 1 && startdate.Year != FactDate.MAXDATE.Year && startdate < mindate)
                 return new FactDate(startdate, mindate);
-            else if (mindate.Year != 1 && mindate.Year != FactDate.MAXDATE.Year && mindate <= maxdate)
+            if (mindate.Year != 1 && mindate.Year != FactDate.MAXDATE.Year && mindate <= maxdate)
                 return new FactDate(mindate, maxdate);
             else
                 return FactDate.UNKNOWN_DATE;
@@ -1046,7 +1047,7 @@ namespace FTAnalyzer
             return maxdate;
         }
 
-        private DateTime GetMinDeathDate(Individual indiv)
+        DateTime GetMinDeathDate(Individual indiv)
         {
             FactDate deathDate = indiv.DeathDate;
             DateTime now = DateTime.Now;
@@ -1071,10 +1072,11 @@ namespace FTAnalyzer
             return deathDate.EndDate;
         }
 
-        void CheckLooseMarriage(Individual ind)
-        {
+        //TODO Check Loose Marriage
+        //void CheckLooseMarriage(Individual ind)
+        //{
 
-        }
+        //}
 
         #endregion
 
@@ -1178,7 +1180,7 @@ namespace FTAnalyzer
             }
         }
 
-        private void AddChildrenToQueue(Individual indiv, Queue<Individual> queue, bool isRootPerson)
+        void AddChildrenToQueue(Individual indiv, Queue<Individual> queue, bool isRootPerson)
         {
             IEnumerable<Family> parentFamilies = indiv.FamiliesAsParent;
             foreach (Family family in parentFamilies)
@@ -1189,10 +1191,7 @@ namespace FTAnalyzer
                     if (child.RelationType == Individual.BLOOD || child.RelationType == Individual.UNKNOWN)
                     {
                         child.RelationType = Individual.BLOOD;
-                        if (isRootPerson)
-                            child.Ahnentafel = indiv.Ahnentafel - 2;
-                        else
-                            child.Ahnentafel = indiv.Ahnentafel - 1;
+                        child.Ahnentafel = isRootPerson ? indiv.Ahnentafel - 2 : indiv.Ahnentafel - 1;
                         child.BudgieCode = "-" + Math.Abs(child.Ahnentafel).ToString().PadLeft(2, '0') + "c";
                         queue.Enqueue(child);
                     }
@@ -1265,8 +1264,8 @@ namespace FTAnalyzer
                     if (relationship == Individual.UNKNOWN)
                         ind.RelationType = Individual.MARRIAGE;
                     AddParentsToQueue(ind, queue);
-                    IEnumerable<Family> families = ind.FamiliesAsParent;
-                    foreach (Family family in families)
+                    IEnumerable<Family> parentFamilies = ind.FamiliesAsParent;
+                    foreach (Family family in parentFamilies)
                     {
                         family.SetSpouseRelation(ind, Individual.MARRIAGE);
                         // children of relatives by marriage that we haven't previously 
@@ -1299,12 +1298,7 @@ namespace FTAnalyzer
                 {
                     if (i.RelationToRoot == null && f.Spouse(i) != null && f.Spouse(i).IsBloodDirect)
                     {
-                        string relation = string.Empty;
-                        if (f.MaritalStatus != Family.MARRIED)
-                            relation = "partner";
-                        else
-                            relation = (i.IsMale ? "husband" : "wife");
-
+                        string relation = f.MaritalStatus != Family.MARRIED ? "partner" : i.IsMale ? "husband" : "wife";
                         i.RelationToRoot = $"{relation} of {f.Spouse(i).RelationToRoot}";
                         break;
                     }
@@ -1700,7 +1694,7 @@ namespace FTAnalyzer
                     var dupList = new List<Fact>();
                     foreach (string dfs in dup)
                     {
-                        var df = ind.AllFacts.Where(x => x.EqualHash.Equals(dfs)).First();
+                        var df = ind.AllFacts.First(x => x.EqualHash.Equals(dfs));
                         if (df != null)
                         {
                             dupList.Add(df);
@@ -1712,7 +1706,7 @@ namespace FTAnalyzer
                     var possDuplicates = ind.AllFileFacts.GroupBy(x => x.PossiblyEqualHash).Where(g => g.Count() > 1).Select(y => y.Key).ToList();
                     foreach (string pd in possDuplicates)
                     {
-                        var pdf = ind.AllFacts.Where(x => x.PossiblyEqualHash.Equals(pd)).First();
+                        var pdf = ind.AllFacts.First(x => x.PossiblyEqualHash.Equals(pd));
                         if (pdf != null && !dupList.Contains(pdf))
                         {
                             errors[(int)Dataerror.POSSIBLE_DUPLICATE_FACT].Add(
@@ -1863,7 +1857,7 @@ namespace FTAnalyzer
             return Fact.LOOSE_DEATH_FACTS.Contains(f.FactType) && f.FactDate.IsAfter(ind.DeathDate);
         }
 
-        public enum Dataerror : int
+        public enum Dataerror
         {
             BIRTH_AFTER_DEATH = 0, BIRTH_AFTER_FATHER_90 = 1, BIRTH_AFTER_MOTHER_60 = 2, BIRTH_AFTER_MOTHER_DEATH = 3,
             BIRTH_AFTER_FATHER_DEATH = 4, BIRTH_BEFORE_FATHER_13 = 5, BIRTH_BEFORE_MOTHER_13 = 6, BURIAL_BEFORE_DEATH = 7,
@@ -1890,10 +1884,7 @@ namespace FTAnalyzer
                     provider = "Ancestry";
                     break;
                 case 1:
-                    if (censusYear == 1939)
-                        uri = BuildFindMyPast1939Query(censusCountry, person);
-                    else
-                        uri = BuildFindMyPastQuery(censusCountry, censusYear, person);
+                    uri = censusYear == 1939 && censusCountry.Equals(Countries.UNITED_KINGDOM) ? BuildFindMyPast1939Query(person) : BuildFindMyPastQuery(censusCountry, censusYear, person);
                     provider = "FindMyPast";
                     break;
                 case 2:
@@ -1948,8 +1939,7 @@ namespace FTAnalyzer
                 collection = FamilySearch.CensusCollectionID(location, censusYear);
                 if (collection > 0)
                     path.Append("&collection_id=" + collection);
-                else
-                    if (Countries.IsUnitedKingdom(country))
+                else if (Countries.IsUnitedKingdom(country))
                 {
                     collection = FamilySearch.CensusCollectionID(Countries.ENGLAND, censusYear);
                     path.Append("&collection_id=" + collection);
@@ -1965,7 +1955,7 @@ namespace FTAnalyzer
         private string BuildAncestryQuery(string censusCountry, int censusYear, Individual person)
         {
             if (censusYear == 1939 && censusCountry.Equals(Countries.UNITED_KINGDOM))
-                return BuildAncestry1939Query(censusCountry, person);
+                return BuildAncestry1939Query(person);
             UriBuilder uri = new UriBuilder
             {
                 Host = "search.ancestry.co.uk",
@@ -2044,7 +2034,7 @@ namespace FTAnalyzer
             uri.Query = query.ToString();
             return uri.ToString();
         }
-        private string BuildAncestry1939Query(string censusCountry, Individual person)
+        private string BuildAncestry1939Query(Individual person)
         {
             UriBuilder uri = new UriBuilder
             {
@@ -2113,7 +2103,7 @@ namespace FTAnalyzer
             query.Append("y=" + censusYear + "&");
             if (person.Forenames != "?" && person.Forenames.ToUpper() != Individual.UNKNOWN_NAME)
             {
-                int pos = person.Forenames.IndexOf(" ");
+                int pos = person.Forenames.IndexOf(" ", StringComparison.Ordinal);
                 string forename = person.Forenames;
                 if (pos > 0)
                     forename = person.Forenames.Substring(0, pos); //strip out any middle names as FreeCen searches better without then
@@ -2188,7 +2178,7 @@ namespace FTAnalyzer
 
             if (person.Forenames != "?" && person.Forenames.ToUpper() != Individual.UNKNOWN_NAME)
             {
-                int pos = person.Forenames.IndexOf(" ");
+                int pos = person.Forenames.IndexOf(" ", StringComparison.Ordinal);
                 string forenames = person.Forenames;
                 if (pos > 0)
                     forenames = person.Forenames.Substring(0, pos); //strip out any middle names as searches better without then
@@ -2248,7 +2238,7 @@ namespace FTAnalyzer
             return uri.ToString();
         }
 
-        private string BuildFindMyPast1939Query(string censusCountry, Individual person)
+        string BuildFindMyPast1939Query(Individual person)
         {
             // new http://search.findmypast.co.uk/results/world-records/1939-register?firstname=frederick&firstname_variants=true&lastname=deakin&lastname_variants=true&yearofbirth=1879
             FactDate censusFactDate = CensusDate.UKCENSUS1939;
@@ -2261,7 +2251,7 @@ namespace FTAnalyzer
 
             if (person.Forenames != "?" && person.Forenames.ToUpper() != Individual.UNKNOWN_NAME)
             {
-                int pos = person.Forenames.IndexOf(" ");
+                int pos = person.Forenames.IndexOf(" ", StringComparison.Ordinal);
                 string forenames = person.Forenames;
                 if (pos > 0)
                     forenames = person.Forenames.Substring(0, pos); //strip out any middle names as searches better without then
@@ -2384,7 +2374,7 @@ namespace FTAnalyzer
             return uri.ToString();
         }
 
-        private static string RecordCountry(SearchType st, Individual individual, FactDate factdate)
+        static string RecordCountry(SearchType st, Individual individual, FactDate factdate)
         {
             string record_country = Countries.UNKNOWN_COUNTRY;
             if (Countries.IsKnownCountry(individual.BirthLocation.Country))
@@ -2398,12 +2388,12 @@ namespace FTAnalyzer
             return record_country;
         }
 
-        private string BuildFreeBMDQuery(SearchType st, Individual individual, FactDate factdate)
+        string BuildFreeBMDQuery(SearchType st, Individual individual, FactDate factdate)
         {
-            throw new CensusSearchException(Messages.NotYet);
+            throw new CensusSearchException("Not Yet");
         }
 
-        private string BuildFindMyPastQuery(SearchType st, Individual individual, FactDate factdate)
+        string BuildFindMyPastQuery(SearchType st, Individual individual, FactDate factdate)
         {
             UriBuilder uri = new UriBuilder
             {
@@ -2412,11 +2402,11 @@ namespace FTAnalyzer
             string record_country = RecordCountry(st, individual, factdate);
             if (Countries.IsUnitedKingdom(record_country))
                 uri.Path = "results/united-kingdom-records-in-birth-marriage-death-and-parish-records";
-            else if (record_country.Equals(Countries.UNITED_STATES))
+            else if (record_country == Countries.UNITED_STATES)
                 uri.Path = "results/united-states-records-in-birth-marriage-death-and-parish-records";
-            else if (record_country.Equals(Countries.NEW_ZEALAND) || record_country.Equals(Countries.AUSTRALIA))
+            else if (record_country == Countries.NEW_ZEALAND || record_country == Countries.AUSTRALIA)
                 uri.Path = "results/australia-and-new-zealand-records-in-birth-marriage-death-and-parish-records";
-            else if (record_country.Equals(Countries.IRELAND))
+            else if (record_country == Countries.IRELAND)
                 uri.Path = "results/ireland-records-in-birth-marriage-death-and-parish-records";
             else
                 uri.Path = "results/world-records-in-birth-marriage-death-and-parish-records";
@@ -2892,10 +2882,8 @@ namespace FTAnalyzer
                         URL = @"http://www.vizgr.org/historical-events/search.php?links=true&format=xml&begin_date=" + year.ToString() + chosenDate.ToString("MMdd", CultureInfo.InvariantCulture) +
                             "&end_date=" + year.ToString() + chosenDate.ToString("MMdd", CultureInfo.InvariantCulture);
                     XmlDocument doc = GetWikipediaData(URL);
-                    if (wholeMonth)
-                        eventDate = new FactDate(CreateDate(year, chosenDate.Month, 1), CreateDate(year, chosenDate.Month + 1, 1).AddDays(-1));
-                    else
-                        eventDate = new FactDate(CreateDate(year, chosenDate.Month, chosenDate.Day), CreateDate(year, chosenDate.Month, chosenDate.Day));
+                    eventDate = wholeMonth ? new FactDate(CreateDate(year, chosenDate.Month, 1), CreateDate(year, chosenDate.Month + 1, 1).AddDays(-1)) :
+                                             new FactDate(CreateDate(year, chosenDate.Month, chosenDate.Day), CreateDate(year, chosenDate.Month, chosenDate.Day));
                     if (doc.InnerText.Length > 0)
                     {
                         FactDate fd;
@@ -2917,11 +2905,11 @@ namespace FTAnalyzer
             return events;
         }
 
-        private static Regex brackets = new Regex("{{.*}}", RegexOptions.Compiled);
-        private static Regex links = new Regex("<a href=.*</a>", RegexOptions.Compiled);
-        private static Regex quotes = new Regex("(.*)quot(.*)quot(.*)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        static Regex brackets = new Regex("{{.*}}", RegexOptions.Compiled);
+        static Regex links = new Regex("<a href=.*</a>", RegexOptions.Compiled);
+        static Regex quotes = new Regex("(.*)quot(.*)quot(.*)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
-        private string FixWikiFormatting(string input)
+        string FixWikiFormatting(string input)
         {
             string result = input.Replace("ampampnbsp", " ").Replace("ampnbsp", " ").Replace("ampampndash", "-").Replace("ampndash", "-");
             //strip out {{cite xxxxx }} citation text with its urls
