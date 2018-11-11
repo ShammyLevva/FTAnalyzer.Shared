@@ -6,37 +6,25 @@ namespace FTAnalyzer
     {
         public static string HUSBAND = "Husband", WIFE = "Wife", CHILD = "Child", UNKNOWNSTATUS = "Unknown";
         
-        private CensusFamily family;
+        CensusFamily Family;
         public int Position { get; private set; }
         public string CensusStatus { get; private set; }
 
-        public CensusIndividual(int position, Individual individual, CensusFamily family, string CensusStatus)
+        public CensusIndividual(int position, Individual individual, CensusFamily family, string censusStatus)
             : base(individual)
         {
-            this.Position = position;
-            this.family = family;
-            this.CensusStatus = CensusStatus;
+            Position = position;
+            Family = family;
+            CensusStatus = censusStatus;
         }
 
-        public int FamilyMembersCount
-        {
-            get { return family.Members.Count<CensusIndividual>(); }
-        }
+        public int FamilyMembersCount => Family.Members.Count<CensusIndividual>();
 
-        public string FamilyID
-        {
-            get { return family.FamilyID; }
-        }
+        public string FamilyID => Family.FamilyID;
 
-        public FactLocation CensusLocation
-        {
-            get { return IsCensusDone(CensusDate) ? BestLocation(CensusDate) : family.BestLocation; }
-        }
+        public FactLocation CensusLocation => IsCensusDone(CensusDate) ? BestLocation(CensusDate) : Family.BestLocation;
 
-        public CensusDate CensusDate
-        {
-            get { return family.CensusDate; }
-        }
+        public CensusDate CensusDate => Family.CensusDate;
 
         public string CensusName
         {
@@ -47,20 +35,13 @@ namespace FTAnalyzer
                     string surname = Surname.Length > 0 ? $" ({Surname})" : string.Empty;
                     return $"{Forenames} {MarriedName} {surname}";
                 }
-                else
-                    return Name;
+                return Name;
             }
         }
 
-        public Age Age
-        {
-            get { return GetAge(CensusDate); }
-        }
+        public Age Age => GetAge(CensusDate);
 
-        public string CensusSurname
-        {
-            get { return family.Surname; }
-        }
+        public string CensusSurname => Family.Surname;
 
         public string CensusReference
         {
@@ -77,19 +58,9 @@ namespace FTAnalyzer
         public System.Windows.Forms.DataGridViewCellStyle CellStyle { get; set; }
 #endif
 
-        public bool IsValidLocation(string location)
-        {
-            if (!CensusLocation.IsKnownCountry)
-                return true;
-            else if (Countries.IsUnitedKingdom(location))
-                return CensusLocation.IsUnitedKingdom;
-            else
-                return CensusLocation.Country.Equals(location);
-        }
+        public bool IsValidLocation(string location) => 
+            !CensusLocation.IsKnownCountry || Countries.IsUnitedKingdom(location) ? CensusLocation.IsUnitedKingdom : CensusLocation.Country.Equals(location);
 
-        public override string ToString()
-        {
-            return $"{IndividualID}: {Name} b.{BirthDate}";
-        }
+        public override string ToString() => $"{IndividualID}: {Name} b.{BirthDate}";
     }
 }

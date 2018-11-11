@@ -113,16 +113,11 @@ namespace FTAnalyzer
             {
                 if ((checkCensus && indiv.IsCensusDone(CensusDate) == censusDone && !indiv.OutOfCountry(CensusDate)) || !checkCensus)
                 {
-                    if (parentCheck) // Husband or Wife with valid date range
-                        return true;
-                    else // individual is a child so remove if married before census date
-                        return !indiv.IsMarried(CensusDate);
+                    return parentCheck || !indiv.IsMarried(CensusDate);
                 }
-                else
-                    return false;
-            }
-            else
                 return false;
+            }
+            return false;
         }
 
         bool IsValidFamily()
@@ -134,13 +129,8 @@ namespace FTAnalyzer
             if (FamilyType == SOLOINDIVIDUAL || FamilyType == PRE_MARRIAGE)
                 return true; // allow solo individual families to be processed
 
-            // don't process family if either parent is under 16
-            if (Husband != null && Husband.GetMaxAge(CensusDate) < 16)
-                return false;
-
-            if (Wife != null && Wife.GetMaxAge(CensusDate) < 16)
-                return false;
-            return true;
+            // valid family if both parent are 16+
+            return Husband?.GetMaxAge(CensusDate) >= 16 && Wife?.GetMaxAge(CensusDate) >= 16;
         }
 
         public string Surname
