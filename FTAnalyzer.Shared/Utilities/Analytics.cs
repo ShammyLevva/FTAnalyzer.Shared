@@ -42,14 +42,15 @@ namespace FTAnalyzer.Utilities
                             LCReportYearEvent = "LC Year Report Run", NoLCCountryEvent = "No LC Country Clicked", LCDuplicatesEvent = "LC Duplicates Clicked",
                             NoLCCensusEvent = "No LC Census Clicked", LCWebLinkEvent = "LC Weblink Clicked", OptionsEvent = "Options Viewed", DBBackupEvent = "Database Backedup",
                             DBRestoreEvent = "Database Restored", ShowCensusEvent = "Show on Census", MissingCensusEvent = "Show Missing from Census", 
-                            MissingCensusLocationEvent = "Missing Census Location Clicked", DuplicateCensusEvent = "Duplicate Census Clicked",
+                            MissingCensusLocationEvent = "Missing Census Location Clicked", DuplicateCensusEvent = "Duplicate Census Clicked", DataErrorsTabEvent = "Data Errors Tab Viewed",
                             NoChildrenStatusEvent = "No Children Status Clicked", MisMatchedEvent = "Mismatched Children Clicked", UnrecognisedCensusEvent = "Unrecognised Census Ref",
                             ColourBMDEvent = "Colour BMD Report Clicked", ColourCensusEvent = "Colour Census Report Clicked", ExportIndEvent = "Individuals Exported",
                             ExportFamEvent = "Families Exported", ExportFactsEvent = "Facts Exported", ExportLooseBirthsEvent = "Loose Births Exported", 
                             ExportLooseDeathsEvent = "Loose Deaths Exported", ExportSourcesEvent = "Sources Exported", ExportTreeTopsEvent = "Treetops Exported",
                             ExportWorldWarsEvent = "World Wars Exported", TodayClickedEvent = "Todays Events Clicked", ShowSurnamesEvent = "Show Surnames Clicked",
                             CousinCountEvent = "Cousins Count Viewed", DirectsReportEvent = "How Many Directs Viewed", FacebookSupportEvent = "Visited Facebook Support",
-                            FacebookUsersEvent = "Visited Facebook Usergroup";
+                            FacebookUsersEvent = "Visited Facebook Usergroup", CountriesTabEvent = "Countries Tab Viewed", RegionsTabEvent = "Regions Tab Viewed",
+                            SubRegionsTabEvent = "SubRegions Tab Viewed", AddressesTabEvent = "Addresses Tab Viewed", PlacesTabEvent = "Places Tab Viewed";
 
         public const string FactsIndividualsEvent = "Individual Facts Viewed", FactsFamiliesEvent = "Family Facts Viewed", 
                             FactsGroupIndividualsEvent = "Various Individuals Facts Viewed", FactsDuplicatesEvent = "Duplicate Facts Viewed", 
