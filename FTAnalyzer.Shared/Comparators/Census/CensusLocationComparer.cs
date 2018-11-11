@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml;
-
 namespace FTAnalyzer
 {
     public class CensusLocationComparer : DefaultCensusComparer
@@ -18,12 +12,12 @@ namespace FTAnalyzer
             this.level = level;
         }
 
-        public override int Compare(CensusIndividual r1, CensusIndividual r2)
+        public override int Compare(CensusIndividual c1, CensusIndividual c2)
         {
-            FactLocation l1 = r1.CensusLocation;
-            FactLocation l2 = r2.CensusLocation;
+            FactLocation l1 = c1.CensusLocation;
+            FactLocation l2 = c2.CensusLocation;
             int comp = l1.CompareTo(l2, level);
-            if (comp == 0) comp = base.Compare(r1, r2);
+            if (comp == 0) comp = base.Compare(c1, c2);
             return comp;
         }
     }

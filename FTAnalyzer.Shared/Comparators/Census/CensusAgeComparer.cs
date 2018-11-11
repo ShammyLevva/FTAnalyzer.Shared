@@ -1,8 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml;
 
 namespace FTAnalyzer
 {
@@ -30,7 +26,7 @@ namespace FTAnalyzer
             return 0;
         }
 
-        private int SortBirthdate(Individual i1, Individual i2)
+        int SortBirthdate(Individual i1, Individual i2)
         {
             Fact b1 = i1.BirthFact;
             Fact b2 = i2.BirthFact;

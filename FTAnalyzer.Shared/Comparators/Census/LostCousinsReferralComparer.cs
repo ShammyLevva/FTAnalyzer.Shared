@@ -1,43 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace FTAnalyzer
 {
     public class LostCousinsReferralComparer : Comparer<ExportReferrals>
     {
-        public override int Compare(ExportReferrals a, ExportReferrals b)
+        public override int Compare(ExportReferrals x, ExportReferrals y)
         {
-            if (a.ShortCode.Equals(b.ShortCode))
+            if (x.ShortCode.Equals(y.ShortCode))
             {
-                if (a.Census.Equals(b.Census))
+                if (x.Census.Equals(y.Census))
                 {
-                    if (a.CensusReference.Equals(b.CensusReference))
+                    if (x.CensusReference.Equals(y.CensusReference))
                     {
-                        if (a.FamilyID.Equals(b.FamilyID))
+                        if (x.FamilyID.Equals(y.FamilyID))
                         {
-                            if (a.Age.Equals(b.Age))
+                            if (x.Age.Equals(y.Age))
                             {
-                                if (a.Surname.Equals(b.Surname))
-                                    return a.Forenames.CompareTo(b.Forenames);
-                                else
-                                    return a.Surname.CompareTo(b.Surname);
+                                return x.Surname.Equals(y.Surname)
+                                    ? string.Compare(x.Forenames, y.Forenames, StringComparison.Ordinal)
+                                    : string.Compare(x.Surname, y.Surname, StringComparison.Ordinal);
                             }
-                            else
-                                return b.Age.CompareTo(a.Age);
+                            return y.Age.CompareTo(x.Age);
                         }
-                        else
-                            return a.FamilyID.CompareTo(b.FamilyID);
+                        return string.Compare(x.FamilyID, y.FamilyID, StringComparison.Ordinal);
                     }
-                    else
-                        return a.CensusReference.CompareTo(b.CensusReference);
+                    return string.Compare(x.CensusReference, y.CensusReference, StringComparison.Ordinal);
                 }
-                else
-                    return a.Census.CompareTo(b.Census);
+                return string.Compare(x.Census, y.Census, StringComparison.Ordinal);
             }
-            else 
-                return a.ShortCode.CompareTo(b.ShortCode);
+            return string.Compare(x.ShortCode, y.ShortCode, StringComparison.Ordinal);
         }
     }
 }

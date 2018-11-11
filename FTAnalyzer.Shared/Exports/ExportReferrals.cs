@@ -2,46 +2,40 @@
 {
     public class ExportReferrals : IExportReferrals
     {
-        Individual ind;
-        Fact f;
-        Fact censusFact;
+        Individual Individual;
+        Fact Fact;
+        readonly Fact censusFact;
 
         public ExportReferrals(Individual ind, Fact f)
         {
-            this.ind = ind;
-            this.f = f;
+            Individual = ind;
+            Fact = f;
             censusFact = ind.GetCensusFact(f);
         }
 
-        public string CensusReference
-        {
-            get
-            {
-                if (censusFact == null)
-                    return "Census Not Found";
-                return censusFact.CensusReference == null ? string.Empty : censusFact.CensusReference.Reference;
-            }
-        }
-        public string IndividualID => ind.IndividualID;
-        public string FamilyID => ind.ReferralFamilyID;
-        public string Forenames => ind.Forenames;
-        public string Surname => ind.Surname;
-        public Age Age => ind.GetAge(f.FactDate);
-        public string Census => censusFact == null ? f.ToString() : censusFact.ToString();
-        public string CensusDate => f.FactDate.ToString();
-        public bool Include => ind.IsBloodDirect;
+        public string CensusReference => censusFact == null
+                    ? "Census Not Found"
+                    : censusFact.CensusReference == null ? string.Empty : censusFact.CensusReference.Reference;
+        public string IndividualID => Individual.IndividualID;
+        public string FamilyID => Individual.ReferralFamilyID;
+        public string Forenames => Individual.Forenames;
+        public string Surname => Individual.Surname;
+        public Age Age => Individual.GetAge(Fact.FactDate);
+        public string Census => censusFact == null ? Fact.ToString() : censusFact.ToString();
+        public string CensusDate => Fact.FactDate.ToString();
+        public bool Include => Individual.IsBloodDirect;
 
         string IExportReferrals.RelationType
         {
             get
             {
-                if (ind.RelationType == Individual.DIRECT)
+                if (Individual.RelationType == Individual.DIRECT)
                     return "Direct Ancestor";
-                if (ind.RelationType == Individual.BLOOD)
+                if (Individual.RelationType == Individual.BLOOD)
                     return "Blood Relation";
-                if (ind.RelationType == Individual.MARRIEDTODB)
+                if (Individual.RelationType == Individual.MARRIEDTODB)
                     return "Marriage";
-                if (ind.RelationType == Individual.DESCENDANT)
+                if (Individual.RelationType == Individual.DESCENDANT)
                     return "Descendant";
                 return string.Empty;
             }

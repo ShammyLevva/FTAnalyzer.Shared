@@ -1573,7 +1573,7 @@ namespace FTAnalyzer
         void SetDataErrorTypes(IProgress<int> progress)
         {
             int catchCount = 0;
-            int totalRecords = (individuals.Count + families.Count)/50; //only count for 50% of progressbar
+            int totalRecords = (individuals.Count + families.Count)/50 +1; //only count for 50% of progressbar
             int record = 0;
             DataErrorTypes = new List<DataErrorGroup>();
             List<DataError>[] errors = new List<DataError>[DATA_ERROR_GROUPS];
