@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace FTAnalyzer
 {
@@ -9,7 +6,7 @@ namespace FTAnalyzer
     {
         public override int Compare(IDisplayIndividual x, IDisplayIndividual y)
         {
-            return x.IndividualID.CompareTo(y.IndividualID);
+            return string.Compare(x.IndividualID, y.IndividualID, System.StringComparison.Ordinal);
         }
     }
 }

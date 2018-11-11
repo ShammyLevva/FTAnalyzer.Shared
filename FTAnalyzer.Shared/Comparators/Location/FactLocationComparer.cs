@@ -1,22 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace FTAnalyzer
 {
     public class FactLocationComparer : Comparer<IDisplayLocation>
     {
-        private int level;
+        public int Level { get; }
 
         public FactLocationComparer(int level)
         {
-            this.level = level;
+            Level = level;
         }
 
         public override int Compare(IDisplayLocation x, IDisplayLocation y)
         {
-            return x.CompareTo(y, level);
+            return x.CompareTo(y, Level);
         }
     }
 }

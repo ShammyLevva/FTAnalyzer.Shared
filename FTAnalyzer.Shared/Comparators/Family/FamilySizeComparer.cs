@@ -1,35 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace FTAnalyzer
 {
     public class FamilySizeComparer : Comparer<IDisplayFamily>
     {
-        private bool countSortLow;
+        public bool CountSortLow { get; set; }
 
         public FamilySizeComparer(bool countSortLow)
         {
-            this.countSortLow = countSortLow;
+            CountSortLow = countSortLow;
         }
 
         public override int Compare(IDisplayFamily x, IDisplayFamily y)
         {
-            if (countSortLow)
-            {
-                if (x.FamilySize == y.FamilySize)
-                    return x.FamilyID.CompareTo(y.FamilyID);
-                else
-                    return x.FamilySize.CompareTo(y.FamilySize);
-            }
-            else
-            {
-                if (x.FamilySize == y.FamilySize)
-                    return y.FamilyID.CompareTo(x.FamilyID);
-                else
-                    return y.FamilySize.CompareTo(x.FamilySize);
-            }
+            return CountSortLow
+                ? x.FamilySize == y.FamilySize
+                    ? string.Compare(x.FamilyID, y.FamilyID, System.StringComparison.Ordinal)
+                    : x.FamilySize.CompareTo(y.FamilySize)
+                : x.FamilySize == y.FamilySize
+                    ? string.Compare(y.FamilyID, x.FamilyID, System.StringComparison.Ordinal)
+                    : y.FamilySize.CompareTo(x.FamilySize);
         }
     }
 }

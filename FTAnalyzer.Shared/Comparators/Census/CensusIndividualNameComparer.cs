@@ -4,10 +4,10 @@ namespace FTAnalyzer
 {
     class CensusIndividualNameComparer : DefaultCensusComparer
     {
-        public override int Compare(CensusIndividual c1, CensusIndividual c2)
+        public override int Compare(CensusIndividual x, CensusIndividual y)
         {
-            int r = string.Compare(c1.CensusSurname, c2.CensusSurname, StringComparison.Ordinal);
-            if (r == 0) r = base.Compare(c1, c2);
+            int r = string.Compare(x.CensusSurname, y.CensusSurname, StringComparison.Ordinal);
+            if (r == 0) r = base.Compare(x, y);
             return r;
         }
     }

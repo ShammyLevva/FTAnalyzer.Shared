@@ -5,7 +5,7 @@ namespace FTAnalyzer
     public class BirthDateComparer : Comparer<IDisplayIndividual>
     {
         public static bool ASCENDING = true;
-        public static bool DESCENDING = false;
+        public static bool DESCENDING;
 
         public BirthDateComparer() : this(ASCENDING) { }
 
@@ -21,15 +21,11 @@ namespace FTAnalyzer
                 a = y;
                 b = x;
             }
-            if (a.BirthDate.Equals(b.BirthDate))
-            {
-                if (a.Surname.Equals(b.Surname))
-                    return a.Forenames.CompareTo(b.Forenames);
-                else
-                    return a.Surname.CompareTo(b.Surname);
-            }
-            else
-                return a.BirthDate.CompareTo(b.BirthDate);
+            return a.BirthDate.Equals(b.BirthDate)
+                ? a.Surname.Equals(b.Surname)
+                    ? string.Compare(a.Forenames, b.Forenames, System.StringComparison.Ordinal)
+                    : string.Compare(a.Surname, b.Surname, System.StringComparison.Ordinal)
+                : a.BirthDate.CompareTo(b.BirthDate);
         }
     }
 }
