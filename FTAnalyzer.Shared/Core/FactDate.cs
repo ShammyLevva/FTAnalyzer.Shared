@@ -14,41 +14,41 @@ namespace FTAnalyzer
         public static DateTime MAXDATE = new DateTime(9999, 12, 31);
         public static int MAXYEARS = 110;
         public static int MINYEARS = 0;
-        private static readonly int LOW = 0;
-        private static readonly int HIGH = 1;
-        private static readonly IFormatProvider CULTURE = new CultureInfo("en-GB", true);
+        static readonly int LOW = 0;
+        static readonly int HIGH = 1;
+        static readonly IFormatProvider CULTURE = new CultureInfo("en-GB", true);
 
-        private static readonly string YEAR = "yyyy";
-        private static readonly string EARLYYEAR = "yyy";
-        private static readonly string MONTHYEAR = "MMM yyyy";
-        private static readonly string MONTHYEAREARLY = "MMM yyy";
-        private static readonly string DAYMONTH = "d MMM";
-        private static readonly string MONTH = "MMM";
+        static readonly string YEAR = "yyyy";
+        static readonly string EARLYYEAR = "yyy";
+        static readonly string MONTHYEAR = "MMM yyyy";
+        static readonly string MONTHYEAREARLY = "MMM yyy";
+        static readonly string DAYMONTH = "d MMM";
+        static readonly string MONTH = "MMM";
         public static string FULL = "d MMM yyyy";
-        private static readonly string FULLEARLY = "d MMM yyy";
-        private static readonly string DISPLAY = "d MMM yyyy";
-        private static readonly string CHECKING = "d MMM";
-        private static readonly string DATE_PATTERN = "^(\\d{0,2} )?([A-Za-z]{0,3}) *(\\d{0,4})$";
-        private static readonly string INTERPRETED_DATE_PATTERN = "^INT (\\d{0,2} )?([A-Za-z]{0,3}) *(\\d{0,4}) .*$";
-        private static readonly string EARLY_DATE_PATTERN = "^(\\d{3})$";
-        private static readonly string DOUBLE_DATE_PATTERN = "^(\\d{0,2} )?([A-Za-z]{0,3}) *(\\d{0,4})/(\\d{0,2})$";
-        private static readonly string DOUBLE_DATE_PATTERN2 = "^(\\d{0,2} )?([A-Za-z]{0,3}) *(\\d{4})/(\\d{4})$";
-        private static readonly string DOUBLE_DATE_PATTERN3 = "^(\\d{0,2} )?([A-Za-z]{0,3}) *(\\d{3})/(\\d{2,3})$";
-        private static readonly string POSTFIX = "(\\d{1,2})(?:ST|ND|RD|TH)(.*)";
-        private static readonly string BETWEENFIX = "(\\d{4}) *- *(\\d{4})";
-        private static readonly string BETWEENFIX2 = "([A-Za-z]{0,3}) *(\\d{4}) *- *([A-Za-z]{0,3}) *(\\d{4})";
-        private static readonly string BETWEENFIX3 = "(\\d{0,2} )?([A-Za-z]{0,3}) *(\\d{4}) *- *(\\d{0,2} )?([A-Za-z]{0,3}) *(\\d{4})";
-        private static readonly string BETWEENFIX4 = "(\\d{1,2}) *- *(\\d{1,2} )?([A-Za-z]{0,3}) *(\\d{4})";
-        private static readonly string BETWEENFIX5 = "(\\d{1,2} )?([A-Za-z]{0,3}) *- *(\\d{1,2} )?([A-Za-z]{0,3}) *(\\d{4})";
-        private static readonly string USDATEFIX = "^([A-Za-z]{3}) *(\\d{1,2} )(\\d{4})$";
-        private static readonly string SPACEFIX = "^(\\d{1,2}) *([A-Za-z]{3}) *(\\d{0,4})$";
-        private static readonly string QUAKERFIX = "^(\\d{1,2})D (\\d{1,2})M (\\d{0,4})$";
+        static readonly string FULLEARLY = "d MMM yyy";
+        static readonly string DISPLAY = "d MMM yyyy";
+        static readonly string CHECKING = "d MMM";
+        static readonly string DATE_PATTERN = "^(\\d{0,2} )?([A-Za-z]{0,3}) *(\\d{0,4})$";
+        static readonly string INTERPRETED_DATE_PATTERN = "^INT (\\d{0,2} )?([A-Za-z]{0,3}) *(\\d{0,4}) .*$";
+        static readonly string EARLY_DATE_PATTERN = "^(\\d{3})$";
+        static readonly string DOUBLE_DATE_PATTERN = "^(\\d{0,2} )?([A-Za-z]{0,3}) *(\\d{0,4})/(\\d{0,2})$";
+        static readonly string DOUBLE_DATE_PATTERN2 = "^(\\d{0,2} )?([A-Za-z]{0,3}) *(\\d{4})/(\\d{4})$";
+        static readonly string DOUBLE_DATE_PATTERN3 = "^(\\d{0,2} )?([A-Za-z]{0,3}) *(\\d{3})/(\\d{2,3})$";
+        static readonly string POSTFIX = "(\\d{1,2})(?:ST|ND|RD|TH)(.*)";
+        static readonly string BETWEENFIX = "(\\d{4}) *- *(\\d{4})";
+        static readonly string BETWEENFIX2 = "([A-Za-z]{0,3}) *(\\d{4}) *- *([A-Za-z]{0,3}) *(\\d{4})";
+        static readonly string BETWEENFIX3 = "(\\d{0,2} )?([A-Za-z]{0,3}) *(\\d{4}) *- *(\\d{0,2} )?([A-Za-z]{0,3}) *(\\d{4})";
+        static readonly string BETWEENFIX4 = "(\\d{1,2}) *- *(\\d{1,2} )?([A-Za-z]{0,3}) *(\\d{4})";
+        static readonly string BETWEENFIX5 = "(\\d{1,2} )?([A-Za-z]{0,3}) *- *(\\d{1,2} )?([A-Za-z]{0,3}) *(\\d{4})";
+        static readonly string USDATEFIX = "^([A-Za-z]{3}) *(\\d{1,2} )(\\d{4})$";
+        static readonly string SPACEFIX = "^(\\d{1,2}) *([A-Za-z]{3}) *(\\d{0,4})$";
+        static readonly string QUAKERFIX = "^(\\d{1,2})D (\\d{1,2})M (\\d{0,4})$";
 
         public static FactDate UNKNOWN_DATE;
         public static FactDate MARRIAGE_LESS_THAN_13;
 
-        private static readonly Dictionary<string, Regex> _datePatterns;
-        private static Regex _regex;
+        static readonly Dictionary<string, Regex> _datePatterns;
+        static Regex _regex;
 
         static FactDate()
         {
@@ -318,9 +318,9 @@ namespace FTAnalyzer
                 if (!str.StartsWith("FROM", StringComparison.Ordinal))
                     str = "FROM " + str;
             }
-            if (str.StartsWith("FROM"))
+            if (str.StartsWith("FROM", StringComparison.Ordinal))
             {
-                if (str.IndexOf("TO") > 0)
+                if (str.IndexOf("TO", StringComparison.Ordinal) > 0)
                     str = str.Replace("FROM", "BET").Replace("TO", "AND");
                 else
                 {
@@ -328,22 +328,23 @@ namespace FTAnalyzer
                     yearfix = -1;
                 }
             }
-            if (str.StartsWith("TO"))
+            if (str.StartsWith("TO", StringComparison.Ordinal))
             {
                 str = str.Replace("TO", "BEF"); // year will be one out
                 yearfix = +1;
             }
-            if (str.StartsWith(">"))
+            if (str.StartsWith(">", StringComparison.Ordinal))
                 str = str.Replace(">", "AFT ");
-            if (str.StartsWith("<"))
+            if (str.StartsWith("<", StringComparison.Ordinal))
                 str = str.Replace("<", "BEF ");
-            if (str.StartsWith("~"))
+            if (str.StartsWith("~", StringComparison.Ordinal))
                 str = str.Replace("~", "ABT ");
-            if (str.StartsWith("C1") || str.StartsWith("C2") || str.StartsWith("C 1") || str.StartsWith("C 2"))
+            if (str.StartsWith("C1", StringComparison.Ordinal) || str.StartsWith("C2", StringComparison.Ordinal) || 
+                str.StartsWith("C 1", StringComparison.Ordinal) || str.StartsWith("C 2", StringComparison.Ordinal))
                 str = "ABT " + str.Substring(1);
             str = str.Replace("  ", " "); // fix issue if > or < or Cxxx has already got a space
             Match matcher;
-            if (str.StartsWith("INT")) // Interpreted date but we can discard <<Date_Phrase>>
+            if (str.StartsWith("INT", StringComparison.Ordinal)) // Interpreted date but we can discard <<Date_Phrase>>
             {
                 matcher = _datePatterns["INTERPRETED_DATE_PATTERN"].Match(str);
                 if (matcher.Success)
@@ -393,7 +394,7 @@ namespace FTAnalyzer
                 int month = 2 + int.Parse(matcher.Groups[2].ToString());
                 if (month > 12) month -= 12;
                 int year = int.Parse(matcher.Groups[3].ToString());
-                return new DateTime(year,month, day).ToString("dd MMMM yyyy");
+                return new DateTime(year, month, day).ToString("dd MMMM yyyy");
             }
             return str.Trim();
         }
@@ -505,26 +506,22 @@ namespace FTAnalyzer
             // dates are "YYYY" or "MMM YYYY" or "DD MMM YYYY"
             try
             {
-                string dateValue;
-                if (processDate.Length >= 4)
-                    dateValue = processDate.Substring(4);
-                else
-                    dateValue = processDate;
-                if (processDate.StartsWith("BEF"))
+                string dateValue = processDate.Length >= 4 ? processDate.Substring(4) : processDate;
+                if (processDate.StartsWith("BEF", StringComparison.Ordinal))
                 {
                     DateType = FactDateType.BEF;
                     EndDate = ParseDate(dateValue, HIGH, -1 + yearfix);
                 }
-                else if (processDate.StartsWith("AFT"))
+                else if (processDate.StartsWith("AFT", StringComparison.Ordinal))
                 {
                     DateType = FactDateType.AFT;
                     StartDate = ParseDate(dateValue, LOW, +1 + yearfix);
                 }
-                else if (processDate.StartsWith("ABT"))
+                else if (processDate.StartsWith("ABT", StringComparison.Ordinal))
                 {
                     DateType = FactDateType.ABT;
-                    if (processDate.StartsWith("ABT MAR") || processDate.StartsWith("ABT JUN")
-                         || processDate.StartsWith("ABT SEP") || processDate.StartsWith("ABT DEC"))
+                    if (processDate.StartsWith("ABT MAR", StringComparison.Ordinal) || processDate.StartsWith("ABT JUN", StringComparison.Ordinal)
+                         || processDate.StartsWith("ABT SEP", StringComparison.Ordinal) || processDate.StartsWith("ABT DEC", StringComparison.Ordinal))
                     {
                         // quarter dates
                         StartDate = ParseDate(dateValue, LOW, -3);
@@ -535,15 +532,15 @@ namespace FTAnalyzer
                     }
                     EndDate = ParseDate(dateValue, HIGH, 0);
                 }
-                else if (processDate.StartsWith("BET"))
+                else if (processDate.StartsWith("BET", StringComparison.Ordinal))
                 {
                     string fromdate;
                     string todate;
                     DateType = FactDateType.BET;
-                    int pos = processDate.IndexOf(" AND ");
+                    int pos = processDate.IndexOf(" AND ", StringComparison.Ordinal);
                     if (pos == -1)
                     {
-                        pos = processDate.IndexOf("-");
+                        pos = processDate.IndexOf("-", StringComparison.Ordinal);
                         if (pos == -1)
                             throw new Exception("Invalid BETween date no AND found");
                         fromdate = processDate.Substring(4, pos - 4);
@@ -561,7 +558,7 @@ namespace FTAnalyzer
                         fromdate = "01 " + fromdate + processDate.Substring(pos + 8);
                     else if (fromdate.Length == 4)
                         fromdate = "01 JAN " + fromdate;
-                    else if (fromdate.Length < 7 && fromdate.IndexOf(" ") > 0)
+                    else if (fromdate.Length < 7 && fromdate.IndexOf(" ", StringComparison.Ordinal) > 0)
                         fromdate = fromdate + processDate.Substring(pos + 11);
                     StartDate = ParseDate(fromdate, LOW, 0, EndDate.Year);
                     EndDate = ParseDate(todate, HIGH, 0);
@@ -623,8 +620,8 @@ namespace FTAnalyzer
                         gMonth = matcher.Groups[2];
                         gYear = matcher.Groups[3];
                         gDouble = matcher.Groups[4];
-                        if (dateValue.IndexOf("/") > 0)
-                            dateValue = dateValue.Substring(0, dateValue.IndexOf("/")); // remove the trailing / and 1 or 2 digits
+                        if (dateValue.IndexOf("/", StringComparison.Ordinal) > 0)
+                            dateValue = dateValue.Substring(0, dateValue.IndexOf("/", StringComparison.Ordinal)); // remove the trailing / and 1 or 2 digits
                     }
                     else if (matcher2.Success)
                     {
@@ -641,8 +638,8 @@ namespace FTAnalyzer
                         gMonth = matcher3.Groups[2];
                         gYear = matcher3.Groups[3];
                         gDouble = matcher3.Groups[4];
-                        if (dateValue.IndexOf("/") > 0)
-                            dateValue = dateValue.Substring(0, dateValue.IndexOf("/")); // remove the trailing / and 1 or 2 digits
+                        if (dateValue.IndexOf("/", StringComparison.Ordinal) > 0)
+                            dateValue = dateValue.Substring(0, dateValue.IndexOf("/", StringComparison.Ordinal)); // remove the trailing / and 1 or 2 digits
                     }
                     else if (Properties.NonGedcomDate.Default.UseNonGedcomDates)
                     {
@@ -691,7 +688,7 @@ namespace FTAnalyzer
                 string month = gMonth == null ? string.Empty : gMonth.ToString().Trim();
                 string year = gYear == null ? string.Empty : gYear.ToString().Trim();
 
-                if (!IsValidDoubleDate(day, month, year, gDouble))
+                if (!IsValidDoubleDate(month, year, gDouble))
                     throw new InvalidDoubleDateException(DoubleDateError);
                 if (day.Length == 0 && month.Length == 0)
                 {
@@ -761,7 +758,7 @@ namespace FTAnalyzer
             return dt;
         }
 
-        private bool IsValidDoubleDate(string day, string month, string year, Group gDouble)
+        bool IsValidDoubleDate(string month, string year, Group gDouble)
         {
             DoubleDate = false;   // set property
             DoubleDateError = string.Empty;
@@ -975,11 +972,11 @@ namespace FTAnalyzer
         #endregion
 
         #region Overrides
-        public override bool Equals(object that)
+        public override bool Equals(object obj)
         {
-            if (that == null || !(that is FactDate))
+            if (obj == null || !(obj is FactDate))
                 return false;
-            FactDate f = (FactDate)that;
+            FactDate f = (FactDate)obj;
             // two FactDates are equal if same datestring or same start and- enddates
             return (DateString.ToUpper().Equals(f.DateString.ToUpper())) ||
                    (StartDate.Equals(f.StartDate) && EndDate.Equals(f.EndDate));
@@ -989,15 +986,9 @@ namespace FTAnalyzer
         {
             // If both are null, or both are same instance, return true.
             if (ReferenceEquals(a, b))
-            {
                 return true;
-            }
             // If one is null, but not both, return false.
-            if ((a is null) || (b is null))
-            {
-                return false;
-            }
-            return a.Equals(b);
+            return a != null && b != null && a.Equals(b);
         }
 
 
@@ -1015,20 +1006,14 @@ namespace FTAnalyzer
         {
             if (Equals(that))
                 return 0;
-            else if (StartDate.Equals(that.StartDate))
-                return EndDate.CompareTo(that.EndDate);
-            else
-                return StartDate.CompareTo(that.StartDate);
+            return StartDate.Equals(that.StartDate) ? EndDate.CompareTo(that.EndDate) : StartDate.CompareTo(that.StartDate);
         }
 
         public override string ToString()
         {
-            if (DateString.StartsWith("BET 1 JAN"))
+            if (DateString.StartsWith("BET 1 JAN", StringComparison.Ordinal))
                 return "BET " + DateString.Substring(10);
-            else if (DateString.StartsWith("AFT 1 JAN"))
-                return "AFT " + DateString.Substring(10);
-            else
-                return DateString;
+            return DateString.StartsWith("AFT 1 JAN", StringComparison.Ordinal) ? "AFT " + DateString.Substring(10) : DateString;
         }
         #endregion
 

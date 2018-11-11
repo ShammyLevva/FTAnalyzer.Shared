@@ -130,8 +130,9 @@ namespace FTAnalyzer
                         return USCENSUS1910;
                     case 1939:
                         return USCENSUS1940;
+                    default:
+                        return null;
                 }
-                return null;
             }
         }
 
