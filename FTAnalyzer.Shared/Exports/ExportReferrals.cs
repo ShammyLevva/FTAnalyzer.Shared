@@ -25,7 +25,7 @@
         public string CensusDate => Fact.FactDate.ToString();
         public bool Include => Individual.IsBloodDirect;
 
-        string IExportReferrals.RelationType
+        public string RelationType
         {
             get
             {
