@@ -67,16 +67,10 @@ namespace FTAnalyzer
                 return string.Empty;
             if (node.Name.Equals("PAGE") || node.Name.Equals("TITL"))
                 return node.InnerText.Trim();
-            else
-            {
-                XmlNode text = node.SelectSingleNode(".//TEXT");
-                if (text != null && lookForText && text.ChildNodes.Count > 0)
-                    return GetContinuationText(text.ChildNodes);
-                else if (node.FirstChild != null && node.FirstChild.Value != null)
-                    return node.FirstChild.Value.Trim();
-                else
-                    return string.Empty;
-            }
+            XmlNode text = node.SelectSingleNode(".//TEXT");
+            if (text != null && lookForText && text.ChildNodes.Count > 0)
+                return GetContinuationText(text.ChildNodes);
+            return node.FirstChild != null && node.FirstChild.Value != null ? node.FirstChild.Value.Trim() : string.Empty;
         }
 
         public static string GetText(XmlNode node, string tag, bool lookForText) => GetText(GetChildNode(node, tag), lookForText);
@@ -104,7 +98,7 @@ namespace FTAnalyzer
                     result.AppendLine();
                 }
             }
-            catch (Exception)
+            catch (Exception )
             { }
             return result.ToString().Trim();
         }
@@ -251,6 +245,7 @@ namespace FTAnalyzer
             if (doc == null)
                 return null;
             ReportOptions(outputText);
+            outputText.Report("File Loaded.\n");
             SetRootIndividual(doc);
             return doc;
         }
@@ -344,7 +339,7 @@ namespace FTAnalyzer
             CreateSharedFacts();
             CountCensusFacts(outputText);
             FixIDs();
-            SetDataErrorTypes();
+            SetDataErrorTypes(progress);
             CountUnknownFactTypes(outputText);
             FactLocation.LoadGoogleFixesXMLFile(outputText);
             LoadLegacyLocations(doc.SelectNodes("GED/_PLAC_DEFN/PLAC"), progress);
@@ -355,10 +350,9 @@ namespace FTAnalyzer
 
         void LoadLegacyLocations(XmlNodeList list, IProgress<int> progress)
         {
-            int max = list.Count / 2; // /2 to make locations load account for 50% of bar
+            int max = list.Count;
             int counter = 0;
             int value = 0;
-            int beforeCount = FactLocation.AllLocations.Count();
             foreach (XmlNode node in list)
             {
                 string place = GetText(node, false);
@@ -370,11 +364,10 @@ namespace FTAnalyzer
                     string lng = long_node.InnerText;
                     FactLocation loc = FactLocation.GetLocation(place, lat, lng, FactLocation.Geocode.GEDCOM_USER, true, true);
                 }
-                value = 30 + (70 * counter++) / max;
+                value = 70 + 30 * (counter++ / max);
                 if (value > 100) value = 100;
                 progress.Report(value);
             }
-            int afterCount = FactLocation.AllLocations.Count();
             progress.Report(100);
         }
 
@@ -415,7 +408,7 @@ namespace FTAnalyzer
             progress?.Report(10);
             SetRelationDescriptions(rootIndividualID);
             outputText.Report(PrintRelationCount());
-            progress?.Report(30);
+            progress?.Report(20);
         }
 
         public void LoadStandardisedNames(string startPath)
@@ -1577,9 +1570,11 @@ namespace FTAnalyzer
 
         #region Data Errors
 
-        private void SetDataErrorTypes()
+        void SetDataErrorTypes(IProgress<int> progress)
         {
             int catchCount = 0;
+            int totalRecords = (individuals.Count + families.Count)/50; //only count for 50% of progressbar
+            int record = 0;
             DataErrorTypes = new List<DataErrorGroup>();
             List<DataError>[] errors = new List<DataError>[DATA_ERROR_GROUPS];
             for (int i = 0; i < DATA_ERROR_GROUPS; i++)
@@ -1588,6 +1583,7 @@ namespace FTAnalyzer
             #region Individual Fact Errors
             foreach (Individual ind in AllIndividuals)
             {
+                progress.Report(20 + (record++ / totalRecords));
                 try
                 {
                     #region Death facts
@@ -1798,6 +1794,7 @@ namespace FTAnalyzer
             catchCount = 0;
             foreach (Family fam in AllFamilies)
             {
+                progress.Report(20 + (record++ / totalRecords)); 
                 try
                 {
                     foreach (Fact f in fam.Facts)
@@ -2388,7 +2385,9 @@ namespace FTAnalyzer
             return record_country;
         }
 
+#pragma warning disable RECS0154 // Parameter is never used
         string BuildFreeBMDQuery(SearchType st, Individual individual, FactDate factdate)
+#pragma warning restore RECS0154 // Parameter is never used
         {
             throw new CensusSearchException("Not Yet");
         }
@@ -2430,9 +2429,10 @@ namespace FTAnalyzer
             return uri.ToString();
         }
 
-        private static string GetSurname(SearchType st, Individual individual, bool ancestry)
+        static string GetSurname(SearchType st, Individual individual, bool ancestry)
         {
             string surname = string.Empty;
+            if (individual == null) return surname;
             if (individual.Surname != "?" && individual.Surname.ToUpper() != Individual.UNKNOWN_NAME)
                 surname = individual.Surname;
             if (st.Equals(SearchType.DEATH) && individual.MarriedName != "?" && individual.MarriedName.ToUpper() != Individual.UNKNOWN_NAME && individual.MarriedName != individual.Surname)
@@ -2441,7 +2441,7 @@ namespace FTAnalyzer
             return surname;
         }
 
-        private string BuildAncestryQuery(SearchType st, Individual individual, FactDate factdate)
+        string BuildAncestryQuery(SearchType st, Individual individual, FactDate factdate)
         {
             UriBuilder uri = new UriBuilder
             {
@@ -2643,9 +2643,9 @@ namespace FTAnalyzer
         #endregion
 
         #region Duplicates Processing
-        ulong maleProgress = 0;
-        ulong femaleProgress = 0;
-        ulong progressMaximum = 0;
+        ulong maleProgress;
+        ulong femaleProgress;
+        ulong progressMaximum;
 
         public async Task<SortableBindingList<IDisplayDuplicateIndividual>> GenerateDuplicatesList(int value, IProgress<int> progress, IProgress<int> maximum, CancellationToken ct)
         {
@@ -2875,11 +2875,10 @@ namespace FTAnalyzer
                 int diff = chosenDate.Year - year;
                 if (diff % stepSize == 0)
                 {
-                    if (wholeMonth)
-                        URL = @"http://www.vizgr.org/historical-events/search.php?links=true&format=xml&begin_date=" + year.ToString() + chosenDate.ToString("MM", CultureInfo.InvariantCulture) + "00" +
-                            "&end_date=" + year.ToString() + chosenDate.ToString("MM", CultureInfo.InvariantCulture) + "31";
-                    else
-                        URL = @"http://www.vizgr.org/historical-events/search.php?links=true&format=xml&begin_date=" + year.ToString() + chosenDate.ToString("MMdd", CultureInfo.InvariantCulture) +
+                    URL = wholeMonth ?
+                            @"http://www.vizgr.org/historical-events/search.php?links=true&format=xml&begin_date=" + year.ToString() + chosenDate.ToString("MM", CultureInfo.InvariantCulture) + "00" +
+                             "&end_date=" + year.ToString() + chosenDate.ToString("MM", CultureInfo.InvariantCulture) + "31" :
+                            @"http://www.vizgr.org/historical-events/search.php?links=true&format=xml&begin_date=" + year.ToString() + chosenDate.ToString("MMdd", CultureInfo.InvariantCulture) +
                             "&end_date=" + year.ToString() + chosenDate.ToString("MMdd", CultureInfo.InvariantCulture);
                     XmlDocument doc = GetWikipediaData(URL);
                     eventDate = wholeMonth ? new FactDate(CreateDate(year, chosenDate.Month, 1), CreateDate(year, chosenDate.Month + 1, 1).AddDays(-1)) :
