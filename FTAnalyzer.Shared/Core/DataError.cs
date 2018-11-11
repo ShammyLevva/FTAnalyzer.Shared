@@ -7,6 +7,8 @@
             ErrorType = DataErrorGroup.ErrorDescription(errorType);
 #if __PC__
             Icon = FactImage.ErrorIcon(errorLevel).Icon;
+#elif __MACOS__
+            var x = errorLevel; // stop compiler warning
 #endif
             individual = ind;
             family = null;

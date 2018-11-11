@@ -846,7 +846,7 @@ namespace FTAnalyzer
             if (!DoubleDate && that != null && that.DoubleDate)
                 return EndDate < that.StartDate || EndDate < that.StartDate.TryAddYears(-1);
             // easy case is extremes whole of date before other
-            return (that == null) ? true : EndDate < that.StartDate;
+            return that == null || EndDate < that.StartDate;
         }
 
         /*
@@ -856,7 +856,7 @@ namespace FTAnalyzer
         {
             if (!DoubleDate && that != null && that.DoubleDate)
                 return StartDate < that.StartDate || StartDate < that.StartDate.TryAddYears(-1);
-            return (that == null) ? true : StartDate < that.StartDate;
+            return that == null || StartDate < that.StartDate;
         }
 
         /*
@@ -978,7 +978,7 @@ namespace FTAnalyzer
                 return false;
             FactDate f = (FactDate)obj;
             // two FactDates are equal if same datestring or same start and- enddates
-            return (DateString.ToUpper().Equals(f.DateString.ToUpper())) ||
+            return DateString.ToUpper().Equals(f.DateString.ToUpper()) ||
                    (StartDate.Equals(f.StartDate) && EndDate.Equals(f.EndDate));
         }
 
@@ -988,7 +988,9 @@ namespace FTAnalyzer
             if (ReferenceEquals(a, b))
                 return true;
             // If one is null, but not both, return false.
-            return a != null && b != null && a.Equals(b);
+            if ((a is null) || (b is null))
+                return false;
+            return a.Equals(b);
         }
 
 
