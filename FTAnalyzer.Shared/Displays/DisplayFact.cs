@@ -1,10 +1,12 @@
-﻿using System;
+﻿using FTAnalyzer.Shared.Utilities;
+using System;
 using System.Collections.Generic;
 
 namespace FTAnalyzer
 {
     public class DisplayFact : IDisplayFact, IComparable
     {
+        [ColumnWidth(20)]
         public string Surname { get; private set; }
         public string Forenames { get; private set; }
         public Individual Ind { get; private set; }

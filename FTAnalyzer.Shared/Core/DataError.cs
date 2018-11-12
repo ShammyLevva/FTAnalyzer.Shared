@@ -1,4 +1,6 @@
-﻿namespace FTAnalyzer
+﻿using FTAnalyzer.Shared.Utilities;
+
+namespace FTAnalyzer
 {
     public class DataError
     {
@@ -24,22 +26,26 @@
             family = fam;
         }
                     
-        private Individual individual;
-        private Family family;
+        Individual individual;
+        Family family;
 
 #if __PC__
+        [ColumnWidth(5)]
         public System.Drawing.Image Icon { get; private set; }
 #endif
+        [ColumnWidth(30)]
         public string ErrorType { get; private set; }
-        public string Reference { get { return individual == null ? family.FamilyID : individual.IndividualID; } }
+        [ColumnWidth(20)]
+        public string Reference => individual == null ? family.FamilyID : individual.IndividualID;
+        [ColumnWidth(30)]
         public string Name { get { return individual == null ? family.FamilyName : individual.Name; } }
+        [ColumnWidth(100)]
         public string Description { get; private set; }
-        public FactDate Born { get { return individual == null ? FactDate.UNKNOWN_DATE : individual.BirthDate; } }
-        public FactDate Died { get { return individual == null ? FactDate.UNKNOWN_DATE : individual.DeathDate; } }
-
-        public bool IsFamily()
-        {
-            return individual == null;
-        }
+        [ColumnWidth(30)]
+        public FactDate Born => individual == null ? FactDate.UNKNOWN_DATE : individual.BirthDate;
+        [ColumnWidth(30)]
+        public FactDate Died => individual == null ? FactDate.UNKNOWN_DATE : individual.DeathDate;
+        [ColumnWidth(20)]
+        public bool IsFamily() => individual == null;
     }
 }
