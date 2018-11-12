@@ -90,15 +90,14 @@ namespace FTAnalyzer
         public FactDate(string str, string factRef = "")
         {
             DoubleDate = false;
-            if (str == null)
-                str = string.Empty;
+            str = str ?? "UNKNOWN";
             OriginalString = str;
             // remove any commas in date string
             yearfix = 0;
             str = FixTextDateFormats(str.ToUpper());
             str = FixCommonDateFormats(str);
             DateType = FactDateType.UNK;
-            if (str == null || str.Length == 0)
+            if (str.Length == 0)
                 DateString = "UNKNOWN";
             else
                 DateString = str.ToUpper();
@@ -147,7 +146,8 @@ namespace FTAnalyzer
             str = str.Replace("(", string.Empty);
             str = str.Replace(")", string.Empty);
             str = str.Replace("?", string.Empty);
-            str = str.Replace(".", " ");
+            if(Properties.NonGedcomDate.Default.Separator != ".")
+                str = str.Replace(".", " ");
             str = str.Replace("&", " AND ");
             str = str.Replace(" / ", "/");
             str = str.Replace("   ", " ");
@@ -577,10 +577,7 @@ namespace FTAnalyzer
             }
         }
 
-        private DateTime ParseDate(string dateValue, int highlow, int adjustment)
-        {
-            return ParseDate(dateValue, highlow, adjustment, 1);
-        }
+        private DateTime ParseDate(string dateValue, int highlow, int adjustment) => ParseDate(dateValue, highlow, adjustment, 1);
 
         private DateTime ParseDate(string dateValue, int highlow, int adjustment, int defaultYear)
         {
@@ -892,24 +889,20 @@ namespace FTAnalyzer
         {
             if (factDate == null) return false;
             if (factDate.StartDate.Year != factDate.EndDate.Year ||
-                 this.StartDate.Year != this.EndDate.Year) return false;
+                 StartDate.Year != EndDate.Year) return false;
             // both this & that have exact years now return whether this and that match
-            return this.StartDate.Year == factDate.StartDate.Year;
+            return StartDate.Year == factDate.StartDate.Year;
         }
 
         public bool CensusYearMatches(CensusDate censusDate)
         {
             if (censusDate == null) return false;
-           if(this.StartDate.Year != this.EndDate.Year) return false;
+           if(this.StartDate.Year != EndDate.Year) return false;
             // both this & that have exact years now return whether this and that match given a census date can go over a year end
-            return this.StartDate.Year == censusDate.StartDate.Year || this.StartDate.Year == censusDate.EndDate.Year;
+            return StartDate.Year == censusDate.StartDate.Year || StartDate.Year == censusDate.EndDate.Year;
         }
 
-        public bool Contains(FactDate that)
-        {
-            return (that == null) ? true :
-                (this.StartDate < that.StartDate && this.EndDate > that.EndDate);
-        }
+        public bool Contains(FactDate that) => (that == null) ? true : StartDate < that.StartDate && EndDate > that.EndDate;
 
         public bool IsLongYearSpan
         {
@@ -1021,17 +1014,9 @@ namespace FTAnalyzer
 
         public static Regex NonGEDCOMDateFormatRegex
         {
-            get
-            {
-                if (_regex == null)
-                    _regex = new Regex(Properties.NonGedcomDate.Default.Regex, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-                return _regex;
-            }
+            get => _regex ?? new Regex(Properties.NonGedcomDate.Default.Regex, RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-            set
-            {
-                _regex = value;
-            }
+            set => _regex = value;
         }
     }
 }
