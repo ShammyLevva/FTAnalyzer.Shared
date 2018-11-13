@@ -1,4 +1,4 @@
-﻿using FTAnalyzer.Shared.Utilities;
+﻿using FTAnalyzer.Utilities;
 using System;
 using System.Collections.Generic;
 
@@ -6,8 +6,9 @@ namespace FTAnalyzer
 {
     public class DisplayFact : IDisplayFact, IComparable
     {
-        [ColumnWidth(20)]
+        [ColumnWidth(100)]
         public string Surname { get; private set; }
+        [ColumnWidth(100)]
         public string Forenames { get; private set; }
         public Individual Ind { get; private set; }
         public Fact Fact { get; set; }

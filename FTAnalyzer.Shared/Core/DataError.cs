@@ -1,4 +1,4 @@
-﻿using FTAnalyzer.Shared.Utilities;
+﻿using FTAnalyzer.Utilities;
 
 namespace FTAnalyzer
 {
@@ -30,22 +30,22 @@ namespace FTAnalyzer
         Family family;
 
 #if __PC__
-        [ColumnWidth(5)]
+        [ColumnWidth(50)]
         public System.Drawing.Image Icon { get; private set; }
 #endif
-        [ColumnWidth(30)]
+        [ColumnWidth(200)]
         public string ErrorType { get; private set; }
-        [ColumnWidth(20)]
+        [ColumnWidth(60)]
         public string Reference => individual == null ? family.FamilyID : individual.IndividualID;
-        [ColumnWidth(30)]
+        [ColumnWidth(200)]
         public string Name { get { return individual == null ? family.FamilyName : individual.Name; } }
-        [ColumnWidth(100)]
+        [ColumnWidth(400)]
         public string Description { get; private set; }
-        [ColumnWidth(30)]
+        [ColumnWidth(150)]
         public FactDate Born => individual == null ? FactDate.UNKNOWN_DATE : individual.BirthDate;
-        [ColumnWidth(30)]
+        [ColumnWidth(150)]
         public FactDate Died => individual == null ? FactDate.UNKNOWN_DATE : individual.DeathDate;
-        [ColumnWidth(20)]
+        [ColumnWidth(50)]
         public bool IsFamily() => individual == null;
     }
 }

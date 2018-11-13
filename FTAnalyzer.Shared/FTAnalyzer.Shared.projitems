@@ -113,7 +113,6 @@
       <DependentUpon>NonGedcomDate.settings</DependentUpon>
       <AutoGen>True</AutoGen>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Utilities\ColumnWidth.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\DoubleMetaphone.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\EnhancedTextInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\ExtensionMethods.cs" />
@@ -126,6 +125,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\SortableBindingList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\Analytics.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\SpecialMethods.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilities\ColumnWidth.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)Resources\BingOSMaps.htm">

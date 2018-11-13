@@ -1,16 +1,13 @@
 ﻿using System;
 
-namespace FTAnalyzer.Shared.Utilities
+namespace FTAnalyzer.Utilities
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Method)]
 
     public class ColumnWidth : Attribute
     {
-        public int ColWidth { get; }
+        public float ColWidth { get; }
 
-        public ColumnWidth(int width)
-        {
-            ColWidth = width;
-        }
+        public ColumnWidth(float width) => ColWidth = width;
     }
 }

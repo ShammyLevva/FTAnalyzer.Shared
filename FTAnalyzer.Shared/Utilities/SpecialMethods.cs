@@ -8,9 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-#elif __MACOS__
-using AppKit;
-using FTAnalyzer.Mac;
 #endif
 
 namespace FTAnalyzer.Utilities
@@ -41,11 +38,6 @@ namespace FTAnalyzer.Utilities
 
         public static async Task<TrackingResult> TrackEventAsync(this SimpleTracker tracker, string category, string action, string label, long value = 1)
         {
-#if __PC__
-            string resolution = Screen.PrimaryScreen.Bounds.ToString();
-#elif __MACOS__
-            string resolution = string.Empty;
-#endif
             var eventTrackingParameters = new EventTracking
             {
                 ClientId = Analytics.GUID,
@@ -57,10 +49,11 @@ namespace FTAnalyzer.Utilities
                 Label = label,
                 Value = value,
                 ScreenName = category,
-                ScreenResolution = resolution.Length > 11 ? resolution.Substring(9, resolution.Length - 10) : resolution,
                 CacheBuster = tracker.AnalyticsSession.GenerateCacheBuster(),
+                ScreenResolution = Analytics.Resolution,
                 CustomDimension1 = Analytics.DeploymentType,
                 CustomDimension2 = Analytics.OSVersion,
+                CustomDimension3 = Analytics.GUID,
                 GoogleAdWordsId = "201-455-7333",
                 UserLanguage = CultureInfo.CurrentUICulture.EnglishName
             };
@@ -69,11 +62,6 @@ namespace FTAnalyzer.Utilities
 
         public static async Task<TrackingResult> TrackScreenviewAsync(this SimpleTracker tracker, string screen)
         {
-#if __PC__
-            string resolution = Screen.PrimaryScreen.Bounds.ToString();
-#elif __MACOS__
-            string resolution = string.Empty;
-#endif
             var screenViewTrackingParameters = new ScreenviewTracking
             {
                 ClientId = Analytics.GUID,
@@ -81,10 +69,11 @@ namespace FTAnalyzer.Utilities
                 ApplicationName = "FTAnalyzer",
                 ApplicationVersion = Analytics.AppVersion,
                 ScreenName = screen,
-                ScreenResolution = resolution.Length > 11 ? resolution.Substring(9, resolution.Length - 10) : resolution,
                 CacheBuster = tracker.AnalyticsSession.GenerateCacheBuster(),
+                ScreenResolution = Analytics.Resolution,
                 CustomDimension1 = Analytics.DeploymentType,
                 CustomDimension2 = Analytics.OSVersion,
+                CustomDimension3 = Analytics.GUID,
                 GoogleAdWordsId = "201-455-7333",
                 UserLanguage = CultureInfo.CurrentUICulture.EnglishName
             };

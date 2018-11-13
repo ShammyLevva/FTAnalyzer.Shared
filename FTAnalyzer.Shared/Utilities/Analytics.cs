@@ -60,6 +60,7 @@ namespace FTAnalyzer.Utilities
         public static string OSVersion { get; }
         public static string DeploymentType { get; }
         public static string GUID { get; }
+        public static string Resolution { get; }
 
         static Analytics()
         {
@@ -77,6 +78,7 @@ namespace FTAnalyzer.Utilities
             AppVersion = MainForm.VERSION;
             OSVersion = SetWindowsVersion(os.Version.ToString());
             DeploymentType = ApplicationDeployment.IsNetworkDeployed ? "ClickOnce" : "Zip File";
+            string resolution = Screen.PrimaryScreen.Bounds.ToString();
 #elif __MACOS__
             var userDefaults = new NSUserDefaults();
             GUID = userDefaults.StringForKey("AnalyticsKey");
@@ -94,7 +96,9 @@ namespace FTAnalyzer.Utilities
             var app = (AppDelegate)NSApplication.SharedApplication.Delegate;
             AppVersion = app.Version;
             DeploymentType = "Mac Website";
+            string resolution = NSScreen.MainScreen.Frame.ToString();
 #endif
+            Resolution = resolution.Length > 11 ? resolution.Substring(9, resolution.Length - 10) : resolution;
         }
 
         public static async Task CheckProgramUsageAsync() // pre demise of Windows 7 add tracker to check how many machines still use old versions
