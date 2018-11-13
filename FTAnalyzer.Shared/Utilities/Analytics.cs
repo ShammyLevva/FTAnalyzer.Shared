@@ -117,8 +117,8 @@ namespace FTAnalyzer.Utilities
         {
             try
             {
-                await tracker.TrackEventAsync(category, action, value).ConfigureAwait(false);
-                await tracker.TrackScreenviewAsync(category).ConfigureAwait(false);
+                await tracker.TrackEventAsync(category, action, value);
+                await tracker.TrackScreenviewAsync(category);
             }
             catch (Exception e)
                 { Console.WriteLine(e.Message); }

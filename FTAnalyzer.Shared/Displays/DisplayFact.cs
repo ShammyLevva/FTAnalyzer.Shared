@@ -1,14 +1,11 @@
-﻿using FTAnalyzer.Utilities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace FTAnalyzer
 {
     public class DisplayFact : IDisplayFact, IComparable
     {
-        [ColumnWidth(100)]
         public string Surname { get; private set; }
-        [ColumnWidth(100)]
         public string Forenames { get; private set; }
         public Individual Ind { get; private set; }
         public Fact Fact { get; set; }
@@ -58,9 +55,7 @@ namespace FTAnalyzer
         public int CompareTo(object obj)
         {
             DisplayFact that = (DisplayFact)obj;
-            if (FactDate == that.FactDate && Ind != null)
-                return Ind.CompareTo(that.Ind);
-            return FactDate.CompareTo(that.FactDate);
+            return FactDate == that.FactDate && Ind != null ? Ind.CompareTo(that.Ind) : FactDate.CompareTo(that.FactDate);
         }
 
         public override bool Equals(object obj)
@@ -69,10 +64,7 @@ namespace FTAnalyzer
             return FactHash.Equals(that.FactHash); //this.Ind.Equals(that.Ind) && this.Fact.Equals(that.Fact);
         }
 
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
+        public override int GetHashCode() => base.GetHashCode();
 
         public override string ToString()
         {
