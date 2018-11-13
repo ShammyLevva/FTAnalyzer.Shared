@@ -22,7 +22,7 @@ namespace FTAnalyzer
     {
         #region Variables
         static FamilyTree instance;
-        static log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         IList<FactSource> sources;
         IList<Individual> individuals;
@@ -98,7 +98,7 @@ namespace FTAnalyzer
                     result.AppendLine();
                 }
             }
-            catch (Exception )
+            catch (Exception)
             { }
             return result.ToString().Trim();
         }
@@ -637,7 +637,7 @@ namespace FTAnalyzer
                     c.Infamily = true;
                     c.ReferralFamilyID = f.FamilyID;
                     c.HasParents = f.Husband != null || f.Wife != null;
-                    c.HasOnlyOneParent = (f.Husband != null && f.Wife == null) || (f.Husband == null && f.Wife !=null);
+                    c.HasOnlyOneParent = (f.Husband != null && f.Wife == null) || (f.Husband == null && f.Wife != null);
                 }
             }
             foreach (Individual ind in individuals)
@@ -1076,14 +1076,14 @@ namespace FTAnalyzer
         #region TreeTops
 
         public IEnumerable<IDisplayIndividual> GetTreeTops(Predicate<Individual> filter) => individuals.Filter(ind => filter(ind));
-        public IEnumerable<IExportIndividual>  GetExportTreeTops(Predicate<Individual> filter) => individuals.Filter(ind => filter(ind));
+        public IEnumerable<IExportIndividual> GetExportTreeTops(Predicate<Individual> filter) => individuals.Filter(ind => filter(ind));
 
         #endregion
 
         #region WorldWars
 
         public IEnumerable<IDisplayIndividual> GetWorldWars(Predicate<Individual> filter) => individuals.Filter(ind => ind.IsMale && filter(ind));
-        public IEnumerable<IExportIndividual>  GetExportWorldWars(Predicate<Individual> filter) => individuals.Filter(ind => ind.IsMale && filter(ind));
+        public IEnumerable<IExportIndividual> GetExportWorldWars(Predicate<Individual> filter) => individuals.Filter(ind => ind.IsMale && filter(ind));
 
         #endregion
 
@@ -1573,7 +1573,7 @@ namespace FTAnalyzer
         void SetDataErrorTypes(IProgress<int> progress)
         {
             int catchCount = 0;
-            int totalRecords = (individuals.Count + families.Count)/50 +1; //only count for 50% of progressbar
+            int totalRecords = (individuals.Count + families.Count) / 50 + 1; //only count for 50% of progressbar
             int record = 0;
             DataErrorTypes = new List<DataErrorGroup>();
             List<DataError>[] errors = new List<DataError>[DATA_ERROR_GROUPS];
@@ -1794,7 +1794,7 @@ namespace FTAnalyzer
             catchCount = 0;
             foreach (Family fam in AllFamilies)
             {
-                progress.Report(20 + (record++ / totalRecords)); 
+                progress.Report(20 + (record++ / totalRecords));
                 try
                 {
                     foreach (Fact f in fam.Facts)

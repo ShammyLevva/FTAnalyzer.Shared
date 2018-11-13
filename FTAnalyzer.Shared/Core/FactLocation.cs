@@ -103,7 +103,7 @@ namespace FTAnalyzer
                     string to = n.Attributes["to"].Value;
                     if (COUNTRY_TYPOS.ContainsKey(from))
                         Console.WriteLine(string.Format("Error duplicate country typos :{0}", from));
-                    if (from != null && from.Length > 0 && to != null && to.Length > 0)
+                    if (!string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to))
                         COUNTRY_TYPOS.Add(from, to);
                 }
                 foreach (XmlNode n in xmlDoc.SelectNodes("Data/Fixes/RegionTypos/RegionTypo"))
@@ -112,7 +112,7 @@ namespace FTAnalyzer
                     string to = n.Attributes["to"].Value;
                     if (REGION_TYPOS.ContainsKey(from))
                         Console.WriteLine(string.Format("Error duplicate region typos :{0}", from));
-                    if (from != null && from.Length > 0 && to != null && to.Length > 0)
+                    if (!string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to))
                         REGION_TYPOS.Add(from, to);
                 }
                 foreach (XmlNode n in xmlDoc.SelectNodes("Data/Fixes/ChapmanCodes/ChapmanCode"))
@@ -121,14 +121,14 @@ namespace FTAnalyzer
                     string countyName = n.Attributes["countyName"].Value;
                     if (REGION_TYPOS.ContainsKey(chapmanCode))
                         Console.WriteLine(string.Format("Error duplicate region typos adding ChapmanCode :{0}", chapmanCode));
-                    if (chapmanCode != null && chapmanCode.Length > 0 && countyName != null && countyName.Length > 0)
+                    if (!string.IsNullOrEmpty(chapmanCode) && !string.IsNullOrEmpty(countyName))
                         REGION_TYPOS.Add(chapmanCode, countyName);
                 }
                 foreach (XmlNode n in xmlDoc.SelectNodes("Data/Fixes/DemoteCountries/CountryToRegion"))
                 {
                     string from = n.Attributes["region"].Value;
                     string to = n.Attributes["country"].Value;
-                    if (from != null && from.Length > 0 && to != null && to.Length > 0)
+                    if (!string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to))
                     {
                         if (COUNTRY_SHIFTS.ContainsKey(from))
                             Console.WriteLine(string.Format("Error duplicate country shift :{0}", from));
@@ -139,7 +139,7 @@ namespace FTAnalyzer
                 {
                     string from = n.Attributes["city"].Value;
                     string to = n.Attributes["country"].Value;
-                    if (from != null && from.Length > 0 && to != null && to.Length > 0)
+                    if (!string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to))
                     {
                         if (CITY_ADD_COUNTRY.ContainsKey(from))
                             Console.WriteLine(string.Format("Error duplicate city add country :{0}", from));
@@ -154,7 +154,7 @@ namespace FTAnalyzer
                     string to = n.Attributes["region"].Value;
                     if (REGION_SHIFTS.ContainsKey(from))
                         Console.WriteLine(string.Format("Error duplicate region shift :{0}", from));
-                    if (from != null && from.Length > 0 && to != null && to.Length > 0)
+                    if (!string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to))
                     {
                         REGION_SHIFTS.Add(from, to);
                     }
@@ -165,10 +165,8 @@ namespace FTAnalyzer
                     string county = n.Attributes["county"].Value;
                     if (FREECEN_LOOKUP.ContainsKey(county))
                         Console.WriteLine(string.Format("Error duplicate freecen lookup :{0}", county));
-                    if (code != null && code.Length > 0 && county != null && county.Length > 0)
-                    {
+                    if (!string.IsNullOrEmpty(code) && !string.IsNullOrEmpty(county))
                         FREECEN_LOOKUP.Add(county, code);
-                    }
                 }
                 foreach (XmlNode n in xmlDoc.SelectNodes("Data/Lookups/FindMyPast/Lookup"))
                 {
@@ -177,7 +175,7 @@ namespace FTAnalyzer
                     string country = n.Attributes["country"].Value;
                     if (FINDMYPAST_LOOKUP.ContainsKey(county))
                         Console.WriteLine(string.Format("Error duplicate FindMyPast lookup :{0}", county));
-                    if (code != null && code.Length > 0 && county != null && county.Length > 0)
+                    if (!string.IsNullOrEmpty(code) && !string.IsNullOrEmpty(county))
                     {
                         Tuple<string, string> result = new Tuple<string, string>(country, code);
                         FINDMYPAST_LOOKUP.Add(county, result);
