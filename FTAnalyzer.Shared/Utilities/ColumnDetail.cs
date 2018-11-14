@@ -1,5 +1,7 @@
 ﻿using System;
-#if __MACOS__
+#if __PC__
+using System.Windows.Forms;
+#elif __MACOS__
 using AppKit;
 #endif
 
@@ -12,7 +14,7 @@ namespace FTAnalyzer.Utilities
         public string ColumnName { get; }
         public float ColumnWidth { get; }
 #if __PC__
-        public AlignmentclassforPC Alignment { get; }
+        public DataGridViewContentAlignment Alignment { get; }
 #elif __MACOS__
         public NSTextAlignment Alignment { get; }
 #endif
@@ -24,9 +26,9 @@ namespace FTAnalyzer.Utilities
 #if __PC__
             switch(alignment)
             {
-                case ColumnAlignment.Left : Alignment = AlignmentclassforPC.Left; break;
-                case ColumnAlignment.Right: Alignment = AlignmentclassforPC.Left; break;
-                case ColumnAlignment.Center: Alignment = AlignmentclassforPC.Left; break;
+                case ColumnAlignment.Left : Alignment = DataGridViewContentAlignment.MiddleLeft; break;
+                case ColumnAlignment.Right: Alignment = DataGridViewContentAlignment.MiddleRight; break;
+                case ColumnAlignment.Center: Alignment = DataGridViewContentAlignment.MiddleCenter; break;
             }
 #elif __MACOS__
             switch (alignment)

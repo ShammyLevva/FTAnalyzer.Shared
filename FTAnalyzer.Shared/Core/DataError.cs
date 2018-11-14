@@ -30,7 +30,7 @@ namespace FTAnalyzer
         Family family;
 
 #if __PC__
-        [ColumnWidth(50)]
+        [ColumnDetail("Icon", 50)]
         public System.Drawing.Image Icon { get; private set; }
 #endif
         [ColumnDetail("Error Type", 200)]
@@ -46,6 +46,6 @@ namespace FTAnalyzer
         [ColumnDetail("Died", 150)]
         public FactDate Died => individual == null ? FactDate.UNKNOWN_DATE : individual.DeathDate;
         [ColumnDetail("Family", 50)]
-        public string IsFamily() => individual == null ? "Yes" : "No";
+        public string IsFamily => individual == null ? "Yes" : "No";
     }
 }
