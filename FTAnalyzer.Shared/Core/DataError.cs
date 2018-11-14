@@ -33,19 +33,19 @@ namespace FTAnalyzer
         [ColumnWidth(50)]
         public System.Drawing.Image Icon { get; private set; }
 #endif
-        [ColumnWidth(200)]
+        [ColumnDetail("Error Type", 200)]
         public string ErrorType { get; private set; }
-        [ColumnWidth(60)]
+        [ColumnDetail("Ref", 60)]
         public string Reference => individual == null ? family.FamilyID : individual.IndividualID;
-        [ColumnWidth(200)]
+        [ColumnDetail("Name", 200)]
         public string Name { get { return individual == null ? family.FamilyName : individual.Name; } }
-        [ColumnWidth(400)]
+        [ColumnDetail("Description", 400)]
         public string Description { get; private set; }
-        [ColumnWidth(150)]
+        [ColumnDetail("Born", 150)]
         public FactDate Born => individual == null ? FactDate.UNKNOWN_DATE : individual.BirthDate;
-        [ColumnWidth(150)]
+        [ColumnDetail("Died", 150)]
         public FactDate Died => individual == null ? FactDate.UNKNOWN_DATE : individual.DeathDate;
-        [ColumnWidth(50)]
-        public bool IsFamily() => individual == null;
+        [ColumnDetail("Family", 50)]
+        public string IsFamily() => individual == null ? "Yes" : "No";
     }
 }

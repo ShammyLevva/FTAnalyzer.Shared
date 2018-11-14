@@ -234,7 +234,7 @@ namespace FTAnalyzer
 
         public bool IsBloodDirect => _relationType == BLOOD || _relationType == DIRECT || _relationType == DESCENDANT || _relationType == MARRIEDTODB;
 
-        public bool HasNotes => Notes.Length > 0;
+        public string HasNotes => Notes.Length > 0 ? "Yes" : "No";
 
         public string Relation
         {
@@ -890,7 +890,7 @@ namespace FTAnalyzer
                 AddFact(f);
         }
 
-        private void CreateLCFact(List<Fact> toAdd, CensusReference cr)
+        void CreateLCFact(List<Fact> toAdd, CensusReference cr)
         {
             if (!IsLostCousinsEntered((CensusDate)cr.Fact.FactDate))
             {
@@ -905,9 +905,9 @@ namespace FTAnalyzer
         /// <summary>
         /// Checks the notes against an individual to see if any census data exists
         /// </summary>
-        private void AddCensusNoteFacts()
+        void AddCensusNoteFacts()
         {
-            if (HasNotes)
+            if (HasNotes == "Yes")
             {
                 bool checkNotes = true;
                 string notes = CensusReference.ClearCommonPhrases(Notes);

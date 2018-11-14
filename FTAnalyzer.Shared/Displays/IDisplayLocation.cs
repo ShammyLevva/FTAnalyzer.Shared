@@ -4,26 +4,26 @@ namespace FTAnalyzer
 {
     public interface IDisplayLocation
     {
-        [ColumnWidth(120)]
+        [ColumnDetail("Country", 120)]
         string Country { get; }
-        [ColumnWidth(120)]
+        [ColumnDetail("Region", 120)]
         string Region { get; }
-        [ColumnWidth(140)]
+        [ColumnDetail("Sub Region", 140)]
         string SubRegion { get; }
-        [ColumnWidth(160)]
+        [ColumnDetail("Address", 160)]
         string Address { get; }
-        [ColumnWidth(180)]
+        [ColumnDetail("Place", 180)]
         string Place { get; }
-        [ColumnWidth(60)]
+        [ColumnDetail("Lat", 60)]
         double Latitude { get; }
-        [ColumnWidth(60)]
+        [ColumnDetail("Long", 60)]
         double Longitude { get; }
 #if __PC__
         System.Drawing.Image Icon { get; }
 #endif
-        [ColumnWidth(120)]
+        [ColumnDetail("Geocode Status", 120)]
         string Geocoded { get; }
-        [ColumnWidth(250)]
+        [ColumnDetail("Found Location", 250)]
         string FoundLocation { get; }
 
         int CompareTo(IDisplayLocation loc, int level);

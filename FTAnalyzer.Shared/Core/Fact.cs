@@ -289,7 +289,7 @@ namespace FTAnalyzer
 
         #region Constructors
 
-        private Fact(string reference, bool preferred)
+        Fact(string reference, bool preferred)
         {
             FactType = string.Empty;
             FactDate = FactDate.UNKNOWN_DATE;
@@ -325,7 +325,7 @@ namespace FTAnalyzer
             CreateFact(node, ind.IndividualRef, preferred, deathdate, outputText);
         }
 
-        private void CreateFact(XmlNode node, string reference, bool preferred, FactDate deathdate, IProgress<string> outputText)
+        void CreateFact(XmlNode node, string reference, bool preferred, FactDate deathdate, IProgress<string> outputText)
         {
             if (node != null)
             {

@@ -9,6 +9,8 @@ namespace FTAnalyzer
         public string Forenames { get; private set; }
         public Individual Ind { get; private set; }
         public Fact Fact { get; set; }
+        public bool IgnoreFact { get; set; }
+
 #if __PC__
         public System.Drawing.Image Icon { get; private set; }
         public System.Drawing.Color BackColour { get; set; }
@@ -47,11 +49,10 @@ namespace FTAnalyzer
         public string Relation => Ind == null ? string.Empty : Ind.Relation;
         public string RelationToRoot => Ind == null ? string.Empty : Ind.RelationToRoot;
         public string SurnameAtDate => Ind == null ? string.Empty : Ind.SurnameAtDate(FactDate);
-        public bool Preferred => Fact.Preferred;
-        public bool IgnoreFact { get; set; }
+        public string Preferred => Fact.Preferred ? "Yes" : "No";
         public string FactHash => Ind == null ? Fact.Preferred + Fact.FactTypeDescription + Fact.DateString + Fact.Location.GEDCOMLocation :
                                               Ind.IndividualID + Fact.Preferred + Fact.FactTypeDescription + Fact.DateString + Fact.Location.GEDCOMLocation;
-
+        public string IgnoredFact => IgnoreFact ? "Yes" : "No";
         public int CompareTo(object obj)
         {
             DisplayFact that = (DisplayFact)obj;

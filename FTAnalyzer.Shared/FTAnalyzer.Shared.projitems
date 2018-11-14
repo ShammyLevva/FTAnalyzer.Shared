@@ -125,7 +125,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\SortableBindingList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\Analytics.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\SpecialMethods.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Utilities\ColumnWidth.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilities\ColumnDetail.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)Resources\BingOSMaps.htm">

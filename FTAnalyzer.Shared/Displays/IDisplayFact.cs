@@ -11,52 +11,52 @@ namespace FTAnalyzer
 #if __PC__
         Image Icon { get; }
 #endif
-        [ColumnWidth(60)]
+        [ColumnDetail("Ref", 60)]
         string IndividualID { get; }
-        [ColumnWidth(75)]
+        [ColumnDetail("Surname", 75)]
         string Surname { get; }
-        [ColumnWidth(100)]
+        [ColumnDetail("Forenames", 100)]
         string Forenames { get; }
-        [ColumnWidth(150)]
+        [ColumnDetail("Birth Date", 150)]
         FactDate DateofBirth { get; }
-        [ColumnWidth(75)]
+        [ColumnDetail("Surname at date", 75)]
         string SurnameAtDate { get; }
-        [ColumnWidth(85)]
+        [ColumnDetail("Fact Type", 85)]
         string TypeOfFact { get; }
-        [ColumnWidth(150)]
+        [ColumnDetail("Fact Date", 150)]
         FactDate FactDate { get; }
-        [ColumnWidth(105)]
+        [ColumnDetail("Relation", 115)]
         string Relation { get; }
-        [ColumnWidth(150)]
+        [ColumnDetail("Relation to Root", 150)]
         string RelationToRoot { get; }
-        [ColumnWidth(250)]
+        [ColumnDetail("Location", 250)]
         FactLocation Location { get; }
-        [ColumnWidth(50)]
+        [ColumnDetail("Age at Fact", 70)]
         Age AgeAtFact { get; }
 #if __PC__
         Image LocationIcon { get; }
 #endif
-        [ColumnWidth(150)]
+        [ColumnDetail("Geocode Status", 150)]
         string GeocodeStatus { get; }
-        [ColumnWidth(250)]
+        [ColumnDetail("Found Location", 250)]
         string FoundLocation { get; }
-        [ColumnWidth(100)]
+        [ColumnDetail("Found Result Type", 130)]
         string FoundResultType { get; }
-        [ColumnWidth(250)]
+        [ColumnDetail("Census Reference", 250)]
         CensusReference CensusReference { get; }
-        [ColumnWidth(100)]
+        [ColumnDetail("Census Ref. Year", 100)]
         string CensusRefYear { get; }
-        [ColumnWidth(250)]
+        [ColumnDetail("Comments", 250)]
         string Comment { get; }
-        [ColumnWidth(300)]
+        [ColumnDetail("Sources", 300)]
         string SourceList { get; }
-        [ColumnWidth(60)]
+        [ColumnDetail("Lat", 60)]
         double Latitude { get; }
-        [ColumnWidth(60)]
+        [ColumnDetail("Long", 60)]
         double Longitude { get; }
-        [ColumnWidth(40)]
-        bool Preferred { get; }
-        [ColumnWidth(40)]
-        bool IgnoreFact { get; }
+        [ColumnDetail("Preferred Fact", 70, ColumnDetail.ColumnAlignment.Right)]
+        string Preferred { get; }
+        [ColumnDetail("Ignored Fact", 70, ColumnDetail.ColumnAlignment.Right)]
+        string IgnoredFact { get; }
     }
 }

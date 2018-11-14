@@ -4,39 +4,39 @@ namespace FTAnalyzer
 {
     public interface IDisplayIndividual
     {
-        [ColumnWidth(60)]
+        [ColumnDetail("Ref", 60)]
         string IndividualID { get; }
-        [ColumnWidth(75)]
+        [ColumnDetail("Forenames", 100)]
         string Forenames { get; }
-        [ColumnWidth(100)]
+        [ColumnDetail("Surnames", 75)]
         string Surname { get; }
-        [ColumnWidth(50)]
+        [ColumnDetail("Gender", 50, ColumnDetail.ColumnAlignment.Center)]
         string Gender { get; }
-        [ColumnWidth(150)]
+        [ColumnDetail("Birth Date", 150)]
         FactDate BirthDate { get; }
-        [ColumnWidth(250)]
+        [ColumnDetail("Birth Location", 250)]
         FactLocation BirthLocation { get; }
-        [ColumnWidth(150)]
+        [ColumnDetail("Death Date", 150)]
         FactDate DeathDate { get; }
-        [ColumnWidth(250)]
+        [ColumnDetail("Death Location", 250)]
         FactLocation DeathLocation { get; }
-        [ColumnWidth(200)]
+        [ColumnDetail("Occupation", 200)]
         string Occupation { get; }
-        [ColumnWidth(60)]
+        [ColumnDetail("Lifespan",65)]
         Age LifeSpan { get; }
-        [ColumnWidth(105)]
+        [ColumnDetail("Relation", 115)]
         string Relation { get; }
-        [ColumnWidth(150)]
+        [ColumnDetail("Relation to Root", 150)]
         string RelationToRoot { get; }
-        [ColumnWidth(60)]
+        [ColumnDetail("Num Marriages", 90, ColumnDetail.ColumnAlignment.Right)]
         int MarriageCount { get; }
-        [ColumnWidth(60)]
+        [ColumnDetail("Num Children", 80, ColumnDetail.ColumnAlignment.Right)]
         int ChildrenCount { get; }
-        [ColumnWidth(80)]
+        [ColumnDetail("Budgie Code", 90)]
         string BudgieCode { get; }
-        [ColumnWidth(60)]
+        [ColumnDetail("Ahnentafel", 70, ColumnDetail.ColumnAlignment.Right)]
         long Ahnentafel { get; }
-        [ColumnWidth(40)]
-        bool HasNotes { get; }
+        [ColumnDetail("Has Notes", 600, ColumnDetail.ColumnAlignment.Center)]
+        string HasNotes { get; }
     }
 }

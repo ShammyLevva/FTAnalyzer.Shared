@@ -81,11 +81,11 @@ namespace FTAnalyzer
         public DateTime StartDate { get; private set; }
         public DateTime EndDate { get; private set; }
         public FactDateType DateType { get; private set; }
-        private readonly string OriginalString;
-        private string DoubleDateError;
+        readonly string OriginalString;
+        string DoubleDateError;
 
         public bool DoubleDate { get; private set; } // Is a pre 1752 date bet 1 Jan and 25 Mar eg: 1735/36.
-        private int yearfix;
+        int yearfix;
 
         public FactDate(string str, string factRef = "")
         {
@@ -97,10 +97,7 @@ namespace FTAnalyzer
             str = FixTextDateFormats(str.ToUpper());
             str = FixCommonDateFormats(str);
             DateType = FactDateType.UNK;
-            if (str.Length == 0)
-                DateString = "UNKNOWN";
-            else
-                DateString = str.ToUpper();
+            DateString = str.Length == 0 ? "UNKNOWN" : str.ToUpper();
             StartDate = MINDATE;
             EndDate = MAXDATE;
             if (!DateString.Equals("UNKNOWN"))
@@ -118,7 +115,7 @@ namespace FTAnalyzer
 
         public static string Format(string format, DateTime date) => string.Format("{0:" + format + "}", date).ToUpper();
 
-        private string FixTextDateFormats(string str)
+        string FixTextDateFormats(string str)
         {
             switch(str)
             {

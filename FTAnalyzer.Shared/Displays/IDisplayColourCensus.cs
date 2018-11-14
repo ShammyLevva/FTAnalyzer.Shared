@@ -1,13 +1,19 @@
-﻿using static FTAnalyzer.ColourValues;
+﻿using FTAnalyzer.Utilities;
+using static FTAnalyzer.ColourValues;
 
 namespace FTAnalyzer
 {
     public interface IDisplayColourCensus
     {
-        string IndividualID { get; }        
-        string Forenames { get; }           
+        [ColumnDetail("Ref", 60)]
+        string IndividualID { get; }
+        [ColumnDetail("Forenames", 100)]
+        string Forenames { get; }
+        [ColumnDetail("Surnames", 75)]
         string Surname { get; }
+        [ColumnDetail("Relation", 115)]
         string Relation { get; }
+        [ColumnDetail("Relation to Root", 150)]
         string RelationToRoot { get; }
 
         CensusColour C1841 { get; }
