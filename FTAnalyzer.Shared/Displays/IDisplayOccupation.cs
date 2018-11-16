@@ -5,9 +5,9 @@ namespace FTAnalyzer
 {
     public interface IDisplayOccupation : IComparable<IDisplayOccupation>
     {
-        [ColumnDetail("Occupation", 300)]
+        [ColumnDetail("Occupation", 400)]
         string Occupation { get; }
-        [ColumnDetail("Count", 50, ColumnDetail.ColumnAlignment.Right)]
+        [ColumnDetail("Count", 70, ColumnDetail.ColumnAlignment.Right)]
         int Count { get; }
     }
 }
