@@ -6,10 +6,10 @@ namespace FTAnalyzer.Utilities
 {
     public class SortableBindingList<T> : BindingList<T>
     {
-        private readonly Dictionary<Type, PropertyComparer<T>> comparers;
-        private bool isSorted;
-        private ListSortDirection listSortDirection;
-        private PropertyDescriptor propertyDescriptor;
+        readonly Dictionary<Type, PropertyComparer<T>> comparers;
+        bool isSorted;
+        ListSortDirection listSortDirection;
+        PropertyDescriptor propertyDescriptor;
 
         public SortableBindingList()
             : base(new List<T>()) => comparers = new Dictionary<Type, PropertyComparer<T>>();
@@ -27,22 +27,22 @@ namespace FTAnalyzer.Utilities
 
         protected override bool SupportsSearchingCore => true;
 
-        protected override void ApplySortCore(PropertyDescriptor property, ListSortDirection direction)
+        protected override void ApplySortCore(PropertyDescriptor prop, ListSortDirection direction)
         {
             OnSortStarted();
             List<T> itemsList = (List<T>)Items;
 
-            Type propertyType = property.PropertyType;
+            Type propertyType = prop.PropertyType;
             if (!comparers.TryGetValue(propertyType, out PropertyComparer<T> comparer))
             {
-                comparer = new PropertyComparer<T>(property, direction);
+                comparer = new PropertyComparer<T>(prop, direction);
                 comparers.Add(propertyType, comparer);
             }
 
-            comparer.SetPropertyAndDirection(property, direction);
+            comparer.SetPropertyAndDirection(prop, direction);
             MergeSort(itemsList, comparer);
 
-           propertyDescriptor = property;
+           propertyDescriptor = prop;
            listSortDirection = direction;
            isSorted = true;
 
@@ -59,27 +59,27 @@ namespace FTAnalyzer.Utilities
             OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
         }
 
-        protected override int FindCore(PropertyDescriptor property, object key)
+        protected override int FindCore(PropertyDescriptor prop, object key)
         {
             int count = Count;
             for (int i = 0; i < count; ++i)
             {
                 T element = this[i];
-                if (property.GetValue(element).Equals(key))
+                if (prop.GetValue(element).Equals(key))
                     return i;
             }
 
             return -1;
         }
 
-        private void MergeSort(List<T> inputList, PropertyComparer<T> comparer)
+        void MergeSort(List<T> inputList, PropertyComparer<T> comparer)
         {
             int left = 0;
             int right = inputList.Count - 1;
             InternalMergeSort(inputList, comparer, left, right);
         }
 
-        private void InternalMergeSort(List<T> inputList, PropertyComparer<T> comparer, int left, int right)
+        void InternalMergeSort(List<T> inputList, PropertyComparer<T> comparer, int left, int right)
         {
             int mid = 0;
 
@@ -92,7 +92,7 @@ namespace FTAnalyzer.Utilities
             }
         }
 
-        private void MergeSortedList(List<T> inputList, PropertyComparer<T> comparer, int left, int mid, int right)
+        void MergeSortedList(List<T> inputList, PropertyComparer<T> comparer, int left, int mid, int right)
         {
             int total_elements = right - left + 1; //BODMAS rule
             int right_start = mid + 1;
