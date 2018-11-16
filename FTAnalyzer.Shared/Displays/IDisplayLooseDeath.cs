@@ -11,11 +11,11 @@ namespace FTAnalyzer
         string Forenames { get; }
         [ColumnDetail("Surnames", 75)]
         string Surname { get; }
-        [ColumnDetail("Birth Date", 150)]
+        [ColumnDetail("Birth Date", 170)]
         FactDate BirthDate { get; }
         [ColumnDetail("Birth Location", 250)]
         FactLocation BirthLocation { get; }
-        [ColumnDetail("Death Date", 150)]
+        [ColumnDetail("Death Date", 170)]
         FactDate DeathDate { get; }
         [ColumnDetail("Death Location", 250)]
         FactLocation DeathLocation { get; }

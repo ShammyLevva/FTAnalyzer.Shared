@@ -30,9 +30,9 @@ namespace FTAnalyzer
         [ColumnDetail("Burial", 60)]
         ColourValues.BMDColour CremBuri { get; }
 
-        [ColumnDetail("Birth date", 150)]
+        [ColumnDetail("Birth date", 170)]
         FactDate BirthDate { get; }
-        [ColumnDetail("Death date", 150)]
+        [ColumnDetail("Death date", 170)]
         FactDate DeathDate { get; }
         [ColumnDetail("First Marriage", 200)]
         string FirstMarriage { get; }

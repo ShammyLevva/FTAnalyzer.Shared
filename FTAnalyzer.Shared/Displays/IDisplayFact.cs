@@ -17,13 +17,13 @@ namespace FTAnalyzer
         string Surname { get; }
         [ColumnDetail("Forenames", 100)]
         string Forenames { get; }
-        [ColumnDetail("Birth Date", 150)]
+        [ColumnDetail("Birth Date", 170)]
         FactDate DateofBirth { get; }
         [ColumnDetail("Surname at date", 75)]
         string SurnameAtDate { get; }
         [ColumnDetail("Fact Type", 85)]
         string TypeOfFact { get; }
-        [ColumnDetail("Fact Date", 150)]
+        [ColumnDetail("Fact Date", 170)]
         FactDate FactDate { get; }
         [ColumnDetail("Relation", 115)]
         string Relation { get; }
