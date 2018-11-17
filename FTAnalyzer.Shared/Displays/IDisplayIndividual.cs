@@ -36,7 +36,7 @@ namespace FTAnalyzer
         string BudgieCode { get; }
         [ColumnDetail("Ahnentafel", 70, ColumnDetail.ColumnAlignment.Right)]
         long Ahnentafel { get; }
-        [ColumnDetail("Has Notes", 600, ColumnDetail.ColumnAlignment.Center)]
+        [ColumnDetail("Has Notes", 60, ColumnDetail.ColumnAlignment.Center)]
         string HasNotes { get; }
     }
 }
