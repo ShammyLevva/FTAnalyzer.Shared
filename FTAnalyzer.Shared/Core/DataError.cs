@@ -25,8 +25,8 @@ namespace FTAnalyzer
         {
             family = fam;
         }
-                    
-        Individual individual;
+
+        readonly Individual individual;
         Family family;
 
 #if __PC__

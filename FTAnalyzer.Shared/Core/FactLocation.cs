@@ -14,7 +14,7 @@ namespace FTAnalyzer
     public class FactLocation : IComparable<FactLocation>, IDisplayLocation, IDisplayGeocodedLocation
     {
         #region Variables
-        private static log4net.ILog log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        // static log4net.ILog log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         public const int UNKNOWN = -1, COUNTRY = 0, REGION = 1, SUBREGION = 2, ADDRESS = 3, PLACE = 4;
         public enum Geocode
         {
@@ -225,6 +225,7 @@ namespace FTAnalyzer
 
         public static void LoadGoogleFixesXMLFile(IProgress<string> progress)
         {
+            progress.Report("");
 #if __PC__
             LOCAL_GOOGLE_FIXES = new Dictionary<Tuple<int, string>, string>();
             try
@@ -253,24 +254,19 @@ namespace FTAnalyzer
 #endif
         }
 
-        private static void AddGoogleFixes(Dictionary<Tuple<int, string>, string> dictionary, XmlNode n, int level)
+        static void AddGoogleFixes(Dictionary<Tuple<int, string>, string> dictionary, XmlNode n, int level)
         {
             string fromstr = n.Attributes["from"].Value;
             string to = n.Attributes["to"].Value;
             Tuple<int, string> from = new Tuple<int, string>(level, fromstr.ToUpperInvariant());
             if (from != null && fromstr.Length > 0 && to != null)
             {
-                if (dictionary.ContainsKey(from))
-                    log.Error(string.Format("Error duplicate Google {0} :{1} to {2}", GoogleFixLevel(level), fromstr, to));
-                else
-                {
-                    log.Info(string.Format("Added Google {0} :{1} to {2}", GoogleFixLevel(level), fromstr, to));
+                if (!dictionary.ContainsKey(from))
                     dictionary.Add(from, to);
-                }
             }
         }
 
-        private static string GoogleFixLevel(int level)
+        static string GoogleFixLevel(int level)
         {
             switch (level)
             {
@@ -282,7 +278,7 @@ namespace FTAnalyzer
             }
         }
 
-        private static void SetupGeocodes()
+        static void SetupGeocodes()
         {
             Geocodes = new Dictionary<Geocode, string>
             {
@@ -348,7 +344,7 @@ namespace FTAnalyzer
                 status = Geocode.GEDCOM_USER;
         }
 
-        private FactLocation(string location)
+        FactLocation(string location)
             : this()
         {
             if (location != null)
@@ -485,7 +481,7 @@ namespace FTAnalyzer
             return result; // should return object that is in list of locations 
         }
 
-        private bool GecodingMatches(FactLocation temp) 
+        bool GecodingMatches(FactLocation temp) 
             => Latitude == temp.Latitude && Longitude == temp.Longitude && LatitudeM == temp.LatitudeM && LongitudeM == temp.LongitudeM;
 
         public static List<FactLocation> ExposeFactLocations => LOCATIONS.Values.ToList();
@@ -669,50 +665,47 @@ namespace FTAnalyzer
             Place = Place.Replace("&", "and").Replace(",", "").Trim();
         }
 
-        private void FixCountryTypos()
+        void FixCountryTypos()
         {
             string result = string.Empty;
             COUNTRY_TYPOS.TryGetValue(Country, out result);
-            if (result != null && result.Length > 0)
+            if (!string.IsNullOrEmpty(result))
                 Country = result;
             else
             {
                 string fixCase = EnhancedTextInfo.ToTitleCase(Country.ToLower());
                 COUNTRY_TYPOS.TryGetValue(fixCase, out result);
-                if (result != null && result.Length > 0)
+                if (!string.IsNullOrEmpty(result))
                     Country = result;
             }
         }
 
-        private string FixRegionTypos(string toFix)
+        string FixRegionTypos(string toFix)
         {
             string result = string.Empty;
             if (Country == Countries.AUSTRALIA && toFix.Equals("WA"))
                 return "Western Australia"; // fix for WA = Washington
             REGION_TYPOS.TryGetValue(toFix, out result);
-            if (result != null && result.Length > 0)
+            if (!string.IsNullOrEmpty(result))
                 return result;
             else
             {
                 string fixCase = EnhancedTextInfo.ToTitleCase(toFix.ToLower());
                 REGION_TYPOS.TryGetValue(fixCase, out result);
-                if (result != null && result.Length > 0)
-                    return result;
-                else
-                    return toFix;
+                return !string.IsNullOrEmpty(result) ? result : toFix;
             }
         }
 
-        private void ShiftCountryToRegion()
+        void ShiftCountryToRegion()
         {
             string result = string.Empty;
             COUNTRY_SHIFTS.TryGetValue(Country, out result);
-            if (result == null || result.Length == 0)
+            if (string.IsNullOrEmpty(result))
             {
                 string fixCase = EnhancedTextInfo.ToTitleCase(Country.ToLower());
                 COUNTRY_SHIFTS.TryGetValue(fixCase, out result);
             }
-            if (result != null && result.Length > 0)
+            if (!string.IsNullOrEmpty(result))
             {
                 Place = (Place + " " + Address).Trim();
                 Address = SubRegion;
@@ -723,18 +716,18 @@ namespace FTAnalyzer
             }
         }
 
-        private void ShiftRegionToParish()
+        void ShiftRegionToParish()
         {
             if (!Countries.IsUnitedKingdom(Country))
                 return; // don't shift regions if not UK
             string result = string.Empty;
             REGION_SHIFTS.TryGetValue(Region, out result);
-            if (result == null || result.Length == 0)
+            if (string.IsNullOrEmpty(result))
             {
                 string fixCase = EnhancedTextInfo.ToTitleCase(Region.ToLower());
                 REGION_TYPOS.TryGetValue(fixCase, out result);
             }
-            if (result != null && result.Length > 0)
+            if (!string.IsNullOrEmpty(result))
             {
                 Place = (Place + " " + Address).Trim();
                 Address = SubRegion;
@@ -744,7 +737,7 @@ namespace FTAnalyzer
             }
         }
 
-        private void SetFixedLocation()
+        void SetFixedLocation()
         {
             FixedLocation = Country;
             if (Region.Length > 0 || GeneralSettings.Default.AllowEmptyLocations)
@@ -758,7 +751,7 @@ namespace FTAnalyzer
             FixedLocation = TrimLeadingCommas(FixedLocation);
         }
 
-        private void SetSortableLocation()
+        void SetSortableLocation()
         {
             SortableLocation = Country;
             if (Region.Length > 0 || GeneralSettings.Default.AllowEmptyLocations)
@@ -772,7 +765,7 @@ namespace FTAnalyzer
             SortableLocation = TrimLeadingCommas(SortableLocation);
         }
 
-        private void SetMetaphones()
+        void SetMetaphones()
         {
             DoubleMetaphone meta = new DoubleMetaphone(Country);
             CountryMetaphone = meta.PrimaryKey;
@@ -868,7 +861,7 @@ namespace FTAnalyzer
             }
         }
 
-        private string TrimLeadingCommas(string toChange)
+        string TrimLeadingCommas(string toChange)
         {
             while (toChange.StartsWith(", "))
                 toChange = toChange.Substring(2);
@@ -894,16 +887,7 @@ namespace FTAnalyzer
 
         public bool IsEnglandWales => Countries.IsEnglandWales(Country);
 
-        public string Geocoded
-        {
-            get
-            {
-                if (Geocodes.TryGetValue(GeocodeStatus, out string result))
-                    return result;
-                else
-                    return "Unknown";
-            }
-        }
+        public string Geocoded => Geocodes.TryGetValue(GeocodeStatus, out string result) ? result : "Unknown";
 
         public static int GeocodedLocations => AllLocations.Count(l => l.IsGeoCoded(false));
 
@@ -913,12 +897,9 @@ namespace FTAnalyzer
         {
             get
             {
-                if (Countries.IsUnitedKingdom(Country))
-                    return Countries.UNITED_KINGDOM;
-                else if (Countries.IsCensusCountry(Country))
-                    return Country;
-                else
-                    return Countries.UNKNOWN_COUNTRY;
+                return Countries.IsUnitedKingdom(Country)
+                    ? Countries.UNITED_KINGDOM
+                    : Countries.IsCensusCountry(Country) ? Country : Countries.UNKNOWN_COUNTRY;
             }
         }
 
@@ -1077,9 +1058,7 @@ namespace FTAnalyzer
 
         public override bool Equals(object obj)
         {
-            if (obj is FactLocation)
-                return CompareTo((FactLocation)obj) == 0;
-            return false;
+            return obj is FactLocation && CompareTo((FactLocation)obj) == 0;
         }
 
         public static bool operator ==(FactLocation a, FactLocation b)

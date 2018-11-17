@@ -38,9 +38,7 @@ namespace FTAnalyzer.Utilities
                 case ColumnAlignment.Center: Alignment = NSTextAlignment.Center; break;
             }
 #endif
-
         }
-
         public enum ColumnAlignment { Left, Right, Center };
     }
 }

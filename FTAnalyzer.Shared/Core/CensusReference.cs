@@ -9,7 +9,7 @@ namespace FTAnalyzer
 {
     public class CensusReference : IComparable<CensusReference>
     {
-        static log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        //static log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         static readonly string EW_CENSUS_PATTERN = @"RG *(\d{1,3}) *Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3})";
         static readonly string EW_CENSUS_PATTERN1 = @"RG *(\d{1,3}) *Piece\/Folio *(\d{1,5})[\/ ]*(\d{1,4}[a-z]?) *Page *(\d{1,3})";
@@ -1235,8 +1235,8 @@ namespace FTAnalyzer
                 }
                 if (unknownCensusRef.Length > 0)
                     return unknownCensusRef;
-                if (ReferenceText.Length > 0)
-                    log.Warn("Census reference text not generated for :" + ReferenceText);
+                //if (ReferenceText.Length > 0)
+                  //  log.Warn("Census reference text not generated for :" + ReferenceText);
                 return string.Empty;
             }
         }

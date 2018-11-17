@@ -22,7 +22,6 @@ namespace FTAnalyzer
     {
         #region Variables
         static FamilyTree instance;
-        static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         IList<FactSource> sources;
         IList<Individual> individuals;
@@ -98,7 +97,7 @@ namespace FTAnalyzer
                     result.AppendLine();
                 }
             }
-            catch (Exception)
+            catch
             { }
             return result.ToString().Trim();
         }
@@ -119,7 +118,7 @@ namespace FTAnalyzer
             return string.Empty;
         }
 
-        private static string GetContinuationText(XmlNodeList nodeList)
+        static string GetContinuationText(XmlNodeList nodeList)
         {
             var result = new StringBuilder();
             foreach (XmlNode child in nodeList)
@@ -423,11 +422,11 @@ namespace FTAnalyzer
             }
             catch (Exception e)
             {
-                log.Warn("Failed to load Standardised names error was : " + e.Message);
+                //log.Warn("Failed to load Standardised names error was : " + e.Message);
             }
         }
 
-        private void ReadStandardisedNameFile(string filename)
+        void ReadStandardisedNameFile(string filename)
         {
             StreamReader reader = new StreamReader(filename);
             while (!reader.EndOfStream)
@@ -448,12 +447,10 @@ namespace FTAnalyzer
         {
             StandardisedName gIn = new StandardisedName(IsMale, name);
             names.TryGetValue(gIn, out StandardisedName gOut);
-            if (gOut == null)
-                return name;
-            return gOut.Name;
+            return gOut == null ? name : gOut.Name;
         }
 
-        private void ReportOptions(IProgress<string> outputText)
+        void ReportOptions(IProgress<string> outputText)
         {
             if (GeneralSettings.Default.ReportOptions)
             {
@@ -488,12 +485,12 @@ namespace FTAnalyzer
             }
         }
 
-        private void RemoveFamiliesWithNoIndividuals()
+        void RemoveFamiliesWithNoIndividuals()
         {
             (families as List<Family>).RemoveAll(x => x.FamilySize == 0);
         }
 
-        private void CountUnknownFactTypes(IProgress<string> outputText)
+        void CountUnknownFactTypes(IProgress<string> outputText)
         {
             if (unknownFactTypes.Count > 0 && !GeneralSettings.Default.IgnoreFactTypeWarnings)
             {
@@ -506,7 +503,7 @@ namespace FTAnalyzer
             }
         }
 
-        private void CreateSharedFacts()
+        void CreateSharedFacts()
         {
             foreach (Tuple<string, Fact> t in sharedFacts)
             {
@@ -517,7 +514,7 @@ namespace FTAnalyzer
             }
         }
 
-        private void CountCensusFacts(IProgress<string> outputText)
+        void CountCensusFacts(IProgress<string> outputText)
         {
             int censusFacts = 0;
             int censusFTAFacts = 0;
@@ -600,7 +597,7 @@ namespace FTAnalyzer
             }
         }
 
-        private void AddOccupations(Individual individual)
+        void AddOccupations(Individual individual)
         {
             HashSet<string> jobs = new HashSet<string>();
             foreach (Fact f in individual.GetFacts(Fact.OCCUPATION))
@@ -618,7 +615,7 @@ namespace FTAnalyzer
             }
         }
 
-        private void CheckAllIndividualsAreInAFamily(IProgress<string> outputText)
+        void CheckAllIndividualsAreInAFamily(IProgress<string> outputText)
         {
             foreach (Family f in families)
             {
@@ -782,7 +779,7 @@ namespace FTAnalyzer
             return result;
         }
 
-        private void CheckLooseBirth(Individual indiv, SortableBindingList<IDisplayLooseBirth> result = null)
+        void CheckLooseBirth(Individual indiv, SortableBindingList<IDisplayLooseBirth> result = null)
         {
             FactDate birthDate = indiv.BirthDate;
             FactDate toAdd = null;
@@ -893,7 +890,7 @@ namespace FTAnalyzer
             }
         }
 
-        private DateTime CreateDate(int year, int month, int day)
+        DateTime CreateDate(int year, int month, int day)
         {
             if (year > DateTime.MaxValue.Year)
                 year = DateTime.MaxValue.Year;
@@ -906,7 +903,7 @@ namespace FTAnalyzer
             return new DateTime(year, month, day);
         }
 
-        private FactDate BaseLivingDate(Individual indiv)
+        FactDate BaseLivingDate(Individual indiv)
         {
             DateTime mindate = FactDate.MAXDATE;
             DateTime maxdate = GetMaxLivingDate(indiv, Fact.LOOSE_BIRTH_FACTS);
@@ -928,8 +925,7 @@ namespace FTAnalyzer
                 return new FactDate(startdate, mindate);
             if (mindate.Year != 1 && mindate.Year != FactDate.MAXDATE.Year && mindate <= maxdate)
                 return new FactDate(mindate, maxdate);
-            else
-                return FactDate.UNKNOWN_DATE;
+            return FactDate.UNKNOWN_DATE;
         }
 
         #endregion
@@ -954,7 +950,7 @@ namespace FTAnalyzer
             return result;
         }
 
-        private void CheckLooseDeath(Individual indiv, SortableBindingList<IDisplayLooseDeath> result = null)
+        void CheckLooseDeath(Individual indiv, SortableBindingList<IDisplayLooseDeath> result = null)
         {
             FactDate deathDate = indiv.DeathDate;
             FactDate toAdd = null;
@@ -997,7 +993,7 @@ namespace FTAnalyzer
             }
         }
 
-        private DateTime GetMaxLivingDate(Individual indiv, ISet<string> factTypes)
+        DateTime GetMaxLivingDate(Individual indiv, ISet<string> factTypes)
         {
             DateTime maxdate = FactDate.MINDATE;
             // having got the families the individual is a parent of
@@ -1089,7 +1085,7 @@ namespace FTAnalyzer
 
         #region Relationship Functions
 
-        private void ClearRelations()
+        void ClearRelations()
         {
             foreach (Individual i in individuals)
             {
@@ -1101,13 +1097,13 @@ namespace FTAnalyzer
             }
         }
 
-        private void AddToQueue(Queue<Individual> queue, IEnumerable<Individual> list)
+        void AddToQueue(Queue<Individual> queue, IEnumerable<Individual> list)
         {
             foreach (Individual i in list)
                 queue.Enqueue(i);
         }
 
-        private void AddDirectParentsToQueue(Individual indiv, Queue<Individual> queue, IProgress<string> outputText)
+        void AddDirectParentsToQueue(Individual indiv, Queue<Individual> queue, IProgress<string> outputText)
         {
             foreach (ParentalRelationship parents in indiv.FamiliesAsChild)
             {
@@ -1141,7 +1137,7 @@ namespace FTAnalyzer
             }
         }
 
-        private void AlreadyDirect(Individual parent, long newAhnatafel, IProgress<string> outputText)
+        void AlreadyDirect(Individual parent, long newAhnatafel, IProgress<string> outputText)
         {
             if (GeneralSettings.Default.ShowMultiAncestors)
             {
@@ -1160,7 +1156,7 @@ namespace FTAnalyzer
             }
         }
 
-        private void AddParentsToQueue(Individual indiv, Queue<Individual> queue)
+        void AddParentsToQueue(Individual indiv, Queue<Individual> queue)
         {
             foreach (ParentalRelationship parents in indiv.FamiliesAsChild)
             {
@@ -1271,7 +1267,7 @@ namespace FTAnalyzer
             }
         }
 
-        private void SetRelationDescriptions(string startID)
+        void SetRelationDescriptions(string startID)
         {
             IEnumerable<Individual> directs = GetAllRelationsOfType(Individual.DIRECT);
             IEnumerable<Individual> blood = GetAllRelationsOfType(Individual.BLOOD);
@@ -1357,7 +1353,7 @@ namespace FTAnalyzer
                 displayLocations[i] = null;
         }
 
-        private SortableBindingList<IDisplayLocation> GetDisplayLocations(int level)
+        SortableBindingList<IDisplayLocation> GetDisplayLocations(int level)
         {
             List<IDisplayLocation> result = new List<IDisplayLocation>();
             //copy to list so that any GetLocation(level) that creates a new location 
@@ -1900,7 +1896,7 @@ namespace FTAnalyzer
             }
         }
 
-        private string BuildFamilySearchQuery(string country, int censusYear, Individual person)
+        string BuildFamilySearchQuery(string country, int censusYear, Individual person)
         {
             FactDate censusFactDate = new FactDate(censusYear.ToString());
             // bad  https://familysearch.org/search/record/results%23count=20&query=%2Bgivenname%3ACharles~%20%2Bsurname%3AGalloway~%20%2Brecord_type%3A(3)&collection_id=2046756
@@ -1922,10 +1918,9 @@ namespace FTAnalyzer
             string location = Countries.UNKNOWN_COUNTRY;
             if (person.BirthLocation != FactLocation.UNKNOWN_LOCATION)
             {
-                if (person.BirthLocation.Country != country)
-                    location = person.BirthLocation.Country;
-                else
-                    location = person.BirthLocation.GetLocation(FactLocation.REGION).ToString().Replace(",", "");
+                location = person.BirthLocation.Country != country
+                    ? person.BirthLocation.Country
+                    : person.BirthLocation.GetLocation(FactLocation.REGION).ToString().Replace(",", "");
                 path.Append("%2B" + FamilySearch.BIRTH_LOCATION + "%3A" + HttpUtility.UrlEncode(location) + "%7E%20");
             }
             int collection = FamilySearch.CensusCollectionID(country, censusYear);
@@ -1949,7 +1944,7 @@ namespace FTAnalyzer
             return path.Replace("+", "%20").ToString();
         }
 
-        private string BuildAncestryQuery(string censusCountry, int censusYear, Individual person)
+        string BuildAncestryQuery(string censusCountry, int censusYear, Individual person)
         {
             if (censusYear == 1939 && censusCountry.Equals(Countries.UNITED_KINGDOM))
                 return BuildAncestry1939Query(person);
@@ -2031,7 +2026,7 @@ namespace FTAnalyzer
             uri.Query = query.ToString();
             return uri.ToString();
         }
-        private string BuildAncestry1939Query(Individual person)
+        string BuildAncestry1939Query(Individual person)
         {
             UriBuilder uri = new UriBuilder
             {
@@ -2084,7 +2079,7 @@ namespace FTAnalyzer
             return uri.ToString();
         }
 
-        private string BuildFreeCenQuery(string censusCountry, int censusYear, Individual person)
+        string BuildFreeCenQuery(string censusCountry, int censusYear, Individual person)
         {
             if (!censusCountry.Equals(Countries.UNITED_KINGDOM) && !censusCountry.Equals("Unknown"))
             {
@@ -2154,7 +2149,7 @@ namespace FTAnalyzer
             return uri.ToString();
         }
 
-        private string BuildFindMyPastQuery(string censusCountry, int censusYear, Individual person)
+        string BuildFindMyPastQuery(string censusCountry, int censusYear, Individual person)
         {
             // new http://search.findmypast.co.uk/results/united-kingdom-records-in-census-land-and-surveys?firstname=peter&firstname_variants=true&lastname=moir&lastname_variants=true&eventyear=1881&eventyear_offset=2&yearofbirth=1825&yearofbirth_offset=2
             FactDate censusFactDate = new FactDate(censusYear.ToString());
@@ -2334,7 +2329,7 @@ namespace FTAnalyzer
             }
         }
 
-        private string BuildFamilySearchQuery(SearchType st, Individual individual, FactDate factdate)
+        string BuildFamilySearchQuery(SearchType st, Individual individual, FactDate factdate)
         {
             // https://familysearch.org/search/record/results?count=20&query=%2Bgivenname%3AElizabeth~%20%2Bsurname%3AAckers~%20%2Bbirth_place%3A%22walton%20le%20dale%2C%20lancashire%2C%20england%22~%20%2Bbirth_year%3A1879-1881~%20%2Brecord_country%3AEngland
             UriBuilder uri = new UriBuilder
@@ -2489,7 +2484,7 @@ namespace FTAnalyzer
             return uri.ToString();
         }
 
-        private static void AppendYearandRange(FactDate factdate, StringBuilder query, string yeartext, string rangetext, bool FMP)
+        static void AppendYearandRange(FactDate factdate, StringBuilder query, string yeartext, string rangetext, bool FMP)
         {
             if (factdate.IsKnown)
             {
@@ -2649,7 +2644,7 @@ namespace FTAnalyzer
 
         public async Task<SortableBindingList<IDisplayDuplicateIndividual>> GenerateDuplicatesList(int value, IProgress<int> progress, IProgress<int> maximum, CancellationToken ct)
         {
-            log.Debug("FamilyTree.GenerateDuplicatesList");
+            //log.Debug("FamilyTree.GenerateDuplicatesList");
             if (duplicates != null)
             {
                 maximum.Report(MaxDuplicateScore());
@@ -2683,7 +2678,7 @@ namespace FTAnalyzer
             return BuildDuplicateList(value);
         }
 
-        private int MaxDuplicateScore()
+        int MaxDuplicateScore()
         {
             int score = 0;
             foreach (DuplicateIndividual dup in duplicates)
@@ -2694,9 +2689,9 @@ namespace FTAnalyzer
             return score;
         }
 
-        private void IdentifyDuplicates(CancellationToken ct, IProgress<int> progress, IEnumerable<Individual> enumerable, ref ulong threadProgress)
+        void IdentifyDuplicates(CancellationToken ct, IProgress<int> progress, IEnumerable<Individual> enumerable, ref ulong threadProgress)
         {
-            log.Debug("FamilyTree.IdentifyDuplicates");
+            //log.Debug("FamilyTree.IdentifyDuplicates");
             var index = 0;
             foreach (var indA in enumerable)
             {
@@ -2727,9 +2722,9 @@ namespace FTAnalyzer
 
         public SortableBindingList<IDisplayDuplicateIndividual> BuildDuplicateList(int minScore)
         {
-            log.Debug("FamilyTree.BuildDuplicateList");
-            if (duplicates == null)
-                log.Error("BuildDuplicateList called with null duplicates");
+            //log.Debug("FamilyTree.BuildDuplicateList");
+            //if (duplicates == null)
+                //log.Error("BuildDuplicateList called with null duplicates");
 
             var select = new SortableBindingList<IDisplayDuplicateIndividual>();
             if (NonDuplicates == null)
@@ -2750,7 +2745,7 @@ namespace FTAnalyzer
 
         public void SerializeNonDuplicates()
         {
-            log.Debug("FamilyTree.SerializeNonDuplicates");
+            //log.Debug("FamilyTree.SerializeNonDuplicates");
             try
             {
                 IFormatter formatter = new BinaryFormatter();
@@ -2762,13 +2757,13 @@ namespace FTAnalyzer
             }
             catch (Exception e)
             {
-                log.Error($"Error {e.Message} writing NonDuplicates.xml");
+               // log.Error($"Error {e.Message} writing NonDuplicates.xml");
             }
         }
 
         public void DeserializeNonDuplicates()
         {
-            log.Debug("FamilyTree.DeserializeNonDuplicates");
+           // log.Debug("FamilyTree.DeserializeNonDuplicates");
             try
             {
                 IFormatter formatter = new BinaryFormatter();
@@ -2785,7 +2780,7 @@ namespace FTAnalyzer
             }
             catch (Exception e)
             {
-                log.Error("Error " + e.Message + " reading NonDuplicates.xml");
+              //  log.Error("Error " + e.Message + " reading NonDuplicates.xml");
                 NonDuplicates = new List<NonDuplicate>();
             }
         }
@@ -2920,7 +2915,7 @@ namespace FTAnalyzer
             return result;
         }
 
-        private static FactDate GetWikiDate(XmlNode dateNode, FactDate defaultDate)
+        static FactDate GetWikiDate(XmlNode dateNode, FactDate defaultDate)
         {
             FactDate fd;
             try
@@ -2933,13 +2928,13 @@ namespace FTAnalyzer
             }
             catch (Exception)
             {
-                log.Error("Error processing wiki date for " + dateNode);
+                //log.Error("Error processing wiki date for " + dateNode);
                 fd = defaultDate;
             }
             return fd;
         }
 
-        private XmlDocument GetWikipediaData(string URL)
+        XmlDocument GetWikipediaData(string URL)
         {
             string result = string.Empty;
             var doc = new XmlDocument();
@@ -2964,7 +2959,8 @@ namespace FTAnalyzer
             }
             catch (Exception e)
             {
-                log.Error($"Error trying to load data from {URL}\n\n{e.Message}");
+                Console.WriteLine(e.Message);
+                //log.Error($"Error trying to load data from {URL}\n\n{e.Message}");
             }
             return doc;
         }

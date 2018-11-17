@@ -136,7 +136,7 @@ namespace FTAnalyzer
             return str;
         }
 
-        private string FixCommonDateFormats(string str)
+        string FixCommonDateFormats(string str)
         {
             str = EnhancedTextInfo.RemoveDiacritics(str.Trim().ToUpper());
             str = str.Replace(",", string.Empty);
@@ -336,7 +336,7 @@ namespace FTAnalyzer
                 str = str.Replace("<", "BEF ");
             if (str.StartsWith("~", StringComparison.Ordinal))
                 str = str.Replace("~", "ABT ");
-            if (str.StartsWith("C1", StringComparison.Ordinal) || str.StartsWith("C2", StringComparison.Ordinal) || 
+            if (str.StartsWith("C1", StringComparison.Ordinal) || str.StartsWith("C2", StringComparison.Ordinal) ||
                 str.StartsWith("C 1", StringComparison.Ordinal) || str.StartsWith("C 2", StringComparison.Ordinal))
                 str = "ABT " + str.Substring(1);
             str = str.Replace("  ", " "); // fix issue if > or < or Cxxx has already got a space
@@ -346,14 +346,14 @@ namespace FTAnalyzer
                 matcher = _datePatterns["INTERPRETED_DATE_PATTERN"].Match(str);
                 if (matcher.Success)
                 {
-                    string result = matcher.Groups[1].ToString() + matcher.Groups[2].ToString() + " " + matcher.Groups[3].ToString();
+                    string result = matcher.Groups[1] + matcher.Groups[2].ToString() + " " + matcher.Groups[3];
                     return result.Trim();
                 }
             }
             matcher = _datePatterns["POSTFIX"].Match(str);
             if (matcher.Success)
             {
-                string result = matcher.Groups[1].ToString() + matcher.Groups[2].ToString();
+                string result = $"{matcher.Groups[1]}{matcher.Groups[2].ToString()}";
                 return result.Trim();
             }
             if (Properties.NonGedcomDate.Default.UseNonGedcomDates)
@@ -363,25 +363,25 @@ namespace FTAnalyzer
                 {
                     Tuple<bool, string> result = BetweenFixes(str);
                     if (result.Item1)
-                        return result.Item2.ToString().Trim();
+                        return result.Item2.Trim();
                 }
             }
             else
             {
                 Tuple<bool, string> result = BetweenFixes(str);
                 if (result.Item1)
-                    return result.Item2.ToString().Trim();
+                    return result.Item2.Trim();
             }
             matcher = _datePatterns["USDATEFIX"].Match(str);
             if (matcher.Success)
             {
-                string result = matcher.Groups[2].ToString() + matcher.Groups[1].ToString() + " " + matcher.Groups[3].ToString();
+                string result = $"{matcher.Groups[2]}{matcher.Groups[1]} {matcher.Groups[3]}";
                 return result.Trim();
             }
             matcher = _datePatterns["SPACEFIX"].Match(str);
             if (matcher.Success)
             {
-                string result = matcher.Groups[1].ToString() + " " + matcher.Groups[2].ToString() + " " + matcher.Groups[3].ToString();
+                string result = $"{matcher.Groups[1]} {matcher.Groups[2]} {matcher.Groups[3]}";
                 return result.Trim();
             }
             matcher = _datePatterns["QUAKERFIX"].Match(str);
@@ -396,23 +396,23 @@ namespace FTAnalyzer
             return str.Trim();
         }
 
-        private Tuple<bool,string> BetweenFixes(string str)
+        Tuple<bool, string> BetweenFixes(string str)
         {
             Match matcher = _datePatterns["BETWEENFIX"].Match(str);
             if (matcher.Success)
-                return new Tuple<bool, string>(true, "BET " + matcher.Groups[1].ToString() + " AND " + matcher.Groups[2].ToString());
+                return new Tuple<bool, string>(true, "BET " + matcher.Groups[1] + " AND " + matcher.Groups[2]);
             matcher = _datePatterns["BETWEENFIX2"].Match(str);
             if (matcher.Success)
-                return new Tuple<bool, string>(true, "BET " + matcher.Groups[1].ToString() + " " + matcher.Groups[2].ToString() + " AND " + matcher.Groups[3].ToString() + " " + matcher.Groups[4].ToString());
+                return new Tuple<bool, string>(true, "BET " + matcher.Groups[1] + " " + matcher.Groups[2] + " AND " + matcher.Groups[3] + " " + matcher.Groups[4]);
             matcher = _datePatterns["BETWEENFIX3"].Match(str);
             if (matcher.Success)
-                return new Tuple<bool, string>(true, "BET " + matcher.Groups[1].ToString() + matcher.Groups[2].ToString() + " " + matcher.Groups[3].ToString() + " AND " + matcher.Groups[4].ToString() + matcher.Groups[5].ToString() + " " + matcher.Groups[6].ToString());
+                return new Tuple<bool, string>(true, "BET " + matcher.Groups[1] + matcher.Groups[2] + " " + matcher.Groups[3] + " AND " + matcher.Groups[4] + matcher.Groups[5] + " " + matcher.Groups[6]);
             matcher = _datePatterns["BETWEENFIX4"].Match(str);
             if (matcher.Success)
-                return  new Tuple<bool, string>(true, "BET " + matcher.Groups[1].ToString() + " " + matcher.Groups[3].ToString() + " " + matcher.Groups[4].ToString() + " AND " + matcher.Groups[2].ToString() + matcher.Groups[3].ToString() + " " + matcher.Groups[4].ToString());
+                return new Tuple<bool, string>(true, "BET " + matcher.Groups[1] + " " + matcher.Groups[3] + " " + matcher.Groups[4] + " AND " + matcher.Groups[2] + matcher.Groups[3] + " " + matcher.Groups[4]);
             matcher = _datePatterns["BETWEENFIX5"].Match(str);
             if (matcher.Success)
-                return new Tuple<bool, string>(true, "BET " + matcher.Groups[1].ToString() + matcher.Groups[2].ToString() + " " + matcher.Groups[5].ToString() + " AND " + matcher.Groups[3].ToString() + matcher.Groups[4].ToString() + " " + matcher.Groups[5].ToString());
+                return new Tuple<bool, string>(true, "BET " + matcher.Groups[1] + matcher.Groups[2] + " " + matcher.Groups[5] + " AND " + matcher.Groups[3] + matcher.Groups[4] + " " + matcher.Groups[5]);
             return new Tuple<bool, string>(false, string.Empty);
         }
 
@@ -422,10 +422,7 @@ namespace FTAnalyzer
         {
             DateTime start = new DateTime(StartDate.Year, StartDate.Month, StartDate.Day);
             DateTime end = new DateTime(EndDate.Year, EndDate.Month, EndDate.Day);
-            if (StartDate.Year != MINDATE.Year)
-                start = start.AddMonths(-months);
-            else
-                start = MINDATE;
+            start = StartDate.Year != MINDATE.Year ? start.AddMonths(-months) : MINDATE;
             end = end.AddMonths(-months);
             if (start < MINDATE)
                 start = MINDATE;
@@ -436,13 +433,13 @@ namespace FTAnalyzer
         {
             DateTime start = new DateTime(StartDate.Year, StartDate.Month, StartDate.Day);
             DateTime end = new DateTime(EndDate.Year, EndDate.Month, EndDate.Day);
-            end = end.AddMonths(years*12);
+            end = end.AddMonths(years * 12);
             if (end > MAXDATE)
                 end = MAXDATE;
             return new FactDate(start, end);
         }
 
-        private string CalculateDateString()
+        string CalculateDateString()
         {
             string check;
             StringBuilder output = new StringBuilder();
@@ -450,11 +447,8 @@ namespace FTAnalyzer
             {
                 if (EndDate == MAXDATE)
                     return "UNKNOWN";
-                else
-                {
-                    DateType = FactDateType.BEF;
-                    output.Append("BEF ");
-                }
+                DateType = FactDateType.BEF;
+                output.Append("BEF ");
             }
             else
             {
@@ -496,7 +490,7 @@ namespace FTAnalyzer
             return output.ToString().ToUpper();
         }
 
-        private void ProcessDate(string processDate, string factRef)
+        void ProcessDate(string processDate, string factRef)
         {
             // takes datestring and works out start and end dates 
             // prefixes are BEF, AFT, BET and nothing
@@ -574,9 +568,9 @@ namespace FTAnalyzer
             }
         }
 
-        private DateTime ParseDate(string dateValue, int highlow, int adjustment) => ParseDate(dateValue, highlow, adjustment, 1);
+        DateTime ParseDate(string dateValue, int highlow, int adjustment) => ParseDate(dateValue, highlow, adjustment, 1);
 
-        private DateTime ParseDate(string dateValue, int highlow, int adjustment, int defaultYear)
+        DateTime ParseDate(string dateValue, int highlow, int adjustment, int defaultYear)
         {
             DateTime date;
             Group gDay = null, gMonth = null, gYear = null, gDouble = null;
@@ -667,11 +661,10 @@ namespace FTAnalyzer
                                     gDouble = null;
                                     break;
                             }
-                            string standardFormat = new DateTime(int.Parse(gYear.Value), int.Parse(gMonth.Value), int.Parse(gDay.Value)).ToString("dd MMM yyyy").ToString().ToUpper();
-                            if (dateValue.Length > matcher2.Length)
-                                dateValue = dateValue.Substring(0, matcher2.Index) + standardFormat + dateValue.Substring(matcher2.Index + matcher2.Length, dateValue.Length);
-                            else
-                                dateValue = standardFormat;
+                            string standardFormat = new DateTime(int.Parse(gYear.Value), int.Parse(gMonth.Value), int.Parse(gDay.Value)).ToString("dd MMM yyyy").ToUpper();
+                            dateValue = dateValue.Length > matcher2.Length
+                                ? dateValue.Substring(0, matcher2.Index) + standardFormat + dateValue.Substring(matcher2.Index + matcher2.Length, dateValue.Length)
+                                : standardFormat;
                         }
                     }
                     else
@@ -686,14 +679,8 @@ namespace FTAnalyzer
                     throw new InvalidDoubleDateException(DoubleDateError);
                 if (day.Length == 0 && month.Length == 0)
                 {
-                    if (year.Length == 4)
-                        date = DateTime.ParseExact(dateValue, YEAR, CULTURE);
-                    else
-                        date = DateTime.ParseExact(dateValue, EARLYYEAR, CULTURE);
-                    if (highlow == HIGH)
-                        dt = new DateTime(date.Year + adjustment, 12, 31);
-                    else
-                        dt = new DateTime(date.Year + adjustment, 1, 1);
+                    date = year.Length == 4 ? DateTime.ParseExact(dateValue, YEAR, CULTURE) : DateTime.ParseExact(dateValue, EARLYYEAR, CULTURE);
+                    dt = highlow == HIGH ? new DateTime(date.Year + adjustment, 12, 31) : new DateTime(date.Year + adjustment, 1, 1);
                 }
                 else if (day.Length == 0 && year.Length > 0)
                 {
@@ -791,9 +778,10 @@ namespace FTAnalyzer
             if (year.Length == 3)
             {
                 iDoubleYear = doubleyear == "00" ?
-               Convert.ToInt32((Convert.ToInt32(year.Substring(0, 1)) + 1).ToString() + doubleyear) :
-               Convert.ToInt32(year.Substring(0, 1) + doubleyear);
-            } else
+                Convert.ToInt32((Convert.ToInt32(year.Substring(0, 1)) + 1).ToString() + doubleyear) :
+                Convert.ToInt32(year.Substring(0, 1) + doubleyear);
+            }
+            else
             {
                 iDoubleYear = doubleyear == "00" ?
                 Convert.ToInt32((Convert.ToInt32(year.Substring(0, 2)) + 1).ToString() + doubleyear) :
@@ -861,7 +849,7 @@ namespace FTAnalyzer
             if (DoubleDate && that != null && !that.DoubleDate)
                 return StartDate > that.EndDate || StartDate.TryAddYears(-1) > that.EndDate;
             // easy case is extremes whole of date after other
-            return (that == null) ? true : StartDate > that.EndDate;
+            return that == null || StartDate > that.EndDate;
         }
 
         /*
@@ -871,13 +859,13 @@ namespace FTAnalyzer
         {
             if (DoubleDate && that != null && !that.DoubleDate)
                 return EndDate > that.EndDate || EndDate.TryAddYears(-1) > that.EndDate;
-            return (that == null) ? true : EndDate > that.EndDate;
+            return that == null || EndDate > that.EndDate;
         }
 
         public bool Overlaps(FactDate that)
         {
             // two dates overlap if not entirely before or after
-            return (that == null) ? true : !(IsBefore(that) || IsAfter(that));
+            return that == null || !(IsBefore(that) || IsAfter(that));
         }
 
         public bool IsNotBEForeOrAFTer => StartDate != MINDATE && EndDate != MAXDATE;
@@ -894,19 +882,19 @@ namespace FTAnalyzer
         public bool CensusYearMatches(CensusDate censusDate)
         {
             if (censusDate == null) return false;
-           if(this.StartDate.Year != EndDate.Year) return false;
+            if (this.StartDate.Year != EndDate.Year) return false;
             // both this & that have exact years now return whether this and that match given a census date can go over a year end
             return StartDate.Year == censusDate.StartDate.Year || StartDate.Year == censusDate.EndDate.Year;
         }
 
-        public bool Contains(FactDate that) => (that == null) ? true : StartDate < that.StartDate && EndDate > that.EndDate;
+        public bool Contains(FactDate that) => that == null || StartDate < that.StartDate && EndDate > that.EndDate;
 
         public bool IsLongYearSpan
         {
             get
             {
                 int diff = Math.Abs(StartDate.Year - EndDate.Year);
-                return (diff > 5);
+                return diff > 5;
             }
         }
 
@@ -924,7 +912,7 @@ namespace FTAnalyzer
                     return EndDate.Year;
                 if (EndDate == MAXDATE)
                     return StartDate.Year;
-                return StartDate.Year + (int)((EndDate.Year - StartDate.Year) / 2);
+                return StartDate.Year + ((EndDate.Year - StartDate.Year) / 2);
             }
         }
 
@@ -951,12 +939,11 @@ namespace FTAnalyzer
                 return BMDColour.WIDE_DATE; // over 2 years less than 10 years
             if (ts.Days > 365.25)
                 return BMDColour.NARROW_DATE; // over 1 year less than 2 years
-            else if (ts.Days > 125)
+            if (ts.Days > 125)
                 return BMDColour.JUST_YEAR_DATE; // more than 4 months less than 1 year
-            else if (ts.Days > 0)
+            if (ts.Days > 0)
                 return BMDColour.APPROX_DATE; // less than 4 months not exact
-            else
-                return BMDColour.EXACT_DATE; // exact date
+            return BMDColour.EXACT_DATE; // exact date
         }
 
         #endregion
@@ -989,10 +976,7 @@ namespace FTAnalyzer
             return !(a == b);
         }
 
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
+        public override int GetHashCode() => base.GetHashCode();
 
         public int CompareTo(FactDate that)
         {

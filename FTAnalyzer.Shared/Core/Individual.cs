@@ -345,7 +345,7 @@ namespace FTAnalyzer
             private set
             {
                 string name = value;
-                int startPos = name.IndexOf("/"), endPos = name.LastIndexOf("/");
+                int startPos = name.IndexOf("/", StringComparison.Ordinal), endPos = name.LastIndexOf("/", StringComparison.Ordinal);
                 if (startPos >= 0 && endPos > startPos)
                 {
                     Surname = name.Substring(startPos + 1, endPos - startPos - 1);
@@ -358,7 +358,7 @@ namespace FTAnalyzer
                 }
                 if (Surname == "?" || Surname.ToLower() == "mnu" || Surname.ToLower() == "lnu" || Surname.ToLower() == "_____" || Surname.Length == 0)
                     Surname = UNKNOWN_NAME;
-                if (GeneralSettings.Default.TreatFemaleSurnamesAsUnknown && !IsMale && Surname.StartsWith("(") && Surname.EndsWith(")"))
+                if (GeneralSettings.Default.TreatFemaleSurnamesAsUnknown && !IsMale && Surname.StartsWith("(", StringComparison.Ordinal) && Surname.EndsWith(")", StringComparison.Ordinal))
                     Surname = UNKNOWN_NAME;
                 MarriedName = Surname;
                 _fullname = SetFullName();
@@ -368,10 +368,9 @@ namespace FTAnalyzer
 
         public string SetFullName()
         {
-            if (GeneralSettings.Default.ShowAliasInName && Alias.Length > 0)
-                return $"{_forenames}  '{Alias}' {Surname}".Trim();
-            else
-                return $"{_forenames} {Surname}".Trim();
+            return GeneralSettings.Default.ShowAliasInName && Alias.Length > 0
+                ? $"{_forenames}  '{Alias}' {Surname}".Trim()
+                : $"{_forenames} {Surname}".Trim();
         }
 
         public string Forename
@@ -380,26 +379,14 @@ namespace FTAnalyzer
             {
                 if (_forenames == null)
                     return string.Empty;
-                else
-                {
-                    int pos = _forenames.IndexOf(' ');
-                    return pos > 0 ? _forenames.Substring(0, pos) : _forenames;
-                }
+                int pos = _forenames.IndexOf(' ');
+                return pos > 0 ? _forenames.Substring(0, pos) : _forenames;
             }
         }
 
         public string ForenameMetaphone => forenameMetaphone.PrimaryKey;
 
-        public string Forenames
-        {
-            get
-            {
-                if (GeneralSettings.Default.ShowAliasInName && Alias.Length > 0)
-                    return $"{_forenames} '{Alias}' ";
-                else
-                    return _forenames;
-            }
-        }
+        public string Forenames => GeneralSettings.Default.ShowAliasInName && Alias.Length > 0 ? $"{_forenames} '{Alias}' " : _forenames;
 
         public string Surname { get; private set; }
 
@@ -620,12 +607,7 @@ namespace FTAnalyzer
             foreach (Fact f in Facts)
             {
                 if (f.IsValidCensus(factDate))
-                {
-                    if (!f.Created)
-                        return true;
-                    else
-                        return includeCreated;
-                }
+                    return !f.Created || includeCreated;
             }
             return false;
         }
@@ -652,8 +634,7 @@ namespace FTAnalyzer
 
         public bool IsTaggedMissingCensus(CensusDate when)
         {
-            if (when == null) return false;
-            return Facts.Any(x => x.FactType == Fact.MISSING && x.FactDate.Overlaps(when));
+            return when != null && Facts.Any(x => x.FactType == Fact.MISSING && x.FactDate.Overlaps(when));
         }
 
         public bool IsLostCousinsEntered(CensusDate when) => IsLostCousinsEntered(when, true);
@@ -957,12 +938,7 @@ namespace FTAnalyzer
             }
         }
 
-        public Fact GetPreferredFact(string factType)
-        {
-            if (preferredFacts.ContainsKey(factType))
-                return preferredFacts[factType];
-            return Facts.FirstOrDefault(f => f.FactType == factType);
-        }
+        public Fact GetPreferredFact(string factType) => preferredFacts.ContainsKey(factType) ? preferredFacts[factType] : Facts.FirstOrDefault(f => f.FactType == factType);
 
         public FactDate GetPreferredFactDate(string factType)
         {
@@ -1061,10 +1037,9 @@ namespace FTAnalyzer
 
         public Fact GetCensusFact(Fact lcFact, bool includeCreated = true)
         {
-            if (includeCreated)
-                return Facts.FirstOrDefault(x => x.IsCensusFact && x.FactDate.Overlaps(lcFact.FactDate));
-            else
-                return Facts.FirstOrDefault(x => x.IsCensusFact && !x.Created && x.FactDate.Overlaps(lcFact.FactDate));
+            return includeCreated
+                ? Facts.FirstOrDefault(x => x.IsCensusFact && x.FactDate.Overlaps(lcFact.FactDate))
+                : Facts.FirstOrDefault(x => x.IsCensusFact && !x.Created && x.FactDate.Overlaps(lcFact.FactDate));
         }
 
         public void FixIndividualID(int length)
@@ -1073,13 +1048,13 @@ namespace FTAnalyzer
             {
                 IndividualID = IndividualID.Substring(0, 1) + IndividualID.Substring(1).PadLeft(length, '0');
             }
-            catch (Exception)
+            catch
             {  // don't error if Individual isn't of type Ixxxx
             }
         }
 
         #region Colour Census 
-        private CensusColour ColourCensusReport(CensusDate census)
+        CensusColour ColourCensusReport(CensusDate census)
         {
             if (BirthDate.IsAfter(census) || DeathDate.IsBefore(census) || GetAge(census).MinAge >= FactDate.MAXYEARS)
                 return CensusColour.NOT_ALIVE; // not alive - grey
@@ -1106,24 +1081,21 @@ namespace FTAnalyzer
                 return CensusColour.CENSUS_PRESENT_NOT_LC_YEAR; // census entered but not LCyear - green
             if (IsLostCousinsEntered(census))
                 return CensusColour.CENSUS_PRESENT_LC_PRESENT; // census + Lost cousins entered - green
-            else
-            {
                 // we have a census in a LC year but no LC event check if country is a LC country.
-                int year = census.StartDate.Year;
-                if (year == 1841 && IsCensusDone(CensusDate.EWCENSUS1841, false))
-                    return CensusColour.CENSUS_PRESENT_LC_MISSING; // census entered LC not entered - yellow
-                if (year == 1880 && IsCensusDone(CensusDate.USCENSUS1880, false))
-                    return CensusColour.CENSUS_PRESENT_LC_MISSING; // census entered LC not entered - yellow
-                if (year == 1881 &&
-                    (IsCensusDone(CensusDate.EWCENSUS1881, false) || IsCensusDone(CensusDate.CANADACENSUS1881, false) ||
-                     IsCensusDone(CensusDate.SCOTCENSUS1881, false)))
-                    return CensusColour.CENSUS_PRESENT_LC_MISSING; // census entered LC not entered - yellow
-                if (year == 1911 && (IsCensusDone(CensusDate.EWCENSUS1911, false) || IsCensusDone(CensusDate.IRELANDCENSUS1911, false)))
-                    return CensusColour.CENSUS_PRESENT_LC_MISSING; // census entered LC not entered - yellow
-                if (year == 1940 && IsCensusDone(CensusDate.USCENSUS1940, false))
-                    return CensusColour.CENSUS_PRESENT_LC_MISSING; // census entered LC not entered - yellow
-                return CensusColour.CENSUS_PRESENT_NOT_LC_YEAR;  // census entered and LCyear but not LC country - green
-            }
+            int year = census.StartDate.Year;
+            if (year == 1841 && IsCensusDone(CensusDate.EWCENSUS1841, false))
+                return CensusColour.CENSUS_PRESENT_LC_MISSING; // census entered LC not entered - yellow
+            if (year == 1880 && IsCensusDone(CensusDate.USCENSUS1880, false))
+                return CensusColour.CENSUS_PRESENT_LC_MISSING; // census entered LC not entered - yellow
+            if (year == 1881 &&
+                (IsCensusDone(CensusDate.EWCENSUS1881, false) || IsCensusDone(CensusDate.CANADACENSUS1881, false) ||
+                 IsCensusDone(CensusDate.SCOTCENSUS1881, false)))
+                return CensusColour.CENSUS_PRESENT_LC_MISSING; // census entered LC not entered - yellow
+            if (year == 1911 && (IsCensusDone(CensusDate.EWCENSUS1911, false) || IsCensusDone(CensusDate.IRELANDCENSUS1911, false)))
+                return CensusColour.CENSUS_PRESENT_LC_MISSING; // census entered LC not entered - yellow
+            if (year == 1940 && IsCensusDone(CensusDate.USCENSUS1940, false))
+                return CensusColour.CENSUS_PRESENT_LC_MISSING; // census entered LC not entered - yellow
+            return CensusColour.CENSUS_PRESENT_NOT_LC_YEAR;  // census entered and LCyear but not LC country - green
         }
 
         public bool AliveOnAnyCensus(string country)
@@ -1131,26 +1103,24 @@ namespace FTAnalyzer
             int ukCensus = (int)C1841 + (int)C1851 + (int)C1861 + (int)C1871 + (int)C1881 + (int)C1891 + (int)C1901 + (int)C1911 + (int)C1939;
             if (country.Equals(Countries.UNITED_STATES))
                 return ((int)US1790 + (int)US1800 + (int)US1810 + (int)US1810 + (int)US1820 + (int)US1830 + (int)US1840 + (int)US1850 + (int)US1860 + (int)US1870 + (int)US1880 + (int)US1890 + (int)US1900 + (int)US1910 + (int)US1920 + (int)US1930 + (int)US1940) > 0;
-            else if (country.Equals(Countries.CANADA))
+            if (country.Equals(Countries.CANADA))
                 return ((int)Can1851 + (int)Can1861 + (int)Can1871 + (int)Can1881 + (int)Can1891 + (int)Can1901 + (int)Can1906 + (int)Can1911 + (int)Can1916 + (int)Can1921) > 0;
-            else if (country.Equals(Countries.IRELAND))
+            if (country.Equals(Countries.IRELAND))
                 return ((int)Ire1901 + (int)Ire1911) > 0;
-            else if (country.Equals(Countries.SCOTLAND))
+            if (country.Equals(Countries.SCOTLAND))
                 return (ukCensus + (int)V1865 + (int)V1875 + (int)V1885 + (int)V1895 + (int)V1905 + (int)V1915 + (int)V1920 + (int)V1925) > 0;
-            else
-                return ukCensus > 0;
+            return ukCensus > 0;
         }
 
         public bool OutOfCountryOnAllCensus(string country)
         {
             if (country.Equals(Countries.UNITED_STATES))
                 return CheckOutOfCountry("US1");
-            else if (country.Equals(Countries.CANADA))
+            if (country.Equals(Countries.CANADA))
                 return CheckOutOfCountry("Can1");
-            else if (country.Equals(Countries.IRELAND))
+            if (country.Equals(Countries.IRELAND))
                 return CheckOutOfCountry("Ire1");
-            else
-                return CheckOutOfCountry("C1");
+            return CheckOutOfCountry("C1");
         }
 
         public bool OutOfCountryCheck(CensusDate census, FactLocation location)
@@ -1164,11 +1134,11 @@ namespace FTAnalyzer
             return CheckOutOfCountry(census.PropertyName);
         }
 
-        private bool CheckOutOfCountry(string prefix)
+        bool CheckOutOfCountry(string prefix)
         {
             foreach (PropertyInfo property in typeof(Individual).GetProperties())
             {
-                if (property.Name.StartsWith(prefix))
+                if (property.Name.StartsWith(prefix, StringComparison.Ordinal))
                 {
                     int value = (int)property.GetValue(this, null);
                     if (value != 0 && value != 6 && value != 7)
@@ -1180,230 +1150,95 @@ namespace FTAnalyzer
         #endregion
 
         #region Colour Census Values
-        public CensusColour C1841
-        {
-            get { return ColourCensusReport(CensusDate.UKCENSUS1841); }
-        }
+        public CensusColour C1841 => ColourCensusReport(CensusDate.UKCENSUS1841);
 
-        public CensusColour C1851
-        {
-            get { return ColourCensusReport(CensusDate.UKCENSUS1851); }
-        }
+        public CensusColour C1851 => ColourCensusReport(CensusDate.UKCENSUS1851);
 
-        public CensusColour C1861
-        {
-            get { return ColourCensusReport(CensusDate.UKCENSUS1861); }
-        }
+        public CensusColour C1861 => ColourCensusReport(CensusDate.UKCENSUS1861);
 
-        public CensusColour C1871
-        {
-            get { return ColourCensusReport(CensusDate.UKCENSUS1871); }
-        }
+        public CensusColour C1871 => ColourCensusReport(CensusDate.UKCENSUS1871);
 
-        public CensusColour C1881
-        {
-            get { return ColourCensusReport(CensusDate.UKCENSUS1881); }
-        }
+        public CensusColour C1881 => ColourCensusReport(CensusDate.UKCENSUS1881);
 
-        public CensusColour C1891
-        {
-            get { return ColourCensusReport(CensusDate.UKCENSUS1891); }
-        }
+        public CensusColour C1891 => ColourCensusReport(CensusDate.UKCENSUS1891);
 
-        public CensusColour C1901
-        {
-            get { return ColourCensusReport(CensusDate.UKCENSUS1901); }
-        }
+        public CensusColour C1901 => ColourCensusReport(CensusDate.UKCENSUS1901);
 
-        public CensusColour C1911
-        {
-            get { return ColourCensusReport(CensusDate.UKCENSUS1911); }
-        }
+        public CensusColour C1911 => ColourCensusReport(CensusDate.UKCENSUS1911);
 
-        public CensusColour C1939
-        {
-            get { return ColourCensusReport(CensusDate.UKCENSUS1939); }
-        }
+        public CensusColour C1939 => ColourCensusReport(CensusDate.UKCENSUS1939);
 
-        public CensusColour Ire1901
-        {
-            get { return ColourCensusReport(CensusDate.IRELANDCENSUS1901); }
-        }
+        public CensusColour Ire1901 => ColourCensusReport(CensusDate.IRELANDCENSUS1901);
 
-        public CensusColour Ire1911
-        {
-            get { return ColourCensusReport(CensusDate.IRELANDCENSUS1911); }
-        }
+        public CensusColour Ire1911 => ColourCensusReport(CensusDate.IRELANDCENSUS1911);
 
-        public CensusColour US1790
-        {
-            get { return ColourCensusReport(CensusDate.USCENSUS1790); }
-        }
+        public CensusColour US1790 => ColourCensusReport(CensusDate.USCENSUS1790);
 
-        public CensusColour US1800
-        {
-            get { return ColourCensusReport(CensusDate.USCENSUS1800); }
-        }
+        public CensusColour US1800 => ColourCensusReport(CensusDate.USCENSUS1800);
 
-        public CensusColour US1810
-        {
-            get { return ColourCensusReport(CensusDate.USCENSUS1810); }
-        }
+        public CensusColour US1810 => ColourCensusReport(CensusDate.USCENSUS1810);
 
-        public CensusColour US1820
-        {
-            get { return ColourCensusReport(CensusDate.USCENSUS1820); }
-        }
+        public CensusColour US1820 => ColourCensusReport(CensusDate.USCENSUS1820);
 
-        public CensusColour US1830
-        {
-            get { return ColourCensusReport(CensusDate.USCENSUS1830); }
-        }
+        public CensusColour US1830 => ColourCensusReport(CensusDate.USCENSUS1830);
 
-        public CensusColour US1840
-        {
-            get { return ColourCensusReport(CensusDate.USCENSUS1840); }
-        }
+        public CensusColour US1840 => ColourCensusReport(CensusDate.USCENSUS1840);
 
-        public CensusColour US1850
-        {
-            get { return ColourCensusReport(CensusDate.USCENSUS1850); }
-        }
+        public CensusColour US1850 => ColourCensusReport(CensusDate.USCENSUS1850);
 
-        public CensusColour US1860
-        {
-            get { return ColourCensusReport(CensusDate.USCENSUS1860); }
-        }
+        public CensusColour US1860 => ColourCensusReport(CensusDate.USCENSUS1860);
 
-        public CensusColour US1870
-        {
-            get { return ColourCensusReport(CensusDate.USCENSUS1870); }
-        }
+        public CensusColour US1870 => ColourCensusReport(CensusDate.USCENSUS1870);
 
-        public CensusColour US1880
-        {
-            get { return ColourCensusReport(CensusDate.USCENSUS1880); }
-        }
+        public CensusColour US1880 => ColourCensusReport(CensusDate.USCENSUS1880);
 
-        public CensusColour US1890
-        {
-            get { return ColourCensusReport(CensusDate.USCENSUS1890); }
-        }
+        public CensusColour US1890 => ColourCensusReport(CensusDate.USCENSUS1890);
 
-        public CensusColour US1900
-        {
-            get { return ColourCensusReport(CensusDate.USCENSUS1900); }
-        }
+        public CensusColour US1900 => ColourCensusReport(CensusDate.USCENSUS1900);
 
-        public CensusColour US1910
-        {
-            get { return ColourCensusReport(CensusDate.USCENSUS1910); }
-        }
+        public CensusColour US1910 => ColourCensusReport(CensusDate.USCENSUS1910);
 
-        public CensusColour US1920
-        {
-            get { return ColourCensusReport(CensusDate.USCENSUS1920); }
-        }
+        public CensusColour US1920 => ColourCensusReport(CensusDate.USCENSUS1920);
 
-        public CensusColour US1930
-        {
-            get { return ColourCensusReport(CensusDate.USCENSUS1930); }
-        }
+        public CensusColour US1930 => ColourCensusReport(CensusDate.USCENSUS1930);
 
-        public CensusColour US1940
-        {
-            get { return ColourCensusReport(CensusDate.USCENSUS1940); }
-        }
+        public CensusColour US1940 => ColourCensusReport(CensusDate.USCENSUS1940);
 
-        public CensusColour Can1851
-        {
-            get { return ColourCensusReport(CensusDate.CANADACENSUS1851); }
-        }
+        public CensusColour Can1851 => ColourCensusReport(CensusDate.CANADACENSUS1851);
 
-        public CensusColour Can1861
-        {
-            get { return ColourCensusReport(CensusDate.CANADACENSUS1861); }
-        }
+        public CensusColour Can1861 => ColourCensusReport(CensusDate.CANADACENSUS1861);
 
-        public CensusColour Can1871
-        {
-            get { return ColourCensusReport(CensusDate.CANADACENSUS1871); }
-        }
+        public CensusColour Can1871 => ColourCensusReport(CensusDate.CANADACENSUS1871);
 
-        public CensusColour Can1881
-        {
-            get { return ColourCensusReport(CensusDate.CANADACENSUS1881); }
-        }
+        public CensusColour Can1881 => ColourCensusReport(CensusDate.CANADACENSUS1881);
 
-        public CensusColour Can1891
-        {
-            get { return ColourCensusReport(CensusDate.CANADACENSUS1891); }
-        }
+        public CensusColour Can1891 => ColourCensusReport(CensusDate.CANADACENSUS1891);
 
-        public CensusColour Can1901
-        {
-            get { return ColourCensusReport(CensusDate.CANADACENSUS1901); }
-        }
+        public CensusColour Can1901 => ColourCensusReport(CensusDate.CANADACENSUS1901);
 
-        public CensusColour Can1906
-        {
-            get { return ColourCensusReport(CensusDate.CANADACENSUS1906); }
-        }
+        public CensusColour Can1906 => ColourCensusReport(CensusDate.CANADACENSUS1906);
 
-        public CensusColour Can1911
-        {
-            get { return ColourCensusReport(CensusDate.CANADACENSUS1911); }
-        }
+        public CensusColour Can1911 => ColourCensusReport(CensusDate.CANADACENSUS1911);
 
-        public CensusColour Can1916
-        {
-            get { return ColourCensusReport(CensusDate.CANADACENSUS1916); }
-        }
+        public CensusColour Can1916 => ColourCensusReport(CensusDate.CANADACENSUS1916);
 
-        public CensusColour Can1921
-        {
-            get { return ColourCensusReport(CensusDate.CANADACENSUS1921); }
-        }
+        public CensusColour Can1921 => ColourCensusReport(CensusDate.CANADACENSUS1921);
 
-        public CensusColour V1865
-        {
-            get { return ColourCensusReport(CensusDate.SCOTVALUATION1865); }
-        }
+        public CensusColour V1865 => ColourCensusReport(CensusDate.SCOTVALUATION1865);
 
-        public CensusColour V1875
-        {
-            get { return ColourCensusReport(CensusDate.SCOTVALUATION1875); }
-        }
+        public CensusColour V1875 => ColourCensusReport(CensusDate.SCOTVALUATION1875);
 
-        public CensusColour V1885
-        {
-            get { return ColourCensusReport(CensusDate.SCOTVALUATION1885); }
-        }
+        public CensusColour V1885 => ColourCensusReport(CensusDate.SCOTVALUATION1885);
 
-        public CensusColour V1895
-        {
-            get { return ColourCensusReport(CensusDate.SCOTVALUATION1895); }
-        }
+        public CensusColour V1895 => ColourCensusReport(CensusDate.SCOTVALUATION1895);
 
-        public CensusColour V1905
-        {
-            get { return ColourCensusReport(CensusDate.SCOTVALUATION1905); }
-        }
+        public CensusColour V1905 => ColourCensusReport(CensusDate.SCOTVALUATION1905);
 
-        public CensusColour V1915
-        {
-            get { return ColourCensusReport(CensusDate.SCOTVALUATION1915); }
-        }
+        public CensusColour V1915 => ColourCensusReport(CensusDate.SCOTVALUATION1915);
 
-        public CensusColour V1920
-        {
-            get { return ColourCensusReport(CensusDate.SCOTVALUATION1920); }
-        }
+        public CensusColour V1920 => ColourCensusReport(CensusDate.SCOTVALUATION1920);
 
-        public CensusColour V1925
-        {
-            get { return ColourCensusReport(CensusDate.SCOTVALUATION1925); }
-        }
+        public CensusColour V1925 => ColourCensusReport(CensusDate.SCOTVALUATION1925);
         #endregion
 
         #region Colour BMD Values
@@ -1426,16 +1261,15 @@ namespace FTAnalyzer
             }
         }
 
-        private BMDColour CheckMarriageStatus(Family fam)
+        BMDColour CheckMarriageStatus(Family fam)
         {
             // individual is a member of a family as parent so check family status
             if ((IndividualID == fam.HusbandID && fam.Wife == null) ||
                 (IndividualID == fam.WifeID && fam.Husband == null))
                 return BMDColour.NO_PARTNER; // no partner but has children
-            else if (fam.GetPreferredFact(Fact.MARRIAGE) == null)
+            if (fam.GetPreferredFact(Fact.MARRIAGE) == null)
                 return BMDColour.NO_MARRIAGE; // has a partner but no marriage fact
-            else
-                return fam.MarriageDate.DateStatus(false); // has a partner and a marriage so return date status
+            return fam.MarriageDate.DateStatus(false); // has a partner and a marriage so return date status
         }
 
         public BMDColour Marriage1
@@ -1462,10 +1296,7 @@ namespace FTAnalyzer
             get
             {
                 Family fam = Marriages(1);
-                if (fam == null)
-                    return BMDColour.EMPTY;
-                else
-                    return CheckMarriageStatus(fam);
+                return fam == null ? BMDColour.EMPTY : CheckMarriageStatus(fam);
             }
         }
 
@@ -1474,10 +1305,7 @@ namespace FTAnalyzer
             get
             {
                 Family fam = Marriages(2);
-                if (fam == null)
-                    return 0;
-                else
-                    return CheckMarriageStatus(fam);
+                return fam == null ? 0 : CheckMarriageStatus(fam);
             }
         }
 
@@ -1492,10 +1320,7 @@ namespace FTAnalyzer
             get
             {
                 Family fam = Marriages(0);
-                if (fam == null)
-                    return FactDate.UNKNOWN_DATE;
-                else
-                    return Marriages(0).MarriageDate;
+                return fam == null ? FactDate.UNKNOWN_DATE : Marriages(0).MarriageDate;
             }
         }
 
@@ -1504,10 +1329,7 @@ namespace FTAnalyzer
             get
             {
                 Family fam = Marriages(1);
-                if (fam == null)
-                    return FactDate.UNKNOWN_DATE;
-                else
-                    return Marriages(1).MarriageDate;
+                return fam == null ? FactDate.UNKNOWN_DATE : Marriages(1).MarriageDate;
             }
         }
 
@@ -1516,10 +1338,7 @@ namespace FTAnalyzer
             get
             {
                 Family fam = Marriages(2);
-                if (fam == null)
-                    return FactDate.UNKNOWN_DATE;
-                else
-                    return Marriages(2).MarriageDate;
+                return fam == null ? FactDate.UNKNOWN_DATE : Marriages(2).MarriageDate;
             }
         }
 
@@ -1529,13 +1348,9 @@ namespace FTAnalyzer
             {
                 if (IsFlaggedAsLiving)
                     return BMDColour.ISLIVING;
-                else if (!DeathDate.IsKnown && GetMaxAge(DateTime.Now) < FactDate.MAXYEARS)
-                    if (GetMaxAge(DateTime.Now) < 90)
-                        return BMDColour.EMPTY;
-                    else
-                        return BMDColour.OVER90;
-                else
-                    return DeathDate.DateStatus(false);
+                if (!DeathDate.IsKnown && GetMaxAge(DateTime.Now) < FactDate.MAXYEARS)
+                    return GetMaxAge(DateTime.Now) < 90 ? BMDColour.EMPTY : BMDColour.OVER90;
+                return DeathDate.DateStatus(false);
             }
         }
 
@@ -1574,7 +1389,7 @@ namespace FTAnalyzer
         public int CensusReferenceCount(CensusReference.ReferenceStatus referenceStatus) 
             => AllFacts.Count(f => f.IsCensusFact && f.CensusReference != null && f.CensusReference.Status.Equals(referenceStatus));
 
-        private Family Marriages(int number)
+        Family Marriages(int number)
         {
             if (number < FamiliesAsParent.Count)
             {
@@ -1584,20 +1399,16 @@ namespace FTAnalyzer
             return null;
         }
 
-        private string MarriageString(int number)
+        string MarriageString(int number)
         {
             Family marriage = Marriages(number);
             if (marriage == null)
                 return string.Empty;
-            else
-            {
-                if (IndividualID == marriage.HusbandID && marriage.Wife != null)
-                    return $"To {marriage.Wife.Name}: {marriage.ToString()}";
-                else if (IndividualID == marriage.WifeID && marriage.Husband != null)
-                    return $"To {marriage.Husband.Name}: {marriage.ToString()}";
-                else
-                    return $"Married: {marriage.ToString()}";
-            }
+            if (IndividualID == marriage.HusbandID && marriage.Wife != null)
+                return $"To {marriage.Wife.Name}: {marriage.ToString()}";
+            if (IndividualID == marriage.WifeID && marriage.Husband != null)
+                return $"To {marriage.Husband.Name}: {marriage.ToString()}";
+            return $"Married: {marriage.ToString()}";
         }
 
         public int NumMissingLostCousins(string country)
@@ -1608,12 +1419,9 @@ namespace FTAnalyzer
         }
 
         #region Basic Class Functions
-        public override bool Equals(object that)
+        public override bool Equals(object obj)
         {
-            if (that is Individual)
-                return IndividualID.Equals(((Individual)that).IndividualID);
-            else
-                return false;
+            return obj is Individual && IndividualID.Equals(((Individual)obj).IndividualID);
         }
 
         public override int GetHashCode() => base.GetHashCode();
@@ -1626,10 +1434,10 @@ namespace FTAnalyzer
             // then date of birth.
             if (that == null)
                 return -1;
-            int res = Surname.CompareTo(that.Surname);
+            int res = string.Compare(Surname, that.Surname, StringComparison.CurrentCulture);
             if (res == 0)
             {
-                res = _forenames.CompareTo(that._forenames);
+                res = string.Compare(_forenames, that._forenames, StringComparison.Ordinal);
                 if (res == 0)
                 {
                     FactDate d1 = BirthDate;

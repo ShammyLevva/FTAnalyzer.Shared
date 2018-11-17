@@ -6,7 +6,7 @@ namespace FTAnalyzer
 {
     public class Age : IComparable<Age>
     {
-        static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(typeof(Age));
+        //static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(typeof(Age));
 
         public int MinAge { get; private set; }
         public int MaxAge { get; private set; }
@@ -30,14 +30,14 @@ namespace FTAnalyzer
             if (when.IsAfter(ind.DeathDate))
                 when = ind.DeathDate;
 
-            Logger.Debug($"Calculating Age for {ind.Name} on {when}");
-            Logger.Debug($"Min age: birth enddate: {ind.BirthDate.EndDate} to startdate: {when.StartDate}");
-            Logger.Debug($"Max age: birth startdate: {ind.BirthDate.StartDate} to enddate: {when.EndDate}");
+            //Logger.Debug($"Calculating Age for {ind.Name} on {when}");
+            //Logger.Debug($"Min age: birth enddate: {ind.BirthDate.EndDate} to startdate: {when.StartDate}");
+            //Logger.Debug($"Max age: birth startdate: {ind.BirthDate.StartDate} to enddate: {when.EndDate}");
 
             MinAge = GetAge(ind.BirthDate.EndDate, when.StartDate);
             MaxAge = GetAge(ind.BirthDate.StartDate, when.EndDate);
 
-            Logger.Debug($"Calculated minage: {MinAge} calculated maxage: {MaxAge}");
+            //Logger.Debug($"Calculated minage: {MinAge} calculated maxage: {MaxAge}");
             if (MinAge == FactDate.MINYEARS)
                 _age = (MaxAge == FactDate.MAXYEARS) ? "Unknown" : MaxAge == 0 ? "< 1" : $"<= {MaxAge}";
             else if (MaxAge < FactDate.MAXYEARS)
