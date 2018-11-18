@@ -1,4 +1,5 @@
-﻿using FTAnalyzer.Utilities;
+﻿using System;
+using FTAnalyzer.Utilities;
 
 namespace FTAnalyzer
 {
@@ -10,7 +11,8 @@ namespace FTAnalyzer
 #if __PC__
             Icon = FactImage.ErrorIcon(errorLevel).Icon;
 #elif __MACOS__
-            var x = errorLevel; // stop compiler warning
+            if (errorLevel == Fact.FactError.ERROR) 
+                Console.WriteLine("nothing"); // stop compiler warning
 #endif
             individual = ind;
             family = null;
