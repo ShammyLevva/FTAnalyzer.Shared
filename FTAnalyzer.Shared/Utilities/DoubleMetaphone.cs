@@ -922,13 +922,10 @@ namespace FTAnalyzer
 		 */
         bool IsWordSlavoGermanic()
         {
-            if ((m_word.IndexOf("W") != -1) ||
-                (m_word.IndexOf("K") != -1) ||
-                (m_word.IndexOf("CZ") != -1) ||
-                (m_word.IndexOf("WITZ") != -1))
-                return true;
-
-            return false;
+            return (m_word.IndexOf("W", StringComparison.Ordinal) != -1) ||
+                (m_word.IndexOf("K", StringComparison.Ordinal) != -1) ||
+                (m_word.IndexOf("CZ", StringComparison.Ordinal) != -1) ||
+                (m_word.IndexOf("WITZ", StringComparison.Ordinal) != -1);
         }
 
         /**
@@ -945,10 +942,7 @@ namespace FTAnalyzer
 
             char it = m_word[pos];
 
-            if ((it == 'E') || (it == 'A') || (it == 'I') || (it == 'O') || (it == 'U') || (it == 'Y'))
-                return true;
-
-            return false;
+            return (it == 'E') || (it == 'A') || (it == 'I') || (it == 'O') || (it == 'U') || (it == 'Y');
         }
 
         /**

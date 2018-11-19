@@ -18,15 +18,11 @@ namespace FTAnalyzer
             var reader = new StreamReader(stream);
             if (FileHandling.Default.LoadWithFilters)
             {
-                if (FileHandling.Default.RetryFailedLines)
-                    reader = new AnselInputStreamReader(CheckInvalidCR(stream));
-                else
-                    reader = new AnselInputStreamReader(stream);
+                reader = FileHandling.Default.RetryFailedLines
+                    ? new AnselInputStreamReader(CheckInvalidCR(stream))
+                    : new AnselInputStreamReader(stream);
             }
-            if (FileHandling.Default.RetryFailedLines)
-                reader = new StreamReader(CheckInvalidCR(stream));
-            else
-                reader = new StreamReader(stream);
+            reader = FileHandling.Default.RetryFailedLines ? new StreamReader(CheckInvalidCR(stream)) : new StreamReader(stream);
             return Parse(reader, outputText);
         }
 
@@ -36,15 +32,13 @@ namespace FTAnalyzer
             StreamReader reader;
             if (FileHandling.Default.LoadWithFilters)
             {
-                if (FileHandling.Default.RetryFailedLines)
-                    reader = new AnselInputStreamReader(CheckInvalidLineEnds(path));
-                else
-                    reader = new AnselInputStreamReader(new FileStream(path, FileMode.Open, FileAccess.Read));
+                reader = FileHandling.Default.RetryFailedLines
+                    ? new AnselInputStreamReader(CheckInvalidLineEnds(path))
+                    : new AnselInputStreamReader(new FileStream(path, FileMode.Open, FileAccess.Read));
             }
-            if (FileHandling.Default.RetryFailedLines)
-                reader = new StreamReader(CheckInvalidLineEnds(path), encoding);
-            else
-                reader = new StreamReader(new FileStream(path, FileMode.Open, FileAccess.Read), encoding);
+            reader = FileHandling.Default.RetryFailedLines
+                ? new StreamReader(CheckInvalidLineEnds(path), encoding)
+                : new StreamReader(new FileStream(path, FileMode.Open, FileAccess.Read), encoding);
             return Parse(reader, outputText);
         }
 
@@ -79,7 +73,7 @@ namespace FTAnalyzer
             return outfs;
         }
 
-        private static MemoryStream CheckSpuriousOD(MemoryStream infs)
+        static MemoryStream CheckSpuriousOD(MemoryStream infs)
         {
             MemoryStream outfs = new MemoryStream();
             byte b = (byte)infs.ReadByte();
@@ -101,7 +95,7 @@ namespace FTAnalyzer
             return outfs;
         }
 
-        private static XmlDocument Parse(StreamReader reader, IProgress<string> outputText)
+        static XmlDocument Parse(StreamReader reader, IProgress<string> outputText)
         {
             long lineNr = 0;
             int badLineCount = 0;
@@ -183,10 +177,9 @@ namespace FTAnalyzer
                                     token2 = FirstWord(line);
                                     if (token2.Length == 1 || (!token2.EndsWith("@", StringComparison.Ordinal) && !token2.EndsWith("@,", StringComparison.Ordinal)))
                                         throw new Exception("Bad pointer value");
-                                    if (token2.EndsWith("@,", StringComparison.Ordinal))
-                                        xref = token2.Substring(1, token2.Length - 3);
-                                    else
-                                        xref = token2.Substring(1, token2.Length - 2);
+                                    xref = token2.EndsWith("@,", StringComparison.Ordinal)
+                                        ? token2.Substring(1, token2.Length - 3)
+                                        : token2.Substring(1, token2.Length - 2);
                                     line = Remainder(line);
                                 }
                             }
@@ -285,26 +278,22 @@ namespace FTAnalyzer
         /**
          * Procedure to return the first word in a string
          */
-        private static string FirstWord(string inp)
+        static string FirstWord(string inp)
         {
             int i;
             i = inp.IndexOf(' ');
-            if (i == 0) return FirstWord(inp.Trim());
-            if (i < 0) return inp;
-            return inp.Substring(0, i).Trim();
+            return i == 0 ? FirstWord(inp.Trim()) : i < 0 ? inp : inp.Substring(0, i).Trim();
         }
 
         /**
           * Procedure to return the text after the first word in a string
           */
 
-        private static string Remainder(string inp)
+        static string Remainder(string inp)
         {
             int i;
             i = inp.IndexOf(' ');
-            if (i == 0) return Remainder(inp.Trim());
-            if (i < 0) return "";
-            return inp.Substring(i + 1).Trim();
+            return i == 0 ? Remainder(inp.Trim()) : i < 0 ? "" : inp.Substring(i + 1).Trim();
         }
     }
 }

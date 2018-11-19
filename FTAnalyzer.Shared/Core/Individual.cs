@@ -14,7 +14,7 @@ namespace FTAnalyzer
     {
         // define relation type from direct ancestor to related by marriage and 
         // MARRIAGEDB ie: married to a direct or blood relation
-        public const int UNKNOWN = 1, DIRECT = 2, DESCENDANT = 3, BLOOD = 4, MARRIEDTODB = 8, MARRIAGE = 16, UNSET = 32;
+        public const int UNKNOWN = 1, DIRECT = 2, BLOOD = 4, MARRIEDTODB = 8, MARRIAGE = 16, DESCENDANT = 32, UNSET = 64;
         public const string UNKNOWN_NAME = "UNKNOWN";
 
         public string IndividualID { get; private set; }
@@ -286,26 +286,6 @@ namespace FTAnalyzer
         }
 
         public IList<Fact> AllFileFacts => _allFileFacts;
-
-        public IList<Fact> DuplicateFacts
-        {
-            get
-            {
-                var duplicatefacts = new List<Fact>();
-                //TODO check if fact is duplicated
-                return duplicatefacts;
-            }
-        }
-
-        public IList<Fact> PossibleDuplicateFacts
-        {
-            get
-            {
-                var possibleDuplicatefacts = new List<Fact>();
-                //TODO check if a fact might be duplicated
-                return possibleDuplicatefacts;
-            }
-        }
 
         public IList<IDisplayFact> AllGeocodedFacts
         {

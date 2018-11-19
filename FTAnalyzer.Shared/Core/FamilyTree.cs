@@ -16,6 +16,10 @@ using FTAnalyzer.Filters;
 using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
 
+#if __MACOS__
+using FTAnalyzer.Mac.ViewControllers;
+#endif
+
 namespace FTAnalyzer
 {
     public class FamilyTree
@@ -1486,8 +1490,7 @@ namespace FTAnalyzer
 
         public SortableBindingList<Individual> AllWorkers(string job) => new SortableBindingList<Individual>(occupations[job]);
 
-#if __PC__
-        public List<IDisplayColourCensus> ColourCensus(string country, Controls.RelationTypes relType, string surname, 
+        public List<IDisplayColourCensus> ColourCensus(string country, RelationTypes relType, string surname, 
                                                        ComboBoxFamily family, bool IgnoreMissingBirthDates, bool IgnoreMissingDeathDates)
         {
             Predicate<Individual> filter;
@@ -1524,11 +1527,11 @@ namespace FTAnalyzer
                 filter = FilterUtils.AndFilter(filter, x => x.AliveOnAnyCensus(country) && !x.OutOfCountryOnAllCensus(country));
             }
             else
-                filter = x => family.Members.Contains(x);
+                filter = family.Members.Contains;
             return individuals.Filter(filter).ToList<IDisplayColourCensus>();
         }
 
-        public List<IDisplayColourBMD> ColourBMD(Controls.RelationTypes relType, string surname, ComboBoxFamily family)
+        public List<IDisplayColourBMD> ColourBMD(RelationTypes relType, string surname, ComboBoxFamily family)
         {
             Predicate<Individual> filter;
             if (family == null)
@@ -1541,11 +1544,11 @@ namespace FTAnalyzer
                 }
             }
             else
-                filter = x => family.Members.Contains(x);
+                filter = family.Members.Contains;
             return individuals.Filter(filter).ToList<IDisplayColourBMD>();
         }
 
-        public List<IDisplayMissingData> MissingData(Controls.RelationTypes relType, string surname, ComboBoxFamily family)
+        public List<IDisplayMissingData> MissingData(RelationTypes relType, string surname, ComboBoxFamily family)
         {
             Predicate<Individual> filter;
             if (family == null)
@@ -1558,10 +1561,9 @@ namespace FTAnalyzer
                 }
             }
             else
-                filter = x => family.Members.Contains(x);
+                filter = family.Members.Contains;
             return individuals.Filter(filter).ToList<IDisplayMissingData>();
         }
-#endif
         #endregion
 
         #region Data Errors
@@ -2850,7 +2852,7 @@ namespace FTAnalyzer
                 todaysFacts.Sort();
             }
             foreach (DisplayFact f in todaysFacts)
-                sb.Append(f.ToString() + @"\line ");
+                sb.Append(f + @"\line ");
             sb.Append("}");
             outputText.Report(sb.ToString());
             progress.Report(100);
