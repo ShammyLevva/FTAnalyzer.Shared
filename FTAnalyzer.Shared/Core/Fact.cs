@@ -28,7 +28,7 @@ namespace FTAnalyzer
                 PHONE = "PHON", PHYSICAL_DESC = "DSCR", PROBATE = "PROB", PROPERTY = "PROP", REFERENCE = "REFN",
                 RELIGION = "RELI", RESIDENCE = "RESI", RETIREMENT = "RETI", SEALED_TO_PARENTS = "SLGC",
                 SEALED_TO_SPOUSE = "SLGS", SEPARATION = "_SEPR", SERVICE_NUMBER = "_MILTID", SOCIAL_SECURITY = "SSN", TITLE = "TITL",
-                UNKNOWN = "UNKN", WEIGHT = "_WEIG", WILL = "WILL";
+                UNKNOWN = "UNKN", WEIGHT = "_WEIG", WILL = "WILL", HASHTAG = "_HASHTAG", OBITUARY = "OBIT";
 
         public const string ARRIVAL = "*ARRI", CHANGE = "*CHNG", CHILDLESS = "*CHILD", CHILDREN = "*CHILDREN", CONTACT = "*CONT", 
                 DEPARTURE = "*DEPT", FAMILYSEARCH = "*IGI", LC_FTA = "*LOST_FTA", LOOSEBIRTH = "*LOOSEB",
@@ -87,6 +87,15 @@ namespace FTAnalyzer
             CUSTOM_TAGS.Add("CHILDREN STATUS", CHILDREN1911);
             CUSTOM_TAGS.Add("CHILDREN1911", CHILDREN1911);
             CUSTOM_TAGS.Add("WEBSITE", WEBSITE);
+            CUSTOM_TAGS.Add("_TAG1", HASHTAG);
+            CUSTOM_TAGS.Add("_TAG2", HASHTAG);
+            CUSTOM_TAGS.Add("_TAG3", HASHTAG);
+            CUSTOM_TAGS.Add("_TAG4", HASHTAG);
+            CUSTOM_TAGS.Add("_TAG5", HASHTAG);
+            CUSTOM_TAGS.Add("_TAG6", HASHTAG);
+            CUSTOM_TAGS.Add("_TAG7", HASHTAG);
+            CUSTOM_TAGS.Add("_TAG8", HASHTAG);
+            CUSTOM_TAGS.Add("_TAG9", HASHTAG);
 
             // convert custom tags to normal tags
             CUSTOM_TAGS.Add("CENSUS 1841", CENSUS);
@@ -175,6 +184,8 @@ namespace FTAnalyzer
             COMMENT_FACTS.Add(UNMARRIED);
             COMMENT_FACTS.Add(WEIGHT);
             COMMENT_FACTS.Add(WITNESS);
+            COMMENT_FACTS.Add(HASHTAG);
+            COMMENT_FACTS.Add(OBITUARY);
         }
 
         internal static string GetFactTypeDescription(string factType)
@@ -231,6 +242,7 @@ namespace FTAnalyzer
                 case FUNERAL: return "Funeral";
                 case GENDER: return "Gender";
                 case GRADUATION: return "Graduation";
+                case HASHTAG: return "Hashtag";
                 case HEIGHT: return "Height";
                 case IMMIGRATION: return "Immigration";
                 case INITIATORY_LDS: return "Initiatory (LDS)";
@@ -255,6 +267,7 @@ namespace FTAnalyzer
                 case NAT_ID_NO: return "National identity no.";
                 case NUM_CHILDREN: return "Number of children";
                 case NUM_MARRIAGE: return "Number of marriages";
+                case OBITUARY: return "Obituary";
                 case OCCUPATION: return "Occupation";
                 case ORDINATION: return "Ordination";
                 case ORDINANCE: return "Ordinance";
@@ -445,9 +458,9 @@ namespace FTAnalyzer
             XmlNodeList list = node.SelectNodes("_SHAR");
             foreach (XmlNode n in list)
             {
-                string indref = n.Attributes["REF"].Value;
+                string indref = n.Attributes["REF"]?.Value;
                 string role = FamilyTree.GetText(n, "ROLE", false);
-                if (role.Equals("Household Member"))
+                if (indref != null && role == "Household Member")
                     FamilyTree.Instance.AddSharedFact(indref, this);
             }
         }

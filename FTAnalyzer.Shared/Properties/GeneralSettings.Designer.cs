@@ -292,6 +292,21 @@ namespace FTAnalyzer.Properties {
 
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SkipCensusReferences
+        {
+            get
+            {
+                return ((bool)(this["SkipCensusReferences"]));
+            }
+            set
+            {
+                this["SkipCensusReferences"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool HideIgnoredDuplicates {
             get {

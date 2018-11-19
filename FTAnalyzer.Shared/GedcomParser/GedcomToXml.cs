@@ -10,7 +10,8 @@ namespace FTAnalyzer
 {
     class GedcomToXml
     {
-        static Encoding isoWesternEuropean = Encoding.GetEncoding(28591);
+        static readonly Encoding isoWesternEuropean = Encoding.GetEncoding(28591);
+        static readonly Encoding ansiLatin1 = Encoding.GetEncoding(1252);
 
         public static XmlDocument Load(MemoryStream stream, IProgress<string> outputText)
         {
@@ -29,7 +30,7 @@ namespace FTAnalyzer
             return Parse(reader, outputText);
         }
 
-        public static XmlDocument LoadFile(string path, IProgress<string> outputText) { return LoadFile(path, isoWesternEuropean, outputText); }
+        public static XmlDocument LoadFile(string path, IProgress<string> outputText) { return LoadFile(path, ansiLatin1, outputText); }
         public static XmlDocument LoadFile(string path, Encoding encoding, IProgress<string> outputText)
         {
             StreamReader reader;
@@ -175,7 +176,7 @@ namespace FTAnalyzer
                             }
 
                             xref = "";
-                            if (line.StartsWith("@", StringComparison.Ordinal))
+                            if (line.StartsWith("@", StringComparison.Ordinal) && tag != "_HASHTAG" & tag != "NAME")
                             {
                                 if (!token1.Equals("CONT") && !token1.Equals("CONC"))
                                 {

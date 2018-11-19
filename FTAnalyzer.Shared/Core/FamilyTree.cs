@@ -219,7 +219,7 @@ namespace FTAnalyzer
             ResetData();
             rootIndividualID = string.Empty;
             outputText.Report(string.Format("Loading file {0}\n", filename));
-            XmlDocument doc = GedcomToXml.LoadFile(filename, Encoding.UTF8, outputText);
+            XmlDocument doc = GedcomToXml.LoadFile(filename, outputText);
             if (doc == null)
             {
                 doc = GedcomToXml.LoadFile(filename, outputText);
@@ -420,7 +420,7 @@ namespace FTAnalyzer
                     ReadStandardisedNameFile(filename);
                 }
             }
-            catch (Exception e)
+            catch
             {
                 //log.Warn("Failed to load Standardised names error was : " + e.Message);
             }
@@ -2755,7 +2755,7 @@ namespace FTAnalyzer
                     formatter.Serialize(stream, NonDuplicates);
                 }
             }
-            catch (Exception e)
+            catch
             {
                // log.Error($"Error {e.Message} writing NonDuplicates.xml");
             }
@@ -2778,7 +2778,7 @@ namespace FTAnalyzer
                 else
                     NonDuplicates = new List<NonDuplicate>();
             }
-            catch (Exception e)
+            catch
             {
               //  log.Error("Error " + e.Message + " reading NonDuplicates.xml");
                 NonDuplicates = new List<NonDuplicate>();
