@@ -73,7 +73,7 @@ namespace FTAnalyzer
         static readonly string LC_CENSUS_PATTERN_1940US = @"(T627[-_])(\d{1,5}-?[AB]?)\/(\d{1,2}[AB]?-\d{1,2}[AB]?)\/(\d{1,3}[AB]?).*?US 1880";
         static readonly string LC_CENSUS_PATTERN_1881CANADA = @"(\d{1,5})\/(\d{0,4}[A-Z]{0,4})\/(\d{0,3})\/(\d{1,3})\/?(\d{1,3})?.*?Canada 1881";
 
-        static Dictionary<string, Regex> censusRegexs;
+        static readonly Dictionary<string, Regex> censusRegexs;
 
         static CensusReference()
         {
@@ -145,7 +145,7 @@ namespace FTAnalyzer
 
         public enum ReferenceStatus { BLANK = 0, UNRECOGNISED = 1, INCOMPLETE = 2, GOOD = 3 };
         public static CensusReference UNKNOWN = new CensusReference();
-        private static string MISSING = "Missing";
+        private static readonly string MISSING = "Missing";
 
         private string unknownCensusRef;
         private string Place { get; set; }
@@ -281,6 +281,8 @@ namespace FTAnalyzer
 
         private bool GetCensusReference(XmlNode n)
         {
+            if (GeneralSettings.Default.SkipCensusReferences)
+                return false;
             string text = FamilyTree.GetText(n, "PAGE", true);
             if (GetCensusReference(text))
                 return true;
@@ -290,6 +292,8 @@ namespace FTAnalyzer
 
         private bool GetCensusReference(string text)
         {
+            if (GeneralSettings.Default.SkipCensusReferences)
+                return false;
             if (text.Length > 0)
             {
                 if (CheckPatterns(text))
@@ -349,7 +353,7 @@ namespace FTAnalyzer
                         .ClearWhiteSpace();
         }
 
-        private bool CheckPatterns(string originalText)
+        bool CheckPatterns(string originalText)
         {
             string text = ClearCommonPhrases(originalText);
             if (text.Length == 0)
