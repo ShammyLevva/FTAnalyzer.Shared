@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace FTAnalyzer
 {
@@ -6,7 +7,11 @@ namespace FTAnalyzer
     {
         public override int Compare(IDisplayColourCensus x, IDisplayColourCensus y)
         {
-            return Compare(x as Individual, y as Individual);
+            return x.Surname.Equals(y.Surname)
+                ? x.Forenames.Equals(y.Forenames)
+                    ? x.BirthDate.CompareTo(y.BirthDate)
+                    : string.Compare(x.Forenames, y.Forenames, StringComparison.Ordinal)
+                : string.Compare(x.Surname, y.Surname, StringComparison.Ordinal);
         }
     }
 }
