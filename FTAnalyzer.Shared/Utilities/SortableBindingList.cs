@@ -72,6 +72,13 @@ namespace FTAnalyzer.Utilities
             return -1;
         }
 
+        public void Sort(IComparer<T> comparer)
+        {
+            List<T> itemsList = (List<T>)Items;
+            itemsList.Sort(comparer);
+            OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+        }
+
         void MergeSort(List<T> inputList, PropertyComparer<T> comparer)
         {
             int left = 0;
