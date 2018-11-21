@@ -114,7 +114,7 @@ namespace FTAnalyzer
         }
 
         public static string Format(string format, DateTime date) => string.Format("{0:" + format + "}", date).ToUpper();
-
+        
         string FixTextDateFormats(string str)
         {
             switch(str)
@@ -138,21 +138,32 @@ namespace FTAnalyzer
 
         string FixCommonDateFormats(string str)
         {
-            str = EnhancedTextInfo.RemoveDiacritics(str.Trim().ToUpper());
-            str = str.Replace(",", string.Empty);
-            str = str.Replace("(", string.Empty);
-            str = str.Replace(")", string.Empty);
-            str = str.Replace("?", string.Empty);
+            str = EnhancedTextInfo.RemoveSupriousDateCharacters(str.Trim().ToUpper());
             if(Properties.NonGedcomDate.Default.Separator != ".")
                 str = str.Replace(".", " ");
             str = str.Replace("&", " AND ");
+            str = str.Replace(",", " ");
+            str = str.Replace("(", " ");
+            str = str.Replace(")", " ");
+            str = str.Replace("?", " ");
+            str = str.Replace("!", " ");
+            str = str.Replace("#", " ");
+            str = str.Replace("$", " ");
+            str = str.Replace("%", " ");
+            str = str.Replace("^", " ");
+            str = str.Replace("'", " ");
+            str = str.Replace(":", " ");
+            str = str.Replace(";", " ");
+            str = str.Replace("@", " ");
+            str = str.Replace("<", "BEF ");
+            str = str.Replace(">", "AFT ");
+            str = str.Replace("=", " ");
+            str = str.Replace("?", " ");
+            str = str.Replace("#", " ");
             str = str.Replace(" / ", "/");
-            str = str.Replace("   ", " ");
-            str = str.Replace("  ", " ");
-            str = str.Replace("  ", " ");
-            str = str.Replace("\'", "");
-            str = str.Replace("\"", "");
-            str = str.Replace("`", "");
+            str = str.Replace("\'", " ");
+            str = str.Replace("\"", " ");
+            str = str.Replace("`", " ").ClearWhiteSpace();
 
             str = str.Replace("JANUARY", "JAN");
             str = str.Replace("FEBRUARY", "FEB");

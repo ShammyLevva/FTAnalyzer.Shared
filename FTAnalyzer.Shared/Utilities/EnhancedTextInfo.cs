@@ -56,6 +56,19 @@ namespace FTAnalyzer.Utilities
             return builder.ToString().TrimEnd(charsToTrim);
         }
 
+        public static string RemoveSupriousDateCharacters(string text)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach(char ch in text)
+            {
+                if (ch >= ' ' && ch <= 'Z')
+                    sb.Append(ch);
+                else
+                    sb.Append(" ");
+            }
+            return sb.ToString().ClearWhiteSpace();
+        }
+
         public static string RemoveDiacritics(string text)
         {
             string formD = text.Normalize(NormalizationForm.FormD);

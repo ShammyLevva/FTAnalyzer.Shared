@@ -1,4 +1,8 @@
-﻿using System;
+﻿using FTAnalyzer.Controls;
+using FTAnalyzer.Filters;
+using FTAnalyzer.Properties;
+using FTAnalyzer.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -12,9 +16,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Xml;
-using FTAnalyzer.Filters;
-using FTAnalyzer.Properties;
-using FTAnalyzer.Utilities;
 
 #if __MACOS__
 using FTAnalyzer.Mac.ViewControllers;
