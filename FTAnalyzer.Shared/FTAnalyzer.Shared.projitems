@@ -126,6 +126,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\Analytics.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\SpecialMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\ColumnDetail.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Comparators\Census\ColourCensusComparer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)Resources\BingOSMaps.htm">
