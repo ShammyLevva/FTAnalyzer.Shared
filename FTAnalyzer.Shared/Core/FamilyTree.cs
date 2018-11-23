@@ -2324,6 +2324,7 @@ namespace FTAnalyzer
                 case 1: uri = BuildFindMyPastQuery(st, individual, factdate); provider = "FindMyPast"; break;
                 case 2: uri = BuildFreeBMDQuery(st, individual, factdate); provider = "FreeBMD"; break;
                 case 3: uri = BuildFamilySearchQuery(st, individual, factdate); provider = "FamilySearch"; break;
+//                case 4: uri = BuildGROQuery(st, individual, factdate); provider = "GRO"; break;
             }
             if (uri != null)
             {
@@ -2387,7 +2388,7 @@ namespace FTAnalyzer
         string BuildFreeBMDQuery(SearchType st, Individual individual, FactDate factdate)
 #pragma warning restore RECS0154 // Parameter is never used
         {
-            throw new CensusSearchException("Not Yet");
+            throw new CensusSearchException("Not Yet"); // TODO: Add FreeBMD searching
         }
 
         string BuildFindMyPastQuery(SearchType st, Individual individual, FactDate factdate)
@@ -2486,6 +2487,48 @@ namespace FTAnalyzer
             uri.Query = query.ToString();
             return uri.ToString();
         }
+
+        //string BuildGROQuery(SearchType st, Individual individual, FactDate factdate)
+        //{
+        //    if (st == SearchType.MARRIAGE)
+        //        return null;
+        //    UriBuilder uri = new UriBuilder
+        //    {
+        //        Host = "www.gro.gov.uk",
+        //        Path = "gro/content/certificates/indexes_search.asp"
+        //    };
+            
+
+            
+        //    if (st.Equals(SearchType.BIRTH))
+        //        query.Append("gl=BMD_BIRTH&");
+        //    if (st.Equals(SearchType.DEATH))
+        //        query.Append("gl=BMD_DEATH&");
+        //    if (individual.Forenames != "?" && individual.Forenames.ToUpper() != Individual.UNKNOWN_NAME)
+        //        query.Append("gsfn=" + HttpUtility.UrlEncode(individual.Forenames) + "&");
+        //    string surname = GetSurname(st, individual, true);
+        //    query.Append("gsln=" + HttpUtility.UrlEncode(surname) + "&");
+        //    AppendYearandRange(individual.BirthDate, query, "msbdy=", "msbdp=", false);
+        //    if (individual.BirthDate.IsKnown)
+        //        query.Append("&msbdy_x=1");
+        //    if (individual.BirthLocation != FactLocation.UNKNOWN_LOCATION)
+        //    {
+        //        string location = individual.BirthLocation.GetLocation(FactLocation.SUBREGION).ToString();
+        //        query.Append("msbpn__ftp=" + HttpUtility.UrlEncode(location) + "&");
+        //    }
+        //    if (st.Equals(SearchType.DEATH) && factdate.IsKnown)
+        //    {
+        //        AppendYearandRange(factdate, query, "msddy=", "msddp=", false);
+        //        query.Append("&msddy_x=1");
+        //    }
+        //    if (st.Equals(SearchType.MARRIAGE) && factdate.IsKnown)
+        //    {
+        //        AppendYearandRange(factdate, query, "msgdy=", "msgdp=", false);
+        //        query.Append("&msgdy_x=1");
+        //    }
+            
+        //    return uri.ToString();
+        //}
 
         static void AppendYearandRange(FactDate factdate, StringBuilder query, string yeartext, string rangetext, bool FMP)
         {

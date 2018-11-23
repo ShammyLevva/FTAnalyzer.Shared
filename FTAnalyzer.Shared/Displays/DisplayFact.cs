@@ -45,14 +45,18 @@ namespace FTAnalyzer
         public string GeocodeStatus => Fact.Location.Geocoded;
 #if __PC__
         public System.Drawing.Image LocationIcon => FactLocationImage.ErrorIcon(Fact.Location.GeocodeStatus).Icon;
+        public bool Preferred => Fact.Preferred;
+        public bool IgnoredFact => IgnoreFact;
+#elif __MACOS__
+        public string Preferred => Fact.Preferred ? "Yes" : "No";
+        public string IgnoredFact => IgnoreFact ? "Yes" : "No";
 #endif
         public string Relation => Ind == null ? string.Empty : Ind.Relation;
         public string RelationToRoot => Ind == null ? string.Empty : Ind.RelationToRoot;
         public string SurnameAtDate => Ind == null ? string.Empty : Ind.SurnameAtDate(FactDate);
-        public string Preferred => Fact.Preferred ? "Yes" : "No";
         public string FactHash => Ind == null ? Fact.Preferred + Fact.FactTypeDescription + Fact.DateString + Fact.Location.GEDCOMLocation :
                                               Ind.IndividualID + Fact.Preferred + Fact.FactTypeDescription + Fact.DateString + Fact.Location.GEDCOMLocation;
-        public string IgnoredFact => IgnoreFact ? "Yes" : "No";
+
         public int CompareTo(object obj)
         {
             DisplayFact that = (DisplayFact)obj;

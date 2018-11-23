@@ -36,7 +36,12 @@ namespace FTAnalyzer
         string BudgieCode { get; }
         [ColumnDetail("Ahnentafel", 70, ColumnDetail.ColumnAlignment.Right)]
         long Ahnentafel { get; }
+#if __PC__
         [ColumnDetail("Has Notes", 60, ColumnDetail.ColumnAlignment.Center)]
-        string HasNotes { get; }
+        bool HasNotes { get; }
+#elif __MACOS__
+        [ColumnDetail("Has Notes", 60, ColumnDetail.ColumnAlignment.Center)]
+        string HasNotesMac { get; }
+#endif
     }
 }

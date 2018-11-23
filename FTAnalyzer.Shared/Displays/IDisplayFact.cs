@@ -54,9 +54,16 @@ namespace FTAnalyzer
         double Latitude { get; }
         [ColumnDetail("Long", 60)]
         double Longitude { get; }
+#if __PC__
+        [ColumnDetail("Preferred Fact", 70, ColumnDetail.ColumnAlignment.Right)]
+        bool Preferred { get; }
+        [ColumnDetail("Ignored Fact", 70, ColumnDetail.ColumnAlignment.Right)]
+        bool IgnoredFact { get; }
+#elif __MACOS__
         [ColumnDetail("Preferred Fact", 70, ColumnDetail.ColumnAlignment.Right)]
         string Preferred { get; }
         [ColumnDetail("Ignored Fact", 70, ColumnDetail.ColumnAlignment.Right)]
         string IgnoredFact { get; }
+#endif
     }
 }

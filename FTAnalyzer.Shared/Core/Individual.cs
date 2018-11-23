@@ -234,7 +234,8 @@ namespace FTAnalyzer
 
         public bool IsBloodDirect => _relationType == BLOOD || _relationType == DIRECT || _relationType == DESCENDANT || _relationType == MARRIEDTODB;
 
-        public string HasNotes => Notes.Length > 0 ? "Yes" : "No";
+        public bool HasNotes => Notes.Length > 0;
+        public string HasNotesMac => HasNotes ? "Yes" : "No";
 
         public string Relation
         {
@@ -868,7 +869,7 @@ namespace FTAnalyzer
         /// </summary>
         void AddCensusNoteFacts()
         {
-            if (HasNotes == "Yes")
+            if (HasNotes)
             {
                 bool checkNotes = true;
                 string notes = CensusReference.ClearCommonPhrases(Notes);

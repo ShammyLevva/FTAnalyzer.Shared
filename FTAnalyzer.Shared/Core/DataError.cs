@@ -47,7 +47,12 @@ namespace FTAnalyzer
         public FactDate Born => individual == null ? FactDate.UNKNOWN_DATE : individual.BirthDate;
         [ColumnDetail("Died", 150)]
         public FactDate Died => individual == null ? FactDate.UNKNOWN_DATE : individual.DeathDate;
+#if __PC__
+        [ColumnDetail("Family", 50)]
+        public bool IsFamily => individual == null;
+#elif __MACOS__
         [ColumnDetail("Family", 50)]
         public string IsFamily => individual == null ? "Yes" : "No";
+#endif
     }
 }
