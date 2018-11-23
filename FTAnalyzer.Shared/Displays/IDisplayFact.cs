@@ -19,7 +19,7 @@ namespace FTAnalyzer
         string Forenames { get; }
         [ColumnDetail("Birth Date", 170)]
         FactDate DateofBirth { get; }
-        [ColumnDetail("Surname at date", 75)]
+        [ColumnDetail("Surname at date", 100)]
         string SurnameAtDate { get; }
         [ColumnDetail("Fact Type", 85)]
         string TypeOfFact { get; }
@@ -55,14 +55,14 @@ namespace FTAnalyzer
         [ColumnDetail("Long", 60)]
         double Longitude { get; }
 #if __PC__
-        [ColumnDetail("Preferred Fact", 70, ColumnDetail.ColumnAlignment.Right)]
+        [ColumnDetail("Preferred Fact", 100, ColumnDetail.ColumnAlignment.Right)]
         bool Preferred { get; }
-        [ColumnDetail("Ignored Fact", 70, ColumnDetail.ColumnAlignment.Right)]
+        [ColumnDetail("Ignored Fact", 80, ColumnDetail.ColumnAlignment.Right)]
         bool IgnoredFact { get; }
 #elif __MACOS__
-        [ColumnDetail("Preferred Fact", 70, ColumnDetail.ColumnAlignment.Right)]
+        [ColumnDetail("Preferred Fact", 100, ColumnDetail.ColumnAlignment.Right)]
         string Preferred { get; }
-        [ColumnDetail("Ignored Fact", 70, ColumnDetail.ColumnAlignment.Right)]
+        [ColumnDetail("Ignored Fact", 80, ColumnDetail.ColumnAlignment.Right)]
         string IgnoredFact { get; }
 #endif
     }
