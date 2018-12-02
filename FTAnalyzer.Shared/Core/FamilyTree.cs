@@ -17,7 +17,7 @@ using System.Web;
 using System.Xml;
 
 #if __MACOS__
-using FTAnalyzer.Mac.ViewControllers;
+using FTAnalyzer.ViewControllers;
 #endif
 
 namespace FTAnalyzer

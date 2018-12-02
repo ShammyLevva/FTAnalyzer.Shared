@@ -887,7 +887,7 @@ namespace FTAnalyzer
                         UpdateCensusFactReference(cr);
                     if (cr.MatchString.Length > 0)
                     {
-                        int pos = notes.IndexOf(cr.MatchString, StringComparison.InvariantCultureIgnoreCase);
+                        int pos = notes.IndexOf(cr.MatchString, StringComparison.OrdinalIgnoreCase);
                         if (pos != -1)
                         {
                             notes = notes.Remove(pos, cr.MatchString.Length);

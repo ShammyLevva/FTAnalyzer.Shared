@@ -102,7 +102,7 @@ namespace FTAnalyzer
             int value = 0;
             foreach (SurnameStats stat in surnames)
             {
-                stat.Individuals = ft.AllIndividuals.Filter(indFilter).Where(x => x.Surname.Equals(stat.Surname, StringComparison.InvariantCultureIgnoreCase)).Count();
+                stat.Individuals = ft.AllIndividuals.Filter(indFilter).Where(x => x.Surname.Equals(stat.Surname, StringComparison.OrdinalIgnoreCase)).Count();
                 stat.Families = ft.AllFamilies.Filter(famFilter).Where(x => x.ContainsSurname(stat.Surname)).Count();
                 stat.Marriages = ft.AllFamilies.Filter(famFilter).Where(x => x.ContainsSurname(stat.Surname) && x.MaritalStatus == Family.MARRIED).Count();
                 value++;

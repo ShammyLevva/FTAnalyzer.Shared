@@ -810,7 +810,7 @@ namespace FTAnalyzer
                 foreach (KeyValuePair<Tuple<int, string>, string> fix in LOCAL_GOOGLE_FIXES)
                 {
                     if (fix.Key.Item1 == UNKNOWN)
-                        result = ReplaceString(result, fix.Key.Item2, fix.Value, StringComparison.InvariantCultureIgnoreCase);
+                        result = ReplaceString(result, fix.Key.Item2, fix.Value, StringComparison.OrdinalIgnoreCase);
                 }
                 if (result != FixedLocation)
                     return result;
@@ -818,7 +818,7 @@ namespace FTAnalyzer
                 foreach (KeyValuePair<Tuple<int, string>, string> fix in GOOGLE_FIXES)
                 {
                     if (fix.Key.Item1 == UNKNOWN)
-                        result = ReplaceString(result, fix.Key.Item2, fix.Value, StringComparison.InvariantCultureIgnoreCase);
+                        result = ReplaceString(result, fix.Key.Item2, fix.Value, StringComparison.OrdinalIgnoreCase);
                 }
                 if (result != FixedLocation)
                     return result;

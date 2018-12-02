@@ -1,4 +1,4 @@
-using FTAnalyzer.Properties;
+﻿using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
 using System;
 using System.Collections.Generic;
@@ -379,7 +379,7 @@ namespace FTAnalyzer
 
         public bool ContainsSurname(string surname)
         {
-            return Members.Any(x => x.Surname.Equals(surname, StringComparison.InvariantCultureIgnoreCase));
+            return Members.Any(x => x.Surname.Equals(surname, StringComparison.OrdinalIgnoreCase));
         }
 
         public bool On1911Census

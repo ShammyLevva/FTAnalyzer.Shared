@@ -10,7 +10,6 @@ using System.Windows.Forms;
 #elif __MACOS__
 using AppKit;
 using Foundation;
-using FTAnalyzer.Mac;
 #endif
 
 namespace FTAnalyzer.Utilities
