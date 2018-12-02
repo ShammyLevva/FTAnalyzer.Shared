@@ -439,11 +439,8 @@ namespace FTAnalyzer
                 {
                     if (FactType == DEATH || FactType == MARRIAGE)
                         throw;
-                    else
-                    {
-                        string message = (node == null) ? string.Empty : node.InnerText + ". ";
-                        throw new InvalidXMLFactException(message + $"\n            Error {te.Message} text in {FactTypeDescription} fact - a non death fact.\n");
-                    }
+                    string message = (node == null) ? string.Empty : node.InnerText + ". ";
+                    throw new InvalidXMLFactException(message + $"\n            Error {te.Message} text in {FactTypeDescription} fact - a non death fact.\n");
                 }
                 catch (Exception ex)
                 {
@@ -884,9 +881,9 @@ namespace FTAnalyzer
             });
         }
 
-        public string PossiblyEqualHash => FactType + FactDate.ToString();
+        public string PossiblyEqualHash => FactType + FactDate;
 
-        public string EqualHash => FactType + FactDate.ToString() + Location.ToString() + Comment;
+        public string EqualHash => FactType + FactDate + Location + Comment;
 
         public bool IsValidCensus(FactDate factDate) => FactDate.IsKnown && IsCensusFact && FactDate.FactYearMatches(factDate) && FactDate.IsNotBEForeOrAFTer && FactErrorLevel == FactError.GOOD;
 
@@ -900,6 +897,6 @@ namespace FTAnalyzer
             country.Equals(Countries.OVERSEAS_UK) || (!Countries.IsUnitedKingdom(country) && CensusReference != null && CensusReference.IsUKCensus);
 
         public override string ToString() => 
-            FactTypeDescription + ": " + FactDate + (Location.ToString().Length > 0 ? " at " + Location : string.Empty) + (Comment.ToString().Length > 0 ? "  (" + Comment + ")" : string.Empty);
+            FactTypeDescription + ": " + FactDate + (Location.ToString().Length > 0 ? " at " + Location : string.Empty) + (Comment.Length > 0 ? "  (" + Comment + ")" : string.Empty);
     }
 }

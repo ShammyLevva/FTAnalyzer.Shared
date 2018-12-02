@@ -878,9 +878,8 @@ namespace FTAnalyzer
                             current += 2;
                             break;
                         }
-                        else
-                            if (AreStringsAt((current + 1), 2, "ZO", "ZI", "ZA")
-                                || (IsWordSlavoGermanic() && ((current > 0) && m_word[current - 1] != 'T')))
+                        if (AreStringsAt((current + 1), 2, "ZO", "ZI", "ZA")
+                            || (IsWordSlavoGermanic() && ((current > 0) && m_word[current - 1] != 'T')))
                         {
                             AddMetaphoneCharacter("S", "TS");
                         }

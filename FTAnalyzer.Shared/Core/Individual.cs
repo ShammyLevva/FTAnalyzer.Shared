@@ -360,7 +360,7 @@ namespace FTAnalyzer
             {
                 if (_forenames == null)
                     return string.Empty;
-                int pos = _forenames.IndexOf(' ');
+                int pos = _forenames.IndexOf(' ', StringComparison.Ordinal);
                 return pos > 0 ? _forenames.Substring(0, pos) : _forenames;
             }
         }
@@ -1029,7 +1029,7 @@ namespace FTAnalyzer
             {
                 IndividualID = IndividualID.Substring(0, 1) + IndividualID.Substring(1).PadLeft(length, '0');
             }
-            catch
+            catch (Exception)
             {  // don't error if Individual isn't of type Ixxxx
             }
         }
@@ -1052,11 +1052,9 @@ namespace FTAnalyzer
                 {
                     if (OutOfCountryCheck(census, location))
                         return CensusColour.OUT_OF_COUNTRY; // Likely out of country on census date
-                    else
-                        return CensusColour.NO_CENSUS; // no census - red
-                }
-                else
                     return CensusColour.NO_CENSUS; // no census - red
+                }
+                return CensusColour.NO_CENSUS; // no census - red
             }
             if (!CensusDate.IsLostCousinsCensusYear(census, true))
                 return CensusColour.CENSUS_PRESENT_NOT_LC_YEAR; // census entered but not LCyear - green
@@ -1262,13 +1260,9 @@ namespace FTAnalyzer
                 {
                     if (MaxAgeAtDeath > 13 && GetPreferredFact(Fact.UNMARRIED) == null)
                         return BMDColour.NO_SPOUSE; // of marrying age but hasn't a partner or unmarried
-                    else
-                        return BMDColour.EMPTY;
+                    return BMDColour.EMPTY;
                 }
-                else
-                {
-                    return CheckMarriageStatus(fam);
-                }
+                return CheckMarriageStatus(fam);
             }
         }
 

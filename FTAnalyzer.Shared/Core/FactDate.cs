@@ -68,7 +68,7 @@ namespace FTAnalyzer
                 ["BETWEENFIX5"] = new Regex(BETWEENFIX5, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["USDATEFIX"] = new Regex(USDATEFIX, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["SPACEFIX"] = new Regex(SPACEFIX, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["QUAKERFIX"] = new Regex(QUAKERFIX, RegexOptions.Compiled | RegexOptions.IgnoreCase),
+                ["QUAKERFIX"] = new Regex(QUAKERFIX, RegexOptions.Compiled | RegexOptions.IgnoreCase)
             };
             UNKNOWN_DATE = new FactDate("UNKNOWN");
             MARRIAGE_LESS_THAN_13 = new FactDate("1600");

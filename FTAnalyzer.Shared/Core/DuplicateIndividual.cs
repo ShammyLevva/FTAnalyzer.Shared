@@ -133,13 +133,12 @@
             return score;
         }
 
-        public override bool Equals(object that)
+        public override bool Equals(object obj)
         {
-            if (that is DuplicateIndividual)
-                return (IndividualA.Equals(((DuplicateIndividual)that).IndividualA) && IndividualB.Equals(((DuplicateIndividual)that).IndividualB))
-                    || (IndividualA.Equals(((DuplicateIndividual)that).IndividualB) && IndividualB.Equals(((DuplicateIndividual)that).IndividualA));
-            else
-                return false;
+            if (obj is DuplicateIndividual)
+                return (IndividualA.Equals(((DuplicateIndividual)obj).IndividualA) && IndividualB.Equals(((DuplicateIndividual)obj).IndividualB))
+                    || (IndividualA.Equals(((DuplicateIndividual)obj).IndividualB) && IndividualB.Equals(((DuplicateIndividual)obj).IndividualA));
+            return false;
         }
 
         public override int GetHashCode()

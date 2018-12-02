@@ -23,21 +23,9 @@ namespace System.Web
 
         internal static bool IsSafe(char ch)
         {
-            if ((((ch >= 'a') && (ch <= 'z')) || ((ch >= 'A') && (ch <= 'Z'))) || ((ch >= '0') && (ch <= '9')))
+            if (((ch >= 'a') && (ch <= 'z')) || ((ch >= 'A') && (ch <= 'Z')) || ((ch >= '0') && (ch <= '9')))
                 return true;
-            switch (ch)
-            {
-                case '\'':
-                case '(':
-                case ')':
-                case '*':
-                case '-':
-                case '.':
-                case '_':
-                case '!':
-                    return true;
-            }
-            return false;
+            return ch == '\'' || ch == '(' || ch == ')' || ch == '*' || ch == '-' || ch == '.' || ch == '_' || ch == '!';
         }
 
         public static string UrlDecode(string str) => str == null ? null : UrlDecode(str, Encoding.UTF8);
@@ -285,7 +273,7 @@ namespace System.Web
 
         internal static string UrlEncodeSpaces(string str)
         {
-            if ((str != null) && (str.IndexOf(' ') >= 0))
+            if ((str != null) && (str.IndexOf(' ', StringComparison.Ordinal) >= 0))
                 str = str.Replace(" ", "%20");
             return str;
         }
@@ -355,7 +343,7 @@ namespace System.Web
         {
             if (str == null)
                 return null;
-            int index = str.IndexOf('?');
+            int index = str.IndexOf('?', StringComparison.Ordinal);
             return index >= 0
                 ? UrlPathEncode(str.Substring(0, index)) + str.Substring(index)
                 : UrlEncodeSpaces(UrlEncodeNonAscii(str, Encoding.UTF8));

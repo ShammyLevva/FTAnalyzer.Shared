@@ -4,7 +4,7 @@ namespace FTAnalyzer
 {
     public class DataErrorGroup
     {
-        static readonly string[] DATAERROR = new string[] 
+        static readonly string[] DATAERROR = 
             { "Birth after death/burial",
                 "Birth after father aged 90+", 
                 "Birth after mother aged 60+", 

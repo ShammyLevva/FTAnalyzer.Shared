@@ -102,12 +102,12 @@ namespace FTAnalyzer
             int value = 0;
             foreach (SurnameStats stat in surnames)
             {
-                stat.Individuals = ft.AllIndividuals.Filter(indFilter).Where(x => x.Surname.Equals(stat.Surname, StringComparison.OrdinalIgnoreCase)).Count();
-                stat.Families = ft.AllFamilies.Filter(famFilter).Where(x => x.ContainsSurname(stat.Surname)).Count();
-                stat.Marriages = ft.AllFamilies.Filter(famFilter).Where(x => x.ContainsSurname(stat.Surname) && x.MaritalStatus == Family.MARRIED).Count();
+                stat.Individuals = ft.AllIndividuals.Filter(indFilter).Count(x => x.Surname.Equals(stat.Surname, StringComparison.OrdinalIgnoreCase));
+                stat.Families = ft.AllFamilies.Filter(famFilter).Count(x => x.ContainsSurname(stat.Surname));
+                stat.Marriages = ft.AllFamilies.Filter(famFilter).Count(x => x.ContainsSurname(stat.Surname) && x.MaritalStatus == Family.MARRIED);
                 value++;
                 if (value % 25 == 0)
-                    progress.Report((100 * value)/maximum);
+                    progress.Report((100 * value) / maximum);
             }
             return surnames;
         }

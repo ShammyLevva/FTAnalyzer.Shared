@@ -7,8 +7,10 @@ namespace FTAnalyzer
 {
     public class FactSource : IDisplaySource
     {
-        private static string BIRTHCERT = "BIRTH", DEATHCERT = "DEATH",
-                MARRIAGECERT = "MARRIAGE", CENSUSCERT = "CENSUS";
+        private static readonly string BIRTHCERT = "BIRTH";
+        private static readonly string DEATHCERT = "DEATH";
+        private static readonly string MARRIAGECERT = "MARRIAGE";
+        private static readonly string CENSUSCERT = "CENSUS";
 
         public string SourceID { get; private set; }
         public string SourceTitle { get; private set; }
@@ -20,30 +22,30 @@ namespace FTAnalyzer
 
         public FactSource(XmlNode node)
         {
-            this.SourceID = node.Attributes["ID"].Value;
-            this.SourceTitle = FamilyTree.GetText(node, "TITL", true);
-            this.Publication = FamilyTree.GetText(node, "PUBL", true);
-            this.Author = FamilyTree.GetText(node, "AUTH", true);
-            this.SourceText = FamilyTree.GetText(node, "TEXT", true);
-            this.SourceMedium = FamilyTree.GetText(node, "REPO/CALN/MEDI", true);
-            if (this.SourceMedium.Length == 0)
-                this.SourceMedium = FamilyTree.GetText(node, "NOTE/CONC", true);
-            this.Facts = new List<Fact>();
+            SourceID = node.Attributes["ID"].Value;
+            SourceTitle = FamilyTree.GetText(node, "TITL", true);
+            Publication = FamilyTree.GetText(node, "PUBL", true);
+            Author = FamilyTree.GetText(node, "AUTH", true);
+            SourceText = FamilyTree.GetText(node, "TEXT", true);
+            SourceMedium = FamilyTree.GetText(node, "REPO/CALN/MEDI", true);
+            if (SourceMedium.Length == 0)
+                SourceMedium = FamilyTree.GetText(node, "NOTE/CONC", true);
+            Facts = new List<Fact>();
         }
 
         public void AddFact(Fact f)
         {
-            if (!this.Facts.Contains(f))
-                this.Facts.Add(f);
+            if (!Facts.Contains(f))
+                Facts.Add(f);
         }
 
         public int FactCount
         {
             get
             {
-                int count = Facts.Count<Fact>(x => x.Individual != null);
-                count += Facts.Count<Fact>(x => x.Family != null && x.Family.Husband != null);
-                count += Facts.Count<Fact>(x => x.Family != null && x.Family.Wife != null);
+                int count = Facts.Count(x => x.Individual != null);
+                count += Facts.Count(x => x.Family != null && x.Family.Husband != null);
+                count += Facts.Count(x => x.Family != null && x.Family.Wife != null);
                 return count;
             }
         }
@@ -52,7 +54,7 @@ namespace FTAnalyzer
         {
             try
             {
-                if (SourceID != null || SourceID.Length > 0)
+                if (!string.IsNullOrEmpty(SourceID))
                     SourceID = SourceID.Substring(0, 1) + SourceID.Substring(1).PadLeft(length, '0');
             }
             catch (Exception)
@@ -60,33 +62,18 @@ namespace FTAnalyzer
             }
         }
 
-        public bool IsBirthCert()
-        {
-            return SourceMedium.Contains("Official Document") &&
-                   SourceTitle.ToUpper().IndexOf(BIRTHCERT) >= 0;
-        }
+        public bool IsBirthCert() => SourceMedium.Contains("Official Document") &&
+                   SourceTitle.ToUpper().IndexOf(BIRTHCERT, StringComparison.Ordinal) >= 0;
 
-        public bool IsDeathCert()
-        {
-            return SourceMedium.Contains("Official Document") &&
-                   SourceTitle.ToUpper().IndexOf(DEATHCERT) >= 0;
-        }
+        public bool IsDeathCert() => SourceMedium.Contains("Official Document") &&
+                   SourceTitle.ToUpper().IndexOf(DEATHCERT, StringComparison.Ordinal) >= 0;
 
-        public bool IsMarriageCert()
-        {
-            return SourceMedium.Contains("Official Document") &&
-                   SourceTitle.ToUpper().IndexOf(MARRIAGECERT) >= 0;
-        }
+        public bool IsMarriageCert() => SourceMedium.Contains("Official Document") &&
+                   SourceTitle.ToUpper().IndexOf(MARRIAGECERT, StringComparison.Ordinal) >= 0;
 
-        public bool IsCensusCert()
-        {
-            return SourceMedium.Equals("Official Document") &&
-                   SourceTitle.ToUpper().IndexOf(CENSUSCERT) >= 0;
-        }
+        public bool IsCensusCert() => SourceMedium.Equals("Official Document") &&
+                   SourceTitle.ToUpper().IndexOf(CENSUSCERT, StringComparison.Ordinal) >= 0;
 
-        public override string ToString()
-        {
-            return SourceTitle;
-        }
+        public override string ToString() => SourceTitle;
     }
 }

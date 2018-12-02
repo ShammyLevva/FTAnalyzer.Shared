@@ -1,6 +1,4 @@
-﻿using FTAnalyzer.Properties;
-using FTAnalyzer.Utilities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,6 +6,8 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
+using FTAnalyzer.Properties;
+using FTAnalyzer.Utilities;
 
 namespace FTAnalyzer
 {
@@ -464,17 +464,14 @@ namespace FTAnalyzer
                     }
                     return temp;
                 }
-                else
+                if (addLocation)
                 {
-                    if (addLocation)
-                    {
-                        if (updateLatLong && result.IsGeoCoded(true))
-                            SaveLocationToDatabase(result);
-                        LOCATIONS.Add(result.ToString(), result);
-                        if (result.Level > COUNTRY)
-                        {   // recusive call to GetLocation forces create of lower level objects and stores in locations
-                            result.GetLocation(result.Level - 1);
-                        }
+                    if (updateLatLong && result.IsGeoCoded(true))
+                        SaveLocationToDatabase(result);
+                    LOCATIONS.Add(result.ToString(), result);
+                    if (result.Level > COUNTRY)
+                    {   // recusive call to GetLocation forces create of lower level objects and stores in locations
+                        result.GetLocation(result.Level - 1);
                     }
                 }
             }
@@ -688,12 +685,9 @@ namespace FTAnalyzer
             REGION_TYPOS.TryGetValue(toFix, out result);
             if (!string.IsNullOrEmpty(result))
                 return result;
-            else
-            {
-                string fixCase = EnhancedTextInfo.ToTitleCase(toFix.ToLower());
-                REGION_TYPOS.TryGetValue(fixCase, out result);
-                return !string.IsNullOrEmpty(result) ? result : toFix;
-            }
+            string fixCase = EnhancedTextInfo.ToTitleCase(toFix.ToLower());
+            REGION_TYPOS.TryGetValue(fixCase, out result);
+            return !string.IsNullOrEmpty(result) ? result : toFix;
         }
 
         void ShiftCountryToRegion()
@@ -863,7 +857,7 @@ namespace FTAnalyzer
 
         string TrimLeadingCommas(string toChange)
         {
-            while (toChange.StartsWith(", "))
+            while (toChange.StartsWith(", ", StringComparison.Ordinal))
                 toChange = toChange.Substring(2);
             return toChange.Trim();
         }
@@ -989,7 +983,7 @@ namespace FTAnalyzer
 
         string FixNumerics(string addressField, bool returnNumber)
         {
-            int pos = addressField.IndexOf(" ");
+            int pos = addressField.IndexOf(" ", StringComparison.Ordinal);
             if (pos > 0 & pos < addressField.Length)
             {
                 string number = addressField.Substring(0, pos);
@@ -1034,19 +1028,19 @@ namespace FTAnalyzer
 
         public virtual int CompareTo(FactLocation that, int level)
         {
-            int res = Country.CompareTo(that.Country);
+            int res = string.Compare(Country, that.Country, StringComparison.Ordinal);
             if (res == 0 && level > COUNTRY)
             {
-                res = Region.CompareTo(that.Region);
+                res = string.Compare(Region, that.Region, StringComparison.Ordinal);
                 if (res == 0 && level > REGION)
                 {
-                    res = SubRegion.CompareTo(that.SubRegion);
+                    res = string.Compare(SubRegion, that.SubRegion, StringComparison.Ordinal);
                     if (res == 0 && level > SUBREGION)
                     {
-                        res = AddressNumeric.CompareTo(that.AddressNumeric);
+                        res = string.Compare(AddressNumeric, that.AddressNumeric, StringComparison.Ordinal);
                         if (res == 0 && level > ADDRESS)
                         {
-                            res = PlaceNumeric.CompareTo(that.PlaceNumeric);
+                            res = string.Compare(PlaceNumeric, that.PlaceNumeric, StringComparison.Ordinal);
                         }
                     }
                 }

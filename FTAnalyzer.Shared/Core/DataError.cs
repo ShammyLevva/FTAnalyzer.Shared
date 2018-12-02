@@ -23,7 +23,7 @@ namespace FTAnalyzer
             : this(errorType, Fact.FactError.ERROR, ind, description) {}
 
         public DataError(int errorType, Family fam, string description)
-            : this(errorType, Fact.FactError.ERROR, (Individual)null, description)
+            : this(errorType, Fact.FactError.ERROR, null, description)
         {
             family = fam;
         }

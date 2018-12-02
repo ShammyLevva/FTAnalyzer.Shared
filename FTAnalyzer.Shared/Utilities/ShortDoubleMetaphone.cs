@@ -71,7 +71,7 @@ namespace FTAnalyzer
 		private ushort m_primaryShortKey, m_alternateShortKey;
 		
         /// <summary>Default ctor, initializes to an empty string and 0 keys</summary>
-		public ShortDoubleMetaphone() : base()
+		public ShortDoubleMetaphone()
 		{
 			m_primaryShortKey = m_alternateShortKey = 0;
 		}
@@ -144,43 +144,62 @@ namespace FTAnalyzer
 		
 			for (int currentCharIdx = 0; currentCharIdx < metaphoneKey.Length; currentCharIdx++) {
 				currentChar = metaphoneKey[currentCharIdx];
-				if (currentChar == 'A')
-					charResult = METAPHONE_A;
-				else if (currentChar == 'P')
-					charResult = METAPHONE_P;
-				else if (currentChar == 'S')
-					charResult = METAPHONE_S;
-				else if (currentChar == 'K')
-					charResult = METAPHONE_K;
-				else if (currentChar == 'X')
-					charResult = METAPHONE_X;
-				else if (currentChar == 'J')
-					charResult = METAPHONE_J;
-				else if (currentChar == 'T')
-					charResult = METAPHONE_T;
-				else if (currentChar == 'F')
-					charResult = METAPHONE_F;
-				else if (currentChar == 'N')
-					charResult = METAPHONE_N;
-				else if (currentChar == 'H')
-					charResult = METAPHONE_H;
-				else if (currentChar == 'M')
-					charResult = METAPHONE_M;
-				else if (currentChar == 'L')
-					charResult = METAPHONE_L;
-				else if (currentChar == 'R')
-					charResult = METAPHONE_R;
-				else if (currentChar == ' ')
-					charResult = METAPHONE_SPACE;
-				else if (currentChar == '\0')
-					charResult = METAPHONE_0;
-				else 
-					charResult = 0x00; //This should never happen
-		
-				result <<= 4;
+                switch (currentChar)
+                {
+                    case 'A':
+                        charResult = METAPHONE_A;
+                        break;
+                    case 'P':
+                        charResult = METAPHONE_P;
+                        break;
+                    case 'S':
+                        charResult = METAPHONE_S;
+                        break;
+                    case 'K':
+                        charResult = METAPHONE_K;
+                        break;
+                    case 'X':
+                        charResult = METAPHONE_X;
+                        break;
+                    case 'J':
+                        charResult = METAPHONE_J;
+                        break;
+                    case 'T':
+                        charResult = METAPHONE_T;
+                        break;
+                    case 'F':
+                        charResult = METAPHONE_F;
+                        break;
+                    case 'N':
+                        charResult = METAPHONE_N;
+                        break;
+                    case 'H':
+                        charResult = METAPHONE_H;
+                        break;
+                    case 'M':
+                        charResult = METAPHONE_M;
+                        break;
+                    case 'L':
+                        charResult = METAPHONE_L;
+                        break;
+                    case 'R':
+                        charResult = METAPHONE_R;
+                        break;
+                    case ' ':
+                        charResult = METAPHONE_SPACE;
+                        break;
+                    case '\0':
+                        charResult = METAPHONE_0;
+                        break;
+                    default:
+                        charResult = 0x00; //This should never happen
+                        break;
+                }
+
+                result <<= 4;
 				result |= charResult;
-			};
-			return result;
+            }
+            return result;
 		}
 	}
 }

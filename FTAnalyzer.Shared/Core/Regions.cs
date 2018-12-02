@@ -1,12 +1,11 @@
-﻿using FTAnalyzer.Utilities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using FTAnalyzer.Utilities;
 
 namespace FTAnalyzer
 {
-    public class Regions
+    public static class Regions
     {
         // ISO Region codes at http://en.wikipedia.org/wiki/ISO_3166-2
 

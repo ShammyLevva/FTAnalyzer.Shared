@@ -58,7 +58,7 @@ namespace FTAnalyzer
             this.Name = name;
             this.Region = region;
             string loc = name + ", " + region + ", Scotland";
-            this.Location = FactLocation.GetLocation(loc, false);
+            Location = FactLocation.GetLocation(loc, false);
         }
 
         public static ScottishParish FindParish(string RD)
@@ -72,8 +72,7 @@ namespace FTAnalyzer
             {
                 if (GeneralSettings.Default.UseCompactCensusRef)
                     return Name + "/" + RD;
-                else
-                    return Name + ", RD: " + RD;
+                return Name + ", RD: " + RD;
             }
         }
 

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace FTAnalyzer
 {
-    public class Relationship
+    public static class Relationship
     {
         public static string CalculateRelationship(Individual rootPerson, Individual indToFind)
         {

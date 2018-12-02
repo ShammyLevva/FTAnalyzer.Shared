@@ -313,13 +313,10 @@ namespace FTAnalyzer
             {
                 if (Husband == null || Wife == null || !MarriageDate.IsKnown)
                     return SINGLE;
-                else
-                {
-                    foreach (Fact f in Facts)
-                        if (f.IsMarriageFact)
-                            return MARRIED;
-                    return UNMARRIED;
-                }
+                foreach (Fact f in Facts)
+                    if (f.IsMarriageFact)
+                        return MARRIED;
+                return UNMARRIED;
             }
         }
 
@@ -363,8 +360,7 @@ namespace FTAnalyzer
                     var name = Husband?.Name ?? Wife?.Name ?? string.Empty;
                     return $"Solo Family {FamilyID}: {name}";
                 }
-                else
-                    return $"{FamilyID}: {FamilyName}";
+                return $"{FamilyID}: {FamilyName}";
             }
         }
 

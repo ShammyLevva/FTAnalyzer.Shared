@@ -213,14 +213,14 @@ namespace FTAnalyzer
             if (fact.FactDate.IsKnown)
             {
                 if (CensusYear.IsKnown && !fact.FactDate.Overlaps(CensusYear))
-                    fact.SetError((int)FamilyTree.Dataerror.FACT_ERROR, Fact.FactError.WARNINGALLOW, "Census Fact dated " + fact.FactDate.ToString() + " doesn't match census reference " + Reference + " date of " + CensusYear);
+                    fact.SetError((int)FamilyTree.Dataerror.FACT_ERROR, Fact.FactError.WARNINGALLOW, "Census Fact dated " + fact.FactDate + " doesn't match census reference " + Reference + " date of " + CensusYear);
                 else
                     CensusYear = fact.FactDate;
             }
             else
                 fact.UpdateFactDate(CensusYear);
             if (pageRef != null && !pageRef.IsKnownStatus && !IsKnownStatus)
-                unknownCensusRef = pageRef.unknownCensusRef + "\n" + unknownCensusRef; 
+                unknownCensusRef = pageRef.unknownCensusRef + "\n" + unknownCensusRef;
             fact.SetCensusReferenceDetails(this, CensusLocation, string.Empty);
         }
 
@@ -361,7 +361,7 @@ namespace FTAnalyzer
             Match matcher = censusRegexs["EW_CENSUS_PATTERN"].Match(text);
             if (matcher.Success)
             {
-                Class = "RG" + matcher.Groups[1].ToString();
+                Class = "RG" + matcher.Groups[1];
                 Piece = matcher.Groups[2].ToString();
                 Folio = matcher.Groups[3].ToString();
                 Page = matcher.Groups[4].ToString();
@@ -371,7 +371,7 @@ namespace FTAnalyzer
             matcher = censusRegexs["EW_CENSUS_PATTERN1"].Match(text);
             if (matcher.Success)
             {
-                Class = "RG" + matcher.Groups[1].ToString();
+                Class = "RG" + matcher.Groups[1];
                 Piece = matcher.Groups[2].ToString();
                 Folio = matcher.Groups[3].ToString();
                 Page = matcher.Groups[4].ToString();
@@ -381,7 +381,7 @@ namespace FTAnalyzer
             matcher = censusRegexs["EW_CENSUS_PATTERN2"].Match(text);
             if (matcher.Success)
             {
-                Class = "RG" + matcher.Groups[1].ToString();
+                Class = "RG" + matcher.Groups[1];
                 Piece = matcher.Groups[2].ToString();
                 Folio = matcher.Groups[3].ToString();
                 Page = MISSING;
@@ -391,7 +391,7 @@ namespace FTAnalyzer
             matcher = censusRegexs["EW_CENSUS_PATTERN_FH"].Match(text);
             if (matcher.Success)
             {
-                Class = "RG" + matcher.Groups[1].ToString();
+                Class = "RG" + matcher.Groups[1];
                 Piece = matcher.Groups[2].ToString();
                 Folio = matcher.Groups[4].ToString();
                 Page = matcher.Groups[6].ToString();
@@ -401,7 +401,7 @@ namespace FTAnalyzer
             matcher = censusRegexs["EW_CENSUS_PATTERN_FH2"].Match(text);
             if (matcher.Success)
             {
-                Class = "RG" + matcher.Groups[1].ToString();
+                Class = "RG" + matcher.Groups[1];
                 Piece = matcher.Groups[2].ToString();
                 ED = matcher.Groups[3].ToString();
                 Folio = matcher.Groups[5].ToString();
@@ -724,7 +724,7 @@ namespace FTAnalyzer
             matcher = censusRegexs["US_CENSUS_PATTERN"].Match(text);
             if (matcher.Success)
             {
-                Class = "US" + matcher.Groups[1].ToString();
+                Class = "US" + matcher.Groups[1];
                 Place = GetOriginalPlace(matcher.Groups[2].ToString(), originalText, "ROLL");
                 Roll = matcher.Groups[3].ToString();
                 Page = matcher.Groups[6].ToString();
@@ -735,7 +735,7 @@ namespace FTAnalyzer
             matcher = censusRegexs["US_CENSUS_PATTERN1A"].Match(text);
             if (matcher.Success)
             {
-                Class = "US" + matcher.Groups[1].ToString();
+                Class = "US" + matcher.Groups[1];
                 Place = GetOriginalPlace(matcher.Groups[2].ToString(), originalText, "ROLL");
                 Roll = matcher.Groups[3].ToString();
                 Page = matcher.Groups[5].ToString();
@@ -746,7 +746,7 @@ namespace FTAnalyzer
             matcher = censusRegexs["US_CENSUS_PATTERN2"].Match(text);
             if (matcher.Success)
             {
-                Class = "US" + matcher.Groups[1].ToString();
+                Class = "US" + matcher.Groups[1];
                 Place = GetOriginalPlace(matcher.Groups[2].ToString(), originalText, "ROLL");
                 Roll = matcher.Groups[3].ToString();
                 Page = matcher.Groups[5].ToString();
@@ -757,7 +757,7 @@ namespace FTAnalyzer
             matcher = censusRegexs["US_CENSUS_PATTERN3"].Match(text);
             if (matcher.Success)
             {
-                Class = "US" + matcher.Groups[1].ToString();
+                Class = "US" + matcher.Groups[1];
                 Place = GetOriginalPlace(matcher.Groups[2].ToString(), originalText, "WARD");
                 Roll = matcher.Groups[3].ToString();
                 Page = matcher.Groups[6].ToString();
@@ -768,7 +768,7 @@ namespace FTAnalyzer
             matcher = censusRegexs["US_CENSUS_PATTERN4"].Match(text);
             if (matcher.Success)
             {
-                Class = "US" + matcher.Groups[1].ToString();
+                Class = "US" + matcher.Groups[1];
                 Place = GetOriginalPlace(matcher.Groups[2].ToString(), originalText, "ED");
                 Page = matcher.Groups[5].ToString();
                 ED = matcher.Groups[3].ToString();
@@ -779,7 +779,7 @@ namespace FTAnalyzer
             if (matcher.Success)
             {
                 Class = "US1940";
-                Roll = "T627_" + matcher.Groups[4].ToString();
+                Roll = "T627_" + matcher.Groups[4];
                 ED = matcher.Groups[1].ToString();
                 Page = matcher.Groups[3].ToString();
                 SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.GOOD, matcher.Value);
@@ -789,7 +789,7 @@ namespace FTAnalyzer
             if (matcher.Success)
             {
                 Class = "US1940";
-                Roll = "T627_" + matcher.Groups[4].ToString();
+                Roll = "T627_" + matcher.Groups[4];
                 ED = matcher.Groups[1].ToString();
                 Page = matcher.Groups[3].ToString();
                 SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.GOOD, matcher.Value);
@@ -800,7 +800,7 @@ namespace FTAnalyzer
             {
                 Class = "US1940";
                 Place = GetOriginalPlace(matcher.Groups[1].ToString(), originalText, "T627");
-                Roll = "T627_" + matcher.Groups[3].ToString();
+                Roll = "T627_" + matcher.Groups[3];
                 ED = matcher.Groups[6].ToString();
                 Page = matcher.Groups[5].ToString();
                 SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.GOOD, matcher.Value);
@@ -809,7 +809,7 @@ namespace FTAnalyzer
             matcher = censusRegexs["CANADA_CENSUS_PATTERN"].Match(text);
             if (matcher.Success)
             {
-                Class = "CAN" + matcher.Groups[1].ToString();
+                Class = "CAN" + matcher.Groups[1];
                 Place = GetOriginalPlace(matcher.Groups[2].ToString(), originalText, "ROLL");
                 Roll = matcher.Groups[3].ToString();
                 Page = matcher.Groups[5].ToString();
@@ -820,7 +820,7 @@ namespace FTAnalyzer
             matcher = censusRegexs["CANADA_CENSUS_PATTERN2"].Match(text);
             if (matcher.Success)
             {
-                Class = "CAN" + matcher.Groups[1].ToString();
+                Class = "CAN" + matcher.Groups[1];
                 ED = matcher.Groups[2].ToString();
                 SD = matcher.Groups[3].ToString();
                 Page = matcher.Groups[5].ToString();
@@ -932,15 +932,14 @@ namespace FTAnalyzer
         private string GetOriginalPlace(string match, string originalText, string stopText)
         {
             int spacePos = match.IndexOf(" ", StringComparison.Ordinal);
-            if(spacePos == -1)
+            if (spacePos == -1)
                 return match.ClearWhiteSpace();
             string startPlace = match.Substring(0, spacePos);
             int matchPos = originalText.ToUpper().IndexOf(startPlace.ToUpper(), StringComparison.Ordinal);
             int stopPos = originalText.ToUpper().IndexOf(stopText, StringComparison.Ordinal);
             if (matchPos > -1 && stopPos > -1 && stopPos - matchPos > 0)
                 return originalText.Substring(matchPos, stopPos - matchPos).ClearWhiteSpace();
-            else
-                return match.ClearWhiteSpace();
+            return match.ClearWhiteSpace();
         }
 
         private string GetUKCensusClass(string year)
@@ -971,8 +970,7 @@ namespace FTAnalyzer
                 bool success = int.TryParse(Piece, out int piecenumber);
                 if (success && piecenumber > 1465) // piece numbers go 1-1465 for 1841 and 1466+ for 1851.
                     return CensusDate.UKCENSUS1851;
-                else
-                    return CensusDate.UKCENSUS1841;
+                return CensusDate.UKCENSUS1841;
             }
             if (Class.Equals("RG9") || Class.Equals("RG09"))
                 return CensusDate.UKCENSUS1861;
@@ -1025,7 +1023,7 @@ namespace FTAnalyzer
                     }
                     if (year.Equals("1841") && Book.Length > 0 && !Book.Equals(MISSING))
                         return @"http://search.findmypast.co.uk/results/world-records/1841-england-wales-and-scotland-census?" + querystring + @"&book=" + Book;
-                    else if (querystring.Length > 0)
+                    if (querystring.Length > 0)
                         return @"http://search.findmypast.co.uk/results/world-records/" + year + "-england-wales-and-scotland-census?" + querystring;
                 }
             }
@@ -1151,12 +1149,9 @@ namespace FTAnalyzer
                     {
                         return GeneralSettings.Default.UseCompactCensusRef ? $"{Roll}/{Page}/{Family}" : $"Roll: {Roll}, Page: {Page}, Family: {Family}";
                     }
-                    else
-                    {
-                        return GeneralSettings.Default.UseCompactCensusRef
-                            ? $"{ED}/{SD}/{Page}/{Family}"
-                            : $"District: {ED}, Sub-District: {SD}, Page: {Page}, Family: {Family}";
-                    }
+                    return GeneralSettings.Default.UseCompactCensusRef
+                        ? $"{ED}/{SD}/{Page}/{Family}"
+                        : $"District: {ED}, Sub-District: {SD}, Page: {Page}, Family: {Family}";
                 }
                 if (Roll.Length > 0)
                 {
@@ -1164,49 +1159,36 @@ namespace FTAnalyzer
                         ? $"{Roll}{(ED.Length > 0 ? "/" + ED : "")}/{Page}"
                         : $"Roll: {Roll}{(ED.Length > 0 ? $", ED: {ED}" : "")}, Page: {Page}";
                 }
-                else if (Piece.Length > 0)
+                if (Piece.Length > 0)
                 {
                     if (Countries.IsEnglandWales(Fact.Location.Country) || Fact.IsOverseasUKCensus(Fact.Location.Country))
                     {
-                        if ((Fact.FactDate.Overlaps(CensusDate.UKCENSUS1851) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1861) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1871) ||
-                            Fact.FactDate.Overlaps(CensusDate.UKCENSUS1881) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1891) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1901)))
-                            if (GeneralSettings.Default.UseCompactCensusRef)
-                                return Piece + "/" + Folio + "/" + Page;
-                            else
-                                return "Piece: " + Piece + ", Folio: " + Folio + ", Page: " + Page;
+                        if (Fact.FactDate.Overlaps(CensusDate.UKCENSUS1851) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1861) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1871) ||
+                            Fact.FactDate.Overlaps(CensusDate.UKCENSUS1881) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1891) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1901))
+                            return GeneralSettings.Default.UseCompactCensusRef
+                                ? Piece + "/" + Folio + "/" + Page
+                                : "Piece: " + Piece + ", Folio: " + Folio + ", Page: " + Page;
                         if (Fact.FactDate.Overlaps(CensusDate.UKCENSUS1841))
                         {
                             if (Book.Length > 0)
-                                if (GeneralSettings.Default.UseCompactCensusRef)
-                                    return Piece + "/" + Book + "/" + Folio + "/" + Page;
-                                else
-                                    return "Piece: " + Piece + ", Book: " + Book + ", Folio: " + Folio + ", Page: " + Page;
-                            else
-                                if (GeneralSettings.Default.UseCompactCensusRef)
-                                    return Piece + "/see image/" + Folio + "/" + Page;
-                                else
-                                    return "Piece: " + Piece + ", Book: see census image (stamped on the census page after the piece number), Folio: " + Folio + ", Page: " + Page;
+                                return GeneralSettings.Default.UseCompactCensusRef
+                                    ? Piece + "/" + Book + "/" + Folio + "/" + Page
+                                    : "Piece: " + Piece + ", Book: " + Book + ", Folio: " + Folio + ", Page: " + Page;
+                            if (GeneralSettings.Default.UseCompactCensusRef)
+                                return Piece + "/see image/" + Folio + "/" + Page;
+                            return "Piece: " + Piece + ", Book: see census image (stamped on the census page after the piece number), Folio: " + Folio + ", Page: " + Page;
                         }
                         if (Fact.FactDate.Overlaps(CensusDate.UKCENSUS1911))
                         {
                             if (Schedule.Length > 0)
-                                if (GeneralSettings.Default.UseCompactCensusRef)
-                                    return Piece + "/" + Schedule;
-                                else
-                                    return "Piece: " + Piece + ", Schedule: " + Schedule;
-                            else
-                                if (GeneralSettings.Default.UseCompactCensusRef)
-                                    return Piece + "/" + Page;
-                                else
-                                    return "Piece: " + Piece + ", Page: " + Page;
+                                return GeneralSettings.Default.UseCompactCensusRef ? Piece + "/" + Schedule : "Piece: " + Piece + ", Schedule: " + Schedule;
+                            return GeneralSettings.Default.UseCompactCensusRef ? Piece + "/" + Page : "Piece: " + Piece + ", Page: " + Page;
                         }
                         if (Fact.FactDate.Overlaps(CensusDate.UKCENSUS1939))
                         {
-                            if (GeneralSettings.Default.UseCompactCensusRef)
-                                return "RG101/" + Piece + "/" + Page + "/" + Schedule + " (" + ED + ")";
-                            else
-                                return "Piece: " + Piece + ", Page: " + Page + ", Schedule " + Schedule + ", ED: " + ED;
-
+                            return GeneralSettings.Default.UseCompactCensusRef
+                                ? "RG101/" + Piece + "/" + Page + "/" + Schedule + " (" + ED + ")"
+                                : "Piece: " + Piece + ", Page: " + Page + ", Schedule " + Schedule + ", ED: " + ED;
                         }
                     }
                 }
@@ -1218,29 +1200,23 @@ namespace FTAnalyzer
                     {
                         ScottishParish sp = ScottishParish.FindParish(Parish);
                         if (GeneralSettings.Default.UseCompactCensusRef)
-                            if (sp == ScottishParish.UNKNOWN_PARISH)
-                                return Parish + "/" + ED + "/" + Page;
-                            else
-                                return sp.Reference + "/" + ED + "/" + Page;
-                        else
-                            if (sp == ScottishParish.UNKNOWN_PARISH)
-                                return "Parish: " + Parish + ", ED: " + ED + ", Page: " + Page;
-                            else
-                                return "Parish: " + sp.Reference + ", ED: " + ED + ", Page: " + Page;
+                            return sp == ScottishParish.UNKNOWN_PARISH ? Parish + "/" + ED + "/" + Page : sp.Reference + "/" + ED + "/" + Page;
+                        return sp == ScottishParish.UNKNOWN_PARISH
+                            ? "Parish: " + Parish + ", ED: " + ED + ", Page: " + Page
+                            : "Parish: " + sp.Reference + ", ED: " + ED + ", Page: " + Page;
                     }
                 }
                 else if (RD.Length > 0)
                 {
                     if (Fact.Location.IsEnglandWales && Fact.FactDate.Overlaps(CensusDate.UKCENSUS1911))
-                        if (GeneralSettings.Default.UseCompactCensusRef)
-                            return RD + "/" + ED + "/" + Schedule;
-                        else
-                            return "RD: " + RD + ", ED: " + ED + ", Schedule: " + Schedule;
+                        return GeneralSettings.Default.UseCompactCensusRef
+                            ? RD + "/" + ED + "/" + Schedule
+                            : "RD: " + RD + ", ED: " + ED + ", Schedule: " + Schedule;
                 }
                 if (unknownCensusRef.Length > 0)
                     return unknownCensusRef;
                 //if (ReferenceText.Length > 0)
-                  //  log.Warn("Census reference text not generated for :" + ReferenceText);
+                //  log.Warn("Census reference text not generated for :" + ReferenceText);
                 return string.Empty;
             }
         }

@@ -424,7 +424,7 @@ namespace FTAnalyzer
                     ReadStandardisedNameFile(filename);
                 }
             }
-            catch
+            catch (Exception)
             {
                 //log.Warn("Failed to load Standardised names error was : " + e.Message);
             }
@@ -437,7 +437,7 @@ namespace FTAnalyzer
             {
                 string line = reader.ReadLine();
                 string[] values = line.Split(',');
-                if (line.IndexOf(',') > 0 && (values[0] == "1" || values[0] == "2"))
+                if (line.IndexOf(',', StringComparison.Ordinal) > 0 && (values[0] == "1" || values[0] == "2"))
                 {
                     StandardisedName original = new StandardisedName(values[0] == "2", values[2]);
                     StandardisedName standardised = new StandardisedName(values[1] == "2", values[3]);
@@ -1527,7 +1527,7 @@ namespace FTAnalyzer
                 filter = FilterUtils.AndFilter(filter, x => x.AliveOnAnyCensus(country) && !x.OutOfCountryOnAllCensus(country));
             }
             else
-                filter = family.Members.Contains;
+                filter = x => family.Members.Contains(x);
             return individuals.Filter(filter).ToList<IDisplayColourCensus>();
         }
 
@@ -1544,7 +1544,7 @@ namespace FTAnalyzer
                 }
             }
             else
-                filter = family.Members.Contains;
+                filter = x=> family.Members.Contains(x);
             return individuals.Filter(filter).ToList<IDisplayColourBMD>();
         }
 
@@ -1561,7 +1561,7 @@ namespace FTAnalyzer
                 }
             }
             else
-                filter = family.Members.Contains;
+                filter = x => family.Members.Contains(x);
             return individuals.Filter(filter).ToList<IDisplayMissingData>();
         }
         #endregion
@@ -1771,7 +1771,7 @@ namespace FTAnalyzer
                     }
                     #endregion
                 }
-#if (__MACOS__ || __IOS__)
+#if __MACOS__ || __IOS__
                 catch (Exception)
                 {
                     catchCount++;
@@ -1808,7 +1808,7 @@ namespace FTAnalyzer
                         }
                     }
                 }
-#if (__MACOS__ || __IOS__)
+#if __MACOS__ || __IOS__
                 catch (Exception)
                 {
                     catchCount++;

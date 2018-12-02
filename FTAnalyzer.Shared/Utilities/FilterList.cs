@@ -31,20 +31,18 @@ namespace FTAnalyzer.Utilities
         public FilterList(IEnumerable<T> elements)
             : base(elements)
         {
-            this.allItems.AddRange(elements);
+            allItems.AddRange(elements);
         }
 
         public void Filter(Predicate<T> filter)
         {
             if (filter is null)
-            {
-                throw new ArgumentNullException("filter");
-            }
+                throw new ArgumentNullException(nameof(filter));
 
-            this.ApplyFilter(filter);
-            if (this.IsSortedCore)
+            ApplyFilter(filter);
+            if (IsSortedCore)
             {
-                this.ApplySortCore(this.SortPropertyCore, this.SortDirectionCore);
+                ApplySortCore(SortPropertyCore, SortDirectionCore);
             }
             OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
         }
@@ -53,10 +51,10 @@ namespace FTAnalyzer.Utilities
         {
             var wantedItems = this.allItems.FindAll(filter);
             
-            this.Items.Clear();
+            Items.Clear();
             foreach (var item in wantedItems)
             {
-                this.Items.Add(item);
+                Items.Add(item);
             }
         }
 

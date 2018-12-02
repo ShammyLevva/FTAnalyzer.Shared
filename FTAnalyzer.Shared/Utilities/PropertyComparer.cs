@@ -14,51 +14,45 @@ namespace FTAnalyzer.Utilities
 
         public PropertyComparer(PropertyDescriptor property, ListSortDirection direction)
         {
-            this.propertyDescriptor = property;
+            propertyDescriptor = property;
             Type comparerForPropertyType = typeof(Comparer<>).MakeGenericType(property.PropertyType);
-            this.comparer = (IComparer)comparerForPropertyType.InvokeMember("Default", BindingFlags.Static | BindingFlags.GetProperty | BindingFlags.Public, null, null, null);
-            this.SetListSortDirection(direction);
+            comparer = (IComparer)comparerForPropertyType.InvokeMember("Default", BindingFlags.Static | BindingFlags.GetProperty | BindingFlags.Public, null, null, null);
+            SetListSortDirection(direction);
         }
 
         #region IComparer<T> Members
 
         public int Compare(T x, T y)
         {
-            var xValue = this.propertyDescriptor.GetValue(x);
-            var yValue = this.propertyDescriptor.GetValue(y);
+            var xValue = propertyDescriptor.GetValue(x);
+            var yValue = propertyDescriptor.GetValue(y);
             string xString = xValue?.ToString();
             string yString = yValue?.ToString();
             if (String.IsNullOrEmpty(xString) && string.IsNullOrEmpty(yString))
-            {
                 return 0;
-            }
-            else if (string.IsNullOrEmpty(xString))
-            {
-                return this.reverse;
-            }
-            else if (string.IsNullOrEmpty(yString))
-            {
-                return -1 * this.reverse;
-            }
-            return this.reverse * this.comparer.Compare(xValue, yValue);
+            if (string.IsNullOrEmpty(xString))
+                return reverse;
+            if (string.IsNullOrEmpty(yString))
+                return -1 * reverse;
+            return reverse * comparer.Compare(xValue, yValue);
         }
 
         #endregion
 
         private void SetPropertyDescriptor(PropertyDescriptor descriptor)
         {
-            this.propertyDescriptor = descriptor;
+            propertyDescriptor = descriptor;
         }
 
         private void SetListSortDirection(ListSortDirection direction)
         {
-            this.reverse = direction == ListSortDirection.Ascending ? 1 : -1;
+            reverse = direction == ListSortDirection.Ascending ? 1 : -1;
         }
 
         public void SetPropertyAndDirection(PropertyDescriptor descriptor, ListSortDirection direction)
         {
-            this.SetPropertyDescriptor(descriptor);
-            this.SetListSortDirection(direction);
+            SetPropertyDescriptor(descriptor);
+            SetListSortDirection(direction);
         }
     }
 }
