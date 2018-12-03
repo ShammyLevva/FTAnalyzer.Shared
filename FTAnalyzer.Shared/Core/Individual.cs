@@ -360,7 +360,7 @@ namespace FTAnalyzer
             {
                 if (_forenames == null)
                     return string.Empty;
-                int pos = _forenames.IndexOf(' ', StringComparison.Ordinal);
+                int pos = _forenames.IndexOf(" ", StringComparison.Ordinal);
                 return pos > 0 ? _forenames.Substring(0, pos) : _forenames;
             }
         }

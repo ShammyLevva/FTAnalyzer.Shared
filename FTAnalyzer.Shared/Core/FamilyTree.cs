@@ -16,7 +16,9 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Xml;
 
-#if __MACOS__
+#if __PC__
+using FTAnalyzer.Controls;
+#elif __MACOS__
 using FTAnalyzer.ViewControllers;
 #endif
 
@@ -437,7 +439,7 @@ namespace FTAnalyzer
             {
                 string line = reader.ReadLine();
                 string[] values = line.Split(',');
-                if (line.IndexOf(',', StringComparison.Ordinal) > 0 && (values[0] == "1" || values[0] == "2"))
+                if (line.IndexOf(",", StringComparison.Ordinal) > 0 && (values[0] == "1" || values[0] == "2"))
                 {
                     StandardisedName original = new StandardisedName(values[0] == "2", values[2]);
                     StandardisedName standardised = new StandardisedName(values[1] == "2", values[3]);

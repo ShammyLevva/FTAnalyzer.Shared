@@ -273,7 +273,7 @@ namespace System.Web
 
         internal static string UrlEncodeSpaces(string str)
         {
-            if ((str != null) && (str.IndexOf(' ', StringComparison.Ordinal) >= 0))
+            if ((str != null) && (str.IndexOf(" ", StringComparison.Ordinal) >= 0))
                 str = str.Replace(" ", "%20");
             return str;
         }
@@ -343,7 +343,7 @@ namespace System.Web
         {
             if (str == null)
                 return null;
-            int index = str.IndexOf('?', StringComparison.Ordinal);
+            int index = str.IndexOf("?", StringComparison.Ordinal);
             return index >= 0
                 ? UrlPathEncode(str.Substring(0, index)) + str.Substring(index)
                 : UrlEncodeSpaces(UrlEncodeNonAscii(str, Encoding.UTF8));
