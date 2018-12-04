@@ -243,6 +243,16 @@
     <Content Include="$(MSBuildThisFileDirectory)Resources\ScottishParishes.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="$(MSBuildThisFileDirectory)Resources\Icons\flogo_rgb_hex-brc-site-250.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\Icons\flogo_rgb_hex-brc-site-250.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="$(MSBuildThisFileDirectory)Resources\Icons\Calendar-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </BundleResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Resources\Icons\filehandling.png" />
   </ItemGroup>
 </Project>
