@@ -426,9 +426,9 @@ namespace FTAnalyzer
                     ReadStandardisedNameFile(filename);
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                //log.Warn("Failed to load Standardised names error was : " + e.Message);
+                Console.WriteLine("Failed to load Standardised names error was : " + e.Message);
             }
         }
 
