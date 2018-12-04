@@ -971,7 +971,10 @@ namespace FTAnalyzer
                 return true;
             if (Longitude == 0.0 && Latitude == 0.0)
                 return false;
-            if (!recheckPartials && MappingSettings.Default.IncludePartials &&
+            if (!recheckPartials &&
+#if __PC__
+                MappingSettings.Default.IncludePartials &&
+#endif
                 (GeocodeStatus == Geocode.PARTIAL_MATCH || GeocodeStatus == Geocode.LEVEL_MISMATCH || GeocodeStatus == Geocode.OS_50KPARTIAL))
                 return true;
             return GeocodeStatus == Geocode.MATCHED || GeocodeStatus == Geocode.GEDCOM_USER ||
@@ -1016,9 +1019,9 @@ namespace FTAnalyzer
                 return true;
             return false;
         }
-        #endregion
+#endregion
 
-        #region Overrides
+#region Overrides
         public int CompareTo(FactLocation that)
         {
             return CompareTo(that, PLACE);
@@ -1073,6 +1076,6 @@ namespace FTAnalyzer
         public bool Equals(FactLocation that, int level) => CompareTo(that, level) == 0;
 
         public override int GetHashCode() => base.GetHashCode();
-        #endregion
+#endregion
     }
 }
