@@ -224,7 +224,7 @@ namespace FTAnalyzer
             Loading = true;
             ResetData();
             rootIndividualID = string.Empty;
-            outputText.Report(string.Format("Loading file {0}\n", filename));
+            outputText.Report($"Loading file {filename}\n");
             XmlDocument doc = GedcomToXml.LoadFile(filename, outputText);
             if (doc == null)
             {

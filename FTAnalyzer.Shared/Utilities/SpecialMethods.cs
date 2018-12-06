@@ -30,9 +30,15 @@ namespace FTAnalyzer.Utilities
 
         public static void SetFonts(Form form)
         {
-            foreach (Control theControl in GetAllControls(form))
-                if (theControl.Font.Name.Equals(Properties.FontSettings.Default.SelectedFont.Name))
-                    theControl.Font = Properties.FontSettings.Default.SelectedFont;
+            try
+            {
+                foreach (Control theControl in GetAllControls(form))
+                    if (theControl.Font.Name.Equals(Properties.FontSettings.Default.SelectedFont.Name))
+                        theControl.Font = Properties.FontSettings.Default.SelectedFont;
+            } catch (Exception e)
+            {
+                Console.WriteLine($"Error processing font: {e.Message}");
+            }
         }
 #endif
 
