@@ -151,9 +151,4 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <BundleResource Include="$(MSBuildThisFileDirectory)Resources\Icons\Calendar-icon.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </BundleResource>
-  </ItemGroup>
 </Project>

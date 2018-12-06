@@ -338,19 +338,24 @@ namespace FTAnalyzer
 
         public void LoadTreeRelationships(XmlDocument doc, IProgress<int> progress, IProgress<string> outputText)
         {
-            if (string.IsNullOrEmpty(rootIndividualID))
+            if (string.IsNullOrEmpty(rootIndividualID) && individuals.Count > 0)
+            { 
                 rootIndividualID = individuals[0].IndividualID;
-            UpdateRootIndividual(rootIndividualID, progress, outputText, true);
-            CreateSharedFacts();
-            CountCensusFacts(outputText);
-            FixIDs();
-            SetDataErrorTypes(progress);
-            CountUnknownFactTypes(outputText);
-            FactLocation.LoadGoogleFixesXMLFile(outputText);
-            LoadLegacyLocations(doc.SelectNodes("GED/_PLAC_DEFN/PLAC"), progress);
-            LoadGeoLocationsFromDataBase(outputText);
+                UpdateRootIndividual(rootIndividualID, progress, outputText, true);
+                CreateSharedFacts();
+                CountCensusFacts(outputText);
+                FixIDs();
+                SetDataErrorTypes(progress);
+                CountUnknownFactTypes(outputText);
+                FactLocation.LoadGoogleFixesXMLFile(outputText);
+                LoadLegacyLocations(doc.SelectNodes("GED/_PLAC_DEFN/PLAC"), progress);
+                LoadGeoLocationsFromDataBase(outputText);
+                DataLoaded = true;
+            }
+            else
+                DataLoaded = false;
             Loading = false;
-            DataLoaded = true;
+
         }
 
         void LoadLegacyLocations(XmlNodeList list, IProgress<int> progress)
