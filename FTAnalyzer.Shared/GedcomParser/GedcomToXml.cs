@@ -1,10 +1,10 @@
+using FTAnalyzer.Properties;
+using FTAnalyzer.Utilities;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Xml;
-using System.IO;
-using FTAnalyzer.Utilities;
-using FTAnalyzer.Properties;
 
 namespace FTAnalyzer
 {
@@ -30,16 +30,34 @@ namespace FTAnalyzer
         public static XmlDocument LoadFile(string path, Encoding encoding, IProgress<string> outputText)
         {
             StreamReader reader;
+            XmlDocument doc;
             if (FileHandling.Default.LoadWithFilters)
             {
                 reader = FileHandling.Default.RetryFailedLines
                     ? new AnselInputStreamReader(CheckInvalidLineEnds(path))
                     : new AnselInputStreamReader(new FileStream(path, FileMode.Open, FileAccess.Read));
+                doc = Parse(reader, outputText);
+                if (doc == null || doc.SelectNodes("GED/INDI").Count == 0)
+                {  // if there is a problem with the file return with opposite line ends
+                    reader = FileHandling.Default.RetryFailedLines
+                        ? new AnselInputStreamReader(new FileStream(path, FileMode.Open, FileAccess.Read))
+                        : new AnselInputStreamReader(CheckInvalidLineEnds(path));
+                    doc = Parse(reader, outputText);
+                }
+                return doc;
             }
             reader = FileHandling.Default.RetryFailedLines
                 ? new StreamReader(CheckInvalidLineEnds(path), encoding)
                 : new StreamReader(new FileStream(path, FileMode.Open, FileAccess.Read), encoding);
-            return Parse(reader, outputText);
+            doc = Parse(reader, outputText);
+            if (doc == null || doc.SelectNodes("GED/INDI").Count == 0)
+            { // if there is a problem with the file return with opposite line ends
+                reader = FileHandling.Default.RetryFailedLines
+                    ? new StreamReader(new FileStream(path, FileMode.Open, FileAccess.Read), encoding)
+                    : new StreamReader(CheckInvalidLineEnds(path), encoding);
+                doc = Parse(reader, outputText);
+            }
+            return doc;
         }
 
         static MemoryStream CheckInvalidLineEnds(string path)
@@ -99,7 +117,7 @@ namespace FTAnalyzer
         {
             long lineNr = 0;
             int badLineCount = 0;
-//            int badLineMax = 30;
+            //            int badLineMax = 30;
 
             string line, nextline, token1, token2;
             string level;

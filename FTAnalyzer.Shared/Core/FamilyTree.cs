@@ -247,7 +247,7 @@ namespace FTAnalyzer
                 doc = GedcomToXml.LoadFile(filename, Encoding.Unicode, outputText);
             if (charset != null && charset.InnerText.Equals("ASCII"))
                 doc = GedcomToXml.LoadFile(filename, Encoding.ASCII, outputText);
-            if (doc == null)
+            if (doc == null || doc.SelectNodes("GED/INDI").Count == 0)
                 return null;
             ReportOptions(outputText);
             outputText.Report("File Loaded.\n");
@@ -338,24 +338,19 @@ namespace FTAnalyzer
 
         public void LoadTreeRelationships(XmlDocument doc, IProgress<int> progress, IProgress<string> outputText)
         {
-            if (string.IsNullOrEmpty(rootIndividualID) && individuals.Count > 0)
-            { 
+            if (string.IsNullOrEmpty(rootIndividualID)) 
                 rootIndividualID = individuals[0].IndividualID;
-                UpdateRootIndividual(rootIndividualID, progress, outputText, true);
-                CreateSharedFacts();
-                CountCensusFacts(outputText);
-                FixIDs();
-                SetDataErrorTypes(progress);
-                CountUnknownFactTypes(outputText);
-                FactLocation.LoadGoogleFixesXMLFile(outputText);
-                LoadLegacyLocations(doc.SelectNodes("GED/_PLAC_DEFN/PLAC"), progress);
-                LoadGeoLocationsFromDataBase(outputText);
-                DataLoaded = true;
-            }
-            else
-                DataLoaded = false;
+            UpdateRootIndividual(rootIndividualID, progress, outputText, true);
+            CreateSharedFacts();
+            CountCensusFacts(outputText);
+            FixIDs();
+            SetDataErrorTypes(progress);
+            CountUnknownFactTypes(outputText);
+            FactLocation.LoadGoogleFixesXMLFile(outputText);
+            LoadLegacyLocations(doc.SelectNodes("GED/_PLAC_DEFN/PLAC"), progress);
+            LoadGeoLocationsFromDataBase(outputText);
+            DataLoaded = true;
             Loading = false;
-
         }
 
         void LoadLegacyLocations(XmlNodeList list, IProgress<int> progress)
