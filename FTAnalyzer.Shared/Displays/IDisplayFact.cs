@@ -27,7 +27,7 @@ namespace FTAnalyzer
         FactDate FactDate { get; }
         [ColumnDetail("Relation", 115)]
         string Relation { get; }
-        [ColumnDetail("Relation to Root", 150)]
+        [ColumnDetail("Relation to Root", 160)]    
         string RelationToRoot { get; }
         [ColumnDetail("Location", 250)]
         FactLocation Location { get; }
