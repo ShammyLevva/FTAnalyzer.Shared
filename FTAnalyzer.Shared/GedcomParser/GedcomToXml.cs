@@ -10,8 +10,8 @@ namespace FTAnalyzer
 {
     class GedcomToXml
     {
-        static readonly Encoding isoWesternEuropean = Encoding.GetEncoding(28591);
         static readonly Encoding ansiLatin1 = Encoding.GetEncoding(1252);
+        static readonly Encoding utf8 = Encoding.UTF8;
 
         public static XmlDocument Load(MemoryStream stream, IProgress<string> outputText)
         {
@@ -70,22 +70,20 @@ namespace FTAnalyzer
         {
             MemoryStream outfs = new MemoryStream();
             long streamLength = infs.Length;
-            byte b = (byte)infs.ReadByte();
+            byte b; 
             while (infs.Position < streamLength)
             {
+                b = (byte)infs.ReadByte();
                 if (b == 0x0d)
                 {
                     b = (byte)infs.ReadByte();
-                    if (b == 0x0a)
-                    { // we have 0x0d 0x0a so write the 0x0d so that normal write works.
+                    if (b == 0x0a)// we have 0x0d 0x0a so write the 0x0d so that normal write works.
                         outfs.WriteByte(0x0d);
-                    }
+                    else
+                        outfs.WriteByte(b);
                 }
                 else
-                {
                     outfs.WriteByte(b);
-                }
-                b = (byte)infs.ReadByte();
             }
             outfs.Position = 0;
             return outfs;
@@ -117,8 +115,6 @@ namespace FTAnalyzer
         {
             long lineNr = 0;
             int badLineCount = 0;
-            //            int badLineMax = 30;
-
             string line, nextline, token1, token2;
             string level;
             int thislevel;

@@ -228,7 +228,7 @@ namespace FTAnalyzer
             XmlDocument doc = GedcomToXml.LoadFile(filename, outputText);
             if (doc == null)
             {
-                doc = GedcomToXml.LoadFile(filename, outputText);
+                doc = GedcomToXml.LoadFile(filename, Encoding.UTF8, outputText);
                 if (doc == null)
                     return null;
             }
@@ -237,16 +237,25 @@ namespace FTAnalyzer
             XmlNode header = doc.SelectSingleNode("GED/HEAD");
             if (header == null)
             {
-                outputText.Report(string.Format("\n\nUnable to find GEDCOM 'HEAD' record in first line of file aborting load.\nIs {0} really a GEDCOM file", filename));
+                outputText.Report(string.Format($"\n\nUnable to find GEDCOM 'HEAD' record in first line of file aborting load.\nIs {filename} really a GEDCOM file"));
                 return null;
             }
             XmlNode charset = doc.SelectSingleNode("GED/HEAD/CHAR");
-            if (charset != null && charset.InnerText.Equals("ANSEL"))
-                doc = GedcomToXml.LoadFile(filename, outputText);
-            if (charset != null && charset.InnerText.Equals("UNICODE"))
-                doc = GedcomToXml.LoadFile(filename, Encoding.Unicode, outputText);
-            if (charset != null && charset.InnerText.Equals("ASCII"))
-                doc = GedcomToXml.LoadFile(filename, Encoding.ASCII, outputText);
+            if (charset != null)
+            {
+                switch (charset.InnerText)
+                {
+                    case "ANSEL":
+                        doc = GedcomToXml.LoadFile(filename, outputText);
+                        break;
+                    case "UNICODE":
+                      doc = GedcomToXml.LoadFile(filename, Encoding.Unicode, outputText);
+                        break;
+                    case "ASCII":
+                        doc = GedcomToXml.LoadFile(filename, Encoding.ASCII, outputText);
+                        break;
+                }
+            }
             if (doc == null || doc.SelectNodes("GED/INDI").Count == 0)
                 return null;
             ReportOptions(outputText);
