@@ -227,11 +227,7 @@ namespace FTAnalyzer
             outputText.Report($"Loading file {filename}\n");
             XmlDocument doc = GedcomToXml.LoadFile(filename, outputText);
             if (doc == null)
-            {
-                doc = GedcomToXml.LoadFile(filename, Encoding.UTF8, outputText);
-                if (doc == null)
-                    return null;
-            }
+                return null;
             // doc.Save(@"c:\temp\FHcensusref.xml");
             // First check if file has a valid header record ie: it is actually a GEDCOM file
             XmlNode header = doc.SelectSingleNode("GED/HEAD");
@@ -253,6 +249,9 @@ namespace FTAnalyzer
                         break;
                     case "ASCII":
                         doc = GedcomToXml.LoadFile(filename, Encoding.ASCII, outputText);
+                        break;
+                    case "UTF-8":
+                        doc = GedcomToXml.LoadFile(filename, Encoding.UTF8, outputText);
                         break;
                 }
             }

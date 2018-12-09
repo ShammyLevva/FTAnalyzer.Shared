@@ -139,8 +139,9 @@ namespace FTAnalyzer
         string FixCommonDateFormats(string str)
         {
             str = EnhancedTextInfo.RemoveSupriousDateCharacters(str.Trim().ToUpper());
-            if(Properties.NonGedcomDate.Default.Separator != ".")
+            if(Properties.NonGedcomDate.Default.UseNonGedcomDates && Properties.NonGedcomDate.Default.Separator != ".")
                 str = str.Replace(".", " ");
+            str = str.Replace(". ", " "); // even if Non GEDCOM date separator is a dot, dot space is invalid.
             str = str.Replace("&", " AND ");
             str = str.Replace(",", " ");
             str = str.Replace("(", " ");
