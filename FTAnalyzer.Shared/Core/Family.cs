@@ -76,8 +76,8 @@ namespace FTAnalyzer
                         Individual child = ft.GetIndividual(n.Attributes["REF"].Value);
                         if (child != null)
                         {
-                            XmlNode fatherNode = node.SelectSingleNode("CHIL/_FREL");
-                            XmlNode motherNode = node.SelectSingleNode("CHIL/_MREL");
+                            XmlNode fatherNode = n.SelectSingleNode("_FREL");
+                            XmlNode motherNode = n.SelectSingleNode("_MREL");
                             var father = ParentalRelationship.GetRelationshipType(fatherNode);
                             var mother = ParentalRelationship.GetRelationshipType(motherNode);
                             Children.Add(child);

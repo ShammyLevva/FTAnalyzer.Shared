@@ -404,16 +404,7 @@ namespace FTAnalyzer
 
         public void UpdateRootIndividual(string rootIndividualID, IProgress<int> progress, IProgress<string> outputText, bool locationsToFollow = false)
         {
-            //int start = xmlErrorbox.TextLength;
-            //xmlErrorbox.AppendText("\nCalculating Relationships using " + rootIndividualID + ": " +
-            //    GetIndividual(rootIndividualID).Name + " as root person. Please wait\n\n");
-            //int end = xmlErrorbox.TextLength;
-            //xmlErrorbox.SelectionStart = start;
-            //xmlErrorbox.SelectionLength = end - start;
-            //xmlErrorbox.SelectionFont = new Font(xmlErrorbox.Font, FontStyle.Bold);
-            //xmlErrorbox.SelectionLength = 0;
-
-            outputText.Report("\nCalculating Relationships using " + rootIndividualID + ": " + GetIndividual(rootIndividualID).Name + " as root person. Please wait\n\n");
+            outputText.Report($"\nCalculating Relationships using {rootIndividualID}: {GetIndividual(rootIndividualID).Name} as root person. Please wait\n\n");
 
             // When the user changes the root individual, no location processing is taking place
             int locationCount = locationsToFollow ? FactLocation.AllLocations.Count() : 0;

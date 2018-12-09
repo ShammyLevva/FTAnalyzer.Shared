@@ -12,9 +12,9 @@ namespace FTAnalyzer
 
         public ParentalRelationship(Family family, ParentalRelationshipType fatherRel, ParentalRelationshipType motherRel)
         {
-            this.Family = family;
-            this.FatherRelationship = fatherRel;
-            this.MotherRelationship = motherRel;
+            Family = family;
+            FatherRelationship = fatherRel;
+            MotherRelationship = motherRel;
         }
 
         public bool IsNaturalFather
