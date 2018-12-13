@@ -10,7 +10,7 @@ namespace FTAnalyzer
         string Forenames { get; }
         [ColumnDetail("Surname", 75)]
         string Surname { get; }
-        [ColumnDetail("Relation", 115)]
+        [ColumnDetail("Relation", 120)]
         string Relation { get; }
         [ColumnDetail("Relation to Root", 160)]
         string RelationToRoot { get; }
