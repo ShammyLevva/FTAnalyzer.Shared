@@ -24,7 +24,7 @@ namespace FTAnalyzer
         string Occupation { get; }
         [ColumnDetail("Lifespan",65)]
         Age LifeSpan { get; }
-        [ColumnDetail("Relation", 115)]
+        [ColumnDetail("Relation", 120)]
         string Relation { get; }
         [ColumnDetail("Relation to Root", 160)]    
         string RelationToRoot { get; }
