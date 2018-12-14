@@ -1160,9 +1160,9 @@ namespace FTAnalyzer
                     parent.Ahnentafel = newAhnatafel; // set to lower line if new direct
                 if (outputText != null)
                 {
-                    outputText.Report(parent.Name + " detected as a direct ancestor more than once as:\n");
-                    outputText.Report(currentLine + " and as:\n");
-                    outputText.Report(newLine + "\n\n");
+                    outputText.Report($"{parent.Name} detected as a direct ancestor more than once as:\n");
+                    outputText.Report($"{currentLine} and as:\n");
+                    outputText.Report($"{newLine}\n\n");
                 }
             }
         }
@@ -1765,8 +1765,13 @@ namespace FTAnalyzer
                             maxAge = spouse.GetMaxAge(asParent.MarriageDate);
                             if (maxAge < 13 && spouse.BirthDate.IsAfter(FactDate.MARRIAGE_LESS_THAN_13))
                                 errors[(int)Dataerror.MARRIAGE_BEFORE_SPOUSE_13].Add(new DataError((int)Dataerror.MARRIAGE_BEFORE_SPOUSE_13, ind, "Marriage to " + spouse.Name + " in " + asParent.MarriageDate + " is before spouse born " + spouse.BirthDate + " was 13 years old"));
-                            if (ind.Surname.Equals(spouse.Surname))
-                                errors[(int)Dataerror.SAME_SURNAME_COUPLE].Add(new DataError((int)Dataerror.SAME_SURNAME_COUPLE, ind, "Spouse " + spouse.Name + " has same surname. Usually due to wife incorrectly recorded with married instead of maiden name."));
+                            if (ind.Surname == spouse.Surname)
+                            {
+                                Individual wifesFather = ind.IsMale ? spouse.NaturalFather : ind.NaturalFather;
+                                Individual husband = ind.IsMale ? ind : spouse;
+                                if(husband.Surname != wifesFather?.Surname) // if couple have same surname and wife is different from her natural father then likely error
+                                    errors[(int)Dataerror.SAME_SURNAME_COUPLE].Add(new DataError((int)Dataerror.SAME_SURNAME_COUPLE, ind, $"Spouse {spouse.Name} has same surname. Usually due to wife incorrectly recorded with married instead of maiden name."));
+                            }
                             //if (ind.FirstMarriage != null && ind.FirstMarriage.MarriageDate != null)
                             //{
                             //    if (asParent.MarriageDate.isAfter(ind.FirstMarriage.MarriageDate))
