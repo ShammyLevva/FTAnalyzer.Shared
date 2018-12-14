@@ -669,19 +669,13 @@ namespace FTAnalyzer
 
         public IList<FactSource> Sources { get; private set; }
 
-        public string Country
-        {
-            get { return Location == null ? "UNKNOWN" : Location.Country; }
-        }
+        public string Country => Location == null ? "UNKNOWN" : Location.Country;
 
         public bool CertificatePresent { get; private set; }
 
         #endregion
 
-        public string ReverseLocation(string location)
-        {
-            return string.Join(",", location.Split(',').Reverse());
-        }
+        public string ReverseLocation(string location) => string.Join(",", location.Split(',').Reverse());
 
         public void SetError(int number, FactError level, string message)
         {
@@ -891,9 +885,11 @@ namespace FTAnalyzer
             });
         }
 
-        public string PossiblyEqualHash => FactType == UNKNOWN ? FactType + Tag + FactDate : FactType + FactDate;
+        string UnknownFactHash => FactType == UNKNOWN ? Tag : string.Empty;
+        
+        public string PossiblyEqualHash => FactType + UnknownFactHash + FactDate + IsMarriageFact;
 
-        public string EqualHash => FactType == UNKNOWN ? FactType + Tag + FactDate + Location + Comment : FactType + FactDate + Location + Comment;
+        public string EqualHash => FactType + UnknownFactHash + FactDate + Location + Comment + IsMarriageFact;
 
         public bool IsValidCensus(FactDate factDate) => FactDate.IsKnown && IsCensusFact && FactDate.FactYearMatches(factDate) && FactDate.IsNotBEForeOrAFTer && FactErrorLevel == FactError.GOOD;
 
