@@ -704,10 +704,7 @@ namespace FTAnalyzer
                 FactDate = date;
         }
 
-        public bool HasValidCensusReference
-        {
-            get { return CensusReference != null && CensusReference.Status != CensusReference.ReferenceStatus.BLANK; }
-        }
+        public bool HasValidCensusReference => CensusReference != null && CensusReference.Status != CensusReference.ReferenceStatus.BLANK;
 
         public void SetCensusReferenceDetails(CensusReference cr, CensusLocation cl, string comment)
         {
@@ -730,7 +727,7 @@ namespace FTAnalyzer
                 {
                     //                    FactErrorNumber = (int) FamilyTree.Dataerror.RESIDENCE_CENSUS_DATE;
                     FactErrorLevel = Fact.FactError.WARNINGALLOW;
-                    FactErrorMessage = "Warning : Residence date " + FactDate + " is in a census year but doesn't overlap census date.";
+                    FactErrorMessage = $"Warning : Residence date {FactDate} is in a census year but doesn't overlap census date.";
                     if (!GeneralSettings.Default.TolerateInaccurateCensusDate)
                         FactErrorMessage += " This would be accepted as a census fact with Tolerate slightly inaccurate census dates option.";
                 }
@@ -762,14 +759,14 @@ namespace FTAnalyzer
                     if (GeneralSettings.Default.TolerateInaccurateCensusDate)
                     {
                         //                        FactErrorNumber = (int)FamilyTree.Dataerror.RESIDENCE_CENSUS_DATE;
-                        FactErrorMessage = "Warning: Inaccurate Census date '" + FactDate + "' treated as '" + yearAdjusted + "'";
+                        FactErrorMessage = $"Warning: Inaccurate Census date '{FactDate}' treated as '{yearAdjusted}'";
                         FactErrorLevel = FactError.WARNINGALLOW;
                     }
                     else
                     {
                         //                        FactErrorNumber = (int)FamilyTree.Dataerror.RESIDENCE_CENSUS_DATE;
                         FactErrorLevel = FactError.WARNINGIGNORE;
-                        FactErrorMessage = "Inaccurate Census date '" + FactDate + "' fact ignored in strict mode. Check for incorrect date entered or try Tolerate slightly inaccurate census date option.";
+                        FactErrorMessage = $"Inaccurate Census date '{FactDate}' fact ignored in strict mode. Check for incorrect date entered or try Tolerate slightly inaccurate census date option.";
                     }
                 }
             }
@@ -783,7 +780,7 @@ namespace FTAnalyzer
                 (tag == "Census 1911" && !yearAdjusted.Overlaps(CensusDate.UKCENSUS1911)) ||
                 (tag == "Census 1939" && !yearAdjusted.Overlaps(CensusDate.UKCENSUS1939)))
             {
-                FactErrorMessage = "UK Census fact error date '" + FactDate + "' doesn't match '" + tag + "' tag. Check for incorrect date entered.";
+                FactErrorMessage = $"UK Census fact error date '{FactDate}' doesn't match '{tag}' tag. Check for incorrect date entered.";
                 FactErrorLevel = FactError.ERROR;
                 //                FactErrorNumber = (int)FamilyTree.Dataerror.CENSUS_COVERAGE;
                 return;
@@ -804,14 +801,14 @@ namespace FTAnalyzer
                 if (!CensusDate.IsCensusYear(yearAdjusted, Country, false))
                 {
                     //                    FactErrorNumber = (int)FamilyTree.Dataerror.CENSUS_COVERAGE;
-                    FactErrorMessage = "Census fact error date '" + FactDate + "' isn't a supported census date. Check for incorrect date entered or try Tolerate slightly inaccurate census date option.";
+                    FactErrorMessage = $"Census fact error date '{FactDate}' isn't a supported census date. Check for incorrect date entered or try Tolerate slightly inaccurate census date option.";
                     FactErrorLevel = FactError.ERROR;
                     return;
                 }
                 if (GeneralSettings.Default.TolerateInaccurateCensusDate && yearAdjusted.IsKnown && !CensusDate.IsCensusYear(yearAdjusted, Country, true))
                 {
                     //                    FactErrorNumber = (int)FamilyTree.Dataerror.CENSUS_COVERAGE;
-                    FactErrorMessage = "Warning : Census fact error date '" + FactDate + "' overlaps census date but is vague. Check for incorrect date entered.";
+                    FactErrorMessage = $"Warning : Census fact error date '{FactDate}' overlaps census date but is vague. Check for incorrect date entered.";
                     FactErrorLevel = FactError.WARNINGALLOW;
                 }
                 if (!FactDate.Equals(yearAdjusted))
@@ -822,13 +819,13 @@ namespace FTAnalyzer
                 if (GeneralSettings.Default.TolerateInaccurateCensusDate && yearAdjusted.IsKnown && !CensusDate.IsLostCousinsCensusYear(yearAdjusted, true))
                 {
                     //                    FactErrorNumber = (int)FamilyTree.Dataerror.CENSUS_COVERAGE;
-                    FactErrorMessage = "Lost Cousins fact error date '" + FactDate + "' overlaps Lost Cousins census year but is vague. Check for incorrect date entered.";
+                    FactErrorMessage = $"Lost Cousins fact error date '{FactDate}' overlaps Lost Cousins census year but is vague. Check for incorrect date entered.";
                     FactErrorLevel = Fact.FactError.WARNINGALLOW;
                 }
                 if (!CensusDate.IsLostCousinsCensusYear(yearAdjusted, false))
                 {
                     //                    FactErrorNumber = (int)FamilyTree.Dataerror.CENSUS_COVERAGE;
-                    FactErrorMessage = "Lost Cousins fact error date '" + FactDate + "' isn't a supported Lost Cousins census year. Check for incorrect date entered or try Tolerate slightly inaccurate census date option.";
+                    FactErrorMessage = $"Lost Cousins fact error date '{FactDate}' isn't a supported Lost Cousins census year. Check for incorrect date entered or try Tolerate slightly inaccurate census date option.";
                     FactErrorLevel = FactError.ERROR;
                 }
                 if (!FactDate.Equals(yearAdjusted))
@@ -894,9 +891,9 @@ namespace FTAnalyzer
             });
         }
 
-        public string PossiblyEqualHash => FactType + FactDate;
+        public string PossiblyEqualHash => FactType == UNKNOWN ? FactType + Tag + FactDate : FactType + FactDate;
 
-        public string EqualHash => FactType + FactDate + Location + Comment;
+        public string EqualHash => FactType == UNKNOWN ? FactType + Tag + FactDate + Location + Comment : FactType + FactDate + Location + Comment;
 
         public bool IsValidCensus(FactDate factDate) => FactDate.IsKnown && IsCensusFact && FactDate.FactYearMatches(factDate) && FactDate.IsNotBEForeOrAFTer && FactErrorLevel == FactError.GOOD;
 

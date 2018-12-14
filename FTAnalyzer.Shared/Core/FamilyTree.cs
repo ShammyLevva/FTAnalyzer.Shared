@@ -209,7 +209,7 @@ namespace FTAnalyzer
             Loading = true;
             ResetData();
             rootIndividualID = string.Empty;
-            outputText.Report(string.Format("Loading file {0}\n", filename));
+            outputText.Report($"Loading file {filename}\n");
             XmlDocument doc = GedcomToXml.Load(stream, outputText);
             if (doc != null)
             {
@@ -314,14 +314,14 @@ namespace FTAnalyzer
                 {
                     individuals.Add(individual);
                     if (individualLookup.ContainsKey(individual.IndividualID))
-                        outputText.Report("More than one INDI record found with ID value " + individual.IndividualID + "\n");
+                        outputText.Report($"More than one INDI record found with ID value {individual.IndividualID}\n");
                     else
                         individualLookup.Add(individual.IndividualID, individual);
                     AddOccupations(individual);
                     progress.Report((100 * counter++) / individualMax);
                 }
             }
-            outputText.Report("Loaded " + counter + " individuals.\n");
+            outputText.Report($"Loaded {counter} individuals.\n");
             progress.Report(100);
         }
 
@@ -338,7 +338,7 @@ namespace FTAnalyzer
                 families.Add(family);
                 progress.Report((100 * counter++) / familyMax);
             }
-            outputText.Report("Loaded " + counter + " families.\n");
+            outputText.Report($"Loaded {counter} families.\n");
             CheckAllIndividualsAreInAFamily(outputText);
             RemoveFamiliesWithNoIndividuals();
             progress.Report(100);
@@ -395,7 +395,7 @@ namespace FTAnalyzer
             }
             catch (Exception ex)
             {
-                outputText.Report("Error loading previously geocoded data. " + ex.Message);
+                outputText.Report($"Error loading previously geocoded data. {ex.Message}");
                 return false;
             }
 #endif
@@ -566,37 +566,37 @@ namespace FTAnalyzer
             int resiTotal = resiFacts + resiWarnAllow;
             int lostCousinsTotal = lostCousinsFacts + lostCousinsWarnAllow + lostCousinsWarnIgnore + lostCousinsErrors;
 
-            outputText.Report("\nFound " + censusTotal + " census facts in GEDCOM File (" + censusFacts + " good, ");
+            outputText.Report($"\nFound {censusTotal} census facts in GEDCOM File ({censusFacts} good, ");
             if (censusWarnAllow > 0)
-                outputText.Report(censusWarnAllow + " warnings (data tolerated), ");
+                outputText.Report($"{censusWarnAllow} warnings (data tolerated), ");
             if (censusWarnIgnore > 0)
-                outputText.Report(censusWarnIgnore + " warnings (data ignored in strict mode), ");
+                outputText.Report($"{censusWarnIgnore} warnings (data ignored in strict mode), ");
             if (censusErrors > 0)
-                outputText.Report(censusErrors + " errors (data discarded), ");
-            outputText.Report((censusFacts + censusWarnAllow) + " usable facts loaded)");
+                outputText.Report($"{censusErrors} errors (data discarded), ");
+            outputText.Report($"{censusFacts + censusWarnAllow} usable facts loaded)");
 
-            outputText.Report("\nCreated " + censusFTAFacts + " census facts from individuals notes and source references in GEDCOM File");
-            outputText.Report("\nFound " + resiTotal + " residence facts in GEDCOM File (" + resiCensus + " treated as census facts) ");
+            outputText.Report($"\nCreated {censusFTAFacts} census facts from individuals notes and source references in GEDCOM File");
+            outputText.Report($"\nFound {resiTotal} residence facts in GEDCOM File ({resiCensus} treated as census facts) ");
             if (resiWarnAllow > 0)
             {
                 if (GeneralSettings.Default.TolerateInaccurateCensusDate)
-                    outputText.Report(resiWarnAllow + " warnings (data tolerated), ");
+                    outputText.Report($"{resiWarnAllow} warnings (data tolerated), ");
                 else
-                    outputText.Report(resiWarnAllow + " warnings (data ignored in strict mode), ");
+                    outputText.Report($"{resiWarnAllow} warnings (data ignored in strict mode), ");
             }
-            outputText.Report("\nFound " + censusReferences + " census references in file and " + blankCensusRefs + " facts missing a census reference");
+            outputText.Report($"\nFound {censusReferences} census references in file and {blankCensusRefs} facts missing a census reference");
             if (partialCensusRefs > 0)
-                outputText.Report(", with " + partialCensusRefs + " references with partial details");
+                outputText.Report($", with {partialCensusRefs} references with partial details");
             if (unrecognisedCensusRefs > 0)
-                outputText.Report(" and " + unrecognisedCensusRefs + " references that were unrecognised");
-            outputText.Report("\nFound " + lostCousinsTotal + " Lost Cousins facts in GEDCOM File (" + lostCousinsFacts + " good, ");
+                outputText.Report($" and {unrecognisedCensusRefs} references that were unrecognised");
+            outputText.Report($"\nFound {lostCousinsTotal} Lost Cousins facts in GEDCOM File ({lostCousinsFacts} good, ");
             if (lostCousinsWarnAllow > 0)
-                outputText.Report(lostCousinsWarnAllow + " warnings (data tolerated), ");
+                outputText.Report($"{lostCousinsWarnAllow} warnings (data tolerated), ");
             if (lostCousinsWarnIgnore > 0)
-                outputText.Report(lostCousinsWarnIgnore + " warnings (data ignored in strict mode), ");
+                outputText.Report($"{lostCousinsWarnIgnore} warnings (data ignored in strict mode), ");
             if (lostCousinsErrors > 0)
-                outputText.Report(lostCousinsErrors + " errors (data discarded), ");
-            outputText.Report((lostCousinsFacts + lostCousinsWarnAllow) + " usable facts loaded)");
+                outputText.Report($"{lostCousinsErrors} errors (data discarded), ");
+            outputText.Report($"{lostCousinsFacts + lostCousinsWarnAllow} usable facts loaded)");
             if (censusFacts == 0 && resiCensus == 0 && censusWarnAllow == 0 && censusFTAFacts == 0)
             {
                 outputText.Report("\nFound no census or suitable residence facts in GEDCOM File and no recognisable\n");
@@ -1679,12 +1679,12 @@ namespace FTAnalyzer
                                 {
                                     errors[(int)Dataerror.UNKNOWN_FACT_TYPE].Add(
                                         new DataError((int)Dataerror.UNKNOWN_FACT_TYPE, Fact.FactError.QUESTIONABLE,
-                                            ind, "Unknown fact type " + f.FactTypeDescription + " recorded"));
+                                            ind, $"Unknown fact type {f.FactTypeDescription} recorded"));
                                 }
                             }
                         }
-                        if (f.IsCensusFact && f.FactDate.FactYearMatches(CensusDate.UKCENSUS1939) && !ind.BirthDate.IsExact)
-                        {
+                        if (f.IsCensusFact && f.FactDate.FactYearMatches(CensusDate.UKCENSUS1939) && !ind.BirthDate.IsExact & f.FactType != Fact.RESIDENCE)
+                        {  //only warn if not a residence fact assumed to be a census fact
                             errors[(int)Dataerror.NATREG1939_INEXACT_BIRTHDATE].Add(
                                         new DataError((int)Dataerror.NATREG1939_INEXACT_BIRTHDATE, Fact.FactError.QUESTIONABLE,
                                             ind, "On the 1939 National Register but birth date is not exact"));
@@ -1701,7 +1701,7 @@ namespace FTAnalyzer
                             dupList.Add(df);
                             errors[(int)Dataerror.DUPLICATE_FACT].Add(
                                             new DataError((int)Dataerror.DUPLICATE_FACT, Fact.FactError.ERROR,
-                                                ind, "Duplicated " + df.FactTypeDescription + " fact recorded"));
+                                                ind, $"Duplicated {df.FactTypeDescription} fact recorded"));
                         }
                     }
                     var possDuplicates = ind.AllFileFacts.GroupBy(x => x.PossiblyEqualHash).Where(g => g.Count() > 1).Select(y => y.Key).ToList();
@@ -1712,7 +1712,7 @@ namespace FTAnalyzer
                         {
                             errors[(int)Dataerror.POSSIBLE_DUPLICATE_FACT].Add(
                                             new DataError((int)Dataerror.POSSIBLE_DUPLICATE_FACT, Fact.FactError.QUESTIONABLE,
-                                                ind, "Possibly duplicated " + pdf.FactTypeDescription + " fact recorded"));
+                                                ind, $"Possibly duplicated {pdf.FactTypeDescription} fact recorded"));
                         }
                     }
 #endregion
