@@ -403,6 +403,7 @@ namespace FTAnalyzer
                 FixRegionFullStops();
                 FixCountryFullStops();
                 FixMultipleSpacesAmpersandsCommas();
+                FixUKGBTypos();
                 FixCountryTypos();
                 Country = EnhancedTextInfo.ToTitleCase(FixRegionTypos(Country).ToLower());
                 ShiftCountryToRegion();
@@ -660,6 +661,21 @@ namespace FTAnalyzer
             SubRegion = SubRegion.Replace("&", "and").Replace(",", "").Trim();
             Address = Address.Replace("&", "and").Replace(",", "").Trim();
             Place = Place.Replace("&", "and").Replace(",", "").Trim();
+        }
+
+        void FixUKGBTypos()
+        {
+            if(Country == "UK" || Country == "GB")
+            {
+                if(Region == "Scotland" || Region == "England" || Region == "Wales")
+                {
+                    Country = Region;
+                    Region = SubRegion;
+                    SubRegion = Address;
+                    Address = Place;
+                    Place = string.Empty;
+                }
+            }
         }
 
         void FixCountryTypos()
