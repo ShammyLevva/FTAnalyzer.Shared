@@ -355,13 +355,14 @@ namespace FTAnalyzer
             SetDataErrorTypes(progress);
             CountUnknownFactTypes(outputText);
             FactLocation.LoadGoogleFixesXMLFile(outputText);
-            LoadLegacyLocations(doc.SelectNodes("GED/_PLAC_DEFN/PLAC"), progress);
+            LoadGEDCOM_PLAC_Locations(doc.SelectNodes("GED/_PLAC_DEFN/PLAC"), progress); // Legacy Family Tree
+            LoadGEDCOM_PLAC_Locations(doc.SelectNodes("GED/_PLAC"), progress); // Family Historian PLAC format
             LoadGeoLocationsFromDataBase(outputText);
             DataLoaded = true;
             Loading = false;
         }
 
-        void LoadLegacyLocations(XmlNodeList list, IProgress<int> progress)
+        void LoadGEDCOM_PLAC_Locations(XmlNodeList list, IProgress<int> progress)
         {
             int max = list.Count;
             int counter = 0;

@@ -23,7 +23,7 @@ namespace FTAnalyzer
                     : new AnselInputStreamReader(stream);
             }
             reader = FileHandling.Default.RetryFailedLines ? new StreamReader(CheckInvalidCR(stream)) : new StreamReader(stream);
-            return Parse(reader, outputText);
+            return Parse(reader, outputText, true);
         }
 
         public static XmlDocument LoadFile(string path, IProgress<string> outputText) { return LoadFile(path, ansiLatin1, outputText); }
@@ -36,26 +36,26 @@ namespace FTAnalyzer
                 reader = FileHandling.Default.RetryFailedLines
                     ? new AnselInputStreamReader(CheckInvalidLineEnds(path))
                     : new AnselInputStreamReader(new FileStream(path, FileMode.Open, FileAccess.Read));
-                doc = Parse(reader, outputText);
+                doc = Parse(reader, outputText, true);
                 if (doc == null || doc.SelectNodes("GED/INDI").Count == 0)
                 {  // if there is a problem with the file return with opposite line ends
                     reader = FileHandling.Default.RetryFailedLines
                         ? new AnselInputStreamReader(new FileStream(path, FileMode.Open, FileAccess.Read))
                         : new AnselInputStreamReader(CheckInvalidLineEnds(path));
-                    doc = Parse(reader, outputText);
+                    doc = Parse(reader, outputText, false);
                 }
                 return doc;
             }
             reader = FileHandling.Default.RetryFailedLines
                 ? new StreamReader(CheckInvalidLineEnds(path), encoding)
                 : new StreamReader(new FileStream(path, FileMode.Open, FileAccess.Read), encoding);
-            doc = Parse(reader, outputText);
+            doc = Parse(reader, outputText, true);
             if (doc == null || doc.SelectNodes("GED/INDI").Count == 0)
             { // if there is a problem with the file return with opposite line ends
                 reader = FileHandling.Default.RetryFailedLines
                     ? new StreamReader(new FileStream(path, FileMode.Open, FileAccess.Read), encoding)
                     : new StreamReader(CheckInvalidLineEnds(path), encoding);
-                doc = Parse(reader, outputText);
+                doc = Parse(reader, outputText, false);
             }
             return doc;
         }
@@ -111,7 +111,7 @@ namespace FTAnalyzer
             return outfs;
         }
 
-        static XmlDocument Parse(StreamReader reader, IProgress<string> outputText)
+        static XmlDocument Parse(StreamReader reader, IProgress<string> outputText, bool reportBadLines)
         {
             long lineNr = 0;
             int badLineCount = 0;
@@ -255,7 +255,8 @@ namespace FTAnalyzer
                         }
                         catch (Exception e)
                         {
-                            outputText.Report("Found bad line " + lineNr + ": '" + line + "'. " + "Error was : " + e.Message + "\n");
+                            if(reportBadLines)
+                                outputText.Report($"Found bad line {lineNr}: '{line}'. Error was : {e.Message}\n");
                             badLineCount++;
                         }
                     }
