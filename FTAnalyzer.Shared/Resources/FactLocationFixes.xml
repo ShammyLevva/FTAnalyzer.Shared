@@ -305,9 +305,12 @@
       <RegionTypo from="Berwick"        to="Berwickshire" />
       <RegionTypo from="Invernessshire" to="Inverness-shire" />
       <RegionTypo from="Invernesshire"  to="Inverness-shire" />
+      <RegionTypo from="Inverness-Shire" to="Inverness-shire" />
       <RegionTypo from="Kinrossshire"   to="Kinross-shire" />
+      <RegionTypo from="Kinross=Shire"  to="Kinross-shire" />
       <RegionTypo from="Peeblesshire"   to="Peebles" />
       <RegionTypo from="Peebles-shire"  to="Peebles" />
+      <RegionTypo from="Peebles-Shire"  to="Peebles" />
       <RegionTypo from="Forfarshire"    to="Angus" />
       <RegionTypo from="Argyllshire"    to="Argyll" />
       <RegionTypo from="Buteshire"      to="Bute" />
@@ -318,6 +321,7 @@
       <RegionTypo from="Roxburghshire"  to="Roxburgh" />
       <RegionTypo from="Selkirkshire"   to="Selkirk" />
       <RegionTypo from="Caithness-shire" to="Caithness" />
+      <RegionTypo from="Caithness-Shire" to="Caithness" />
       <RegionTypo from="Caithnessshire"  to="Caithness" />
       <RegionTypo from="Haddingtonshire" to="East Lothian" />
       <RegionTypo from="Linlithgowshire" to="West Lothian" />
