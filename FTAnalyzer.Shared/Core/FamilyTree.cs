@@ -1728,14 +1728,14 @@ namespace FTAnalyzer
                             int minAge = father.GetMinAge(ind.BirthDate);
                             int maxAge = father.GetMaxAge(ind.BirthDate);
                             if (minAge > 90)
-                                errors[(int)Dataerror.BIRTH_AFTER_FATHER_90].Add(new DataError((int)Dataerror.BIRTH_AFTER_FATHER_90, ind, "Father " + father.Name + " born " + father.BirthDate + " is more than 90 yrs old when individual was born"));
+                                errors[(int)Dataerror.BIRTH_AFTER_FATHER_90].Add(new DataError((int)Dataerror.BIRTH_AFTER_FATHER_90, ind, $"Father {father.Name} born {father.BirthDate} is more than 90 yrs old when individual was born"));
                             if (maxAge < 13)
-                                errors[(int)Dataerror.BIRTH_BEFORE_FATHER_13].Add(new DataError((int)Dataerror.BIRTH_BEFORE_FATHER_13, ind, "Father " + father.Name + " born " + father.BirthDate + " is less than 13 yrs old when individual was born"));
+                                errors[(int)Dataerror.BIRTH_BEFORE_FATHER_13].Add(new DataError((int)Dataerror.BIRTH_BEFORE_FATHER_13, ind, $"Father {father.Name} born {father.BirthDate} is less than 13 yrs old when individual was born"));
                             if (father.DeathDate.IsKnown && ind.BirthDate.IsKnown)
                             {
                                 FactDate conception = ind.BirthDate.SubtractMonths(9);
                                 if (father.DeathDate.IsBefore(conception))
-                                    errors[(int)Dataerror.BIRTH_AFTER_FATHER_DEATH].Add(new DataError((int)Dataerror.BIRTH_AFTER_FATHER_DEATH, ind, "Father " + father.Name + " died " + father.DeathDate + " more than 9 months before individual was born"));
+                                    errors[(int)Dataerror.BIRTH_AFTER_FATHER_DEATH].Add(new DataError((int)Dataerror.BIRTH_AFTER_FATHER_DEATH, ind, $"Father {father.Name} died {father.DeathDate} more than 9 months before individual was born"));
                             }
                         }
                         Individual mother = asChild.Wife;
@@ -1744,11 +1744,11 @@ namespace FTAnalyzer
                             int minAge = mother.GetMinAge(ind.BirthDate);
                             int maxAge = mother.GetMaxAge(ind.BirthDate);
                             if (minAge > 60)
-                                errors[(int)Dataerror.BIRTH_AFTER_MOTHER_60].Add(new DataError((int)Dataerror.BIRTH_AFTER_MOTHER_60, ind, "Mother " + mother.Name + " born " + mother.BirthDate + " is more than 60 yrs old when individual was born"));
+                                errors[(int)Dataerror.BIRTH_AFTER_MOTHER_60].Add(new DataError((int)Dataerror.BIRTH_AFTER_MOTHER_60, ind, $"Mother {mother.Name} born {mother.BirthDate} is more than 60 yrs old when individual was born"));
                             if (maxAge < 13)
-                                errors[(int)Dataerror.BIRTH_BEFORE_MOTHER_13].Add(new DataError((int)Dataerror.BIRTH_BEFORE_MOTHER_13, ind, "Mother " + mother.Name + " born " + mother.BirthDate + " is less than 13 yrs old when individual was born"));
+                                errors[(int)Dataerror.BIRTH_BEFORE_MOTHER_13].Add(new DataError((int)Dataerror.BIRTH_BEFORE_MOTHER_13, ind, $"Mother {mother.Name} born {mother.BirthDate} is less than 13 yrs old when individual was born"));
                             if (mother.DeathDate.IsKnown && mother.DeathDate.IsBefore(ind.BirthDate))
-                                errors[(int)Dataerror.BIRTH_AFTER_MOTHER_DEATH].Add(new DataError((int)Dataerror.BIRTH_AFTER_MOTHER_DEATH, ind, "Mother " + mother.Name + " died " + mother.DeathDate + " which is before individual was born"));
+                                errors[(int)Dataerror.BIRTH_AFTER_MOTHER_DEATH].Add(new DataError((int)Dataerror.BIRTH_AFTER_MOTHER_DEATH, ind, $"Mother {mother.Name} died {mother.DeathDate} which is before individual was born"));
                         }
                     }
                     foreach (Family asParent in ind.FamiliesAsParent)
@@ -1757,15 +1757,15 @@ namespace FTAnalyzer
                         if (asParent.MarriageDate != null && spouse != null)
                         {
                             if (ind.DeathDate != null && asParent.MarriageDate.IsAfter(ind.DeathDate))
-                                errors[(int)Dataerror.MARRIAGE_AFTER_DEATH].Add(new DataError((int)Dataerror.MARRIAGE_AFTER_DEATH, ind, "Marriage to " + spouse.Name + " in " + asParent.MarriageDate + " is after individual died " + ind.DeathDate));
+                                errors[(int)Dataerror.MARRIAGE_AFTER_DEATH].Add(new DataError((int)Dataerror.MARRIAGE_AFTER_DEATH, ind, $"Marriage to {spouse.Name} in {asParent.MarriageDate} is after individual died on {ind.DeathDate}"));
                             if (spouse.DeathDate != null && asParent.MarriageDate.IsAfter(spouse.DeathDate))
-                                errors[(int)Dataerror.MARRIAGE_AFTER_SPOUSE_DEAD].Add(new DataError((int)Dataerror.MARRIAGE_AFTER_SPOUSE_DEAD, ind, "Marriage to " + spouse.Name + " in " + asParent.MarriageDate + " is after spouse died " + spouse.DeathDate));
+                                errors[(int)Dataerror.MARRIAGE_AFTER_SPOUSE_DEAD].Add(new DataError((int)Dataerror.MARRIAGE_AFTER_SPOUSE_DEAD, ind, $"Marriage to {spouse.Name} in {asParent.MarriageDate} is after spouse died {spouse.DeathDate}"));
                             int maxAge = ind.GetMaxAge(asParent.MarriageDate);
                             if (maxAge < 13 && ind.BirthDate.IsAfter(FactDate.MARRIAGE_LESS_THAN_13))
-                                errors[(int)Dataerror.MARRIAGE_BEFORE_13].Add(new DataError((int)Dataerror.MARRIAGE_BEFORE_13, ind, "Marriage to " + spouse.Name + " in " + asParent.MarriageDate + " is before individual was 13 years old"));
+                                errors[(int)Dataerror.MARRIAGE_BEFORE_13].Add(new DataError((int)Dataerror.MARRIAGE_BEFORE_13, ind, $"Marriage to {spouse.Name} in {asParent.MarriageDate} is before individual was 13 years old"));
                             maxAge = spouse.GetMaxAge(asParent.MarriageDate);
                             if (maxAge < 13 && spouse.BirthDate.IsAfter(FactDate.MARRIAGE_LESS_THAN_13))
-                                errors[(int)Dataerror.MARRIAGE_BEFORE_SPOUSE_13].Add(new DataError((int)Dataerror.MARRIAGE_BEFORE_SPOUSE_13, ind, "Marriage to " + spouse.Name + " in " + asParent.MarriageDate + " is before spouse born " + spouse.BirthDate + " was 13 years old"));
+                                errors[(int)Dataerror.MARRIAGE_BEFORE_SPOUSE_13].Add(new DataError((int)Dataerror.MARRIAGE_BEFORE_SPOUSE_13, ind, $"Marriage to {spouse.Name} in {asParent.MarriageDate} is before spouse born {spouse.BirthDate} was 13 years old"));
                             if (ind.Surname == spouse.Surname)
                             {
                                 Individual wifesFather = ind.IsMale ? spouse.NaturalFather : ind.NaturalFather;

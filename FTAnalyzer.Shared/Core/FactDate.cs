@@ -139,7 +139,7 @@ namespace FTAnalyzer
         string FixCommonDateFormats(string str)
         {
             str = EnhancedTextInfo.RemoveSupriousDateCharacters(str.Trim().ToUpper());
-            if(Properties.NonGedcomDate.Default.UseNonGedcomDates && Properties.NonGedcomDate.Default.Separator != ".")
+            if(!Properties.NonGedcomDate.Default.UseNonGedcomDates || Properties.NonGedcomDate.Default.Separator != ".")
                 str = str.Replace(".", " ");
             str = str.Replace(". ", " "); // even if Non GEDCOM date separator is a dot, dot space is invalid.
             str = str.Replace("&", " AND ");
@@ -548,7 +548,7 @@ namespace FTAnalyzer
                     {
                         pos = processDate.IndexOf("-", StringComparison.Ordinal);
                         if (pos == -1)
-                            throw new Exception("Invalid BETween date no AND found");
+                            throw new FactDateException("Invalid BETween date no AND found");
                         fromdate = processDate.Substring(4, pos - 4);
                         todate = processDate.Substring(pos + 1);
                         pos = pos - 4; // from to code in next block expects to jump 5 chars not 1.
@@ -683,7 +683,7 @@ namespace FTAnalyzer
                         }
                     }
                     else
-                        throw new Exception($"Unrecognised date format for: {dateValue}");
+                        throw new FactDateException($"Unrecognised date format for: {dateValue}");
                 }
                 // Now process matched string - if gDouble is not null we have a double date to check
                 string day = gDay == null ? string.Empty : gDay.ToString().Trim();
@@ -732,7 +732,13 @@ namespace FTAnalyzer
                 {
                     if (!DateTime.TryParseExact(dateValue, FULL, CULTURE, DateTimeStyles.NoCurrentDateDefault, out date))
                         DateTime.TryParseExact(dateValue, FULLEARLY, CULTURE, DateTimeStyles.NoCurrentDateDefault, out date);
-                    dt = new DateTime(date.Year, date.Month, date.Day);
+                    if(date.Year == 1 && date.Year.ToString() != year)
+                    {
+                        // we have valid date format but invalid day/month combo eg: 29th Feb in odd year.
+                        throw new FactDateException("Date has normal format but is not a valid date. eg: like 31 NOV 1900 or 29 FEB 1735");
+                    }
+                    else
+                        dt = new DateTime(date.Year, date.Month, date.Day);
                     dt = dt.AddDays(adjustment);
                 }
                 else
@@ -744,12 +750,12 @@ namespace FTAnalyzer
             }
             catch (FormatException)
             {
-                throw new Exception($"Unrecognised date format for: {dateValue}");
+                throw new FactDateException($"Unrecognised date format for: {dateValue}");
             }
             catch (Exception e)
             {
                 dt = (highlow == HIGH) ? MAXDATE : MINDATE;
-                throw new Exception($"Problem with date format for: {dateValue} system said: {e.Message}");
+                throw new FactDateException($"Problem with date format for: {dateValue} system said: {e.Message}");
             }
             return dt;
         }
