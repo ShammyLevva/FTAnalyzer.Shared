@@ -565,7 +565,7 @@ namespace FTAnalyzer
                     else if (fromdate.Length == 4)
                         fromdate = "01 JAN " + fromdate;
                     else if (fromdate.Length < 7 && fromdate.IndexOf(" ", StringComparison.Ordinal) > 0)
-                        fromdate = fromdate + processDate.Substring(pos + 11);
+                        fromdate = (fromdate + " " + processDate.Substring(pos + 11)).Replace("  "," ");
                     StartDate = ParseDate(fromdate, LOW, 0, EndDate.Year);
                     EndDate = ParseDate(todate, HIGH, 0);
                 }
