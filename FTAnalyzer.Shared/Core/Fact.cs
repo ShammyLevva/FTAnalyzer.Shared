@@ -893,6 +893,10 @@ namespace FTAnalyzer
                     Comment = Comment.Replace("/", "");
             }
             Comment = EnhancedTextInfo.ToTitleCase(Comment).Trim();
+            if (string.IsNullOrEmpty(latitude))
+                latitude = "0.0";
+            if (string.IsNullOrEmpty(longitude))
+                longitude = "0.0";
             FactLocation.Geocode geocode = 
                 (latitude.Equals("0.0") && longitude.Equals("0.0")) ? FactLocation.Geocode.NOT_SEARCHED : FactLocation.Geocode.GEDCOM_USER;
             if (GeneralSettings.Default.ReverseLocations)

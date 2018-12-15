@@ -355,14 +355,14 @@ namespace FTAnalyzer
             SetDataErrorTypes(progress);
             CountUnknownFactTypes(outputText);
             FactLocation.LoadGoogleFixesXMLFile(outputText);
-            LoadGEDCOM_PLAC_Locations(doc.SelectNodes("GED/_PLAC_DEFN/PLAC"), progress); // Legacy Family Tree
-            LoadGEDCOM_PLAC_Locations(doc.SelectNodes("GED/_PLAC"), progress); // Family Historian PLAC format
+            LoadGEDCOM_PLAC_Locations(doc.SelectNodes("GED/_PLAC_DEFN/PLAC"), progress, 70); // Legacy Family Tree
+            LoadGEDCOM_PLAC_Locations(doc.SelectNodes("GED/_PLAC"), progress, 85); // Family Historian PLAC format
             LoadGeoLocationsFromDataBase(outputText);
             DataLoaded = true;
             Loading = false;
         }
 
-        void LoadGEDCOM_PLAC_Locations(XmlNodeList list, IProgress<int> progress)
+        void LoadGEDCOM_PLAC_Locations(XmlNodeList list, IProgress<int> progress, int startval)
         {
             int max = list.Count;
             int counter = 0;
@@ -378,7 +378,7 @@ namespace FTAnalyzer
                     string lng = long_node.InnerText;
                     FactLocation loc = FactLocation.GetLocation(place, lat, lng, FactLocation.Geocode.GEDCOM_USER, true, true);
                 }
-                value = 70 + 30 * (counter++ / max);
+                value = startval + 15 * (counter++ / max);
                 if (value > 100) value = 100;
                 progress.Report(value);
             }
