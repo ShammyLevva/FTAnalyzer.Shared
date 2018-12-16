@@ -17,7 +17,7 @@ namespace FTAnalyzer
         new Age LifeSpan { get; }
         new string Relation { get; }
         new string BudgieCode { get; }
-        new long Ahnentafel { get; }
+        new decimal Ahnentafel { get; }
         bool HasRangedBirthDate { get; }
         bool HasParents { get; }
         int CensusFactCount { get; }

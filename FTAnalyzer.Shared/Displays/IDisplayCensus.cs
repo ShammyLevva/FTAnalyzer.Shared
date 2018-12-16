@@ -17,6 +17,6 @@
         string CensusReference { get; }
         string Relation { get; }
         string RelationToRoot { get; }
-        long Ahnentafel { get; }
+        decimal Ahnentafel { get; }
     }
 }

@@ -272,6 +272,10 @@ namespace FTAnalyzer
             str = str.Replace("JAN-FEB-MAR", "ABT MAR");
             str = str.Replace("JAN/FEB/MAR", "ABT MAR");
             str = str.Replace("JAN\\FEB\\MAR", "ABT MAR");
+            str = str.Replace("1ST", "1");
+            str = str.Replace("2ND", "2");
+            str = str.Replace("3RD", "3");
+            str = str.Replace("4TH", "4");
             str = str.Replace("Q1", "ABT MAR");
             str = str.Replace("1Q", "ABT MAR");
             str = str.Replace("QTR1", "ABT MAR");
@@ -547,6 +551,7 @@ namespace FTAnalyzer
                     if (pos == -1)
                     {
                         pos = processDate.IndexOf("-", StringComparison.Ordinal);
+                        byte[] asciiBytes = Encoding.ASCII.GetBytes(processDate);
                         if (pos == -1)
                             throw new FactDateException("Invalid BETween date no AND found");
                         fromdate = processDate.Substring(4, pos - 4);

@@ -83,24 +83,16 @@ namespace FTAnalyzer
                         i++;
                     }
                     else
-                    {
                         ch = (char) ConvertOneByteToUnicode(b);
-                    }
                 }
                 chars[j++] = ch;
             }
             return j - charIndex;
         }
 
-        public override int GetMaxByteCount(int charCount)
-        {
-            return charCount * 2;
-        }
+        public override int GetMaxByteCount(int charCount) => charCount * 2;
 
-        public override int GetMaxCharCount(int byteCount)
-        {
-            return byteCount;
-        }
+        public override int GetMaxCharCount(int byteCount) => byteCount;
 
         private int ConvertToAnsel(int unicode)
         {
@@ -871,7 +863,7 @@ namespace FTAnalyzer
                 case 0xF948: return 0x1E2A;  //  capital h with breve below
                 case 0xF968: return 0x1E2B;  //  small h with breve below
 
-                default: return -1;
+                default: return 0xFFFD;     // if no match, use Unicode REPLACEMENT CHARACTER
             } //end switch
         }
     }   

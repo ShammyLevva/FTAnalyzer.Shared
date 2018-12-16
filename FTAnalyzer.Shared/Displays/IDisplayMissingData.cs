@@ -24,7 +24,7 @@
         FactLocation BirthLocation { get; }
         FactLocation DeathLocation { get; }
         FactLocation BestLocation(FactDate when);
-        long Ahnentafel { get; }
+        decimal Ahnentafel { get; }
         float Score { get; }
     }
 }

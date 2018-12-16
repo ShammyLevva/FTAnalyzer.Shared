@@ -122,6 +122,6 @@ namespace FTAnalyzer
         [ColumnDetail("Location", 250)]
         FactLocation BestLocation(FactDate when);
         [ColumnDetail("Ahnentafel", 70, ColumnDetail.ColumnAlignment.Right)]
-        long Ahnentafel { get; }
+        decimal Ahnentafel { get; }
     }
 }

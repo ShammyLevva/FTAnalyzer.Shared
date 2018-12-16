@@ -35,7 +35,7 @@ namespace FTAnalyzer
         [ColumnDetail("Budgie Code", 90)]
         string BudgieCode { get; }
         [ColumnDetail("Ahnentafel", 70, ColumnDetail.ColumnAlignment.Right)]
-        long Ahnentafel { get; }
+        decimal Ahnentafel { get; }
 #if __PC__
         [ColumnDetail("Has Notes", 60, ColumnDetail.ColumnAlignment.Center)]
         bool HasNotes { get; }

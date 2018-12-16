@@ -42,7 +42,7 @@ namespace FTAnalyzer
         SortableBindingList<DuplicateIndividual> duplicates;
         readonly static int DATA_ERROR_GROUPS = 28;
         static XmlNodeList noteNodes;
-        long maxAhnentafel;
+        decimal maxAhnentafel;
         Dictionary<string, Individual> individualLookup;
         string rootIndividualID = string.Empty;
 
@@ -1151,7 +1151,7 @@ namespace FTAnalyzer
             }
         }
 
-        void AlreadyDirect(Individual parent, long newAhnatafel, IProgress<string> outputText)
+        void AlreadyDirect(Individual parent, decimal newAhnatafel, IProgress<string> outputText)
         {
             if (GeneralSettings.Default.ShowMultiAncestors)
             {

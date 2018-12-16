@@ -33,7 +33,7 @@ namespace FTAnalyzer
         public bool HasOnlyOneParent { get; set; }
         public bool Infamily { get; set; }
         public bool IsFlaggedAsLiving { get; private set; }
-        public long Ahnentafel { get; set; }
+        public decimal Ahnentafel { get; set; }
         public string BudgieCode { get; set; }
         public string RelationToRoot { get; set; }
         public long RelationSort { get; set; }
