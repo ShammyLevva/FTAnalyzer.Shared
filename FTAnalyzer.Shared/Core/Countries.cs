@@ -95,7 +95,7 @@ namespace FTAnalyzer
 
 #if __PC__
         static Dictionary<string, Envelope> BOUNDING_BOXES;
-        static Envelope WHOLE_WORLD = new Envelope(-180, 180, -90, 90);
+        static readonly Envelope WHOLE_WORLD = new Envelope(-180, 180, -90, 90);
 #endif
 
         static Countries()
@@ -106,6 +106,7 @@ namespace FTAnalyzer
                 { SCOTLAND, new Envelope(-7.974074, -0.463426, 54.571547, 60.970872) },
                 { ENGLAND, new Envelope(-6.523879, 1.879409, 49.814376, 55.865022) },
                 { WALES, new Envelope(-5.561202, -2.596147, 51.296580, 53.450153) },
+                { UNITED_KINGDOM, new Envelope(-7.974074, 1.879409, 49.814376, 60.970872) },
                 { IRELAND, new Envelope(-10.746749, -5.298783, 51.296580, 55.467681) },
                 { NORTHERN_IRELAND, new Envelope(-8.329757, -5.298783, 53.872250, 55.467681) },
                 { CANADA, new Envelope(-141, -52, 41.129387, 83.232810) },

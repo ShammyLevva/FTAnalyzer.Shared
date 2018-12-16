@@ -917,10 +917,12 @@ namespace FTAnalyzer
         }
 
         string UnknownFactHash => FactType == UNKNOWN ? Tag : string.Empty;
-        
-        public string PossiblyEqualHash => FactType + UnknownFactHash + FactDate + IsMarriageFact;
 
-        public string EqualHash => FactType + UnknownFactHash + FactDate + Location + Comment + IsMarriageFact;
+        string FamilyFactHash => Family == null ? string.Empty : Family.FamilyID;
+        
+        public string PossiblyEqualHash => FactType + UnknownFactHash + FamilyFactHash +  FactDate + IsMarriageFact;
+
+        public string EqualHash => FactType + UnknownFactHash + FamilyFactHash + FactDate + Location + Comment + IsMarriageFact;
 
         public bool IsValidCensus(FactDate factDate) => FactDate.IsKnown && IsCensusFact && FactDate.FactYearMatches(factDate) && FactDate.IsNotBEForeOrAFTer && FactErrorLevel == FactError.GOOD;
 

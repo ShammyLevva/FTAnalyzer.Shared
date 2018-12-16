@@ -462,7 +462,7 @@ namespace FTAnalyzer
         {
             if (GeneralSettings.Default.ReportOptions)
             {
-                outputText.Report($"\nThe current file handling options are set:");
+                outputText.Report($"\nThe current file handling options are set :");
                 outputText.Report($"\n    Use Special Character Filters When Loading: {FileHandling.Default.LoadWithFilters}");
                 outputText.Report($"\n    Retry failed lines by looking for bad line breaks: {FileHandling.Default.RetryFailedLines}");
 
@@ -489,7 +489,7 @@ namespace FTAnalyzer
                 outputText.Report($"\n    Hide Ignored Duplicates: {GeneralSettings.Default.HideIgnoredDuplicates}");
 
 #if __PC__
-                outputText.Report($"\nThe current mapping options are set:"}");
+                outputText.Report($"\nThe current mapping options are set:");
                 outputText.Report($"\n    Custom Maps Location: {MappingSettings.Default.CustomMapPath}");
                 outputText.Report($"\n    Display British Parish Boundaries: {MappingSettings.Default.UseParishBoundaries}");
                 outputText.Report($"\n    Hide Scale Bar: {MappingSettings.Default.HideScaleBar}");
@@ -2591,19 +2591,19 @@ namespace FTAnalyzer
             int needsReverse = FactLocation.AllLocations.Count(x => x.NeedsReverseGeocoding);
             //Predicate<FactLocation> predicate = x => x.NeedsReverseGeocoding;
             //List<FactLocation> needRev = FactLocation.AllLocations.Where(predicate).ToList();
-            outputText.Report("\nFound " + FactLocation.LocationsCount + " locations in file.\n");
-            outputText.Report("    " + FactLocation.AllLocations.Count(x => x.GeocodeStatus.Equals(FactLocation.Geocode.GEDCOM_USER) && x.FoundLocation.Length > 0) + " are GEDCOM/User Entered and have been geocoded.\n");
-            outputText.Report("    " + FactLocation.AllLocations.Count(x => x.GeocodeStatus.Equals(FactLocation.Geocode.GEDCOM_USER) && x.FoundLocation.Length == 0) + " are GEDCOM/User Entered but lack a Google Location.\n");
-            outputText.Report("    " + FactLocation.AllLocations.Count(x => x.GeocodeStatus.Equals(FactLocation.Geocode.MATCHED)) + " have a geocoding match from Google.\n");
-            outputText.Report("    " + FactLocation.AllLocations.Count(x => x.GeocodeStatus.Equals(FactLocation.Geocode.OS_50KMATCH)) + " have a geocoding match from Ordnance Survey.\n");
-            outputText.Report("    " + FactLocation.AllLocations.Count(x => x.GeocodeStatus.Equals(FactLocation.Geocode.OS_50KFUZZY)) + " have a fuzzy geocoding match from Ordnance Survey.\n");
-            outputText.Report("    " + FactLocation.AllLocations.Count(x => x.GeocodeStatus.Equals(FactLocation.Geocode.PARTIAL_MATCH)) + " have partial geocoding match from Google.\n");
-            outputText.Report("    " + FactLocation.AllLocations.Count(x => x.GeocodeStatus.Equals(FactLocation.Geocode.LEVEL_MISMATCH)) + " have partial geocoding match at lower level of detail.\n");
-            outputText.Report("    " + FactLocation.AllLocations.Count(x => x.GeocodeStatus.Equals(FactLocation.Geocode.OS_50KPARTIAL)) + " have partial geocoding match from Ordnance Survey.\n");
-            outputText.Report("    " + FactLocation.AllLocations.Count(x => x.GeocodeStatus.Equals(FactLocation.Geocode.OUT_OF_BOUNDS)) + " found by Google but outside country boundary.\n");
-            outputText.Report("    " + FactLocation.AllLocations.Count(x => x.GeocodeStatus.Equals(FactLocation.Geocode.INCORRECT)) + " marked as incorrect by user.\n");
-            outputText.Report("    " + FactLocation.AllLocations.Count(x => x.GeocodeStatus.Equals(FactLocation.Geocode.NO_MATCH)) + " could not be found on Google.\n");
-            outputText.Report("    " + notsearched + " haven't been searched.");
+            outputText.Report($"\n{FactLocation.LocationsCount} locations identified after loading file.\n");
+            outputText.Report($"    {FactLocation.AllLocations.Count(x => x.GeocodeStatus.Equals(FactLocation.Geocode.GEDCOM_USER) && x.FoundLocation.Length > 0)} are GEDCOM/User Entered and have been geocoded.\n");
+            outputText.Report($"    {FactLocation.AllLocations.Count(x => x.GeocodeStatus.Equals(FactLocation.Geocode.GEDCOM_USER) && x.FoundLocation.Length == 0)} are GEDCOM/User Entered but lack a Google Location.\n");
+            outputText.Report($"    {FactLocation.AllLocations.Count(x => x.GeocodeStatus.Equals(FactLocation.Geocode.MATCHED))} have a geocoding match from Google.\n");
+            outputText.Report($"    {FactLocation.AllLocations.Count(x => x.GeocodeStatus.Equals(FactLocation.Geocode.OS_50KMATCH))} have a geocoding match from Ordnance Survey.\n");
+            outputText.Report($"    {FactLocation.AllLocations.Count(x => x.GeocodeStatus.Equals(FactLocation.Geocode.OS_50KFUZZY))} have a fuzzy geocoding match from Ordnance Survey.\n");
+            outputText.Report($"    {FactLocation.AllLocations.Count(x => x.GeocodeStatus.Equals(FactLocation.Geocode.PARTIAL_MATCH))} have partial geocoding match from Google.\n");
+            outputText.Report($"    {FactLocation.AllLocations.Count(x => x.GeocodeStatus.Equals(FactLocation.Geocode.LEVEL_MISMATCH))} have partial geocoding match at lower level of detail.\n");
+            outputText.Report($"    {FactLocation.AllLocations.Count(x => x.GeocodeStatus.Equals(FactLocation.Geocode.OS_50KPARTIAL))} have partial geocoding match from Ordnance Survey.\n");
+            outputText.Report($"    {FactLocation.AllLocations.Count(x => x.GeocodeStatus.Equals(FactLocation.Geocode.OUT_OF_BOUNDS))} found by Google but outside country boundary.\n");
+            outputText.Report($"    {FactLocation.AllLocations.Count(x => x.GeocodeStatus.Equals(FactLocation.Geocode.INCORRECT))} marked as incorrect by user.\n");
+            outputText.Report($"    {FactLocation.AllLocations.Count(x => x.GeocodeStatus.Equals(FactLocation.Geocode.NO_MATCH))} could not be found on Google.\n");
+            outputText.Report($"    {notsearched} haven't been searched.");
             if (notsearched > 0)
                 outputText.Report(" Use the 'Run Google/OS Geocoder' option (under Maps menu) to find them.\n");
             if (needsReverse > 0)

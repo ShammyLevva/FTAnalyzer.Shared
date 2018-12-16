@@ -735,8 +735,10 @@ namespace FTAnalyzer
                 try
                 {
                     if (factType != Fact.NAME || !preferredFact)
-                    {  // don't add first name in file as a fact 
+                    {  // don't add first name in file as a fact as already given by SURNAME & FORENAME tags
                         Fact f = new Fact(n, this, preferredFact, null, outputText);
+                        if (!f.Location.IsValidLatLong)
+                            outputText.Report($"Found problem with Lat/Long for Location '{f.Location}' in facts for {IndividualID}: {Name}");
                         AddFact(f);
                         if (f.GedcomAge != null && f.GedcomAge.CalculatedBirthDate != FactDate.UNKNOWN_DATE)
                         {
@@ -976,17 +978,9 @@ namespace FTAnalyzer
 
         #region Location functions
 
-        public FactLocation BestLocation(FactDate when)
-        {
-            // this returns a Location a person was at for a given period
-            return FactLocation.BestLocation(AllFacts, when);
-        }
+        public FactLocation BestLocation(FactDate when) => FactLocation.BestLocation(AllFacts, when);  // this returns a Location a person was at for a given period
 
-        public Fact BestLocationFact(FactDate when, int limit)
-        {
-            // this returns a Fact a person was at for a given period
-            return FactLocation.BestLocationFact(AllFacts, when, limit);
-        }
+        public Fact BestLocationFact(FactDate when, int limit) => FactLocation.BestLocationFact(AllFacts, when, limit); // this returns a Fact a person was at for a given period
 
         public bool IsAtLocation(FactLocation loc, int level)
         {

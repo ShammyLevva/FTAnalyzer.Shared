@@ -206,6 +206,8 @@ namespace FTAnalyzer
                 try
                 {
                     Fact f = new Fact(n, this, preferredFact, outputText);
+                    if (!f.Location.IsValidLatLong)
+                        outputText.Report($"Found problem with Lat/Long for Location '{f.Location}' in facts for {FamilyID}: {FamilyName}");
                     if (string.IsNullOrEmpty(f.Comment) && Husband != null && Wife != null && f.IsMarriageFact)
                     {
                         string description = Fact.GetFactTypeDescription(factType);

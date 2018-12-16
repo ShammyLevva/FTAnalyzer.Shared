@@ -444,7 +444,6 @@ namespace FTAnalyzer
                         result.LongitudeM = temp.LongitudeM;
                         SaveLocationToDatabase(result);
                     }
-                    return result;
                 }
             }
             else
@@ -939,18 +938,22 @@ namespace FTAnalyzer
         {
             get
             {
-                float zoom = 2.5f + (Level + 1f) * 3f;  // default use level 
+                float zoom = (Level + 3.75f) * 2.2f;  // default use level 
                 if (ViewPort != null)
                 {
-                    double pixelWidth = 256;  // tweak to get best results as required 
-                    double GLOBE_WIDTH = 256; // a constant in Google's map projection
-                    var west = ViewPort.SouthWest.Long;
-                    var east = ViewPort.NorthEast.Long;
+#if __PC__
+                    double pixelWidth = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;  // tweak to get best results as required 
+#else
+                    double pixelWidth = NSScreen.MainScreen.Frame;
+#endif
+                    double GLOBE_WIDTH = 512; // a constant in Google's map projection
+                    var west = ViewPort.SouthWest.Long/100000;
+                    var east = ViewPort.NorthEast.Long/100000;
                     var angle = east - west;
                     if (angle < 0)
                         angle += 360;
                     if (west != 0 || east != 0)
-                        return (int)Math.Round(Math.Log(pixelWidth * 360 / angle / GLOBE_WIDTH) / Math.Log(2));
+                        return (int)Math.Abs(Math.Round(Math.Log(pixelWidth * 360f / angle / GLOBE_WIDTH) / Math.Log(2)));
                 }
                 return zoom;
             }
@@ -964,9 +967,9 @@ namespace FTAnalyzer
         public string FixedLocation { get; set; }
         public string Address1 { get; set; }
         public string Place1 { get; set; }
-        #endregion
+#endregion
 
-        #region General Functions
+#region General Functions
         public FactLocation GetLocation(int level) => GetLocation(level, false);
         public FactLocation GetLocation(int level, bool fixNumerics)
         {
@@ -1058,9 +1061,32 @@ namespace FTAnalyzer
                 return true;
             return false;
         }
-#endregion
+        #endregion
 
-#region Overrides
+        public bool IsWithinUKBounds => Longitude >= -7.974074 && Longitude <= 1.879409 && Latitude >= 49.814376 && Latitude <= 60.970872;
+
+        //public string OSGridMapReference
+        //{
+        //    get
+        //    {
+        //        if (IsWithinUKBounds)
+        //        {
+        //            //var latLong = new LatitudeLongitude(Latitude, Longitude);
+
+        //            //var cartesian = GeoUK.Convert.ToCartesian(new Wgs84(), latLong);
+        //            //var bngCartesian = Transform.Etrs89ToOsgb36(cartesian);
+        //            //var bngEN = GeoUK.Convert.ToEastingNorthing(new Airy1830(), new BritishNationalGrid(), bngCartesian);
+
+        //            //// Convert to Osgb36 coordinates by creating a new object passing  
+        //            //// in the EastingNorthing object to the constructor.
+        //            //var osgb36EN = new Osgb36(bngEN);
+        //            //return osgb36EN.MapReference;
+        //        }
+        //        return string.Empty;
+        //    }
+        //}
+
+        #region Overrides
         public int CompareTo(FactLocation that)
         {
             return CompareTo(that, PLACE);
