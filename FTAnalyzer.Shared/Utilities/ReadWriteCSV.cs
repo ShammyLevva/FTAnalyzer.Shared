@@ -67,13 +67,13 @@ namespace FTAnalyzer.Utilities
         public CsvFileReader(Stream stream, char separator = ',')
             : base(stream)
         {
-            this.Separator = separator;
+            Separator = separator;
         }
 
         public CsvFileReader(string filename, char separator = ',')
             : base(filename)
         {
-            this.Separator = separator;
+            Separator = separator;
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace FTAnalyzer.Utilities
         public bool ReadRow(CsvRow row)
         {
             row.LineText = ReadLine();
-            if (String.IsNullOrEmpty(row.LineText))
+            if (string.IsNullOrEmpty(row.LineText))
                 return false;
 
             int pos = 0;

@@ -200,10 +200,7 @@ namespace FTAnalyzer
             CUSTOM_TAGS.Add("MARL: MARRIAGE LICENCE", MARR_LICENSE);
             CUSTOM_TAGS.Add("FUNL: FUNERAL", FUNERAL);
             CUSTOM_TAGS.Add("CAUSE OF DEATH (FACTS PAGE)", CAUSE_OF_DEATH);
-            CUSTOM_TAGS.Add("FUNL: FUNERAL", FUNERAL);
-            CUSTOM_TAGS.Add("FUNL: FUNERAL", FUNERAL);
-            CUSTOM_TAGS.Add("FUNL: FUNERAL", FUNERAL);
-
+            
             // Legacy 8 default fact types
             CUSTOM_TAGS.Add("ALT. BIRTH", BIRTH);
             CUSTOM_TAGS.Add("ALT. CHRISTENING", CHRISTENING);
