@@ -10,7 +10,7 @@ namespace FTAnalyzer
         string Forenames { get; }
         [ColumnDetail("Surnames", 75)]
         string Surname { get; }
-        [ColumnDetail("Gender", 50, ColumnDetail.ColumnAlignment.Center)]
+        [ColumnDetail("Gender", 40, ColumnDetail.ColumnAlignment.Center)]
         string Gender { get; }
         [ColumnDetail("Birth Date", 170)]
         FactDate BirthDate { get; }
