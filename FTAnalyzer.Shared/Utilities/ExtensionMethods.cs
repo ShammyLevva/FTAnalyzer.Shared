@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace FTAnalyzer.Utilities
 {
-    public static class ExtensionMethods
+    public static partial class ExtensionMethods
     {
 #if __PC__
         public static void DoubleBuffered(this System.Windows.Forms.DataGridView dgv, bool setting)
