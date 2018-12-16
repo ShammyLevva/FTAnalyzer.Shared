@@ -482,6 +482,8 @@ namespace FTAnalyzer
         bool GecodingMatches(FactLocation temp) 
             => Latitude == temp.Latitude && Longitude == temp.Longitude && LatitudeM == temp.LatitudeM && LongitudeM == temp.LongitudeM;
 
+        public bool IsValidLatLong => Latitude >= -90 && Latitude <= 90 && Longitude >= -180 && Longitude <= 180;
+
         public static List<FactLocation> ExposeFactLocations => LOCATIONS.Values.ToList();
 
         static void SaveLocationToDatabase(FactLocation loc)
@@ -933,24 +935,23 @@ namespace FTAnalyzer
             }
         }
 
-        public int ZoomLevel
+        public float ZoomLevel
         {
             get
             {
-                int zoom = 0;
+                float zoom = 2.5f + (Level + 1f) * 3f;  // default use level 
                 if (ViewPort != null)
                 {
-                    double pixelWidth = 256;
+                    double pixelWidth = 256;  // tweak to get best results as required 
                     double GLOBE_WIDTH = 256; // a constant in Google's map projection
                     var west = ViewPort.SouthWest.Long;
                     var east = ViewPort.NorthEast.Long;
                     var angle = east - west;
                     if (angle < 0)
                         angle += 360;
-                    zoom = angle == 0 ? (Level +1) * 3 : (int)Math.Round(Math.Log(pixelWidth * 360 / angle / GLOBE_WIDTH) / Math.Log(2));
+                    if (west != 0 || east != 0)
+                        return (int)Math.Round(Math.Log(pixelWidth * 360 / angle / GLOBE_WIDTH) / Math.Log(2));
                 }
-                else
-                    zoom = (Level +1) * 3;
                 return zoom;
             }
         }

@@ -355,14 +355,14 @@ namespace FTAnalyzer
             SetDataErrorTypes(progress);
             CountUnknownFactTypes(outputText);
             FactLocation.LoadGoogleFixesXMLFile(outputText);
-            LoadGEDCOM_PLAC_Locations(doc.SelectNodes("GED/_PLAC_DEFN/PLAC"), progress, 70); // Legacy Family Tree
-            LoadGEDCOM_PLAC_Locations(doc.SelectNodes("GED/_PLAC"), progress, 85); // Family Historian PLAC format
+            LoadGEDCOM_PLAC_Locations(doc.SelectNodes("GED/_PLAC_DEFN/PLAC"), 70, progress, outputText); // Legacy Family Tree
+            LoadGEDCOM_PLAC_Locations(doc.SelectNodes("GED/_PLAC"), 85, progress, outputText); // Family Historian PLAC format
             LoadGeoLocationsFromDataBase(outputText);
             DataLoaded = true;
             Loading = false;
         }
 
-        void LoadGEDCOM_PLAC_Locations(XmlNodeList list, IProgress<int> progress, int startval)
+        void LoadGEDCOM_PLAC_Locations(XmlNodeList list, int startval, IProgress<int> progress, IProgress<string> outputText)
         {
             int max = list.Count;
             int counter = 0;
@@ -377,6 +377,8 @@ namespace FTAnalyzer
                     string lat = lat_node.InnerText;
                     string lng = long_node.InnerText;
                     FactLocation loc = FactLocation.GetLocation(place, lat, lng, FactLocation.Geocode.GEDCOM_USER, true, true);
+                    if (!loc.IsValidLatLong)
+                        outputText.Report($"'PLAC' record in GEDCOM has Location: {place} with invalid Lat/Long '{lat},{lng}'.");
                 }
                 value = startval + 15 * (counter++ / max);
                 if (value > 100) value = 100;
@@ -460,38 +462,38 @@ namespace FTAnalyzer
         {
             if (GeneralSettings.Default.ReportOptions)
             {
-                outputText.Report("\nThe current file handling options are set :");
-                outputText.Report("\n    Use Special Character Filters When Loading : " + FileHandling.Default.LoadWithFilters);
-                outputText.Report("\n    Retry failed lines by looking for bad line breaks : " + FileHandling.Default.RetryFailedLines);
+                outputText.Report($"\nThe current file handling options are set:");
+                outputText.Report($"\n    Use Special Character Filters When Loading: {FileHandling.Default.LoadWithFilters}");
+                outputText.Report($"\n    Retry failed lines by looking for bad line breaks: {FileHandling.Default.RetryFailedLines}");
 
-                outputText.Report("\nThe current general options are set :");
-                outputText.Report("\n    Use Baptism/Christening Date If No Birth Date : " + GeneralSettings.Default.UseBaptismDates);
-                outputText.Report("\n    Use Burial/Cremation Date If No Death Date : " + GeneralSettings.Default.UseBurialDates);
-                outputText.Report("\n    Allow Empty Values In Locations : " + GeneralSettings.Default.AllowEmptyLocations);
-                outputText.Report("\n    Treat Residence Facts As Census Facts : " + GeneralSettings.Default.UseResidenceAsCensus);
-                outputText.Report("\n    Tolerate Slightly Inaccurate Census Dates : " + GeneralSettings.Default.TolerateInaccurateCensusDate);
-                outputText.Report("\n    Family Census Facts Apply To Only Parents : " + GeneralSettings.Default.OnlyCensusParents);
-                outputText.Report("\n    Loose Birth Minimum Parental Age : " + GeneralSettings.Default.MinParentalAge);
-                outputText.Report("\n    Show Multiple Fact Forms When Viewing Duplicates : " + GeneralSettings.Default.MultipleFactForms);
-                outputText.Report("\n    Use Compact Census References : " + GeneralSettings.Default.UseCompactCensusRef);
-                outputText.Report("\n    Show Alias In Name Displays : " + GeneralSettings.Default.ShowAliasInName);
-                outputText.Report("\n    Hide People Tagged As Missing From Census : " + GeneralSettings.Default.HidePeopleWithMissingTag);
-                outputText.Report("\n    Files use Country First Locations : " + GeneralSettings.Default.ReverseLocations);
-                outputText.Report("\n    Show World Events on the 'On This Day' tab : " + GeneralSettings.Default.ShowWorldEvents);
-                outputText.Report("\n    Auto Create Census Events from Notes & Sources : " + GeneralSettings.Default.AutoCreateCensusFacts);
-                outputText.Report("\n    Add Auto Created Census Locations to Locations List : " + GeneralSettings.Default.AddCreatedLocations);
-                outputText.Report("\n    Ignore Unknown Fact Type Warnings : " + GeneralSettings.Default.IgnoreFactTypeWarnings);
-                outputText.Report("\n    Treat Female Surnames as Unknown : " + GeneralSettings.Default.TreatFemaleSurnamesAsUnknown);
-                outputText.Report("\n    Show Ancestors that are muliple directs : " + GeneralSettings.Default.ShowMultiAncestors);
-                outputText.Report("\n    Skip Checking for Census References : " + GeneralSettings.Default.SkipCensusReferences);
-                outputText.Report("\n    Hide Ignored Duplicates: " + GeneralSettings.Default.HideIgnoredDuplicates);
+                outputText.Report($"\nThe current general options are set:");
+                outputText.Report($"\n    Use Baptism/Christening Date If No Birth Date: {GeneralSettings.Default.UseBaptismDates}");
+                outputText.Report($"\n    Use Burial/Cremation Date If No Death Date: {GeneralSettings.Default.UseBurialDates}");
+                outputText.Report($"\n    Allow Empty Values In Locations: {GeneralSettings.Default.AllowEmptyLocations}");
+                outputText.Report($"\n    Treat Residence Facts As Census Facts: {GeneralSettings.Default.UseResidenceAsCensus}");
+                outputText.Report($"\n    Tolerate Slightly Inaccurate Census Dates: {GeneralSettings.Default.TolerateInaccurateCensusDate}");
+                outputText.Report($"\n    Family Census Facts Apply To Only Parents: {GeneralSettings.Default.OnlyCensusParents}");
+                outputText.Report($"\n    Loose Birth Minimum Parental Age: {GeneralSettings.Default.MinParentalAge}");
+                outputText.Report($"\n    Show Multiple Fact Forms When Viewing Duplicates: {GeneralSettings.Default.MultipleFactForms}");
+                outputText.Report($"\n    Use Compact Census References: {GeneralSettings.Default.UseCompactCensusRef}");
+                outputText.Report($"\n    Show Alias In Name Displays: {GeneralSettings.Default.ShowAliasInName}");
+                outputText.Report($"\n    Hide People Tagged As Missing From Census: {GeneralSettings.Default.HidePeopleWithMissingTag}");
+                outputText.Report($"\n    Files use Country First Locations: {GeneralSettings.Default.ReverseLocations}");
+                outputText.Report($"\n    Show World Events on the 'On This Day' tab: {GeneralSettings.Default.ShowWorldEvents}");
+                outputText.Report($"\n    Auto Create Census Events from Notes & Sources: {GeneralSettings.Default.AutoCreateCensusFacts}");
+                outputText.Report($"\n    Add Auto Created Census Locations to Locations List: {GeneralSettings.Default.AddCreatedLocations}");
+                outputText.Report($"\n    Ignore Unknown Fact Type Warnings: {GeneralSettings.Default.IgnoreFactTypeWarnings}");
+                outputText.Report($"\n    Treat Female Surnames as Unknown: {GeneralSettings.Default.TreatFemaleSurnamesAsUnknown}");
+                outputText.Report($"\n    Show Ancestors that are muliple directs: {GeneralSettings.Default.ShowMultiAncestors}");
+                outputText.Report($"\n    Skip Checking for Census References: {GeneralSettings.Default.SkipCensusReferences}");
+                outputText.Report($"\n    Hide Ignored Duplicates: {GeneralSettings.Default.HideIgnoredDuplicates}");
 
 #if __PC__
-                outputText.Report("\nThe current mapping options are set :");
-                outputText.Report("\n    Custom Maps Location : " + MappingSettings.Default.CustomMapPath);
-                outputText.Report("\n    Display British Parish Boundaries : " + MappingSettings.Default.UseParishBoundaries);
-                outputText.Report("\n    Hide Scale Bar : " + MappingSettings.Default.HideScaleBar);
-                outputText.Report("\n    Include Locations with Partial Match Status : " + MappingSettings.Default.IncludePartials);
+                outputText.Report($"\nThe current mapping options are set:"}");
+                outputText.Report($"\n    Custom Maps Location: {MappingSettings.Default.CustomMapPath}");
+                outputText.Report($"\n    Display British Parish Boundaries: {MappingSettings.Default.UseParishBoundaries}");
+                outputText.Report($"\n    Hide Scale Bar: {MappingSettings.Default.HideScaleBar}");
+                outputText.Report($"\n    Include Locations with Partial Match Status: {MappingSettings.Default.IncludePartials}");
 #endif
                 outputText.Report("\n\n");
             }
