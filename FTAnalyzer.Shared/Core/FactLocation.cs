@@ -580,7 +580,7 @@ namespace FTAnalyzer
         #endregion
 
         #region Fix Location string routines
-        private void FixEmptyFields()
+        void FixEmptyFields()
         {
             // first remove extraneous spaces and extraneous commas
             Country = Country.Trim();
@@ -617,7 +617,7 @@ namespace FTAnalyzer
             }
         }
 
-        private void RemoveDiacritics()
+        void RemoveDiacritics()
         {
             Country = EnhancedTextInfo.RemoveDiacritics(Country);
             Region = EnhancedTextInfo.RemoveDiacritics(Region);
@@ -626,7 +626,7 @@ namespace FTAnalyzer
             Place = EnhancedTextInfo.RemoveDiacritics(Place);
         }
 
-        private void FixCapitalisation()
+        void FixCapitalisation()
         {
             if (Country.Length > 1)
                 Country = char.ToUpper(Country[0]) + Country.Substring(1);
@@ -640,11 +640,11 @@ namespace FTAnalyzer
                 Place = char.ToUpper(Place[0]) + Place.Substring(1);
         }
 
-        private void FixRegionFullStops() => Region = Region.Replace(".", " ").Trim();
+        void FixRegionFullStops() => Region = Region.Replace(".", " ").Trim();
 
-        private void FixCountryFullStops() => Country = Country.Replace(".", " ").Trim();
+        void FixCountryFullStops() => Country = Country.Replace(".", " ").Trim();
 
-        private void FixMultipleSpacesAmpersandsCommas()
+        void FixMultipleSpacesAmpersandsCommas()
         {
             while (Country.IndexOf("  ", StringComparison.Ordinal) != -1)
                 Country = Country.Replace("  ", " ");
@@ -930,6 +930,28 @@ namespace FTAnalyzer
             {
                 FINDMYPAST_LOOKUP.TryGetValue(Region, out Tuple<string, string> result);
                 return result;
+            }
+        }
+
+        public int ZoomLevel
+        {
+            get
+            {
+                int zoom = 0;
+                if (ViewPort != null)
+                {
+                    double pixelWidth = 256;
+                    double GLOBE_WIDTH = 256; // a constant in Google's map projection
+                    var west = ViewPort.SouthWest.Long;
+                    var east = ViewPort.NorthEast.Long;
+                    var angle = east - west;
+                    if (angle < 0)
+                        angle += 360;
+                    zoom = angle == 0 ? (Level +1) * 3 : (int)Math.Round(Math.Log(pixelWidth * 360 / angle / GLOBE_WIDTH) / Math.Log(2));
+                }
+                else
+                    zoom = (Level +1) * 3;
+                return zoom;
             }
         }
 

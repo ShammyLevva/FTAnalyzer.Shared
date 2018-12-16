@@ -58,7 +58,7 @@ namespace FTAnalyzer
             return stats;
         }
 
-        private void AddAgeData(int parent, int[,,] stats, Age age, string gender)
+        void AddAgeData(int parent, int[,,] stats, Age age, string gender)
         {
             int child = gender == "M" ? 0 : (gender == "F" ? 1 : 2);
             int fiveyear = age.MinAge / 5;

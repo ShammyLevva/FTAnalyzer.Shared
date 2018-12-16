@@ -39,12 +39,12 @@ namespace FTAnalyzer.Utilities
 
         #endregion
 
-        private void SetPropertyDescriptor(PropertyDescriptor descriptor)
+        void SetPropertyDescriptor(PropertyDescriptor descriptor)
         {
             propertyDescriptor = descriptor;
         }
 
-        private void SetListSortDirection(ListSortDirection direction)
+        void SetListSortDirection(ListSortDirection direction)
         {
             reverse = direction == ListSortDirection.Ascending ? 1 : -1;
         }

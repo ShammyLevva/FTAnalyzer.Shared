@@ -430,7 +430,7 @@ namespace System.Web
                 _charBuffer[_numChars++] = ch;
             }
 
-            private void FlushBytes()
+            void FlushBytes()
             {
                 if (_numBytes > 0)
                 {

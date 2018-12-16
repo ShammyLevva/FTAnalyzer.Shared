@@ -966,7 +966,7 @@ namespace FTAnalyzer
 		 *               Alternate character to append to alternate key.  May be null or a zero-length string,
 		 *               in which case the primary character will be appended to the alternate key instead
 		 */
-        private void AddMetaphoneCharacter(string primaryCharacter, string alternateCharacter)
+        void AddMetaphoneCharacter(string primaryCharacter, string alternateCharacter)
         {
             //Is the primary character valid?
             if (primaryCharacter.Length > 0)

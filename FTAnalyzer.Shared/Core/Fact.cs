@@ -490,7 +490,7 @@ namespace FTAnalyzer
             }
         }
 
-        private void CheckForSharedFacts(XmlNode node)
+        void CheckForSharedFacts(XmlNode node)
         {
             XmlNodeList list = node.SelectNodes("_SHAR");
             foreach (XmlNode n in list)
@@ -507,7 +507,7 @@ namespace FTAnalyzer
         public readonly static Regex regexChildren1 = new Regex(CHILDREN_STATUS_PATTERN1, RegexOptions.Compiled);
         public readonly static Regex regexChildren2 = new Regex(CHILDREN_STATUS_PATTERN2, RegexOptions.Compiled);
 
-        private void CheckValidChildrenStatus(XmlNode node)
+        void CheckValidChildrenStatus(XmlNode node)
         {
             if (Comment.Length == 0)
                 Comment = FamilyTree.GetNotes(node);
@@ -550,7 +550,7 @@ namespace FTAnalyzer
             FactErrorLevel = FactError.ERROR;
         }
 
-        private void SetAddress(string factType, XmlNode node)
+        void SetAddress(string factType, XmlNode node)
         {
             XmlNode addr = node.SelectSingleNode("ADDR");
             if (addr == null)
@@ -739,7 +739,7 @@ namespace FTAnalyzer
                 Comment = comment;
         }
 
-        private void CheckResidenceCensusDate()
+        void CheckResidenceCensusDate()
         {
             if (FactDate.IsKnown && CensusDate.IsCensusYear(FactDate, Country, true) && !CensusDate.IsCensusYear(FactDate, Country, false))
             {
@@ -755,7 +755,7 @@ namespace FTAnalyzer
             }
         }
 
-        private void CheckCensusDate(string tag)
+        void CheckCensusDate(string tag)
         {
             FactDate yearAdjusted = FactDate;
             // check if census fails to overlaps a census date
@@ -854,7 +854,7 @@ namespace FTAnalyzer
             }
         }
 
-        private void SetCommentAndLocation(string factType, string factComment, string factPlace, string latitude, string longitude)
+        void SetCommentAndLocation(string factType, string factComment, string factPlace, string latitude, string longitude)
         {
             if (factComment.Length == 0 && factPlace.Length > 0)
             {

@@ -242,7 +242,7 @@ namespace FTAnalyzer
             }
         }
 
-        private void SetCensusReferenceDetails()
+        void SetCensusReferenceDetails()
         {
             unknownCensusRef = string.Empty;
             if (Class.Equals("SCOT"))
@@ -920,7 +920,7 @@ namespace FTAnalyzer
             return letterCode;
         }
 
-        private void SetFlagsandCountry(bool ukCensus, bool LCcensuFact, string country, ReferenceStatus status, string matchstring)
+        void SetFlagsandCountry(bool ukCensus, bool LCcensuFact, string country, ReferenceStatus status, string matchstring)
         {
             IsUKCensus = ukCensus;
             IsLCCensusFact = LCcensuFact;

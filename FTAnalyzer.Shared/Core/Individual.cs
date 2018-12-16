@@ -726,7 +726,7 @@ namespace FTAnalyzer
 
         #region Fact Functions
 
-        private void AddFacts(XmlNode node, string factType, IProgress<string> outputText)
+        void AddFacts(XmlNode node, string factType, IProgress<string> outputText)
         {
             XmlNodeList list = node.SelectNodes(factType);
             bool preferredFact = true;
@@ -824,7 +824,7 @@ namespace FTAnalyzer
             }
         }
 
-        private void AddGoodFact(Fact fact)
+        void AddGoodFact(Fact fact)
         {
             Facts.Add(fact);
             if (fact.Preferred && !preferredFacts.ContainsKey(fact.FactType))
@@ -835,7 +835,7 @@ namespace FTAnalyzer
         /// <summary>
         /// Checks the individual's node data to see if any census references exist in the source records
         /// </summary>
-        private void AddCensusSourceFacts()
+        void AddCensusSourceFacts()
         {
             List<Fact> toAdd = new List<Fact>(); // we can't vary the facts collection whilst looping
             foreach (Fact f in Facts)
