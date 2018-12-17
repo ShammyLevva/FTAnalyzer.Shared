@@ -355,9 +355,10 @@ namespace FTAnalyzer
             SetDataErrorTypes(progress);
             CountUnknownFactTypes(outputText);
             FactLocation.LoadGoogleFixesXMLFile(outputText);
-            LoadGEDCOM_PLAC_Locations(doc.SelectNodes("GED/_PLAC_DEFN/PLAC"), 70, progress, outputText); // Legacy Family Tree
-            LoadGEDCOM_PLAC_Locations(doc.SelectNodes("GED/_PLAC"), 85, progress, outputText); // Family Historian PLAC format
+            LoadGEDCOM_PLAC_Locations(doc.SelectNodes("GED/_PLAC_DEFN/PLAC"), 60, progress, outputText); // Legacy Family Tree
+            LoadGEDCOM_PLAC_Locations(doc.SelectNodes("GED/_PLAC"), 80, progress, outputText); // Family Historian PLAC format
             LoadGeoLocationsFromDataBase(outputText);
+            progress.Report(100);
             DataLoaded = true;
             Loading = false;
         }
@@ -377,6 +378,7 @@ namespace FTAnalyzer
                     string lat = lat_node.InnerText;
                     string lng = long_node.InnerText;
                     FactLocation loc = FactLocation.GetLocation(place, lat, lng, FactLocation.Geocode.GEDCOM_USER, true, true);
+                    loc.FTAnalyzerCreated = false;
                     if (!loc.IsValidLatLong)
                         outputText.Report($"'PLAC' record in GEDCOM has Location: {place} with invalid Lat/Long '{lat},{lng}'.");
                 }
@@ -384,7 +386,6 @@ namespace FTAnalyzer
                 if (value > 100) value = 100;
                 progress.Report(value);
             }
-            progress.Report(100);
         }
 
         public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
@@ -657,7 +658,7 @@ namespace FTAnalyzer
                     families.Add(new Family(ind, NextSoloFamily));
             }
             if (SoloFamilies > 0)
-                outputText.Report("Added " + SoloFamilies + " lone individuals as single families.\n");
+                outputText.Report($"Added {SoloFamilies} lone individuals as single families.\n");
         }
 #endregion
 
@@ -1326,6 +1327,8 @@ namespace FTAnalyzer
             return sb.ToString();
         }
 
+        public IEnumerable<Individual> DirectLineIndividuals => AllIndividuals.Filter(i => i.RelationType == Individual.DIRECT || i.RelationType == Individual.DESCENDANT);
+
 #endregion
 
 #region Displays
@@ -1581,7 +1584,7 @@ namespace FTAnalyzer
         void SetDataErrorTypes(IProgress<int> progress)
         {
             int catchCount = 0;
-            int totalRecords = (individuals.Count + families.Count) / 50 + 1; //only count for 50% of progressbar
+            int totalRecords = (individuals.Count + families.Count) / 40 + 1; //only count for 40% of progressbar
             int record = 0;
             DataErrorTypes = new List<DataErrorGroup>();
             List<DataError>[] errors = new List<DataError>[DATA_ERROR_GROUPS];
@@ -1823,21 +1826,11 @@ namespace FTAnalyzer
                         }
                     }
                 }
-#if __MACOS__ || __IOS__
                 catch (Exception)
                 {
-                    catchCount++;
-                }
-#else
-                catch (Exception e)
-                {
                     if (catchCount == 0) // prevent multiple displays of the same error - usually resource icon load failures
-                    {
-                        ErrorHandler.Show("FTA_0001", e);
-                        catchCount++;
-                    }
+                       catchCount++;
                 }
-#endif
             }
 #endregion
 
@@ -1862,10 +1855,7 @@ namespace FTAnalyzer
             return false;
         }
 
-        public bool FactAfterDeath(Individual ind, Fact f)
-        {
-            return Fact.LOOSE_DEATH_FACTS.Contains(f.FactType) && f.FactDate.IsAfter(ind.DeathDate);
-        }
+        public bool FactAfterDeath(Individual ind, Fact f) => Fact.LOOSE_DEATH_FACTS.Contains(f.FactType) && f.FactDate.IsAfter(ind.DeathDate);
 
         public enum Dataerror
         {
@@ -2591,7 +2581,9 @@ namespace FTAnalyzer
             int needsReverse = FactLocation.AllLocations.Count(x => x.NeedsReverseGeocoding);
             //Predicate<FactLocation> predicate = x => x.NeedsReverseGeocoding;
             //List<FactLocation> needRev = FactLocation.AllLocations.Where(predicate).ToList();
-            outputText.Report($"\n{FactLocation.LocationsCount} locations identified after loading file.\n");
+            outputText.Report($"\n{FactLocation.GEDCOMLocationsCount} locations loaded from GEDCOM file.\n");
+            outputText.Report($"    {FactLocation.GEDCOM_GeocodedCount} have Lat/Long coordinates in the file.\n");
+            outputText.Report($"\n{FactLocation.LocationsCount} locations in use after processing file.\n");
             outputText.Report($"    {FactLocation.AllLocations.Count(x => x.GeocodeStatus.Equals(FactLocation.Geocode.GEDCOM_USER) && x.FoundLocation.Length > 0)} are GEDCOM/User Entered and have been geocoded.\n");
             outputText.Report($"    {FactLocation.AllLocations.Count(x => x.GeocodeStatus.Equals(FactLocation.Geocode.GEDCOM_USER) && x.FoundLocation.Length == 0)} are GEDCOM/User Entered but lack a Google Location.\n");
             outputText.Report($"    {FactLocation.AllLocations.Count(x => x.GeocodeStatus.Equals(FactLocation.Geocode.MATCHED))} have a geocoding match from Google.\n");
@@ -2608,7 +2600,7 @@ namespace FTAnalyzer
                 outputText.Report(" Use the 'Run Google/OS Geocoder' option (under Maps menu) to find them.\n");
             if (needsReverse > 0)
             {
-                outputText.Report("\nNote " + needsReverse + " of the searched locations are missing a Google location.");
+                outputText.Report($"\nNote {needsReverse} of the searched locations are missing a Google location.");
                 outputText.Report(" Use the 'Lookup Blank Google Locations' option (under Maps menu) to find them.\n");
             }
         }

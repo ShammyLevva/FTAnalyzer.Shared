@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace FTAnalyzer.Utilities
+namespace FTAnalyzer.Exports
 {
     // Thanks to Johnathan Wood of CodeProject 
     // http://www.codeproject.com/Articles/415732/Reading-and-Writing-CSV-Files-in-Csharp

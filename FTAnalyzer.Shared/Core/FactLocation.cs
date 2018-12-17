@@ -50,6 +50,7 @@ namespace FTAnalyzer
         public string FoundResultType { get; set; }
         public int FoundLevel { get; set; }
         public double PixelSize { get; set; }
+        public bool FTAnalyzerCreated { get; set; }
 #if __PC__
         public Mapping.GeoResponse.CResult.CGeometry.CViewPort ViewPort { get; set; }
 #endif
@@ -321,6 +322,7 @@ namespace FTAnalyzer
             FoundLocation = string.Empty;
             FoundResultType = string.Empty;
             FoundLevel = -2;
+            FTAnalyzerCreated = true; // override when GEDCOM created.
             _Parts = new string[] { Country, Region, SubRegion, Address, Place };
 #if __PC__
             ViewPort = new Mapping.GeoResponse.CResult.CGeometry.CViewPort();
@@ -903,6 +905,10 @@ namespace FTAnalyzer
         public static int GeocodedLocations => AllLocations.Count(l => l.IsGeoCoded(false));
 
         public static int LocationsCount => AllLocations.Count() - 1;
+
+        public static int GEDCOMLocationsCount => AllLocations.Count(l => !l.FTAnalyzerCreated);
+
+        public static int GEDCOM_GeocodedCount => AllLocations.Count(l => !l.FTAnalyzerCreated && l.IsGeoCoded(false));
 
         public string CensusCountry
         {

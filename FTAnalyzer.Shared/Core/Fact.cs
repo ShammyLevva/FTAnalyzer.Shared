@@ -618,7 +618,10 @@ namespace FTAnalyzer
             //+1 CTRY <ADDRESS_COUNTRY> 
 
             if (!COMMENT_FACTS.Contains(factType))
+            {
                 Location = FactLocation.GetLocation(result);
+                Location.FTAnalyzerCreated = false;
+            }
         }
 
         public Fact(string factRef, string factType, FactDate date, FactLocation loc, string comment = "", bool preferred = true, bool createdByFTA = false)

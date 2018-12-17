@@ -252,7 +252,7 @@ namespace FTAnalyzer
                 {
                     ScottishParish sp = ScottishParish.FindParish(Parish);
                     if (sp != ScottishParish.UNKNOWN_PARISH)
-                        CensusLocation = new CensusLocation(string.Empty, string.Empty, sp.RD, sp.Name, sp.Region, sp.Location.ToString());
+                        CensusLocation = new CensusLocation(string.Empty, string.Empty, sp.RegistrationDistrict, sp.Name, sp.Region, sp.Location.ToString());
                 }
             }
             else if (Class.StartsWith("US", StringComparison.Ordinal))

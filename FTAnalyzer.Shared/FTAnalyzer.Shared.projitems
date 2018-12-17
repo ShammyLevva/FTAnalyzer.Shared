@@ -62,8 +62,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\TextFactDateException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\InvalidDoubleDateException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\CensusSearchException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Exports\DNA_GEDCOM.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exports\ExportFact.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exports\ExportReferrals.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Exports\ExportToExcel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exports\IExportIndividual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exports\IExportReferrals.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exports\NonDuplicate.cs" />

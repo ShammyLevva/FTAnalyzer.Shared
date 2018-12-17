@@ -9,9 +9,9 @@ namespace FTAnalyzer
 {
     public class ScottishParish
     {
-        private static Dictionary<string, ScottishParish> SCOTTISHPARISHES = new Dictionary<string, ScottishParish>();
+        static Dictionary<string, ScottishParish> SCOTTISHPARISHES = new Dictionary<string, ScottishParish>();
         public static ScottishParish UNKNOWN_PARISH = new ScottishParish("UNK", "", Countries.SCOTLAND);
-        public string RD { get; private set; }
+        public string RegistrationDistrict { get; private set; }
         public FactLocation Location { get; private set; }
         public string Name { get; private set; }
         public string Region { get; private set; }
@@ -42,7 +42,7 @@ namespace FTAnalyzer
             }
         }
 
-        private static void AddParish(string RD, ScottishParish sp)
+        static void AddParish(string RD, ScottishParish sp)
         {
             try
             {
@@ -54,31 +54,25 @@ namespace FTAnalyzer
 
         public ScottishParish(string RD, string name, string region)
         {
-            this.RD = RD;
-            this.Name = name;
-            this.Region = region;
+            RegistrationDistrict = RD;
+            Name = name;
+            Region = region;
             string loc = name + ", " + region + ", Scotland";
             Location = FactLocation.GetLocation(loc, false);
         }
 
-        public static ScottishParish FindParish(string RD)
-        {
-            return SCOTTISHPARISHES.ContainsKey(RD) ? SCOTTISHPARISHES[RD] : UNKNOWN_PARISH;
-        }
+        public static ScottishParish FindParish(string RD) => SCOTTISHPARISHES.ContainsKey(RD) ? SCOTTISHPARISHES[RD] : UNKNOWN_PARISH;
 
         public string Reference
         {
             get
             {
                 if (GeneralSettings.Default.UseCompactCensusRef)
-                    return Name + "/" + RD;
-                return Name + ", RD: " + RD;
+                    return $"{Name}/{RegistrationDistrict}";
+                return $"{Name}, RD: {RegistrationDistrict}";
             }
         }
 
-        public override string ToString()
-        {
-            return "RD: " + RD + " Parish: " + Name + " Region: " + Region;
-        }
+        public override string ToString() => $"RD: {RegistrationDistrict} Parish: {Name} Region: {Region}";
     }
 }
