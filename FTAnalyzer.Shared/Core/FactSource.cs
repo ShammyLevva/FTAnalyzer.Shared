@@ -7,10 +7,10 @@ namespace FTAnalyzer
 {
     public class FactSource : IDisplaySource
     {
-        private static readonly string BIRTHCERT = "BIRTH";
-        private static readonly string DEATHCERT = "DEATH";
-        private static readonly string MARRIAGECERT = "MARRIAGE";
-        private static readonly string CENSUSCERT = "CENSUS";
+        static readonly string BIRTHCERT = "BIRTH";
+        static readonly string DEATHCERT = "DEATH";
+        static readonly string MARRIAGECERT = "MARRIAGE";
+        static readonly string CENSUSCERT = "CENSUS";
 
         public string SourceID { get; private set; }
         public string SourceTitle { get; private set; }

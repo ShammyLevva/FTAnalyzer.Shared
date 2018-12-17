@@ -307,9 +307,7 @@ namespace FTAnalyzer
             {
                 var individual = new Individual(n, outputText);
                 if (individual.IndividualID == null)
-                {
                     outputText.Report("File has invalid GEDCOM data. Individual found with no ID. Search file for 0 @@ INDI\n");
-                }
                 else
                 {
                     individuals.Add(individual);
@@ -500,10 +498,7 @@ namespace FTAnalyzer
             }
         }
 
-        void RemoveFamiliesWithNoIndividuals()
-        {
-            (families as List<Family>).RemoveAll(x => x.FamilySize == 0);
-        }
+        void RemoveFamiliesWithNoIndividuals() => (families as List<Family>).RemoveAll(x => x.FamilySize == 0);
 
         void CountUnknownFactTypes(IProgress<string> outputText)
         {
@@ -2583,7 +2578,7 @@ namespace FTAnalyzer
             //List<FactLocation> needRev = FactLocation.AllLocations.Where(predicate).ToList();
             outputText.Report($"\n{FactLocation.GEDCOMLocationsCount} locations loaded from GEDCOM file.\n");
             outputText.Report($"    {FactLocation.GEDCOM_GeocodedCount} have Lat/Long coordinates in the file.\n");
-            outputText.Report($"\n{FactLocation.LocationsCount} locations in use after processing file.\n");
+            outputText.Report($"\n{FactLocation.LocationsCount} locations in use after processing file and generating extra locaitons for tree view.\n");
             outputText.Report($"    {FactLocation.AllLocations.Count(x => x.GeocodeStatus.Equals(FactLocation.Geocode.GEDCOM_USER) && x.FoundLocation.Length > 0)} are GEDCOM/User Entered and have been geocoded.\n");
             outputText.Report($"    {FactLocation.AllLocations.Count(x => x.GeocodeStatus.Equals(FactLocation.Geocode.GEDCOM_USER) && x.FoundLocation.Length == 0)} are GEDCOM/User Entered but lack a Google Location.\n");
             outputText.Report($"    {FactLocation.AllLocations.Count(x => x.GeocodeStatus.Equals(FactLocation.Geocode.MATCHED))} have a geocoding match from Google.\n");

@@ -25,6 +25,7 @@ namespace FTAnalyzer
         public string FamilyType { get; internal set; }
 
         IDictionary<string, Fact> _preferredFacts;
+        FamilyTree ft = FamilyTree.Instance;
 
         Family(string familyID)
         {
@@ -56,7 +57,6 @@ namespace FTAnalyzer
                 FamilyID = node.Attributes["ID"].Value;
                 string husbandID = eHusband?.Attributes["REF"]?.Value;
                 string wifeID = eWife?.Attributes["REF"]?.Value;
-                FamilyTree ft = FamilyTree.Instance;
                 Husband = ft.GetIndividual(husbandID);
                 Wife = ft.GetIndividual(wifeID);
                 if (Husband != null && Wife != null)
@@ -206,6 +206,7 @@ namespace FTAnalyzer
                 try
                 {
                     Fact f = new Fact(n, this, preferredFact, outputText);
+                    f.Location.FTAnalyzerCreated = false;
                     if (!f.Location.IsValidLatLong)
                         outputText.Report($"Found problem with Lat/Long for Location '{f.Location}' in facts for {FamilyID}: {FamilyName}");
                     if (string.IsNullOrEmpty(f.Comment) && Husband != null && Wife != null && f.IsMarriageFact)
@@ -239,7 +240,6 @@ namespace FTAnalyzer
                 }
                 catch (InvalidXMLFactException ex)
                 {
-                    FamilyTree ft = FamilyTree.Instance;
                     outputText.Report($"Error with Family : {FamilyID}\n       Invalid fact : {ex.Message}");
                 }
                 catch (TextFactDateException te)
@@ -261,7 +261,7 @@ namespace FTAnalyzer
             if (string.IsNullOrEmpty(FamilyID))
             {
                 FamilyType = SOLOINDIVIDUAL;
-                FamilyID = FamilyTree.Instance.NextSoloFamily;
+                FamilyID = ft.NextSoloFamily;
             }
             else
             {

@@ -737,6 +737,7 @@ namespace FTAnalyzer
                     if (factType != Fact.NAME || !preferredFact)
                     {  // don't add first name in file as a fact as already given by SURNAME & FORENAME tags
                         Fact f = new Fact(n, this, preferredFact, null, outputText);
+                        f.Location.FTAnalyzerCreated = false;
                         if (!f.Location.IsValidLatLong)
                             outputText.Report($"Found problem with Lat/Long for Location '{f.Location}' in facts for {IndividualID}: {Name}");
                         AddFact(f);
