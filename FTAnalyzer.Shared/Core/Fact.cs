@@ -200,6 +200,7 @@ namespace FTAnalyzer
             CUSTOM_TAGS.Add("MARL: MARRIAGE LICENCE", MARR_LICENSE);
             CUSTOM_TAGS.Add("FUNL: FUNERAL", FUNERAL);
             CUSTOM_TAGS.Add("CAUSE OF DEATH (FACTS PAGE)", CAUSE_OF_DEATH);
+            CUSTOM_TAGS.Add("LTOG: LIVED TOGETHER (UNMARRIED)", UNMARRIED);
             
             // Legacy 8 default fact types
             CUSTOM_TAGS.Add("ALT. BIRTH", BIRTH);
@@ -370,7 +371,7 @@ namespace FTAnalyzer
             FactDate = FactDate.UNKNOWN_DATE;
             Comment = string.Empty;
             Place = string.Empty;
-            Location = FactLocation.UNKNOWN_LOCATION;
+            Location = FactLocation.BLANK_LOCATION;
             Sources = new List<FactSource>();
             CensusReference = CensusReference.UNKNOWN;
             CertificatePresent = false;
@@ -440,7 +441,7 @@ namespace FTAnalyzer
                     }
                     SetCommentAndLocation(FactType, FamilyTree.GetText(node, false), FamilyTree.GetText(node, "PLAC", false),
                         FamilyTree.GetText(node, "PLAC/MAP/LATI", false), FamilyTree.GetText(node, "PLAC/MAP/LONG", false));
-                    if(Location.IsBlank)
+                    if(!Location.IsKnown)
                         SetAddress(FactType, node);
 
                     // only check UK census dates for errors as those are used for colour census

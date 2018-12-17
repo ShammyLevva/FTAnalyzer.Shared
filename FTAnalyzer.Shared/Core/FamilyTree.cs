@@ -1374,7 +1374,7 @@ namespace FTAnalyzer
             foreach (FactLocation loc in allLocations)
             {
                 FactLocation c = loc.GetLocation(level);
-                if (!string.IsNullOrEmpty(c.Country) && !result.Contains(c))
+                if (!c.IsBlank && !result.Contains(c))
                     result.Add(c);
             }
             result.Sort(new FactLocationComparer(level));
@@ -1398,7 +1398,7 @@ namespace FTAnalyzer
             {
                 List<IDisplayGeocodedLocation> result = new List<IDisplayGeocodedLocation>();
                 foreach (IDisplayGeocodedLocation loc in FactLocation.AllLocations)
-                    if (!loc.Equals(FactLocation.UNKNOWN_LOCATION))
+                    if ((loc as FactLocation).IsKnown)
                         result.Add(loc);
                 return result;
             }
@@ -1918,7 +1918,7 @@ namespace FTAnalyzer
                 path.Append("%2B" + FamilySearch.BIRTH_YEAR + "%3A" + startYear + "-" + endYear + "%7E%20");
             }
             string location = Countries.UNKNOWN_COUNTRY;
-            if (person.BirthLocation != FactLocation.UNKNOWN_LOCATION)
+            if (person.BirthLocation.IsKnown)
             {
                 location = person.BirthLocation.Country != country
                     ? person.BirthLocation.Country
@@ -2019,7 +2019,7 @@ namespace FTAnalyzer
                 query.Append("msbdy=" + year + "&");
                 query.Append("msbdp=" + range + "&");
             }
-            if (person.BirthLocation != FactLocation.UNKNOWN_LOCATION)
+            if (person.BirthLocation.IsKnown)
             {
                 string location = person.BirthLocation.GetLocation(FactLocation.SUBREGION).ToString();
                 query.Append("msbpn__ftp=" + HttpUtility.UrlEncode(location) + "&");
@@ -2072,7 +2072,7 @@ namespace FTAnalyzer
                 query.Append($"birth_x={range}-0-0&");
             }
             FactLocation bestLocation = person.BestLocation(CensusDate.UKCENSUS1939);
-            if (bestLocation != FactLocation.UNKNOWN_LOCATION)
+            if (bestLocation.IsKnown)
             {
                 string location = HttpUtility.UrlEncode(bestLocation.ToString());
                 query.Append($"residence={location}");
@@ -2139,7 +2139,7 @@ namespace FTAnalyzer
                     query.Append("r=10&");
                 query.Append("a=" + year + "&");
             }
-            if (person.BirthLocation != FactLocation.UNKNOWN_LOCATION)
+            if (person.BirthLocation.IsKnown)
             {
                 string location = person.BirthLocation.SubRegion;
                 query.Append("t=" + HttpUtility.UrlEncode(location) + "&");
@@ -2357,7 +2357,7 @@ namespace FTAnalyzer
                     endYear = startYear + 9;
                 query.Append("%2Bbirth_year%3A" + startYear + "-" + endYear + "~%20");
             }
-            if (st.Equals(SearchType.BIRTH) && individual.BirthLocation != FactLocation.UNKNOWN_LOCATION)
+            if (st.Equals(SearchType.BIRTH) && individual.BirthLocation.IsKnown)
             {  // add birth place if searching for a birth
                 string location = individual.BirthLocation.GetLocation(FactLocation.SUBREGION).ToString();
                 query.Append("%2Bbirth_place%3A%22" + HttpUtility.UrlEncode(location) + "%22~%20");
@@ -2467,7 +2467,7 @@ namespace FTAnalyzer
             AppendYearandRange(individual.BirthDate, query, "msbdy=", "msbdp=", false);
             if (individual.BirthDate.IsKnown)
                 query.Append("&msbdy_x=1");
-            if (individual.BirthLocation != FactLocation.UNKNOWN_LOCATION)
+            if (individual.BirthLocation.IsKnown)
             {
                 string location = individual.BirthLocation.GetLocation(FactLocation.SUBREGION).ToString();
                 query.Append("msbpn__ftp=" + HttpUtility.UrlEncode(location) + "&");

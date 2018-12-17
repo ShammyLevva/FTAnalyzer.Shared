@@ -27,6 +27,8 @@ namespace FTAnalyzer
         string FoundLocation { get; }
         [ColumnDetail("GEDCOM Location", 250)]
         string GEDCOMLocation { get; }
+        [ColumnDetail("GEDCOM Loaded", 80)]
+        string GEDCOMLoaded { get; }
 
         int CompareTo(IDisplayLocation loc, int level);
         FactLocation GetLocation(int level);

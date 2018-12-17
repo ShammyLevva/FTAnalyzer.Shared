@@ -51,6 +51,7 @@ namespace FTAnalyzer
         public string FoundResultType { get; set; }
         public int FoundLevel { get; set; }
         public double PixelSize { get; set; }
+        public string GEDCOMLoaded => FTAnalyzerCreated ? "No" : "Yes";
         public bool FTAnalyzerCreated
         { get => _created;
             set {
@@ -79,6 +80,7 @@ namespace FTAnalyzer
         public static Dictionary<string, string> CITY_ADD_COUNTRY = new Dictionary<string, string>();
         public static Dictionary<Geocode, string> Geocodes;
         public static FactLocation UNKNOWN_LOCATION;
+        public static FactLocation BLANK_LOCATION;
         public static FactLocation TEMP = new FactLocation();
         #endregion
 
@@ -358,60 +360,61 @@ namespace FTAnalyzer
         FactLocation(string location)
             : this()
         {
-            if (location != null)
+            if (!string.IsNullOrEmpty(location))
             {
                 OriginalText = location;
                 // we need to parse the location string from a little injun to a big injun
                 int comma = location.LastIndexOf(",", StringComparison.Ordinal);
                 if (comma > 0)
                 {
-                    Country = location.Substring(comma + 1).Trim();
+                    Country = location.Substring(comma + 1);
                     location = location.Substring(0, comma);
                     comma = location.LastIndexOf(",", comma, StringComparison.Ordinal);
                     if (comma > 0)
                     {
-                        Region = location.Substring(comma + 1).Trim();
+                        Region = location.Substring(comma + 1);
                         location = location.Substring(0, comma);
                         comma = location.LastIndexOf(",", comma, StringComparison.Ordinal);
                         if (comma > 0)
                         {
-                            SubRegion = location.Substring(comma + 1).Trim();
+                            SubRegion = location.Substring(comma + 1);
                             location = location.Substring(0, comma);
                             comma = location.LastIndexOf(",", comma, StringComparison.Ordinal);
                             if (comma > 0)
                             {
-                                Address = location.Substring(comma + 1).Trim();
-                                Place = location.Substring(0, comma).Trim();
+                                Address = location.Substring(comma + 1);
+                                Place = location.Substring(0, comma);
                                 Level = PLACE;
                             }
                             else
                             {
-                                Address = location.Trim();
+                                Address = location;
                                 Level = ADDRESS;
                             }
                         }
                         else
                         {
-                            SubRegion = location.Trim();
+                            SubRegion = location;
                             Level = SUBREGION;
                         }
                     }
                     else
                     {
-                        Region = location.Trim();
+                        Region = location;
                         Level = REGION;
                     }
                 }
                 else
                 {
-                    Country = location.Trim();
+                    Country = location;
                     Level = COUNTRY;
                 }
                 //string before = $"{SubRegion}, {Region}, {Country}".ToUpper().Trim();
-                if (!GeneralSettings.Default.AllowEmptyLocations)
-                    FixEmptyFields();
                 if (!GeneralSettings.Default.SkipFixingLocations)
                 {
+                    TrimLocations();
+                    if (!GeneralSettings.Default.AllowEmptyLocations)
+                        FixEmptyFields();
                     RemoveDiacritics();
                     FixRegionFullStops();
                     FixCountryFullStops();
@@ -440,6 +443,10 @@ namespace FTAnalyzer
         public static FactLocation GetLocation(string place, string latitude, string longitude, Geocode status, bool addLocation = true, bool updateLatLong = false)
         {
             FactLocation temp;
+            if (string.IsNullOrEmpty(place))
+                return BLANK_LOCATION;
+            if (place.ToUpper() == "UNKNOWN")
+                return UNKNOWN_LOCATION;
             // GEDCOM lat/long will be prefixed with NS and EW which needs to be +/- to work.
             latitude = latitude.Replace("N", "").Replace("S", "-");
             longitude = longitude.Replace("W", "-").Replace("E", "");
@@ -540,8 +547,9 @@ namespace FTAnalyzer
             LOCAL_GOOGLE_FIXES = new Dictionary<Tuple<int, string>, string>();
 
             // set unknown location as unknown so it doesn't keep hassling to be searched
-            UNKNOWN_LOCATION = GetLocation(string.Empty, "0.0", "0.0", Geocode.UNKNOWN);
-
+            BLANK_LOCATION = new FactLocation(string.Empty, "0.0", "0.0", Geocode.UNKNOWN);
+            UNKNOWN_LOCATION = new FactLocation("Unknown", "0.0", "0.0", Geocode.UNKNOWN);
+            LOCATIONS.Add("Unknown", UNKNOWN_LOCATION);
             if (!GeneralSettings.Default.SkipFixingLocations)
                 LoadConversions(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location));
         }
@@ -605,15 +613,18 @@ namespace FTAnalyzer
         #endregion
 
         #region Fix Location string routines
-        void FixEmptyFields()
+        void TrimLocations()
         {
-            // first remove extraneous spaces and extraneous commas
+            // remove extraneous spaces
             Country = Country.Trim();
             Region = Region.Trim();
             SubRegion = SubRegion.Trim();
             Address = Address.Trim();
             Place = Place.Trim();
+        }
 
+        void FixEmptyFields()
+        {
             if (Country.Length == 0)
             {
                 Country = Region;
@@ -928,9 +939,9 @@ namespace FTAnalyzer
 
         public static int LocationsCount => AllLocations.Count() - 1;
 
-        public static int GEDCOMLocationsCount => AllLocations.Count(l => !l.FTAnalyzerCreated);
+        public static int GEDCOMLocationsCount => AllLocations.Count(l => !l.FTAnalyzerCreated) - 1;
 
-        public static int GEDCOM_GeocodedCount => AllLocations.Count(l => !l.FTAnalyzerCreated && l.IsGeoCoded(false));
+        public static int GEDCOM_GeocodedCount => AllLocations.Count(l => !l.FTAnalyzerCreated && l.IsGeoCoded(false)) - 1;
 
         public string CensusCountry
         {
@@ -986,6 +997,7 @@ namespace FTAnalyzer
         }
 
         public bool IsBlank => Country.Length == 0;
+        public bool IsKnown => this != BLANK_LOCATION && this != UNKNOWN_LOCATION;
 
         public bool NeedsReverseGeocoding => FoundLocation.Length == 0 &&
                     (GeocodeStatus == Geocode.GEDCOM_USER || GeocodeStatus == Geocode.OS_50KMATCH || GeocodeStatus == Geocode.OS_50KPARTIAL || GeocodeStatus == Geocode.OS_50KFUZZY);

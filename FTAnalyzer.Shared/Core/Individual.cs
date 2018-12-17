@@ -80,6 +80,8 @@ namespace FTAnalyzer
             : this()
         {
             IndividualID = node.Attributes["ID"].Value;
+            if (IndividualID == "I126001")
+                Console.WriteLine("test");
             Name = FamilyTree.GetText(node, "NAME", false);
             Gender = FamilyTree.GetText(node, "SEX", false);
             Alias = FamilyTree.GetText(node, "ALIA", false);
@@ -401,7 +403,7 @@ namespace FTAnalyzer
         public DateTime BirthStart => BirthDate.StartDate != FactDate.MINDATE ? BirthDate.StartDate : BirthDate.EndDate;
         public DateTime BirthEnd => BirthDate.StartDate != FactDate.MAXDATE ? BirthDate.EndDate : BirthDate.StartDate;
 
-        public FactLocation BirthLocation => (BirthFact == null) ? FactLocation.UNKNOWN_LOCATION : BirthFact.Location;
+        public FactLocation BirthLocation => (BirthFact == null) ? FactLocation.BLANK_LOCATION : BirthFact.Location;
 
         public Fact DeathFact
         {
@@ -426,7 +428,7 @@ namespace FTAnalyzer
         public DateTime DeathStart => DeathDate.StartDate != FactDate.MINDATE ? DeathDate.StartDate : DeathDate.EndDate;
         public DateTime DeathEnd => DeathDate.EndDate != FactDate.MAXDATE ? DeathDate.EndDate : DeathDate.StartDate;
 
-        public FactLocation DeathLocation => DeathFact == null ? FactLocation.UNKNOWN_LOCATION : DeathFact.Location;
+        public FactLocation DeathLocation => DeathFact == null ? FactLocation.BLANK_LOCATION : DeathFact.Location;
 
         public FactDate BurialDate
         {
