@@ -945,13 +945,10 @@ namespace FTAnalyzer
             get
             {
                 float zoom = (Level + 3.75f) * 2.2f;  // default use level 
+#if __PC__
                 if (ViewPort != null)
                 {
-#if __PC__
                     double pixelWidth = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;  // tweak to get best results as required 
-#else
-                    double pixelWidth = NSScreen.MainScreen.Frame;
-#endif
                     double GLOBE_WIDTH = 512; // a constant in Google's map projection
                     var west = ViewPort.SouthWest.Long/100000;
                     var east = ViewPort.NorthEast.Long/100000;
@@ -961,7 +958,8 @@ namespace FTAnalyzer
                     if (west != 0 || east != 0)
                         return (int)Math.Abs(Math.Round(Math.Log(pixelWidth * 360f / angle / GLOBE_WIDTH) / Math.Log(2)));
                 }
-                return zoom;
+#endif
+                 return zoom;
             }
         }
 
@@ -1067,7 +1065,7 @@ namespace FTAnalyzer
                 return true;
             return false;
         }
-        #endregion
+#endregion
 
         public bool IsWithinUKBounds => Longitude >= -7.974074 && Longitude <= 1.879409 && Latitude >= 49.814376 && Latitude <= 60.970872;
 
@@ -1092,7 +1090,7 @@ namespace FTAnalyzer
         //    }
         //}
 
-        #region Overrides
+#region Overrides
         public int CompareTo(FactLocation that) => CompareTo(that, PLACE);
 
         public int CompareTo(IDisplayLocation that, int level) => CompareTo((FactLocation)that, level);

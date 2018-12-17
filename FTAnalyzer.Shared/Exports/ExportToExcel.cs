@@ -2,12 +2,15 @@
 using System.Text;
 using System.Data;
 using System.IO;
+#if __PC__
 using System.Windows.Forms;
+#endif
 
 namespace FTAnalyzer.Utilities
 {
     public class ExportToExcel
     {
+#if __PC__
         public static void Export(DataTable dt)
         {
             try
@@ -59,5 +62,6 @@ namespace FTAnalyzer.Utilities
             }
             output.Close();
         }
+#endif
     }
 }

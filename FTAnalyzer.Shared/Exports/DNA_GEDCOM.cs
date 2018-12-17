@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+#if __PC__
 using System.Windows.Forms;
+#elif __MACOS__
+using AppKit;
+#endif
 
 namespace FTAnalyzer.Exports
 {
@@ -11,7 +15,11 @@ namespace FTAnalyzer.Exports
         static readonly FactDate PrivacyDate = new FactDate(DateTime.Now.AddYears(-100).ToString("dd MMM yyyy"));
         static readonly FactDate Today = new FactDate(DateTime.Now.ToString("dd MMM yyyy"));
         static FamilyTree ft = FamilyTree.Instance;
+#if __MACOS__
+        static AppDelegate App => (AppDelegate)NSApplication.SharedApplication.Delegate;
+#endif 
 
+#if __PC__
         public static void Export()
         {
             try
@@ -34,7 +42,12 @@ namespace FTAnalyzer.Exports
                 MessageBox.Show(ex.Message, "FTAnalyzer");
             }
         }
+#elif __MACOS__
+        public static void Export()
+        {
 
+        }
+#endif
         static void WriteFile(string filename)
         {
             List<Family> families = new List<Family>();
@@ -60,7 +73,11 @@ namespace FTAnalyzer.Exports
             WriteFamilies(families, output);
             WriteFooter(output);
             output.Close();
+#if __PC__
             MessageBox.Show("Minimalist GEDCOM file written for use with DNA Matching. Upload today.");
+#elif __MACOS__
+            UIHelpers.ShowMessage("Minimalist GEDCOM file written for use with DNA Matching. Upload today.");
+#endif
         }
 
         static void WriteFamilies(List<Family> families, StreamWriter output)
@@ -91,9 +108,14 @@ namespace FTAnalyzer.Exports
 
         static void WriteHeader(string filename, StreamWriter output)
         {
+#if __PC__
+            var version = MainForm.VERSION;
+#elif __MACOS__
+            var version = App.Version;
+#endif
             output.WriteLine($"0 HEAD");
             output.WriteLine($"1 SOUR Family Tree Analyzer");
-            output.WriteLine($"2 VERS {MainForm.VERSION}");
+            output.WriteLine($"2 VERS {version}");
             output.WriteLine($"2 NAME Family Tree Analyzer");
             output.WriteLine($"2 CORP FTAnalyzer.com");
             output.WriteLine($"1 FILE {filename}");
