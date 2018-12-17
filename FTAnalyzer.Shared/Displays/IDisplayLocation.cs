@@ -25,9 +25,10 @@ namespace FTAnalyzer
         string Geocoded { get; }
         [ColumnDetail("Found Location", 250)]
         string FoundLocation { get; }
+        [ColumnDetail("GEDCOM Location", 250)]
+        string GEDCOMLocation { get; }
 
         int CompareTo(IDisplayLocation loc, int level);
         FactLocation GetLocation(int level);
-
     }
 }

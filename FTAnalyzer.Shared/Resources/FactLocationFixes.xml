@@ -357,19 +357,19 @@
       <RegionTypo from="Lincoln"       to="Lincolnshire" />
       <RegionTypo from="Middx"         to="Middlesex" />
       <RegionTypo from="Mddx"          to="Middlesex" />
-      <RegionTypo from="Mx"     to="Middlesex" />
+      <RegionTypo from="Mx"            to="Middlesex" />
       <RegionTypo from="Northants"     to="Northamptonshire" />
       <RegionTypo from="Notts"         to="Nottinghamshire" />
       <RegionTypo from="Oxon"          to="Oxfordshire" />
       <RegionTypo from="Oxford"        to="Oxfordshire" />
       <RegionTypo from="Rutlandshire"  to="Rutland" />
-      <RegionTypo from="Rut"    to="Rutland" />
+      <RegionTypo from="Rut"           to="Rutland" />
       <RegionTypo from="Salop"         to="Shropshire" />
       <RegionTypo from="Shrops"        to="Shropshire" />
       <RegionTypo from="Somt"          to="Somerset" />
       <RegionTypo from="Somer"         to="Somerset" />
       <RegionTypo from="Staffs"        to="Staffordshire" />
-      <RegionTypo from="SX"     to="Sussex" />
+      <RegionTypo from="SX"            to="Sussex" />
       <RegionTypo from="West Sussex"   to="Sussex" />
       <RegionTypo from="East Sussex"   to="Sussex" />
       <RegionTypo from="Warks"         to="Warwickshire" />
@@ -408,24 +408,34 @@
       <RegionTypo from="Cambridgeshire county"      to="Cambridgeshire" />
       <RegionTypo from="Cheshire county"            to="Cheshire" />
       <RegionTypo from="Cornwall county"            to="Cornwall" />
+      <RegionTypo from="Cornwallshire"              to="Cornwall" />
       <RegionTypo from="Cumberland county"          to="Cumberland" />
+      <RegionTypo from="Cumberlandshire"            to="Cumberland" />
       <RegionTypo from="Cumbria county"             to="Cumbria" />
+      <RegionTypo from="Cumbriashire"               to="Cumbria" />
       <RegionTypo from="Derbyshire county"          to="Derbyshire" />
       <RegionTypo from="Devon county"               to="Devon" />
       <RegionTypo from="Dorset county"              to="Dorset" />
+      <RegionTypo from="Dorsetshire"                to="Dorset" />
       <RegionTypo from="County Durham county"       to="County Durham" />
+      <RegionTypo from="County Durhamshire"         to="County Durham" />
+      <RegionTypo from="Durhamshire"                to="County Durham" />
       <RegionTypo from="Essex county"               to="Essex" />
+      <RegionTypo from="Essexshire"                 to="Essex" />
       <RegionTypo from="Gloucestershire county"     to="Gloucestershire" />
       <RegionTypo from="Hampshire county"           to="Hampshire" />
       <RegionTypo from="Herefordshire county"       to="Herefordshire" />
       <RegionTypo from="Hertfordshire county"       to="Hertfordshire" />
       <RegionTypo from="Huntingdonshire county"     to="Huntingdonshire" />
       <RegionTypo from="Kent county"                to="Kent" />
+      <RegionTypo from="Kentshire"                  to="Kent" />
       <RegionTypo from="Lancashire county"          to="Lancashire" />
       <RegionTypo from="Leicestershire county"      to="Leicestershire" />
       <RegionTypo from="Lincolnshire county"        to="Lincolnshire" />
       <RegionTypo from="Middlesex county"           to="Middlesex" />
+      <RegionTypo from="Middlesexshire"             to="Middlesex" />
       <RegionTypo from="Norfolk county"             to="Norfolk" />
+      <RegionTypo from="Norfolkshire"               to="Norfolk" />
       <RegionTypo from="Northamptonshire county"    to="Northamptonshire" />
       <RegionTypo from="Northumberland county"      to="Northumberland" />
       <RegionTypo from="Nottinghamshire county"     to="Nottinghamshire" />
@@ -433,10 +443,14 @@
       <RegionTypo from="Rutland county"             to="Rutland" />
       <RegionTypo from="Shropshire county"          to="Shropshire" />
       <RegionTypo from="Somerset county"            to="Somerset" />
+      <RegionTypo from="Somersetshire"              to="Somerset" />
       <RegionTypo from="Staffordshire county"       to="Staffordshire" />
       <RegionTypo from="Suffolk county"             to="Suffolk" />
+      <RegionTypo from="Suffolkshire"               to="Suffolk" />
       <RegionTypo from="Sussex county"              to="Sussex" />
+      <RegionTypo from="Sussexshire"                to="Sussex" />
       <RegionTypo from="Surrey county"              to="Surrey" />
+      <RegionTypo from="Surreyshire"                to="Surrey" />
       <RegionTypo from="Warwickshire county"        to="Warwickshire" />
       <RegionTypo from="Westmorland county"         to="Westmorland" />
       <RegionTypo from="Wiltshire county"           to="Wiltshire" />

@@ -54,8 +54,8 @@ namespace FTAnalyzer
         public string Relation => Ind == null ? string.Empty : Ind.Relation;
         public string RelationToRoot => Ind == null ? string.Empty : Ind.RelationToRoot;
         public string SurnameAtDate => Ind == null ? string.Empty : Ind.SurnameAtDate(FactDate);
-        public string FactHash => Ind == null ? Fact.Preferred + Fact.FactTypeDescription + Fact.DateString + Fact.Location.GEDCOMLocation :
-                                              Ind.IndividualID + Fact.Preferred + Fact.FactTypeDescription + Fact.DateString + Fact.Location.GEDCOMLocation;
+        public string FactHash => Ind == null ? Fact.Preferred + Fact.FactTypeDescription + Fact.DateString + Fact.Location.OriginalText :
+                                              Ind.IndividualID + Fact.Preferred + Fact.FactTypeDescription + Fact.DateString + Fact.Location.OriginalText;
 
         public int CompareTo(object obj)
         {

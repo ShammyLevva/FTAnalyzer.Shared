@@ -22,6 +22,7 @@ namespace FTAnalyzer
             INCORRECT = 5, OUT_OF_BOUNDS = 6, LEVEL_MISMATCH = 7, OS_50KMATCH = 8, OS_50KPARTIAL = 9, OS_50KFUZZY = 10
         };
 
+        public string OriginalText { get; private set; }
         public string GEDCOMLocation { get; private set; }
         public string SortableLocation { get; private set; }
         public string Country { get; set; }
@@ -50,12 +51,20 @@ namespace FTAnalyzer
         public string FoundResultType { get; set; }
         public int FoundLevel { get; set; }
         public double PixelSize { get; set; }
-        public bool FTAnalyzerCreated { get; set; }
+        public bool FTAnalyzerCreated
+        { get => _created;
+            set {
+                _created = value;
+                if (!_created)
+                    GEDCOMLocation = OriginalText;
+            }
+        }
 #if __PC__
         public Mapping.GeoResponse.CResult.CGeometry.CViewPort ViewPort { get; set; }
 #endif
         List<Individual> individuals;
         string[] _Parts;
+        bool _created;
 
         static Dictionary<string, string> COUNTRY_TYPOS = new Dictionary<string, string>();
         static Dictionary<string, string> REGION_TYPOS = new Dictionary<string, string>();
@@ -78,10 +87,9 @@ namespace FTAnalyzer
         {
             SetupGeocodes();
             ResetLocations();
-            LoadConversions(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location));
         }
 
-        public static void LoadConversions(string startPath)
+        static void LoadConversions(string startPath)
         {
             // load conversions from XML file
             #region Fact Location Fixes
@@ -94,7 +102,7 @@ namespace FTAnalyzer
             string filename = Path.Combine(startPath, @"Resources\FactLocationFixes.xml");
 #endif
             Console.WriteLine($"Loading factlocation fixes from: {filename}");
-            if (File.Exists(filename))
+            if (File.Exists(filename) && !GeneralSettings.Default.SkipFixingLocations) // don't load file if skipping fixing locations
             {
                 XmlDocument xmlDoc = new XmlDocument();
                 xmlDoc.Load(filename);
@@ -302,6 +310,7 @@ namespace FTAnalyzer
         #region Object Constructors
         private FactLocation()
         {
+            OriginalText = string.Empty;
             GEDCOMLocation = string.Empty;
             FixedLocation = string.Empty;
             SortableLocation = string.Empty;
@@ -351,7 +360,7 @@ namespace FTAnalyzer
         {
             if (location != null)
             {
-                GEDCOMLocation = location;
+                OriginalText = location;
                 // we need to parse the location string from a little injun to a big injun
                 int comma = location.LastIndexOf(",", StringComparison.Ordinal);
                 if (comma > 0)
@@ -401,24 +410,25 @@ namespace FTAnalyzer
                 //string before = $"{SubRegion}, {Region}, {Country}".ToUpper().Trim();
                 if (!GeneralSettings.Default.AllowEmptyLocations)
                     FixEmptyFields();
-                RemoveDiacritics();
-                FixRegionFullStops();
-                FixCountryFullStops();
-                FixMultipleSpacesAmpersandsCommas();
-                FixUKGBTypos();
-                FixCountryTypos();
-                Country = EnhancedTextInfo.ToTitleCase(FixRegionTypos(Country).ToLower());
-                ShiftCountryToRegion();
-                Region = FixRegionTypos(Region);
-                ShiftRegionToParish();
+                if (!GeneralSettings.Default.SkipFixingLocations)
+                {
+                    RemoveDiacritics();
+                    FixRegionFullStops();
+                    FixCountryFullStops();
+                    FixMultipleSpacesAmpersandsCommas();
+                    FixUKGBTypos();
+                    FixCountryTypos();
+                    Country = EnhancedTextInfo.ToTitleCase(FixRegionTypos(Country).ToLower());
+                    ShiftCountryToRegion();
+                    Region = FixRegionTypos(Region);
+                    ShiftRegionToParish();
+                }
                 SetFixedLocation();
                 SetSortableLocation();
                 SetMetaphones();
                 KnownRegion = Regions.GetRegion(Region);
-                FixCapitalisation();
-                //string after = (parish + ", " + region + ", " + country).ToUpper().Trim();
-                //if (!before.Equals(after))
-                //    Console.WriteLine("Debug : '" + before + "'  converted to '" + after + "'");
+                if (!GeneralSettings.Default.SkipFixingLocations)
+                    FixCapitalisation();
             }
             _Parts = new string[] { Country, Region, SubRegion, Address, Place };
         }
@@ -518,10 +528,22 @@ namespace FTAnalyzer
 
         public static void ResetLocations()
         {
+            COUNTRY_TYPOS = new Dictionary<string, string>();
+            REGION_TYPOS = new Dictionary<string, string>();
+            COUNTRY_SHIFTS = new Dictionary<string, string>();
+            REGION_SHIFTS = new Dictionary<string, string>();
+            CITY_ADD_COUNTRY = new Dictionary<string, string>();
+            FREECEN_LOOKUP = new Dictionary<string, string>();
+            FINDMYPAST_LOOKUP = new Dictionary<string, Tuple<string, string>>();
             LOCATIONS = new Dictionary<string, FactLocation>();
+            GOOGLE_FIXES = new Dictionary<Tuple<int, string>, string>();
+            LOCAL_GOOGLE_FIXES = new Dictionary<Tuple<int, string>, string>();
+
             // set unknown location as unknown so it doesn't keep hassling to be searched
             UNKNOWN_LOCATION = GetLocation(string.Empty, "0.0", "0.0", Geocode.UNKNOWN);
-            LOCAL_GOOGLE_FIXES = new Dictionary<Tuple<int, string>, string>();
+
+            if (!GeneralSettings.Default.SkipFixingLocations)
+                LoadConversions(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location));
         }
 
         public static FactLocation BestLocation(IEnumerable<Fact> facts, FactDate when)
@@ -538,7 +560,7 @@ namespace FTAnalyzer
             double distance;
             foreach (Fact f in facts)
             {
-                if (f.FactDate.IsKnown && !string.IsNullOrEmpty(f.Location.GEDCOMLocation))
+                if (f.FactDate.IsKnown && !string.IsNullOrEmpty(f.Location.OriginalText))
                 {  // only deal with known dates and non empty locations
                     if (Fact.RANGED_DATE_FACTS.Contains(f.FactType) && f.FactDate.StartDate.Year != f.FactDate.EndDate.Year) // If fact type is ranged year use least end of range
                     {
