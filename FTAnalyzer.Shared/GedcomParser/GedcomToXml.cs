@@ -115,6 +115,7 @@ namespace FTAnalyzer
         {
             long lineNr = 0;
             int badLineCount = 0;
+            int badLineMax = 50;
             string line, nextline, token1, token2;
             string level;
             int thislevel;
@@ -261,24 +262,24 @@ namespace FTAnalyzer
                         }
                     }
                     line = nextline;
-                    //if (badLineCount > badLineMax)
-                    //{
-                    //    string message = "Found more than " + badLineMax + " consecutive errors in the GEDCOM file.";
-                    //    if (!FileHandling.Default.LoadWithFilters)
-                    //        message += "\n\nNB. You might get less errors if you turn on the option to 'Use Special Character Filters When Loading' from the Tools Options menu.";
-                    //    message += "\n\nContinue Loading?";
-                    //    DialogResult result = MessageBox.Show(message, "Continue Loading?", MessageBoxButtons.YesNo);
-                    //    if (result == DialogResult.Yes)
-                    //    {
-                    //        badLineCount = 0;
-                    //        badLineMax *= 2; // double count of errors before next act
-                    //    }
-                    //    else
-                    //    {
-                    //        document = null;
-                    //        break;
-                    //    }
-                    //}
+                    if (badLineCount > badLineMax)
+                    {
+                        string message = $"Found more than {badLineMax} consecutive errors in the GEDCOM file.";
+                        if (!FileHandling.Default.RetryFailedLines)
+                            message += "\n\nNB. You may get less errors if you turn on the option to 'Retry failed lines by looking for bad line breaks' from the File Handling section of the Tools Options menu.";
+                        message += "\n\nContinue Loading?";
+                        bool result = UIHelpers.ShowYesNo(message);
+                        if (result)
+                        {
+                            badLineCount = 0;
+                            badLineMax *= 2; // double count of errors before next act
+                        }
+                        else
+                        {
+                            document = null;
+                            break;
+                        }
+                    }
 
                 } // end while
 
