@@ -15,6 +15,7 @@ namespace FTAnalyzer.Exports
         static readonly FactDate PrivacyDate = new FactDate(DateTime.Now.AddYears(-100).ToString("dd MMM yyyy"));
         static readonly FactDate Today = new FactDate(DateTime.Now.ToString("dd MMM yyyy"));
         static FamilyTree ft = FamilyTree.Instance;
+        static bool _includeSiblings = false;
 #if __MACOS__
         static AppDelegate App => (AppDelegate)NSApplication.SharedApplication.Delegate;
 #endif 
@@ -22,24 +23,29 @@ namespace FTAnalyzer.Exports
 #if __PC__
         public static void Export()
         {
-            try
+            DialogResult result = MessageBox.Show("Do you want to include siblings of direct ancestors in the export?", "FTAnalyzer", MessageBoxButtons.YesNoCancel);
+            if (result != DialogResult.Cancel)
             {
-                SaveFileDialog saveFileDialog = new SaveFileDialog();
-                string initialDir = (string)Application.UserAppDataRegistry.GetValue("Export DNA GEDCOM Path");
-                saveFileDialog.InitialDirectory = initialDir ?? Environment.SpecialFolder.MyDocuments.ToString();
-                saveFileDialog.Filter = "Comma Separated Value (*.ged)|*.ged";
-                saveFileDialog.FilterIndex = 1;
-                DialogResult dr = saveFileDialog.ShowDialog();
-                if (dr == DialogResult.OK)
+                _includeSiblings = result == DialogResult.Yes;
+                try
                 {
-                    string path = Path.GetDirectoryName(saveFileDialog.FileName);
-                    Application.UserAppDataRegistry.SetValue("Export DNA GEDCOM Path", path);
-                    WriteFile(saveFileDialog.FileName);
+                    SaveFileDialog saveFileDialog = new SaveFileDialog();
+                    string initialDir = (string)Application.UserAppDataRegistry.GetValue("Export DNA GEDCOM Path");
+                    saveFileDialog.InitialDirectory = initialDir ?? Environment.SpecialFolder.MyDocuments.ToString();
+                    saveFileDialog.Filter = "Comma Separated Value (*.ged)|*.ged";
+                    saveFileDialog.FilterIndex = 1;
+                    DialogResult dr = saveFileDialog.ShowDialog();
+                    if (dr == DialogResult.OK)
+                    {
+                        string path = Path.GetDirectoryName(saveFileDialog.FileName);
+                        Application.UserAppDataRegistry.SetValue("Export DNA GEDCOM Path", path);
+                        WriteFile(saveFileDialog.FileName);
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "FTAnalyzer");
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "FTAnalyzer");
+                }
             }
         }
 #elif __MACOS__
@@ -61,15 +67,19 @@ namespace FTAnalyzer.Exports
                     if (asChild.IsNaturalFather || asChild.IsNaturalMother)
                     {
                         output.WriteLine($"1 FAMC @{asChild.Family.FamilyID}@");
-                        families.Add(asChild.Family);
+                        if(!families.Contains(asChild.Family))
+                            families.Add(asChild.Family);
                     }
                 }
                 foreach (Family asParent in ind.FamiliesAsParent)
                 {
                     output.WriteLine($"1 FAMS @{asParent.FamilyID}@");
-                    families.Add(asParent);
+                    if (!families.Contains(asParent))
+                        families.Add(asParent);
                 }
             }
+            if (_includeSiblings)
+                WriteSiblings(families, output);
             WriteFamilies(families, output);
             WriteFooter(output);
             output.Close();
@@ -80,13 +90,25 @@ namespace FTAnalyzer.Exports
 #endif
         }
 
+        static void WriteSiblings(List<Family> families, StreamWriter output)
+        {
+            foreach (Family fam in families)
+            {
+                foreach (Individual child in fam.Children)
+                {
+                    if (child.RelationType != Individual.DIRECT && child.RelationType != Individual.DESCENDANT) // only write out siblings not directs at this point
+                        WriteIndividual(child, output);
+                }
+            }
+        }
+
         static void WriteFamilies(List<Family> families, StreamWriter output)
         {
             foreach(Family fam in families)
             {
-                bool isPrivate = fam.FamilyDate.IsAfter(PrivacyDate) ||
-                                (fam.Husband != null && fam.Husband.IsAlive(Today)) ||
-                                (fam.Wife != null && fam.Wife.IsAlive(Today)); // if marriage is after privacy date or either party is alive then make marriage private
+                bool isPrivate = fam.FamilyDate.IsAfter(PrivacyDate) &&
+                                ((fam.Husband != null && fam.Husband.IsAlive(Today)) ||
+                                 (fam.Wife != null && fam.Wife.IsAlive(Today))); // if marriage is after privacy date and either party is alive then make marriage private
                 output.WriteLine($"0 @{fam.FamilyID}@ FAM");
                 if(fam.Husband != null)
                     output.WriteLine($"1 HUSB @{fam.HusbandID}@");
@@ -94,7 +116,7 @@ namespace FTAnalyzer.Exports
                     output.WriteLine($"1 WIFE @{fam.WifeID}@");
                 foreach(Individual child in fam.Children)
                 {
-                    if(child.RelationType == Individual.DIRECT || child.RelationType == Individual.DESCENDANT) // skip siblings
+                    if(_includeSiblings || child.RelationType == Individual.DIRECT || child.RelationType == Individual.DESCENDANT) // skip siblings if not including
                         output.WriteLine($"1 CHIL @{child.IndividualID}@");
                 }
                 if (!isPrivate)
