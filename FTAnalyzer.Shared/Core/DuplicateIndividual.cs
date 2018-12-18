@@ -121,9 +121,9 @@
         int SharedChildren()
         {
             int score = 0;
-            foreach (Family familyA in IndividualA.FamiliesAsParent)
+            foreach (Family familyA in IndividualA.FamiliesAsSpouse)
             {
-                foreach (Family familyB in IndividualB.FamiliesAsParent)
+                foreach (Family familyB in IndividualB.FamiliesAsSpouse)
                 {
                     foreach (Individual familyBchild in familyB.Children)
                         if (familyA.Children.Contains(familyBchild))

@@ -908,21 +908,14 @@ namespace FTAnalyzer
         public bool CensusYearMatches(CensusDate censusDate)
         {
             if (censusDate == null) return false;
-            if (this.StartDate.Year != EndDate.Year) return false;
+            if (StartDate.Year != EndDate.Year) return false;
             // both this & that have exact years now return whether this and that match given a census date can go over a year end
             return StartDate.Year == censusDate.StartDate.Year || StartDate.Year == censusDate.EndDate.Year;
         }
 
         public bool Contains(FactDate that) => that == null || StartDate < that.StartDate && EndDate > that.EndDate;
 
-        public bool IsLongYearSpan
-        {
-            get
-            {
-                int diff = Math.Abs(StartDate.Year - EndDate.Year);
-                return diff > 5;
-            }
-        }
+        public bool IsLongYearSpan => Math.Abs(StartDate.Year - EndDate.Year) > 5;
 
         public bool IsExact => StartDate.Equals(EndDate);
 
@@ -948,6 +941,18 @@ namespace FTAnalyzer
             double endDiff = ((EndDate.Year - when.EndDate.Year) * 12) + (EndDate.Month - when.EndDate.Month);
             double difference = Math.Sqrt(Math.Pow(startDiff, 2.0) + Math.Pow(endDiff, 2.0));
             return difference;
+        }
+
+        double DaysSpan => EndDate.Subtract(StartDate).TotalDays;
+
+        public double DaysDifference(FactDate when)
+        {
+            if (DaysSpan > 100 || when.DaysSpan > 100)
+                return double.MaxValue;
+            var x = EndDate.Subtract(when.StartDate).TotalDays;
+            var y = when.EndDate.Subtract(StartDate).TotalDays;
+            double minGap = Math.Min(Math.Abs(EndDate.Subtract(when.StartDate).TotalDays), Math.Abs(when.EndDate.Subtract(StartDate).TotalDays));
+            return minGap;
         }
 
         public BMDColour DateStatus(bool ignoreUnknown)

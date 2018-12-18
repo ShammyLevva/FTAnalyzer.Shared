@@ -70,7 +70,7 @@ namespace FTAnalyzer
             ErrorFacts = new List<Fact>();
             Locations = new List<FactLocation>();
             FamiliesAsChild = new List<ParentalRelationship>();
-            FamiliesAsParent = new List<Family>();
+            FamiliesAsSpouse = new List<Family>();
             preferredFacts = new Dictionary<string, Fact>();
             _allfacts = null;
             _allFileFacts = null;
@@ -203,7 +203,7 @@ namespace FTAnalyzer
                 ErrorFacts = new List<Fact>(i.ErrorFacts);
                 Locations = new List<FactLocation>(i.Locations);
                 FamiliesAsChild = new List<ParentalRelationship>(i.FamiliesAsChild);
-                FamiliesAsParent = new List<Family>(i.FamiliesAsParent);
+                FamiliesAsSpouse = new List<Family>(i.FamiliesAsSpouse);
                 preferredFacts = new Dictionary<string, Fact>(i.preferredFacts);
             }
         }
@@ -262,7 +262,7 @@ namespace FTAnalyzer
             get
             {
                 var familyfacts = new List<Fact>();
-                foreach (Family f in FamiliesAsParent)
+                foreach (Family f in FamiliesAsSpouse)
                     familyfacts.AddRange(f.Facts);
                 return familyfacts;
             }
@@ -499,7 +499,7 @@ namespace FTAnalyzer
             }
         }
 
-        public IList<Family> FamiliesAsParent { get; }
+        public IList<Family> FamiliesAsSpouse { get; }
 
         public IList<ParentalRelationship> FamiliesAsChild { get; }
 
@@ -538,7 +538,7 @@ namespace FTAnalyzer
             get
             {
                 string output = string.Empty;
-                foreach (Family f in FamiliesAsParent)
+                foreach (Family f in FamiliesAsSpouse)
                     if (!string.IsNullOrEmpty(f.MarriageDate?.ToString()))
                         output += $"{f.MarriageDate}; ";
                 return output.Length > 0 ? output.Substring(0, output.Length - 2) : output; // remove trailing ;
@@ -550,16 +550,16 @@ namespace FTAnalyzer
             get
             {
                 string output = string.Empty;
-                foreach (Family f in FamiliesAsParent)
+                foreach (Family f in FamiliesAsSpouse)
                     if (!string.IsNullOrEmpty(f.MarriageLocation))
                         output += $"{f.MarriageLocation}; ";
                 return output.Length > 0 ? output.Substring(0, output.Length - 2) : output; // remove trailing ;
             }
         }
 
-        public int MarriageCount => FamiliesAsParent.Count;
+        public int MarriageCount => FamiliesAsSpouse.Count;
 
-        public int ChildrenCount => FamiliesAsParent.Sum(x => x.Children.Count);
+        public int ChildrenCount => FamiliesAsSpouse.Sum(x => x.Children.Count);
 
         #endregion
 
@@ -571,9 +571,9 @@ namespace FTAnalyzer
 
         public bool IsMarried(FactDate fd)
         {
-            if (IsSingleAtDeath())
+            if (IsSingleAtDeath)
                 return false;
-            return FamiliesAsParent.Any(f =>
+            return FamiliesAsSpouse.Any(f =>
             {
                 FactDate marriage = f.GetPreferredFactDate(Fact.MARRIAGE);
                 return (marriage != null && marriage.IsBefore(fd));
@@ -624,10 +624,7 @@ namespace FTAnalyzer
             return false;
         }
 
-        public bool IsTaggedMissingCensus(CensusDate when)
-        {
-            return when != null && Facts.Any(x => x.FactType == Fact.MISSING && x.FactDate.Overlaps(when));
-        }
+        public bool IsTaggedMissingCensus(CensusDate when) => when != null && Facts.Any(x => x.FactType == Fact.MISSING && x.FactDate.Overlaps(when));
 
         public bool IsLostCousinsEntered(CensusDate when) => IsLostCousinsEntered(when, true);
         public bool IsLostCousinsEntered(CensusDate when, bool includeUnknownCountries)
@@ -677,25 +674,19 @@ namespace FTAnalyzer
 
         public bool IsDeceased(FactDate when) => DeathDate.IsKnown && DeathDate.IsBefore(when);
 
-        public bool IsSingleAtDeath() => GetPreferredFact(Fact.UNMARRIED) != null || MaxAgeAtDeath < 16 || LifeSpan.MaxAge < 16;
+        public bool IsSingleAtDeath => GetPreferredFact(Fact.UNMARRIED) != null || MaxAgeAtDeath < 16 || LifeSpan.MaxAge < 16;
 
-        public bool IsBirthKnown() => BirthDate.IsKnown && BirthDate.IsExact;
+        public bool IsBirthKnown => BirthDate.IsKnown && BirthDate.IsExact;
 
-        public bool IsDeathKnown() => DeathDate.IsKnown && DeathDate.IsExact;
+        public bool IsDeathKnown => DeathDate.IsKnown && DeathDate.IsExact;
 
         #endregion
 
         #region Age Functions
 
-        public Age GetAge(FactDate when)
-        {
-            return new Age(this, when);
-        }
+        public Age GetAge(FactDate when) => new Age(this, when);
 
-        public Age GetAge(FactDate when, string factType)
-        {
-            return (factType == Fact.BIRTH || factType == Fact.PARENT) ? Age.BIRTH : new Age(this, when);
-        }
+        public Age GetAge(FactDate when, string factType) => (factType == Fact.BIRTH || factType == Fact.PARENT) ? Age.BIRTH : new Age(this, when);
 
         public Age GetAge(DateTime when)
         {
@@ -703,15 +694,9 @@ namespace FTAnalyzer
             return GetAge(new FactDate(now));
         }
 
-        public int GetMaxAge(FactDate when)
-        {
-            return GetAge(when).MaxAge;
-        }
+        public int GetMaxAge(FactDate when) => GetAge(when).MaxAge;
 
-        public int GetMinAge(FactDate when)
-        {
-            return GetAge(when).MinAge;
-        }
+        public int GetMinAge(FactDate when) => GetAge(when).MinAge;
 
         public int GetMaxAge(DateTime when)
         {
@@ -949,7 +934,7 @@ namespace FTAnalyzer
             string name = Surname;
             if (!IsMale)
             {
-                foreach (Family marriage in FamiliesAsParent.OrderBy(f => f.MarriageDate))
+                foreach (Family marriage in FamiliesAsSpouse.OrderBy(f => f.MarriageDate))
                 {
                     if ((marriage.MarriageDate.Equals(date) || marriage.MarriageDate.IsBefore(date)) && marriage.Husband != null)
                         name = marriage.Husband.Surname;
@@ -1372,9 +1357,9 @@ namespace FTAnalyzer
 
         Family Marriages(int number)
         {
-            if (number < FamiliesAsParent.Count)
+            if (number < FamiliesAsSpouse.Count)
             {
-                Family f = FamiliesAsParent.OrderBy(d => d.MarriageDate).ElementAt(number);
+                Family f = FamiliesAsSpouse.OrderBy(d => d.MarriageDate).ElementAt(number);
                 return f;
             }
             return null;

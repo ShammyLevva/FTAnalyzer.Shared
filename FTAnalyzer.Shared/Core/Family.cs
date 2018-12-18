@@ -62,9 +62,9 @@ namespace FTAnalyzer
                 if (Husband != null && Wife != null)
                     Wife.MarriedName = Husband.Surname;
                 if (Husband != null)
-                    Husband.FamiliesAsParent.Add(this);
+                    Husband.FamiliesAsSpouse.Add(this);
                 if (Wife != null)
-                    Wife.FamiliesAsParent.Add(this);
+                    Wife.FamiliesAsSpouse.Add(this);
 
                 // now iterate through child elements of eChildren
                 // finding all individuals

@@ -71,7 +71,7 @@ namespace FTAnalyzer.Exports
                             families.Add(asChild.Family);
                     }
                 }
-                foreach (Family asParent in ind.FamiliesAsParent)
+                foreach (Family asParent in ind.FamiliesAsSpouse)
                 {
                     output.WriteLine($"1 FAMS @{asParent.FamilyID}@");
                     if (!families.Contains(asParent))

@@ -171,6 +171,10 @@ namespace FTAnalyzer
             CUSTOM_TAGS.Add("ALTERNATE BIRTH", BIRTH);
             CUSTOM_TAGS.Add("MARRIAGE REG", MARRIAGE);
             CUSTOM_TAGS.Add("MARRIAGE", MARRIAGE);
+            CUSTOM_TAGS.Add("SAME SEX MARRIAGE", MARRIAGE);
+            CUSTOM_TAGS.Add("CIVIL", MARRIAGE);
+            CUSTOM_TAGS.Add("CIVIL PARTNER", MARRIAGE);
+            CUSTOM_TAGS.Add("CIVIL PARTNERSHIP", MARRIAGE);
             CUSTOM_TAGS.Add("DEATH REG", DEATH);
             CUSTOM_TAGS.Add("DEATH", DEATH);
             CUSTOM_TAGS.Add("DEATH NOTICE", DEATH);
@@ -182,6 +186,7 @@ namespace FTAnalyzer
             CUSTOM_TAGS.Add("CREMATION", CREMATION);
             CUSTOM_TAGS.Add("CREMATED", CREMATION);
             CUSTOM_TAGS.Add("PROBATE", PROBATE);
+            CUSTOM_TAGS.Add("GRANT OF PROBATE", PROBATE);
             CUSTOM_TAGS.Add("PROBATE DATE", PROBATE);
             CUSTOM_TAGS.Add("RESIDENCE", RESIDENCE);
             CUSTOM_TAGS.Add("DIVORCED", DIVORCE);
@@ -201,6 +206,7 @@ namespace FTAnalyzer
             CUSTOM_TAGS.Add("FUNL: FUNERAL", FUNERAL);
             CUSTOM_TAGS.Add("CAUSE OF DEATH (FACTS PAGE)", CAUSE_OF_DEATH);
             CUSTOM_TAGS.Add("LTOG: LIVED TOGETHER (UNMARRIED)", UNMARRIED);
+            CUSTOM_TAGS.Add("ILLNESS", MEDICAL_CONDITION);
             
             // Legacy 8 default fact types
             CUSTOM_TAGS.Add("ALT. BIRTH", BIRTH);

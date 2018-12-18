@@ -671,7 +671,7 @@ namespace FTAnalyzer
                 {
                     foreach (Fact f in ind.PersonalFacts)
                         result.Add(new ExportFact(ind, f));
-                    foreach (Family fam in ind.FamiliesAsParent)
+                    foreach (Family fam in ind.FamiliesAsSpouse)
                         foreach (Fact famfact in fam.Facts)
                             result.Add(new ExportFact(ind, famfact));
                 }
@@ -805,7 +805,7 @@ namespace FTAnalyzer
                     //if (minStart != FactDate.MINDATE && minEnd.Year > minStart.Year + FactDate.MAXYEARS)
                     //    minStart = CreateDate(minEnd.Year - FactDate.MAXYEARS, minStart.Month, minStart.Day); // min end mustn't be more than max years after start
                 }
-                foreach (Family fam in indiv.FamiliesAsParent)
+                foreach (Family fam in indiv.FamiliesAsSpouse)
                 {
                     FactDate marriageDate = fam.GetPreferredFactDate(Fact.MARRIAGE);
                     if (marriageDate.StartDate.Year > GeneralSettings.Default.MinParentalAge && !marriageDate.IsLongYearSpan)
@@ -1011,7 +1011,7 @@ namespace FTAnalyzer
             // this then is the minimum point they were alive
             // subtract 9 months for a male
             bool childDate = false;
-            foreach (Family fam in indiv.FamiliesAsParent)
+            foreach (Family fam in indiv.FamiliesAsSpouse)
             {
                 FactDate marriageDate = fam.GetPreferredFactDate(Fact.MARRIAGE);
                 if (marriageDate.StartDate > maxdate && !marriageDate.IsLongYearSpan)
@@ -1181,7 +1181,7 @@ namespace FTAnalyzer
 
         void AddChildrenToQueue(Individual indiv, Queue<Individual> queue, bool isRootPerson)
         {
-            IEnumerable<Family> parentFamilies = indiv.FamiliesAsParent;
+            IEnumerable<Family> parentFamilies = indiv.FamiliesAsSpouse;
             foreach (Family family in parentFamilies)
             {
                 foreach (Individual child in family.Children)
@@ -1231,7 +1231,7 @@ namespace FTAnalyzer
             {
                 // get the next person
                 ind = queue.Dequeue();
-                var parentFamilies = ind.FamiliesAsParent;
+                var parentFamilies = ind.FamiliesAsSpouse;
                 foreach (Family family in parentFamilies)
                 {
                     // if the spouse of a direct ancestor is not a direct
@@ -1263,7 +1263,7 @@ namespace FTAnalyzer
                     if (relationship == Individual.UNKNOWN)
                         ind.RelationType = Individual.MARRIAGE;
                     AddParentsToQueue(ind, queue);
-                    IEnumerable<Family> parentFamilies = ind.FamiliesAsParent;
+                    IEnumerable<Family> parentFamilies = ind.FamiliesAsSpouse;
                     foreach (Family family in parentFamilies)
                     {
                         family.SetSpouseRelation(ind, Individual.MARRIAGE);
@@ -1293,7 +1293,7 @@ namespace FTAnalyzer
             }
             foreach (Individual i in married)
             {
-                foreach (Family f in i.FamiliesAsParent)
+                foreach (Family f in i.FamiliesAsSpouse)
                 {
                     if (i.RelationToRoot == null && f.Spouse(i) != null && f.Spouse(i).IsBloodDirect)
                     {
@@ -1488,7 +1488,7 @@ namespace FTAnalyzer
                 {
                     foreach (Fact f in ind.PersonalFacts)
                         result.Add(new DisplayFact(ind, f));
-                    foreach (Family fam in ind.FamiliesAsParent)
+                    foreach (Family fam in ind.FamiliesAsSpouse)
                         foreach (Fact famfact in fam.Facts)
                             result.Add(new DisplayFact(ind, famfact));
                 }
@@ -1751,7 +1751,8 @@ namespace FTAnalyzer
                                 errors[(int)Dataerror.BIRTH_AFTER_MOTHER_DEATH].Add(new DataError((int)Dataerror.BIRTH_AFTER_MOTHER_DEATH, ind, $"Mother {mother.Name} died {mother.DeathDate} which is before individual was born"));
                         }
                     }
-                    foreach (Family asParent in ind.FamiliesAsParent)
+                    List<Individual> womansChildren = new List<Individual>();
+                    foreach (Family asParent in ind.FamiliesAsSpouse)
                     {
                         Individual spouse = asParent.Spouse(ind);
                         if (asParent.MarriageDate != null && spouse != null)
@@ -1780,6 +1781,25 @@ namespace FTAnalyzer
 
                             //    }
                             //}
+                        }
+                        if(!ind.IsMale) // for females as parent in family check children
+                        {
+                            womansChildren.AddRange(asParent.Children.Where(c => c.IsNaturalChildOf(ind)));
+                        }
+                    }
+                    womansChildren = womansChildren.Distinct().ToList(); // eliminate duplicate children
+                    if (womansChildren.Count > 1) // only bother checking if we have two or more children.
+                    {
+                        womansChildren.Sort(new BirthDateComparer());
+                        FactDate previousBirth = ind.BirthDate;  // set start date to womans birth date.
+                        foreach (Individual child in womansChildren)
+                        {
+                            if (child.IsBirthKnown)
+                            {
+                                double daysDiff = child.BirthDate.DaysDifference(previousBirth);
+                                if (daysDiff < 365)
+                                    Console.WriteLine("ok more interesting");
+                            }
                         }
                     }
 #endregion
@@ -1861,7 +1881,7 @@ namespace FTAnalyzer
             LOST_COUSINS_NOT_SUPPORTED_YEAR = 16, RESIDENCE_CENSUS_DATE = 17, CENSUS_COVERAGE = 18, FACT_ERROR = 19,
             UNKNOWN_FACT_TYPE = 20, LIVING_WITH_DEATH_DATE = 21, CHILDRENSTATUS_TOTAL_MISMATCH = 22, DUPLICATE_FACT = 23,
             POSSIBLE_DUPLICATE_FACT = 24, NATREG1939_INEXACT_BIRTHDATE = 25, MALE_WIFE_FEMALE_HUSBAND = 26,
-            SAME_SURNAME_COUPLE = 27
+            SAME_SURNAME_COUPLE = 27, SIBLING_TOO_SOON = 28, SIBLING_PROB_TOO_SOON = 29
         };
 
 #endregion
@@ -2606,7 +2626,7 @@ namespace FTAnalyzer
         public List<Individual> GetFamily(Individual startIndividiual)
         {
             List<Individual> results = new List<Individual>();
-            foreach (Family f in startIndividiual.FamiliesAsParent)
+            foreach (Family f in startIndividiual.FamiliesAsSpouse)
             {
                 foreach (Individual i in f.Members)
                     results.Add(i);
@@ -2656,7 +2676,7 @@ namespace FTAnalyzer
             {
                 Individual parent = queue.Dequeue();
                 processed.Add(parent);
-                foreach (Family f in parent.FamiliesAsParent)
+                foreach (Family f in parent.FamiliesAsSpouse)
                 {
                     Individual spouse = f.Spouse(parent);
                     if (spouse != null && !processed.Contains(spouse))

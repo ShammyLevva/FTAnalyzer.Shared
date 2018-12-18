@@ -32,7 +32,9 @@ namespace FTAnalyzer
                 "Possible Duplicate Fact",
                 "On 1939 Register no precise birthdate",
                 "Male Wifes and Female Husbands",
-                "Couples with same surnames"
+                "Couples with same surnames",
+                "Child born too soon after sibling",
+                "Child likely born too soon after sibling"
             };
 
         //"Later marriage before previous spouse died"
