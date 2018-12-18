@@ -2705,9 +2705,9 @@ namespace FTAnalyzer
 #endregion
 
 #region Duplicates Processing
-        ulong maleProgress;
-        ulong femaleProgress;
-        ulong progressMaximum;
+        decimal maleProgress;
+        decimal femaleProgress;
+        decimal progressMaximum;
 
         public async Task<SortableBindingList<IDisplayDuplicateIndividual>> GenerateDuplicatesList(int value, IProgress<int> progress, IProgress<int> maximum, CancellationToken ct)
         {
@@ -2720,8 +2720,8 @@ namespace FTAnalyzer
             duplicates = new SortableBindingList<DuplicateIndividual>();
             IEnumerable<Individual> males = individuals.Filter(x => (x.Gender == "M" || x.Gender == "U"));
             IEnumerable<Individual> females = individuals.Filter(x => (x.Gender == "F" || x.Gender == "U"));
-            ulong nummales = (ulong)males.Count();
-            ulong numfemales = (ulong)males.Count();
+            decimal nummales = (ulong)males.Count();
+            decimal numfemales = (ulong)males.Count();
             progressMaximum = (nummales * nummales + numfemales * numfemales) / 2;
             progress.Report(0);
             try
@@ -2756,7 +2756,7 @@ namespace FTAnalyzer
             return score;
         }
 
-        void IdentifyDuplicates(CancellationToken ct, IProgress<int> progress, IEnumerable<Individual> enumerable, ref ulong threadProgress)
+        void IdentifyDuplicates(CancellationToken ct, IProgress<int> progress, IEnumerable<Individual> enumerable, ref decimal threadProgress)
         {
             //log.Debug("FamilyTree.IdentifyDuplicates");
             var index = 0;
@@ -2780,7 +2780,7 @@ namespace FTAnalyzer
                     threadProgress++;
                     if (threadProgress % 500 == 0)
                     {
-                        ulong val = (100 * (maleProgress + femaleProgress)) / progressMaximum;
+                        decimal val = (100 * (maleProgress + femaleProgress)) / progressMaximum;
                         progress.Report((int)val);
                     }
                 }
