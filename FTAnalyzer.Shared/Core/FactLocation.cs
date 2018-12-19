@@ -52,6 +52,7 @@ namespace FTAnalyzer
         public int FoundLevel { get; set; }
         public double PixelSize { get; set; }
         public string GEDCOMLoaded => FTAnalyzerCreated ? "No" : "Yes";
+        public bool GEDCOMLatLong { get; set; }
         public bool FTAnalyzerCreated
         { get => _created;
             set {
@@ -330,6 +331,7 @@ namespace FTAnalyzer
             LongitudeM = 0;
             Level = UNKNOWN;
             GeocodeStatus = Geocode.NOT_SEARCHED;
+            GEDCOMLatLong = false;
             FoundLocation = string.Empty;
             FoundResultType = string.Empty;
             FoundLevel = -2;
@@ -410,7 +412,20 @@ namespace FTAnalyzer
                     Level = COUNTRY;
                 }
                 //string before = $"{SubRegion}, {Region}, {Country}".ToUpper().Trim();
-                if (!GeneralSettings.Default.SkipFixingLocations)
+                if (GeneralSettings.Default.SkipFixingLocations)
+                { // we aren't fixing locations but we still need to allow for comma space as a valid separator
+                    if (Country.Length > 1 && Country[0] == ' ')
+                        Country = Country.Substring(1);
+                    if (Region.Length > 1 && Region[0] == ' ')
+                        Region = Region.Substring(1);
+                    if (SubRegion.Length > 1 && SubRegion[0] == ' ')
+                        SubRegion = SubRegion.Substring(1);
+                    if (Address.Length > 1 && Address[0] == ' ')
+                        Address = Address.Substring(1);
+                    if (Place.Length > 1 && Place[0] == ' ')
+                        Place = Place.Substring(1);
+                }
+                else
                 {
                     TrimLocations();
                     if (!GeneralSettings.Default.AllowEmptyLocations)
@@ -941,7 +956,7 @@ namespace FTAnalyzer
 
         public static int GEDCOMLocationsCount => AllLocations.Count(l => !l.FTAnalyzerCreated) - 1;
 
-        public static int GEDCOM_GeocodedCount => AllLocations.Count(l => !l.FTAnalyzerCreated && l.IsGeoCoded(false)) - 1;
+        public static int GEDCOMGeocodedCount => AllLocations.Count(l => l.GEDCOMLatLong);
 
         public string CensusCountry
         {
@@ -1151,7 +1166,7 @@ namespace FTAnalyzer
             return res;
         }
 
-        public override string ToString() => FixedLocation; //return location;
+        public override string ToString() => GeneralSettings.Default.SkipFixingLocations ? OriginalText : FixedLocation; //return location;
 
         public override bool Equals(object obj)
         {

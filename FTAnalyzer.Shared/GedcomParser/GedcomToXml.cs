@@ -37,7 +37,7 @@ namespace FTAnalyzer
                     ? new AnselInputStreamReader(CheckInvalidLineEnds(path))
                     : new AnselInputStreamReader(new FileStream(path, FileMode.Open, FileAccess.Read));
                 doc = Parse(reader, outputText, true);
-                if (doc == null || doc.SelectNodes("GED/INDI").Count == 0)
+                if (doc.SelectNodes("GED/INDI").Count == 0)
                 {  // if there is a problem with the file return with opposite line ends
                     reader = FileHandling.Default.RetryFailedLines
                         ? new AnselInputStreamReader(new FileStream(path, FileMode.Open, FileAccess.Read))
@@ -50,7 +50,7 @@ namespace FTAnalyzer
                 ? new StreamReader(CheckInvalidLineEnds(path), encoding)
                 : new StreamReader(new FileStream(path, FileMode.Open, FileAccess.Read), encoding);
             doc = Parse(reader, outputText, true);
-            if (doc == null || doc.SelectNodes("GED/INDI").Count == 0)
+            if (doc.SelectNodes("GED/INDI").Count == 0)
             { // if there is a problem with the file return with opposite line ends
                 reader = FileHandling.Default.RetryFailedLines
                     ? new StreamReader(new FileStream(path, FileMode.Open, FileAccess.Read), encoding)
@@ -127,7 +127,6 @@ namespace FTAnalyzer
             XmlDocument document = new XmlDocument();
             XmlNode node = document.CreateElement("GED");
             document.AppendChild(node);
-
             try
             {
                 line = reader.ReadLine();
@@ -268,8 +267,8 @@ namespace FTAnalyzer
                         if (!FileHandling.Default.RetryFailedLines)
                             message += "\n\nNB. You may get less errors if you turn on the option to 'Retry failed lines by looking for bad line breaks' from the File Handling section of the Tools Options menu.";
                         message += "\n\nContinue Loading?";
-                        bool result = UIHelpers.ShowYesNo(message);
-                        if (result)
+                        int result = UIHelpers.ShowYesNo(message);
+                        if (result == UIHelpers.Yes)
                         {
                             badLineCount = 0;
                             badLineMax *= 2; // double count of errors before next act

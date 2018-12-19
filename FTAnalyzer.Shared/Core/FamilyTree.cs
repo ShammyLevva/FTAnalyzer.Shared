@@ -211,7 +211,9 @@ namespace FTAnalyzer
             rootIndividualID = string.Empty;
             outputText.Report($"Loading file {filename}\n");
             XmlDocument doc = GedcomToXml.Load(stream, outputText);
-            if (doc != null)
+            if (doc == null)
+                Loading = false;
+            else
             {
                 ReportOptions(outputText);
                 SetRootIndividual(doc);
@@ -227,13 +229,17 @@ namespace FTAnalyzer
             outputText.Report($"Loading file {filename}\n");
             XmlDocument doc = GedcomToXml.LoadFile(filename, outputText);
             if (doc == null)
+            {
+                Loading = false;
                 return null;
+            }
             // doc.Save(@"c:\temp\FHcensusref.xml");
             // First check if file has a valid header record ie: it is actually a GEDCOM file
             XmlNode header = doc.SelectSingleNode("GED/HEAD");
             if (header == null)
             {
                 outputText.Report(string.Format($"\n\nUnable to find GEDCOM 'HEAD' record in first line of file aborting load.\nIs {filename} really a GEDCOM file"));
+                Loading = false;
                 return null;
             }
             XmlNode charset = doc.SelectSingleNode("GED/HEAD/CHAR");
@@ -256,7 +262,10 @@ namespace FTAnalyzer
                 }
             }
             if (doc == null || doc.SelectNodes("GED/INDI").Count == 0)
+            {
+                Loading = false;
                 return null;
+            }
             ReportOptions(outputText);
             outputText.Report("File Loaded.\n");
             SetRootIndividual(doc);
@@ -377,6 +386,7 @@ namespace FTAnalyzer
                     string lng = long_node.InnerText;
                     FactLocation loc = FactLocation.GetLocation(place, lat, lng, FactLocation.Geocode.GEDCOM_USER, true, true);
                     loc.FTAnalyzerCreated = false;
+                    loc.GEDCOMLatLong = true;
                     if (!loc.IsValidLatLong)
                         outputText.Report($"'PLAC' record in GEDCOM has Location: {place} with invalid Lat/Long '{lat},{lng}'.");
                 }
@@ -2597,7 +2607,7 @@ namespace FTAnalyzer
             //Predicate<FactLocation> predicate = x => x.NeedsReverseGeocoding;
             //List<FactLocation> needRev = FactLocation.AllLocations.Where(predicate).ToList();
             outputText.Report($"\n{FactLocation.GEDCOMLocationsCount} locations loaded from GEDCOM file.\n");
-            outputText.Report($"    {FactLocation.GEDCOM_GeocodedCount} have Lat/Long coordinates in the file.\n");
+            outputText.Report($"    {FactLocation.GEDCOMGeocodedCount} have Lat/Long coordinates in the file.\n");
             outputText.Report($"\n{FactLocation.LocationsCount} locations in use after processing file and generating extra locaitons for tree view.\n");
             outputText.Report($"    {FactLocation.AllLocations.Count(x => x.GeocodeStatus.Equals(FactLocation.Geocode.GEDCOM_USER) && x.FoundLocation.Length > 0)} are GEDCOM/User Entered and have been geocoded.\n");
             outputText.Report($"    {FactLocation.AllLocations.Count(x => x.GeocodeStatus.Equals(FactLocation.Geocode.GEDCOM_USER) && x.FoundLocation.Length == 0)} are GEDCOM/User Entered but lack a Google Location.\n");

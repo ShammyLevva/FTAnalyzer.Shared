@@ -445,8 +445,13 @@ namespace FTAnalyzer
                             Tag = tag;
                         }
                     }
-                    SetCommentAndLocation(FactType, FamilyTree.GetText(node, false), FamilyTree.GetText(node, "PLAC", false),
-                        FamilyTree.GetText(node, "PLAC/MAP/LATI", false), FamilyTree.GetText(node, "PLAC/MAP/LONG", false));
+                    var x = FamilyTree.GetText(node, false);
+                    var y = FamilyTree.GetText(node, "PLAC", false);
+                    var xmlLat = FamilyTree.GetText(node, "PLAC/MAP/LATI", false);
+                    var xmlLong = FamilyTree.GetText(node, "PLAC/MAP/LONG", false);
+                    SetCommentAndLocation(FactType, x, y, xmlLat, xmlLong);
+                    if (!string.IsNullOrEmpty(xmlLat) && !string.IsNullOrEmpty(xmlLong))
+                        Location.GEDCOMLatLong = true;
                     if(!Location.IsKnown)
                         SetAddress(FactType, node);
 
