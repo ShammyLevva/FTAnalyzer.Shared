@@ -11,7 +11,7 @@ namespace FTAnalyzer
             Icon = FactImage.ErrorIcon(errorLevel).Icon;
 #elif __MACOS__
             if (errorLevel == Fact.FactError.ERROR) 
-                Console.WriteLine("nothing"); // stop compiler warning
+                System.Console.WriteLine("nothing"); // stop compiler warning
 #endif
             individual = ind;
             family = null;
