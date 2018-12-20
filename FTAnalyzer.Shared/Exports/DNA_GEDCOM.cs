@@ -19,19 +19,20 @@ namespace FTAnalyzer.Exports
         static bool _includeSiblings = false;
         static bool _includeDescendants = false;
         static List<Individual> processed;
+        static StreamWriter output;
 #if __MACOS__
         static AppDelegate App => (AppDelegate)NSApplication.SharedApplication.Delegate;
-#endif 
+#endif
 
 #if __PC__
         public static void Export()
         {
-            int siblingsResult = UIHelpers.ShowYesNo("Do you want to include siblings of direct ancestors in the export?");
+            int siblingsResult = UIHelpers.ShowYesNo("Do you want to include SIBLINGS of direct ancestors in the export?");
             if (siblingsResult != UIHelpers.Cancel)
             {
                 int descendantsResult = UIHelpers.No;
-                //if(siblingsResult == UIHelpers.Yes) // only ask about descendants if including siblings
-                //   descendantsResult = UIHelpers.ShowYesNo("Do you want to include descendants of direct ancestors in the export?");
+                if (siblingsResult == UIHelpers.Yes) // only ask about descendants if including siblings
+                    descendantsResult = UIHelpers.ShowYesNo("Do you want to include DESCENDANTS of siblings in the export?");
                 if (descendantsResult != UIHelpers.Cancel)
                 {
                     _includeSiblings = siblingsResult == UIHelpers.Yes;
@@ -55,6 +56,10 @@ namespace FTAnalyzer.Exports
                     {
                         MessageBox.Show(ex.Message, "FTAnalyzer");
                     }
+                    finally
+                    {
+                        output.Close();
+                    }
                 }
             }
         }
@@ -68,8 +73,8 @@ namespace FTAnalyzer.Exports
         {
             List<Family> families = new List<Family>();
             List<Individual> spouses = new List<Individual>();
-            StreamWriter output = new StreamWriter(new FileStream(filename, FileMode.Create, FileAccess.Write), Encoding.UTF8);
-            WriteHeader(filename, output);
+            output = new StreamWriter(new FileStream(filename, FileMode.Create, FileAccess.Write), Encoding.UTF8);
+            WriteHeader(filename);
             processed = new List<Individual>();
             foreach (Individual ind in ft.DirectLineIndividuals)
             {
@@ -94,15 +99,14 @@ namespace FTAnalyzer.Exports
                 }
             }
             if (_includeSiblings)
-                WriteSiblings(families, output);
-            WriteSpouses(spouses, output);
-            WriteFamilies(families, output);
-            WriteFooter(output);
-            output.Close();
+                WriteSiblings(families);
+            WriteSpouses(spouses);
+            WriteFamilies(families);
+            WriteFooter();
             UIHelpers.ShowMessage("Minimalist GEDCOM file written for use with DNA Matching. Upload today.");
         }
 
-        static void WriteSiblings(List<Family> families, StreamWriter output)
+        static void WriteSiblings(List<Family> families)
         {
             List<Individual> descendants = new List<Individual>();
             foreach (Family fam in families)
@@ -119,16 +123,16 @@ namespace FTAnalyzer.Exports
                 }
             }
             if (_includeDescendants)
-                WriteDescendants(descendants, output);
+                WriteDescendants(descendants);
         }
 
-        static void WriteSpouses(List<Individual> spouses, StreamWriter output)
+        static void WriteSpouses(List<Individual> spouses)
         {
             foreach (Individual spouse in spouses)
                 WriteIndividual(spouse, output);
         }
 
-        static void WriteDescendants(List<Individual> descendants, StreamWriter output)
+        static void WriteDescendants(List<Individual> descendants)
         {
             // TODO: list needs to write out individual their spouses and their descendants. 
             // do this as a pop off list write out individual and spouse then add descendants to list.
@@ -154,7 +158,7 @@ namespace FTAnalyzer.Exports
             }
         }
 
-        static void WriteFamilies(List<Family> families, StreamWriter output)
+        static void WriteFamilies(List<Family> families)
         {
             foreach(Family fam in families)
             {
@@ -180,7 +184,7 @@ namespace FTAnalyzer.Exports
             }
         }
 
-        static void WriteHeader(string filename, StreamWriter output)
+        static void WriteHeader(string filename)
         {
 #if __PC__
             var version = MainForm.VERSION;
@@ -237,6 +241,6 @@ namespace FTAnalyzer.Exports
             processed.Add(ind);
         }
 
-        static void WriteFooter(StreamWriter output) => output.WriteLine("0 TRLR");
+        static void WriteFooter() => output.WriteLine("0 TRLR");
     }
 }
