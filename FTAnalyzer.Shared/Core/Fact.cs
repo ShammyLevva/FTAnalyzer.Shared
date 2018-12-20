@@ -452,7 +452,7 @@ namespace FTAnalyzer
                     SetCommentAndLocation(FactType, x, y, xmlLat, xmlLong);
                     if (!string.IsNullOrEmpty(xmlLat) && !string.IsNullOrEmpty(xmlLong))
                         Location.GEDCOMLatLong = true;
-                    if(!Location.IsKnown)
+                    if (!Location.IsKnown)
                         SetAddress(FactType, node);
 
                     // only check UK census dates for errors as those are used for colour census
@@ -492,7 +492,7 @@ namespace FTAnalyzer
                         CheckForSharedFacts(node);
                         if (CensusReference == CensusReference.UNKNOWN)
                             CensusReference = new CensusReference(this, node);
-                        else if(!CensusReference.IsKnownStatus)
+                        else if (!CensusReference.IsKnownStatus)
                         {
                             CensusReference pageRef = CensusReference;
                             CensusReference = new CensusReference(this, node, pageRef);
@@ -514,12 +514,12 @@ namespace FTAnalyzer
                     if (FactType == DEATH || FactType == MARRIAGE)
                         throw;
                     string message = (node == null) ? string.Empty : node.InnerText + ". ";
-                    throw new InvalidXMLFactException(message + $"\n            Error {te.Message} text in {FactTypeDescription} fact - a non death fact.\n");
+                    throw new InvalidXMLFactException($"{message}\n            Error {te.Message} text in {FactTypeDescription} fact - a non death fact.\n");
                 }
                 catch (Exception ex)
                 {
                     string message = (node == null) ? string.Empty : node.InnerText + ". ";
-                    throw new InvalidXMLFactException(message + $"\n            Error {ex.Message} in {FactTypeDescription} fact\n");
+                    throw new InvalidXMLFactException($"{message}\n            Error {ex.Message} in {FactTypeDescription} fact\n");
                 }
             }
         }

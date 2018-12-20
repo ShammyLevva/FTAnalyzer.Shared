@@ -793,7 +793,7 @@ namespace FTAnalyzer
             }
             catch (Exception ex)
             {
-                throw new LooseDataException("Problem calculating Loose Births. Error was " + ex.Message);
+                throw new LooseDataException($"Problem calculating Loose Births. Error was {ex.Message}");
             }
             looseBirths = result;
             return result;
@@ -964,7 +964,7 @@ namespace FTAnalyzer
             }
             catch (Exception ex)
             {
-                throw new LooseDataException("Problem calculating Loose Deaths. Error was " + ex.Message);
+                throw new LooseDataException($"Problem calculating Loose Deaths. Error was {ex.Message}");
             }
             looseDeaths = result;
             return result;
@@ -1969,8 +1969,8 @@ namespace FTAnalyzer
                     path.Append("&collection_id=" + collection);
                 }
                 else if (Countries.IsKnownCountry(country))
-                {
-                    throw new CensusSearchException("Sorry searching the " + country + " census on FamilySearch for " + censusYear + " is not supported by FTAnalyzer at this time");
+                { // TODO
+                    throw new CensusSearchException($"Sorry searching the {country} census on FamilySearch for {censusYear} is not supported by FTAnalyzer at this time");
                 }
             }
             return path.Replace("+", "%20").ToString();
@@ -2790,7 +2790,7 @@ namespace FTAnalyzer
                     threadProgress++;
                     if (threadProgress % 500 == 0)
                     {
-                        decimal val = (100 * (maleProgress + femaleProgress)) / progressMaximum;
+                        decimal val = Math.Max(progressMaximum, 100 * (maleProgress + femaleProgress) / progressMaximum);
                         progress.Report((int)val);
                     }
                 }

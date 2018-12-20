@@ -37,7 +37,7 @@ namespace FTAnalyzer
                     ? new AnselInputStreamReader(CheckInvalidLineEnds(path))
                     : new AnselInputStreamReader(new FileStream(path, FileMode.Open, FileAccess.Read));
                 doc = Parse(reader, outputText, true);
-                if (doc.SelectNodes("GED/INDI").Count == 0)
+                if (doc?.SelectNodes("GED/INDI").Count == 0)
                 {  // if there is a problem with the file return with opposite line ends
                     reader = FileHandling.Default.RetryFailedLines
                         ? new AnselInputStreamReader(new FileStream(path, FileMode.Open, FileAccess.Read))
@@ -50,7 +50,7 @@ namespace FTAnalyzer
                 ? new StreamReader(CheckInvalidLineEnds(path), encoding)
                 : new StreamReader(new FileStream(path, FileMode.Open, FileAccess.Read), encoding);
             doc = Parse(reader, outputText, true);
-            if (doc.SelectNodes("GED/INDI").Count == 0)
+            if (doc?.SelectNodes("GED/INDI").Count == 0)
             { // if there is a problem with the file return with opposite line ends
                 reader = FileHandling.Default.RetryFailedLines
                     ? new StreamReader(new FileStream(path, FileMode.Open, FileAccess.Read), encoding)
@@ -115,7 +115,7 @@ namespace FTAnalyzer
         {
             long lineNr = 0;
             int badLineCount = 0;
-            int badLineMax = 50;
+            int badLineMax = 30;
             string line, nextline, token1, token2;
             string level;
             int thislevel;
@@ -152,17 +152,20 @@ namespace FTAnalyzer
                         {
                             line = line.Replace('–', '-').Replace('—', '-').Replace("***Data is already there***", ""); // "data is already there" is some Ancestry anomaly
                             cpos1 = line.IndexOf(" ", StringComparison.Ordinal);
-                            if (cpos1 < 0) throw new Exception("No space in line");
+                            if (cpos1 < 0) throw new InvalidGEDCOMException($"No space found in line: '{line}'");
 
                             level = FirstWord(line);
-                            thislevel = int.Parse(level);
+                            if (level.StartsWithNumeric())
+                                thislevel = int.Parse(level);
+                            else
+                                throw new InvalidGEDCOMException($"First character in a should be numeric '{line}'");
 
                             // check the level number
-
+                            
                             if (thislevel > prevlevel && !(thislevel == prevlevel + 1))
-                                throw new Exception("Level numbers must increase by 1");
+                                throw new InvalidGEDCOMException($"Level numbers must increase by 1");
                             if (thislevel < 0)
-                                throw new Exception("Level number must not be negative");
+                                throw new InvalidGEDCOMException("Level number must not be negative");
 
                             line = Remainder(line);
                             token1 = FirstWord(line);
@@ -171,7 +174,7 @@ namespace FTAnalyzer
                             if (token1.StartsWith("@", StringComparison.Ordinal))
                             {
                                 if (token1.Length == 1 || !token1.EndsWith("@", StringComparison.Ordinal))
-                                    throw new Exception("Bad xref_id");
+                                    throw new InvalidGEDCOMException("Bad xref_id invalid @ character in line.");
 
                                 iden = token1.Substring(1, token1.Length - 2);
                                 tag = FirstWord(line);
@@ -190,7 +193,7 @@ namespace FTAnalyzer
                                 {
                                     token2 = FirstWord(line);
                                     if (token2.Length == 1 || (!token2.EndsWith("@", StringComparison.Ordinal) && !token2.EndsWith("@,", StringComparison.Ordinal)))
-                                        throw new Exception("Bad pointer value");
+                                        throw new InvalidGEDCOMException("Bad pointer value");
                                     xref = token2.EndsWith("@,", StringComparison.Ordinal)
                                         ? token2.Substring(1, token2.Length - 3)
                                         : token2.Substring(1, token2.Length - 2);
@@ -214,7 +217,7 @@ namespace FTAnalyzer
                             if (tag.Equals("CHAR") &&
                                 !(valtrim.Equals("ANSEL") || valtrim.Equals("ASCII") || valtrim.Equals("ANSI") || valtrim.Equals("UTF-8") || valtrim.Equals("UNICODE")))
                             {
-                                outputText.Report("WARNING: Character set is " + value + ": should be ANSEL, ANSI, ASCII, UTF-8 or UNICODE\n");
+                                outputText.Report($"WARNING: Character set is {value}: should be ANSEL, ANSI, ASCII, UTF-8 or UNICODE\n");
                             }
 
                             // insert any necessary closing tags
@@ -253,10 +256,16 @@ namespace FTAnalyzer
                                 node.AppendChild(text);
                             }
                         }
-                        catch (Exception e)
+                        catch (InvalidGEDCOMException ige)
                         {
                             if(reportBadLines)
-                                outputText.Report($"Found bad line {lineNr}: '{line}'. Error was : {e.Message}\n");
+                                outputText.Report($"Invalid GEDCOM, Line: {lineNr}. {ige.Message}\n");
+                            badLineCount++;
+                        }
+                        catch (Exception e)
+                        {
+                            if (reportBadLines)
+                                outputText.Report($"Unhandled Exception, bad line {lineNr}: '{line}'. Error was : {e.Message}\n");
                             badLineCount++;
                         }
                     }

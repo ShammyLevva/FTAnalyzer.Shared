@@ -18,6 +18,7 @@ namespace FTAnalyzer.Exports
         static FamilyTree ft = FamilyTree.Instance;
         static bool _includeSiblings = false;
         static bool _includeDescendants = false;
+        static List<Individual> processed;
 #if __MACOS__
         static AppDelegate App => (AppDelegate)NSApplication.SharedApplication.Delegate;
 #endif 
@@ -69,6 +70,7 @@ namespace FTAnalyzer.Exports
             List<Individual> spouses = new List<Individual>();
             StreamWriter output = new StreamWriter(new FileStream(filename, FileMode.Create, FileAccess.Write), Encoding.UTF8);
             WriteHeader(filename, output);
+            processed = new List<Individual>();
             foreach (Individual ind in ft.DirectLineIndividuals)
             {
                 WriteIndividual(ind, output);
@@ -117,23 +119,39 @@ namespace FTAnalyzer.Exports
                 }
             }
             if (_includeDescendants)
-                WriteDescendants(descendants);
+                WriteDescendants(descendants, output);
         }
 
         static void WriteSpouses(List<Individual> spouses, StreamWriter output)
         {
             foreach (Individual spouse in spouses)
-            {
                 WriteIndividual(spouse, output);
-            }
         }
 
-        static void WriteDescendants(List<Individual> descendants)
+        static void WriteDescendants(List<Individual> descendants, StreamWriter output)
         {
             // TODO: list needs to write out individual their spouses and their descendants. 
             // do this as a pop off list write out individual and spouse then add descendants to list.
-
-
+            Queue<Individual> queue = new Queue<Individual>();
+            foreach (Individual i in descendants)
+                if(i.IsBloodDirect)
+                    queue.Enqueue(i);
+            Individual ind;
+            while(queue.Count > 0)
+            {
+                ind = queue.Dequeue();
+                if(ind.IsBloodDirect)
+                    WriteIndividual(ind, output);
+                foreach(Family fam in ind.FamiliesAsSpouse)
+                {
+                    if(fam.Husband != null && fam.Husband.IsBloodDirect)
+                        WriteIndividual(fam.Husband, output);
+                    if (fam.Wife != null && fam.Wife.IsBloodDirect)
+                        WriteIndividual(fam.Husband, output);
+                    foreach (Individual child in fam.Children)
+                        queue.Enqueue(child);
+                }
+            }
         }
 
         static void WriteFamilies(List<Family> families, StreamWriter output)
@@ -184,6 +202,8 @@ namespace FTAnalyzer.Exports
 
         static void WriteIndividual(Individual ind, StreamWriter output)
         {
+            if (ind == null || processed.Contains(ind))
+                return; // don't write out individual if already processed
             bool isPrivate = ind.BirthDate.IsAfter(PrivacyDate) && ind.IsAlive(Today);
             output.WriteLine($"0 @{ind.IndividualID}@ INDI");
             if (isPrivate)
@@ -214,6 +234,7 @@ namespace FTAnalyzer.Exports
                     output.WriteLine($"2 PLAC {ind.DeathLocation}");
                 }
             }
+            processed.Add(ind);
         }
 
         static void WriteFooter(StreamWriter output) => output.WriteLine("0 TRLR");

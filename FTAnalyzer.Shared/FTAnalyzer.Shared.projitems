@@ -59,6 +59,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Displays\IDisplayOccupation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Displays\IDisplaySource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\DuplicateIndividual.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Exceptions\InvalidGEDCOMException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\TextFactDateException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\InvalidDoubleDateException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\CensusSearchException.cs" />
