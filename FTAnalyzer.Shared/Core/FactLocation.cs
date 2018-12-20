@@ -92,7 +92,7 @@ namespace FTAnalyzer
             ResetLocations();
         }
 
-        static void LoadConversions(string startPath)
+        public static void LoadConversions(string startPath)
         {
             // load conversions from XML file
             #region Fact Location Fixes
