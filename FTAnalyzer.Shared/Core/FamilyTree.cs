@@ -2790,7 +2790,7 @@ namespace FTAnalyzer
                     threadProgress++;
                     if (threadProgress % 500 == 0)
                     {
-                        decimal val = Math.Max(progressMaximum, 100 * (maleProgress + femaleProgress) / progressMaximum);
+                        decimal val = Math.Min(progressMaximum, 100 * (maleProgress + femaleProgress) / progressMaximum);
                         progress.Report((int)val);
                     }
                 }
