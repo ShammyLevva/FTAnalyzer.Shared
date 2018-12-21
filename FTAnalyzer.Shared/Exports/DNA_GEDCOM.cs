@@ -13,8 +13,7 @@ namespace FTAnalyzer.Exports
 {
     public static class DNA_GEDCOM
     {
-        static readonly FactDate PrivacyDate = new FactDate(DateTime.Now.AddYears(-100).ToString("dd MMM yyyy"));
-        static readonly FactDate Today = new FactDate(DateTime.Now.ToString("dd MMM yyyy"));
+        static readonly FactDate PrivacyDate = new FactDate(DateTime.Now.AddYears(-100).ToString("dd MMM yyyy", FactDate.CULTURE));
         static FamilyTree ft = FamilyTree.Instance;
         static bool _includeSiblings = false;
         static bool _includeDescendants = false;
@@ -163,8 +162,8 @@ namespace FTAnalyzer.Exports
             foreach(Family fam in families)
             {
                 bool isPrivate = fam.FamilyDate.IsAfter(PrivacyDate) &&
-                                ((fam.Husband != null && fam.Husband.IsAlive(Today)) ||
-                                 (fam.Wife != null && fam.Wife.IsAlive(Today))); // if marriage is after privacy date and either party is alive then make marriage private
+                                ((fam.Husband != null && fam.Husband.IsAlive(FactDate.TODAY)) ||
+                                 (fam.Wife != null && fam.Wife.IsAlive(FactDate.TODAY))); // if marriage is after privacy date and either party is alive then make marriage private
                 output.WriteLine($"0 @{fam.FamilyID}@ FAM");
                 if(fam.Husband != null)
                     output.WriteLine($"1 HUSB @{fam.HusbandID}@");
@@ -208,7 +207,7 @@ namespace FTAnalyzer.Exports
         {
             if (ind == null || processed.Contains(ind))
                 return; // don't write out individual if already processed
-            bool isPrivate = ind.BirthDate.IsAfter(PrivacyDate) && ind.IsAlive(Today);
+            bool isPrivate = ind.BirthDate.IsAfter(PrivacyDate) && ind.IsAlive(FactDate.TODAY);
             output.WriteLine($"0 @{ind.IndividualID}@ INDI");
             if (isPrivate)
             {

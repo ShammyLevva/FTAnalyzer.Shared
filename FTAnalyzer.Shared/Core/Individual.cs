@@ -1,6 +1,7 @@
 using FTAnalyzer.Properties;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Xml;
@@ -450,7 +451,7 @@ namespace FTAnalyzer
 
         private int MaxAgeAtDeath => GetAge(DeathDate).MaxAge;
 
-        public Age LifeSpan => GetAge(DateTime.Now);
+        public Age LifeSpan => GetAge(FactDate.TODAY);
 
         public FactDate LooseBirthDate
         {
@@ -1314,8 +1315,8 @@ namespace FTAnalyzer
             {
                 if (IsFlaggedAsLiving)
                     return BMDColour.ISLIVING;
-                if (!DeathDate.IsKnown && GetMaxAge(DateTime.Now) < FactDate.MAXYEARS)
-                    return GetMaxAge(DateTime.Now) < 90 ? BMDColour.EMPTY : BMDColour.OVER90;
+                if (!DeathDate.IsKnown && GetMaxAge(FactDate.TODAY) < FactDate.MAXYEARS)
+                    return GetMaxAge(FactDate.TODAY) < 90 ? BMDColour.EMPTY : BMDColour.OVER90;
                 return DeathDate.DateStatus(false);
             }
         }

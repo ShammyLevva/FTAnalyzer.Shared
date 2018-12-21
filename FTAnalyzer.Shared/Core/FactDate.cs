@@ -10,21 +10,21 @@ namespace FTAnalyzer
 {
     public class FactDate : IComparable<FactDate>
     {
-        public static DateTime MINDATE = new DateTime(1, 1, 1);
-        public static DateTime MAXDATE = new DateTime(9999, 12, 31);
-        public static int MAXYEARS = 110;
-        public static int MINYEARS = 0;
+        public static readonly DateTime MINDATE = new DateTime(1, 1, 1);
+        public static readonly DateTime MAXDATE = new DateTime(9999, 12, 31);
+        public static readonly IFormatProvider CULTURE = new CultureInfo("en-GB", true);
+        public static readonly int MAXYEARS = 110;
+        public static readonly int MINYEARS = 0;
         static readonly int LOW = 0;
         static readonly int HIGH = 1;
-        static readonly IFormatProvider CULTURE = new CultureInfo("en-GB", true);
 
+        public readonly static string FULL = "d MMM yyyy";
         static readonly string YEAR = "yyyy";
         static readonly string EARLYYEAR = "yyy";
         static readonly string MONTHYEAR = "MMM yyyy";
         static readonly string MONTHYEAREARLY = "MMM yyy";
         static readonly string DAYMONTH = "d MMM";
         static readonly string MONTH = "MMM";
-        public static string FULL = "d MMM yyyy";
         static readonly string FULLEARLY = "d MMM yyy";
         static readonly string DISPLAY = "d MMM yyyy";
         static readonly string CHECKING = "d MMM";
@@ -46,6 +46,8 @@ namespace FTAnalyzer
 
         public static FactDate UNKNOWN_DATE;
         public static FactDate MARRIAGE_LESS_THAN_13;
+        public static FactDate SAME_SEX_MARRIAGE;
+        public static FactDate TODAY;
 
         static readonly Dictionary<string, Regex> _datePatterns;
         static Regex _regex;
@@ -72,6 +74,8 @@ namespace FTAnalyzer
             };
             UNKNOWN_DATE = new FactDate("UNKNOWN");
             MARRIAGE_LESS_THAN_13 = new FactDate("1600");
+            SAME_SEX_MARRIAGE = new FactDate("AFT 2000");
+            TODAY = new FactDate(DateTime.Now.ToString("dd MMM yyyy", CULTURE));
         }
 
         public enum FactDateType { BEF, AFT, BET, ABT, UNK, EXT }
@@ -121,8 +125,7 @@ namespace FTAnalyzer
             {
                 case "DECEASED":
                 case "DEAD":
-                    string today = DateTime.Now.ToString("dd MMM yyyy").ToUpper();
-                    str = $"BEF {today}";
+                    str = $"BEF {TODAY.ToString()}";
                     break;
                 case "STILLBORN":
                 case "INFANT":
@@ -226,6 +229,18 @@ namespace FTAnalyzer
             str = str.Replace("PEU ", " "); //french little
             str = str.Replace("REC ", " "); //french census recusement
             str = str.Replace("  ", " ");
+
+            //German
+            str = str.Replace("DEZ", "DEC");
+            str = str.Replace("MARZ", "MAR");
+            str = str.Replace("JUNI", "JUN");
+            str = str.Replace("JULI", "JUL");
+            str = str.Replace("OKT", "OCT");
+            str = str.Replace("JANNER", "JAN");
+            str = str.Replace("JANUAR", "JAN");
+            str = str.Replace("FEBRUAR", "FEB");
+            str = str.Replace("OKTOBER", "OCT");
+            str = str.Replace("DEZEMBER", "DEC");
 
             str = str.Replace("SEPT", "SEP"); // avoids confusing french translation by removing T before checking for french
             str = str.Replace("M01", "JAN");

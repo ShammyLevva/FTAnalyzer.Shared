@@ -1639,7 +1639,7 @@ namespace FTAnalyzer
                             else if (!CensusDate.IsLostCousinsCensusYear(f.FactDate, false))
                             {
                                 errors[(int)Dataerror.LOST_COUSINS_NOT_SUPPORTED_YEAR].Add(
-                                    new DataError((int)Dataerror.LOST_COUSINS_NOT_SUPPORTED_YEAR, ind, "Lost Cousins event for " + f.FactDate + " which isn't a Lost Cousins census year"));
+                                    new DataError((int)Dataerror.LOST_COUSINS_NOT_SUPPORTED_YEAR, ind, $"Lost Cousins event for {f.FactDate} which isn't a Lost Cousins census year"));
                                 added = true;
                             }
                         }
@@ -1649,7 +1649,7 @@ namespace FTAnalyzer
                             if (!f.FactDate.IsKnown)
                             {
                                 errors[(int)Dataerror.CENSUS_COVERAGE].Add(
-                                        new DataError((int)Dataerror.CENSUS_COVERAGE, ind, comment + "is blank."));
+                                        new DataError((int)Dataerror.CENSUS_COVERAGE, ind, $"{comment} is blank."));
                                 added = true;
                             }
                             else
@@ -1658,7 +1658,7 @@ namespace FTAnalyzer
                                 if (ts.Days > 3650)
                                 {
                                     errors[(int)Dataerror.CENSUS_COVERAGE].Add(
-                                        new DataError((int)Dataerror.CENSUS_COVERAGE, ind, comment + f.FactDate + " covers more than one census event."));
+                                        new DataError((int)Dataerror.CENSUS_COVERAGE, ind, $"{comment} {f.FactDate} covers more than one census event."));
                                     added = true;
                                 }
                             }

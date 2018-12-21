@@ -73,6 +73,8 @@ namespace FTAnalyzer.Utilities
 
         public static string RemoveDiacritics(string text)
         {
+            if (!Properties.FileHandling.Default.ConvertDiacrits)
+                return text; // only process if user wants to remove diacrits
             string formD = text.Normalize(NormalizationForm.FormD);
             StringBuilder sb = new StringBuilder();
 
