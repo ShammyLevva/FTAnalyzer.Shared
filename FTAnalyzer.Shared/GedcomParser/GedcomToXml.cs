@@ -150,7 +150,7 @@ namespace FTAnalyzer
                     {
                         try
                         {
-                            line = line.Replace('–', '-').Replace('—', '-').Replace("***Data is already there***", ""); // "data is already there" is some Ancestry anomaly
+                            line = line.Replace('?', '-').Replace('?', '-').Replace("***Data is already there***", ""); // "data is already there" is some Ancestry anomaly
                             cpos1 = line.IndexOf(" ", StringComparison.Ordinal);
                             if (cpos1 < 0) throw new InvalidGEDCOMException($"No space found in line: '{line}'");
 
@@ -270,6 +270,7 @@ namespace FTAnalyzer
                         }
                     }
                     line = nextline;
+#if __PC__
                     if (badLineCount > badLineMax)
                     {
                         string message = $"Found more than {badLineMax} consecutive errors in the GEDCOM file.";
@@ -287,7 +288,8 @@ namespace FTAnalyzer
                             document = null;
                             break;
                         }
-                    }
+                }
+#endif
 
                 } // end while
 
