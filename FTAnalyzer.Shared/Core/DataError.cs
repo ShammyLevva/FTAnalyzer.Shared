@@ -40,7 +40,7 @@ namespace FTAnalyzer
         public string Reference => individual == null ? family.FamilyID : individual.IndividualID;
         [ColumnDetail("Name", 200)]
         public string Name { get { return individual == null ? family.FamilyName : individual.Name; } }
-        [ColumnDetail("Description", 400)]
+        [ColumnDetail("Description", 500)]
         public string Description { get; private set; }
         [ColumnDetail("Born", 150)]
         public FactDate Born => individual == null ? FactDate.UNKNOWN_DATE : individual.BirthDate;
