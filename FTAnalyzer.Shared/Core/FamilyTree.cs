@@ -474,28 +474,30 @@ namespace FTAnalyzer
                 outputText.Report($"\nThe current file handling options are set :");
                 outputText.Report($"\n    Use Special Character Filters When Loading: {FileHandling.Default.LoadWithFilters}");
                 outputText.Report($"\n    Retry failed lines by looking for bad line breaks: {FileHandling.Default.RetryFailedLines}");
+                outputText.Report($"`n    Convert Diacritics on load {FileHandling.Default.ConvertDiacritics}");
 
                 outputText.Report($"\nThe current general options are set:");
                 outputText.Report($"\n    Use Baptism/Christening Date If No Birth Date: {GeneralSettings.Default.UseBaptismDates}");
                 outputText.Report($"\n    Use Burial/Cremation Date If No Death Date: {GeneralSettings.Default.UseBurialDates}");
                 outputText.Report($"\n    Allow Empty Values In Locations: {GeneralSettings.Default.AllowEmptyLocations}");
-                outputText.Report($"\n    Treat Residence Facts As Census Facts: {GeneralSettings.Default.UseResidenceAsCensus}");
-                outputText.Report($"\n    Tolerate Slightly Inaccurate Census Dates: {GeneralSettings.Default.TolerateInaccurateCensusDate}");
-                outputText.Report($"\n    Family Census Facts Apply To Only Parents: {GeneralSettings.Default.OnlyCensusParents}");
-                outputText.Report($"\n    Loose Birth Minimum Parental Age: {GeneralSettings.Default.MinParentalAge}");
                 outputText.Report($"\n    Show Multiple Fact Forms When Viewing Duplicates: {GeneralSettings.Default.MultipleFactForms}");
-                outputText.Report($"\n    Use Compact Census References: {GeneralSettings.Default.UseCompactCensusRef}");
+                outputText.Report($"\n    Loose Birth Minimum Parental Age: {GeneralSettings.Default.MinParentalAge}");
                 outputText.Report($"\n    Show Alias In Name Displays: {GeneralSettings.Default.ShowAliasInName}");
-                outputText.Report($"\n    Hide People Tagged As Missing From Census: {GeneralSettings.Default.HidePeopleWithMissingTag}");
                 outputText.Report($"\n    Files use Country First Locations: {GeneralSettings.Default.ReverseLocations}");
                 outputText.Report($"\n    Show World Events on the 'On This Day' tab: {GeneralSettings.Default.ShowWorldEvents}");
-                outputText.Report($"\n    Auto Create Census Events from Notes & Sources: {GeneralSettings.Default.AutoCreateCensusFacts}");
-                outputText.Report($"\n    Add Auto Created Census Locations to Locations List: {GeneralSettings.Default.AddCreatedLocations}");
                 outputText.Report($"\n    Ignore Unknown Fact Type Warnings: {GeneralSettings.Default.IgnoreFactTypeWarnings}");
                 outputText.Report($"\n    Treat Female Surnames as Unknown: {GeneralSettings.Default.TreatFemaleSurnamesAsUnknown}");
                 outputText.Report($"\n    Show Ancestors that are muliple directs: {GeneralSettings.Default.ShowMultiAncestors}");
-                outputText.Report($"\n    Skip Checking for Census References: {GeneralSettings.Default.SkipCensusReferences}");
                 outputText.Report($"\n    Hide Ignored Duplicates: {GeneralSettings.Default.HideIgnoredDuplicates}");
+                outputText.Report($"\nThe current census options are set:");
+                outputText.Report($"\n    Treat Residence Facts As Census Facts: {GeneralSettings.Default.UseResidenceAsCensus}");
+                outputText.Report($"\n    Tolerate Slightly Inaccurate Census Dates: {GeneralSettings.Default.TolerateInaccurateCensusDate}");
+                outputText.Report($"\n    Family Census Facts Apply To Only Parents: {GeneralSettings.Default.OnlyCensusParents}");
+                outputText.Report($"\n    Use Compact Census References: {GeneralSettings.Default.UseCompactCensusRef}");
+                outputText.Report($"\n    Auto Create Census Events from Notes & Sources: {GeneralSettings.Default.AutoCreateCensusFacts}");
+                outputText.Report($"\n    Add Auto Created Census Locations to Locations List: {GeneralSettings.Default.AddCreatedLocations}");
+                outputText.Report($"\n    Hide People Tagged As Missing From Census: {GeneralSettings.Default.HidePeopleWithMissingTag}");
+                outputText.Report($"\n    Skip Checking for Census References: {GeneralSettings.Default.SkipCensusReferences}");
 
 #if __PC__
                 outputText.Report($"\nThe current mapping options are set:");
