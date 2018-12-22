@@ -6,7 +6,7 @@ namespace FTAnalyzer
     {
         [ColumnDetail("Source Ref", 100)]
         string SourceID { get; }
-        [ColumnDetail("Source Title", 200)]
+        [ColumnDetail("Source Title", 500)]
         string SourceTitle { get; }
         [ColumnDetail("Publication", 200)]
         string Publication { get; }

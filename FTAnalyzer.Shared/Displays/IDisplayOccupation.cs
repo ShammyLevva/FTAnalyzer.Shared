@@ -7,7 +7,7 @@ namespace FTAnalyzer
     {
         [ColumnDetail("Occupation", 400)]
         string Occupation { get; }
-        [ColumnDetail("Count", 70, ColumnDetail.ColumnAlignment.Right)]
+        [ColumnDetail("Count", 70)]
         int Count { get; }
     }
 }
