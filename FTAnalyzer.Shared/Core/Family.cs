@@ -113,10 +113,13 @@ namespace FTAnalyzer
                 //TODO: need to think about family facts having AGE tags in GEDCOM
                 if (HasGoodChildrenStatus)
                     CheckChildrenStatusCounts();
-                if (Husband != null && !Husband.IsMale)
-                    Husband.QuestionGender(this, true);
-                if (Wife != null && Wife.IsMale)
-                    Wife.QuestionGender(this, false);
+                if (MarriageDate.IsKnown && !MarriageDate.Overlaps(FactDate.SAME_SEX_MARRIAGE)) // check for wrongly set gender only if pre-dates same sex marriages
+                {
+                    if (Husband != null && !Husband.IsMale)
+                        Husband.QuestionGender(this, true);
+                    if (Wife != null && Wife.IsMale)
+                        Wife.QuestionGender(this, false);
+                }
                 Children.Sort(new BirthDateComparer());
             }
         }

@@ -1602,20 +1602,20 @@ namespace FTAnalyzer
                 progress.Report(20 + (record++ / totalRecords));
                 try
                 {
-#region Death facts
+                    #region Death facts
                     if (ind.DeathDate.IsKnown)
                     {
                         if (ind.BirthDate.IsAfter(ind.DeathDate))
-                            errors[(int)Dataerror.BIRTH_AFTER_DEATH].Add(new DataError((int)Dataerror.BIRTH_AFTER_DEATH, ind, "Died " + ind.DeathDate + " before born"));
+                            errors[(int)Dataerror.BIRTH_AFTER_DEATH].Add(new DataError((int)Dataerror.BIRTH_AFTER_DEATH, ind, $"Died {ind.DeathDate} before born"));
                         if (ind.BurialDate != null && ind.BirthDate.IsAfter(ind.BurialDate))
-                            errors[(int)Dataerror.BIRTH_AFTER_DEATH].Add(new DataError((int)Dataerror.BIRTH_AFTER_DEATH, ind, "Buried " + ind.BurialDate + " before born"));
+                            errors[(int)Dataerror.BIRTH_AFTER_DEATH].Add(new DataError((int)Dataerror.BIRTH_AFTER_DEATH, ind, $"Buried {ind.BurialDate} before born"));
                         if (ind.BurialDate != null && ind.BurialDate.IsBefore(ind.DeathDate) && !ind.BurialDate.Overlaps(ind.DeathDate))
-                            errors[(int)Dataerror.BURIAL_BEFORE_DEATH].Add(new DataError((int)Dataerror.BURIAL_BEFORE_DEATH, ind, "Buried " + ind.BurialDate + " before died " + ind.DeathDate));
+                            errors[(int)Dataerror.BURIAL_BEFORE_DEATH].Add(new DataError((int)Dataerror.BURIAL_BEFORE_DEATH, ind, $"Buried {ind.BurialDate} before died {ind.DeathDate}"));
                         int minAge = ind.GetMinAge(ind.DeathDate);
                         if (minAge > FactDate.MAXYEARS)
-                            errors[(int)Dataerror.AGED_MORE_THAN_110].Add(new DataError((int)Dataerror.AGED_MORE_THAN_110, ind, "Aged over " + FactDate.MAXYEARS + " before died " + ind.DeathDate));
+                            errors[(int)Dataerror.AGED_MORE_THAN_110].Add(new DataError((int)Dataerror.AGED_MORE_THAN_110, ind, $"Aged over {FactDate.MAXYEARS} before died {ind.DeathDate}"));
                         if (ind.IsFlaggedAsLiving)
-                            errors[(int)Dataerror.LIVING_WITH_DEATH_DATE].Add(new DataError((int)Dataerror.LIVING_WITH_DEATH_DATE, ind, "Flagged as living but has death date of " + ind.DeathDate));
+                            errors[(int)Dataerror.LIVING_WITH_DEATH_DATE].Add(new DataError((int)Dataerror.LIVING_WITH_DEATH_DATE, ind, $"Flagged as living but has death date of {ind.DeathDate}"));
                     }
 #endregion
 #region Error facts
@@ -1633,7 +1633,7 @@ namespace FTAnalyzer
                             if (!CensusDate.IsCensusYear(f.FactDate, f.Country, false))
                             {
                                 errors[(int)Dataerror.LOST_COUSINS_NON_CENSUS].Add(
-                                    new DataError((int)Dataerror.LOST_COUSINS_NON_CENSUS, ind, "Lost Cousins event for " + f.FactDate + " which isn't a census year"));
+                                    new DataError((int)Dataerror.LOST_COUSINS_NON_CENSUS, ind, $"Lost Cousins event for {f.FactDate} which isn't a census year"));
                                 added = true;
                             }
                             else if (!CensusDate.IsLostCousinsCensusYear(f.FactDate, false))

@@ -213,14 +213,14 @@ namespace FTAnalyzer
             if (fact.FactDate.IsKnown)
             {
                 if (CensusYear.IsKnown && !fact.FactDate.Overlaps(CensusYear))
-                    fact.SetError((int)FamilyTree.Dataerror.FACT_ERROR, Fact.FactError.WARNINGALLOW, "Census Fact dated " + fact.FactDate + " doesn't match census reference " + Reference + " date of " + CensusYear);
+                    fact.SetError((int)FamilyTree.Dataerror.FACT_ERROR, Fact.FactError.WARNINGALLOW, $"Census Fact dated {fact.FactDate} doesn't match census reference {Reference} date of {CensusYear}");
                 else
                     CensusYear = fact.FactDate;
             }
             else
                 fact.UpdateFactDate(CensusYear);
             if (pageRef != null && !pageRef.IsKnownStatus && !IsKnownStatus)
-                unknownCensusRef = pageRef.unknownCensusRef + "\n" + unknownCensusRef;
+                unknownCensusRef = $"{pageRef.unknownCensusRef}\n{unknownCensusRef}";
             fact.SetCensusReferenceDetails(this, CensusLocation, string.Empty);
         }
 
