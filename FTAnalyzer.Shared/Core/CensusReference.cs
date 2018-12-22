@@ -235,9 +235,9 @@ namespace FTAnalyzer
                     SetCensusReferenceDetails();
                     Fact.UpdateFactDate(CensusYear);
                     if (source)
-                        Fact.SetCensusReferenceDetails(this, CensusLocation, "Fact created by FTAnalyzer after finding census ref: " + MatchString + " in a source for this individual");
+                        Fact.SetCensusReferenceDetails(this, CensusLocation, $"Fact created by FTAnalyzer after finding census ref: {MatchString} in a source for this individual");
                     else
-                        Fact.SetCensusReferenceDetails(this, CensusLocation, "Fact created by FTAnalyzer after finding census ref: " + MatchString + " in the notes for this individual");
+                        Fact.SetCensusReferenceDetails(this, CensusLocation, $"Fact created by FTAnalyzer after finding census ref: {MatchString} in the notes for this individual");
                 }
             }
         }
@@ -304,9 +304,9 @@ namespace FTAnalyzer
                 // no match so store text 
                 Status = ReferenceStatus.UNRECOGNISED;
                 if (unknownCensusRef.Length == 0)
-                    unknownCensusRef = "Unknown Census Ref: " + text;
+                    unknownCensusRef = $"Unknown Census Ref: {text}";
                 else
-                    unknownCensusRef += "\n" + text;
+                    unknownCensusRef += $"\n{text}";
             }
             // now check sources to see if census reference is in title page
             foreach (FactSource fs in Fact.Sources)
@@ -361,7 +361,7 @@ namespace FTAnalyzer
             Match matcher = censusRegexs["EW_CENSUS_PATTERN"].Match(text);
             if (matcher.Success)
             {
-                Class = "RG" + matcher.Groups[1];
+                Class = $"RG{matcher.Groups[1]}";
                 Piece = matcher.Groups[2].ToString();
                 Folio = matcher.Groups[3].ToString();
                 Page = matcher.Groups[4].ToString();
@@ -371,7 +371,7 @@ namespace FTAnalyzer
             matcher = censusRegexs["EW_CENSUS_PATTERN1"].Match(text);
             if (matcher.Success)
             {
-                Class = "RG" + matcher.Groups[1];
+                Class = $"RG{matcher.Groups[1]}";
                 Piece = matcher.Groups[2].ToString();
                 Folio = matcher.Groups[3].ToString();
                 Page = matcher.Groups[4].ToString();
@@ -381,7 +381,7 @@ namespace FTAnalyzer
             matcher = censusRegexs["EW_CENSUS_PATTERN2"].Match(text);
             if (matcher.Success)
             {
-                Class = "RG" + matcher.Groups[1];
+                Class = $"RG{matcher.Groups[1]}";
                 Piece = matcher.Groups[2].ToString();
                 Folio = matcher.Groups[3].ToString();
                 Page = MISSING;
@@ -391,7 +391,7 @@ namespace FTAnalyzer
             matcher = censusRegexs["EW_CENSUS_PATTERN_FH"].Match(text);
             if (matcher.Success)
             {
-                Class = "RG" + matcher.Groups[1];
+                Class = $"RG{matcher.Groups[1]}";
                 Piece = matcher.Groups[2].ToString();
                 Folio = matcher.Groups[4].ToString();
                 Page = matcher.Groups[6].ToString();
@@ -401,7 +401,7 @@ namespace FTAnalyzer
             matcher = censusRegexs["EW_CENSUS_PATTERN_FH2"].Match(text);
             if (matcher.Success)
             {
-                Class = "RG" + matcher.Groups[1];
+                Class = $"RG{matcher.Groups[1]}";
                 Piece = matcher.Groups[2].ToString();
                 ED = matcher.Groups[3].ToString();
                 Folio = matcher.Groups[5].ToString();
@@ -724,7 +724,7 @@ namespace FTAnalyzer
             matcher = censusRegexs["US_CENSUS_PATTERN"].Match(text);
             if (matcher.Success)
             {
-                Class = "US" + matcher.Groups[1];
+                Class = $"US{matcher.Groups[1]}";
                 Place = GetOriginalPlace(matcher.Groups[2].ToString(), originalText, "ROLL");
                 Roll = matcher.Groups[3].ToString();
                 Page = matcher.Groups[6].ToString();
@@ -735,7 +735,7 @@ namespace FTAnalyzer
             matcher = censusRegexs["US_CENSUS_PATTERN1A"].Match(text);
             if (matcher.Success)
             {
-                Class = "US" + matcher.Groups[1];
+                Class = $"US{matcher.Groups[1]}";
                 Place = GetOriginalPlace(matcher.Groups[2].ToString(), originalText, "ROLL");
                 Roll = matcher.Groups[3].ToString();
                 Page = matcher.Groups[5].ToString();
@@ -746,7 +746,7 @@ namespace FTAnalyzer
             matcher = censusRegexs["US_CENSUS_PATTERN2"].Match(text);
             if (matcher.Success)
             {
-                Class = "US" + matcher.Groups[1];
+                Class = $"US{matcher.Groups[1]}";
                 Place = GetOriginalPlace(matcher.Groups[2].ToString(), originalText, "ROLL");
                 Roll = matcher.Groups[3].ToString();
                 Page = matcher.Groups[5].ToString();
@@ -757,7 +757,7 @@ namespace FTAnalyzer
             matcher = censusRegexs["US_CENSUS_PATTERN3"].Match(text);
             if (matcher.Success)
             {
-                Class = "US" + matcher.Groups[1];
+                Class = $"US{matcher.Groups[1]}";
                 Place = GetOriginalPlace(matcher.Groups[2].ToString(), originalText, "WARD");
                 Roll = matcher.Groups[3].ToString();
                 Page = matcher.Groups[6].ToString();
@@ -768,7 +768,7 @@ namespace FTAnalyzer
             matcher = censusRegexs["US_CENSUS_PATTERN4"].Match(text);
             if (matcher.Success)
             {
-                Class = "US" + matcher.Groups[1];
+                Class = $"US{matcher.Groups[1]}";
                 Place = GetOriginalPlace(matcher.Groups[2].ToString(), originalText, "ED");
                 Page = matcher.Groups[5].ToString();
                 ED = matcher.Groups[3].ToString();
@@ -779,7 +779,7 @@ namespace FTAnalyzer
             if (matcher.Success)
             {
                 Class = "US1940";
-                Roll = "T627_" + matcher.Groups[4];
+                Roll = $"T627_{matcher.Groups[4]}";
                 ED = matcher.Groups[1].ToString();
                 Page = matcher.Groups[3].ToString();
                 SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.GOOD, matcher.Value);
@@ -789,7 +789,7 @@ namespace FTAnalyzer
             if (matcher.Success)
             {
                 Class = "US1940";
-                Roll = "T627_" + matcher.Groups[4];
+                Roll = $"T627_{matcher.Groups[4]}";
                 ED = matcher.Groups[1].ToString();
                 Page = matcher.Groups[3].ToString();
                 SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.GOOD, matcher.Value);
@@ -800,7 +800,7 @@ namespace FTAnalyzer
             {
                 Class = "US1940";
                 Place = GetOriginalPlace(matcher.Groups[1].ToString(), originalText, "T627");
-                Roll = "T627_" + matcher.Groups[3];
+                Roll = $"T627_{matcher.Groups[3]}";
                 ED = matcher.Groups[6].ToString();
                 Page = matcher.Groups[5].ToString();
                 SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.GOOD, matcher.Value);
@@ -809,7 +809,7 @@ namespace FTAnalyzer
             matcher = censusRegexs["CANADA_CENSUS_PATTERN"].Match(text);
             if (matcher.Success)
             {
-                Class = "CAN" + matcher.Groups[1];
+                Class = $"CAN{matcher.Groups[1]}";
                 Place = GetOriginalPlace(matcher.Groups[2].ToString(), originalText, "ROLL");
                 Roll = matcher.Groups[3].ToString();
                 Page = matcher.Groups[5].ToString();
@@ -820,7 +820,7 @@ namespace FTAnalyzer
             matcher = censusRegexs["CANADA_CENSUS_PATTERN2"].Match(text);
             if (matcher.Success)
             {
-                Class = "CAN" + matcher.Groups[1];
+                Class = $"CAN{matcher.Groups[1]}";
                 ED = matcher.Groups[2].ToString();
                 SD = matcher.Groups[3].ToString();
                 Page = matcher.Groups[5].ToString();
