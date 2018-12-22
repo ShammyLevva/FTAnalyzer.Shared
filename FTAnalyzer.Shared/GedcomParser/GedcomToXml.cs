@@ -270,9 +270,9 @@ namespace FTAnalyzer
                         }
                     }
                     line = nextline;
-#if __PC__
                     if (badLineCount > badLineMax)
                     {
+#if __PC__
                         string message = $"Found more than {badLineMax} consecutive errors in the GEDCOM file.";
                         if (!FileHandling.Default.RetryFailedLines)
                             message += "\n\nNB. You may get less errors if you turn on the option to 'Retry failed lines by looking for bad line breaks' from the File Handling section of the Tools Options menu.";
@@ -288,11 +288,9 @@ namespace FTAnalyzer
                             document = null;
                             break;
                         }
-                }
 #endif
-
+                    }
                 } // end while
-
             }
             finally
             {
