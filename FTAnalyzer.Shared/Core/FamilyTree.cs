@@ -1900,27 +1900,40 @@ namespace FTAnalyzer
 
 #region Census Searching
 
+        public string ProviderName(int censusProvider)
+        {
+            switch(censusProvider)
+            {
+                case 0:
+                    return "Ancestry";
+                case 1:
+                    return "FindMyPast";
+                case 2:
+                    return "FreeCen";
+                case 3:
+                    return "FamilySearch";
+                default:
+                    return "FamilySearch";
+            }
+        }
+
         public void SearchCensus(string censusCountry, int censusYear, Individual person, int censusProvider)
         {
             string uri = null;
-            string provider = string.Empty;
+            string provider = ProviderName(censusProvider);
             switch (censusProvider)
             {
                 case 0:
                     uri = BuildAncestryQuery(censusCountry, censusYear, person);
-                    provider = "Ancestry";
                     break;
                 case 1:
                     uri = censusYear == 1939 && censusCountry.Equals(Countries.UNITED_KINGDOM) ? BuildFindMyPast1939Query(person) : BuildFindMyPastQuery(censusCountry, censusYear, person);
-                    provider = "FindMyPast";
                     break;
                 case 2:
                     uri = BuildFreeCenQuery(censusCountry, censusYear, person);
-                    provider = "FreeCen";
                     break;
                 case 3:
                     uri = BuildFamilySearchQuery(censusCountry, censusYear, person);
-                    provider = "FamilySearch";
                     break;
             }
             if (uri != null)
@@ -2122,7 +2135,9 @@ namespace FTAnalyzer
             FactDate censusFactDate = new FactDate(censusYear.ToString());
             UriBuilder uri = new UriBuilder
             {
-                Host = "www.freecen.org.uk",
+                //Host = "www.freecen.org.uk",
+                Scheme = Uri.UriSchemeHttps,
+                Host = "freecen1.freecen.org.uk",
                 Path = "/cgi/search.pl"
             };
             StringBuilder query = new StringBuilder();
