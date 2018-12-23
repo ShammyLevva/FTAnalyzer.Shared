@@ -579,14 +579,14 @@ namespace FTAnalyzer
                         todate = processDate.Substring(pos + 5);
                     }
                     if (fromdate.Length < 3)
-                        fromdate = fromdate + ' ' + processDate.Substring(pos + 7);
+                        fromdate = fromdate + " " + processDate.Substring(pos + 7);
                     else if (fromdate.Length == 3)
                         fromdate = "01 " + fromdate + processDate.Substring(pos + 8);
                     else if (fromdate.Length == 4)
                         fromdate = "01 JAN " + fromdate;
                     else if (fromdate.Length < 7 && fromdate.IndexOf(" ", StringComparison.Ordinal) > 0)
-                        fromdate = (fromdate + " " + processDate.Substring(pos + 11)).Replace("  "," ");
-                    StartDate = ParseDate(fromdate, LOW, 0, EndDate.Year);
+                        fromdate = fromdate + " " + processDate.Substring(pos + 11);
+                    StartDate = ParseDate(fromdate.Replace("  ", " "), LOW, 0, EndDate.Year);
                     EndDate = ParseDate(todate, HIGH, 0);
                 }
                 else
@@ -752,7 +752,7 @@ namespace FTAnalyzer
                 {
                     if (!DateTime.TryParseExact(dateValue, FULL, CULTURE, DateTimeStyles.NoCurrentDateDefault, out date))
                         DateTime.TryParseExact(dateValue, FULLEARLY, CULTURE, DateTimeStyles.NoCurrentDateDefault, out date);
-                    if(date.Year == 1 && date.Year.ToString() != year)
+                    if (date.Year == 1 && date.Year.ToString() != year)
                     {
                         // we have valid date format but invalid day/month combo eg: 29th Feb in odd year.
                         throw new FactDateException("Date has normal format but is not a valid date. eg: like 31 NOV 1900 or 29 FEB 1735");
