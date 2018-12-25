@@ -50,6 +50,11 @@ namespace FTAnalyzer
 #if __PC__
         [ColumnDetail("Family", 50)]
         public bool IsFamily => individual == null;
+
+        public IComparer<DataError> GetComparer(string columnName, bool ascending)
+        {
+            throw new System.NotImplementedException();
+        }
 #elif __MACOS__
         [ColumnDetail("Family", 50)]
         public string IsFamily => individual == null ? "Yes" : "No";
