@@ -3,7 +3,7 @@ using static FTAnalyzer.ColourValues;
 
 namespace FTAnalyzer
 {
-    public interface IDisplayColourCensus
+    public interface IDisplayColourCensus : IColumnComparer<IDisplayColourCensus>
     {
         [ColumnDetail("Ref", 60)]
         string IndividualID { get; }

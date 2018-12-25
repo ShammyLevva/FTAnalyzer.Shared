@@ -1,10 +1,9 @@
-using FTAnalyzer.Properties;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Xml;
+using FTAnalyzer.Properties;
 using static FTAnalyzer.ColourValues;
 
 namespace FTAnalyzer
@@ -1413,6 +1412,31 @@ namespace FTAnalyzer
                 }
             }
             return res;
+        }
+
+        IComparer<IDisplayIndividual> IColumnComparer<IDisplayIndividual>.GetComparer(string columnName, bool ascending)
+        {
+            switch(columnName)
+            {
+                case "Forenames": return new NameComparer(ascending, true);
+                case "Surname": return new NameComparer(ascending, false);
+                default: return null;
+            }
+        }
+
+        public IComparer<IDisplayColourCensus> GetComparer(string columnName, bool ascending)
+        {
+            throw new NotImplementedException();
+        }
+
+        IComparer<IDisplayLooseDeath> IColumnComparer<IDisplayLooseDeath>.GetComparer(string columnName, bool ascending)
+        {
+            throw new NotImplementedException();
+        }
+
+        IComparer<IDisplayLooseBirth> IColumnComparer<IDisplayLooseBirth>.GetComparer(string columnName, bool ascending)
+        {
+            throw new NotImplementedException();
         }
         #endregion
     }

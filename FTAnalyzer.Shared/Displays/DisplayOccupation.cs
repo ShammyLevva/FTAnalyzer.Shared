@@ -1,4 +1,6 @@
-﻿namespace FTAnalyzer
+﻿using System.Collections.Generic;
+
+namespace FTAnalyzer
 {
     public class DisplayOccupation : IDisplayOccupation
     {
@@ -12,5 +14,10 @@
         }
 
         public int CompareTo(IDisplayOccupation that) => string.Compare(Occupation, that.Occupation, System.StringComparison.Ordinal);
+
+        public IComparer<IDisplayOccupation> GetComparer(string columnName, bool ascending)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

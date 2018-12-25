@@ -76,5 +76,10 @@ namespace FTAnalyzer
             return Ind == null ? Fact.FactTypeDescription + ": " + Fact.FactDate + " " + Fact.Comment 
                                : IndividualID + ": " + Forenames + " " + Surname + ", " + Fact;
         }
+
+        public IComparer<IDisplayFact> GetComparer(string columnName, bool ascending)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

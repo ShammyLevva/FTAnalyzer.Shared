@@ -1,8 +1,9 @@
-﻿using FTAnalyzer.Utilities;
+﻿using System.Collections.Generic;
+using FTAnalyzer.Utilities;
 
 namespace FTAnalyzer
 {
-    public class DataError
+    public class DataError : IColumnComparer<DataError>
     {
         public DataError(int errorType, Fact.FactError errorLevel, Individual ind, string description)
         {
@@ -52,6 +53,11 @@ namespace FTAnalyzer
 #elif __MACOS__
         [ColumnDetail("Family", 50)]
         public string IsFamily => individual == null ? "Yes" : "No";
+
+        public IComparer<DataError> GetComparer(string columnName, bool ascending)
+        {
+            throw new System.NotImplementedException();
+        }
 #endif
     }
 }

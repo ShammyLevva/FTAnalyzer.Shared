@@ -2,7 +2,7 @@
 
 namespace FTAnalyzer
 {
-    public interface IDisplayFamily
+    public interface IDisplayFamily : IColumnComparer<IDisplayFamily>
     {
         [ColumnDetail("Family Ref",60)]
         string FamilyID { get; }

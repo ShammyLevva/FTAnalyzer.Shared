@@ -3,7 +3,7 @@ using FTAnalyzer.Utilities;
 
 namespace FTAnalyzer
 {
-    public interface IDisplayOccupation : IComparable<IDisplayOccupation>
+    public interface IDisplayOccupation : IComparable<IDisplayOccupation>, IColumnComparer<IDisplayOccupation>
     {
         [ColumnDetail("Occupation", 400)]
         string Occupation { get; }

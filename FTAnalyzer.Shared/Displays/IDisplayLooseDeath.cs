@@ -3,7 +3,7 @@ using FTAnalyzer.Utilities;
 
 namespace FTAnalyzer
 {
-    public interface IDisplayLooseDeath : IComparable<Individual>
+    public interface IDisplayLooseDeath : IComparable<Individual>, IColumnComparer<IDisplayLooseDeath>
     {
         [ColumnDetail("Ref", 60)]
         string IndividualID { get; }

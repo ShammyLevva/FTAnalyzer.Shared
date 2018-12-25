@@ -1,8 +1,9 @@
-﻿using FTAnalyzer.Utilities;
+﻿using System.Collections.Generic;
+using FTAnalyzer.Utilities;
 
 namespace FTAnalyzer
 {
-    public interface IDisplayIndividual
+    public interface IDisplayIndividual : IColumnComparer<IDisplayIndividual>
     {
         [ColumnDetail("Ref", 60)]
         string IndividualID { get; }

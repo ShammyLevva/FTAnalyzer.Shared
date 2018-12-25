@@ -6,7 +6,7 @@ using FTAnalyzer.Utilities;
 
 namespace FTAnalyzer
 {
-    public interface IDisplayFact
+    public interface IDisplayFact : IColumnComparer<IDisplayFact>
     {
 #if __PC__
         Image Icon { get; }

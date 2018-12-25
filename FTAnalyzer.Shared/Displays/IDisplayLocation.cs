@@ -2,7 +2,7 @@
 
 namespace FTAnalyzer
 {
-    public interface IDisplayLocation
+    public interface IDisplayLocation : IColumnComparer<IDisplayLocation>
     {
         [ColumnDetail("Country", 120)]
         string Country { get; }

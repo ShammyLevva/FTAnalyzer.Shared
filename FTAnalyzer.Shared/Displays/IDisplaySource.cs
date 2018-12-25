@@ -2,7 +2,7 @@
 
 namespace FTAnalyzer
 {
-    public interface IDisplaySource
+    public interface IDisplaySource : IColumnComparer<IDisplaySource>
     {
         [ColumnDetail("Source Ref", 100)]
         string SourceID { get; }

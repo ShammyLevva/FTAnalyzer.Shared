@@ -629,5 +629,10 @@ namespace FTAnalyzer
                     marriage.Location.IsBlank ? $"{MarriageDate}" :
                         $"{MarriageDate} at {marriage.Location}";
         }
+
+        public IComparer<IDisplayFamily> GetComparer(string columnName, bool ascending)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

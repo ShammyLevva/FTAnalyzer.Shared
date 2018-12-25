@@ -1191,6 +1191,11 @@ namespace FTAnalyzer
         public bool Equals(FactLocation that, int level) => CompareTo(that, level) == 0;
 
         public override int GetHashCode() => base.GetHashCode();
-#endregion
+
+        public IComparer<IDisplayLocation> GetComparer(string columnName, bool ascending)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
     }
 }

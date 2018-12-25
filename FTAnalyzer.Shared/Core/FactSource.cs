@@ -75,5 +75,10 @@ namespace FTAnalyzer
                    SourceTitle.ToUpper().IndexOf(CENSUSCERT, StringComparison.Ordinal) >= 0;
 
         public override string ToString() => SourceTitle;
+
+        public IComparer<IDisplaySource> GetComparer(string columnName, bool ascending)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
