@@ -445,16 +445,15 @@ namespace FTAnalyzer
                             Tag = tag;
                         }
                     }
-                    var x = FamilyTree.GetText(node, false);
-                    var y = FamilyTree.GetText(node, "PLAC", false);
+                    var nodeText = FamilyTree.GetText(node, false);
+                    var placeText = FamilyTree.GetText(node, "PLAC", false);
                     var xmlLat = FamilyTree.GetText(node, "PLAC/MAP/LATI", false);
                     var xmlLong = FamilyTree.GetText(node, "PLAC/MAP/LONG", false);
-                    SetCommentAndLocation(FactType, x, y, xmlLat, xmlLong);
+                    var addrTagText = GetAddress(FactType, node);
+                    SetCommentAndLocation(FactType, nodeText, placeText, addrTagText, xmlLat, xmlLong);
                     if (!string.IsNullOrEmpty(xmlLat) && !string.IsNullOrEmpty(xmlLong))
                         Location.GEDCOMLatLong = true;
-                    if (!Location.IsKnown)
-                        SetAddress(FactType, node);
-
+                    
                     // only check UK census dates for errors as those are used for colour census
                     if (FactType.Equals(CENSUS) && Location.IsUnitedKingdom)
                         CheckCensusDate("Census");
@@ -584,15 +583,15 @@ namespace FTAnalyzer
             FactErrorLevel = FactError.ERROR;
         }
 
-        void SetAddress(string factType, XmlNode node)
+        string GetAddress(string factType, XmlNode node)
         {
             XmlNode addr = node.SelectSingleNode("ADDR");
             if (addr == null)
-                return;
+                return string.Empty;
             string result = string.Empty; // need to do something with an ADDR tag
             XmlNode ctry = node.SelectSingleNode("ADDR/CTRY");
             if (ctry != null)
-                result = ctry.InnerText;
+                result = (result.Length > 0) ? ctry.InnerText + ", " + result : ctry.InnerText;
             XmlNode stae = node.SelectSingleNode("ADDR/STAE");
             if (stae != null)
                 result = (result.Length > 0) ? stae.InnerText + ", " + result : stae.InnerText;
@@ -629,11 +628,12 @@ namespace FTAnalyzer
             //+1 POST <ADDRESS_POSTAL_CODE> {0:1} p.41
             //+1 CTRY <ADDRESS_COUNTRY> 
 
-            if (!COMMENT_FACTS.Contains(factType))
-            {
-                Location = FactLocation.GetLocation(result);
-                Location.FTAnalyzerCreated = false;
-            }
+            //if (!COMMENT_FACTS.Contains(factType)) //pre v7.2.1.2
+            //{
+            //    Location = FactLocation.GetLocation(result);
+            //    Location.FTAnalyzerCreated = false;
+            //}
+            return result;
         }
 
         public Fact(string factRef, string factType, FactDate date, FactLocation loc, string comment = "", bool preferred = true, bool createdByFTA = false)
@@ -891,7 +891,7 @@ namespace FTAnalyzer
             }
         }
 
-        void SetCommentAndLocation(string factType, string factComment, string factPlace, string latitude, string longitude)
+        void SetCommentAndLocation(string factType, string factComment, string factPlace, string addrTagText, string latitude, string longitude)
         {
             if (factComment.Length == 0 && factPlace.Length > 0)
             {
@@ -936,10 +936,20 @@ namespace FTAnalyzer
                 longitude = "0.0";
             FactLocation.Geocode geocode = 
                 (latitude.Equals("0.0") && longitude.Equals("0.0")) ? FactLocation.Geocode.NOT_SEARCHED : FactLocation.Geocode.GEDCOM_USER;
+            if (addrTagText.Length > 0)
+            {    //we have an address decide to add it to place or not
+                if (string.IsNullOrEmpty(Place) || addrTagText.Contains(Place))
+                    Place = addrTagText;
+                else if (GeneralSettings.Default.ReverseLocations)
+                    Place = $"{Place}, {addrTagText}";
+                else
+                    Place = $"{addrTagText}, {Place}";
+            }
             if (GeneralSettings.Default.ReverseLocations)
                 Location = FactLocation.GetLocation(ReverseLocation(Place), latitude, longitude, geocode, true, true);
             else
                 Location = FactLocation.GetLocation(Place, latitude, longitude, geocode, true, true);
+            Location.FTAnalyzerCreated = false;
         }
 
         private bool SetCertificatePresent()

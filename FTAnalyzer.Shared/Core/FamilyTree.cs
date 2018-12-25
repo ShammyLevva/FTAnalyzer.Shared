@@ -2623,7 +2623,7 @@ namespace FTAnalyzer
             int needsReverse = FactLocation.AllLocations.Count(x => x.NeedsReverseGeocoding);
             //Predicate<FactLocation> predicate = x => x.NeedsReverseGeocoding;
             //List<FactLocation> needRev = FactLocation.AllLocations.Where(predicate).ToList();
-            outputText.Report($"\n{FactLocation.GEDCOMLocationsCount} locations loaded from GEDCOM file.\n");
+            outputText.Report($"\n{FactLocation.GEDCOMLocationsCount} locations and addresses loaded from GEDCOM file.\n");
             outputText.Report($"    {FactLocation.GEDCOMGeocodedCount} have Lat/Long coordinates in the file.\n");
             outputText.Report($"\n{FactLocation.LocationsCount} locations in use after processing file and generating extra locaitons for tree view.\n");
             outputText.Report($"    {FactLocation.AllLocations.Count(x => x.GeocodeStatus.Equals(FactLocation.Geocode.GEDCOM_USER) && x.FoundLocation.Length > 0)} are GEDCOM/User Entered and have been geocoded.\n");

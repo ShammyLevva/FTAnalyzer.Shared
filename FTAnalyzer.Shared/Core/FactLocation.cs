@@ -816,13 +816,13 @@ namespace FTAnalyzer
         {
             SortableLocation = Country;
             if (Region.Length > 0 || GeneralSettings.Default.AllowEmptyLocations)
-                SortableLocation = SortableLocation + ", " + Region;
+                SortableLocation = $"{SortableLocation}, {Region}";
             if (SubRegion.Length > 0 || GeneralSettings.Default.AllowEmptyLocations)
-                SortableLocation = SortableLocation + ", " + SubRegion;
+                SortableLocation = $"{SortableLocation}, {SubRegion}";
             if (Address.Length > 0 || GeneralSettings.Default.AllowEmptyLocations)
-                SortableLocation = SortableLocation + ", " + Address;
+                SortableLocation = $"{SortableLocation}, {Address}";
             if (Place.Length > 0)
-                SortableLocation = SortableLocation + ", " + Place;
+                SortableLocation = $"{SortableLocation}, {Place}";
             SortableLocation = TrimLeadingCommas(SortableLocation);
         }
 
@@ -838,8 +838,8 @@ namespace FTAnalyzer
             AddressMetaphone = meta.PrimaryKey;
             meta = new DoubleMetaphone(Place);
             PlaceMetaphone = meta.PrimaryKey;
-            FuzzyMatch = AddressMetaphone + ":" + SubRegionMetaphone + ":" + RegionMetaphone + ":" + CountryMetaphone;
-            FuzzyNoParishMatch = AddressMetaphone + ":" + RegionMetaphone + ":" + CountryMetaphone;
+            FuzzyMatch = $"{AddressMetaphone}:{SubRegionMetaphone}:{RegionMetaphone}:{CountryMetaphone}";
+            FuzzyNoParishMatch = $"{AddressMetaphone}:{RegionMetaphone}:{CountryMetaphone}";
         }
 
         public static string ReplaceString(string str, string oldValue, string newValue, StringComparison comparison)
@@ -954,7 +954,7 @@ namespace FTAnalyzer
 
         public static int LocationsCount => AllLocations.Count() - 1;
 
-        public static int GEDCOMLocationsCount => AllLocations.Count(l => !l.FTAnalyzerCreated) - 1;
+        public static int GEDCOMLocationsCount => AllLocations.Count(l => !l.FTAnalyzerCreated);
 
         public static int GEDCOMGeocodedCount => AllLocations.Count(l => l.GEDCOMLatLong);
 
