@@ -588,6 +588,8 @@ namespace FTAnalyzer
             XmlNode addr = node.SelectSingleNode("ADDR");
             if (addr == null)
                 return string.Empty;
+            if (COMMENT_FACTS.Contains(factType)) // don't parse address records if this is a comment fact
+                return string.Empty;
             string result = string.Empty; // need to do something with an ADDR tag
             XmlNode ctry = node.SelectSingleNode("ADDR/CTRY");
             if (ctry != null)
@@ -627,12 +629,6 @@ namespace FTAnalyzer
             //+1 STAE <ADDRESS_STATE> {0:1} p.42
             //+1 POST <ADDRESS_POSTAL_CODE> {0:1} p.41
             //+1 CTRY <ADDRESS_COUNTRY> 
-
-            //if (!COMMENT_FACTS.Contains(factType)) //pre v7.2.1.2
-            //{
-            //    Location = FactLocation.GetLocation(result);
-            //    Location.FTAnalyzerCreated = false;
-            //}
             return result;
         }
 
