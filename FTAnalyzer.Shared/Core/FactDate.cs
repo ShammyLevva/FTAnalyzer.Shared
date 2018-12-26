@@ -8,7 +8,7 @@ using static FTAnalyzer.ColourValues;
 
 namespace FTAnalyzer
 {
-    public class FactDate : IComparable<FactDate>
+    public class FactDate : IComparable<FactDate>, IComparable
     {
         public static readonly DateTime MINDATE = new DateTime(1, 1, 1);
         public static readonly DateTime MAXDATE = new DateTime(9999, 12, 31);
@@ -1020,6 +1020,8 @@ namespace FTAnalyzer
         public static bool operator !=(FactDate a, FactDate b) => !(a == b);
 
         public override int GetHashCode() => base.GetHashCode();
+
+        public int CompareTo(object that) => CompareTo(that as FactDate);
 
         public int CompareTo(FactDate that)
         {

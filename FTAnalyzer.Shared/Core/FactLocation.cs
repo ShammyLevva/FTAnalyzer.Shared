@@ -11,7 +11,7 @@ using FTAnalyzer.Utilities;
 
 namespace FTAnalyzer
 {
-    public class FactLocation : IComparable<FactLocation>, IDisplayLocation, IDisplayGeocodedLocation
+    public class FactLocation : IComparable<FactLocation>, IComparable, IDisplayLocation, IDisplayGeocodedLocation
     {
         #region Variables
         // static log4net.ILog log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -1139,7 +1139,10 @@ namespace FTAnalyzer
         //    }
         //}
 
-#region Overrides
+        #region Overrides
+
+        public int CompareTo(object that) => CompareTo(that as FactLocation);
+
         public int CompareTo(FactLocation that) => CompareTo(that, PLACE);
 
         public int CompareTo(IDisplayLocation that, int level) => CompareTo((FactLocation)that, level);
@@ -1194,7 +1197,32 @@ namespace FTAnalyzer
 
         public IComparer<IDisplayLocation> GetComparer(string columnName, bool ascending)
         {
-            throw new NotImplementedException();
+            switch (columnName)
+            {
+                case "Country": return CompareComparableProperty<IDisplayLocation>(f => f.Country, ascending);
+                case "Region": return CompareComparableProperty<IDisplayLocation>(f => f.Region, ascending);
+                case "SubRegion": return CompareComparableProperty<IDisplayLocation>(f => f.SubRegion, ascending);
+                case "Address": return CompareComparableProperty<IDisplayLocation>(f => f.Address, ascending);
+                case "Place": return CompareComparableProperty<IDisplayLocation>(f => f.Place, ascending);
+                case "Latitude": return CompareComparableProperty<IDisplayLocation>(f => f.Latitude, ascending);
+                case "Longitude": return CompareComparableProperty<IDisplayLocation>(f => f.Longitude, ascending);
+                case "Geocoded": return CompareComparableProperty<IDisplayLocation>(f => f.Geocoded, ascending);
+                case "FoundLocation": return CompareComparableProperty<IDisplayLocation>(f => f.FoundLocation, ascending);
+                case "GEDCOMLocation": return CompareComparableProperty<IDisplayLocation>(f => f.GEDCOMLocation, ascending);
+                case "GEDCOMLoaded": return CompareComparableProperty<IDisplayLocation>(f => f.GEDCOMLoaded, ascending);
+                default: return null;
+            }
+        }
+
+        Comparer<T> CompareComparableProperty<T>(Func<IDisplayLocation, IComparable> accessor, bool ascending)
+        {
+            return Comparer<T>.Create((x, y) =>
+            {
+                var c1 = accessor(x as IDisplayLocation);
+                var c2 = accessor(y as IDisplayLocation);
+                var result = c1.CompareTo(c2);
+                return ascending ? result : -result;
+            });
         }
         #endregion
     }

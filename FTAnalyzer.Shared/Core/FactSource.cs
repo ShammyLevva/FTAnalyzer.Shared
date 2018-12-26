@@ -78,7 +78,28 @@ namespace FTAnalyzer
 
         public IComparer<IDisplaySource> GetComparer(string columnName, bool ascending)
         {
-            throw new NotImplementedException();
+            switch (columnName)
+            {
+                case "SourceID": return CompareComparableProperty<IDisplaySource>(f => f.SourceID, ascending);
+                case "SourceTitle": return CompareComparableProperty<IDisplaySource>(f => f.SourceTitle, ascending);
+                case "Publication": return CompareComparableProperty<IDisplaySource>(f => f.Publication, ascending);
+                case "Author": return CompareComparableProperty<IDisplaySource>(f => f.Author, ascending);
+                case "SourceText": return CompareComparableProperty<IDisplaySource>(f => f.SourceText, ascending);
+                case "SourceMedium": return CompareComparableProperty<IDisplaySource>(f => f.SourceMedium, ascending);
+                case "FactCount": return CompareComparableProperty<IDisplaySource>(f => f.FactCount, ascending);
+                default: return null;
+            }
+        }
+
+        Comparer<T> CompareComparableProperty<T>(Func<IDisplaySource, IComparable> accessor, bool ascending)
+        {
+            return Comparer<T>.Create((x, y) =>
+            {
+                var c1 = accessor(x as IDisplaySource);
+                var c2 = accessor(y as IDisplaySource);
+                var result = c1.CompareTo(c2);
+                return ascending ? result : -result;
+            });
         }
     }
 }

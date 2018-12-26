@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace FTAnalyzer
 {
@@ -17,7 +18,24 @@ namespace FTAnalyzer
 
         public IComparer<IDisplayOccupation> GetComparer(string columnName, bool ascending)
         {
-            throw new System.NotImplementedException();
+            switch(columnName)
+            { 
+                case "Occupation": return CompareComparableProperty<IDisplayOccupation>(f => f.Occupation, ascending);
+                case "Count": return CompareComparableProperty<IDisplayOccupation>(f => f.Count, ascending);
+                 default: return null;
+            }
+        }
+
+        Comparer<T> CompareComparableProperty<T>(Func<IDisplayOccupation, IComparable> accessor, bool ascending)
+        {
+            return Comparer<T>.Create((x, y) =>
+            {
+                var c1 = accessor(x as IDisplayOccupation);
+                var c2 = accessor(y as IDisplayOccupation);
+                var result = c1.CompareTo(c2);
+                return ascending ? result : -result;
+            });
         }
     }
+}
 }

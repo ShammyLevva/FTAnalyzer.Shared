@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using FTAnalyzer.Utilities;
 
 namespace FTAnalyzer
@@ -50,19 +51,35 @@ namespace FTAnalyzer
 #if __PC__
         [ColumnDetail("Family", 50)]
         public bool IsFamily => individual == null;
-
-        public IComparer<DataError> GetComparer(string columnName, bool ascending)
-        {
-            throw new System.NotImplementedException();
-        }
-#elif __MACOS__
+#endif
         [ColumnDetail("Family", 50)]
         public string IsFamily => individual == null ? "Yes" : "No";
 
         public IComparer<DataError> GetComparer(string columnName, bool ascending)
         {
-            throw new System.NotImplementedException();
+            switch (columnName)
+            {
+                case "ErrorType": return CompareComparableProperty<DataError>(f => f.ErrorType, ascending);
+                case "Reference": return CompareComparableProperty<DataError>(f => f.Reference, ascending);
+                case "Name": return CompareComparableProperty<DataError>(f => f.Name, ascending);
+                case "Description": return CompareComparableProperty<DataError>(f => f.Description, ascending);
+                case "Born": return CompareComparableProperty<DataError>(f => f.Born, ascending);
+                case "Died": return CompareComparableProperty<DataError>(f => f.Died, ascending);
+                case "IsFamily": return CompareComparableProperty<DataError>(f => f.IsFamily, ascending);
+                default: return null;
+            }
         }
-#endif
+
+        Comparer<T> CompareComparableProperty<T>(Func<DataError, IComparable> accessor, bool ascending)
+        {
+            return Comparer<T>.Create((x, y) =>
+            {
+                var c1 = accessor(x as DataError);
+                var c2 = accessor(y as DataError);
+                var result = c1.CompareTo(c2);
+                return ascending ? result : -result;
+            });
+        }
     }
 }
+

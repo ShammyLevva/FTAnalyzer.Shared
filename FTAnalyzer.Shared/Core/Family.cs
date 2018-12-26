@@ -632,7 +632,30 @@ namespace FTAnalyzer
 
         public IComparer<IDisplayFamily> GetComparer(string columnName, bool ascending)
         {
-            throw new NotImplementedException();
+            switch (columnName)
+            {
+                case "FamilyID": return CompareComparableProperty<IDisplayFamily>(f => f.FamilyID, ascending);
+                case "HusbandID": return CompareComparableProperty<IDisplayFamily>(f => f.HusbandID, ascending);
+                case "Husband": return CompareComparableProperty<IDisplayFamily>(f => f.Husband, ascending);
+                case "WifeID": return CompareComparableProperty<IDisplayFamily>(f => f.WifeID, ascending);
+                case "Wife": return CompareComparableProperty<IDisplayFamily>(f => f.Wife, ascending);
+                case "Marriage": return CompareComparableProperty<IDisplayFamily>(f => f.Marriage, ascending);
+                case "Location": return CompareComparableProperty<IDisplayFamily>(f => f.Location, ascending);
+                case "Children": return CompareComparableProperty<IDisplayFamily>(f => f.Children, ascending);
+                case "FamilySize": return CompareComparableProperty<IDisplayFamily>(f => f.FamilySize, ascending);
+                default: return null;
+            }
+        }
+
+        Comparer<T> CompareComparableProperty<T>(Func<IDisplayFamily, IComparable> accessor, bool ascending)
+        {
+            return Comparer<T>.Create((x, y) =>
+            {
+                var c1 = accessor(x as IDisplayFamily);
+                var c2 = accessor(y as IDisplayFamily);
+                var result = c1.CompareTo(c2);
+                return ascending ? result : -result;
+            });
         }
     }
 }
