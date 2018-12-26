@@ -51,10 +51,10 @@ namespace FTAnalyzer
 #if __PC__
         [ColumnDetail("Family", 50)]
         public bool IsFamily => individual == null;
-#endif
+#elif __MAC__
         [ColumnDetail("Family", 50)]
         public string IsFamily => individual == null ? "Yes" : "No";
-
+#endif
         public IComparer<DataError> GetComparer(string columnName, bool ascending)
         {
             switch (columnName)
