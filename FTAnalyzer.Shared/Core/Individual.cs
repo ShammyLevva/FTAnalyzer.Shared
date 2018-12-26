@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -1203,11 +1204,8 @@ namespace FTAnalyzer
         public CensusColour V1895 => ColourCensusReport(CensusDate.SCOTVALUATION1895);
 
         public CensusColour V1905 => ColourCensusReport(CensusDate.SCOTVALUATION1905);
-
         public CensusColour V1915 => ColourCensusReport(CensusDate.SCOTVALUATION1915);
-
         public CensusColour V1920 => ColourCensusReport(CensusDate.SCOTVALUATION1920);
-
         public CensusColour V1925 => ColourCensusReport(CensusDate.SCOTVALUATION1925);
         #endregion
 
@@ -1418,25 +1416,169 @@ namespace FTAnalyzer
         {
             switch(columnName)
             {
-                case "Forenames": return new NameComparer(ascending, true);
-                case "Surname": return new NameComparer(ascending, false);
+                case "IndividualID": return CompareStringProperty<IDisplayIndividual>(i => i.IndividualID, ascending);
+                case "Forenames": return new NameComparer<IDisplayIndividual>(ascending, true);
+                case "Surname": return new NameComparer<IDisplayIndividual>(ascending, false);
+                case "BirthDate": return CompareDateProperty<IDisplayIndividual>(i => i.BirthDate, ascending);
+                case "BirthLocation": return CompareLocationProperty<IDisplayIndividual>(i => i.BirthLocation, ascending);
+                case "DeathDate": return CompareDateProperty<IDisplayIndividual>(i => i.DeathDate, ascending);
+                case "DeathLocation": return CompareLocationProperty<IDisplayIndividual>(i => i.DeathLocation, ascending);
+                case "Occupation": return CompareStringProperty<IDisplayIndividual>(i => i.Occupation, ascending);
+                case "Relation": return CompareStringProperty<IDisplayIndividual>(i => i.Relation, ascending);
+                case "RelationToRoot": return CompareStringProperty<IDisplayIndividual>(i => i.RelationToRoot, ascending);
+                case "MarriageCount": return CompareIntProperty<IDisplayIndividual>(i => i.MarriageCount, ascending);
+                case "ChildrenCount": return CompareIntProperty<IDisplayIndividual>(i => i.ChildrenCount, ascending);
+                case "BudgieCode": return CompareStringProperty<IDisplayIndividual>(i => i.BudgieCode, ascending);
+                case "Ahnentafel": return CompareDecimalProperty<IDisplayIndividual>(i => i.Ahnentafel, ascending);
+                case "Notes": return CompareStringProperty<IDisplayIndividual>(i => i.Notes, ascending);
                 default: return null;
             }
         }
 
         public IComparer<IDisplayColourCensus> GetComparer(string columnName, bool ascending)
         {
-            throw new NotImplementedException();
-        }
-
-        IComparer<IDisplayLooseDeath> IColumnComparer<IDisplayLooseDeath>.GetComparer(string columnName, bool ascending)
-        {
-            throw new NotImplementedException();
+            switch (columnName)
+            {
+                case "IndividualID": return CompareStringProperty<IDisplayColourCensus>(i => i.IndividualID, ascending);
+                case "Forenames": return  new NameComparer<IDisplayColourCensus>(ascending, true);
+                case "Surname": return new NameComparer<IDisplayColourCensus>(ascending, false);
+                case "Relation": return CompareStringProperty<IDisplayColourCensus>(i => i.Relation, ascending);
+                case "RelationToRoot": return CompareStringProperty<IDisplayColourCensus>(i => i.RelationToRoot, ascending);
+                case "BirthDate": return CompareDateProperty<IDisplayColourCensus>(i => i.BirthDate, ascending);
+                case "BirthLocation": return CompareLocationProperty<IDisplayColourCensus>(i => i.BirthLocation, ascending);
+                case "DeathDate": return CompareDateProperty<IDisplayColourCensus>(i => i.DeathDate, ascending);
+                case "DeathLocation": return CompareLocationProperty<IDisplayColourCensus>(i => i.DeathLocation, ascending);
+                case "C1841": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.C1841, ascending);
+                case "C1851": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.C1851, ascending);
+                case "C1861": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.C1861, ascending);
+                case "C1871": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.C1871, ascending);
+                case "C1881": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.C1881, ascending);
+                case "C1891": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.C1891, ascending);
+                case "C1901": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.C1901, ascending);
+                case "C1911": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.C1911, ascending);
+                case "C1939": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.C1939, ascending);
+                case "US1790": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.US1790, ascending);
+                case "US1800": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.US1800, ascending);
+                case "US1810": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.US1810, ascending);
+                case "US1820": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.US1820, ascending);
+                case "US1830": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.US1830, ascending);
+                case "US1840": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.US1840, ascending);
+                case "US1850": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.US1850, ascending);
+                case "US1860": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.US1860, ascending);
+                case "US1870": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.US1870, ascending);
+                case "US1880": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.US1880, ascending);
+                case "US1890": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.US1890, ascending);
+                case "US1900": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.US1900, ascending);
+                case "US1910": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.US1910, ascending);
+                case "US1920": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.US1920, ascending);
+                case "US1930": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.US1930, ascending);
+                case "US1940": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.US1940, ascending);
+                case "Ire1901": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.Ire1901, ascending);
+                case "Ire1911": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.Ire1911, ascending);
+                case "Can1851": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.Can1851, ascending);
+                case "Can1861": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.Can1861, ascending);
+                case "Can1871": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.Can1871, ascending);
+                case "Can1881": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.Can1881, ascending);
+                case "Can1891": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.Can1891, ascending);
+                case "Can1901": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.Can1901, ascending);
+                case "Can1906": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.Can1906, ascending);
+                case "Can1911": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.Can1911, ascending);
+                case "Can1916": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.Can1916, ascending);
+                case "Can1921": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.Can1921, ascending);
+                case "V1865": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.V1865, ascending);
+                case "V1875": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.V1875, ascending);
+                case "V1885": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.V1885, ascending);
+                case "V1895": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.V1895, ascending);
+                case "V1905": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.V1905, ascending);
+                case "V1915": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.V1915, ascending);
+                case "V1920": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.V1920, ascending);
+                case "V1925": return CompareIntProperty<IDisplayColourCensus>(i => (int)i.V1925, ascending);
+                case "Ahnentafel": return CompareDecimalProperty<IDisplayColourCensus>(i => i.Ahnentafel, ascending);
+                default: return null;
+            }
         }
 
         IComparer<IDisplayLooseBirth> IColumnComparer<IDisplayLooseBirth>.GetComparer(string columnName, bool ascending)
         {
-            throw new NotImplementedException();
+            switch (columnName)
+            {
+                case "IndividualID": return CompareStringProperty<IDisplayLooseBirth>(i => i.IndividualID, ascending);
+                case "Forenames": return new NameComparer<IDisplayLooseBirth>(ascending, true);
+                case "Surname": return new NameComparer<IDisplayLooseBirth>(ascending, false);
+                case "BirthDate": return CompareDateProperty<IDisplayLooseBirth>(i => i.BirthDate, ascending);
+                case "BirthLocation": return CompareLocationProperty<IDisplayLooseBirth>(i => i.BirthLocation, ascending);
+                case "LooseBirth": return CompareDateProperty<IDisplayLooseBirth>(i => i.LooseBirthDate, ascending);
+                default: return null;
+            }
+        }
+
+        IComparer<IDisplayLooseDeath> IColumnComparer<IDisplayLooseDeath>.GetComparer(string columnName, bool ascending)
+        {
+            switch (columnName)
+            {
+                case "IndividualID": return CompareStringProperty<IDisplayLooseDeath>(i => i.IndividualID, ascending);
+                case "Forenames": return new NameComparer<IDisplayLooseDeath>(ascending, true);
+                case "Surname": return new NameComparer<IDisplayLooseDeath>(ascending, false);
+                case "BirthDate": return CompareDateProperty<IDisplayLooseDeath>(i => i.DeathDate, ascending);
+                case "BirthLocation": return CompareLocationProperty<IDisplayLooseDeath>(i => i.DeathLocation, ascending);
+                case "LooseBirth": return CompareDateProperty<IDisplayLooseDeath>(i => i.LooseDeathDate, ascending);
+                default: return null;
+            }
+        }
+
+        Comparer<T> CompareStringProperty<T>(Func<Individual, string> accessor, bool ascending)
+        {
+            return Comparer<T>.Create((x, y) =>
+            {
+                var s1 = accessor(x as Individual);
+                var s2 = accessor(y as Individual);
+                var result = string.Compare(s1, s2);
+                return ascending ? result : -result;
+            });
+        }
+
+        Comparer<T> CompareIntProperty<T>(Func<Individual, int> accessor, bool ascending)
+        {
+            return Comparer<T>.Create((x, y) =>
+            {
+                var i1 = accessor(x as Individual);
+                var i2 = accessor(y as Individual);
+                var result = i1 - i2;
+                return ascending ? result : -result;
+            });
+        }
+
+        Comparer<T> CompareDecimalProperty<T>(Func<Individual, decimal> accessor, bool ascending)
+        {
+            return Comparer<T>.Create((x, y) =>
+            {
+                var d1 = accessor(x as Individual);
+                var d2 = accessor(y as Individual);
+                var result = decimal.Compare(d1, d2);
+                return ascending ? result : -result;
+            });
+        }
+
+        Comparer<T> CompareDateProperty<T>(Func<Individual, FactDate> accessor, bool ascending)
+        {
+            return Comparer<T>.Create((x, y) =>
+            {
+                var fd1 = accessor(x as Individual);
+                var fd2 = accessor(y as Individual);
+                int result = fd1.CompareTo(fd2);
+                return ascending ? result : -result;
+            });
+        }
+
+        Comparer<T> CompareLocationProperty<T>(Func<Individual, FactLocation> accessor, bool ascending)
+        {
+            return Comparer<T>.Create((x, y) =>
+            {
+                var fl1 = accessor(x as Individual);
+                var fl2 = accessor(y as Individual);
+                int result = fl1.CompareTo(fl2);
+                return ascending ? result : -result;
+            });
         }
         #endregion
     }

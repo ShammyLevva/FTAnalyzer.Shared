@@ -73,13 +73,93 @@ namespace FTAnalyzer
 
         public override string ToString()
         {
-            return Ind == null ? Fact.FactTypeDescription + ": " + Fact.FactDate + " " + Fact.Comment 
-                               : IndividualID + ": " + Forenames + " " + Surname + ", " + Fact;
+            return Ind == null ? $"{Fact.FactTypeDescription}: {Fact.FactDate} {Fact.Comment}" 
+                               : $"{IndividualID}: {Forenames} {Surname}, {Fact}";
         }
 
         public IComparer<IDisplayFact> GetComparer(string columnName, bool ascending)
         {
-            throw new NotImplementedException();
+            switch (columnName)
+            {
+                case "IndividualID": return CompareStringProperty<IDisplayFact>(f => f.IndividualID, ascending);
+                case "Surname": return new NameComparer<IDisplayFact>(ascending, false);
+                case "Forenames": return new NameComparer<IDisplayFact>(ascending, true);
+                case "DateofBirth": return CompareDateProperty<IDisplayFact>(f => f.DateofBirth, ascending);
+                case "SurnameAtDate": return CompareStringProperty<IDisplayFact>(f => f.SurnameAtDate, ascending);
+                case "TypeOfFact": return CompareStringProperty<IDisplayFact>(f => f.TypeOfFact, ascending);
+                case "FactDate": return CompareDateProperty<IDisplayFact>(f => f.FactDate, ascending);
+                case "Relation": return CompareStringProperty<IDisplayFact>(f => f.Relation, ascending);
+                case "RelationToRoot": return CompareStringProperty<IDisplayFact>(f => f.RelationToRoot, ascending);
+                case "Location": return CompareLocationProperty<IDisplayFact>(f => f.Location, ascending);
+                case "AgeAtFact": return CompareAgeProperty<IDisplayFact>(f => f.AgeAtFact, ascending);
+                case "GeocodeStatus": return CompareStringProperty<IDisplayFact>(f => f.GeocodeStatus, ascending);
+                case "FoundLocation": return CompareStringProperty<IDisplayFact>(f => f.FoundLocation, ascending);
+                case "FoundResultType": return CompareStringProperty<IDisplayFact>(f => f.FoundResultType, ascending);
+                case "CensusReference": return CompareStringProperty<IDisplayFact>(f => f.CensusReference.ToString(), ascending);
+                case "CensusRefYear": return CompareStringProperty<IDisplayFact>(f => f.CensusRefYear, ascending);
+                case "Comment": return CompareStringProperty<IDisplayFact>(f => f.Comment, ascending);
+                case "SourceList": return CompareStringProperty<IDisplayFact>(f => f.SourceList, ascending);
+                case "Latitude": return CompareDoubleProperty<IDisplayFact>(f => f.Latitude, ascending);
+                case "Longitude": return CompareDoubleProperty<IDisplayFact>(f => f.Longitude, ascending);
+                case "Preferred": return CompareStringProperty<IDisplayFact>(f => f.Preferred, ascending);
+                case "IgnoredFact": return CompareStringProperty<IDisplayFact>(f => f.IgnoredFact, ascending);
+                default: return null;
+            }
+        }
+
+        Comparer<T> CompareStringProperty<T>(Func<DisplayFact, string> accessor, bool ascending)
+        {
+            return Comparer<T>.Create((x, y) =>
+            {
+                var s1 = accessor(x as DisplayFact);
+                var s2 = accessor(y as DisplayFact);
+                var result = string.Compare(s1, s2);
+                return ascending ? result : -result;
+            });
+        }
+
+        Comparer<T> CompareDoubleProperty<T>(Func<DisplayFact, double> accessor, bool ascending)
+        {
+            return Comparer<T>.Create((x, y) =>
+            {
+                var d1 = accessor(x as DisplayFact);
+                var d2 = accessor(y as DisplayFact);
+                double result = ascending ? d1 - d2 : d2 - d1;
+                return Math.Sign(result);
+            });
+        }
+
+        Comparer<T> CompareDateProperty<T>(Func<DisplayFact, FactDate> accessor, bool ascending)
+        {
+            return Comparer<T>.Create((x, y) =>
+            {
+                var fd1 = accessor(x as DisplayFact);
+                var fd2 = accessor(y as DisplayFact);
+                int result = fd1.CompareTo(fd2);
+                return ascending ? result : -result;
+            });
+        }
+
+        Comparer<T> CompareLocationProperty<T>(Func<DisplayFact, FactLocation> accessor, bool ascending)
+        {
+            return Comparer<T>.Create((x, y) =>
+            {
+                var fl1 = accessor(x as DisplayFact);
+                var fl2 = accessor(y as DisplayFact);
+                int result = fl1.CompareTo(fl2);
+                return ascending ? result : -result;
+            });
+        }
+
+        Comparer<T> CompareAgeProperty<T>(Func<DisplayFact, Age> accessor, bool ascending)
+        {
+            return Comparer<T>.Create((x, y) =>
+            {
+                var a1 = accessor(x as DisplayFact);
+                var a2 = accessor(y as DisplayFact);
+                int result = a1.CompareTo(a2);
+                return ascending ? result : -result;
+            });
         }
     }
 }

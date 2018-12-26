@@ -2,11 +2,18 @@
 
 namespace FTAnalyzer
 {
-    public class DefaultIndividualComparer : Comparer<IDisplayIndividual>
+    public class DefaultIndividualComparer : Comparer<Individual>
     {
-        public override int Compare(IDisplayIndividual x, IDisplayIndividual y)
+        int Ascending { get; }
+
+        public DefaultIndividualComparer(bool ascending)
         {
-            return string.Compare(x.IndividualID, y.IndividualID, System.StringComparison.Ordinal);
+             Ascending = ascending ? 1 : -1;
+        }
+
+        public override int Compare(Individual x, Individual y)
+        {
+            return Ascending * string.Compare(x.IndividualID, y.IndividualID, System.StringComparison.Ordinal);
         }
     }
 }

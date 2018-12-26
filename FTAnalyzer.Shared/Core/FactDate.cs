@@ -1017,10 +1017,7 @@ namespace FTAnalyzer
         }
 
 
-        public static bool operator !=(FactDate a, FactDate b)
-        {
-            return !(a == b);
-        }
+        public static bool operator !=(FactDate a, FactDate b) => !(a == b);
 
         public override int GetHashCode() => base.GetHashCode();
 
