@@ -51,7 +51,7 @@ namespace FTAnalyzer.Utilities
                             ShowSurnamesEvent = "Show Surnames Clicked", CousinCountEvent = "Cousins Count Viewed", DirectsReportEvent = "How Many Directs Viewed", 
                             FacebookSupportEvent = "Visited Facebook Support", FacebookUsersEvent = "Visited Facebook Usergroup", CountriesTabEvent = "Countries Tab Viewed", 
                             RegionsTabEvent = "Regions Tab Viewed", SubRegionsTabEvent = "SubRegions Tab Viewed", AddressesTabEvent = "Addresses Tab Viewed", 
-                            PlacesTabEvent = "Places Tab Viewed";
+                            PlacesTabEvent = "Places Tab Viewed", ExportLocationsEvent ="Locations Exported";
 
         public const string FactsIndividualsEvent = "Individual Facts Viewed", FactsFamiliesEvent = "Family Facts Viewed", 
                             FactsGroupIndividualsEvent = "Various Individuals Facts Viewed", FactsDuplicatesEvent = "Duplicate Facts Viewed", 
