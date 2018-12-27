@@ -15,15 +15,14 @@ namespace FTAnalyzer.Exports
     {
         static readonly FactDate PrivacyDate = new FactDate(DateTime.Now.AddYears(-100).ToString("dd MMM yyyy", FactDate.CULTURE));
         static FamilyTree ft = FamilyTree.Instance;
-        static readonly bool _includeSiblings;
-        static readonly bool _includeDescendants;
+        static bool _includeSiblings;
+        static bool _includeDescendants;
         static List<Individual> processed;
         static StreamWriter output;
 #if __MACOS__
         static AppDelegate App => (AppDelegate)NSApplication.SharedApplication.Delegate;
 #endif
 
-#if __PC__
         public static void Export()
         {
             int siblingsResult = UIHelpers.ShowYesNo("Do you want to include SIBLINGS of direct ancestors in the export?");
@@ -38,22 +37,11 @@ namespace FTAnalyzer.Exports
                     _includeDescendants = descendantsResult == UIHelpers.Yes;
                     try
                     {
-                        SaveFileDialog saveFileDialog = new SaveFileDialog();
-                        string initialDir = (string)Application.UserAppDataRegistry.GetValue("Export DNA GEDCOM Path");
-                        saveFileDialog.InitialDirectory = initialDir ?? Environment.SpecialFolder.MyDocuments.ToString();
-                        saveFileDialog.Filter = "Comma Separated Value (*.ged)|*.ged";
-                        saveFileDialog.FilterIndex = 1;
-                        DialogResult dr = saveFileDialog.ShowDialog();
-                        if (dr == DialogResult.OK)
-                        {
-                            string path = Path.GetDirectoryName(saveFileDialog.FileName);
-                            Application.UserAppDataRegistry.SetValue("Export DNA GEDCOM Path", path);
-                            WriteFile(saveFileDialog.FileName);
-                        }
+                        GetFilename();
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message, "FTAnalyzer");
+                        UIHelpers.ShowMessage(ex.Message, "FTAnalyzer");
                     }
                     finally
                     {
@@ -62,8 +50,24 @@ namespace FTAnalyzer.Exports
                 }
             }
         }
+#if __PC__
+        static void GetFilename()
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            string initialDir = (string)Application.UserAppDataRegistry.GetValue("Export DNA GEDCOM Path");
+            saveFileDialog.InitialDirectory = initialDir ?? Environment.SpecialFolder.MyDocuments.ToString();
+            saveFileDialog.Filter = "Comma Separated Value (*.ged)|*.ged";
+            saveFileDialog.FilterIndex = 1;
+            DialogResult dr = saveFileDialog.ShowDialog();
+            if (dr == DialogResult.OK)
+            {
+                string path = Path.GetDirectoryName(saveFileDialog.FileName);
+                Application.UserAppDataRegistry.SetValue("Export DNA GEDCOM Path", path);
+                WriteFile(saveFileDialog.FileName);
+            }
+        }
 #elif __MACOS__
-        public static void Export()
+        static void GetFilename()
         {
 
         }

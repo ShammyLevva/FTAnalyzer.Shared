@@ -4,11 +4,13 @@ using System.Data;
 using System.IO;
 #if __PC__
 using System.Windows.Forms;
+#elif __MACOS__
+using AppKit;
 #endif
 
 namespace FTAnalyzer.Utilities
 {
-    public class ExportToExcel
+    public static class ExportToExcel
     {
 #if __PC__
         public static void Export(DataTable dt)
@@ -39,7 +41,13 @@ namespace FTAnalyzer.Utilities
         {
             try
             {
-
+                var dlg = new NSSavePanel
+                {
+                    Title = "Export data to Excel",
+                    AllowedFileTypes = new string[] { "csv" }
+                };
+                if (dlg.RunModal() == 1)
+                    WriteFile(dt, dlg.Url.ToString());
             }
             catch (Exception ex)
             {
