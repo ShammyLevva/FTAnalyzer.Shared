@@ -697,6 +697,8 @@ namespace FTAnalyzer
 
         public IEnumerable<FactSource> AllSources => sources;
 
+        public IEnumerable<DataError> AllDataErrors => DataErrorTypes.SelectMany(dg => dg.Errors);
+
         public int IndividualCount => individuals.Count;
 
         public List<Individual> DeadOrAlive => individuals.Filter(x => x.DeathDate.IsKnown && x.IsFlaggedAsLiving).ToList();

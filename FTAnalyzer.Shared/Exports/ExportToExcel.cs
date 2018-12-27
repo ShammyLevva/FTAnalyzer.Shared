@@ -28,7 +28,7 @@ namespace FTAnalyzer.Utilities
                     string path = Path.GetDirectoryName(saveFileDialog.FileName);
                     Application.UserAppDataRegistry.SetValue("Excel Export Individual Path", path);
                     WriteFile(dt, saveFileDialog.FileName);
-                    MessageBox.Show("File written to " + saveFileDialog.FileName, "FTAnalyzer");
+                    MessageBox.Show($"File written to {saveFileDialog.FileName}", "FTAnalyzer");
                 }
             }
             catch (Exception ex)
@@ -47,7 +47,10 @@ namespace FTAnalyzer.Utilities
                     AllowedFileTypes = new string[] { "csv" }
                 };
                 if (dlg.RunModal() == 1)
-                    WriteFile(dt, dlg.Url.ToString());
+                {
+                    WriteFile(dt, dlg.Url.Path);
+                    UIHelpers.ShowMessage($"File written to {dlg.Url.Path}", "FTAnalyzer");
+                }
             }
             catch (Exception ex)
             {

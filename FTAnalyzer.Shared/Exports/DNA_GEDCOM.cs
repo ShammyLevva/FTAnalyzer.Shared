@@ -51,7 +51,7 @@ namespace FTAnalyzer.Exports
             }
         }
 #if __PC__
-        static void GetFilename()
+        public static void GetFilename()
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             string initialDir = (string)Application.UserAppDataRegistry.GetValue("Export DNA GEDCOM Path");
@@ -64,12 +64,29 @@ namespace FTAnalyzer.Exports
                 string path = Path.GetDirectoryName(saveFileDialog.FileName);
                 Application.UserAppDataRegistry.SetValue("Export DNA GEDCOM Path", path);
                 WriteFile(saveFileDialog.FileName);
+                UIHelpers.ShowMessage($"GEDCOM File written to {dlg.Url.Path}", "FTAnalyzer");
             }
         }
 #elif __MACOS__
-        static void GetFilename()
+        public static void GetFilename()
         {
-
+            try
+            {
+                var dlg = new NSSavePanel
+                {
+                    Title = "Export GEDCOM File of skeleton tree",
+                    AllowedFileTypes = new string[] { "ged" }
+                };
+                if (dlg.RunModal() == 1)
+                {
+                    WriteFile(dlg.Url.Path);
+                    UIHelpers.ShowMessage($"GEDCOM File written to {dlg.Url.Path}", "FTAnalyzer");
+                }
+            }
+            catch (Exception ex)
+            {
+                UIHelpers.ShowMessage(ex.Message, "FTAnalyzer");
+            }
         }
 #endif
         static void WriteFile(string filename)
