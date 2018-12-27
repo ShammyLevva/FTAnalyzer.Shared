@@ -34,7 +34,18 @@ namespace FTAnalyzer.Utilities
                 MessageBox.Show(ex.Message, "FTAnalyzer");
             }
         }
-
+#elif __MACOS__
+        public static void Export(DataTable dt)
+        {
+            try
+            {
+        }
+            catch (Exception ex)
+            {
+                UIHelpers.ShowMessage(ex.Message, "FTAnalyzer");
+            }
+        }
+#endif
         static void WriteFile(DataTable table, string filename)
         {
             string q = "\"";
@@ -62,6 +73,5 @@ namespace FTAnalyzer.Utilities
             }
             output.Close();
         }
-#endif
     }
 }
