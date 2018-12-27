@@ -39,7 +39,8 @@ namespace FTAnalyzer.Utilities
         {
             try
             {
-        }
+
+            }
             catch (Exception ex)
             {
                 UIHelpers.ShowMessage(ex.Message, "FTAnalyzer");
