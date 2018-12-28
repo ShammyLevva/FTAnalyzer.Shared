@@ -78,10 +78,7 @@ namespace FTAnalyzer.Exports
                     AllowedFileTypes = new string[] { "ged" }
                 };
                 if (dlg.RunModal() == 1)
-                {
                     WriteFile(dlg.Url.Path);
-                    UIHelpers.ShowMessage($"GEDCOM File written to {dlg.Url.Path}", "FTAnalyzer");
-                }
             }
             catch (Exception ex)
             {
