@@ -64,7 +64,6 @@ namespace FTAnalyzer.Exports
                 string path = Path.GetDirectoryName(saveFileDialog.FileName);
                 Application.UserAppDataRegistry.SetValue("Export DNA GEDCOM Path", path);
                 WriteFile(saveFileDialog.FileName);
-                UIHelpers.ShowMessage($"GEDCOM File written to {dlg.Url.Path}", "FTAnalyzer");
             }
         }
 #elif __MACOS__
