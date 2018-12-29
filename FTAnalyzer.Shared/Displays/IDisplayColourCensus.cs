@@ -5,7 +5,7 @@ namespace FTAnalyzer
 {
     public interface IDisplayColourCensus : IColumnComparer<IDisplayColourCensus>
     {
-        [ColumnDetail("Ref", 60)]
+        [ColumnDetail("Ref", 50)]
         string IndividualID { get; }
         [ColumnDetail("Forenames", 100)]
         string Forenames { get; }
