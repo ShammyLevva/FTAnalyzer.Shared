@@ -2061,7 +2061,12 @@ namespace FTAnalyzer
                     year = (endYear + startYear + 1) / 2;
                     range = (endYear - startYear + 1) / 2;
                     if (2 < range && range < 5) range = 5;
-                    if (range > 5) range = 10;
+                    if (range > 5)
+                    {
+                        year = startYear + 5;
+                        range = 10;
+                    }
+                    if (year > censusYear) year = censusYear;
                 }
                 query.Append("msbdy=" + year + "&");
                 query.Append("msbdp=" + range + "&");
@@ -2113,7 +2118,12 @@ namespace FTAnalyzer
                     year = (endYear + startYear + 1) / 2;
                     range = (endYear - startYear + 1) / 2;
                     if (2 < range && range < 5) range = 5;
-                    if (range > 5) range = 10;
+                    if (range > 5)
+                    {
+                        year = startYear + 5;
+                        range = 10;
+                    }
+                    if (year > 1939) year = 1939;
                 }
                 query.Append($"birth={year}&");
                 query.Append($"birth_x={range}-0-0&");
@@ -2185,7 +2195,11 @@ namespace FTAnalyzer
                 else if (range <= 5)
                     query.Append("r=5&");
                 else
+                {
+                    year = startYear + 5;
                     query.Append("r=10&");
+                }
+                if (year > censusYear) year = censusYear;
                 query.Append("a=" + year + "&");
             }
             if (person.BirthLocation.IsKnown)
@@ -2253,7 +2267,11 @@ namespace FTAnalyzer
                 {
                     year = (endYear + startYear + 1) / 2;
                     range = (endYear - startYear + 3) / 2;
-                    if (range > 5) range = 10;
+                    if (range > 5)
+                    {
+                        year = startYear + 5;
+                        range = 10;
+                    }
                     if (year > censusYear) year = censusYear;
                 }
                 query.Append("yearofbirth=" + year + "&");
@@ -2326,7 +2344,11 @@ namespace FTAnalyzer
                 {
                     year = (endYear + startYear + 1) / 2;
                     range = (endYear - startYear + 3) / 2;
-                    if (range > 5) range = 10;
+                    if (range > 5)
+                    {
+                        year = startYear + 5;
+                        range = 10;
+                    }
                     if (year > 1939) year = 1939;
                 }
                 query.Append("yearofbirth=" + year + "&");
