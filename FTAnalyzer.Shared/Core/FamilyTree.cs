@@ -1,6 +1,7 @@
 ﻿using FTAnalyzer.Filters;
 using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
+using FTAnalyzer.ViewControllers;
 using System;
 using System.Collections.Generic;
 using System.Globalization;

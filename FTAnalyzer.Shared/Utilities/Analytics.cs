@@ -2,6 +2,7 @@
 using GoogleAnalyticsTracker.Simple;
 using System;
 using System.Threading.Tasks;
+using FTAnalyzer.iOS;
 
 #if __PC__
 using FTAnalyzer.Properties;
@@ -9,6 +10,9 @@ using System.Deployment.Application;
 using System.Windows.Forms;
 #elif __MACOS__
 using AppKit;
+using Foundation;
+#elif __IOS__
+using UIKit;
 using Foundation;
 #endif
 
@@ -98,6 +102,25 @@ namespace FTAnalyzer.Utilities
             AppVersion = app.Version;
             DeploymentType = "Mac Website";
             string resolution = NSScreen.MainScreen.Frame.ToString();
+#elif __IOS__
+            var userDefaults = new NSUserDefaults();
+            GUID = userDefaults.StringForKey("AnalyticsKey");
+            if (string.IsNullOrEmpty(GUID))
+            {
+                GUID = Guid.NewGuid().ToString();
+                userDefaults.SetString(GUID, "AnalyticsKey");
+                userDefaults.Synchronize();
+            }
+            NSProcessInfo info = new NSProcessInfo();
+            OSVersion = $"MacOSX {info.OperatingSystemVersionString}";
+            trackerEnvironment = new SimpleTrackerEnvironment("Mac OSX", info.OperatingSystemVersion.ToString(), OSVersion);
+            analyticsSession = new AnalyticsSession();
+            tracker = new SimpleTracker("UA-125850339-2", analyticsSession, trackerEnvironment);
+            var app = (AppDelegate)UIApplication.SharedApplication.Delegate;
+            AppVersion = app.Version;
+            DeploymentType = "Mac Website";
+            string resolution = UIScreen.MainScreen.Bounds.ToString();
+
 #endif
             Resolution = resolution.Length > 11 ? resolution.Substring(9, resolution.Length - 10) : resolution;
         }

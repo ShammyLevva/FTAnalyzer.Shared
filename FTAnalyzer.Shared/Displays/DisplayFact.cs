@@ -47,7 +47,7 @@ namespace FTAnalyzer
         public System.Drawing.Image LocationIcon => FactLocationImage.ErrorIcon(Fact.Location.GeocodeStatus).Icon;
         public bool Preferred => Fact.Preferred;
         public bool IgnoredFact => IgnoreFact;
-#elif __MACOS__
+#elif __MACOS__ || __IOS__
         public string Preferred => Fact.Preferred ? "Yes" : "No";
         public string IgnoredFact => IgnoreFact ? "Yes" : "No";
 #endif

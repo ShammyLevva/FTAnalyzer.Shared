@@ -1,4 +1,4 @@
-﻿using FTAnalyzer.Utilities;
+﻿using FTAnalyzer.iOS;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,6 +7,8 @@ using System.Text;
 using System.Windows.Forms;
 #elif __MACOS__
 using AppKit;
+#elif __IOS__
+using UIKit;
 #endif
 
 namespace FTAnalyzer.Exports
@@ -23,6 +25,8 @@ namespace FTAnalyzer.Exports
         static StreamWriter output;
 #if __MACOS__
         static AppDelegate App => (AppDelegate)NSApplication.SharedApplication.Delegate;
+#elif __IOS__
+        static AppDelegate App => (AppDelegate)UIApplication.SharedApplication.Delegate;
 #endif
 
         public static void Export()
@@ -90,6 +94,11 @@ namespace FTAnalyzer.Exports
             {
                 UIHelpers.ShowMessage(ex.Message, "FTAnalyzer");
             }
+        }
+#elif __IOS__
+        public static void GetFilename()
+        {
+
         }
 #endif
         static void WriteFile(string filename)
@@ -213,7 +222,7 @@ namespace FTAnalyzer.Exports
         {
 #if __PC__
             var version = MainForm.VERSION;
-#elif __MACOS__
+#elif __MACOS__ || __IOS__
             var version = App.Version;
 #endif
             output.WriteLine($"0 HEAD");
