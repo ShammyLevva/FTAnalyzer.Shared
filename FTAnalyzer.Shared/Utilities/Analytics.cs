@@ -2,7 +2,6 @@
 using GoogleAnalyticsTracker.Simple;
 using System;
 using System.Threading.Tasks;
-using FTAnalyzer.iOS;
 
 #if __PC__
 using FTAnalyzer.Properties;
