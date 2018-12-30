@@ -17,6 +17,8 @@ namespace FTAnalyzer.Exports
         static FamilyTree ft = FamilyTree.Instance;
         static bool _includeSiblings;
         static bool _includeDescendants;
+        static bool _privatise;
+        static int _privateID;
         static List<Individual> processed;
         static StreamWriter output;
 #if __MACOS__
@@ -25,27 +27,32 @@ namespace FTAnalyzer.Exports
 
         public static void Export()
         {
-            int siblingsResult = UIHelpers.ShowYesNo("Do you want to include SIBLINGS of direct ancestors in the export?");
-            if (siblingsResult != UIHelpers.Cancel)
+            int privatise = UIHelpers.ShowYesNo("Do you want living people replaced with 'Private Person' and their details hidden");
+            if (privatise != UIHelpers.Cancel)
             {
-                int descendantsResult = UIHelpers.No;
-                if (siblingsResult == UIHelpers.Yes) // only ask about descendants if including siblings
-                    descendantsResult = UIHelpers.ShowYesNo("Do you want to include DESCENDANTS of siblings in the export?");
-                if (descendantsResult != UIHelpers.Cancel)
+                int siblingsResult = UIHelpers.ShowYesNo("Do you want to include SIBLINGS of direct ancestors in the export?");
+                if (siblingsResult != UIHelpers.Cancel)
                 {
-                    _includeSiblings = siblingsResult == UIHelpers.Yes;
-                    _includeDescendants = descendantsResult == UIHelpers.Yes;
-                    try
+                    int descendantsResult = UIHelpers.No;
+                    if (siblingsResult == UIHelpers.Yes) // only ask about descendants if including siblings
+                        descendantsResult = UIHelpers.ShowYesNo("Do you want to include DESCENDANTS of siblings in the export?");
+                    if (descendantsResult != UIHelpers.Cancel)
                     {
-                        GetFilename();
-                    }
-                    catch (Exception ex)
-                    {
-                        UIHelpers.ShowMessage(ex.Message, "FTAnalyzer");
-                    }
-                    finally
-                    {
-                        output.Close();
+                        _privatise = privatise == UIHelpers.Yes;
+                        _includeSiblings = siblingsResult == UIHelpers.Yes;
+                        _includeDescendants = descendantsResult == UIHelpers.Yes;
+                        try
+                        {
+                            GetFilename();
+                        }
+                        catch (Exception ex)
+                        {
+                            UIHelpers.ShowMessage(ex.Message, "FTAnalyzer");
+                        }
+                        finally
+                        {
+                            output.Close();
+                        }
                     }
                 }
             }
@@ -89,6 +96,7 @@ namespace FTAnalyzer.Exports
         {
             List<Family> families = new List<Family>();
             List<Individual> spouses = new List<Individual>();
+            _privateID = 1;
             output = new StreamWriter(new FileStream(filename, FileMode.Create, FileAccess.Write), Encoding.UTF8);
             WriteHeader(filename);
             processed = new List<Individual>();
@@ -114,9 +122,9 @@ namespace FTAnalyzer.Exports
                         families.Add(asSpouse);
                 }
             }
+            WriteSpouses(spouses);
             if (_includeSiblings)
                 WriteSiblings(families);
-            WriteSpouses(spouses);
             WriteFamilies(families);
             WriteFooter();
             UIHelpers.ShowMessage("Minimalist GEDCOM file written for use with DNA Matching. Upload today.");
@@ -128,7 +136,7 @@ namespace FTAnalyzer.Exports
             foreach (Family fam in families)
             {
                 foreach (Individual child in fam.Children)
-                {
+                { 
                     if (child.RelationType != Individual.DIRECT && child.RelationType != Individual.DESCENDANT) // only write out siblings not directs at this point
                     {
                         if(_includeDescendants)
@@ -155,6 +163,7 @@ namespace FTAnalyzer.Exports
                 if(i.IsBloodDirect)
                     queue.Enqueue(i);
             Individual ind;
+            List<Family> descendantFamilies = new List<Family>();
             while(queue.Count > 0)
             {
                 ind = queue.Dequeue();
@@ -165,18 +174,20 @@ namespace FTAnalyzer.Exports
                     if(fam.Husband != null && fam.Husband.IsBloodDirect)
                         WriteIndividual(fam.Husband);
                     if (fam.Wife != null && fam.Wife.IsBloodDirect)
-                        WriteIndividual(fam.Husband);
+                        WriteIndividual(fam.Wife);
                     foreach (Individual child in fam.Children)
                         queue.Enqueue(child);
+                    descendantFamilies.Add(fam);
                 }
             }
+            WriteFamilies(descendantFamilies);
         }
 
         static void WriteFamilies(List<Family> families)
         {
             foreach(Family fam in families)
             {
-                bool isPrivate = fam.FamilyDate.IsAfter(PrivacyDate) &&
+                bool isPrivate = _privatise && fam.FamilyDate.IsAfter(PrivacyDate) &&
                                 ((fam.Husband != null && fam.Husband.IsAlive(FactDate.TODAY)) ||
                                  (fam.Wife != null && fam.Wife.IsAlive(FactDate.TODAY))); // if marriage is after privacy date and either party is alive then make marriage private
                 output.WriteLine($"0 @{fam.FamilyID}@ FAM");
@@ -222,18 +233,19 @@ namespace FTAnalyzer.Exports
         {
             if (ind == null || processed.Contains(ind))
                 return; // don't write out individual if already processed
-            bool isPrivate = ind.BirthDate.IsAfter(PrivacyDate) && ind.IsAlive(FactDate.TODAY);
+            bool isPrivate = _privatise && ind.BirthDate.IsAfter(PrivacyDate) && ind.IsAlive(FactDate.TODAY);
             output.WriteLine($"0 @{ind.IndividualID}@ INDI");
             if (isPrivate)
             {
-                output.WriteLine("1 NAME Private /Person/");
-                output.WriteLine("2 GIVN Private");
+                output.WriteLine($"1 NAME Private {_privateID} /Person/");
+                output.WriteLine($"2 GIVN Private {_privateID}");
                 output.WriteLine("2 SURN Person");
+                _privateID++;
             }
             else
             {
-                output.WriteLine($"1 NAME {ind.Forename} /{ind.Surname}/");
-                output.WriteLine($"2 GIVN {ind.Forename}");
+                output.WriteLine($"1 NAME {ind.Forenames} /{ind.Surname}/");
+                output.WriteLine($"2 GIVN {ind.Forenames}");
                 output.WriteLine($"2 SURN {ind.Surname}");
             }
             output.WriteLine($"1 SEX {(ind.IsMale ? 'M' : 'F')}");
