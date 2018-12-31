@@ -18,7 +18,7 @@ using System.Xml;
 
 #if __PC__
 using FTAnalyzer.Controls;
-#elif __MACOS__
+#elif __MACOS__ || __IOS__
 using FTAnalyzer.ViewControllers;
 #endif
 

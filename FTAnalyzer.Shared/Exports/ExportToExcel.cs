@@ -39,22 +39,16 @@ namespace FTAnalyzer.Utilities
 #elif __MACOS__
         public static void Export(DataTable dt)
         {
-            try
+            var dlg = new NSSavePanel
             {
-                var dlg = new NSSavePanel
-                {
-                    Title = "Export data to Excel",
-                    AllowedFileTypes = new string[] { "csv" }
-                };
-                if (dlg.RunModal() == 1)
-                {
-                    WriteFile(dt, dlg.Url.Path);
-                    UIHelpers.ShowMessage($"File written to {dlg.Url.Path}", "FTAnalyzer");
-                }
-            }
-            catch (Exception ex)
+                Title = "Export data to Excel",
+                AllowedFileTypes = new string[] { "csv" },
+                Message = "Select location to export file to"
+            };
+            if (dlg.RunModal() == 1)
             {
-                UIHelpers.ShowMessage(ex.Message, "FTAnalyzer");
+                WriteFile(dt, dlg.Url.Path);
+                UIHelpers.ShowMessage($"File written to {dlg.Url.Path}", "FTAnalyzer");
             }
         }
 #endif
@@ -67,7 +61,7 @@ namespace FTAnalyzer.Utilities
 
             for (int j = 0; j < columnscount; j++)
             {   //Get column headers  and make it as bold in excel columns
-                output.Write(q + table.Columns[j].ColumnName.ToString() + q);
+                output.Write(q + table.Columns[j].ColumnName + q);
                 if (j < columnscount - 1)
                     output.Write(",");
             }
