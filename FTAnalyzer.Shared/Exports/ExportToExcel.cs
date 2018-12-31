@@ -45,7 +45,7 @@ namespace FTAnalyzer.Utilities
                 AllowedFileTypes = new string[] { "csv" },
                 Message = "Select location to export file to"
             };
-            if (dlg.RunModal() == 1)
+            if (dlg.RunModal().Equals(NSPanelButtonType.Ok))
             {
                 WriteFile(dt, dlg.Url.Path);
                 UIHelpers.ShowMessage($"File written to {dlg.Url.Path}", "FTAnalyzer");
