@@ -37,15 +37,16 @@ namespace FTAnalyzer.Utilities
             }
         }
 #elif __MACOS__
-        public static void Export(DataTable dt)
+        public static void Export(DataTable dt, string exportType)
         {
             var dlg = new NSSavePanel
             {
                 Title = "Export data to Excel",
                 AllowedFileTypes = new string[] { "csv" },
-                Message = "Select location to export file to"
+                Message = "Select location to export file to",
+                NameFieldStringValue = exportType
             };
-            if (dlg.RunModal().Equals(NSPanelButtonType.Ok))
+            if (dlg.RunModal().Equals(NSModalResponse.OK))
             {
                 WriteFile(dt, dlg.Url.Path);
                 UIHelpers.ShowMessage($"File written to {dlg.Url.Path}", "FTAnalyzer");

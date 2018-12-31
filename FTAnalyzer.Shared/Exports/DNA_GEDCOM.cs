@@ -83,9 +83,10 @@ namespace FTAnalyzer.Exports
             {
                 Title = "Export GEDCOM File of skeleton tree",
                 AllowedFileTypes = new string[] { "ged" },
-                Message = "Select location to export GEDCOM file to"
+                Message = "Select location to export GEDCOM file to",
+                NameFieldStringValue = "Minimalist DNA GEDCOM"
             };
-            if (dlg.RunModal().Equals(NSPanelButtonType.Ok))
+            if (dlg.RunModal().Equals(NSModalResponse.OK))
                 WriteFile(dlg.Url.Path);
          }
 #elif __IOS__
