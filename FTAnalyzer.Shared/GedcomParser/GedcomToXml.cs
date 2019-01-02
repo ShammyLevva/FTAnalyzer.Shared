@@ -10,60 +10,45 @@ namespace FTAnalyzer
 {
     class GedcomToXml
     {
-        static readonly Encoding ansiLatin1 = Encoding.GetEncoding(1252);
-        static readonly Encoding utf8 = Encoding.UTF8;
-
-        public static XmlDocument Load(MemoryStream stream, IProgress<string> outputText)
+        public static XmlDocument LoadFile(MemoryStream stream, IProgress<string> outputText) => LoadFromStream(stream, Encoding.UTF8, outputText);
+        public static XmlDocument LoadFile(string path, IProgress<string> outputText) { return LoadFile(path, Encoding.GetEncoding(1252), outputText); }
+        public static XmlDocument LoadFile(string path, Encoding encoding, IProgress<string> outputText)
         {
-            var reader = new StreamReader(stream);
+            FileStream infs = new FileStream(path, FileMode.Open, FileAccess.Read);
+            return LoadFromStream(infs, encoding, outputText);
+        }
+
+        static XmlDocument LoadFromStream(Stream stream, Encoding encoding, IProgress<string> outputText)
+        {
+            XmlDocument doc = null;
+            StreamReader reader;
             if (FileHandling.Default.LoadWithFilters)
             {
                 reader = FileHandling.Default.RetryFailedLines
                     ? new AnselInputStreamReader(CheckInvalidCR(stream))
                     : new AnselInputStreamReader(stream);
-            }
-            reader = FileHandling.Default.RetryFailedLines ? new StreamReader(CheckInvalidCR(stream)) : new StreamReader(stream);
-            return Parse(reader, outputText, true);
-        }
-
-        public static XmlDocument LoadFile(string path, IProgress<string> outputText) { return LoadFile(path, ansiLatin1, outputText); }
-        public static XmlDocument LoadFile(string path, Encoding encoding, IProgress<string> outputText)
-        {
-            StreamReader reader;
-            XmlDocument doc;
-            if (FileHandling.Default.LoadWithFilters)
-            {
-                reader = FileHandling.Default.RetryFailedLines
-                    ? new AnselInputStreamReader(CheckInvalidLineEnds(path))
-                    : new AnselInputStreamReader(new FileStream(path, FileMode.Open, FileAccess.Read));
                 doc = Parse(reader, outputText, true);
                 if (doc?.SelectNodes("GED/INDI").Count == 0)
                 {  // if there is a problem with the file return with opposite line ends
                     reader = FileHandling.Default.RetryFailedLines
-                        ? new AnselInputStreamReader(new FileStream(path, FileMode.Open, FileAccess.Read))
-                        : new AnselInputStreamReader(CheckInvalidLineEnds(path));
+                        ? new AnselInputStreamReader(stream)
+                        : new AnselInputStreamReader(CheckInvalidCR(stream));
                     doc = Parse(reader, outputText, false);
                 }
                 return doc;
             }
             reader = FileHandling.Default.RetryFailedLines
-                ? new StreamReader(CheckInvalidLineEnds(path), encoding)
-                : new StreamReader(new FileStream(path, FileMode.Open, FileAccess.Read), encoding);
+                ? new StreamReader(CheckInvalidCR(stream), encoding)
+                : new StreamReader(stream, encoding);
             doc = Parse(reader, outputText, true);
             if (doc?.SelectNodes("GED/INDI").Count == 0)
             { // if there is a problem with the file return with opposite line ends
                 reader = FileHandling.Default.RetryFailedLines
-                    ? new StreamReader(new FileStream(path, FileMode.Open, FileAccess.Read), encoding)
-                    : new StreamReader(CheckInvalidLineEnds(path), encoding);
+                    ? new StreamReader(stream, encoding)
+                    : new StreamReader(CheckInvalidCR(stream), encoding);
                 doc = Parse(reader, outputText, false);
             }
             return doc;
-        }
-
-        static MemoryStream CheckInvalidLineEnds(string path)
-        {
-            FileStream infs = new FileStream(path, FileMode.Open, FileAccess.Read);
-            return CheckInvalidCR(infs);
         }
 
         static MemoryStream CheckInvalidCR(Stream infs)
@@ -258,7 +243,7 @@ namespace FTAnalyzer
                         }
                         catch (InvalidGEDCOMException ige)
                         {
-                            if(reportBadLines)
+                            if (reportBadLines)
                                 outputText.Report($"Invalid GEDCOM, Line: {lineNr}. {ige.Message}\n");
                             badLineCount++;
                         }
