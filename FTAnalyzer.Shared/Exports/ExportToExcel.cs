@@ -1,7 +1,7 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using System.Data;
 using System.IO;
+using static FTAnalyzer.UIHelpers;
 #if __PC__
 using System.Windows.Forms;
 #elif __MACOS__
@@ -39,17 +39,15 @@ namespace FTAnalyzer.Utilities
 #elif __MACOS__
         public static void Export(DataTable dt, string exportType)
         {
-            var dlg = new NSSavePanel
-            {
-                Title = "Export data to Excel",
-                AllowedFileTypes = new string[] { "csv" },
-                Message = "Select location to export file to",
-                NameFieldStringValue = exportType
-            };
+            var dlg = NSSavePanel.SavePanel;
+            dlg.Title = "Export data to Excel";
+            dlg.AllowedFileTypes = new string[] { "csv" };
+            dlg.Message = "Select location to export file to";
+            dlg.NameFieldStringValue = exportType;
             if (dlg.RunModal().Equals(NSModalResponse.OK))
             {
                 WriteFile(dt, dlg.Url.Path);
-                UIHelpers.ShowMessage($"File written to {dlg.Url.Path}", "FTAnalyzer");
+                ShowMessage($"File written to {dlg.Url.Path}", "FTAnalyzer");
             }
         }
 #endif

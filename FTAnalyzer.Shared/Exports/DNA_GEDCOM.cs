@@ -80,13 +80,11 @@ namespace FTAnalyzer.Exports
 #elif __MACOS__
         public static void ExportGedcomFile()
         {
-            NSSavePanel dlg = new NSSavePanel
-            {
-                Title = "Export GEDCOM File of skeleton tree",
-                AllowedFileTypes = new string[] { "ged" },
-                Message = "Select location to export GEDCOM file to",
-                NameFieldStringValue = "Minimalist DNA GEDCOM"
-            };
+            var dlg = NSSavePanel.SavePanel;
+            dlg.Title = "Export GEDCOM File of skeleton tree";
+            dlg.AllowedFileTypes = new string[] { "ged" };
+            dlg.Message = "Select location to export GEDCOM file to";
+            dlg.NameFieldStringValue = "Minimalist DNA GEDCOM";
             if (dlg.RunModal().Equals(NSModalResponse.OK))
                 WriteFile(dlg.Url.Path);
          }
