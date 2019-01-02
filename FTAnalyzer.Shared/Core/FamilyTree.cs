@@ -1920,17 +1920,17 @@ namespace FTAnalyzer
             }
         }
 
-        public void SearchCensus(string censusCountry, int censusYear, Individual person, int censusProvider)
+        public void SearchCensus(string censusCountry, int censusYear, Individual person, int censusProvider, string censusRegion)
         {
             string uri = null;
             string provider = ProviderName(censusProvider);
             switch (censusProvider)
             {
                 case 0:
-                    uri = BuildAncestryQuery(censusCountry, censusYear, person);
+                    uri = BuildAncestryQuery(censusCountry, censusYear, person, censusRegion);
                     break;
                 case 1:
-                    uri = censusYear == 1939 && censusCountry.Equals(Countries.UNITED_KINGDOM) ? BuildFindMyPast1939Query(person) : BuildFindMyPastQuery(censusCountry, censusYear, person);
+                    uri = censusYear == 1939 && censusCountry.Equals(Countries.UNITED_KINGDOM) ? BuildFindMyPast1939Query(person, censusRegion) : BuildFindMyPastQuery(censusCountry, censusYear, person, censusRegion);
                     break;
                 case 2:
                     uri = BuildFreeCenQuery(censusCountry, censusYear, person);
@@ -1994,13 +1994,13 @@ namespace FTAnalyzer
             return path.Replace("+", "%20").ToString();
         }
 
-        string BuildAncestryQuery(string censusCountry, int censusYear, Individual person)
+        string BuildAncestryQuery(string censusCountry, int censusYear, Individual person, string censusRegion = ".com")
         {
             if (censusYear == 1939 && censusCountry.Equals(Countries.UNITED_KINGDOM))
-                return BuildAncestry1939Query(person);
+                return BuildAncestry1939Query(person, censusRegion);
             UriBuilder uri = new UriBuilder
             {
-                Host = "search.ancestry.co.uk",
+                Host = $"search.ancestry{censusRegion}",
                 Path = "cgi-bin/sse.dll"
             };
             StringBuilder query = new StringBuilder();
@@ -2081,7 +2081,7 @@ namespace FTAnalyzer
             uri.Query = query.ToString();
             return uri.ToString();
         }
-        string BuildAncestry1939Query(Individual person)
+        string BuildAncestry1939Query(Individual person, string censusRegion = ".co.uk")
         {
             UriBuilder uri = new UriBuilder
             {
@@ -2215,13 +2215,13 @@ namespace FTAnalyzer
             return uri.ToString();
         }
 
-        string BuildFindMyPastQuery(string censusCountry, int censusYear, Individual person)
+        string BuildFindMyPastQuery(string censusCountry, int censusYear, Individual person, string censusRegion = ".com")
         {
             // new http://search.findmypast.co.uk/results/united-kingdom-records-in-census-land-and-surveys?firstname=peter&firstname_variants=true&lastname=moir&lastname_variants=true&eventyear=1881&eventyear_offset=2&yearofbirth=1825&yearofbirth_offset=2
             FactDate censusFactDate = new FactDate(censusYear.ToString());
             UriBuilder uri = new UriBuilder
             {
-                Host = "search.findmypast.co.uk"
+                Host = $"search.findmypast{censusRegion}"
             };
             if (censusCountry.Equals(Countries.UNITED_STATES))
                 uri.Path = "/results/united-states-records-in-census-land-and-surveys";
@@ -2300,13 +2300,13 @@ namespace FTAnalyzer
             return uri.ToString();
         }
 
-        string BuildFindMyPast1939Query(Individual person)
+        string BuildFindMyPast1939Query(Individual person, string censusRegion)
         {
             // new http://search.findmypast.co.uk/results/world-records/1939-register?firstname=frederick&firstname_variants=true&lastname=deakin&lastname_variants=true&yearofbirth=1879
             FactDate censusFactDate = CensusDate.UKCENSUS1939;
             UriBuilder uri = new UriBuilder
             {
-                Host = "search.findmypast.co.uk",
+                Host = $"search.findmypast{censusRegion}",
                 Path = "/results/world-records/1939-register"
             };
             StringBuilder query = new StringBuilder();
@@ -2365,7 +2365,7 @@ namespace FTAnalyzer
 
         public enum SearchType { BIRTH = 0, MARRIAGE = 1, DEATH = 2 };
 
-        public void SearchBMD(SearchType st, Individual individual, FactDate factdate, int searchProvider)
+        public void SearchBMD(SearchType st, Individual individual, FactDate factdate, int searchProvider, string bmdRegion)
         {
             string uri = null;
             if (!factdate.IsKnown || factdate.DateType.Equals(FactDate.FactDateType.AFT) || factdate.DateType.Equals(FactDate.FactDateType.BEF))
@@ -2391,8 +2391,8 @@ namespace FTAnalyzer
             string provider = string.Empty;
             switch (searchProvider)
             {
-                case 0: uri = BuildAncestryQuery(st, individual, factdate); provider = "Ancestry"; break;
-                case 1: uri = BuildFindMyPastQuery(st, individual, factdate); provider = "FindMyPast"; break;
+                case 0: uri = BuildAncestryQuery(st, individual, factdate, bmdRegion); provider = "Ancestry"; break;
+                case 1: uri = BuildFindMyPastQuery(st, individual, factdate, bmdRegion); provider = "FindMyPast"; break;
                 case 2: uri = BuildFreeBMDQuery(st, individual, factdate); provider = "FreeBMD"; break;
                 case 3: uri = BuildFamilySearchQuery(st, individual, factdate); provider = "FamilySearch"; break;
 //                case 4: uri = BuildGROQuery(st, individual, factdate); provider = "GRO"; break;
@@ -2462,11 +2462,11 @@ namespace FTAnalyzer
             throw new CensusSearchException("Not Yet"); // TODO: Add FreeBMD searching
         }
 
-        string BuildFindMyPastQuery(SearchType st, Individual individual, FactDate factdate)
+        string BuildFindMyPastQuery(SearchType st, Individual individual, FactDate factdate, string bmdRegion)
         {
             UriBuilder uri = new UriBuilder
             {
-                Host = "search.findmypast.co.uk"
+                Host = $"search.findmypast{bmdRegion}"
             };
             string record_country = RecordCountry(st, individual, factdate);
             if (Countries.IsUnitedKingdom(record_country))
@@ -2511,11 +2511,11 @@ namespace FTAnalyzer
             return surname;
         }
 
-        string BuildAncestryQuery(SearchType st, Individual individual, FactDate factdate)
+        string BuildAncestryQuery(SearchType st, Individual individual, FactDate factdate, string bmdRegion)
         {
             UriBuilder uri = new UriBuilder
             {
-                Host = "search.ancestry.co.uk",
+                Host = $"search.ancestry{bmdRegion}",
                 Path = "cgi-bin/sse.dll"
             };
             //gsln_x=NP&

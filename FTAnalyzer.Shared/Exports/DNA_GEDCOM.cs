@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 #if __PC__
+using FTAnalyzer.Utilities;
 using System.Windows.Forms;
 #elif __MACOS__
 using AppKit;
