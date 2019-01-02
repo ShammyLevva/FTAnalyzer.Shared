@@ -55,7 +55,7 @@ namespace FTAnalyzer.Exports
                         }
                         finally
                         {
-                            output.Close();
+                            output?.Close();
                         }
                     }
                 }
