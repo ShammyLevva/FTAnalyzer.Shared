@@ -10,33 +10,11 @@ namespace FTAnalyzer
 {
     class GedcomToXml
     {
-        public static XmlDocument LoadFile(MemoryStream stream, IProgress<string> outputText) => LoadFromStream(stream, Encoding.UTF8, outputText);
-        public static XmlDocument LoadFile(string path, IProgress<string> outputText) { return LoadFile(path, Encoding.GetEncoding(1252), outputText); }
-        public static XmlDocument LoadFile(string path, Encoding encoding, IProgress<string> outputText)
-        {
-            FileStream infs = new FileStream(path, FileMode.Open, FileAccess.Read);
-            return LoadFromStream(infs, encoding, outputText);
-        }
-
-        static XmlDocument LoadFromStream(Stream stream, Encoding encoding, IProgress<string> outputText)
+        public static XmlDocument LoadFile(Stream stream, Encoding encoding, IProgress<string> outputText)
         {
             XmlDocument doc = null;
             StreamReader reader;
-            if (FileHandling.Default.LoadWithFilters)
-            {
-                reader = FileHandling.Default.RetryFailedLines
-                    ? new AnselInputStreamReader(CheckInvalidCR(stream))
-                    : new AnselInputStreamReader(stream);
-                doc = Parse(reader, outputText, true);
-                if (doc?.SelectNodes("GED/INDI").Count == 0)
-                {  // if there is a problem with the file return with opposite line ends
-                    reader = FileHandling.Default.RetryFailedLines
-                        ? new AnselInputStreamReader(stream)
-                        : new AnselInputStreamReader(CheckInvalidCR(stream));
-                    doc = Parse(reader, outputText, false);
-                }
-                return doc;
-            }
+            stream.Position = 0;
             reader = FileHandling.Default.RetryFailedLines
                 ? new StreamReader(CheckInvalidCR(stream), encoding)
                 : new StreamReader(stream, encoding);
@@ -51,7 +29,27 @@ namespace FTAnalyzer
             return doc;
         }
 
-        static MemoryStream CheckInvalidCR(Stream infs)
+        public static XmlDocument LoadAnselFile(Stream stream, IProgress<string> outputText)
+        {
+            XmlDocument doc = null;
+            StreamReader reader;
+            stream.Position = 0;
+            reader = FileHandling.Default.RetryFailedLines
+                    ? new AnselInputStreamReader(CheckInvalidCR(stream))
+                    : new AnselInputStreamReader(stream);
+                doc = Parse(reader, outputText, true);
+                if (doc?.SelectNodes("GED/INDI").Count == 0)
+                {  // if there is a problem with the file return with opposite line ends
+                    reader = FileHandling.Default.RetryFailedLines
+                        ? new AnselInputStreamReader(stream)
+                        : new AnselInputStreamReader(CheckInvalidCR(stream));
+                    doc = Parse(reader, outputText, false);
+                }
+                return doc;
+            }
+
+
+            static MemoryStream CheckInvalidCR(Stream infs)
         {
             MemoryStream outfs = new MemoryStream();
             long streamLength = infs.Length;
@@ -199,10 +197,13 @@ namespace FTAnalyzer
 
                             // perform validation on the CHAR field (character code)
                             string valtrim = value.Trim();
-                            if (tag.Equals("CHAR") &&
-                                !(valtrim.Equals("ANSEL") || valtrim.Equals("ASCII") || valtrim.Equals("ANSI") || valtrim.Equals("UTF-8") || valtrim.Equals("UNICODE")))
+                            if (tag.Equals("CHAR"))
                             {
-                                outputText.Report($"WARNING: Character set is {value}: should be ANSEL, ANSI, ASCII, UTF-8 or UNICODE\n");
+                                if (!(valtrim.Equals("ANSEL") || valtrim.Equals("ASCII") || valtrim.Equals("ANSI") ||
+                                     valtrim.Equals("UTF-8") || valtrim.Equals("UNICODE")))
+                                {
+                                    outputText.Report($"WARNING: Character set is {value}: should be ANSEL, ANSI, ASCII, UTF-8 or UNICODE\n");
+                                }
                             }
 
                             // insert any necessary closing tags

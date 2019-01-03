@@ -203,37 +203,19 @@ namespace FTAnalyzer
             if (!unknownFactTypes.Contains(factType))
                 unknownFactTypes.Add(factType);
         }
-
-        public XmlDocument LoadTreeHeader(string filename, MemoryStream stream, IProgress<string> outputText)
+        
+        public XmlDocument LoadTreeHeader(string filename, Stream stream, IProgress<string> outputText)
         {
             Loading = true;
             ResetData();
             rootIndividualID = string.Empty;
             outputText.Report($"Loading file {filename}\n");
-            XmlDocument doc = GedcomToXml.LoadFile(stream, outputText);
-            if (doc == null)
-                Loading = false;
-            else
-            {
-                ReportOptions(outputText);
-                SetRootIndividual(doc);
-            }
-            return doc;
-        }
-
-        public XmlDocument LoadTreeHeader(string filename, IProgress<string> outputText)
-        {
-            Loading = true;
-            ResetData();
-            rootIndividualID = string.Empty;
-            outputText.Report($"Loading file {filename}\n");
-            XmlDocument doc = GedcomToXml.LoadFile(filename, outputText);
+            XmlDocument doc = GedcomToXml.LoadFile(stream, Encoding.GetEncoding(1252), outputText);
             if (doc == null)
             {
                 Loading = false;
                 return null;
             }
-            // doc.Save(@"c:\temp\FHcensusref.xml");
             // First check if file has a valid header record ie: it is actually a GEDCOM file
             XmlNode header = doc.SelectSingleNode("GED/HEAD");
             if (header == null)
@@ -248,16 +230,16 @@ namespace FTAnalyzer
                 switch (charset.InnerText)
                 {
                     case "ANSEL":
-                        doc = GedcomToXml.LoadFile(filename, outputText);
+                        doc = GedcomToXml.LoadAnselFile(stream, outputText);
                         break;
                     case "UNICODE":
-                      doc = GedcomToXml.LoadFile(filename, Encoding.Unicode, outputText);
+                      doc = GedcomToXml.LoadFile(stream, Encoding.Unicode, outputText);
                         break;
                     case "ASCII":
-                        doc = GedcomToXml.LoadFile(filename, Encoding.ASCII, outputText);
+                        doc = GedcomToXml.LoadFile(stream, Encoding.ASCII, outputText);
                         break;
                     case "UTF-8":
-                        doc = GedcomToXml.LoadFile(filename, Encoding.UTF8, outputText);
+                        doc = GedcomToXml.LoadFile(stream, Encoding.UTF8, outputText);
                         break;
                 }
             }

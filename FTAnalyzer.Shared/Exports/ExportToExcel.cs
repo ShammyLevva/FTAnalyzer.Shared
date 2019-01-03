@@ -1,11 +1,12 @@
 ﻿using System.Text;
 using System.Data;
 using System.IO;
-using static FTAnalyzer.UIHelpers;
 #if __PC__
+using System;
 using System.Windows.Forms;
 #elif __MACOS__
 using AppKit;
+using static FTAnalyzer.UIHelpers;
 #endif
 
 namespace FTAnalyzer.Utilities
