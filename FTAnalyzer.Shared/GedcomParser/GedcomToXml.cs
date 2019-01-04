@@ -14,16 +14,15 @@ namespace FTAnalyzer
         {
             XmlDocument doc = null;
             StreamReader reader;
-            stream.Position = 0;
             reader = FileHandling.Default.RetryFailedLines
-                ? new StreamReader(CheckInvalidCR(stream), encoding)
-                : new StreamReader(stream, encoding);
+                ? new StreamReader(CheckInvalidCR(CloneStream(stream)), encoding)
+                : new StreamReader(CloneStream(stream), encoding);
             doc = Parse(reader, outputText, true);
             if (doc?.SelectNodes("GED/INDI").Count == 0)
             { // if there is a problem with the file return with opposite line ends
                 reader = FileHandling.Default.RetryFailedLines
-                    ? new StreamReader(stream, encoding)
-                    : new StreamReader(CheckInvalidCR(stream), encoding);
+                    ? new StreamReader(CloneStream(stream), encoding)
+                    : new StreamReader(CheckInvalidCR(CloneStream(stream)), encoding);
                 doc = Parse(reader, outputText, false);
             }
             return doc;
@@ -33,23 +32,31 @@ namespace FTAnalyzer
         {
             XmlDocument doc = null;
             StreamReader reader;
-            stream.Position = 0;
             reader = FileHandling.Default.RetryFailedLines
-                    ? new AnselInputStreamReader(CheckInvalidCR(stream))
-                    : new AnselInputStreamReader(stream);
-                doc = Parse(reader, outputText, true);
-                if (doc?.SelectNodes("GED/INDI").Count == 0)
-                {  // if there is a problem with the file return with opposite line ends
-                    reader = FileHandling.Default.RetryFailedLines
-                        ? new AnselInputStreamReader(stream)
-                        : new AnselInputStreamReader(CheckInvalidCR(stream));
-                    doc = Parse(reader, outputText, false);
-                }
-                return doc;
+                    ? new AnselInputStreamReader(CheckInvalidCR(CloneStream(stream)))
+                    : new AnselInputStreamReader(CloneStream(stream));
+            doc = Parse(reader, outputText, true);
+            if (doc?.SelectNodes("GED/INDI").Count == 0)
+            {
+                // if there is a problem with the file return with opposite line ends
+                reader = FileHandling.Default.RetryFailedLines
+                    ? new AnselInputStreamReader(CloneStream(stream))
+                    : new AnselInputStreamReader(CheckInvalidCR(CloneStream(stream)));
+                doc = Parse(reader, outputText, false);
             }
+            return doc;
+        }
 
+        private static MemoryStream CloneStream(Stream stream)
+        {
+            MemoryStream mstream = new MemoryStream();
+            stream.Position = 0;
+            stream.CopyTo(mstream);
+            mstream.Position = 0;
+            return mstream;
+        }
 
-            static MemoryStream CheckInvalidCR(Stream infs)
+        static MemoryStream CheckInvalidCR(Stream infs)
         {
             MemoryStream outfs = new MemoryStream();
             long streamLength = infs.Length;

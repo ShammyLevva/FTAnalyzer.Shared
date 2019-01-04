@@ -457,9 +457,10 @@ namespace FTAnalyzer
             DateTime start = new DateTime(StartDate.Year, StartDate.Month, StartDate.Day);
             DateTime end = new DateTime(EndDate.Year, EndDate.Month, EndDate.Day);
             start = StartDate.Year != MINDATE.Year ? start.AddMonths(-months) : MINDATE;
+            //end = EndDate.Year != MINDATE.Year ? end.AddMonths(-months) : MINDATE;
             end = end.AddMonths(-months);
             if (start < MINDATE)
-                start = MINDATE;
+               start = MINDATE;
             return new FactDate(start, end);
         }
 

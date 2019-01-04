@@ -454,9 +454,8 @@ namespace FTAnalyzer
             if (GeneralSettings.Default.ReportOptions)
             {
                 outputText.Report($"\nThe current file handling options are set :");
-                outputText.Report($"\n    Use Special Character Filters When Loading: {FileHandling.Default.LoadWithFilters}");
                 outputText.Report($"\n    Retry failed lines by looking for bad line breaks: {FileHandling.Default.RetryFailedLines}");
-                outputText.Report($"`n    Convert Diacritics on load {FileHandling.Default.ConvertDiacritics}");
+                outputText.Report($"\n    Convert Diacritics on load {FileHandling.Default.ConvertDiacritics}");
 
                 outputText.Report($"\nThe current general options are set:");
                 outputText.Report($"\n    Use Baptism/Christening Date If No Birth Date: {GeneralSettings.Default.UseBaptismDates}");
