@@ -45,7 +45,8 @@ namespace FTAnalyzer.Utilities
             dlg.AllowedFileTypes = new string[] { "csv" };
             dlg.Message = "Select location to export file to";
             dlg.NameFieldStringValue = exportType;
-            if (dlg.RunModal().Equals(NSModalResponse.OK))
+            var result = dlg.RunModal();
+            if (result == 1) // ok
             {
                 WriteFile(dt, dlg.Url.Path);
                 ShowMessage($"File written to {dlg.Url.Path}", "FTAnalyzer");

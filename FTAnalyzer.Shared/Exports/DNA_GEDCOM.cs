@@ -85,7 +85,8 @@ namespace FTAnalyzer.Exports
             dlg.AllowedFileTypes = new string[] { "ged" };
             dlg.Message = "Select location to export GEDCOM file to";
             dlg.NameFieldStringValue = "Minimalist DNA GEDCOM";
-            if (dlg.RunModal().Equals(NSModalResponse.OK))
+            var response = dlg.RunModal();
+            if (response == 1)
                 WriteFile(dlg.Url.Path);
          }
 #elif __IOS__
