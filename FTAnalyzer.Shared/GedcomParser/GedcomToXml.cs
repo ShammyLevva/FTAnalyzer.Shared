@@ -10,14 +10,14 @@ namespace FTAnalyzer
 {
     class GedcomToXml
     {
-        public static XmlDocument LoadFile(Stream stream, Encoding encoding, IProgress<string> outputText)
+        public static XmlDocument LoadFile(Stream stream, Encoding encoding, IProgress<string> outputText, bool reportBadLines)
         {
             XmlDocument doc = null;
             StreamReader reader;
             reader = FileHandling.Default.RetryFailedLines
                 ? new StreamReader(CheckInvalidCR(CloneStream(stream)), encoding)
                 : new StreamReader(CloneStream(stream), encoding);
-            doc = Parse(reader, outputText, true);
+            doc = Parse(reader, outputText, reportBadLines);
             if (doc?.SelectNodes("GED/INDI").Count == 0)
             { // if there is a problem with the file return with opposite line ends
                 reader = FileHandling.Default.RetryFailedLines
@@ -28,14 +28,14 @@ namespace FTAnalyzer
             return doc;
         }
 
-        public static XmlDocument LoadAnselFile(Stream stream, IProgress<string> outputText)
+        public static XmlDocument LoadAnselFile(Stream stream, IProgress<string> outputText, bool reportBadLines)
         {
             XmlDocument doc = null;
             StreamReader reader;
             reader = FileHandling.Default.RetryFailedLines
                     ? new AnselInputStreamReader(CheckInvalidCR(CloneStream(stream)))
                     : new AnselInputStreamReader(CloneStream(stream));
-            doc = Parse(reader, outputText, true);
+            doc = Parse(reader, outputText, reportBadLines);
             if (doc?.SelectNodes("GED/INDI").Count == 0)
             {
                 // if there is a problem with the file return with opposite line ends

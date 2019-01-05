@@ -210,7 +210,7 @@ namespace FTAnalyzer
             ResetData();
             rootIndividualID = string.Empty;
             outputText.Report($"Loading file {filename}\n");
-            XmlDocument doc = GedcomToXml.LoadFile(stream, Encoding.GetEncoding(1252), outputText);
+            XmlDocument doc = GedcomToXml.LoadFile(stream, Encoding.GetEncoding(1252), outputText, true);
             if (doc == null)
             {
                 Loading = false;
@@ -230,16 +230,16 @@ namespace FTAnalyzer
                 switch (charset.InnerText)
                 {
                     case "ANSEL":
-                        doc = GedcomToXml.LoadAnselFile(stream, outputText);
+                        doc = GedcomToXml.LoadAnselFile(stream, outputText, false);
                         break;
                     case "UNICODE":
-                      doc = GedcomToXml.LoadFile(stream, Encoding.Unicode, outputText);
+                      doc = GedcomToXml.LoadFile(stream, Encoding.Unicode, outputText, false);
                         break;
                     case "ASCII":
-                        doc = GedcomToXml.LoadFile(stream, Encoding.ASCII, outputText);
+                        doc = GedcomToXml.LoadFile(stream, Encoding.ASCII, outputText, false);
                         break;
                     case "UTF-8":
-                        doc = GedcomToXml.LoadFile(stream, Encoding.UTF8, outputText);
+                        doc = GedcomToXml.LoadFile(stream, Encoding.UTF8, outputText, false);
                         break;
                 }
             }
@@ -251,6 +251,7 @@ namespace FTAnalyzer
             ReportOptions(outputText);
             outputText.Report("File Loaded.\n");
             SetRootIndividual(doc);
+            // doc.Save(new FileStream(@"c:\temp\tim.xml", FileMode.Create));
             return doc;
         }
 

@@ -456,11 +456,8 @@ namespace FTAnalyzer
         {
             DateTime start = new DateTime(StartDate.Year, StartDate.Month, StartDate.Day);
             DateTime end = new DateTime(EndDate.Year, EndDate.Month, EndDate.Day);
-            start = StartDate.Year != MINDATE.Year ? start.AddMonths(-months) : MINDATE;
-            //end = EndDate.Year != MINDATE.Year ? end.AddMonths(-months) : MINDATE;
-            end = end.AddMonths(-months);
-            if (start < MINDATE)
-               start = MINDATE;
+            start = StartDate < MINDATE.AddMonths(months) ? MINDATE : start.AddMonths(-months);
+            end = EndDate < MINDATE.AddMonths(months) ? MINDATE : end.AddMonths(-months);
             return new FactDate(start, end);
         }
 
@@ -468,9 +465,7 @@ namespace FTAnalyzer
         {
             DateTime start = new DateTime(StartDate.Year, StartDate.Month, StartDate.Day);
             DateTime end = new DateTime(EndDate.Year, EndDate.Month, EndDate.Day);
-            end = end.AddMonths(years * 12);
-            if (end > MAXDATE)
-                end = MAXDATE;
+            end = end >= MAXDATE.AddYears(-years) ? MAXDATE : end.AddYears(years);
             return new FactDate(start, end);
         }
 
