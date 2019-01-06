@@ -576,7 +576,7 @@ namespace FTAnalyzer
                     }
                     if (fromdate.Length < 3)
                         fromdate = fromdate + " " + processDate.Substring(pos + 7);
-                    else if (fromdate.Length == 3)
+                    else if (fromdate.Length == 3 && !fromdate.StartsWithNumeric())
                         fromdate = "01 " + fromdate + processDate.Substring(pos + 8);
                     else if (fromdate.Length == 4)
                         fromdate = "01 JAN " + fromdate;

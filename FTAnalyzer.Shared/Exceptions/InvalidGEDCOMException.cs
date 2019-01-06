@@ -5,8 +5,13 @@ namespace FTAnalyzer
     [Serializable]
     public class InvalidGEDCOMException : Exception
     {
-        public InvalidGEDCOMException(string message)
+        string OriginalLine { get; }
+        long LineNumber { get; }
+        public InvalidGEDCOMException(string message, string line, long lineNumber)
             : base(message)
-        { }
+        {
+            OriginalLine = line;
+            LineNumber = lineNumber;
+        }
     }
 }

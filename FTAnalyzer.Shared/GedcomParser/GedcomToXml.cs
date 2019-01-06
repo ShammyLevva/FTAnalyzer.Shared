@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Web;
 using System.Xml;
 
 namespace FTAnalyzer
@@ -66,11 +67,15 @@ namespace FTAnalyzer
                 b = (byte)infs.ReadByte();
                 if (b == 0x0d)
                 {
-                    b = (byte)infs.ReadByte();
-                    if (b == 0x0a)// we have 0x0d 0x0a so write the 0x0d so that normal write works.
-                        outfs.WriteByte(0x0d);
-                    else
-                        outfs.WriteByte(b);
+                    var x = infs.ReadByte();
+                    if (x >= 0)
+                    {
+                        b = (byte)x;
+                        if (b == 0x0a)// we have 0x0d 0x0a so write the 0x0d so that normal write works.
+                            outfs.WriteByte(0x0d);
+                        else
+                            outfs.WriteByte(b);
+                    }
                 }
                 else
                     outfs.WriteByte(b);
@@ -142,20 +147,20 @@ namespace FTAnalyzer
                         {
                             line = line.Replace('?', '-').Replace('?', '-').Replace("***Data is already there***", ""); // "data is already there" is some Ancestry anomaly
                             cpos1 = line.IndexOf(" ", StringComparison.Ordinal);
-                            if (cpos1 < 0) throw new InvalidGEDCOMException($"No space found in line: '{line}'");
+                            if (cpos1 < 0) throw new InvalidGEDCOMException($"No space found in line: '{line}'", line, lineNr);
 
                             level = FirstWord(line);
                             if (level.StartsWithNumeric())
                                 thislevel = int.Parse(level);
                             else
-                                throw new InvalidGEDCOMException($"First character in a should be numeric '{line}'");
+                                throw new InvalidGEDCOMException($"First character in a should be numeric '{line}'", line, lineNr);
 
                             // check the level number
                             
                             if (thislevel > prevlevel && !(thislevel == prevlevel + 1))
-                                throw new InvalidGEDCOMException($"Level numbers must increase by 1");
+                                throw new InvalidGEDCOMException($"Level numbers must increase by 1", line, lineNr);
                             if (thislevel < 0)
-                                throw new InvalidGEDCOMException("Level number must not be negative");
+                                throw new InvalidGEDCOMException("Level number must not be negative", line, lineNr);
 
                             line = Remainder(line);
                             token1 = FirstWord(line);
@@ -164,7 +169,7 @@ namespace FTAnalyzer
                             if (token1.StartsWith("@", StringComparison.Ordinal))
                             {
                                 if (token1.Length == 1 || !token1.EndsWith("@", StringComparison.Ordinal))
-                                    throw new InvalidGEDCOMException("Bad xref_id invalid @ character in line.");
+                                    throw new InvalidGEDCOMException("Bad xref_id invalid @ character in line.", line, lineNr);
 
                                 iden = token1.Substring(1, token1.Length - 2);
                                 tag = FirstWord(line);
@@ -183,7 +188,7 @@ namespace FTAnalyzer
                                 {
                                     token2 = FirstWord(line);
                                     if (token2.Length == 1 || (!token2.EndsWith("@", StringComparison.Ordinal) && !token2.EndsWith("@,", StringComparison.Ordinal)))
-                                        throw new InvalidGEDCOMException("Bad pointer value");
+                                        throw new InvalidGEDCOMException("Bad pointer value", line, lineNr);
                                     xref = token2.EndsWith("@,", StringComparison.Ordinal)
                                         ? token2.Substring(1, token2.Length - 3)
                                         : token2.Substring(1, token2.Length - 2);
@@ -252,13 +257,13 @@ namespace FTAnalyzer
                         catch (InvalidGEDCOMException ige)
                         {
                             if (reportBadLines)
-                                outputText.Report($"Invalid GEDCOM, Line: {lineNr}. {ige.Message}\n");
+                                outputText.Report($"Invalid GEDCOM, Line: {lineNr}: '{line}'. Error was: {ige.Message}\n");
                             badLineCount++;
                         }
                         catch (Exception e)
                         {
                             if (reportBadLines)
-                                outputText.Report($"Unhandled Exception, bad line {lineNr}: '{line}'. Error was : {e.Message}\n");
+                                outputText.Report($"Unhandled Exception, bad line {lineNr}: '{line}'. Error was: {e.Message}\n");
                             badLineCount++;
                         }
                     }
@@ -287,14 +292,51 @@ namespace FTAnalyzer
             }
             finally
             {
+                //if (badLineCount > 0 && reportBadLines)
+                //    ShowBadLines(reader.BaseStream);
                 reader.Close();
             }
             return document;
         }
 
+        static void ShowBadLines(Stream stream)
+        {
+            string tempFile = CreateTempFile();
+            if(!string.IsNullOrEmpty(tempFile))
+            {
+                tempFile = tempFile.Substring(0, tempFile.Length - 3) + "html";
+                stream.Position = 0;
+                FileStream fileStream = new FileStream(tempFile, FileMode.Create, FileAccess.Write);
+                StreamWriter writer = new StreamWriter(fileStream);
+                writer.Write("<html><head><Title>Gedcomfile</Title></head><body>");
+                stream.CopyTo(fileStream);
+                writer.Write("</body></html>");
+                fileStream.Close();
+                HttpUtility.VisitWebsite(tempFile);
+            }
+        }
+
+        static string CreateTempFile()
+        {
+            string fileName = string.Empty;
+            try
+            {
+                fileName = Path.GetTempFileName();
+                FileInfo fileInfo = new FileInfo(fileName)
+                {
+                    Attributes = FileAttributes.Temporary
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Unable to create TEMP file or set its attributes: " + ex.Message);
+            }
+            return fileName;
+        }
+
         /**
-         * Procedure to return the first word in a string
-         */
+            * Procedure to return the first word in a string
+            */
         static string FirstWord(string inp)
         {
             int i;
