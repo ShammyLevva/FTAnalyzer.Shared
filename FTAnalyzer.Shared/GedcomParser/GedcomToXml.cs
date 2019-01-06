@@ -117,6 +117,7 @@ namespace FTAnalyzer
             int prevlevel = -1;
             string iden, tag, xref, value;
             int cpos1;
+            Dictionary<long, Tuple<string, string>> lineErrors = new Dictionary<long, Tuple<string, string>>();
             Stack<string> stack = new Stack<string>();
             stack.Push("GED");
             XmlDocument document = new XmlDocument();
@@ -258,12 +259,14 @@ namespace FTAnalyzer
                         {
                             if (reportBadLines)
                                 outputText.Report($"Invalid GEDCOM, Line: {lineNr}: '{line}'. Error was: {ige.Message}\n");
+                            lineErrors.Add(lineNr, new Tuple<string, string>(line, ige.Message));
                             badLineCount++;
                         }
                         catch (Exception e)
                         {
                             if (reportBadLines)
                                 outputText.Report($"Unhandled Exception, bad line {lineNr}: '{line}'. Error was: {e.Message}\n");
+                            lineErrors.Add(lineNr, new Tuple<string, string>(line, e.Message));
                             badLineCount++;
                         }
                     }
@@ -292,27 +295,55 @@ namespace FTAnalyzer
             }
             finally
             {
-                //if (badLineCount > 0 && reportBadLines)
-                //    ShowBadLines(reader.BaseStream);
+#if !__IOS__
+                if (badLineCount > 0 && reportBadLines)
+                    ShowBadLines(reader.BaseStream, lineErrors);
+#endif
                 reader.Close();
             }
             return document;
         }
 
-        static void ShowBadLines(Stream stream)
+        static void ShowBadLines(Stream stream, Dictionary<long, Tuple<string, string>> lineErrors)
         {
-            string tempFile = CreateTempFile();
-            if(!string.IsNullOrEmpty(tempFile))
+            try
             {
-                tempFile = tempFile.Substring(0, tempFile.Length - 3) + "html";
-                stream.Position = 0;
-                FileStream fileStream = new FileStream(tempFile, FileMode.Create, FileAccess.Write);
-                StreamWriter writer = new StreamWriter(fileStream);
-                writer.Write("<html><head><Title>Gedcomfile</Title></head><body>");
-                stream.CopyTo(fileStream);
-                writer.Write("</body></html>");
-                fileStream.Close();
-                HttpUtility.VisitWebsite(tempFile);
+                int result = UIHelpers.ShowYesNo("Would you like to view the line error report?");
+                if (result == UIHelpers.Yes)
+                {
+                    string tempFile = CreateTempFile();
+                    if (!string.IsNullOrEmpty(tempFile))
+                    {
+                        tempFile = tempFile.Substring(0, tempFile.Length - 3) + "html";
+                        stream.Position = 0;
+                        FileStream fileStream = new FileStream(tempFile, FileMode.Create, FileAccess.Write);
+                        StreamWriter writer = new StreamWriter(fileStream);
+                        StreamReader reader = new StreamReader(stream);
+                        writer.WriteLine("<html><head><Title>Gedcom File</Title></head><body>");
+                        writer.WriteLine("<h4>Line Errors</h4>");
+                        writer.WriteLine("<table border='1'><tr><th>Line Number</th><th>Line Contents</th><th>Error Description</th></tr>");
+                        foreach (KeyValuePair<long, Tuple<string, string>> kvp in lineErrors)
+                            writer.WriteLine($"<tr><td><a href='#{kvp.Key}'>{kvp.Key}</a></td><td>{kvp.Value.Item1}</td><td>{kvp.Value.Item2}</td></tr>");
+                        writer.WriteLine("</table><h4>GEDCOM Contents</h4><table border='1'><tr><th>Line Number</th><th>Line Contents</th></tr>");
+                        string line = reader.ReadLine();
+                        long lineNr = 1;
+                        while (line != null)
+                        {
+                            if (lineErrors.ContainsKey(lineNr))
+                                writer.WriteLine($"<tr id='{lineNr}'><td>{lineNr++}</td><td>{line}</td></tr>");
+                            else
+                                writer.WriteLine($"<tr><td>{lineNr++}</td><td>{line}</td></tr>");
+                            line = reader.ReadLine();
+                        }
+                        writer.Write("</table></body></html>");
+                        fileStream.Close();
+                        HttpUtility.VisitWebsite(tempFile);
+                    }
+                }
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine($"Error: {e.Message}");
             }
         }
 
