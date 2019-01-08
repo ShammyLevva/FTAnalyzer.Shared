@@ -7,6 +7,10 @@ using System.Text;
 using System.Web;
 using System.Xml;
 
+#if __MACOS__
+using Foundation;
+#endif
+
 namespace FTAnalyzer
 {
     class GedcomToXml
@@ -304,8 +308,19 @@ namespace FTAnalyzer
             return document;
         }
 
+#if __MACOS__
+        static readonly NSObject Invoker = new NSObject();
+#endif
         static void ShowBadLines(Stream stream, Dictionary<long, Tuple<string, string>> lineErrors)
         {
+#if __MACOS__
+            if (!NSThread.IsMain)
+            {
+                
+                Invoker.InvokeOnMainThread(() => ShowBadLines(stream, lineErrors));
+                return;
+            }
+#endif
             try
             {
                 int result = UIHelpers.ShowYesNo("Would you like to view the line error report?");
