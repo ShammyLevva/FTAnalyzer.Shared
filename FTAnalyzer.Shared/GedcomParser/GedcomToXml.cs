@@ -30,6 +30,7 @@ namespace FTAnalyzer
                     : new StreamReader(CheckInvalidCR(CloneStream(stream)), encoding);
                 doc = Parse(reader, outputText, false);
             }
+            reader.Close();
             return doc;
         }
 
@@ -49,6 +50,7 @@ namespace FTAnalyzer
                     : new AnselInputStreamReader(CheckInvalidCR(CloneStream(stream)));
                 doc = Parse(reader, outputText, false);
             }
+            reader.Close();
             return doc;
         }
 

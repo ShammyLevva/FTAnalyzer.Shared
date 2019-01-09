@@ -18,7 +18,7 @@ namespace FTAnalyzer
             CensusStatus = censusStatus;
         }
 
-        public int FamilyMembersCount => Family.Members.Count<CensusIndividual>();
+        public int FamilyMembersCount => Family.Members.Count();
 
         public string FamilyID => Family.FamilyID;
 
@@ -48,11 +48,13 @@ namespace FTAnalyzer
             get
             {
                 foreach (Fact f in AllFacts)
-                    if (f.IsValidCensus(CensusDate) && f.CensusReference != null)
-                        return f.CensusReference.Reference;
+                    if (f.FactDate.Overlaps(CensusDate) && f.IsValidCensus(CensusDate) && f.CensusReference != null)
+                        return f.CensusReference.Reference.Trim();
                 return string.Empty;
             }
         }
+
+        public bool IsKnownCensusReference => !CensusReference.StartsWith("Unknown");
 
 #if __PC__
         public System.Windows.Forms.DataGridViewCellStyle CellStyle { get; set; }

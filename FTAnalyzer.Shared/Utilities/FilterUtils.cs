@@ -18,7 +18,7 @@ namespace FTAnalyzer.Filters
 
         public static Predicate<T> AndFilter<T>(Predicate<T> p1, Predicate<T> p2) => x => p1(x) && p2(x);
 
-        //public static Predicate<T> AndFilter<T>(Predicate<T> p1, Predicate<T> p2, Predicate<T> p3) => x => p1(x) && p2(x) && p3(x);
+        public static Predicate<T> AndFilter<T>(Predicate<T> p1, Predicate<T> p2, Predicate<T> p3) => x => p1(x) && p2(x) && p3(x);
 
         public static Predicate<T> AndFilter<T>(IEnumerable<Predicate<T>> ps) => x => ps.All(p => p(x));
 

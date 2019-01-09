@@ -123,14 +123,14 @@ namespace FTAnalyzer
         bool IsValidFamily()
         {
             Individual eldestChild = Children.OrderBy(x => x.BirthDate).FirstOrDefault();
-            if (MarriageDate.IsAfter(CensusDate) && (eldestChild == null || eldestChild.BirthDate.IsAfter(CensusDate)))
+            if (MarriageDate.IsKnown && MarriageDate.IsAfter(CensusDate) && (eldestChild == null || eldestChild.BirthDate.IsAfter(CensusDate)))
                 return false;
 
             if (FamilyType == SOLOINDIVIDUAL || FamilyType == PRE_MARRIAGE)
                 return true; // allow solo individual families to be processed
 
-            // valid family if both parent are 16+
-            return Husband?.GetMaxAge(CensusDate) >= 16 && Wife?.GetMaxAge(CensusDate) >= 16;
+            // valid family if both parent are 16+ or sole parent >=16
+            return (Husband == null || Husband?.GetMaxAge(CensusDate) >= 16) && (Wife == null || Wife?.GetMaxAge(CensusDate) >= 16);
         }
 
         public string Surname

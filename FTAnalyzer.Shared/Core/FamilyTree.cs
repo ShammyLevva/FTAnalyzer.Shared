@@ -1333,8 +1333,6 @@ namespace FTAnalyzer
                 foreach (Family f in families)
                 {
                     CensusFamily cf = new CensusFamily(f, censusDate);
-                    //if(cf.Members.Any(x => x.IndividualID == "I0282"))
-                    //    Console.WriteLine("found it");
                     if (cf.Process(censusDate, censusDone, checkCensus))
                     {
                         individualIDs.UnionWith(cf.Members.Select(x => x.IndividualID));
@@ -1344,8 +1342,8 @@ namespace FTAnalyzer
                 // also add all individuals that don't ever appear as a child as they may have census facts for when they are children
                 foreach (Individual ind in individuals.Filter(x => x.FamiliesAsChild.Count == 0))
                 {
-                    //if (ind.IndividualID == "I0282")
-                    //    Console.WriteLine("found it");
+                    if (ind.IndividualID == "I3317" || ind.IndividualID == "I5251" || ind.IndividualID == "I2832")
+                        Console.WriteLine("Stop");
                     CensusFamily cf = new CensusFamily(new Family(ind, Instance.NextPreMarriageFamily), censusDate);
                     if (!individualIDs.Contains(ind.IndividualID) && cf.Process(censusDate, censusDone, checkCensus))
                     {

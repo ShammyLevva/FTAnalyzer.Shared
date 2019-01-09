@@ -39,10 +39,9 @@ namespace FTAnalyzer
             ExpectedAlive = 0;
             ExpectedDead = 0;
 
-            FamilyType = familyID.StartsWith("SF", StringComparison.Ordinal)
-                ? SOLOINDIVIDUAL
-                : familyID.StartsWith("PM", StringComparison.Ordinal) ? PRE_MARRIAGE
-                : UNKNOWN;
+            FamilyType = familyID.StartsWith("SF", StringComparison.Ordinal) ? SOLOINDIVIDUAL
+                       : familyID.StartsWith("PM", StringComparison.Ordinal) ? PRE_MARRIAGE
+                       : UNKNOWN;
         }
 
         public Family() : this(string.Empty) { }
