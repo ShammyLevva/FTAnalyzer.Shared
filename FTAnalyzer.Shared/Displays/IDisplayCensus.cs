@@ -14,7 +14,7 @@
         FactDate DeathDate { get; }
         FactLocation DeathLocation { get; }
         string CensusStatus { get; }
-        string CensusReference { get; }
+        string CensusRef { get; }
         string Relation { get; }
         string RelationToRoot { get; }
         decimal Ahnentafel { get; }

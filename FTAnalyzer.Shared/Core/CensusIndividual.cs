@@ -19,12 +19,13 @@ namespace FTAnalyzer
         }
 
         public int FamilyMembersCount => Family.Members.Count();
-
         public string FamilyID => Family.FamilyID;
-
         public FactLocation CensusLocation => IsCensusDone(CensusDate) ? BestLocation(CensusDate) : Family.BestLocation;
-
+        public string CensusRef => CensusReference.Reference.Trim();
         public CensusDate CensusDate => Family.CensusDate;
+        public Age Age => GetAge(CensusDate);
+        public string CensusSurname => Family.Surname;
+        public bool IsKnownCensusReference => CensusReference.IsKnownStatus;
 
         public string CensusName
         {
@@ -39,27 +40,19 @@ namespace FTAnalyzer
             }
         }
 
-        public Age Age => GetAge(CensusDate);
-
-        public string CensusSurname => Family.Surname;
-
-        public string CensusReference
+        public CensusReference CensusReference
         {
             get
             {
                 foreach (Fact f in AllFacts)
                     if (f.FactDate.Overlaps(CensusDate) && f.IsValidCensus(CensusDate) && f.CensusReference != null)
-                        return f.CensusReference.Reference.Trim();
-                return string.Empty;
+                        return f.CensusReference;
+                return null;
             }
         }
-
-        public bool IsKnownCensusReference => !CensusReference.StartsWith("Unknown");
-
 #if __PC__
         public System.Windows.Forms.DataGridViewCellStyle CellStyle { get; set; }
 #endif
-
         public bool IsValidLocation(string location) => 
             !CensusLocation.IsKnownCountry || Countries.IsUnitedKingdom(location) ? CensusLocation.IsUnitedKingdom : CensusLocation.Country.Equals(location);
 
