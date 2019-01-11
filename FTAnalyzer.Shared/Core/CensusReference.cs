@@ -143,11 +143,11 @@ namespace FTAnalyzer
 
         public enum ReferenceStatus { BLANK = 0, UNRECOGNISED = 1, INCOMPLETE = 2, GOOD = 3 };
         public static CensusReference UNKNOWN = new CensusReference();
-        private static readonly string MISSING = "Missing";
+        static readonly string MISSING = "Missing";
 
-        private string unknownCensusRef;
-        private string Place { get; set; }
-        private string Class { get; set; }
+        string unknownCensusRef;
+        string Place { get; set; }
+        string Class { get; set; }
         public string Roll { get; private set; }
         public string Piece { get; private set; }
         public string Folio { get; private set; }
@@ -159,8 +159,8 @@ namespace FTAnalyzer
         public string ED { get; private set; }
         public string SD { get; private set; }
         public string Family { get; private set; }
-        private string ReferenceText { get; set; }
-        private CensusLocation CensusLocation { get; set; }
+        string ReferenceText { get; set; }
+        CensusLocation CensusLocation { get; set; }
         public Fact Fact { get; private set; }
         public bool IsUKCensus { get; private set; }
         public bool IsLCCensusFact { get; private set; }

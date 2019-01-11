@@ -23,14 +23,14 @@ namespace FTAnalyzer.Exports
             {
                 if (AddIndividualToWebsite(ind, outputText))
                 {
-                    outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.ToString()}, {ind.CensusReference} added.\n");
+                    outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - {ind.ToString()}, {ind.CensusReference} added.\n");
                     recordsAdded++;
 #if __PC__
                     DatabaseHelper.Instance.StoreLostCousinsFact(ind);
 #endif
                 }
                 else
-                    outputText.Report($"Record {++count} of {ToProcess.Count}: Failed to add {ind.ToString()}, {ind.CensusReference}.\n");
+                    outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - Failed to add {ind.ToString()}, {ind.CensusReference}.\n");
             }
             outputText.Report("\n\nFinished writing Entries to Lost Cousins website");
             return recordsAdded;
