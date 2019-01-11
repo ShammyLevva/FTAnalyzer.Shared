@@ -21,12 +21,11 @@ namespace FTAnalyzer
         public int FamilyMembersCount => Family.Members.Count();
         public string FamilyID => Family.FamilyID;
         public FactLocation CensusLocation => IsCensusDone(CensusDate) ? BestLocation(CensusDate) : Family.BestLocation;
-        public string CensusRef => CensusReference.Reference.Trim();
+        public string CensusRef => CensusReference == null ? string.Empty : CensusReference.Reference.Trim();
         public CensusDate CensusDate => Family.CensusDate;
         public Age Age => GetAge(CensusDate);
         public string CensusSurname => Family.Surname;
-        public bool IsKnownCensusReference => CensusReference.IsKnownStatus;
-
+        public bool IsKnownCensusReference => CensusReference != null && CensusReference.IsKnownStatus;
 
         public string LCAge
         {

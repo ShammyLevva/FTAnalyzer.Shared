@@ -140,24 +140,22 @@ namespace FTAnalyzer.Exports
 
         static string GetCensusSpecificFields(CensusIndividual ind)
         {
+            //if (ind.CensusDate.Equals(CensusDate.EWCENSUS1841))
+            //    return "&census_code=1841";
             if (ind.CensusDate.Equals(CensusDate.EWCENSUS1881))
                 return $"&census_code=RG11&ref1={ind.CensusReference.Piece}&ref2={ind.CensusReference.Folio}&ref3={ind.CensusReference.Page}&ref4=&ref5=";
             if (ind.CensusDate.Equals(CensusDate.SCOTCENSUS1881))
                 return $"&census_code=SCT1&ref1={ind.CensusReference.Parish}&ref2={ind.CensusReference.ED}&ref3={ind.CensusReference.Page}&ref4=&ref5=";
             //if (ind.CensusDate.Equals(CensusDate.CANADACENSUS1881))
             //    return $"&census_code=CAN1&ref1={ind.CensusReference.ED}&ref2={ind.CensusReference.SD}&ref3={ind.CensusReference.}&ref4={ind.CensusReference.Page}&ref5={ind.CensusReference.Family}";
-            //if (ind.CensusDate.Equals(CensusDate.USCENSUS1880))
-            //    return "&census_code=USA1";
-            //if (ind.CensusDate.Equals(CensusDate.EWCENSUS1841))
-            //    return "&census_code=1841";
             //if (ind.CensusDate.Equals(CensusDate.IRELANDCENSUS1911))
             //    return "&census_code=0IRL";
             //if (ind.CensusDate.Equals(CensusDate.EWCENSUS1911))
             //    return "&census_code=0ENG";
+            //if (ind.CensusDate.Equals(CensusDate.USCENSUS1880))
+            //    return "&census_code=USA1";
             //if (ind.CensusDate.Equals(CensusDate.USCENSUS1940))
             //    return "&census_code=USA4";
-            //if (ind.CensusDate.Equals(CensusDate.EWCENSUS1881))
-            //    return "NEWF";
             return string.Empty;
         }
 

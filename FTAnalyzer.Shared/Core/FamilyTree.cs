@@ -386,7 +386,7 @@ namespace FTAnalyzer
             try
             {
                 int count = DatabaseHelper.Instance.AddLostCousinsFacts();
-                outputText.Report($"{count} FTAnalyzer created Lost Cousins facts loaded.");
+                outputText.Report($"Created {count} Lost Cousins facts from records previously uploaded by FTAnalyzer");
             }
             catch (Exception ex)
             {
