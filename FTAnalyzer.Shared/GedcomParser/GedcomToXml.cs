@@ -354,7 +354,7 @@ namespace FTAnalyzer
                         }
                         writer.Write("</table></body></html>");
                         fileStream.Close();
-                        HttpUtility.VisitWebsite(tempFile);
+                        SpecialMethods.VisitWebsite(tempFile);
                     }
                 }
             }

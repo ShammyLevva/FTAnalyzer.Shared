@@ -3,6 +3,7 @@ using GoogleAnalyticsTracker.Core.TrackerParameters;
 using GoogleAnalyticsTracker.Simple;
 using System.Globalization;
 using System.Threading.Tasks;
+using System.Diagnostics;
 #if __PC__
 using System;
 using System.Collections.Generic;
@@ -41,6 +42,17 @@ namespace FTAnalyzer.Utilities
             }
         }
 #endif
+        public static void VisitWebsite(string url)
+        {
+            try
+            {
+                Process.Start(url);
+            }
+            catch (Exception e)
+            {
+                UIHelpers.ShowMessage($"Error processing web request. Error was : {e.Message}\nSite was: {url}");
+            }
+        }
 
         public static async Task<TrackingResult> TrackEventAsync(this SimpleTracker tracker, string category, string action, string label, long value = 1)
         {

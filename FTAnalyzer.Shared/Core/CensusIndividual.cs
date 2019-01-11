@@ -27,6 +27,25 @@ namespace FTAnalyzer
         public string CensusSurname => Family.Surname;
         public bool IsKnownCensusReference => CensusReference.IsKnownStatus;
 
+
+        public string LCAge
+        {
+            get
+            {
+                if (Age.MinAge > 0)
+                    return Age.MinAge.ToString();
+                if (Age.MaxAge > 0)
+                    return Age.MaxAge.ToString();
+                if (BirthDate.IsKnown)
+                {
+                    int months = BirthDate.MonthsDifference(CensusDate);
+                    return $"{months}m";
+                }
+                else
+                    return "0";
+            }
+        }
+
         public string CensusName
         {
             get

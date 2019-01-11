@@ -368,6 +368,17 @@ namespace FTAnalyzer
             }
         }
 
+        public string OtherNames
+        {
+            get
+            {
+                if (_forenames == null)
+                    return string.Empty;
+                int pos = _forenames.IndexOf(" ", StringComparison.Ordinal);
+                return pos > 0 ? _forenames.Substring(pos).Trim() : string.Empty;
+            }
+        }
+
         public string ForenameMetaphone => forenameMetaphone.PrimaryKey;
 
         public string Forenames => GeneralSettings.Default.ShowAliasInName && Alias.Length > 0 ? $"{_forenames} '{Alias}' " : _forenames;

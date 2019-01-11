@@ -956,12 +956,20 @@ namespace FTAnalyzer
 
         double DaysSpan => EndDate.Subtract(StartDate).TotalDays;
 
+        public int MonthsDifference(CensusDate when)
+        {
+            if (DaysSpan > 366)
+                return 12;
+            var x = EndDate.Subtract(when.StartDate).TotalDays/30;
+            var y = when.EndDate.Subtract(StartDate).TotalDays/30;
+            double minGap = Math.Min(x, y);
+            return (int)minGap;
+        }
+
         public double DaysDifference(FactDate when)
         {
             if (DaysSpan > 100 || when.DaysSpan > 100)
                 return double.MaxValue;
-            var x = EndDate.Subtract(when.StartDate).TotalDays;
-            var y = when.EndDate.Subtract(StartDate).TotalDays;
             double minGap = Math.Min(Math.Abs(EndDate.Subtract(when.StartDate).TotalDays), Math.Abs(when.EndDate.Subtract(StartDate).TotalDays));
             return minGap;
         }

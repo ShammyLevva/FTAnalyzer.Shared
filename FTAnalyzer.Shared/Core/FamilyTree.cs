@@ -340,6 +340,7 @@ namespace FTAnalyzer
                 rootIndividualID = individuals[0].IndividualID;
             UpdateRootIndividual(rootIndividualID, progress, outputText, true);
             CreateSharedFacts();
+            CreateLostCousinsFacts(outputText);
             CountCensusFacts(outputText);
             FixIDs();
             SetDataErrorTypes(progress);
@@ -379,7 +380,22 @@ namespace FTAnalyzer
             }
         }
 
-        public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
+        void CreateLostCousinsFacts(IProgress<string> outputText)
+        {
+#if __PC__
+            try
+            {
+                int count = DatabaseHelper.Instance.AddLostCousinsFacts();
+                outputText.Report($"{count} FTAnalyzer created Lost Cousins facts loaded.");
+            }
+            catch (Exception ex)
+            {
+                outputText.Report($"Error loading previously submitted Lost Cousins data. {ex.Message}");
+            }
+#endif
+}
+
+public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
         {
             outputText.Report("");
 #if __PC__
@@ -715,6 +731,8 @@ namespace FTAnalyzer
             //            return individuals.FirstOrDefault(i => i.IndividualID == individualID);
             if (string.IsNullOrEmpty(individualID))
                 return null;
+            while (individualID.StartsWith("I0"))
+                individualID = "I" + individualID.Substring(2);
             individualLookup.TryGetValue(individualID, out Individual person);
             return person;
         }
@@ -1921,7 +1939,7 @@ namespace FTAnalyzer
             }
             if (uri != null)
             {
-                HttpUtility.VisitWebsite(uri);
+                SpecialMethods.VisitWebsite(uri);
                 Analytics.TrackAction(Analytics.CensusSearchAction, $"Searching {provider} {censusYear}");
             }
         }
@@ -2379,7 +2397,7 @@ namespace FTAnalyzer
             }
             if (uri != null)
             {
-                HttpUtility.VisitWebsite(uri);
+                SpecialMethods.VisitWebsite(uri);
                 Analytics.TrackAction(Analytics.BMDSearchAction, $"Searching {provider} BMDs");
             }
         }
