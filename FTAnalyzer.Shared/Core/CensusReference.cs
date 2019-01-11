@@ -155,7 +155,7 @@ namespace FTAnalyzer
         public string Book { get; private set; }
         public string Schedule { get; private set; }
         public string Parish { get; private set; }
-        private string RD { get; set; }
+        public string RD { get; set; }
         public string ED { get; private set; }
         public string SD { get; private set; }
         public string Family { get; private set; }
@@ -884,7 +884,6 @@ namespace FTAnalyzer
                 {
                     Page = matcher.Groups[3].ToString();
                     Family = matcher.Groups[4].ToString();
-
                 }
                 SetFlagsandCountry(false, true, Countries.UNITED_STATES, ReferenceStatus.GOOD, matcher.Value);
                 return true;
@@ -925,6 +924,11 @@ namespace FTAnalyzer
             Country = country;
             Status = status;
             MatchString = matchstring;
+            if(Parish.Length > 0)
+            {
+                ScottishParish sp = ScottishParish.FindParish(Parish);
+                RD = sp.RegistrationDistrict;
+            }
         }
 
         private string GetOriginalPlace(string match, string originalText, string stopText)
@@ -1154,7 +1158,7 @@ namespace FTAnalyzer
                 if (Roll.Length > 0)
                 {
                     return GeneralSettings.Default.UseCompactCensusRef
-                        ? $"{Roll}{(ED.Length > 0 ? "/" + ED : "")}/{Page}"
+                        ? $"{Roll}{(ED.Length > 0 ? $"/{ED}" : "")}/{Page}"
                         : $"Roll: {Roll}{(ED.Length > 0 ? $", ED: {ED}" : "")}, Page: {Page}";
                 }
                 if (Piece.Length > 0)
@@ -1164,29 +1168,29 @@ namespace FTAnalyzer
                         if (Fact.FactDate.Overlaps(CensusDate.UKCENSUS1851) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1861) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1871) ||
                             Fact.FactDate.Overlaps(CensusDate.UKCENSUS1881) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1891) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1901))
                             return GeneralSettings.Default.UseCompactCensusRef
-                                ? Piece + "/" + Folio + "/" + Page
-                                : "Piece: " + Piece + ", Folio: " + Folio + ", Page: " + Page;
+                                ? $"{Piece}/{Folio}/{Page}"
+                                : $"Piece: {Piece}, Folio: {Folio}, Page: {Page}";
                         if (Fact.FactDate.Overlaps(CensusDate.UKCENSUS1841))
                         {
                             if (Book.Length > 0)
                                 return GeneralSettings.Default.UseCompactCensusRef
-                                    ? Piece + "/" + Book + "/" + Folio + "/" + Page
-                                    : "Piece: " + Piece + ", Book: " + Book + ", Folio: " + Folio + ", Page: " + Page;
+                                    ? $"{Piece}/{Book}/{Folio}/{Page}"
+                                    : $"Piece: {Piece}, Book: {Book}, Folio: {Folio}, Page: {Page}";
                             if (GeneralSettings.Default.UseCompactCensusRef)
-                                return Piece + "/see image/" + Folio + "/" + Page;
-                            return "Piece: " + Piece + ", Book: see census image (stamped on the census page after the piece number), Folio: " + Folio + ", Page: " + Page;
+                                return $"{Piece}/see image/{Folio}/{Page}";
+                            return $"Piece: {Piece}, Book: see census image (stamped on the census page after the piece number), Folio: {Folio}, Page: {Page}";
                         }
                         if (Fact.FactDate.Overlaps(CensusDate.UKCENSUS1911))
                         {
                             if (Schedule.Length > 0)
-                                return GeneralSettings.Default.UseCompactCensusRef ? Piece + "/" + Schedule : "Piece: " + Piece + ", Schedule: " + Schedule;
-                            return GeneralSettings.Default.UseCompactCensusRef ? Piece + "/" + Page : "Piece: " + Piece + ", Page: " + Page;
+                                return GeneralSettings.Default.UseCompactCensusRef ? $"{Piece}/{Schedule}" : $"Piece: {Piece}, Schedule: {Schedule}";
+                            return GeneralSettings.Default.UseCompactCensusRef ? $"{Piece}/{Page}" : $"Piece: {Piece}, Page: {Page}";
                         }
                         if (Fact.FactDate.Overlaps(CensusDate.UKCENSUS1939))
                         {
                             return GeneralSettings.Default.UseCompactCensusRef
-                                ? "RG101/" + Piece + "/" + Page + "/" + Schedule + " (" + ED + ")"
-                                : "Piece: " + Piece + ", Page: " + Page + ", Schedule " + Schedule + ", ED: " + ED;
+                                ? $"RG101/{Piece}/{Page}/{Schedule} ({ED})"
+                                : $"Piece: {Piece}, Page: {Page}, Schedule {Schedule}, ED: {ED}";
                         }
                     }
                 }
@@ -1198,18 +1202,18 @@ namespace FTAnalyzer
                     {
                         ScottishParish sp = ScottishParish.FindParish(Parish);
                         if (GeneralSettings.Default.UseCompactCensusRef)
-                            return sp == ScottishParish.UNKNOWN_PARISH ? Parish + "/" + ED + "/" + Page : sp.Reference + "/" + ED + "/" + Page;
+                            return sp == ScottishParish.UNKNOWN_PARISH ? $"{Parish}/{ED}/{Page}" : $"{sp.Reference}/{ED}/{Page}";
                         return sp == ScottishParish.UNKNOWN_PARISH
-                            ? "Parish: " + Parish + ", ED: " + ED + ", Page: " + Page
-                            : "Parish: " + sp.Reference + ", ED: " + ED + ", Page: " + Page;
+                            ? $"Parish: {Parish}, ED: {ED}, Page: {Page}"
+                            : $"Parish: {sp.Reference}, ED: {ED}, Page: {Page}";
                     }
                 }
                 else if (RD.Length > 0)
                 {
                     if (Fact.Location.IsEnglandWales && Fact.FactDate.Overlaps(CensusDate.UKCENSUS1911))
                         return GeneralSettings.Default.UseCompactCensusRef
-                            ? RD + "/" + ED + "/" + Schedule
-                            : "RD: " + RD + ", ED: " + ED + ", Schedule: " + Schedule;
+                            ? $"{RD}/{ED}/{Schedule}"
+                            : $"RD: {RD}, ED: {ED}, Schedule: {Schedule}";
                 }
                 if (unknownCensusRef.Length > 0)
                     return unknownCensusRef;

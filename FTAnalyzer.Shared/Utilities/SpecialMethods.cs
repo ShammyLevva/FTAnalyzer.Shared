@@ -4,6 +4,7 @@ using GoogleAnalyticsTracker.Simple;
 using System.Globalization;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 #if __PC__
 using System;
 using System.Collections.Generic;
@@ -46,11 +47,31 @@ namespace FTAnalyzer.Utilities
         {
             try
             {
-                Process.Start(url);
+                Process process = new Process();
+                process.StartInfo.UseShellExecute = true;
+                process.StartInfo.FileName = url;
+                process.Start();
             }
             catch (Exception e)
             {
-                UIHelpers.ShowMessage($"Error processing web request. Error was : {e.Message}\nSite was: {url}");
+                // hack because of this: https://github.com/dotnet/corefx/issues/10361
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    url = url.Replace("&", "^&");
+                    Process.Start(new ProcessStartInfo("cmd", $"/c start {url}") { CreateNoWindow = true });
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    Process.Start("xdg-open", url);
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    Process.Start("open", url);
+                }
+                else
+                {
+                    UIHelpers.ShowMessage($"Error processing web request. Error was : {e.Message}\nSite was: {url}");
+                }
             }
         }
 

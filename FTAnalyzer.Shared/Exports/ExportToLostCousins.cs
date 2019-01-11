@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 
 namespace FTAnalyzer.Exports
@@ -15,14 +14,14 @@ namespace FTAnalyzer.Exports
         static NetworkCredential Credentials { get; set; }
         static CookieCollection CookieJar { get; set; }
         
-        public static void ProcessList(List<CensusIndividual> individuals, IProgress<string> outputText)
+        public static int ProcessList(List<CensusIndividual> individuals, IProgress<string> outputText)
         {
             ToProcess = individuals;
             int recordsAdded = 0;
             int count = 0;
             foreach (CensusIndividual ind in ToProcess)
             {
-                if (AddIndividualToWebsite(ind))
+                if (AddIndividualToWebsite(ind, outputText))
                 {
                     outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.ToString()}, {ind.CensusReference} added.\n");
                     recordsAdded++;
@@ -34,6 +33,7 @@ namespace FTAnalyzer.Exports
                     outputText.Report($"Record {++count} of {ToProcess.Count}: Failed to add {ind.ToString()}, {ind.CensusReference}.\n");
             }
             outputText.Report("\n\nFinished writing Entries to Lost Cousins website");
+            return recordsAdded;
         }
 
         public static bool CheckLostCousinsLogin(string email, string password)
@@ -73,7 +73,7 @@ namespace FTAnalyzer.Exports
             }
         }
 
-        static bool AddIndividualToWebsite(CensusIndividual ind)
+        static bool AddIndividualToWebsite(CensusIndividual ind, IProgress<string> outputText)
         {
             HttpWebResponse resp = null;
             try
@@ -98,7 +98,7 @@ namespace FTAnalyzer.Exports
             }
             catch (Exception e)
             {
-                UIHelpers.ShowMessage($"Problem accessing Lost Cousins Website. Check you are connected to internet. Error message is: {e.Message}");
+                outputText.Report($"Problem accessing Lost Cousins Website to send record below. Error message is: {e.Message}\n");
                 return false;
             }
             finally
@@ -140,22 +140,23 @@ namespace FTAnalyzer.Exports
 
         static string GetCensusSpecificFields(CensusIndividual ind)
         {
-            //if (ind.CensusDate.Equals(CensusDate.EWCENSUS1841))
-            //    return "&census_code=1841";
-            if (ind.CensusDate.Equals(CensusDate.EWCENSUS1881))
-                return $"&census_code=RG11&ref1={ind.CensusReference.Piece}&ref2={ind.CensusReference.Folio}&ref3={ind.CensusReference.Page}&ref4=&ref5=";
-            if (ind.CensusDate.Equals(CensusDate.SCOTCENSUS1881))
-                return $"&census_code=SCT1&ref1={ind.CensusReference.Parish}&ref2={ind.CensusReference.ED}&ref3={ind.CensusReference.Page}&ref4=&ref5=";
-            //if (ind.CensusDate.Equals(CensusDate.CANADACENSUS1881))
-            //    return $"&census_code=CAN1&ref1={ind.CensusReference.ED}&ref2={ind.CensusReference.SD}&ref3={ind.CensusReference.}&ref4={ind.CensusReference.Page}&ref5={ind.CensusReference.Family}";
-            //if (ind.CensusDate.Equals(CensusDate.IRELANDCENSUS1911))
-            //    return "&census_code=0IRL";
-            //if (ind.CensusDate.Equals(CensusDate.EWCENSUS1911))
-            //    return "&census_code=0ENG";
-            //if (ind.CensusDate.Equals(CensusDate.USCENSUS1880))
-            //    return "&census_code=USA1";
-            //if (ind.CensusDate.Equals(CensusDate.USCENSUS1940))
-            //    return "&census_code=USA4";
+            CensusReference censusRef = ind.CensusReference;
+            if (ind.CensusDate.Equals(CensusDate.EWCENSUS1841) && Countries.IsEnglandWales(ind.CensusCountry))
+                return $"&census_code=1841&ref1={censusRef.Piece}&ref2={censusRef.Book}&ref3={censusRef.Folio}&ref4={censusRef.Page}&ref5=";
+            if (ind.CensusDate.Equals(CensusDate.EWCENSUS1881) && Countries.IsEnglandWales(ind.CensusCountry))
+                return $"&census_code=RG11&ref1={censusRef.Piece}&ref2={censusRef.Folio}&ref3={censusRef.Page}&ref4=&ref5=";
+            if (ind.CensusDate.Equals(CensusDate.SCOTCENSUS1881) && ind.CensusCountry == Countries.SCOTLAND)
+                return $"&census_code=SCT1&ref1={censusRef.RD}&ref2={censusRef.ED}&ref3={censusRef.Page}&ref4=&ref5=";
+            if (ind.CensusDate.Equals(CensusDate.CANADACENSUS1881) && ind.CensusCountry == Countries.CANADA)
+                return $"&census_code=CAN1&ref1={censusRef.ED}&ref2={censusRef.SD}&ref3=&ref4={censusRef.Page}&ref5={censusRef.Family}";
+            //if (ind.CensusDate.Equals(CensusDate.IRELANDCENSUS1911) && ind.CensusCountry == Countries.IRELAND)
+            //    return $"&census_code=0IRL&ref1=&ref2=&ref3=&ref4=&ref5=";
+            if (ind.CensusDate.Equals(CensusDate.EWCENSUS1911) && Countries.IsEnglandWales(ind.CensusCountry))
+                return $"&census_code=0ENG&ref1={censusRef.Piece}&ref2={censusRef.Schedule}&ref3=&ref4=&ref5=";
+            if (ind.CensusDate.Equals(CensusDate.USCENSUS1880) && ind.CensusCountry == Countries.UNITED_STATES)
+                return $"&census_code=USA1&ref1={censusRef.Roll}&ref2={censusRef.Page}&ref3=&ref4=&ref5=";
+            if (ind.CensusDate.Equals(CensusDate.USCENSUS1940) && ind.CensusCountry == Countries.UNITED_STATES)
+                return $"&census_code=USA4&ref1={censusRef.Roll}&ref2={censusRef.ED}&ref3={censusRef.Page}&ref4=&ref5=";
             return string.Empty;
         }
 

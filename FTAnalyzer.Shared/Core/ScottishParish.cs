@@ -57,7 +57,7 @@ namespace FTAnalyzer
             RegistrationDistrict = RD;
             Name = name;
             Region = region;
-            string loc = name + ", " + region + ", Scotland";
+            string loc = $"{name}, {region}, Scotland";
             Location = FactLocation.GetLocation(loc, false);
         }
 

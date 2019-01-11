@@ -26,6 +26,7 @@ namespace FTAnalyzer
         public Age Age => GetAge(CensusDate);
         public string CensusSurname => Family.Surname;
         public bool IsKnownCensusReference => CensusReference != null && CensusReference.IsKnownStatus;
+        public string CensusCountry => CensusReference == null ? string.Empty : CensusReference.Country; 
 
         public string LCAge
         {
