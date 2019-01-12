@@ -2276,6 +2276,12 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
                 query.Append("yearofbirth=" + year + "&");
                 query.Append("yearofbirth_offset=" + range + "&");
             }
+            if(censusYear == 1911 && Countries.IsUnitedKingdom(censusCountry))
+            {
+                CensusReference reference = person.GetCensusReference(CensusDate.EWCENSUS1911);
+                if (reference?.Piece != null && reference.Schedule == "Missing")
+                    query.Append($"pieceno={reference.Piece}");
+            }
             //if (person.BirthLocation != FactLocation.UNKNOWN_LOCATION)
             //{
             //    query.Append("birthPlace=" + HttpUtility.UrlEncode(person.BirthLocation.SubRegion) + "&");

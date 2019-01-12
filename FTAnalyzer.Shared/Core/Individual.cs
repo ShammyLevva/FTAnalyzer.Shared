@@ -605,6 +605,19 @@ namespace FTAnalyzer
             return false;
         }
 
+        public Fact CensusFact(FactDate factDate)
+        {
+            if (factDate == null) return null;
+            foreach (Fact f in Facts)
+            {
+                if (f.IsValidCensus(factDate))
+                    return f;
+            }
+            return null;
+        }
+
+        public CensusReference GetCensusReference(FactDate factDate) => CensusFact(factDate)?.CensusReference;
+
         public bool CensusFactExists(FactDate factDate, bool includeCreated)
         {
             if (factDate == null) return false;
