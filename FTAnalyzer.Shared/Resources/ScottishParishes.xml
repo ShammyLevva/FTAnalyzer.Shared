@@ -4,7 +4,8 @@
 		<Parish Region="Shetland" Name="Bressay" RD="1"/>
 		<Parish Region="Shetland" Name="Delting" RD="1"/>
 		<Parish Region="Shetland" Name="Dunrossness Fair Isle Sandwick and Cunningsburgh" RD="3"/>
-		<Parish Region="Shetland" Name="Fetlar and North Yell" RD="4"/>
+		<Parish Region="Shetland" Name="Fetlar" RD="4-1"/>
+		<Parish Region="Shetland" Name="North Yell" RD="4-2"/>
 		<Parish Region="Shetland" Name="Lerwick" RD="5"/>
 		<Parish Region="Shetland" Name="Mid and South Yell" RD="6"/>
 		<Parish Region="Shetland" Name="Whalsay and Skerries" RD="7"/>
@@ -87,19 +88,36 @@
 		<Parish Region="Ross and Cromarty" Name="Bavas" RD="86"/>
 		<Parish Region="Ross and Cromarty" Name="Lochs" RD="87"/>
 		<Parish Region="Ross and Cromarty" Name="Stornoway" RD="88"/>
+		<Parish Region="Ross and Cromarty" Name="Uig" RD="89"/>
+		<Parish Region="Inverness-shire" Name="Alvie" RD="90"/>
 		<Parish Region="Inverness-shire" Name="Ardersier" RD="91"/>
+		<Parish Region="Inverness-shire" Name="Boleskine and Abertarff" RD="92"/>
 		<Parish Region="Inverness-shire" Name="Inverallan" RD="93"/>
 		<Parish Region="Inverness-shire" Name="Croy and Dalcross" RD="94"/>
+		<Parish Region="Inverness-shire" Name="Daviot and Dunlichity" RD="95"/>
+		<Parish Region="Inverness-shire" Name="Dores" RD="96"/>
+		<Parish Region="Inverness-shire" Name="Glenelg" RD="97"/>
+		<Parish Region="Inverness-shire" Name="Inverness" RD="98"/>
+		<Parish Region="Inverness-shire" Name="Kilmonivaig" RD="99"/>
 		<Parish Region="Inverness-shire" Name="Kilmorack" RD="100"/>
 		<Parish Region="Inverness-shire" Name="Kiltarlity" RD="101"/>
 		<Parish Region="Inverness-shire" Name="Kingussie and Insh" RD="102"/>
 		<Parish Region="Inverness-shire" Name="Kirkhill" RD="103"/>
 		<Parish Region="Inverness-shire" Name="Laggan" RD="104"/>
+		<Parish Region="Inverness-shire" Name="" RD="105"/>
+		<Parish Region="Inverness-shire" Name="" RD="106"/>
+		<Parish Region="Inverness-shire" Name="" RD="107"/>
+		<Parish Region="Inverness-shire" Name="" RD="108"/>
 		<Parish Region="Inverness-shire" Name="Bracadale" RD="109"/>
+		<Parish Region="Inverness-shire" Name="" RD="110"/>
 		<Parish Region="Inverness-shire" Name="Harris and St Kilda" RD="111"/>
 		<Parish Region="Inverness-shire" Name="Kilmuir" RD="112"/>
+		<Parish Region="Inverness-shire" Name="" RD="113"/>
+		<Parish Region="Inverness-shire" Name="" RD="114"/>
 		<Parish Region="Inverness-shire" Name="Sleat" RD="115"/>
 		<Parish Region="Inverness-shire" Name="Small Isles" RD="116"/>
+		<Parish Region="Inverness-shire" Name="" RD="117"/>
+		<Parish Region="Inverness-shire" Name="" RD="118"/>
 		<Parish Region="Inverness-shire" Name="Strath" RD="119"/>
 		<Parish Region="Nairn" Name="Nairn" RD="123"/>
 		<Parish Region="Moray" Name="Alves" RD="125"/>
