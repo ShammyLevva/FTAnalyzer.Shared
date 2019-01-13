@@ -196,6 +196,7 @@ namespace FTAnalyzer.Exports
                     return "Marriage&descent=";
                 case Individual.UNKNOWN:
                 case Individual.UNSET:
+                case Individual.LINKED:
                 default:
                     return "Unknown&descent=";
             }

@@ -341,6 +341,9 @@ namespace FTAnalyzer
 
         public IEnumerable<int> RelationTypes => Members.Select(m => m.RelationType);
 
+        public bool HasUnknownRelations => RelationTypes.Contains(Individual.UNKNOWN);
+        public bool HasLinkedRelations => RelationTypes.Contains(Individual.MARRIAGE) || RelationTypes.Contains(Individual.LINKED);
+
         public string FamilyName
         {
             get
@@ -377,10 +380,7 @@ namespace FTAnalyzer
             return null;
         }
 
-        public bool ContainsSurname(string surname)
-        {
-            return Members.Any(x => x.Surname.Equals(surname, StringComparison.OrdinalIgnoreCase));
-        }
+        public bool ContainsSurname(string surname) => Members.Any(x => x.Surname.Equals(surname, StringComparison.OrdinalIgnoreCase));
 
         public bool On1911Census
         {

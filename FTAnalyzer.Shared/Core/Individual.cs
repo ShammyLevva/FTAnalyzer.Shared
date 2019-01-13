@@ -15,7 +15,7 @@ namespace FTAnalyzer
     {
         // define relation type from direct ancestor to related by marriage and 
         // MARRIAGEDB ie: married to a direct or blood relation
-        public const int UNKNOWN = 1, DIRECT = 2, DESCENDANT = 4, BLOOD = 8, MARRIEDTODB = 16, MARRIAGE = 32, UNSET = 64;
+        public const int UNKNOWN = 1, DIRECT = 2, DESCENDANT = 4, BLOOD = 8, MARRIEDTODB = 16, MARRIAGE = 32, LINKED = 64, UNSET = 128;
         public const string UNKNOWN_NAME = "UNKNOWN";
 
         public string IndividualID { get; private set; }
@@ -251,6 +251,7 @@ namespace FTAnalyzer
                     case MARRIAGE: return "By Marriage";
                     case MARRIEDTODB: return "Marr to Direct/Blood";
                     case DESCENDANT: return "Descendant";
+                    case LINKED: return "Linked by Marriages";
                     default: return "Unknown";
                 }
             }

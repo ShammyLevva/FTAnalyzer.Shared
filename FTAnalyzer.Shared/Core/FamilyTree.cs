@@ -1260,10 +1260,9 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
                 }
             }
             // we have now set all direct ancestors and all blood relations
-            // all that remains is to loop through the marriage relations
+            // now is to loop through the marriage relations
             IEnumerable<Individual> marriedDBs = GetAllRelationsOfType(Individual.MARRIEDTODB);
             AddToQueue(queue, marriedDBs);
-            int ignored = 0;
             while (queue.Count > 0)
             {
                 // get the next person
@@ -1287,8 +1286,24 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
                         family.SetChildRelation(queue, Individual.MARRIAGE);
                     }
                 }
-                else
-                    ignored++;
+            }
+            // now anyone linked is set
+            bool keepLooping = true;
+            while (keepLooping)
+            {
+                keepLooping = false; 
+                IEnumerable<Family> families = AllFamilies.Where(f => f.HasUnknownRelations && f.HasLinkedRelations);
+                foreach (Family f in families)
+                {
+                    foreach (Individual i in f.Members)
+                    {
+                        if (i.RelationType == Individual.UNKNOWN)
+                        {
+                            i.RelationType = Individual.LINKED;
+                            keepLooping = true; // keep going if we set an individual
+                        }
+                    }
+                }
             }
         }
 
@@ -1331,6 +1346,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             sb.Append($"Blood Relations: {relations[Individual.BLOOD]}\n");
             sb.Append($"Married to Blood or Direct Relation: {relations[Individual.MARRIEDTODB]}\n");
             sb.Append($"Related by Marriage: {relations[Individual.MARRIAGE]}\n");
+            sb.Append($"Linked through Marriages: {relations[Individual.LINKED]}\n");
             sb.Append($"Unknown relation: {relations[Individual.UNKNOWN]}\n");
             if (relations[Individual.UNSET] > 0)
                 sb.Append($"Failed to set relationship: {relations[Individual.UNSET]}\n");

@@ -33,10 +33,14 @@
                     return "Direct Ancestor";
                 if (Individual.RelationType == Individual.BLOOD)
                     return "Blood Relation";
-                if (Individual.RelationType == Individual.MARRIEDTODB)
+                if (Individual.RelationType == Individual.MARRIEDTODB || Individual.RelationType == Individual.MARRIAGE)
                     return "Marriage";
                 if (Individual.RelationType == Individual.DESCENDANT)
                     return "Descendant";
+                if (Individual.RelationType == Individual.LINKED)
+                    return "Linked";
+                if (Individual.RelationType == Individual.UNKNOWN)
+                    return "Unknown";
                 return string.Empty;
             }
         }
