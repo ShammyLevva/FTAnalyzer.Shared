@@ -10,7 +10,8 @@ namespace FTAnalyzer
     public class ScottishParish
     {
         static Dictionary<string, ScottishParish> SCOTTISHPARISHES = new Dictionary<string, ScottishParish>();
-        public static ScottishParish UNKNOWN_PARISH = new ScottishParish("UNK", "", Countries.SCOTLAND);
+        static Dictionary<string, string> SCOTTISHPARISHNAMES = new Dictionary<string, string>();
+        public static ScottishParish UNKNOWN_PARISH = new ScottishParish("UNK", "Unknown", Countries.SCOTLAND);
         public string RegistrationDistrict { get; private set; }
         public FactLocation Location { get; private set; }
         public string Name { get; private set; }
@@ -47,6 +48,7 @@ namespace FTAnalyzer
             try
             {
                 SCOTTISHPARISHES.Add(RD, sp);
+                SCOTTISHPARISHNAMES.Add(sp.Name, RD);
             }
             catch (ArgumentException)
             { } // ignore duplicates leave first value in list
@@ -61,17 +63,10 @@ namespace FTAnalyzer
             Location = FactLocation.GetLocation(loc, false);
         }
 
-        public static ScottishParish FindParish(string RD) => SCOTTISHPARISHES.ContainsKey(RD) ? SCOTTISHPARISHES[RD] : UNKNOWN_PARISH;
+        public static ScottishParish FindParishFromID(string RD) => SCOTTISHPARISHES.ContainsKey(RD.ToLower()) ? SCOTTISHPARISHES[RD.ToLower()] : UNKNOWN_PARISH;
+        public static string FindParishFromName(string parish) => SCOTTISHPARISHNAMES.ContainsKey(parish) ? SCOTTISHPARISHNAMES[parish] : UNKNOWN_PARISH.Name;
 
-        public string Reference
-        {
-            get
-            {
-                if (GeneralSettings.Default.UseCompactCensusRef)
-                    return $"{Name}/{RegistrationDistrict}";
-                return $"{Name}, RD: {RegistrationDistrict}";
-            }
-        }
+        public string Reference => GeneralSettings.Default.UseCompactCensusRef ? $"{Name}/{RegistrationDistrict}" : $"{Name}, RD: {RegistrationDistrict}";
 
         public override string ToString() => $"RD: {RegistrationDistrict} Parish: {Name} Region: {Region}";
     }

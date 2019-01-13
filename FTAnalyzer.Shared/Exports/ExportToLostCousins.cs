@@ -18,21 +18,32 @@ namespace FTAnalyzer.Exports
         {
             ToProcess = individuals;
             int recordsAdded = 0;
+            int recordsFailed = 0;
             int count = 0;
             foreach (CensusIndividual ind in ToProcess)
             {
-                if (AddIndividualToWebsite(ind, outputText))
+                if (ValidLCCensusRef(ind.CensusDate, ind.CensusReference, ind.CensusCountry))
                 {
-                    outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - {ind.ToString()}, {ind.CensusReference} added.\n");
-                    recordsAdded++;
-#if __PC__
-                    DatabaseHelper.Instance.StoreLostCousinsFact(ind);
-#endif
+                    if (AddIndividualToWebsite(ind, outputText))
+                    {
+                        outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - {ind.ToString()}, {ind.CensusReference} added.\n");
+                        recordsAdded++;
+                        DatabaseHelper.Instance.StoreLostCousinsFact(ind);
+                    }
+                    else
+                    {
+                        outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - Failed to add {ind.ToString()}, {ind.CensusReference}.\n");
+                        recordsFailed++;
+                    }
+                   
                 }
                 else
-                    outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - Failed to add {ind.ToString()}, {ind.CensusReference}.\n");
+                {
+                    outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - Failed to add {ind.ToString()}, {ind.CensusReference}. Census Reference problem.\n");
+                    recordsFailed++;
+                }
             }
-            outputText.Report("\n\nFinished writing Entries to Lost Cousins website");
+            outputText.Report($"\nFinished writing Entries to Lost Cousins website. {recordsAdded} successfully added {recordsFailed} failed. View Lost Cousins Report tab to see current status.");
             return recordsAdded;
         }
 
@@ -136,6 +147,17 @@ namespace FTAnalyzer.Exports
             int x = random.Next(1,99);
             int y = random.Next(1, 9);
             return $"&x={x}&y={y}";
+        }
+
+        static bool ValidLCCensusRef(CensusDate date, CensusReference censusRef, string country)
+        {
+            if (censusRef.Status != CensusReference.ReferenceStatus.GOOD)
+                return false;
+            if(date.Equals(CensusDate.EWCENSUS1841) && Countries.IsEnglandWales(country))
+            {
+
+            }
+            return true;
         }
 
         static string GetCensusSpecificFields(CensusIndividual ind)

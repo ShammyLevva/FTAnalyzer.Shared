@@ -61,6 +61,7 @@ namespace FTAnalyzer
         static readonly string US_CENSUS_1940_PATTERN = @"District *(\d{1,5}[AB]?-?\d{0,4}[AB]?).*?P(age)? *(\d{1,3}[ABCD]?).*?T627 ?,? *(\d{1,5}-?[AB]?)";
         static readonly string US_CENSUS_1940_PATTERN2 = @"ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?).*? *P(age)? *(\d{1,3}[ABCD]?).*?T627.*?roll ?(\d{1,5}-?[AB]?)";
         static readonly string US_CENSUS_1940_PATTERN3 = @"1940 *(.*?)(Roll)? *T627_(.*?) *P(age)? *(\d{1,4}[ABCD]?) *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?)";
+        static readonly string US_CENSUS_1940_PATTERN4 = @"(.*?)(Roll)? *T627_(.*?) *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?) *P(age)? *(\d{1,4}[ABCD]?)";
 
         static readonly string CANADA_CENSUS_PATTERN = @"Year *(\d{4}) *Census *(.*?) *Roll *(.*?) *P(age)? *(\d{1,4}[ABCD]?) *Family *(\d{1,4})";
         static readonly string CANADA_CENSUS_PATTERN2 = @"(\d{4}) *Census[ -]*District *(\d{1,5})\/(\d{0,4}[A-Z]{0,4}) *P(age)? *(\d{1,4}[ABCD]?) *Family *(\d{1,4})";
@@ -129,6 +130,7 @@ namespace FTAnalyzer
                 ["US_CENSUS_1940_PATTERN"] = new Regex(US_CENSUS_1940_PATTERN, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["US_CENSUS_1940_PATTERN2"] = new Regex(US_CENSUS_1940_PATTERN2, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["US_CENSUS_1940_PATTERN3"] = new Regex(US_CENSUS_1940_PATTERN3, RegexOptions.Compiled | RegexOptions.IgnoreCase),
+                ["US_CENSUS_1940_PATTERN4"] = new Regex(US_CENSUS_1940_PATTERN4, RegexOptions.Compiled | RegexOptions.IgnoreCase),
 
                 ["CANADA_CENSUS_PATTERN"] = new Regex(CANADA_CENSUS_PATTERN, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["CANADA_CENSUS_PATTERN2"] = new Regex(CANADA_CENSUS_PATTERN2, RegexOptions.Compiled | RegexOptions.IgnoreCase),
@@ -248,7 +250,7 @@ namespace FTAnalyzer
                 CensusLocation = CensusLocation.SCOTLAND;
                 if (Parish.Length > 0)
                 {
-                    ScottishParish sp = ScottishParish.FindParish(Parish);
+                    ScottishParish sp = ScottishParish.FindParishFromID(Parish);
                     if (sp != ScottishParish.UNKNOWN_PARISH)
                         CensusLocation = new CensusLocation(string.Empty, string.Empty, sp.RegistrationDistrict, sp.Name, sp.Region, sp.Location.ToString());
                 }
@@ -777,7 +779,7 @@ namespace FTAnalyzer
             if (matcher.Success)
             {
                 Class = "US1940";
-                Roll = $"T627_{matcher.Groups[4]}";
+                Roll = $"{matcher.Groups[4]}";
                 ED = matcher.Groups[1].ToString();
                 Page = matcher.Groups[3].ToString();
                 SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.GOOD, matcher.Value);
@@ -787,7 +789,7 @@ namespace FTAnalyzer
             if (matcher.Success)
             {
                 Class = "US1940";
-                Roll = $"T627_{matcher.Groups[4]}";
+                Roll = $"{matcher.Groups[4]}";
                 ED = matcher.Groups[1].ToString();
                 Page = matcher.Groups[3].ToString();
                 SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.GOOD, matcher.Value);
@@ -798,9 +800,20 @@ namespace FTAnalyzer
             {
                 Class = "US1940";
                 Place = GetOriginalPlace(matcher.Groups[1].ToString(), originalText, "T627");
-                Roll = $"T627_{matcher.Groups[3]}";
+                Roll = $"{matcher.Groups[3]}";
                 ED = matcher.Groups[6].ToString();
                 Page = matcher.Groups[5].ToString();
+                SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.GOOD, matcher.Value);
+                return true;
+            }
+            matcher = censusRegexs["US_CENSUS_1940_PATTERN4"].Match(text);
+            if (matcher.Success)
+            {
+                Class = "US1940";
+                Place = GetOriginalPlace(matcher.Groups[1].ToString(), originalText, "T627");
+                Roll = $"{matcher.Groups[3]}";
+                ED = matcher.Groups[4].ToString();
+                Page = matcher.Groups[6].ToString();
                 SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
@@ -926,8 +939,28 @@ namespace FTAnalyzer
             MatchString = matchstring;
             if(Parish.Length > 0)
             {
-                ScottishParish sp = ScottishParish.FindParish(Parish);
-                RD = sp.RegistrationDistrict;
+                if (int.TryParse(Parish, out int rd))
+                    RD = rd.ToString();
+                else
+                {
+                    ScottishParish sp = ScottishParish.FindParishFromID(Parish);
+                    if (sp.RegistrationDistrict != "UNK")
+                        RD = sp.RegistrationDistrict;
+                    else
+                    {
+                        RD = ScottishParish.FindParishFromName(Parish);
+                        if (RD == "Unknown")
+                            Status = ReferenceStatus.INCOMPLETE;
+                    }
+                }
+            }
+            if(country == Countries.UNITED_STATES)
+            {
+                Roll = Roll.ToUpper();
+                if (Roll.StartsWith("T627_")) Roll = Roll.Substring(5);
+                else if (Roll.StartsWith("T0627_")) Roll = Roll.Substring(6);
+                else if (Roll.StartsWith("M_T627_")) Roll = Roll.Substring(7);
+                else if (Roll.StartsWith("M_T0627_")) Roll = Roll.Substring(8);
             }
         }
 
@@ -1200,7 +1233,7 @@ namespace FTAnalyzer
                         Fact.FactDate.Overlaps(CensusDate.UKCENSUS1861) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1871) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1881) ||
                         Fact.FactDate.Overlaps(CensusDate.UKCENSUS1891) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1901) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1911)))
                     {
-                        ScottishParish sp = ScottishParish.FindParish(Parish);
+                        ScottishParish sp = ScottishParish.FindParishFromID(Parish);
                         if (GeneralSettings.Default.UseCompactCensusRef)
                             return sp == ScottishParish.UNKNOWN_PARISH ? $"{Parish}/{ED}/{Page}" : $"{sp.Reference}/{ED}/{Page}";
                         return sp == ScottishParish.UNKNOWN_PARISH
