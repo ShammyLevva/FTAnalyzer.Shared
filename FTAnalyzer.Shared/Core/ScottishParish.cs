@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Xml;
 
 namespace FTAnalyzer
@@ -16,6 +17,8 @@ namespace FTAnalyzer
         public FactLocation Location { get; private set; }
         public string Name { get; private set; }
         public string Region { get; private set; }
+
+        static Regex ParishRegex = new Regex(@"\d{1,3}-\d{1,2}?[AB]?", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         static ScottishParish()
         {
@@ -61,6 +64,15 @@ namespace FTAnalyzer
             Region = region;
             string loc = $"{name}, {region}, Scotland";
             Location = FactLocation.GetLocation(loc, false);
+        }
+
+        public static bool IsParishID(string rd)
+        {
+            if (int.TryParse(rd, out int result))
+                return true;
+            rd.ToLower().Replace(" ", "-").Replace("/", "-");
+            Match match = ParishRegex.Match(rd);
+            return match.Success;
         }
 
         public static ScottishParish FindParishFromID(string RD) => SCOTTISHPARISHES.ContainsKey(RD.ToLower()) ? SCOTTISHPARISHES[RD.ToLower()] : UNKNOWN_PARISH;

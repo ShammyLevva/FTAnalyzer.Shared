@@ -38,6 +38,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\Countries.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\DataError.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\DataErrorGroup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\LostCousinsCensusReference.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Displays\ColourValues.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Displays\DisplayDuplicateIndividual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Displays\DisplayFact.cs" />
@@ -100,6 +101,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)GedcomParser\AnselInputStreamReader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GedcomParser\AnselOutputStreamWriter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GedcomParser\GedcomToXml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilities\DatabaseHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\DoubleMetaphone.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\EnhancedTextInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\ExtensionMethods.cs" />

@@ -22,7 +22,8 @@ namespace FTAnalyzer.Exports
             int count = 0;
             foreach (CensusIndividual ind in ToProcess)
             {
-                if (ValidLCCensusRef(ind.CensusDate, ind.CensusReference, ind.CensusCountry))
+                LostCousinsCensusReference censusRef = ind.CensusReference as LostCousinsCensusReference;
+                if (censusRef.IsValid)
                 {
                     if (AddIndividualToWebsite(ind, outputText))
                     {
@@ -35,7 +36,6 @@ namespace FTAnalyzer.Exports
                         outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - Failed to add {ind.ToString()}, {ind.CensusReference}.\n");
                         recordsFailed++;
                     }
-                   
                 }
                 else
                 {
@@ -149,20 +149,9 @@ namespace FTAnalyzer.Exports
             return $"&x={x}&y={y}";
         }
 
-        static bool ValidLCCensusRef(CensusDate date, CensusReference censusRef, string country)
-        {
-            if (censusRef.Status != CensusReference.ReferenceStatus.GOOD)
-                return false;
-            if(date.Equals(CensusDate.EWCENSUS1841) && Countries.IsEnglandWales(country))
-            {
-
-            }
-            return true;
-        }
-
         static string GetCensusSpecificFields(CensusIndividual ind)
         {
-            CensusReference censusRef = ind.CensusReference;
+            LostCousinsCensusReference censusRef = ind.CensusReference as LostCousinsCensusReference;
             if (ind.CensusDate.Equals(CensusDate.EWCENSUS1841) && Countries.IsEnglandWales(ind.CensusCountry))
                 return $"&census_code=1841&ref1={censusRef.Piece}&ref2={censusRef.Book}&ref3={censusRef.Folio}&ref4={censusRef.Page}&ref5=";
             if (ind.CensusDate.Equals(CensusDate.EWCENSUS1881) && Countries.IsEnglandWales(ind.CensusCountry))

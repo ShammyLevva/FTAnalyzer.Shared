@@ -46,12 +46,12 @@ namespace FTAnalyzer
         static readonly string EW_1939_REGISTER_PATTERN1 = @"RG *101\/?\\? *(\d{1,6}[A-Z]?) *.\/?\\? *(\d{1,3}) *.\/?\\? *(\d{1,3}).+([A-Z]{4})$";
         
         static readonly string SCOT_CENSUSYEAR_PATTERN = @"(1[89]\d[15]).{1,10}(\(?GROS *\)?)?Parish *([A-Z .'-]+) *ED *(\d{1,3}[AB]?) *Page *(\d{1,4}) *Line *(\d{1,2})";
-        static readonly string SCOT_CENSUSYEAR_PATTERN2 = @"(1[89]\d[15]).{1,10}(\(?GROS *\)?)?(\d{3}\/\d{1,2}[AB]?) (\d{3}\/\d{2}) (\d{3,4})";
-        static readonly string SCOT_CENSUSYEAR_PATTERN3 = @"(1[89]\d[15]).{1,10}(\(?GROS *\)?)?(\d{3}[AB]?)\/(\d{2}[AB]?) Page *(\d{1,4})";
-        static readonly string SCOT_CENSUSYEAR_PATTERN4 = @"SCT(1[89]\d[15])\/?(\d{3}[AB]?) *f(olio)? *(\d{1,3}[AB]?) *p(age)? *(\d{1,4})";
+        static readonly string SCOT_CENSUSYEAR_PATTERN2 = @"(1[89]\d[15]).{1,10}(\(?GROS *\)?)?(\d{1,3}\/\d{1,2}[AB]?) (\d{3}\/\d{2}) (\d{3,4})";
+        static readonly string SCOT_CENSUSYEAR_PATTERN3 = @"(1[89]\d[15]).{1,10}(\(?GROS *\)?)?(\d{1,3}[AB]?)\/(\d{2}[AB]?) Page *(\d{1,4})";
+        static readonly string SCOT_CENSUSYEAR_PATTERN4 = @"SCT(1[89]\d[15])\/?(\d{1,3}[AB]?) *f(olio)? *(\d{1,3}[AB]?) *p(age)? *(\d{1,4})";
         static readonly string SCOT_CENSUS_PATTERN = @"Parish *([A-Z .'-]+) *ED *(\d{1,3}[AB]?) *Page *(\d{1,4}) *Line *(\d{1,2})";
-        static readonly string SCOT_CENSUS_PATTERN2 = @"(\(?GROS *\)?)?(\d{3}\/\d{1,2}[AB]?) (\d{3}\/\d{2}) (\d{3,4})";
-        static readonly string SCOT_CENSUS_PATTERN3 = @"(\(?GROS *\)?)?(\d{3}[AB]?)\/(\d{2}[AB]?) Page *(\d{1,4})";
+        static readonly string SCOT_CENSUS_PATTERN2 = @"(\(?GROS *\)?)?(\d{1,3}\/\d{1,2}[AB]?) (\d{3}\/\d{2}) (\d{3,4})";
+        static readonly string SCOT_CENSUS_PATTERN3 = @"(\(?GROS *\)?)?(\d{1,3}[AB]?)\/(\d{2}[AB]?) Page *(\d{1,4})";
 
         static readonly string US_CENSUS_PATTERN = @"Year *(\d{4}) *Census *(.*?) *Roll *(.*?) *Film (.*?) *P(age)? *(\d{1,4}[ABCD]?) *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?)";
         static readonly string US_CENSUS_PATTERN1A = @"Year *(\d{4}) *Census *(.*?) *Roll *(.*?) *P(age)? *(\d{1,4}[ABCD]?) *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?)";
@@ -150,29 +150,29 @@ namespace FTAnalyzer
         string unknownCensusRef;
         string Place { get; set; }
         string Class { get; set; }
-        public string Roll { get; private set; }
-        public string Piece { get; private set; }
-        public string Folio { get; private set; }
-        public string Page { get; private set; }
-        public string Book { get; private set; }
-        public string Schedule { get; private set; }
-        public string Parish { get; private set; }
+        public string Roll { get; internal set; }
+        public string Piece { get; internal set; }
+        public string Folio { get; internal set; }
+        public string Page { get; internal set; }
+        public string Book { get; internal set; }
+        public string Schedule { get; internal set; }
+        public string Parish { get; internal set; }
         public string RD { get; set; }
-        public string ED { get; private set; }
-        public string SD { get; private set; }
-        public string Family { get; private set; }
+        public string ED { get; internal set; }
+        public string SD { get; internal set; }
+        public string Family { get; internal set; }
         string ReferenceText { get; set; }
         CensusLocation CensusLocation { get; set; }
         public Fact Fact { get; private set; }
         public bool IsUKCensus { get; private set; }
         public bool IsLCCensusFact { get; private set; }
-        public ReferenceStatus Status { get; private set; }
+        public ReferenceStatus Status { get; internal set; }
         public FactDate CensusYear { get; private set; }
         public string MatchString { get; private set; }
         public string Country { get; private set; }
         public string URL { get; private set; }
 
-        private CensusReference()
+        internal CensusReference()
         {
             Class = string.Empty;
             Roll = string.Empty;
@@ -922,7 +922,7 @@ namespace FTAnalyzer
             return false;
         }
 
-        private string CheckLetterCode(string letterCode)
+        string CheckLetterCode(string letterCode)
         {
             if (letterCode.Equals("CODE"))
                 return "UNKNOWN";
@@ -937,34 +937,9 @@ namespace FTAnalyzer
             Country = country;
             Status = status;
             MatchString = matchstring;
-            if(Parish.Length > 0)
-            {
-                if (int.TryParse(Parish, out int rd))
-                    RD = rd.ToString();
-                else
-                {
-                    ScottishParish sp = ScottishParish.FindParishFromID(Parish);
-                    if (sp.RegistrationDistrict != "UNK")
-                        RD = sp.RegistrationDistrict;
-                    else
-                    {
-                        RD = ScottishParish.FindParishFromName(Parish);
-                        if (RD == "Unknown")
-                            Status = ReferenceStatus.INCOMPLETE;
-                    }
-                }
-            }
-            if(country == Countries.UNITED_STATES)
-            {
-                Roll = Roll.ToUpper();
-                if (Roll.StartsWith("T627_")) Roll = Roll.Substring(5);
-                else if (Roll.StartsWith("T0627_")) Roll = Roll.Substring(6);
-                else if (Roll.StartsWith("M_T627_")) Roll = Roll.Substring(7);
-                else if (Roll.StartsWith("M_T0627_")) Roll = Roll.Substring(8);
-            }
         }
 
-        private string GetOriginalPlace(string match, string originalText, string stopText)
+        string GetOriginalPlace(string match, string originalText, string stopText)
         {
             int spacePos = match.IndexOf(" ", StringComparison.Ordinal);
             if (spacePos == -1)
@@ -977,7 +952,7 @@ namespace FTAnalyzer
             return match.ClearWhiteSpace();
         }
 
-        private string GetUKCensusClass(string year)
+        string GetUKCensusClass(string year)
         {
             if (year.Equals("1841") || year.Equals("1851"))
                 return "HO107";
@@ -996,7 +971,7 @@ namespace FTAnalyzer
             return string.Empty;
         }
 
-        private FactDate GetCensusYearFromReference()
+        FactDate GetCensusYearFromReference()
         {
             if (Class.Equals("SCOT"))
                 return FactDate.UNKNOWN_DATE;
@@ -1028,7 +1003,7 @@ namespace FTAnalyzer
             return FactDate.UNKNOWN_DATE;
         }
 
-        private string GetCensusURLFromReference()
+        string GetCensusURLFromReference()
         {
             if (CensusDate.IsUKCensusYear(CensusYear, true))
             {
@@ -1065,7 +1040,7 @@ namespace FTAnalyzer
             return string.Empty;
         }
 
-        private string GetCensusReferenceCountry(string censusClass, string censusPiece)
+        string GetCensusReferenceCountry(string censusClass, string censusPiece)
         {
             bool success = int.TryParse(censusPiece, out int piece);
             if (success && censusClass.Length > 0 && censusPiece.Length > 0 && piece > 0)
