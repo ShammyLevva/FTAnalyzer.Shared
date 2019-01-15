@@ -38,7 +38,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\Countries.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\DataError.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\DataErrorGroup.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Core\LostCousinsCensusReference.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\LostCousin.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Displays\ColourValues.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Displays\DisplayDuplicateIndividual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Displays\DisplayFact.cs" />
