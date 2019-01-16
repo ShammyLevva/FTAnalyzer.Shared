@@ -114,8 +114,7 @@
 		<Parish Region="Ross and Cromarty" Name="Uig" RD="89"/>
 		<Parish Region="Inverness-shire" Name="Abernethy" RD="90a"/>
 		<Parish Region="Inverness-shire" Name="Alvie" RD="90b"/>
-		<Parish Region="Inverness-shire" Name="Ardersier" RD="91a"/>
-		<Parish Region="Inverness-shire" Name="Arisaig" RD="91b"/>
+		<Parish Region="Inverness-shire" Name="Ardersier" RD="91"/>
 		<Parish Region="Inverness-shire" Name="Ballachulish and Onich" RD="91c"/>
 		<Parish Region="Inverness-shire" Name="Boleskine and Abertarff" RD="92"/>
 		<Parish Region="Inverness-shire" Name="Boleskine" RD="92-1"/>
@@ -705,8 +704,7 @@
 		<Parish Region="Argyll" Name="North Knapdale" RD="530"/>
 		<Parish Region="Argyll" Name="Saddell" RD="531-1"/>
 		<Parish Region="Argyll" Name="Skipness" RD="531-2"/>
-		<Parish Region="Argyll" Name="South Knapdale" RD="533-1"/>
-		<Parish Region="Argyll" Name="Kilberry" RD="533-2"/>
+		<Parish Region="Argyll" Name="South Knapdale" RD="533"/>
 		<Parish Region="Argyll" Name="Stralachlan" RD="534-1"/>
 		<Parish Region="Argyll" Name="Strachur" RD="534-2"/>
 		<Parish Region="Argyll" Name="Tarbert" RD="535"/>
@@ -739,8 +737,7 @@
 		<Parish Region="Bute" Name="Rothesay" RD="558"/>
 		<Parish Region="Bute" Name="Rothesay Burgh" RD="558-1"/>
 		<Parish Region="Bute" Name="Rothesay Landward" RD="558-2"/>
-		<Parish Region="Renfrewshire" Name="Abbey" RD="559"/>
-		<Parish Region="Renfrewshire" Name="Johnstone" RD="559a"/>
+		<Parish Region="Renfrewshire" Name="Abbey" RD="559a"/>
 		<Parish Region="Renfrewshire" Name="Bridge of Weir" RD="559b"/>
 		<Parish Region="Renfrewshire" Name="Cathcart" RD="560"/>
 		<Parish Region="Renfrewshire" Name="Eaglesham" RD="561"/>
@@ -850,8 +847,7 @@
 		<Parish Region="Lanarkshire" Name="Carnwath" RD="632-1"/>
 		<Parish Region="Lanarkshire" Name="Forth" RD="632-2"/>
 		<Parish Region="Lanarkshire" Name="Haywood" RD="632-3"/>
-		<Parish Region="Lanarkshire" Name="Carstairs" RD="633a"/>
-		<Parish Region="Lanarkshire" Name="Cathcart" RD="633b"/>
+		<Parish Region="Lanarkshire" Name="Carstairs" RD="633"/>
 		<Parish Region="Lanarkshire" Name="Covington and Thankerton" RD="634"/>
 		<Parish Region="Lanarkshire" Name="Crawford" RD="635-1"/>
 		<Parish Region="Lanarkshire" Name="Leadhills" RD="635-2"/>
@@ -902,7 +898,7 @@
 		<Parish Region="Lanarkshire" Name="Shotts Western" RD="655-3"/>
 		<Parish Region="Lanarkshire" Name="Shotts Northern" RD="655-4"/>
 		<Parish Region="Lanarkshire" Name="Stonehouse" RD="656"/>
-		<Parish Region="Lanarkshire" Name="Symington" RD="657"/>
+		<Parish Region="Lanarkshire" Name="Symington (Lanark)" RD="657"/>
 		<Parish Region="Lanarkshire" Name="Walston" RD="658"/>
 		<Parish Region="Lanarkshire" Name="Lamington" RD="659"/>
 		<Parish Region="Lanarkshire" Name="Wiston and Roberton" RD="660"/>
@@ -928,122 +924,278 @@
 		<Parish Region="Midlothian" Name="Borthwich" RD="674"/>
 		<Parish Region="Midlothian" Name="Carrington" RD="675"/>
 		<Parish Region="Midlothian" Name="Cockpen" RD="676"/>
-		<Parish Region="Midlothian" Name="Cramond" RD="679"/>
+		<Parish Region="Midlothian" Name="Colinton" RD="677"/>
+		<Parish Region="Midlothian" Name="Corstorphine" RD="678"/>
+		<Parish Region="Midlothian" Name="Crammond" RD="679"/>
 		<Parish Region="Midlothian" Name="Cranston" RD="680"/>
+		<Parish Region="Midlothian" Name="Crichton" RD="681"/>
 		<Parish Region="Midlothian" Name="Currie" RD="682"/>
 		<Parish Region="Midlothian" Name="Dalkeith" RD="683"/>
+		<Parish Region="Midlothian" Name="Duddingston" RD="684-1"/>
+		<Parish Region="Midlothian" Name="Portobello" RD="684-2"/>
 		<Parish Region="MidLothian" Name="Edinburgh Tolbooth" RD="685/T"/>
-		<Parish Region="MidLothian" Name="Edinburgh" RD="685-1"/>
+		<Parish Region="MidLothian" Name="Edinburgh" RD="685"/>
+		<Parish Region="MidLothian" Name="Edinburgh St George" RD="685-1"/>
+		<Parish Region="MidLothian" Name="Edinburgh St Andrews" RD="685-2"/>
+		<Parish Region="MidLothian" Name="Edinburgh Canongate" RD="685-3"/>
+		<Parish Region="MidLothian" Name="Edinburgh St Giles" RD="685-4"/>
+		<Parish Region="MidLothian" Name="Edinburgh Newington" RD="685-5"/>
+		<Parish Region="MidLothian" Name="Edinburgh Portobello" RD="685-6"/>
+		<Parish Region="MidLothian" Name="Edinburgh Morningside" RD="685-7"/>
+		<Parish Region="MidLothian" Name="Fala Soutra" RD="686"/>
+		<Parish Region="MidLothian" Name="Glencorse" RD="687"/>
 		<Parish Region="Midlothian" Name="Heriot" RD="688"/>
 		<Parish Region="Midlothian" Name="Kirknewton and East Calder" RD="690"/>
+		<Parish Region="Midlothian" Name="Lasswade" RD="691"/>
+		<Parish Region="MidLothian" Name="Leith North" RD="692-1"/>
 		<Parish Region="MidLothian" Name="Leith South" RD="692-2"/>
+		<Parish Region="Midlothian" Name="Liberton" RD="693"/>
+		<Parish Region="Midlothian" Name="Midcalder" RD="694"/>
 		<Parish Region="Midlothian" Name="Newbattle" RD="695"/>
-		<Parish Region="Midlothian" Name="Ratho" RD="698"/>
+		<Parish Region="Midlothian" Name="Newton" RD="696"/>
+		<Parish Region="Midlothian" Name="Penicuik" RD="697"/>
+		<Parish Region="Midlothian" Name="Ratho" RD="698a"/>
 		<Parish Region="Midlothian" Name="Stobhill" RD="698b"/>
 		<Parish Region="Midlothian" Name="Temple" RD="700"/>
 		<Parish Region="Midlothian" Name="West Calder" RD="701"/>
+		<Parish Region="East Lothian" Name="Aberlady" RD="702"/>
+		<Parish Region="East Lothian" Name="Athelstandeford East" RD="703"/>
 		<Parish Region="East Lothian" Name="Bolton" RD="704"/>
+		<Parish Region="East Lothian" Name="Dirleton" RD="705"/>
 		<Parish Region="East Lothian" Name="Dunbar" RD="706"/>
+		<Parish Region="East Lothian" Name="Dunbar Burgh" RD="706-1"/>
+		<Parish Region="East Lothian" Name="Dunbar Landward" RD="706-2"/>
+		<Parish Region="East Lothian" Name="Garvald" RD="707"/>
 		<Parish Region="East Lothian" Name="Gladsmuir" RD="708"/>
+		<Parish Region="East Lothian" Name="Haddington" RD="709"/>
+		<Parish Region="East Lothian" Name="Haddington Burgh" RD="709-1"/>
+		<Parish Region="East Lothian" Name="Haddington Landward" RD="709-2"/>
 		<Parish Region="East Lothian" Name="Humbie" RD="710"/>
 		<Parish Region="East Lothian" Name="Innerwick" RD="711"/>
-		<Parish Region="East Lothian" Name="Croick" RD="712"/>
+		<Parish Region="East Lothian" Name="Morham" RD="712"/>
 		<Parish Region="East Lothian" Name="North Berwick" RD="713"/>
+		<Parish Region="East Lothian" Name="North Berwick Burgh" RD="713-1"/>
+		<Parish Region="East Lothian" Name="North Berwick Landward" RD="713-2"/>
 		<Parish Region="East Lothian" Name="Oldhamstocks" RD="714"/>
+		<Parish Region="East Lothian" Name="Ormiston" RD="715"/>
 		<Parish Region="East Lothian" Name="Pencaitland" RD="716"/>
+		<Parish Region="East Lothian" Name="Prestonkirk" RD="717"/>
 		<Parish Region="East Lothian" Name="Prestonpans" RD="718"/>
+		<Parish Region="East Lothian" Name="Saltoun East" RD="719"/>
+		<Parish Region="East Lothian" Name="Spott" RD="720"/>
+		<Parish Region="East Lothian" Name="Stenton" RD="721"/>
+		<Parish Region="East Lothian" Name="Tranent" RD="722"/>
 		<Parish Region="East Lothian" Name="Whitekirk and Tynninghame" RD="723"/>
 		<Parish Region="East Lothian" Name="Whittinghame" RD="724"/>
 		<Parish Region="East Lothian" Name="Gifford and Yester" RD="725"/>
+		<Parish Region="Berwickshire" Name="Abbey St Bathans" RD="726"/>
+		<Parish Region="Berwickshire" Name="Ayton" RD="727"/>
+		<Parish Region="Berwickshire" Name="Bunkle and Preston" RD="728"/>
+		<Parish Region="Berwickshire" Name="Channelkirk" RD="729"/>
+		<Parish Region="Berwickshire" Name="Chirnside" RD="730"/>
+		<Parish Region="Berwickshire" Name="Cockburnspath" RD="731"/>
+		<Parish Region="Berwickshire" Name="Coldingham" RD="732-1"/>
+		<Parish Region="Berwickshire" Name="Grantshouse" RD="732-2"/>
 		<Parish Region="Berwickshire" Name="Coldstream" RD="733"/>
+		<Parish Region="Berwickshire" Name="Cranshaws" RD="734"/>
+		<Parish Region="Berwickshire" Name="Duns" RD="735"/>
+		<Parish Region="Berwickshire" Name="Earlston" RD="736"/>
+		<Parish Region="Berwickshire" Name="Eccles" RD="737"/>
+		<Parish Region="Berwickshire" Name="Edrom" RD="738"/>
+		<Parish Region="Berwickshire" Name="Eyemouth" RD="739"/>
 		<Parish Region="Berwickshire" Name="Fogo" RD="740"/>
+		<Parish Region="Berwickshire" Name="Foulden" RD="741"/>
 		<Parish Region="Berwickshire" Name="Gordon" RD="742"/>
 		<Parish Region="Berwickshire" Name="Greenlaw" RD="743"/>
+		<Parish Region="Berwickshire" Name="Hume" RD="744"/>
+		<Parish Region="Berwickshire" Name="Hutton" RD="745"/>
+		<Parish Region="Berwickshire" Name="Ladykirk" RD="746"/>
+		<Parish Region="Berwickshire" Name="Langton" RD="747"/>
+		<Parish Region="Berwickshire" Name="Lauder" RD="748"/>
+		<Parish Region="Berwickshire" Name="Lauder Burgh" RD="748-1"/>
+		<Parish Region="Berwickshire" Name="Lauder Landward" RD="748-2"/>
 		<Parish Region="Berwickshire" Name="Legerwood" RD="749"/>
 		<Parish Region="Berwickshire" Name="Longformacus" RD="750"/>
+		<Parish Region="Berwickshire" Name="Mertoun" RD="751"/>
+		<Parish Region="Berwickshire" Name="Mordington" RD="752"/>
 		<Parish Region="Berwickshire" Name="Nenthorn" RD="753"/>
+		<Parish Region="Berwickshire" Name="Polwarth" RD="754"/>
+		<Parish Region="Berwickshire" Name="Swinton" RD="755"/>
+		<Parish Region="Berwickshire" Name="Westruther" RD="756"/>
+		<Parish Region="Berwickshire" Name="Whitsome" RD="757"/>
+		<Parish Region="Peebles" Name="Broughton" RD="758"/>
+		<Parish Region="Peebles" Name="Drumelzier" RD="759"/>
+		<Parish Region="Peebles" Name="Eddleston" RD="760"/>
 		<Parish Region="Peebles" Name="Glenholm" RD="761"/>
+		<Parish Region="Peebles" Name="Innerleithen" RD="762-1"/>
+		<Parish Region="Peebles" Name="Walkerburn" RD="762-2"/>
 		<Parish Region="Peebles" Name="Kilbucho" RD="763"/>
 		<Parish Region="Peebles" Name="Kirkurd" RD="764"/>
+		<Parish Region="Peebles" Name="Lyne" RD="765"/>
+		<Parish Region="Peebles" Name="Manor" RD="766"/>
 		<Parish Region="Peebles" Name="Newlands" RD="767"/>
+		<Parish Region="Peebles" Name="Peebles" RD="768"/>
+		<Parish Region="Peebles" Name="Peebles Burgh" RD="768-1"/>
+		<Parish Region="Peebles" Name="Peebles Newlands" RD="768-2"/>
+		<Parish Region="Peebles" Name="Skirling" RD="769"/>
+		<Parish Region="Peebles" Name="Skobo" RD="770"/>
 		<Parish Region="Peebles" Name="Traquair" RD="771"/>
+		<Parish Region="Peebles" Name="Tweedsmuir" RD="772"/>
 		<Parish Region="Peebles" Name="West Linton" RD="773"/>
 		<Parish Region="Selkirk" Name="Caddonfoot" RD="774a"/>
 		<Parish Region="Selkirk" Name="Ettrick" RD="774b"/>
 		<Parish Region="Selkirk" Name="Galashiels" RD="775"/>
+		<Parish Region="Selkirk" Name="Kirkhope" RD="776a"/>
+		<Parish Region="Selkirk" Name="Ladhope" RD="776b"/>
+		<Parish Region="Selkirk" Name="Roberton" RD="777"/>
 		<Parish Region="Selkirk" Name="Selkirk" RD="778"/>
+		<Parish Region="Selkirk" Name="Selkirk Burgh" RD="778-1"/>
+		<Parish Region="Selkirk" Name="Selkirk Landward" RD="778-2"/>
+		<Parish Region="Selkirk" Name="Yarrow" RD="779"/>
+		<Parish Region="Roxburgh" Name="Ancrum" RD="780"/>
+		<Parish Region="Roxburgh" Name="Ashkirk" RD="781"/>
+		<Parish Region="Roxburgh" Name="Bedrule" RD="782"/>
 		<Parish Region="Roxburgh" Name="Bowden" RD="783"/>
 		<Parish Region="Roxburgh" Name="Castleton" RD="784"/>
-		<Parish Region="Roxburgh" Name="Cavers" RD="785"/>
+		<Parish Region="Roxburgh" Name="Cavers" RD="785-1"/>
+		<Parish Region="Roxburgh" Name="Kirkton" RD="785-2"/>
+		<Parish Region="Roxburgh" Name="Crailing" RD="786"/>
 		<Parish Region="Roxburgh" Name="Eckford" RD="787a"/>
+		<Parish Region="Roxburgh" Name="Edgerston" RD="787b"/>
 		<Parish Region="Roxburgh" Name="Ednam" RD="788"/>
+		<Parish Region="Roxburgh" Name="Hawick" RD="789"/>
+		<Parish Region="Roxburgh" Name="Hobkirk" RD="790"/>
 		<Parish Region="Roxburgh" Name="Hownam" RD="791"/>
 		<Parish Region="Roxburgh" Name="Jedburgh" RD="792"/>
+		<Parish Region="Roxburgh" Name="Jedburgh Burgh" RD="792-1"/>
+		<Parish Region="Roxburgh" Name="Jedburgh Landward" RD="792-2"/>
 		<Parish Region="Roxburgh" Name="Kelso" RD="793"/>
+		<Parish Region="Roxburgh" Name="Kirkton (Roxburgh)" RD="794" />
+		<Parish Region="Roxburgh" Name="Lilliesleaf" RD="795"/>
+		<Parish Region="Roxburgh" Name="Linton" RD="796"/>
 		<Parish Region="Roxburgh" Name="Makerston" RD="797"/>
 		<Parish Region="Roxburgh" Name="Maxton" RD="798"/>
+		<Parish Region="Roxburgh" Name="Melrose" RD="799"/>
+		<Parish Region="Roxburgh" Name="Minto" RD="800"/>
 		<Parish Region="Roxburgh" Name="Morebattle" RD="801"/>
 		<Parish Region="Roxburgh" Name="Oxnam" RD="802"/>
 		<Parish Region="Roxburgh" Name="Roxburgh" RD="803"/>
 		<Parish Region="Roxburgh" Name="St Boswells" RD="804"/>
+		<Parish Region="Roxburgh" Name="Smailholm" RD="805"/>
 		<Parish Region="Roxburgh" Name="Southdean and Abbotrule" RD="806"/>
 		<Parish Region="Roxburgh" Name="Sprouston" RD="807"/>
+		<Parish Region="Roxburgh" Name="Stitchell" RD="808"/>
+		<Parish Region="Roxburgh" Name="Teviothead" RD="809"/>
+		<Parish Region="Roxburgh" Name="Wilton" RD="810"/>
+		<Parish Region="Roxburgh" Name="Yeltholm" RD="811"/>
 		<Parish Region="Dumfries-shire" Name="Annan" RD="812"/>
+		<Parish Region="Dumfries-shire" Name="Annan Burgh" RD="812-1"/>
+		<Parish Region="Dumfries-shire" Name="Annan Landward" RD="812-2"/>
 		<Parish Region="Dumfries-shire" Name="Applegarth and Sibbaldbie" RD="813a"/>
 		<Parish Region="Dumfries-shire" Name="Brydekirk" RD="813b"/>
 		<Parish Region="Dumfries-shire" Name="Canonbie" RD="814"/>
+		<Parish Region="Dumfries-shire" Name="Caerlaverock" RD="815"/>
+		<Parish Region="Dumfries-shire" Name="Closeburn" RD="816"/>
 		<Parish Region="Dumfries-shire" Name="Cummertrees" RD="817"/>
 		<Parish Region="Dumfries-shire" Name="Dalton" RD="818"/>
 		<Parish Region="Dumfries-shire" Name="Dornock" RD="819"/>
+		<Parish Region="Dumfries-shire" Name="Dryfesdale" RD="820"/>
 		<Parish Region="Dumfries-shire" Name="Dumfries" RD="821"/>
+		<Parish Region="Dumfries-shire" Name="Dumfries Burgh" RD="821-1"/>
+		<Parish Region="Dumfries-shire" Name="Dumfries Landward" RD="821-2"/>
 		<Parish Region="Dumfries-shire" Name="Dunscore" RD="822"/>
+		<Parish Region="Dumfries-shire" Name="Durisdeer" RD="823"/>
+		<Parish Region="Dumfries-shire" Name="Eskdalemuir" RD="824"/>
 		<Parish Region="Dumfries-shire" Name="Ewes" RD="825"/>
+		<Parish Region="Dumfries-shire" Name="Glencairn" RD="826"/>
 		<Parish Region="Dumfries-shire" Name="Gretna" RD="827"/>
 		<Parish Region="Dumfries-shire" Name="Halfmorton" RD="828"/>
 		<Parish Region="Dumfries-shire" Name="Hoddam" RD="829"/>
 		<Parish Region="Dumfries-shire" Name="Holywood" RD="830"/>
 		<Parish Region="Dumfries-shire" Name="Hutton and Corrie" RD="831"/>
+		<Parish Region="Dumfries-shire" Name="Johnstone" RD="832"/>
 		<Parish Region="Dumfries-shire" Name="Keir" RD="833"/>
+		<Parish Region="Dumfries-shire" Name="Kirkconnel" RD="834"/>
 		<Parish Region="Dumfries-shire" Name="Kirkmahoe" RD="835"/>
 		<Parish Region="Dumfries-shire" Name="Kirkmichael (Dumfries)" RD="836"/>
-		<Parish Region="Dumfries-shire" Name="Kirkpatrick-Juxta" RD="838"/>
+		<Parish Region="Dumfries-shire" Name="Kirkpatrick Fleming" RD="837"/>
+		<Parish Region="Dumfries-shire" Name="Kirkpatrick Juxta" RD="838"/>
 		<Parish Region="Dumfries-shire" Name="Langholm" RD="839"/>
 		<Parish Region="Dumfries-shire" Name="Lochmaben" RD="840"/>
+		<Parish Region="Dumfries-shire" Name="Lochmaben Burgh" RD="840-1"/>
+		<Parish Region="Dumfries-shire" Name="Lochmaben Landward" RD="840-2"/>
 		<Parish Region="Dumfries-shire" Name="Middlebie" RD="841"/>
+		<Parish Region="Dumfries-shire" Name="Middlebie Northern" RD="841-1"/>
+		<Parish Region="Dumfries-shire" Name="Middlebie Southern" RD="841-2"/>
+		<Parish Region="Dumfries-shire" Name="Moffat" RD="842"/>
+		<Parish Region="Dumfries-shire" Name="Morton" RD="843"/>
 		<Parish Region="Dumfries-shire" Name="Mousewald" RD="844"/>
+		<Parish Region="Dumfries-shire" Name="Penpont" RD="845"/>
+		<Parish Region="Dumfries-shire" Name="Ruthwell" RD="846"/>
 		<Parish Region="Dumfries-shire" Name="St Mungo" RD="847"/>
+		<Parish Region="Dumfries-shire" Name="Sanquhar" RD="848"/>
+		<Parish Region="Dumfries-shire" Name="Sanquhar Burgh" RD="848-1"/>
+		<Parish Region="Dumfries-shire" Name="Sanquhar Landward" RD="848-2"/>
 		<Parish Region="Dumfries-shire" Name="Tinwald" RD="849"/>
 		<Parish Region="Dumfries-shire" Name="Torthorwald" RD="850"/>
+		<Parish Region="Dumfries-shire" Name="Tundergarth" RD="851"/>
+		<Parish Region="Dumfries-shire" Name="Tynron" RD="852"/>
 		<Parish Region="Dumfries-shire" Name="Wamphray" RD="853a"/>
 		<Parish Region="Dumfries-shire" Name="Wanlockhead" RD="853b"/>
+		<Parish Region="Dumfries-shire" Name="Westerkirk" RD="854"/>
+		<Parish Region="Kirkcudbrightshire" Name="Anwoth" RD="855"/>
+		<Parish Region="Kirkcudbrightshire" Name="Balmaclellan" RD="856"/>
 		<Parish Region="Kirkcudbrightshire" Name="Balmaghie" RD="857a"/>
 		<Parish Region="Kirkcudbrightshire" Name="Bargrennan" RD="857b"/>
 		<Parish Region="Kirkcudbrightshire" Name="Borgue" RD="858"/>
 		<Parish Region="Kirkcudbrightshire" Name="Buittle" RD="859"/>
 		<Parish Region="Kirkcudbrightshire" Name="Carsphairn" RD="860"/>
-		<Parish Region="Kirkcudbrightshire" Name="Corsock-Bridge" RD="862"/>
+		<Parish Region="Kirkcudbrightshire" Name="Castle Douglas" RD="861"/>
+		<Parish Region="Kirkcudbrightshire" Name="Colvend" RD="861-1"/>
+		<Parish Region="Kirkcudbrightshire" Name="Southwick" RD="861-2"/>
+		<Parish Region="Kirkcudbrightshire" Name="Corsock Bridge" RD="862"/>
+		<Parish Region="Kirkcudbrightshire" Name="Crossmichael" RD="863"/>
 		<Parish Region="Kirkcudbrightshire" Name="Dalbeattie" RD="864"/>
+		<Parish Region="Kirkcudbrightshire" Name="Dalry (Kirkcudbright)" RD="865"/>
 		<Parish Region="Kirkcudbrightshire" Name="Girthon" RD="866"/>
 		<Parish Region="Kirkcudbrightshire" Name="Irongray" RD="867"/>
+		<Parish Region="Kirkcudbrightshire" Name="Kells" RD="868"/>
+		<Parish Region="Kirkcudbrightshire" Name="Kelton" RD="869"/>
 		<Parish Region="Kirkcudbrightshire" Name="Kirkbean" RD="870"/>
-		<Parish Region="Kirkcudbrightshire" Name="Kirkpatrick-Durham" RD="874"/>
+		<Parish Region="Kirkcudbrightshire" Name="Kirkudbright" RD="871"/>
+		<Parish Region="Kirkcudbrightshire" Name="Kirkudbright Burgh" RD="871-1"/>
+		<Parish Region="Kirkcudbrightshire" Name="Kirkudbright Landward" RD="871-2"/>
+		<Parish Region="Kirkcudbrightshire" Name="Kirkgunzeon" RD="872"/>
+		<Parish Region="Kirkcudbrightshire" Name="Kirkmabreck" RD="873"/>
+		<Parish Region="Kirkcudbrightshire" Name="Kirkpatrick Durham" RD="874"/>
 		<Parish Region="Kirkcudbrightshire" Name="Lochrutton" RD="875"/>
 		<Parish Region="Kirkcudbrightshire" Name="Minnigaff" RD="876"/>
 		<Parish Region="Kirkcudbrightshire" Name="New Abbey" RD="877"/>
 		<Parish Region="Kirkcudbrightshire" Name="Parton" RD="878"/>
+		<Parish Region="Kirkcudbrightshire" Name="Rerrick" RD="879"/>
 		<Parish Region="Kirkcudbrightshire" Name="Terregles" RD="880"/>
+		<Parish Region="Kirkcudbrightshire" Name="Tongland" RD="881"/>
 		<Parish Region="Kirkcudbrightshire" Name="Troqueer" RD="882"/>
 		<Parish Region="Kirkcudbrightshire" Name="Twynholm" RD="883"/>
+		<Parish Region="Kirkcudbrightshire" Name="Urr" RD="884"/>
+		<Parish Region="Wigtownshire" Name="Glasserton" RD="885"/>
+		<Parish Region="Wigtownshire" Name="Inch" RD="886"/>
 		<Parish Region="Wigtownshire" Name="Kirkcolm" RD="887"/>
 		<Parish Region="Wigtownshire" Name="Kirkcowan" RD="888"/>
 		<Parish Region="Wigtownshire" Name="Kirkinner" RD="889"/>
+		<Parish Region="Wigtownshire" Name="Kirkmaiden" RD="890"/>
 		<Parish Region="Wigtownshire" Name="Leswalt" RD="891"/>
 		<Parish Region="Wigtownshire" Name="Mochrum" RD="892"/>
 		<Parish Region="Wigtownshire" Name="New Luce" RD="893"/>
+		<Parish Region="Wigtownshire" Name="Old Luce" RD="894"/>
 		<Parish Region="Wigtownshire" Name="Penninghame" RD="895"/>
 		<Parish Region="Wigtownshire" Name="Portpatrick" RD="896"/>
 		<Parish Region="Wigtownshire" Name="Sorbie" RD="897"/>
+		<Parish Region="Wigtownshire" Name="Stoneykirk" RD="898"/>
+		<Parish Region="Wigtownshire" Name="Stranraer" RD="899"/>
 		<Parish Region="Wigtownshire" Name="Whithorn" RD="900"/>
 		<Parish Region="Wigtownshire" Name="Wigtown" RD="901"/>
+		<Parish Region="Wigtownshire" Name="Wigtown Burgh" RD="901-1"/>
+		<Parish Region="Wigtownshire" Name="Wigtown Landward" RD="901-2"/>
 	</ByID>
 </ScottishParish>
