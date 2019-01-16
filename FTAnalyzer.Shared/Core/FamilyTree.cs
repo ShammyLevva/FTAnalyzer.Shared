@@ -282,7 +282,7 @@ namespace FTAnalyzer
                 sources.Add(fs);
                 progress.Report((100 * counter++) / sourceMax);
             }
-            outputText.Report("Loaded " + counter + " sources.\n");
+            outputText.Report($"Loaded {counter} sources.\n");
             progress.Report(100);
             // now get a list of all notes
             noteNodes = doc.SelectNodes("GED/NOTE");
@@ -1350,6 +1350,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             sb.Append($"Unknown relation: {relations[Individual.UNKNOWN]}\n");
             if (relations[Individual.UNSET] > 0)
                 sb.Append($"Failed to set relationship: {relations[Individual.UNSET]}\n");
+            sb.Append("\n");
             return sb.ToString();
         }
 
