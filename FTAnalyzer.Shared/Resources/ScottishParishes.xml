@@ -26,7 +26,7 @@
 		<Parish Region="Orkney" Name="North Ronaldsay" RD="22"/>
 		<Parish Region="Orkney" Name="Orphir" RD="23"/>
 		<Parish Region="Orkney" Name="Rousay" RD="24"/>
-		<Parish Region="Orkney" Name="St Andrews" RD="25"/>
+		<Parish Region="Orkney" Name="St Andrews (Orkney)" RD="25"/>
 		<Parish Region="Orkney" Name="Sanday" RD="26"/>
 		<Parish Region="Orkney" Name="Sandwick" RD="27"/>
 		<Parish Region="Orkney" Name="Shapinsay" RD="28"/>
@@ -225,7 +225,7 @@
 		<Parish Region="Banffshire" Name="Glenlivet" RD="157-3"/>
 		<Parish Region="Banffshire" Name="Inverkeithny" RD="158"/>
 		<Parish Region="Banffshire" Name="Keith" RD="159"/>
-		<Parish Region="Banffshire" Name="Kirkmichael" RD="160-1"/>
+		<Parish Region="Banffshire" Name="Kirkmichael (Banff)" RD="160-1"/>
 		<Parish Region="Banffshire" Name="Tomintoul" RD="160-2"/>
 		<Parish Region="Banffshire" Name="Mortlach" RD="162"/>
 		<Parish Region="Banffshire" Name="Ordiquhill" RD="163"/>
@@ -333,120 +333,284 @@
 		<Parish Region="Aberdeenshire" Name="Tyrie" RD="248"/>
 		<Parish Region="Aberdeenshire" Name="Udny" RD="249a"/>
 		<Parish Region="Aberdeenshire" Name="Ythanwells" RD="249b"/>
-		<Parish Region="Kincardineshire" Name="Banchory-Ternan" RD="250"/>
-		<Parish Region="Kincardineshire" Name="Banchory-Ternan" RD="251"/>
-		<Parish Region="Kincardineshire" Name="Banchory-Ternan" RD="252"/>
+		<Parish Region="Kincardineshire" Name="Arbuthnott" RD="250"/>
+		<Parish Region="Kincardineshire" Name="Banchory Devenick" RD="251-1"/>
+		<Parish Region="Kincardineshire" Name="Portlethen" RD="251-2"/>
+		<Parish Region="Kincardineshire" Name="Cults" RD="251-3"/>
+		<Parish Region="Kincardineshire" Name="Banchory Ternan" RD="252"/>
 		<Parish Region="Kincardineshire" Name="Benholm" RD="253"/>
+		<Parish Region="Kincardineshire" Name="Bervie" RD="254"/>
+		<Parish Region="Kincardineshire" Name="Bervie Burgh" RD="254-1"/>
+		<Parish Region="Kincardineshire" Name="Bervie Landward" RD="254-2"/>
 		<Parish Region="Kincardineshire" Name="Dunnottar" RD="255"/>
 		<Parish Region="Kincardineshire" Name="Durris" RD="256"/>
-		<Parish Region="Kincardineshire" Name="Fetteresso" RD="258"/>
+		<Parish Region="Kincardineshire" Name="Fettercairn" RD="257"/>
+		<Parish Region="Kincardineshire" Name="Fetteresso" RD="258-1"/>
+		<Parish Region="Kincardineshire" Name="Cookney" RD="258-2"/>
+		<Parish Region="Kincardineshire" Name="Fordoun" RD="259"/>
 		<Parish Region="Kincardineshire" Name="Garvock" RD="260"/>
+		<Parish Region="Kincardineshire" Name="Glenbervie" RD="261"/>
 		<Parish Region="Kincardineshire" Name="Kinneff and Catterline" RD="262"/>
 		<Parish Region="Kincardineshire" Name="Laurencekirk" RD="263"/>
 		<Parish Region="Kincardineshire" Name="Maryculter" RD="264"/>
+		<Parish Region="Kincardineshire" Name="Marykirk" RD="265"/>
 		<Parish Region="Kincardineshire" Name="Nigg" RD="266"/>
 		<Parish Region="Kincardineshire" Name="St Cyrus" RD="267"/>
+		<Parish Region="Kincardineshire" Name="Strachan" RD="268"/>
 		<Parish Region="Angus" Name="Aberlemno" RD="269"/>
+		<Parish Region="Angus" Name="Arlie" RD="270"/>
+		<Parish Region="Angus" Name="Arbirlot" RD="271"/>
 		<Parish Region="Angus" Name="Arbroath" RD="272"/>
+		<Parish Region="Angus" Name="Arbroath Burgh" RD="272-1"/>
+		<Parish Region="Angus" Name="Arbroath Landward" RD="272-2"/>
+		<Parish Region="Angus" Name="Auchterhouse" RD="273"/>
+		<Parish Region="Angus" Name="Barry" RD="274"/>
+		<Parish Region="Angus" Name="Brechin" RD="275"/>
+		<Parish Region="Angus" Name="Brechin Burgh" RD="275-1"/>
+		<Parish Region="Angus" Name="Brechin Landward" RD="275-2"/>
 		<Parish Region="Angus" Name="Carmylie" RD="276"/>
 		<Parish Region="Angus" Name="Careston" RD="277"/>
 		<Parish Region="Angus" Name="Cortachy and Clova" RD="278"/>
-		<Parish Region="Angus" Name="Coupar-Angus" RD="279"/>
+		<Parish Region="Angus" Name="Coupar Angus" RD="279"/>
+		<Parish Region="Angus" Name="Craig" RD="280"/>
+		<Parish Region="Angus" Name="Dun" RD="281"/>
 		<Parish Region="Angus" Name="Dundee" RD="282"/>
+		<Parish Region="Angus" Name="Dundee St Peter" RD="282-1"/>
+		<Parish Region="Angus" Name="Dundee St Mary" RD="282-2"/>
+		<Parish Region="Angus" Name="Lochee" RD="282-3"/>
+		<Parish Region="Angus" Name="Dundee St Clement" RD="282-4"/>
+		<Parish Region="Angus" Name="Broughty Ferry" RD="282-5"/>
 		<Parish Region="Angus" Name="Dunnichen" RD="283"/>
 		<Parish Region="Angus" Name="Eassie and Nevay" RD="284"/>
 		<Parish Region="Angus" Name="Edzell" RD="285"/>
 		<Parish Region="Angus" Name="Farnell" RD="286"/>
-		<Parish Region="Angus" Name="Fearn" RD="287"/>
+		<Parish Region="Angus" Name="Fearn (Angus)" RD="287"/>
+		<Parish Region="Angus" Name="Forfar" RD="288"/>
+		<Parish Region="Angus" Name="Forfar Burgh" RD="288-1"/>
+		<Parish Region="Angus" Name="Forfar Landward" RD="288-2"/>
+		<Parish Region="Angus" Name="Glamis" RD="289"/>
+		<Parish Region="Angus" Name="Glenisla" RD="290"/>
 		<Parish Region="Angus" Name="Guthrie" RD="291"/>
 		<Parish Region="Angus" Name="Inverarity and Methy" RD="292"/>
 		<Parish Region="Angus" Name="Inverkeillor" RD="293"/>
+		<Parish Region="Angus" Name="Kettins" RD="294-1"/>
+		<Parish Region="Angus" Name="Kilry" RD="294-2"/>
+		<Parish Region="Angus" Name="Kingoldrum" RD="295"/>
+		<Parish Region="Angus" Name="Kinkell" RD="296"/>
 		<Parish Region="Angus" Name="Kinnettles" RD="297"/>
 		<Parish Region="Angus" Name="Kirkden" RD="298"/>
 		<Parish Region="Angus" Name="Kirriemuir" RD="299"/>
 		<Parish Region="Angus" Name="Lethnott and Navar" RD="300"/>
 		<Parish Region="Angus" Name="Liff Benvie and Invergowrie" RD="301"/>
 		<Parish Region="Angus" Name="Lintrathen" RD="302"/>
-		<Parish Region="Angus" Name="Logie-Pert" RD="304"/>
+		<Parish Region="Angus" Name="Lochlee" RD="303"/>
+		<Parish Region="Angus" Name="Logie Pert" RD="304"/>
 		<Parish Region="Angus" Name="Lunan" RD="305"/>
-		<Parish Region="Angus" Name="Strathmartine" RD="307"/>
-		<Parish Region="Angus" Name="Marytown" RD="308"/>
+		<Parish Region="Angus" Name="Lundie" RD="306"/>
+		<Parish Region="Angus" Name="Mains" RD="307-1"/>
+		<Parish Region="Angus" Name="Strathmartine" RD="307-2"/>
+		<Parish Region="Angus" Name="Maryton" RD="308"/>
 		<Parish Region="Angus" Name="Menmuir" RD="309"/>
+		<Parish Region="Angus" Name="Monifieth East" RD="310-1"/>
+		<Parish Region="Angus" Name="Monifieth West" RD="310-2"/>
 		<Parish Region="Angus" Name="Monikie" RD="311"/>
 		<Parish Region="Angus" Name="Montrose" RD="312"/>
+		<Parish Region="Angus" Name="Montrose Burgh" RD="312-1"/>
+		<Parish Region="Angus" Name="Montrose Landward" RD="312-2"/>
 		<Parish Region="Angus" Name="Murroes" RD="313"/>
+		<Parish Region="Angus" Name="Newtyle" RD="314"/>
+		<Parish Region="Angus" Name="Oathlaw" RD="315"/>
+		<Parish Region="Angus" Name="Panbride" RD="316"/>
 		<Parish Region="Angus" Name="Roscobie" RD="317"/>
 		<Parish Region="Angus" Name="Ruthven" RD="318"/>
 		<Parish Region="Angus" Name="Stracathro" RD="320"/>
+		<Parish Region="Angus" Name="Tannadice" RD="321"/>
+		<Parish Region="Angus" Name="Tealing" RD="322"/>
+		<Parish Region="Perthshire" Name="Aberdalgie" RD="323"/>
+		<Parish Region="Perthshire" Name="Aberfeldie" RD="324"/>
 		<Parish Region="Perthshire" Name="Aberfoyle" RD="325"/>
-		<Parish Region="Perthshire" Name="Abernethy" RD="326"/>
+		<Parish Region="Perthshire" Name="Abernethy (Perth)" RD="326"/>
 		<Parish Region="Perthshire" Name="Abernyte" RD="327"/>
-		<Parish Region="Perthshire" Name="Alyth" RD="328"/>
+		<Parish Region="Perthshire" Name="Alyth" RD="328a"/>
+		<Parish Region="Perthshire" Name="Ardoch" RD="328b"/>
 		<Parish Region="Perthshire" Name="Auchterarder" RD="329"/>
 		<Parish Region="Perthshire" Name="Auchtergaven" RD="330"/>
 		<Parish Region="Perthshire" Name="Balquhidder" RD="331"/>
+		<Parish Region="Perthshire" Name="Bendochy" RD="332"/>
 		<Parish Region="Perthshire" Name="Blackford" RD="333"/>
+		<Parish Region="Perthshire" Name="Blair Atholl" RD="334"/>
 		<Parish Region="Perthshire" Name="Blairgowrie" RD="335"/>
+		<Parish Region="Perthshire" Name="Callander" RD="336"/>
 		<Parish Region="Perthshire" Name="Caputh" RD="337"/>
+		<Parish Region="Perthshire" Name="Cargill" RD="338"/>
 		<Parish Region="Perthshire" Name="Clunie" RD="339"/>
+		<Parish Region="Perthshire" Name="Collace" RD="340"/>
 		<Parish Region="Perthshire" Name="Comrie" RD="341"/>
 		<Parish Region="Perthshire" Name="Crieff" RD="342"/>
+		<Parish Region="Perthshire" Name="Culross" RD="343"/>
+		<Parish Region="Perthshire" Name="Culross Burgh" RD="343-1"/>
+		<Parish Region="Perthshire" Name="Culross Landward" RD="343-2"/>
 		<Parish Region="Perthshire" Name="Dowally" RD="344"/>
+		<Parish Region="Perthshire" Name="Dron" RD="345"/>
 		<Parish Region="Perthshire" Name="Dull" RD="346"/>
-		<Parish Region="Perthshire" Name="Dunblane" RD="348"/>
+		<Parish Region="Perthshire" Name="Dunbarney" RD="347"/>
+		<Parish Region="Perthshire" Name="Dunblane" RD="348-1"/>
+		<Parish Region="Perthshire" Name="Lecopt" RD="348-2"/>
+		<Parish Region="Perthshire" Name="Dunkeld" RD="349"/>
+		<Parish Region="Perthshire" Name="Dunning" RD="350"/>
+		<Parish Region="Perthshire" Name="Errol" RD="351"/>
+		<Parish Region="Perthshire" Name="Findogask" RD="352"/>
+		<Parish Region="Perthshire" Name="Forgandenny" RD="353"/>
 		<Parish Region="Perthshire" Name="Forteviot" RD="354"/>
+		<Parish Region="Perthshire" Name="Fortingall" RD="355a"/>
 		<Parish Region="Perthshire" Name="Foss" RD="355b"/>
-		<Parish Region="Perthshire" Name="Fowlis-Wester" RD="357"/>
+		<Parish Region="Perthshire" Name="Fowlis Easter" RD="356"/>
+		<Parish Region="Perthshire" Name="Fowlis Wester" RD="357"/>
 		<Parish Region="Perthshire" Name="Glendevon" RD="358"/>
+		<Parish Region="Perthshire" Name="Inchture" RD="359"/>
 		<Parish Region="Perthshire" Name="Kenmore" RD="360"/>
+		<Parish Region="Perthshire" Name="Killin" RD="361"/>
 		<Parish Region="Perthshire" Name="Kilmadock" RD="362"/>
 		<Parish Region="Perthshire" Name="Kilspindie" RD="363"/>
+		<Parish Region="Perthshire" Name="Kincardine (Perth)" RD="364"/>
 		<Parish Region="Perthshire" Name="Kinclaven" RD="365"/>
-		<Parish Region="Perthshire" Name="Kinloch-Rannoch" RD="367"/>
+		<Parish Region="Perthshire" Name="Kinfauns" RD="366"/>
+		<Parish Region="Perthshire" Name="Kinloch Rannoch" RD="367"/>
+		<Parish Region="Perthshire" Name="Kinmaird" RD="368"/>
+		<Parish Region="Perthshire" Name="Kinnoull" RD="369"/>
+		<Parish Region="Perthshire" Name="Kinnoull Burgh" RD="369-1"/>
+		<Parish Region="Perthshire" Name="Kinnoull Landward" RD="369-2"/>
+		<Parish Region="Perthshire" Name="Kirkmichael (Perth)" RD="370-1"/>
+		<Parish Region="Perthshire" Name="Glenshee" RD="370-2"/>
+		<Parish Region="Perthshire" Name="Lecropt" RD="371"/>
+		<Parish Region="Perthshire" Name="Lethendy" RD="372-1"/>
+		<Parish Region="Perthshire" Name="Kinloch" RD="372-2"/>
 		<Parish Region="Perthshire" Name="Little Dunkeld" RD="373"/>
 		<Parish Region="Perthshire" Name="Logie" RD="374"/>
+		<Parish Region="Perthshire" Name="Logiealmond" RD="375"/>
 		<Parish Region="Perthshire" Name="Logierait" RD="376"/>
+		<Parish Region="Perthshire" Name="Longforgan" RD="377"/>
 		<Parish Region="Perthshire" Name="Madderty" RD="378"/>
 		<Parish Region="Perthshire" Name="Meigle" RD="379"/>
+		<Parish Region="Perthshire" Name="Methven" RD="380"/>
 		<Parish Region="Perthshire" Name="Moneydie" RD="381"/>
 		<Parish Region="Perthshire" Name="Monzie" RD="382"/>
+		<Parish Region="Perthshire" Name="Monzievaird" RD="383"/>
+		<Parish Region="Perthshire" Name="Moulin" RD="384-1"/>
+		<Parish Region="Perthshire" Name="Strathloch" RD="384-2"/>
+		<Parish Region="Perthshire" Name="Tenandry" RD="384-3"/>
+		<Parish Region="Perthshire" Name="Muchart" RD="385"/>
+		<Parish Region="Perthshire" Name="Muthill" RD="386a"/>
 		<Parish Region="Perthshire" Name="Persie" RD="386b"/>
+		<Parish Region="Perthshire" Name="Perth" RD="387"/>
+		<Parish Region="Perthshire" Name="Perth Burgh" RD="387-1"/>
+		<Parish Region="Perthshire" Name="Perth Landward" RD="387-2"/>
 		<Parish Region="Perthshire" Name="Port of Monteith" RD="388"/>
 		<Parish Region="Perthshire" Name="Rattray" RD="389"/>
+		<Parish Region="Perthshire" Name="Redgorton" RD="390"/>
 		<Parish Region="Perthshire" Name="Rhynd" RD="391"/>
-		<Parish Region="Perthshire" Name="St Martins" RD="393"/>
+		<Parish Region="Perthshire" Name="St Madoes" RD="392"/>
+		<Parish Region="Perthshire" Name="St Martins" RD="393a"/>
+		<Parish Region="Perthshire" Name="Stanley" RD="393b"/>
+		<Parish Region="Perthshire" Name="Scone" RD="394a"/>
+		<Parish Region="Perthshire" Name="Strathfillin" RD="394b"/>
+		<Parish Region="Perthshire" Name="Tibbermore" RD="395"/>
+		<Parish Region="Perthshire" Name="Trinity Gask" RD="396"/>
+		<Parish Region="Perthshire" Name="Tulliallan" RD="397"/>
 		<Parish Region="Perthshire" Name="Weem" RD="398"/>
 		<Parish Region="Fife" Name="Abbotshall" RD="399"/>
-		<Parish Region="Fife" Name="Aberdour" RD="401"/>
-		<Parish Region="Fife" Name="Anstruther-Wester" RD="403"/>
+		<Parish Region="Fife" Name="Abdie" RD="400"/>
+		<Parish Region="Fife" Name="Aberdour (Fife)" RD="401"/>
+		<Parish Region="Fife" Name="Anstruther Easter" RD="402"/>
+		<Parish Region="Fife" Name="Anstruther Wester" RD="403"/>
+		<Parish Region="Fife" Name="Arngask" RD="404"/>
+		<Parish Region="Fife" Name="Auchterderran" RD="405"/>
+		<Parish Region="Fife" Name="Auchtermuchty" RD="406"/>
+		<Parish Region="Fife" Name="Auchtermuchty Burgh" RD="406-1"/>
+		<Parish Region="Fife" Name="Auchtermuchty Landward" RD="406-2"/>
 		<Parish Region="Fife" Name="Auchtertool" RD="407"/>
 		<Parish Region="Fife" Name="Ballingry" RD="408"/>
+		<Parish Region="Fife" Name="Balmerino" RD="409"/>
 		<Parish Region="Fife" Name="Beath" RD="410"/>
 		<Parish Region="Fife" Name="Burntisland" RD="411"/>
+		<Parish Region="Fife" Name="Burntisland Burgh" RD="411-1"/>
+		<Parish Region="Fife" Name="Burntisland Landward" RD="411-2"/>
 		<Parish Region="Fife" Name="Cameron" RD="412"/>
+		<Parish Region="Fife" Name="Carnbee" RD="413"/>
 		<Parish Region="Fife" Name="Carnock" RD="414"/>
 		<Parish Region="Fife" Name="Ceres" RD="415"/>
 		<Parish Region="Fife" Name="Collessie" RD="416"/>
 		<Parish Region="Fife" Name="Crail" RD="417"/>
-		<Parish Region="Fife" Name="Cults" RD="419"/>
+		<Parish Region="Fife" Name="Crail Burgh" RD="417-1"/>
+		<Parish Region="Fife" Name="Crail Landward" RD="417-2"/>
+		<Parish Region="Fife" Name="Creich (Fife)" RD="418a"/>
+		<Parish Region="Fife" Name="Culross (Fife)" RD="418b"/>
+		<Parish Region="Fife" Name="Cults (Fife)" RD="419"/>
+		<Parish Region="Fife" Name="Cupar" RD="420"/>
+		<Parish Region="Fife" Name="Cupar Burgh" RD="420-1"/>
+		<Parish Region="Fife" Name="Cupar Landward" RD="420-2"/>
 		<Parish Region="Fife" Name="Dairsie" RD="421"/>
+		<Parish Region="Fife" Name="Dalgety" RD="422"/>
+		<Parish Region="Fife" Name="Dunbog" RD="423"/>
 		<Parish Region="Fife" Name="Dunfermline" RD="424"/>
+		<Parish Region="Fife" Name="Dunfermline Burgh" RD="424-1"/>
+		<Parish Region="Fife" Name="Dunfermline Landward" RD="424-2"/>
+		<Parish Region="Fife" Name="Dunino" RD="425"/>
+		<Parish Region="Fife" Name="Dysart" RD="426"/>
+		<Parish Region="Fife" Name="Dysart Burgh" RD="426-1"/>
+		<Parish Region="Fife" Name="Dysart Landward" RD="426-2"/>
 		<Parish Region="Fife" Name="Elie" RD="427"/>
+		<Parish Region="Fife" Name="Falkland" RD="428"/>
+		<Parish Region="Fife" Name="Falkland Burgh" RD="428-1"/>
+		<Parish Region="Fife" Name="Falkland Landward" RD="428-2"/>
+		<Parish Region="Fife" Name="Lochgelly" RD="429"/>
+		<Parish Region="Fife" Name="Flisk" RD="430"/>
 		<Parish Region="Fife" Name="Forgan" RD="431"/>
+		<Parish Region="Fife" Name="Inverkeithing" RD="432"/>
+		<Parish Region="Fife" Name="Inverkeithing Burgh" RD="432-1"/>
+		<Parish Region="Fife" Name="Inverkeithing Landward" RD="432-2"/>
 		<Parish Region="Fife" Name="Kemback" RD="433"/>
 		<Parish Region="Fife" Name="Kennoway" RD="434"/>
 		<Parish Region="Fife" Name="Kettle" RD="435"/>
 		<Parish Region="Fife" Name="Kilconguhar" RD="436"/>
+		<Parish Region="Fife" Name="Kilmany" RD="437"/>
+		<Parish Region="Fife" Name="Kilrenny" RD="438"/>
+		<Parish Region="Fife" Name="Kilrenny Burgh" RD="438-1"/>
+		<Parish Region="Fife" Name="Kilrenny Landward" RD="438-2"/>
 		<Parish Region="Fife" Name="Kinghorn" RD="439"/>
+		<Parish Region="Fife" Name="Kinglassie" RD="440"/>
 		<Parish Region="Fife" Name="Kingsbarns" RD="441"/>
-		<Parish Region="Fife" Name="Leslie" RD="444"/>
-		<Parish Region="Fife" Name="Markinch" RD="447"/>
+		<Parish Region="Fife" Name="Kirkcaldy" RD="442"/>
+		<Parish Region="Fife" Name="Kirkcaldy Burgh" RD="442-1"/>
+		<Parish Region="Fife" Name="Kirkcaldy Landward" RD="442-2"/>
+		<Parish Region="Fife" Name="Largo" RD="443"/>
+		<Parish Region="Fife" Name="Leslie (Fife)" RD="444"/>
+		<Parish Region="Fife" Name="Leuchars" RD="445"/>
+		<Parish Region="Fife" Name="Logie (Fife)" RD="446"/>
+		<Parish Region="Fife" Name="Markinch" RD="447-1"/>
+		<Parish Region="Fife" Name="Windygates" RD="447-2"/>
+		<Parish Region="Fife" Name="Monimail" RD="448"/>
 		<Parish Region="Fife" Name="Moonzie" RD="449"/>
-		<Parish Region="Fife" Name="Newborn" RD="451"/>
+		<Parish Region="Fife" Name="Newburgh (Fife)" RD="450"/>
+		<Parish Region="Fife" Name="Newburgh Burgh" RD="450-1"/>
+		<Parish Region="Fife" Name="Newburgh Landward" RD="450-2"/>
+		<Parish Region="Fife" Name="Newburn" RD="451"/>
+		<Parish Region="Fife" Name="Pittenweem" RD="452"/>
+		<Parish Region="Fife" Name="St Andrews" RD="453"/>
+		<Parish Region="Fife" Name="St Andrews Burgh" RD="453-1"/>
+		<Parish Region="Fife" Name="St Andrews Landward" RD="453-2"/>
+		<Parish Region="Fife" Name="St Monance" RD="454"/>
 		<Parish Region="Fife" Name="Saline" RD="455"/>
 		<Parish Region="Fife" Name="Scoonie" RD="456"/>
+		<Parish Region="Fife" Name="Strathmiglo" RD="457a"/>
+		<Parish Region="Fife" Name="Thornton" RD="457b"/>
+		<Parish Region="Fife" Name="Torryburn" RD="458"/>
+		<Parish Region="Fife" Name="Weymyss" RD="459a"/>
+		<Parish Region="Fife" Name="Buckhaven" RD="459b"/>
 		<Parish Region="Kinross-shire" Name="Cleish" RD="460"/>
+		<Parish Region="Kinross-shire" Name="Fossoway" RD="461"/>
 		<Parish Region="Kinross-shire" Name="Kinross" RD="462"/>
+		<Parish Region="Kinross-shire" Name="Orwell" RD="463"/>
 		<Parish Region="Kinross-shire" Name="Portmoak" RD="464"/>
 		<Parish Region="Clackmannanshire" Name="Alloa" RD="465"/>
 		<Parish Region="Clackmannanshire" Name="Clackmannan" RD="466"/>
@@ -455,20 +619,47 @@
 		<Parish Region="Stirlingshire" Name="Airth" RD="469"/>
 		<Parish Region="Stirlingshire" Name="Alva" RD="470"/>
 		<Parish Region="Stirlingshire" Name="Baldernock" RD="471"/>
+		<Parish Region="Stirlingshire" Name="Balfron" RD="472"/>
 		<Parish Region="Stirlingshire" Name="Bothkennar" RD="473"/>
+		<Parish Region="Stirlingshire" Name="Buchanan" RD="474a"/>
+		<Parish Region="Stirlingshire" Name="Inversnaid" RD="474b"/>
 		<Parish Region="Stirlingshire" Name="Campsie" RD="475"/>
 		<Parish Region="Stirlingshire" Name="Denny" RD="476"/>
 		<Parish Region="Stirlingshire" Name="Drymen" RD="477"/>
 		<Parish Region="Stirlingshire" Name="Dunipace" RD="478"/>
 		<Parish Region="Stirlingshire" Name="Falkirk" RD="479"/>
+		<Parish Region="Stirlingshire" Name="Falkirk Burgh" RD="479-1"/>
+		<Parish Region="Stirlingshire" Name="Falkirk Landward" RD="479-2"/>
+		<Parish Region="Stirlingshire" Name="Fintray (Stirling)" RD="480"/>
+		<Parish Region="Stirlingshire" Name="Gargunnock" RD="481a"/>
+		<Parish Region="Stirlingshire" Name="Grangemouth" RD="481b"/>
+		<Parish Region="Stirlingshire" Name="Killearn" RD="482"/>
+		<Parish Region="Stirlingshire" Name="Kilsyth" RD="483"/>
+		<Parish Region="Stirlingshire" Name="Kippen" RD="484"/>
 		<Parish Region="Stirlingshire" Name="Larbert" RD="485"/>
 		<Parish Region="Stirlingshire" Name="Muiravonside" RD="486"/>
 		<Parish Region="Stirlingshire" Name="Polmont" RD="487"/>
+		<Parish Region="Stirlingshire" Name="St Ninians Stirling" RD="488-1"/>
+		<Parish Region="Stirlingshire" Name="Bannockburn" RD="488-2"/>
+		<Parish Region="Stirlingshire" Name="Slamannan" RD="489"/>
 		<Parish Region="Stirlingshire" Name="Stirling" RD="490"/>
+		<Parish Region="Stirlingshire" Name="Strathblane" RD="491"/>
 		<Parish Region="Dunbartonshire" Name="Arrochar" RD="492"/>
 		<Parish Region="Dunbartonshire" Name="Bonhill" RD="493"/>
+		<Parish Region="Dunbartonshire" Name="Cardross" RD="494-1"/>
+		<Parish Region="Dunbartonshire" Name="Renton" RD="494-2"/>
+		<Parish Region="Dunbartonshire" Name="Cumbernauld" RD="495"/>
+		<Parish Region="Dunbartonshire" Name="Dunbarton" RD="496"/>
+		<Parish Region="Dunbartonshire" Name="Dunbarton Burgh" RD="496-1"/>
+		<Parish Region="Dunbartonshire" Name="Dunbarton Landward" RD="496-2"/>
+		<Parish Region="Dunbartonshire" Name="Kilmaronock" RD="497"/>
+		<Parish Region="Dunbartonshire" Name="Kirkintilloch" RD="498"/>
 		<Parish Region="Dunbartonshire" Name="Luss" RD="499"/>
-		<Parish Region="Dunbartonshire" Name="Roseneath and Strathy" RD="502"/>
+		<Parish Region="Dunbartonshire" Name="New Kilpatrick" RD="500"/>
+		<Parish Region="Dunbartonshire" Name="Old Kilpatrick" RD="501"/>
+		<Parish Region="Dunbartonshire" Name="Roseneath" RD="502-1"/>
+		<Parish Region="Dunbartonshire" Name="Strathy" RD="502-2"/>
+		<Parish Region="Dunbartonshire" Name="Row" RD="503"/>
 		<Parish Region="Argyll" Name="Ardchattan" RD="504"/>
 		<Parish Region="Argyll" Name="Aharacle Ardnamurchan Arisaig Sunart and Strontian" RD="505"/>
 		<Parish Region="Argyll" Name="Ballachulish and Corran of Ardgour" RD="506"/>
@@ -529,7 +720,7 @@
 		<Parish Region="Ayrshire" Name="Kilmarnock" RD="597"/>
 		<Parish Region="Ayrshire" Name="Kilmaurs" RD="598"/>
 		<Parish Region="Ayrshire" Name="Kilwinning" RD="599"/>
-		<Parish Region="Ayrshire" Name="Kirkmichael" RD="600"/>
+		<Parish Region="Ayrshire" Name="Kirkmichael (Ayr)" RD="600"/>
 		<Parish Region="Ayrshire" Name="Kirkoswald" RD="601"/>
 		<Parish Region="Ayrshire" Name="Largs" RD="602"/>
 		<Parish Region="Ayrshire" Name="Loudoun" RD="603"/>
@@ -656,7 +847,7 @@
 		<Parish Region="Dumfries-shire" Name="Hutton and Corrie" RD="831"/>
 		<Parish Region="Dumfries-shire" Name="Keir" RD="833"/>
 		<Parish Region="Dumfries-shire" Name="Kirkmahoe" RD="835"/>
-		<Parish Region="Dumfries-shire" Name="Kirkmichael" RD="836"/>
+		<Parish Region="Dumfries-shire" Name="Kirkmichael (Dumfries)" RD="836"/>
 		<Parish Region="Dumfries-shire" Name="Kirkpatrick-Juxta" RD="838"/>
 		<Parish Region="Dumfries-shire" Name="Langholm" RD="839"/>
 		<Parish Region="Dumfries-shire" Name="Lochmaben" RD="840"/>
