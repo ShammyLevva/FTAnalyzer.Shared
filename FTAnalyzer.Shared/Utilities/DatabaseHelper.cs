@@ -146,7 +146,7 @@ namespace FTAnalyzer.Utilities
                 if (File.Exists(saveDatabase.FileName))
                     File.Delete(saveDatabase.FileName);
                 ZipFile zip = new ZipFile(saveDatabase.FileName);
-                zip.AddFile(Filename, string.Empty);
+                zip.AddFile(DatabaseFile, string.Empty);
                 zip.Comment = comment + " on " + DateTime.Now.ToString("dd MMM yyyy HH:mm");
                 zip.Save();
                 //EndBackupDatabase();
