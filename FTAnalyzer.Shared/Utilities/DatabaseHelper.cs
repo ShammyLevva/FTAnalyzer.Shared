@@ -1,6 +1,9 @@
-﻿using FTAnalyzer.Forms;
+﻿#if __PC__
+using FTAnalyzer.Forms;
 using FTAnalyzer.Mapping;
 using GeoAPI.Geometries;
+using System.Windows.Forms;
+#endif
 using Ionic.Zip;
 using System;
 using System.Collections.Concurrent;
@@ -9,13 +12,12 @@ using System.Data;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms;
 
 namespace FTAnalyzer.Utilities
 {
     public class DatabaseHelper : IDisposable
     {
-        public string Filename { get; private set; }
+        public string DatabaseFile { get; private set; }
         public string CurrentFilename { get; private set; }
         public string DatabasePath { get; private set; }
         static DatabaseHelper instance;
@@ -24,7 +26,7 @@ namespace FTAnalyzer.Utilities
         Version ProgramVersion { get; set; }
         bool restoring;
 
-        #region Constructor/Destructor
+#region Constructor/Destructor
         DatabaseHelper()
         {
             DatabasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Family Tree Analyzer");
@@ -71,25 +73,28 @@ namespace FTAnalyzer.Utilities
         {
             try
             {
-                Filename = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Family Tree Analyzer\Geocodes.s3db");
-                if (!File.Exists(Filename))
+                DatabaseFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Family Tree Analyzer\Geocodes.s3db");
+                if (!File.Exists(DatabaseFile))
                 {
                     string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Family Tree Analyzer");
                     if (!Directory.Exists(path))
                         Directory.CreateDirectory(path);
-                    File.Copy(Path.Combine(Application.StartupPath, @"Resources\Geocodes-Empty.s3db"), Filename);
+#if __PC__
+                    File.Copy(Path.Combine(Application.StartupPath, @"Resources\Geocodes-Empty.s3db"), DatabaseFile);
+#elif __MACOS__
+                    //TODO copy file mac style
+#endif
                 }
-                connectionString = "Data Source=" + Filename + ";Version=3;";
+                connectionString = $"Data Source={DatabaseFile};Version=3;";
             }
             catch (Exception ex)
             {
-//                log.Error("Error opening database. Error is :" + ex.Message);
-                MessageBox.Show("Error opening database. Error is :" + ex.Message, "FTAnalyzer");
+                UIHelpers.ShowMessage($"Error opening database. Error is :{ex.Message}", "FTAnalyzer");
             }
         }
-        #endregion
+#endregion
 
-        #region Database Update Functions
+#region Database Update Functions
         public void CheckDatabaseVersion(Version programVersion)
         {
             try
@@ -128,7 +133,7 @@ namespace FTAnalyzer.Utilities
                 return new Version("7.0.0.0"); // force old version so it updates after beta fix on v7.3.0.0
             return dbVersion;
         }
-
+#if __PC__
         public bool BackupDatabase(SaveFileDialog saveDatabase, string comment)
         {
             string directory = Application.UserAppDataRegistry.GetValue("Geocode Backup Directory", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)).ToString();
@@ -151,11 +156,12 @@ namespace FTAnalyzer.Utilities
             }
             return false;
         }
-
+#endif
         void UpgradeDatabase(Version dbVersion)
         {
             try
             {
+#if __PC__
                 Version v3_0_0_0 = new Version("3.0.0.0");
                 Version v3_0_2_0 = new Version("3.0.2.0");
                 Version v3_1_2_0 = new Version("3.1.2.0");
@@ -167,11 +173,11 @@ namespace FTAnalyzer.Utilities
                 {
                     // Version is less than 3.0.0.0 or none existent so copy latest database from empty database
                     GC.Collect(); // needed to force a cleanup of connections prior to replacing the file.
-                    if (File.Exists(Filename))
+                    if (File.Exists(DatabaseFile))
                     {
-                        File.Delete(Filename);
+                        File.Delete(DatabaseFile);
                     }
-                    File.Copy(Path.Combine(Application.StartupPath, @"Resources\Geocodes-Empty.s3db"), Filename);
+                    File.Copy(Path.Combine(Application.StartupPath, @"Resources\Geocodes-Empty.s3db"), DatabaseFile);
                 }
                 if (InstanceConnection.State != ConnectionState.Open)
                     InstanceConnection.Open();
@@ -307,17 +313,18 @@ namespace FTAnalyzer.Utilities
                         cmd.ExecuteNonQuery();
                     }
                 }
-
+#endif
                 InstanceConnection.Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error upgrading database. Error is :{ex.Message}", "FTAnalyzer");
+                UIHelpers.ShowMessage($"Error upgrading database. Error is :{ex.Message}", "FTAnalyzer");
             }
         }
         #endregion
 
-        #region Lat/Long Routines
+#if __PC__
+#region Lat/Long Routines
         void ConvertLatLongs()
         {
             Coordinate Point, NorthEast, SouthWest;
@@ -335,7 +342,7 @@ namespace FTAnalyzer.Utilities
                     int.TryParse(reader[0].ToString(), out rowcount);
                 }
             }
-            #region update cmd
+#region update cmd
             using (SQLiteCommand updateCmd = new SQLiteCommand("update geocode set latm=?, longm=?, viewport_x_ne=?, viewport_y_ne=?, viewport_x_sw=?, viewport_y_sw=?  where location = ?", InstanceConnection))
             {
                 SQLiteParameter param = updateCmd.CreateParameter();
@@ -403,7 +410,7 @@ namespace FTAnalyzer.Utilities
                     }
                 }
             }
-            #endregion
+#endregion
         }
 
         public string LatLongHashKey(double latitude, double longitude) => latitude.ToString("F6") + longitude.ToString("F6");
@@ -441,9 +448,9 @@ namespace FTAnalyzer.Utilities
                 return results;
             }
         }
-        #endregion
-
-        #region Commands
+#endregion
+#endif
+#region Commands
         public bool IsLocationInDatabase(string location)
         {
             bool inDatabase;
@@ -519,6 +526,7 @@ namespace FTAnalyzer.Utilities
                         location.Longitude = longitude;
                         location.LatitudeM = latm;
                         location.LongitudeM = longm;
+#if __PC__
                         if (location.ViewPort == null)
                         {
                             location.ViewPort = new GeoResponse.CResult.CGeometry.CViewPort
@@ -531,6 +539,7 @@ namespace FTAnalyzer.Utilities
                         location.ViewPort.NorthEast.Long = viewport_x_ne;
                         location.ViewPort.SouthWest.Lat = viewport_y_sw;
                         location.ViewPort.SouthWest.Long = viewport_x_sw;
+#endif
                         location.GeocodeStatus = (FactLocation.Geocode)Enum.Parse(typeof(FactLocation.Geocode), reader["geocodestatus"].ToString());
                         location.FoundLocation = reader["foundlocation"].ToString();
                         location.FoundResultType = reader["foundresulttype"].ToString();
@@ -611,10 +620,12 @@ namespace FTAnalyzer.Utilities
                 insertCmd.Parameters[3].Value = loc.Longitude;
                 insertCmd.Parameters[4].Value = loc.FoundLocation;
                 insertCmd.Parameters[5].Value = loc.FoundLevel;
+#if __PC__
                 insertCmd.Parameters[6].Value = loc.ViewPort.NorthEast.Long;
                 insertCmd.Parameters[7].Value = loc.ViewPort.NorthEast.Lat;
                 insertCmd.Parameters[8].Value = loc.ViewPort.SouthWest.Long;
                 insertCmd.Parameters[9].Value = loc.ViewPort.SouthWest.Lat;
+#endif
                 insertCmd.Parameters[10].Value = loc.GeocodeStatus;
                 insertCmd.Parameters[11].Value = loc.FoundResultType;
                 insertCmd.Parameters[12].Value = loc.LatitudeM;
@@ -693,10 +704,12 @@ namespace FTAnalyzer.Utilities
                 updateCmd.Parameters[2].Value = loc.Longitude;
                 updateCmd.Parameters[3].Value = loc.FoundLocation;
                 updateCmd.Parameters[4].Value = loc.FoundLevel;
+#if __PC__
                 updateCmd.Parameters[5].Value = loc.ViewPort.NorthEast.Long;
                 updateCmd.Parameters[6].Value = loc.ViewPort.NorthEast.Lat;
                 updateCmd.Parameters[7].Value = loc.ViewPort.SouthWest.Long;
                 updateCmd.Parameters[8].Value = loc.ViewPort.SouthWest.Lat;
+#endif
                 updateCmd.Parameters[9].Value = loc.GeocodeStatus;
                 updateCmd.Parameters[10].Value = loc.FoundResultType;
                 updateCmd.Parameters[11].Value = loc.LatitudeM;
@@ -708,9 +721,9 @@ namespace FTAnalyzer.Utilities
                 OnGeoLocationUpdated(loc);
             }
         }
-        #endregion
+#endregion
 
-        #region LostCousins
+#region LostCousins
         public int AddLostCousinsFacts()
         {
             int count = 0;
@@ -834,9 +847,9 @@ namespace FTAnalyzer.Utilities
                 Console.WriteLine(e.Message);
             }
         }
-        #endregion
+#endregion
 
-            #region Cursor Queries
+#region Cursor Queries
 
             public void AddEmptyLocationsToQueue(ConcurrentQueue<FactLocation> queue)
         {
@@ -862,9 +875,9 @@ namespace FTAnalyzer.Utilities
         //    return new SQLiteCommand("select location from geocode where foundlocation='' and geocodestatus in (3, 8, 9)", xxx);
         //}
 
-        #endregion
+#endregion
 
-        #region BackupRestore
+#region BackupRestore
         public bool StartBackupRestoreDatabase()
         {
             string tempFilename = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Family Tree Analyzer\Geocodes.s3db.tmp");
@@ -900,14 +913,14 @@ namespace FTAnalyzer.Utilities
             }
             return result;
         }
-        #endregion
+#endregion
 
-        #region EventHandler
+#region EventHandler
         public static event EventHandler GeoLocationUpdated;
         protected static void OnGeoLocationUpdated(FactLocation loc)
         {
             GeoLocationUpdated?.Invoke(loc, EventArgs.Empty);
         }
-        #endregion
+#endregion
     }
 }

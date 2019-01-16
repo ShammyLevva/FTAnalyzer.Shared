@@ -29,12 +29,12 @@ namespace FTAnalyzer.Utilities
                     string path = Path.GetDirectoryName(saveFileDialog.FileName);
                     Application.UserAppDataRegistry.SetValue("Excel Export Individual Path", path);
                     WriteFile(dt, saveFileDialog.FileName);
-                    MessageBox.Show($"File written to {saveFileDialog.FileName}", "FTAnalyzer");
+                    UIHelpers.ShowMessage($"File written to {saveFileDialog.FileName}", "FTAnalyzer");
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "FTAnalyzer");
+                UIHelpers.ShowMessage(ex.Message, "FTAnalyzer");
             }
         }
 #elif __MACOS__
