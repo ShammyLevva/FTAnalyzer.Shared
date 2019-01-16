@@ -169,13 +169,13 @@ namespace FTAnalyzer
             );
 
         public static FactDate GetUSCensusDateFromReference(string reference) =>
-            US_FEDERAL_CENSUS.FirstOrDefault(cd => cd.PropertyName == reference) ?? FactDate.UNKNOWN_DATE;
+            US_FEDERAL_CENSUS.FirstOrDefault(cd => cd.PropertyName == reference) ?? UNKNOWN_DATE;
 
         public static FactDate GetCanadianCensusDateFromReference(string reference) =>
-            CANADIAN_CENSUS.FirstOrDefault(cd => cd.PropertyName.ToUpper() == reference) ?? FactDate.UNKNOWN_DATE;
+            CANADIAN_CENSUS.FirstOrDefault(cd => cd.PropertyName.ToUpper() == reference) ?? UNKNOWN_DATE;
 
         public static FactDate GetUKCensusDateFromYear(string year) =>
-            UK_CENSUS.FirstOrDefault(cd => cd.PropertyName == $"C{year}") ?? FactDate.UNKNOWN_DATE;
+            UK_CENSUS.FirstOrDefault(cd => cd.PropertyName == $"C{year}") ?? UNKNOWN_DATE;
 
         public override string ToString() => _displayName;
     }

@@ -770,7 +770,7 @@ namespace FTAnalyzer
         {
             if (!HasValidCensusReference)
                 CensusReference = cr;
-            if (Location.IsBlank)
+            if (Location.IsBlank || !Location.IsKnown)
                 Location = cl.Equals(CensusLocation.UNKNOWN) ?
                     FactLocation.GetLocation(cr.Country, GeneralSettings.Default.AddCreatedLocations) :
                     FactLocation.GetLocation(cl.Location, GeneralSettings.Default.AddCreatedLocations);

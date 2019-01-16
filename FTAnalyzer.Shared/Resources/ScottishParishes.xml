@@ -64,13 +64,16 @@
 		<Parish Region="Ross and Cromarty" Name="Alness" RD="57"/>
 		<Parish Region="Ross and Cromarty" Name="Applecross" RD="58-1"/>
 		<Parish Region="Ross and Cromarty" Name="Shieldaig" RD="58-2"/>
-		<Parish Region="Ross and Cromarty" Name="Avoch" RD="59"/>
+		<Parish Region="Ross and Cromarty" Name="Avoch" RD="59a"/>
+		<Parish Region="Ross and Cromarty" Name="Carnoch" RD="59b"/>
 		<Parish Region="Ross and Cromarty" Name="Contin" RD="60-1"/>
 		<Parish Region="Ross and Cromarty" Name="Kinlochluichart" RD="60-2"/>
 		<Parish Region="Ross and Cromarty" Name="Cromarty" RD="61"/>
 		<Parish Region="Ross and Cromarty" Name="Cromarty Burgh" RD="61-1"/>
 		<Parish Region="Ross and Cromarty" Name="Cromarty Landward" RD="61-2"/>
 		<Parish Region="Ross and Cromarty" Name="Dingwall" RD="62"/>
+		<Parish Region="Ross and Cromarty" Name="Dingwall Burgh" RD="62-1"/>
+		<Parish Region="Ross and Cromarty" Name="Dingwall Landward" RD="62-2"/>
 		<Parish Region="Ross and Cromarty" Name="Edderton" RD="63"/>
 		<Parish Region="Ross and Cromarty" Name="Fearn" RD="64"/>
 		<Parish Region="Ross and Cromarty" Name="Fodderty" RD="65"/>
@@ -661,68 +664,152 @@
 		<Parish Region="Dunbartonshire" Name="Strathy" RD="502-2"/>
 		<Parish Region="Dunbartonshire" Name="Row" RD="503"/>
 		<Parish Region="Argyll" Name="Ardchattan" RD="504"/>
-		<Parish Region="Argyll" Name="Aharacle Ardnamurchan Arisaig Sunart and Strontian" RD="505"/>
-		<Parish Region="Argyll" Name="Ballachulish and Corran of Ardgour" RD="506"/>
+		<Parish Region="Argyll" Name="Aharacle" RD="505-1"/>
+		<Parish Region="Argyll" Name="Arisaig" RD="505-2"/>
+		<Parish Region="Argyll" Name="Sunart" RD="505-3"/>
+		<Parish Region="Argyll" Name="Ardnamurchan" RD="505-4"/>
+		<Parish Region="Argyll" Name="Ballachulish" RD="506"/>
+		<Parish Region="Argyll" Name="Campbelltown" RD="507"/>
+		<Parish Region="Argyll" Name="Campbelltown Burgh" RD="507-1"/>
+		<Parish Region="Argyll" Name="Campbelltown Landward" RD="507-2"/>
+		<Parish Region="Argyll" Name="Craignish" RD="508"/>
+		<Parish Region="Argyll" Name="Cumlodden" RD="509"/>
+		<Parish Region="Argyll" Name="Dunoon" RD="510-1"/>
 		<Parish Region="Argyll" Name="Kilmun" RD="510"/>
-		<Parish Region="Argyll" Name="Glossary" RD="511"/>
+		<Parish Region="Argyll" Name="Glassary" RD="511"/>
+		<Parish Region="Argyll" Name="Glenorchy and Inishail" RD="512"/>
+		<Parish Region="Argyll" Name="Inverary" RD="513"/>
+		<Parish Region="Argyll" Name="Inverary Burgh" RD="513-1"/>
+		<Parish Region="Argyll" Name="Inverary Landward" RD="513-2"/>
 		<Parish Region="Argyll" Name="Inverchaolain" RD="514"/>
+		<Parish Region="Argyll" Name="Kilbrandon and Kilchattan" RD="515"/>
 		<Parish Region="Argyll" Name="Kilberry" RD="516"/>
+		<Parish Region="Argyll" Name="Kilchrenan" RD="517-1"/>
+		<Parish Region="Argyll" Name="Dalavich" RD="517-2"/>
 		<Parish Region="Argyll" Name="Kilfinan" RD="518"/>
 		<Parish Region="Argyll" Name="Killean and Kilchenzie" RD="519"/>
 		<Parish Region="Argyll" Name="Kilmalie" RD="520"/>
 		<Parish Region="Argyll" Name="Kilmartin" RD="521"/>
 		<Parish Region="Argyll" Name="Kilmodan" RD="522"/>
+		<Parish Region="Argyll" Name="Oban" RD="523-1"/>
+		<Parish Region="Argyll" Name="Kilmore and Kilbride" RD="523-2"/>
 		<Parish Region="Argyll" Name="Kilmelford and Kilninver" RD="524"/>
-		<Parish Region="Argyll" Name="Appin Glencoe and Ballachulish" RD="525"/>
-		<Parish Region="Argyll" Name="Kilmorich and Lochgoilhead" RD="527"/>
+		<Parish Region="Argyll" Name="Lismore" RD="525-1"/>
+		<Parish Region="Argyll" Name="Appin" RD="525-2"/>
+		<Parish Region="Argyll" Name="Glenco" RD="525-3"/>
+		<Parish Region="Argyll" Name="Duror" RD="525-4"/>
+		<Parish Region="Argyll" Name="Lochgoilhead" RD="527-1"/>
+		<Parish Region="Argyll" Name="Kilmorich" RD="527-2"/>
 		<Parish Region="Argyll" Name="Morvern" RD="528"/>
 		<Parish Region="Argyll" Name="Muckairn" RD="529"/>
 		<Parish Region="Argyll" Name="North Knapdale" RD="530"/>
-		<Parish Region="Argyll" Name="Saddell and Skipness" RD="531"/>
-		<Parish Region="Argyll" Name="South Knapdale" RD="533"/>
-		<Parish Region="Argyll" Name="Strachur and Stralachlan" RD="534"/>
+		<Parish Region="Argyll" Name="Saddell" RD="531-1"/>
+		<Parish Region="Argyll" Name="Skipness" RD="531-2"/>
+		<Parish Region="Argyll" Name="South Knapdale" RD="533-1"/>
+		<Parish Region="Argyll" Name="Kilberry" RD="533-2"/>
+		<Parish Region="Argyll" Name="Stralachlan" RD="534-1"/>
+		<Parish Region="Argyll" Name="Strachur" RD="534-2"/>
+		<Parish Region="Argyll" Name="Tarbert" RD="535"/>
 		<Parish Region="Argyll" Name="Bowmore and Kilarrow" RD="536"/>
-		<Parish Region="Argyll" Name="Colonsay and Jura" RD="539"/>
+		<Parish Region="Argyll" Name="Gigha and Cara" RD="537"/>
+		<Parish Region="Argyll" Name="Iona" RD="538"/>
+		<Parish Region="Argyll" Name="Jura" RD="539-1"/>
+		<Parish Region="Argyll" Name="Colonsay and Oronsay" RD="539-2"/>
 		<Parish Region="Argyll" Name="Kilchoman" RD="540"/>
+		<Parish Region="Argyll" Name="Kildalton" RD="541"/>
+		<Parish Region="Argyll" Name="Kilfinichen and Kilvickeon" RD="542"/>
+		<Parish Region="Argyll" Name="Kilmeny" RD="543"/>
+		<Parish Region="Argyll" Name="Ulva" RD="544-1"/>
+		<Parish Region="Argyll" Name="Kilninian and Kilmore " RD="544-2"/>
+		<Parish Region="Argyll" Name="Kinlochspelvie" RD="545"/>
 		<Parish Region="Argyll" Name="Oa" RD="546"/>
-		<Parish Region="Argyll" Name="Coll and Tyree" RD="551"/>
+		<Parish Region="Argyll" Name="Portnahaven" RD="547"/>
+		<Parish Region="Argyll" Name="Salen" RD="548"/>
+		<Parish Region="Argyll" Name="Tobermory" RD="549"/>
+		<Parish Region="Argyll" Name="Torosay" RD="550"/>
+		<Parish Region="Argyll" Name="Tiree" RD="551"/>
 		<Parish Region="Bute" Name="Cumbraes" RD="552"/>
+		<Parish Region="Bute" Name="Brodick" RD="553-1"/>
+		<Parish Region="Bute" Name="Kilbride" RD="553-2"/>
+		<Parish Region="Bute" Name="Kilmory" RD="554-1"/>
+		<Parish Region="Bute" Name="Shiskine" RD="554-2"/>
+		<Parish Region="Bute" Name="Kingarth" RD="555"/>
+		<Parish Region="Bute" Name="Lochranza" RD="556"/>
+		<Parish Region="Bute" Name="North Bute" RD="557"/>
+		<Parish Region="Bute" Name="Rothesay" RD="558"/>
+		<Parish Region="Bute" Name="Rothesay Burgh" RD="558-1"/>
+		<Parish Region="Bute" Name="Rothesay Landward" RD="558-2"/>
 		<Parish Region="Renfrewshire" Name="Abbey" RD="559"/>
+		<Parish Region="Renfrewshire" Name="Johnstone" RD="559a"/>
+		<Parish Region="Renfrewshire" Name="Bridge of Weir" RD="559b"/>
+		<Parish Region="Renfrewshire" Name="Cathcart" RD="560"/>
 		<Parish Region="Renfrewshire" Name="Eaglesham" RD="561"/>
 		<Parish Region="Renfrewshire" Name="Eastwood" RD="562"/>
 		<Parish Region="Renfrewshire" Name="Erskine" RD="563"/>
+		<Parish Region="Renfrewshire" Name="Greenock" RD="564"/>
+		<Parish Region="Renfrewshire" Name="East Greenock" RD="564-1"/>
+		<Parish Region="Renfrewshire" Name="West Greenock" RD="564-2"/>
+		<Parish Region="Renfrewshire" Name="Old Greenock" RD="564-3"/>
+		<Parish Region="Renfrewshire" Name="Houston and Killellan" RD="565"/>
 		<Parish Region="Renfrewshire" Name="Inchinnan" RD="566"/>
-		<Parish Region="Renfrewshire" Name="Innerkip" RD="567"/>
+		<Parish Region="Renfrewshire" Name="Innerkip" RD="567-1"/>
+		<Parish Region="Renfrewshire" Name="Gourock" RD="567-2"/>
+		<Parish Region="Renfrewshire" Name="Kilbarchan" RD="568-1"/>
+		<Parish Region="Renfrewshire" Name="Linwood" RD="568-2"/>
+		<Parish Region="Renfrewshire" Name="Kilmalcolm" RD="569"/>
 		<Parish Region="Renfrewshire" Name="Lochwinnoch" RD="570"/>
-		<Parish Region="Renfrewshire" Name="Mearns" RD="571"/>
-		<Parish Region="Renfrewshire" Name="Barrhead" RD="572"/>
+		<Parish Region="Renfrewshire" Name="Busby" RD="571-1"/>
+		<Parish Region="Renfrewshire" Name="Newton Mearns" RD="571-2"/>
+		<Parish Region="Renfrewshire" Name="Neilston" RD="572-1"/>
+		<Parish Region="Renfrewshire" Name="Barrhead" RD="572-2"/>
 		<Parish Region="Renfrewshire" Name="Paisley" RD="573"/>
+		<Parish Region="Renfrewshire" Name="Paisley High" RD="573-1"/>
+		<Parish Region="Renfrewshire" Name="Paisley Low" RD="573-2"/>
+		<Parish Region="Renfrewshire" Name="Paisley Middle" RD="573-3"/>
+		<Parish Region="Renfrewshire" Name="Port Glasgow" RD="574"/>
+		<Parish Region="Renfrewshire" Name="Port Glasgow Burgh" RD="574-1"/>
+		<Parish Region="Renfrewshire" Name="Port Glasgow Landward" RD="574-2"/>
 		<Parish Region="Renfrewshire" Name="Renfrew" RD="575"/>
+		<Parish Region="Renfrewshire" Name="Renfrew Burgh" RD="575-1"/>
+		<Parish Region="Renfrewshire" Name="Renfrew Landward" RD="575-2"/>
+		<Parish Region="Ayrshire" Name="Ardrossan" RD="576"/>
+		<Parish Region="Ayrshire" Name="Auchinleck" RD="577-1"/>
+		<Parish Region="Ayrshire" Name="Lugar" RD="577-2"/>
 		<Parish Region="Ayrshire" Name="Ayr" RD="578"/>
+		<Parish Region="Ayrshire" Name="Ayr Burgh" RD="578-1"/>
+		<Parish Region="Ayrshire" Name="Ayr Landward" RD="578-2"/>
 		<Parish Region="Ayrshire" Name="Ballantrae" RD="579"/>
 		<Parish Region="Ayrshire" Name="Barr" RD="580"/>
 		<Parish Region="Ayrshire" Name="Beith" RD="581"/>
-		<Parish Region="Ayrshire" Name="Colmonell" RD="582"/>
-		<Parish Region="Ayrshire" Name="Coylton" RD="583"/>
-		<Parish Region="Ayrshire" Name="Craigie" RD="584"/>
+		<Parish Region="Ayrshire" Name="Colmonell" RD="582-1"/>
+		<Parish Region="Ayrshire" Name="Barrhill" RD="582-2"/>
+		<Parish Region="Ayrshire" Name="Coylton" RD="583-1"/>
+		<Parish Region="Ayrshire" Name="Rankinston" RD="583-2"/>
+		<Parish Region="Ayrshire" Name="Craigie" RD="584a"/>
+		<Parish Region="Ayrshire" Name="Crosshill" RD="584b"/>
 		<Parish Region="Ayrshire" Name="Dailly" RD="585"/>
-		<Parish Region="Ayrshire" Name="Dalmellington" RD="586"/>
+		<Parish Region="Ayrshire" Name="Dalmellington" RD="586-1"/>
+		<Parish Region="Ayrshire" Name="Waterside" RD="586-2"/>
 		<Parish Region="Ayrshire" Name="Dalry" RD="587"/>
 		<Parish Region="Ayrshire" Name="Dalrymple" RD="588"/>
 		<Parish Region="Ayrshire" Name="Dreghorn" RD="589"/>
-		<Parish Region="Ayrshire" Name="Dundonald" RD="590"/>
+		<Parish Region="Ayrshire" Name="Dundonald" RD="590-1"/>
+		<Parish Region="Ayrshire" Name="Troon" RD="590-2"/>
 		<Parish Region="Ayrshire" Name="Dunlop" RD="591"/>
 		<Parish Region="Ayrshire" Name="Fenwick" RD="592"/>
 		<Parish Region="Ayrshire" Name="Galston" RD="593"/>
 		<Parish Region="Ayrshire" Name="Girvin" RD="594"/>
 		<Parish Region="Ayrshire" Name="Irvine" RD="595"/>
+		<Parish Region="Ayrshire" Name="Irvine Burgh" RD="595-1"/>
+		<Parish Region="Ayrshire" Name="Irvine Landward" RD="595-2"/>
 		<Parish Region="Ayrshire" Name="Kilbirnie" RD="596"/>
 		<Parish Region="Ayrshire" Name="Kilmarnock" RD="597"/>
 		<Parish Region="Ayrshire" Name="Kilmaurs" RD="598"/>
 		<Parish Region="Ayrshire" Name="Kilwinning" RD="599"/>
 		<Parish Region="Ayrshire" Name="Kirkmichael (Ayr)" RD="600"/>
 		<Parish Region="Ayrshire" Name="Kirkoswald" RD="601"/>
-		<Parish Region="Ayrshire" Name="Largs" RD="602"/>
+		<Parish Region="Ayrshire" Name="Largs" RD="602-1"/>
+		<Parish Region="Ayrshire" Name="Skelmorlie" RD="602-2"/>
 		<Parish Region="Ayrshire" Name="Loudoun" RD="603"/>
 		<Parish Region="Ayrshire" Name="Mauchline" RD="604"/>
 		<Parish Region="Ayrshire" Name="Maybole" RD="605"/>
@@ -730,9 +817,11 @@
 		<Parish Region="Ayrshire" Name="Muirkirk" RD="607"/>
 		<Parish Region="Ayrshire" Name="New Cumnock" RD="608"/>
 		<Parish Region="Ayrshire" Name="Ochiltree" RD="609"/>
-		<Parish Region="Ayrshire" Name="Old Cumnock" RD="610"/>
+		<Parish Region="Ayrshire" Name="Old Cumnock" RD="610a"/>
+		<Parish Region="Ayrshire" Name="Patna" RD="610b"/>
 		<Parish Region="Ayrshire" Name="Riccarton" RD="611"/>
-		<Parish Region="Ayrshire" Name="Newton-on-Ayr and St Quivox" RD="612"/>
+		<Parish Region="Ayrshire" Name="St Quivox" RD="612-1"/>
+		<Parish Region="Ayrshire" Name="Newton-on-Ayr" RD="612-2"/>
 		<Parish Region="Ayrshire" Name="Sorn" RD="613"/>
 		<Parish Region="Ayrshire" Name="Stair" RD="614"/>
 		<Parish Region="Ayrshire" Name="Stevenston" RD="615"/>
@@ -742,33 +831,102 @@
 		<Parish Region="Ayrshire" Name="Tarbolton" RD="619"/>
 		<Parish Region="Ayrshire" Name="West Kilbride" RD="620"/>
 		<Parish Region="Lanarkshire" Name="Avondale" RD="621"/>
-		<Parish Region="Lanarkshire" Name="Baillieston" RD="622"/>
+		<Parish Region="Lanarkshire" Name="Barony" RD="622"/>
+		<Parish Region="Lanarkshire" Name="Maryhill" RD="622-1"/>
+		<Parish Region="Lanarkshire" Name="Shettleston" RD="622-2"/>
+		<Parish Region="Lanarkshire" Name="Springburn" RD="622-3"/>
 		<Parish Region="Lanarkshire" Name="Biggar" RD="623"/>
 		<Parish Region="Lanarkshire" Name="Blantyre" RD="624"/>
-		<Parish Region="Lanarkshire" Name="Bellshill" RD="625"/>
-		<Parish Region="Lanarkshire" Name="Bothwell" RD="626"/>
+		<Parish Region="Lanarkshire" Name="Bothwell" RD="625-1"/>
+		<Parish Region="Lanarkshire" Name="Holytown" RD="625-2"/>
+		<Parish Region="Lanarkshire" Name="Bellshill" RD="625-3"/>
+		<Parish Region="Lanarkshire" Name="Cadder" RD="626a"/>
+		<Parish Region="Lanarkshire" Name="Calderhead" RD="626b"/>
 		<Parish Region="Lanarkshire" Name="Cambuslang" RD="627"/>
 		<Parish Region="Lanarkshire" Name="Cambusnethan" RD="628"/>
 		<Parish Region="Lanarkshire" Name="Carluke" RD="629"/>
 		<Parish Region="Lanarkshire" Name="Carmichael" RD="630"/>
-		<Parish Region="Lanarkshire" Name="Crawford" RD="635"/>
+		<Parish Region="Lanarkshire" Name="Carmunnock" RD="631"/>
+		<Parish Region="Lanarkshire" Name="Carnwath" RD="632-1"/>
+		<Parish Region="Lanarkshire" Name="Forth" RD="632-2"/>
+		<Parish Region="Lanarkshire" Name="Haywood" RD="632-3"/>
+		<Parish Region="Lanarkshire" Name="Carstairs" RD="633a"/>
+		<Parish Region="Lanarkshire" Name="Cathcart" RD="633b"/>
+		<Parish Region="Lanarkshire" Name="Covington and Thankerton" RD="634"/>
+		<Parish Region="Lanarkshire" Name="Crawford" RD="635-1"/>
+		<Parish Region="Lanarkshire" Name="Leadhills" RD="635-2"/>
+		<Parish Region="Lanarkshire" Name="Crawfordjohn" RD="636"/>
+		<Parish Region="Lanarkshire" Name="Culter" RD="637"/>
+		<Parish Region="Lanarkshire" Name="Larkhall" RD="638-1"/>
+		<Parish Region="Lanarkshire" Name="Dalserf" RD="638-2"/>
+		<Parish Region="Lanarkshire" Name="Dalziel" RD="639"/>
+		<Parish Region="Lanarkshire" Name="Dolphinton" RD="640"/>
+		<Parish Region="Lanarkshire" Name="Douglas" RD="641"/>
+		<Parish Region="Lanarkshire" Name="Dunsyre" RD="642"/>
+		<Parish Region="Lanarkshire" Name="East Kilbride" RD="643"/>
 		<Parish Region="Lanarkshire" Name="Glasgow" RD="644"/>
+		<Parish Region="Lanarkshire" Name="Glasgow Central" RD="644-1"/>
+		<Parish Region="Lanarkshire" Name="Glasgow Gorbals" RD="644-2"/>
+		<Parish Region="Lanarkshire" Name="Glasgow Dennistoun" RD="644-3"/>
+		<Parish Region="Lanarkshire" Name="Glasgow Calton" RD="644-4"/>
+		<Parish Region="Lanarkshire" Name="Glasgow Blackfriars" RD="644-5"/>
+		<Parish Region="Lanarkshire" Name="Glasgow Blythswood" RD="644-6"/>
+		<Parish Region="Lanarkshire" Name="Glasgow Milton" RD="644-7"/>
+		<Parish Region="Lanarkshire" Name="Glasgow Anderston" RD="644-8"/>
+		<Parish Region="Lanarkshire" Name="Glasgow Kelvin" RD="644-9"/>
+		<Parish Region="Lanarkshire" Name="Glasgow Govan" RD="644-10"/>
+		<Parish Region="Lanarkshire" Name="Glasgow Hutchesontown" RD="644-11"/>
 		<Parish Region="Lanarkshire" Name="Glassford" RD="645"/>
+		<Parish Region="Lanarkshire" Name="Govan" RD="646-1"/>
+		<Parish Region="Lanarkshire" Name="Partick" RD="646-2"/>
 		<Parish Region="Lanarkshire" Name="Hamilton" RD="647"/>
+		<Parish Region="Lanarkshire" Name="Hamilton Burgh" RD="647-1"/>
+		<Parish Region="Lanarkshire" Name="Hamilton Landward" RD="647-2"/>
+		<Parish Region="Lanarkshire" Name="Lanark" RD="648"/>
+		<Parish Region="Lanarkshire" Name="Lanark Burgh" RD="648-1"/>
+		<Parish Region="Lanarkshire" Name="Lanark Landward" RD="648-2"/>
+		<Parish Region="Lanarkshire" Name="Lesmahagow" RD="649-1"/>
+		<Parish Region="Lanarkshire" Name="Kirkfieldbank" RD="649-2"/>
 		<Parish Region="Lanarkshire" Name="Libberton" RD="650"/>
-		<Parish Region="Lanarkshire" Name="New Monkland" RD="651"/>
-		<Parish Region="Lanarkshire" Name="Old Monkland" RD="652"/>
+		<Parish Region="Lanarkshire" Name="Airdrie" RD="651-1"/>
+		<Parish Region="Lanarkshire" Name="New Monkland" RD="651-2"/>
+		<Parish Region="Lanarkshire" Name="Old Monkland" RD="652-1"/>
+		<Parish Region="Lanarkshire" Name="Coatbridge" RD="652-2"/>
 		<Parish Region="Lanarkshire" Name="Pettinain" RD="653"/>
+		<Parish Region="Lanarkshire" Name="Rutherglen" RD="654"/>
+		<Parish Region="Lanarkshire" Name="Rutherglen Burgh" RD="654-1"/>
+		<Parish Region="Lanarkshire" Name="Rutherglen Landward" RD="654-2"/>
 		<Parish Region="Lanarkshire" Name="Shotts" RD="655"/>
+		<Parish Region="Lanarkshire" Name="Shotts Middle" RD="655-1"/>
+		<Parish Region="Lanarkshire" Name="Shotts Eastern" RD="655-2"/>
+		<Parish Region="Lanarkshire" Name="Shotts Western" RD="655-3"/>
+		<Parish Region="Lanarkshire" Name="Shotts Northern" RD="655-4"/>
 		<Parish Region="Lanarkshire" Name="Stonehouse" RD="656"/>
+		<Parish Region="Lanarkshire" Name="Symington" RD="657"/>
+		<Parish Region="Lanarkshire" Name="Walston" RD="658"/>
 		<Parish Region="Lanarkshire" Name="Lamington" RD="659"/>
 		<Parish Region="Lanarkshire" Name="Wiston and Roberton" RD="660"/>
 		<Parish Region="West Lothian" Name="Abercorn" RD="661"/>
+		<Parish Region="West Lothian" Name="Bathgate" RD="662-1"/>
+		<Parish Region="West Lothian" Name="Armdale" RD="662-2"/>
+		<Parish Region="West Lothian" Name="Bo'ness" RD="663"/>
 		<Parish Region="West Lothian" Name="Carriden" RD="664"/>
+		<Parish Region="West Lothian" Name="Dalmeny" RD="665"/>
 		<Parish Region="West Lothian" Name="Ecclesmachen" RD="666"/>
 		<Parish Region="West Lothian" Name="Kirkliston" RD="667"/>
 		<Parish Region="West Lothian" Name="Linlithgow" RD="668"/>
-		<Parish Region="West Lothian" Name="Torphichen" RD="671"/>
+		<Parish Region="West Lothian" Name="Linlithgow Burgh" RD="668-1"/>
+		<Parish Region="West Lothian" Name="Linlithgow Landward" RD="668-2"/>
+		<Parish Region="West Lothian" Name="Livingston" RD="669"/>
+		<Parish Region="West Lothian" Name="Queensferry" RD="670"/>
+		<Parish Region="West Lothian" Name="Torphichen" RD="671-1"/>
+		<Parish Region="West Lothian" Name="Blackridge" RD="671-2"/>
+		<Parish Region="West Lothian" Name="Uphall" RD="672"/>
+		<Parish Region="West Lothian" Name="Whitburn" RD="673-1"/>
+		<Parish Region="West Lothian" Name="Fauldhouse" RD="673-2"/>
+		<Parish Region="West Lothian" Name="Stoneyburn" RD="673-3"/>
+		<Parish Region="Midlothian" Name="Borthwich" RD="674"/>
+		<Parish Region="Midlothian" Name="Carrington" RD="675"/>
 		<Parish Region="Midlothian" Name="Cockpen" RD="676"/>
 		<Parish Region="Midlothian" Name="Cramond" RD="679"/>
 		<Parish Region="Midlothian" Name="Cranston" RD="680"/>

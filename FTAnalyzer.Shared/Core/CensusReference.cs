@@ -60,8 +60,8 @@ namespace FTAnalyzer
         static readonly string US_CENSUS_PATTERN4 = @"Census *(\d{4}) *(.*?) *ED *(\d{1,5}[AB]?-?\d{0,4}[ABCD]?) *P(age)? *(\d{1,4}[AB]?)";
         static readonly string US_CENSUS_1940_PATTERN = @"District *(\d{1,5}[AB]?-?\d{0,4}[AB]?).*?P(age)? *(\d{1,3}[ABCD]?).*?T627 ?,? *(\d{1,5}-?[AB]?)";
         static readonly string US_CENSUS_1940_PATTERN2 = @"ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?).*? *P(age)? *(\d{1,3}[ABCD]?).*?T627.*?roll ?(\d{1,5}-?[AB]?)";
-        static readonly string US_CENSUS_1940_PATTERN3 = @"1940 *(.*?)(Roll)? *T627_(.*?) *P(age)? *(\d{1,4}[ABCD]?) *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?)";
-        static readonly string US_CENSUS_1940_PATTERN4 = @"(.*?)(Roll)? *T627_(.*?) *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?) *P(age)? *(\d{1,4}[ABCD]?)";
+        static readonly string US_CENSUS_1940_PATTERN3 = @"1940 *(.*?)(Roll)? *M?-?_?T0?627_(.*?) *P(age)? *(\d{1,4}[ABCD]?) *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?)";
+        static readonly string US_CENSUS_1940_PATTERN4 = @"(.*?)(Roll)? *M?-?_?T0?627_(.*?) *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?) *P(age)? *(\d{1,4}[ABCD]?)";
 
         static readonly string CANADA_CENSUS_PATTERN = @"Year *(\d{4}) *Census *(.*?) *Roll *(.*?) *P(age)? *(\d{1,4}[ABCD]?) *Family *(\d{1,4})";
         static readonly string CANADA_CENSUS_PATTERN2 = @"(\d{4}) *Census[ -]*District *(\d{1,5})\/(\d{0,4}[A-Z]{0,4}) *P(age)? *(\d{1,4}[ABCD]?) *Family *(\d{1,4})";
@@ -741,6 +741,7 @@ namespace FTAnalyzer
                 Page = matcher.Groups[5].ToString();
                 ED = matcher.Groups[6].ToString();
                 SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.GOOD, matcher.Value);
+                if (Roll.StartsWith("T627")) Roll = Roll.Substring(5);
                 return true;
             }
             matcher = censusRegexs["US_CENSUS_PATTERN2"].Match(text);
@@ -937,6 +938,7 @@ namespace FTAnalyzer
             Country = country;
             Status = status;
             MatchString = matchstring;
+            if(country == Countries.UNITED_STATES) FixUS1940Prefix();
         }
 
         string GetOriginalPlace(string match, string originalText, string stopText)
@@ -1230,6 +1232,15 @@ namespace FTAnalyzer
                 return string.Empty;
             }
         }
+        
+        void FixUS1940Prefix()
+        {
+            Roll = Roll.ToUpper().Replace('-', '_');
+            if (Roll.StartsWith("T627_")) Roll = Roll.Substring(5);
+            else if (Roll.StartsWith("T0627_")) Roll = Roll.Substring(6);
+            else if (Roll.StartsWith("M_T627_")) Roll = Roll.Substring(7);
+            else if (Roll.StartsWith("M_T0627_")) Roll = Roll.Substring(8);
+        }
 
         static readonly Regex LCEDregex = new Regex(@"\d{1,3}[A-Z]?", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
@@ -1320,11 +1331,6 @@ namespace FTAnalyzer
             }
             else if (CensusYear.Overlaps(CensusDate.USCENSUS1940) && Country == Countries.UNITED_STATES)
             {
-                Roll = Roll.ToUpper().Replace('-','_');
-                if (Roll.StartsWith("T627_")) Roll = Roll.Substring(5);
-                else if (Roll.StartsWith("T0627_")) Roll = Roll.Substring(6);
-                else if (Roll.StartsWith("M_T627_")) Roll = Roll.Substring(7);
-                else if (Roll.StartsWith("M_T0627_")) Roll = Roll.Substring(8);
                 Roll = Roll.TrimStart('0');
                 Page = NumericToAlpha(Page.TrimStart('0'));
                 if (!Roll.IsNumeric()) return false;
