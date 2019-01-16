@@ -2,8 +2,8 @@
 <ScottishParish>
 	<ByID>
 		<Parish Region="Shetland" Name="Bressay" RD="1"/>
-		<Parish Region="Shetland" Name="Delting" RD="1"/>
-		<Parish Region="Shetland" Name="Dunrossness Fair Isle Sandwick and Cunningsburgh" RD="3"/>
+		<Parish Region="Shetland" Name="Delting" RD="2"/>
+		<Parish Region="Shetland" Name="Cunningsburgh" RD="3"/>
 		<Parish Region="Shetland" Name="Fetlar" RD="4-1"/>
 		<Parish Region="Shetland" Name="North Yell" RD="4-2"/>
 		<Parish Region="Shetland" Name="Lerwick" RD="5"/>
@@ -33,12 +33,15 @@
 		<Parish Region="Orkney" Name="South Ronaldsay and Burray" RD="29"/>
 		<Parish Region="Orkney" Name="Stromness" RD="30"/>
 		<Parish Region="Orkney" Name="Stronsay" RD="31"/>
-		<Parish Region="Orkney" Name="Flotta" RD="32"/>
-		<Parish Region="Orkney" Name="Westray" RD="33"/>
+		<Parish Region="Orkney" Name="Walls" RD="32-1"/>
+		<Parish Region="Orkney" Name="Flotta" RD="32-2"/>
+		<Parish Region="Orkney" Name="Westray" RD="33-1"/>
+		<Parish Region="Orkney" Name="Papa Westray" RD="33-2"/>
 		<Parish Region="Caithness" Name="Bower" RD="34"/>
 		<Parish Region="Caithness" Name="Canisbay" RD="35"/>
 		<Parish Region="Caithness" Name="Dunnet" RD="36"/>
-		<Parish Region="Caithness" Name="Halkirk" RD="37"/>
+		<Parish Region="Caithness" Name="Halkirk" RD="37a"/>
+		<Parish Region="Caithness" Name="Keiss" RD="37b"/>
 		<Parish Region="Caithness" Name="Latheron" RD="38"/>
 		<Parish Region="Caithness" Name="Olrig" RD="39"/>
 		<Parish Region="Caithness" Name="Reay" RD="40"/>
@@ -58,123 +61,280 @@
 		<Parish Region="Sutherland" Name="Loth" RD="54"/>
 		<Parish Region="Sutherland" Name="Rogart" RD="55"/>
 		<Parish Region="Sutherland" Name="Tongue" RD="56"/>
+		<Parish Region="Ross and Cromarty" Name="Alness" RD="57"/>
+		<Parish Region="Ross and Cromarty" Name="Applecross" RD="58-1"/>
+		<Parish Region="Ross and Cromarty" Name="Shieldaig" RD="58-2"/>
 		<Parish Region="Ross and Cromarty" Name="Avoch" RD="59"/>
-		<Parish Region="Ross and Cromarty" Name="Contin" RD="60"/>
-		<Parish Region="Ross and Cromarty" Name="Kinlochluichart" RD="61"/>
+		<Parish Region="Ross and Cromarty" Name="Contin" RD="60-1"/>
+		<Parish Region="Ross and Cromarty" Name="Kinlochluichart" RD="60-2"/>
+		<Parish Region="Ross and Cromarty" Name="Cromarty" RD="61"/>
+		<Parish Region="Ross and Cromarty" Name="Cromarty Burgh" RD="61-1"/>
+		<Parish Region="Ross and Cromarty" Name="Cromarty Landward" RD="61-2"/>
 		<Parish Region="Ross and Cromarty" Name="Dingwall" RD="62"/>
 		<Parish Region="Ross and Cromarty" Name="Edderton" RD="63"/>
 		<Parish Region="Ross and Cromarty" Name="Fearn" RD="64"/>
 		<Parish Region="Ross and Cromarty" Name="Fodderty" RD="65"/>
 		<Parish Region="Ross and Cromarty" Name="Gairloch" RD="66"/>
+		<Parish Region="Ross and Cromarty" Name="Gairloch Northern" RD="66-1"/>
+		<Parish Region="Ross and Cromarty" Name="Gairloch Southern" RD="66-2"/>
 		<Parish Region="Ross and Cromarty" Name="Glenshiel" RD="67"/>
 		<Parish Region="Ross and Cromarty" Name="Killearnan" RD="68"/>
 		<Parish Region="Ross and Cromarty" Name="Kilmuir Easter Ross" RD="69"/>
 		<Parish Region="Ross and Cromarty" Name="Kiltearn" RD="70"/>
-		<Parish Region="Ross and Cromarty" Name="Kincardine (Ross)" RD="71"/>
+		<Parish Region="Ross and Cromarty" Name="Kincardine (Ross)" RD="71-1"/>
+		<Parish Region="Ross and Cromarty" Name="Strathoykel" RD="71-2"/>
 		<Parish Region="Ross and Cromarty" Name="Kintail" RD="72"/>
 		<Parish Region="Ross and Cromarty" Name="Knockbain" RD="73"/>
 		<Parish Region="Ross and Cromarty" Name="Lochalsh" RD="74"/>
-		<Parish Region="Ross and Cromarty" Name="Lochbroom" RD="75"/>
+		<Parish Region="Ross and Cromarty" Name="Lochbroom" RD="75-1"/>
+		<Parish Region="Ross and Cromarty" Name="Coigach" RD="75-2"/>
 		<Parish Region="Ross and Cromarty" Name="Lochcarron" RD="76"/>
 		<Parish Region="Ross and Cromarty" Name="Logie Easter Ross" RD="77"/>
 		<Parish Region="Ross and Cromarty" Name="Nigg (Ross)" RD="78"/>
 		<Parish Region="Ross and Cromarty" Name="Resolis" RD="79"/>
 		<Parish Region="Ross and Cromarty" Name="Fortrose" RD="80"/>
+		<Parish Region="Ross and Cromarty" Name="Rosemarkie" RD="80-1"/>
+		<Parish Region="Ross and Cromarty" Name="Rosemarkie Landward" RD="80-2"/>
 		<Parish Region="Ross and Cromarty" Name="Rosskeen" RD="81"/>
 		<Parish Region="Ross and Cromarty" Name="Tain" RD="82"/>
+		<Parish Region="Ross and Cromarty" Name="Tain Burgh" RD="82-1"/>
+		<Parish Region="Ross and Cromarty" Name="Tain Landward" RD="82-2"/>
 		<Parish Region="Ross and Cromarty" Name="Tarbat" RD="83"/>
 		<Parish Region="Ross and Cromarty" Name="Urquhart and Logie-Wester" RD="84"/>
 		<Parish Region="Ross and Cromarty" Name="Urray" RD="85"/>
-		<Parish Region="Ross and Cromarty" Name="Bavas" RD="86"/>
+		<Parish Region="Ross and Cromarty" Name="Barvas" RD="86a"/>
+		<Parish Region="Ross and Cromarty" Name="Carloway" RD="86b"/>
 		<Parish Region="Ross and Cromarty" Name="Lochs" RD="87"/>
+		<Parish Region="Ross and Cromarty" Name="Lochs North" RD="87-1"/>
+		<Parish Region="Ross and Cromarty" Name="Lochs South" RD="87-2"/>
 		<Parish Region="Ross and Cromarty" Name="Stornoway" RD="88"/>
 		<Parish Region="Ross and Cromarty" Name="Uig" RD="89"/>
-		<Parish Region="Inverness-shire" Name="Alvie" RD="90"/>
-		<Parish Region="Inverness-shire" Name="Ardersier" RD="91"/>
+		<Parish Region="Inverness-shire" Name="Abernethy" RD="90a"/>
+		<Parish Region="Inverness-shire" Name="Alvie" RD="90b"/>
+		<Parish Region="Inverness-shire" Name="Ardersier" RD="91a"/>
+		<Parish Region="Inverness-shire" Name="Arisaig" RD="91b"/>
+		<Parish Region="Inverness-shire" Name="Ballachulish and Onich" RD="91c"/>
 		<Parish Region="Inverness-shire" Name="Boleskine and Abertarff" RD="92"/>
-		<Parish Region="Inverness-shire" Name="Inverallan" RD="93"/>
+		<Parish Region="Inverness-shire" Name="Boleskine" RD="92-1"/>
+		<Parish Region="Inverness-shire" Name="Abertarff" RD="92-2"/>
+		<Parish Region="Inverness-shire" Name="Fort Augustus" RD="92a"/>
+		<Parish Region="Inverness-shire" Name="Cannich" RD="92b"/>
+		<Parish Region="Inverness-shire" Name="Cromdale and Advie" RD="93-1"/>
 		<Parish Region="Inverness-shire" Name="Croy and Dalcross" RD="94"/>
 		<Parish Region="Inverness-shire" Name="Daviot and Dunlichity" RD="95"/>
-		<Parish Region="Inverness-shire" Name="Dores" RD="96"/>
-		<Parish Region="Inverness-shire" Name="Glenelg" RD="97"/>
+		<Parish Region="Inverness-shire" Name="Dores" RD="96a"/>
+		<Parish Region="Inverness-shire" Name="Duthil and Rothiemurchus" RD="96b"/>
+		<Parish Region="Inverness-shire" Name="Glenelg" RD="97-1"/>
+		<Parish Region="Inverness-shire" Name="Knoydart" RD="97-2"/>
+		<Parish Region="Inverness-shire" Name="North-Morar" RD="97-3"/>
 		<Parish Region="Inverness-shire" Name="Inverness" RD="98"/>
+		<Parish Region="Inverness-shire" Name="Inverness Burgh" RD="98-1"/>
+		<Parish Region="Inverness-shire" Name="Inverness Landward" RD="98-2"/>
 		<Parish Region="Inverness-shire" Name="Kilmonivaig" RD="99"/>
+		<Parish Region="Inverness-shire" Name="Glengarry" RD="99-1"/>
+		<Parish Region="Inverness-shire" Name="Lochaber" RD="99-2"/>
 		<Parish Region="Inverness-shire" Name="Kilmorack" RD="100"/>
 		<Parish Region="Inverness-shire" Name="Kiltarlity" RD="101"/>
 		<Parish Region="Inverness-shire" Name="Kingussie and Insh" RD="102"/>
 		<Parish Region="Inverness-shire" Name="Kirkhill" RD="103"/>
 		<Parish Region="Inverness-shire" Name="Laggan" RD="104"/>
-		<Parish Region="Inverness-shire" Name="" RD="105"/>
-		<Parish Region="Inverness-shire" Name="" RD="106"/>
-		<Parish Region="Inverness-shire" Name="" RD="107"/>
-		<Parish Region="Inverness-shire" Name="" RD="108"/>
-		<Parish Region="Inverness-shire" Name="Bracadale" RD="109"/>
-		<Parish Region="Inverness-shire" Name="" RD="110"/>
+		<Parish Region="Inverness-shire" Name="Dalrossie" RD="105"/>
+		<Parish Region="Inverness-shire" Name="Petty" RD="106"/>
+		<Parish Region="Inverness-shire" Name="Urquhart" RD="107-1"/>
+		<Parish Region="Inverness-shire" Name="Glenmoriston" RD="107-2"/>
+		<Parish Region="Inverness-shire" Name="Barra" RD="108"/>
+		<Parish Region="Inverness-shire" Name="Bracadale" RD="109-1"/>
+		<Parish Region="Inverness-shire" Name="Minginish" RD="109-2"/>
+		<Parish Region="Inverness-shire" Name="Duirnish" RD="110-1"/>
+		<Parish Region="Inverness-shire" Name="Waternish" RD="110-2"/>
 		<Parish Region="Inverness-shire" Name="Harris and St Kilda" RD="111"/>
-		<Parish Region="Inverness-shire" Name="Kilmuir" RD="112"/>
-		<Parish Region="Inverness-shire" Name="" RD="113"/>
-		<Parish Region="Inverness-shire" Name="" RD="114"/>
+		<Parish Region="Inverness-shire" Name="Harris North" RD="111-1"/>
+		<Parish Region="Inverness-shire" Name="Harris South" RD="111-2"/>
+		<Parish Region="Inverness-shire" Name="St.Kilda" RD="111-3"/>
+		<Parish Region="Inverness-shire" Name="St Kilda" RD="111-4"/>
+		<Parish Region="Inverness-shire" Name="Kilmuir" RD="112-1"/>
+		<Parish Region="Inverness-shire" Name="Stenscholl" RD="112-2"/>
+		<Parish Region="Inverness-shire" Name="North Uist" RD="113"/>
+		<Parish Region="Inverness-shire" Name="Portree" RD="114-1"/>
+		<Parish Region="Inverness-shire" Name="Raasay" RD="114-2"/>
 		<Parish Region="Inverness-shire" Name="Sleat" RD="115"/>
 		<Parish Region="Inverness-shire" Name="Small Isles" RD="116"/>
-		<Parish Region="Inverness-shire" Name="" RD="117"/>
-		<Parish Region="Inverness-shire" Name="" RD="118"/>
+		<Parish Region="Inverness-shire" Name="Snizort North" RD="117-1"/>
+		<Parish Region="Inverness-shire" Name="Snizort South" RD="117-2"/>
+		<Parish Region="Inverness-shire" Name="South Uist" RD="118"/>
+		<Parish Region="Inverness-shire" Name="Benbecula" RD="118-1"/>
+		<Parish Region="Inverness-shire" Name="Howmore" RD="118-2"/>
+		<Parish Region="Inverness-shire" Name="Boisdale" RD="118-3"/>
 		<Parish Region="Inverness-shire" Name="Strath" RD="119"/>
+		<Parish Region="Nairn" Name="Ardclach" RD="120"/>
+		<Parish Region="Nairn" Name="Auldearn" RD="121"/>
+		<Parish Region="Nairn" Name="Cawdor" RD="122"/>
 		<Parish Region="Nairn" Name="Nairn" RD="123"/>
+		<Parish Region="Nairn" Name="Nairn Burgh" RD="123-1"/>
+		<Parish Region="Nairn" Name="Nairn Landward" RD="123-2"/>
+		<Parish Region="Moray" Name="Abernethy and Kincardine" RD="124"/>
 		<Parish Region="Moray" Name="Alves" RD="125"/>
 		<Parish Region="Moray" Name="Bellie" RD="126"/>
-		<Parish Region="Moray" Name="Duffus" RD="131"/>
+		<Parish Region="Moray" Name="Birnie" RD="127"/>
+		<Parish Region="Moray" Name="Boharm" RD="128"/>
+		<Parish Region="Moray" Name="Cromdale" RD="128a"/>
+		<Parish Region="Moray" Name="Inverallan" RD="128b"/>
+		<Parish Region="Moray" Name="Dallas" RD="129"/>
+		<Parish Region="Moray" Name="Drainie" RD="130"/>
+		<Parish Region="Moray" Name="Burghead" RD="131-1"/>
+		<Parish Region="Moray" Name="Duffus" RD="131-2"/>
+		<Parish Region="Moray" Name="Duthil" RD="132-1"/>
+		<Parish Region="Moray" Name="Rothiemurchus" RD="132-2"/>
 		<Parish Region="Moray" Name="Dyke" RD="133"/>
+		<Parish Region="Moray" Name="Edinkillie" RD="134"/>
+		<Parish Region="Moray" Name="Elgin" RD="135"/>
+		<Parish Region="Moray" Name="Elgin Burgh" RD="135-1"/>
+		<Parish Region="Moray" Name="Elgin Landward" RD="135-2"/>
+		<Parish Region="Moray" Name="New Spynie" RD="136"/>
 		<Parish Region="Moray" Name="Forres" RD="137"/>
+		<Parish Region="Moray" Name="Forres Burgh" RD="137-1"/>
+		<Parish Region="Moray" Name="Forres Landward" RD="137-2"/>
 		<Parish Region="Moray" Name="Kinloss" RD="138"/>
+		<Parish Region="Moray" Name="Knockando" RD="139"/>
 		<Parish Region="Moray" Name="Rafford" RD="140"/>
 		<Parish Region="Moray" Name="Rothes" RD="141"/>
+		<Parish Region="Moray" Name="St Andrews Lhanbryd" RD="142"/>
 		<Parish Region="Moray" Name="Speymouth" RD="143"/>
-		<Parish Region="Moray" Name="Urquhart" RD="144"/>
+		<Parish Region="Moray" Name="Urquhart (Elgin)" RD="144-1"/>
+		<Parish Region="Moray" Name="Garmouth" RD="144-2"/>
+		<Parish Region="Banffshire" Name="Aberlour" RD="145"/>
+		<Parish Region="Banffshire" Name="Alvah" RD="146"/>
+		<Parish Region="Banffshire" Name="Banff" RD="147"/>
+		<Parish Region="Banffshire" Name="Banff Burgh" RD="147-1"/>
+		<Parish Region="Banffshire" Name="Banff Landward" RD="147-2"/>
 		<Parish Region="Banffshire" Name="Botriphnie" RD="148"/>
+		<Parish Region="Banffshire" Name="Boyndie" RD="149"/>
 		<Parish Region="Banffshire" Name="Cullen" RD="150"/>
+		<Parish Region="Banffshire" Name="Cullen Burgh" RD="150-1"/>
+		<Parish Region="Banffshire" Name="Cullen Landward" RD="150-2"/>
+		<Parish Region="Banffshire" Name="Deskford" RD="151"/>
 		<Parish Region="Banffshire" Name="Enzie" RD="152"/>
-		<Parish Region="Banffshire" Name="Fordyce" RD="153"/>
+		<Parish Region="Banffshire" Name="Fordyce" RD="153-1"/>
+		<Parish Region="Banffshire" Name="Portsoy" RD="153-2"/>
 		<Parish Region="Banffshire" Name="Forglen" RD="154"/>
+		<Parish Region="Banffshire" Name="Gamrie" RD="155a"/>
+		<Parish Region="Banffshire" Name="Glenrinnes" RD="155b"/>
+		<Parish Region="Banffshire" Name="Grange" RD="156"/>
+		<Parish Region="Banffshire" Name="Inveravon" RD="157-1"/>
+		<Parish Region="Banffshire" Name="Auchbreck" RD="157-2"/>
+		<Parish Region="Banffshire" Name="Glenlivet" RD="157-3"/>
 		<Parish Region="Banffshire" Name="Inverkeithny" RD="158"/>
+		<Parish Region="Banffshire" Name="Keith" RD="159"/>
+		<Parish Region="Banffshire" Name="Kirkmichael" RD="160-1"/>
+		<Parish Region="Banffshire" Name="Tomintoul" RD="160-2"/>
 		<Parish Region="Banffshire" Name="Mortlach" RD="162"/>
 		<Parish Region="Banffshire" Name="Ordiquhill" RD="163"/>
+		<Parish Region="Banffshire" Name="Rathven" RD="164"/>
 		<Parish Region="Banffshire" Name="Rothiemay" RD="165"/>
+		<Parish Region="Banffshire" Name="St.Fergus" RD="166"/>
+		<Parish Region="Banffshire" Name="Seafield" RD="167"/>
+		<Parish Region="Aberdeenshire" Name="Aberdeen" RD="168a"/>
+		<Parish Region="Aberdeenshire" Name="Old Machar" RD="168b"/>
+		<Parish Region="Aberdeenshire" Name="St.Nicholas" RD="168-1"/>
+		<Parish Region="Aberdeenshire" Name="St.Machar" RD="168-2"/>
+		<Parish Region="Aberdeenshire" Name="Rubislaw" RD="168-3"/>
+		<Parish Region="Aberdeenshire" Name="Woodside" RD="168-4"/>
+		<Parish Region="Aberdeenshire" Name="Aberdour" RD="169"/>
+		<Parish Region="Aberdeenshire" Name="Aboyne" RD="170"/>
+		<Parish Region="Aberdeenshire" Name="Alford" RD="171a"/>
+		<Parish Region="Aberdeenshire" Name="Ardallie" RD="171b"/>
 		<Parish Region="Aberdeenshire" Name="Auchindoir and Kearn" RD="172"/>
 		<Parish Region="Aberdeenshire" Name="Auchterless" RD="173"/>
+		<Parish Region="Aberdeenshire" Name="Belhelvie" RD="174"/>
+		<Parish Region="Aberdeenshire" Name="Birse" RD="175"/>
+		<Parish Region="Aberdeenshire" Name="Bourtie" RD="176"/>
 		<Parish Region="Aberdeenshire" Name="Cabrach" RD="177"/>
-		<Parish Region="Aberdeenshire" Name="Cairney" RD="178"/>
+		<Parish Region="Aberdeenshire" Name="Cairnie" RD="178"/>
 		<Parish Region="Aberdeenshire" Name="Chapel of Garioch" RD="179"/>
+		<Parish Region="Aberdeenshire" Name="Clatt" RD="180"/>
+		<Parish Region="Aberdeenshire" Name="Cluny" RD="181"/>
+		<Parish Region="Aberdeenshire" Name="Coull" RD="182"/>
+		<Parish Region="Aberdeenshire" Name="Braemar" RD="183-1"/>
+		<Parish Region="Aberdeenshire" Name="Crathie" RD="183-2"/>
+		<Parish Region="Aberdeenshire" Name="Crimmond" RD="184"/>
+		<Parish Region="Aberdeenshire" Name="Cruden" RD="185"/>
 		<Parish Region="Aberdeenshire" Name="Culsamond" RD="186"/>
 		<Parish Region="Aberdeenshire" Name="Daviot" RD="187"/>
 		<Parish Region="Aberdeenshire" Name="Drumblade" RD="188"/>
 		<Parish Region="Aberdeenshire" Name="Drumoak" RD="189"/>
+		<Parish Region="Aberdeenshire" Name="Dyce" RD="190"/>
+		<Parish Region="Aberdeenshire" Name="Echt" RD="191"/>
+		<Parish Region="Aberdeenshire" Name="Ellon" RD="192"/>
 		<Parish Region="Aberdeenshire" Name="Fintray" RD="193"/>
+		<Parish Region="Aberdeenshire" Name="Forgue" RD="194"/>
 		<Parish Region="Aberdeenshire" Name="Foveran" RD="195"/>
+		<Parish Region="Aberdeenshire" Name="Fraserburgh" RD="196"/>
 		<Parish Region="Aberdeenshire" Name="Fyvie" RD="197"/>
 		<Parish Region="Aberdeenshire" Name="Gartly" RD="198"/>
+		<Parish Region="Aberdeenshire" Name="Glass" RD="199"/>
 		<Parish Region="Aberdeenshire" Name="Glenbucket" RD="200"/>
 		<Parish Region="Aberdeenshire" Name="Glenmuick and Tullich" RD="201"/>
 		<Parish Region="Aberdeenshire" Name="Huntly" RD="202"/>
+		<Parish Region="Aberdeenshire" Name="Insch" RD="203"/>
 		<Parish Region="Aberdeenshire" Name="Inverurie" RD="204"/>
 		<Parish Region="Aberdeenshire" Name="Keith-hall and Kinkell" RD="206"/>
-		<Parish Region="Aberdeenshire" Name="King-Edward" RD="210"/>
+		<Parish Region="Aberdeenshire" Name="Kemnay" RD="207"/>
+		<Parish Region="Aberdeenshire" Name="Kildrummy" RD="208"/>
+		<Parish Region="Aberdeenshire" Name="Kincardine O'Neill" RD="209"/>
+		<Parish Region="Aberdeenshire" Name="King-Edward" RD="210-1"/>
+		<Parish Region="Aberdeenshire" Name="New Byth" RD="210-2"/>
 		<Parish Region="Aberdeenshire" Name="Kinnellar" RD="211"/>
+		<Parish Region="Aberdeenshire" Name="Kinnethmont" RD="212"/>
 		<Parish Region="Aberdeenshire" Name="Kintore" RD="213"/>
+		<Parish Region="Aberdeenshire" Name="Kintore Burgh" RD="213-1"/>
+		<Parish Region="Aberdeenshire" Name="Kintore Landward" RD="213-2"/>
+		<Parish Region="Aberdeenshire" Name="Leochel Cushnie" RD="214"/>
+		<Parish Region="Aberdeenshire" Name="Leslie" RD="215"/>
+		<Parish Region="Aberdeenshire" Name="Logie Buchan" RD="216"/>
 		<Parish Region="Aberdeenshire" Name="Logie-Coldstone" RD="217"/>
+		<Parish Region="Aberdeenshire" Name="Longside" RD="218"/>
 		<Parish Region="Aberdeenshire" Name="Lonmay" RD="219"/>
+		<Parish Region="Aberdeenshire" Name="Lumphanan" RD="220"/>
 		<Parish Region="Aberdeenshire" Name="Methlick" RD="221"/>
+		<Parish Region="Aberdeenshire" Name="Midmar" RD="222a"/>
+		<Parish Region="Aberdeenshire" Name="Millbrex" RD="222b"/>
+		<Parish Region="Aberdeenshire" Name="Monquhitter" RD="223"/>
+		<Parish Region="Aberdeenshire" Name="Monymusk" RD="224"/>
 		<Parish Region="Aberdeenshire" Name="New Deer" RD="225"/>
+		<Parish Region="Aberdeenshire" Name="Newhills" RD="226"/>
+		<Parish Region="Aberdeenshire" Name="Newmachar" RD="227"/>
 		<Parish Region="Aberdeenshire" Name="Old Deer" RD="228"/>
+		<Parish Region="Aberdeenshire" Name="Old Meldrum" RD="229"/>
+		<Parish Region="Aberdeenshire" Name="Oyne" RD="230"/>
 		<Parish Region="Aberdeenshire" Name="Peterculter" RD="231"/>
+		<Parish Region="Aberdeenshire" Name="Peterculter East" RD="231-1"/>
+		<Parish Region="Aberdeenshire" Name="Peterculter West" RD="231-2"/>
+		<Parish Region="Aberdeenshire" Name="Peterhead" RD="232"/>
+		<Parish Region="Aberdeenshire" Name="Peterhead Burgh" RD="232-1"/>
+		<Parish Region="Aberdeenshire" Name="Peterhead Landward" RD="232-2"/>
 		<Parish Region="Aberdeenshire" Name="Pitsligo" RD="233"/>
 		<Parish Region="Aberdeenshire" Name="Premnay" RD="234"/>
+		<Parish Region="Aberdeenshire" Name="Rathen" RD="235-1"/>
+		<Parish Region="Aberdeenshire" Name="Inverallochy" RD="235-2"/>
+		<Parish Region="Aberdeenshire" Name="Rayne" RD="236"/>
+		<Parish Region="Aberdeenshire" Name="Rhynie" RD="237"/>
+		<Parish Region="Aberdeenshire" Name="Essie" RD="237a"/>
+		<Parish Region="Aberdeenshire" Name="Savoch" RD="237b"/>
+		<Parish Region="Aberdeenshire" Name="Skene" RD="238"/>
 		<Parish Region="Aberdeenshire" Name="Slains" RD="239"/>
 		<Parish Region="Aberdeenshire" Name="Strathdon" RD="240"/>
+		<Parish Region="Aberdeenshire" Name="Strichen" RD="241"/>
+		<Parish Region="Aberdeenshire" Name="Tarland" RD="242"/>
 		<Parish Region="Aberdeenshire" Name="Tarves" RD="243"/>
+		<Parish Region="Aberdeenshire" Name="Tough" RD="244"/>
 		<Parish Region="Aberdeenshire" Name="Towie" RD="245"/>
 		<Parish Region="Aberdeenshire" Name="Tullynessle Forbes and Kearn" RD="246"/>
 		<Parish Region="Aberdeenshire" Name="Turriff" RD="247"/>
-		<Parish Region="Aberdeenshire" Name="Udny" RD="249"/>
+		<Parish Region="Aberdeenshire" Name="Tyrie" RD="248"/>
+		<Parish Region="Aberdeenshire" Name="Udny" RD="249a"/>
+		<Parish Region="Aberdeenshire" Name="Ythanwells" RD="249b"/>
+		<Parish Region="Kincardineshire" Name="Banchory-Ternan" RD="250"/>
+		<Parish Region="Kincardineshire" Name="Banchory-Ternan" RD="251"/>
 		<Parish Region="Kincardineshire" Name="Banchory-Ternan" RD="252"/>
 		<Parish Region="Kincardineshire" Name="Benholm" RD="253"/>
 		<Parish Region="Kincardineshire" Name="Dunnottar" RD="255"/>
@@ -235,6 +395,7 @@
 		<Parish Region="Perthshire" Name="Dull" RD="346"/>
 		<Parish Region="Perthshire" Name="Dunblane" RD="348"/>
 		<Parish Region="Perthshire" Name="Forteviot" RD="354"/>
+		<Parish Region="Perthshire" Name="Foss" RD="355b"/>
 		<Parish Region="Perthshire" Name="Fowlis-Wester" RD="357"/>
 		<Parish Region="Perthshire" Name="Glendevon" RD="358"/>
 		<Parish Region="Perthshire" Name="Kenmore" RD="360"/>
@@ -249,6 +410,7 @@
 		<Parish Region="Perthshire" Name="Meigle" RD="379"/>
 		<Parish Region="Perthshire" Name="Moneydie" RD="381"/>
 		<Parish Region="Perthshire" Name="Monzie" RD="382"/>
+		<Parish Region="Perthshire" Name="Persie" RD="386b"/>
 		<Parish Region="Perthshire" Name="Port of Monteith" RD="388"/>
 		<Parish Region="Perthshire" Name="Rattray" RD="389"/>
 		<Parish Region="Perthshire" Name="Rhynd" RD="391"/>
@@ -421,10 +583,14 @@
 		<Parish Region="Midlothian" Name="Cranston" RD="680"/>
 		<Parish Region="Midlothian" Name="Currie" RD="682"/>
 		<Parish Region="Midlothian" Name="Dalkeith" RD="683"/>
+		<Parish Region="MidLothian" Name="Edinburgh Tolbooth" RD="685/T"/>
+		<Parish Region="MidLothian" Name="Edinburgh" RD="685-1"/>
 		<Parish Region="Midlothian" Name="Heriot" RD="688"/>
 		<Parish Region="Midlothian" Name="Kirknewton and East Calder" RD="690"/>
+		<Parish Region="MidLothian" Name="Leith South" RD="692-2"/>
 		<Parish Region="Midlothian" Name="Newbattle" RD="695"/>
 		<Parish Region="Midlothian" Name="Ratho" RD="698"/>
+		<Parish Region="Midlothian" Name="Stobhill" RD="698b"/>
 		<Parish Region="Midlothian" Name="Temple" RD="700"/>
 		<Parish Region="Midlothian" Name="West Calder" RD="701"/>
 		<Parish Region="East Lothian" Name="Bolton" RD="704"/>
@@ -453,11 +619,14 @@
 		<Parish Region="Peebles" Name="Newlands" RD="767"/>
 		<Parish Region="Peebles" Name="Traquair" RD="771"/>
 		<Parish Region="Peebles" Name="West Linton" RD="773"/>
+		<Parish Region="Selkirk" Name="Caddonfoot" RD="774a"/>
+		<Parish Region="Selkirk" Name="Ettrick" RD="774b"/>
 		<Parish Region="Selkirk" Name="Galashiels" RD="775"/>
 		<Parish Region="Selkirk" Name="Selkirk" RD="778"/>
 		<Parish Region="Roxburgh" Name="Bowden" RD="783"/>
 		<Parish Region="Roxburgh" Name="Castleton" RD="784"/>
 		<Parish Region="Roxburgh" Name="Cavers" RD="785"/>
+		<Parish Region="Roxburgh" Name="Eckford" RD="787a"/>
 		<Parish Region="Roxburgh" Name="Ednam" RD="788"/>
 		<Parish Region="Roxburgh" Name="Hownam" RD="791"/>
 		<Parish Region="Roxburgh" Name="Jedburgh" RD="792"/>
@@ -471,6 +640,8 @@
 		<Parish Region="Roxburgh" Name="Southdean and Abbotrule" RD="806"/>
 		<Parish Region="Roxburgh" Name="Sprouston" RD="807"/>
 		<Parish Region="Dumfries-shire" Name="Annan" RD="812"/>
+		<Parish Region="Dumfries-shire" Name="Applegarth and Sibbaldbie" RD="813a"/>
+		<Parish Region="Dumfries-shire" Name="Brydekirk" RD="813b"/>
 		<Parish Region="Dumfries-shire" Name="Canonbie" RD="814"/>
 		<Parish Region="Dumfries-shire" Name="Cummertrees" RD="817"/>
 		<Parish Region="Dumfries-shire" Name="Dalton" RD="818"/>
@@ -494,6 +665,10 @@
 		<Parish Region="Dumfries-shire" Name="St Mungo" RD="847"/>
 		<Parish Region="Dumfries-shire" Name="Tinwald" RD="849"/>
 		<Parish Region="Dumfries-shire" Name="Torthorwald" RD="850"/>
+		<Parish Region="Dumfries-shire" Name="Wamphray" RD="853a"/>
+		<Parish Region="Dumfries-shire" Name="Wanlockhead" RD="853b"/>
+		<Parish Region="Kirkcudbrightshire" Name="Balmaghie" RD="857a"/>
+		<Parish Region="Kirkcudbrightshire" Name="Bargrennan" RD="857b"/>
 		<Parish Region="Kirkcudbrightshire" Name="Borgue" RD="858"/>
 		<Parish Region="Kirkcudbrightshire" Name="Buittle" RD="859"/>
 		<Parish Region="Kirkcudbrightshire" Name="Carsphairn" RD="860"/>
@@ -521,31 +696,5 @@
 		<Parish Region="Wigtownshire" Name="Sorbie" RD="897"/>
 		<Parish Region="Wigtownshire" Name="Whithorn" RD="900"/>
 		<Parish Region="Wigtownshire" Name="Wigtown" RD="901"/>
-		<Parish Region="Moray" Name="Boharm" RD="128a"/>
-		<Parish Region="Moray" Name="Cromdale Inverallan and Advie" RD="128b"/>
-		<Parish Region="Banffshire" Name="Gamrie" RD="155a"/>
-		<Parish Region="Banffshire" Name="Glenrinnes" RD="155b"/>
-		<Parish Region="Aberdeenshire" Name="Aberdeen" RD="168a"/>
-		<Parish Region="Aberdeenshire" Name="Old Machar" RD="168b"/>
-		<Parish Region="Aberdeenshire" Name="Savoch" RD="237b"/>
-		<Parish Region="Perthshire" Name="Foss" RD="355b"/>
-		<Parish Region="Perthshire" Name="Persie" RD="386b"/>
-		<Parish Region="MidLothian" Name="Edinburgh Tolbooth" RD="685/T"/>
-		<Parish Region="MidLothian" Name="Edinburgh" RD="685-1"/>
-		<Parish Region="MidLothian" Name="Leith South" RD="692-2"/>
-		<Parish Region="Midlothian" Name="Stobhill" RD="698b"/>
-		<Parish Region="Selkirk" Name="Caddonfoot" RD="774a"/>
-		<Parish Region="Selkirk" Name="Ettrick" RD="774b"/>
-		<Parish Region="Roxburgh" Name="Eckford" RD="787a"/>
-		<Parish Region="Dumfries-shire" Name="Applegarth and Sibbaldbie" RD="813a"/>
-		<Parish Region="Dumfries-shire" Name="Brydekirk" RD="813b"/>
-		<Parish Region="Dumfries-shire" Name="Wamphray" RD="853a"/>
-		<Parish Region="Dumfries-shire" Name="Wanlockhead" RD="853b"/>
-		<Parish Region="Kirkcudbrightshire" Name="Balmaghie" RD="857a"/>
-		<Parish Region="Kirkcudbrightshire" Name="Bargrennan" RD="857b"/>
-		<Parish Region="Ross and Cromarty" Name="Barvas" RD="86a"/>
-		<Parish Region="Ross and Cromarty" Name="Carloway" RD="86b"/>
-		<Parish Region="Inverness-shire" Name="Dores" RD="96a"/>
-		<Parish Region="Inverness-shire" Name="Duthil and Rothiemurchus" RD="96b"/>
 	</ByID>
 </ScottishParish>

@@ -380,7 +380,9 @@ namespace FTAnalyzer
             return null;
         }
 
-        public bool ContainsSurname(string surname) => Members.Any(x => x.Surname.Equals(surname, StringComparison.OrdinalIgnoreCase));
+        public bool ContainsSurname(string surname, bool ignoreCase) =>
+                ignoreCase ? Members.Any(x => x.Surname.Equals(surname, StringComparison.OrdinalIgnoreCase)) :
+                             Members.Any(x => x.Surname.Equals(surname));
 
         public bool On1911Census
         {
