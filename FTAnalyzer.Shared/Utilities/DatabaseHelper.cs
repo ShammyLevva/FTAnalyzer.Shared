@@ -151,7 +151,7 @@ namespace FTAnalyzer.Utilities
                 zip.Save();
                 //EndBackupDatabase();
                 Application.UserAppDataRegistry.SetValue("Geocode Backup Directory", Path.GetDirectoryName(saveDatabase.FileName));
-                MessageBox.Show("Database exported to " + saveDatabase.FileName, "FTAnalyzer Database Export Complete");
+                UIHelpers.ShowMessage($"Database exported to {saveDatabase.FileName}", "FTAnalyzer Database Export Complete");
                 return true;
             }
             return false;
