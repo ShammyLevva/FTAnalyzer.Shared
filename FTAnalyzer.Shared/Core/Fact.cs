@@ -28,7 +28,7 @@ namespace FTAnalyzer
                 PHONE = "PHON", PHYSICAL_DESC = "DSCR", PROBATE = "PROB", PROPERTY = "PROP", REFERENCE = "REFN",
                 RELIGION = "RELI", RESIDENCE = "RESI", RETIREMENT = "RETI", SEALED_TO_PARENTS = "SLGC",
                 SEALED_TO_SPOUSE = "SLGS", SEPARATION = "_SEPR", SERVICE_NUMBER = "_MILTID", SOCIAL_SECURITY = "SSN", TITLE = "TITL",
-                UNKNOWN = "UNKN", WEIGHT = "_WEIG", WILL = "WILL", HASHTAG = "_HASHTAG", OBITUARY = "OBIT";
+                UNKNOWN = "UNKN", WEIGHT = "_WEIG", WILL = "WILL", HASHTAG = "_HASHTAG", OBITUARY = "OBIT", CENSUS_SUMMARY = "CEN_SUMM";
 
         public const string ARRIVAL = "*ARRI", CHANGE = "*CHNG", CHILDLESS = "*CHILD", CHILDREN = "*CHILDREN", CONTACT = "*CONT", 
                 DEPARTURE = "*DEPT", FAMILYSEARCH = "*IGI", LC_FTA = "*LOST_FTA", LOOSEBIRTH = "*LOOSEB",
@@ -40,13 +40,13 @@ namespace FTAnalyzer
             EDUCATION, DEGREE, ADOPTION, BAR_MITZVAH, BAS_MITZVAH, ADULT_CHRISTENING, CONFIRMATION, 
             FIRST_COMMUNION, ORDINATION, NATURALIZATION, GRADUATION, RETIREMENT, LOSTCOUSINS, 
             LC_FTA, MARR_CONTRACT, MARR_LICENSE, MARR_SETTLEMENT, MARRIAGE, MARRIAGE_BANN, DEATH, 
-            CREMATION, BURIAL, CENSUS, BIRTH_CALC
+            CREMATION, BURIAL, CENSUS, BIRTH_CALC, CENSUS_SUMMARY
                     });
 
         public static ISet<string> LOOSE_DEATH_FACTS = new HashSet<string>(new string[] {
             CENSUS, RESIDENCE, WITNESS, EMIGRATION, IMMIGRATION, ARRIVAL, DEPARTURE, EDUCATION,
             DEGREE, ADOPTION, BAR_MITZVAH, BAS_MITZVAH, ADULT_CHRISTENING, CONFIRMATION, FIRST_COMMUNION,
-            ORDINATION, NATURALIZATION, GRADUATION, RETIREMENT, LOSTCOUSINS, LC_FTA
+            ORDINATION, NATURALIZATION, GRADUATION, RETIREMENT, LOSTCOUSINS, LC_FTA, CENSUS_SUMMARY
                     });
 
         public static ISet<string> RANGED_DATE_FACTS = new HashSet<string>(new string[] {
@@ -213,6 +213,7 @@ namespace FTAnalyzer
             CUSTOM_TAGS.Add("CAUSE OF DEATH (FACTS PAGE)", CAUSE_OF_DEATH);
             CUSTOM_TAGS.Add("LTOG: LIVED TOGETHER (UNMARRIED)", UNMARRIED);
             CUSTOM_TAGS.Add("ILLNESS", MEDICAL_CONDITION);
+            CUSTOM_TAGS.Add("CENSUS SUMMARY", CENSUS_SUMMARY);
             
             // Legacy 8 default fact types
             CUSTOM_TAGS.Add("ALT. BIRTH", BIRTH);
@@ -285,6 +286,7 @@ namespace FTAnalyzer
                 case CAUSE_OF_DEATH: return "Cause of Death";
                 case CENSUS: return "Census";
                 case CENSUS_FTA: return "Census (FTAnalyzer)";
+                case CENSUS_SUMMARY: return "Census Summary";
                 case CHANGE: return "Record change";
                 case CHILDLESS: return "Childless";
                 case CHILDREN1911: return "Children Status";
@@ -776,6 +778,8 @@ namespace FTAnalyzer
                     FactLocation.GetLocation(cl.Location, GeneralSettings.Default.AddCreatedLocations);
             if (Comment.Length == 0 && comment.Length > 0)
                 Comment = comment;
+            if (cr.Class == "RG78")
+                FactType = CENSUS_SUMMARY;
         }
 
         void CheckResidenceCensusDate()

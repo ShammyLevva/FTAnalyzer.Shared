@@ -566,16 +566,16 @@ namespace FTAnalyzer
             matcher = censusRegexs["EW_CENSUS_1911_PATTERN78"].Match(text);
             if (matcher.Success)
             {
-                Class = "RG14";
+                Class = "RG78";
                 Piece = matcher.Groups[1].ToString();
                 Schedule = matcher.Groups[2].ToString();
-                SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
+                SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.INCOMPLETE, matcher.Value);
                 return true;
             }
             matcher = censusRegexs["EW_CENSUS_1911_PATTERN78b"].Match(text);
             if (matcher.Success)
             {
-                Class = "RG14";
+                Class = "RG78";
                 Piece = matcher.Groups[1].ToString();
                 Schedule = "Missing";
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.INCOMPLETE, matcher.Value);
