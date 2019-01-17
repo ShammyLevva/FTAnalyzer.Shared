@@ -111,7 +111,7 @@ namespace FTAnalyzer
                 if (value % 25 == 0)
                     progress.Report((100 * value) / maximum);
             }
-            return surnames;
+            return surnames.Distinct(new SurnameStatsComparer()).ToList();
         }
 
         public static void DisplayGOONSpage(string surname)
