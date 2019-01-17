@@ -18,7 +18,7 @@ namespace FTAnalyzer
         static readonly string EW_CENSUS_PATTERN6 = @"Census *(\d{4}).*? *Piece *(\d{1,5}) *Book *(\d{1,3}).*?Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3})";
         static readonly string EW_CENSUS_PATTERN7 = @"Census *(\d{4}).*? *Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3})";
         static readonly string EW_CENSUS_PATTERN8 = @"Census *(\d{4}).*? *Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?)";
-
+ 
         static readonly string EW_CENSUS_PATTERN_FH = @"RG *(\d{1,2})\/(\d{1,5}) F(olio)? ?(\d{1,4}[a-z]?) p(age)? ?(\d{1,3})";
         static readonly string EW_CENSUS_PATTERN_FH2 = @"RG *(\d{1,2})\/(\d{1,5}) ED *(\d{1,4}[a-z]?) F(olio)? ?(\d{1,4}[a-z]?) p(age)? ?(\d{1,3})";
 
@@ -36,12 +36,13 @@ namespace FTAnalyzer
         static readonly string EW_CENSUS_1841_51_PATTERN_FH4 = @"HO *107\/(\d{1,5}) .*?F(olio)? *(\d{1,4}[a-z]?) p(age)? *(\d{1,3})";
 
         static readonly string EW_CENSUS_1911_PATTERN = @"RG *14\/? *Piece *(\d{1,6}) .*?SN *(\d{1,4})";
-        static readonly string EW_CENSUS_1911_PATTERN78 = @"RG *78\/? *Piece *(\d{1,6}) .*?SN *(\d{1,4})";
         static readonly string EW_CENSUS_1911_PATTERN2 = @"1911 Census.*? *Piece *(\d{1,6}) *SN *(\d{1,4})";
         static readonly string EW_CENSUS_1911_PATTERN3 = @"Census *1911.*? *Piece *(\d{1,6}) *SN *(\d{1,4})";
         static readonly string EW_CENSUS_1911_PATTERN4 = @"RG *14\/? *Piece *(\d{1,6})$";
         static readonly string EW_CENSUS_1911_PATTERN5 = @"RG *14\/? *Piece *(\d{1,6}) *Page *(\d{1,3})";
         static readonly string EW_CENSUS_1911_PATTERN6 = @"RG *14\/? *RD *(\d{1,4}) *ED *(\d{1,3}) (\d{1,5})";
+        static readonly string EW_CENSUS_1911_PATTERN78 = @"RG *78\/? *Piece *(\d{1,6}) .*?SN *(\d{1,4})";
+        static readonly string EW_CENSUS_1911_PATTERN78b = @"RG *78\/? *Piece *(\d{1,5})";
 
         static readonly string EW_1939_REGISTER_PATTERN1 = @"RG *101\/?\\? *(\d{1,6}[A-Z]?) *.\/?\\? *(\d{1,3}) *.\/?\\? *(\d{1,3}).+([A-Z]{4})$";
         
@@ -105,12 +106,13 @@ namespace FTAnalyzer
                 ["EW_CENSUS_1841_51_PATTERN_FH4"] = new Regex(EW_CENSUS_1841_51_PATTERN_FH4, RegexOptions.Compiled | RegexOptions.IgnoreCase),
 
                 ["EW_CENSUS_1911_PATTERN"] = new Regex(EW_CENSUS_1911_PATTERN, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_1911_PATTERN78"] = new Regex(EW_CENSUS_1911_PATTERN78, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["EW_CENSUS_1911_PATTERN2"] = new Regex(EW_CENSUS_1911_PATTERN2, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["EW_CENSUS_1911_PATTERN3"] = new Regex(EW_CENSUS_1911_PATTERN3, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["EW_CENSUS_1911_PATTERN4"] = new Regex(EW_CENSUS_1911_PATTERN4, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["EW_CENSUS_1911_PATTERN5"] = new Regex(EW_CENSUS_1911_PATTERN5, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["EW_CENSUS_1911_PATTERN6"] = new Regex(EW_CENSUS_1911_PATTERN6, RegexOptions.Compiled | RegexOptions.IgnoreCase),
+                ["EW_CENSUS_1911_PATTERN78"] = new Regex(EW_CENSUS_1911_PATTERN78, RegexOptions.Compiled | RegexOptions.IgnoreCase),
+                ["EW_CENSUS_1911_PATTERN78b"] = new Regex(EW_CENSUS_1911_PATTERN78b, RegexOptions.Compiled | RegexOptions.IgnoreCase),
 
                 ["EW_1939_REGISTER_PATTERN1"] = new Regex(EW_1939_REGISTER_PATTERN1, RegexOptions.Compiled | RegexOptions.IgnoreCase),
 
@@ -149,7 +151,7 @@ namespace FTAnalyzer
 
         string unknownCensusRef;
         string Place { get; set; }
-        string Class { get; set; }
+        public string Class { get; internal set; }
         public string Roll { get; internal set; }
         public string Piece { get; internal set; }
         public string Folio { get; internal set; }
@@ -515,15 +517,6 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_1911_PATTERN78"].Match(text);
-            if (matcher.Success)
-            {
-                Class = "RG14";
-                Piece = matcher.Groups[1].ToString();
-                Schedule = matcher.Groups[2].ToString();
-                SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
-                return true;
-            }
             matcher = censusRegexs["EW_CENSUS_1911_PATTERN2"].Match(text);
             if (matcher.Success)
             {
@@ -568,6 +561,24 @@ namespace FTAnalyzer
                 ED = matcher.Groups[2].ToString();
                 Schedule = matcher.Groups[3].ToString();
                 SetFlagsandCountry(true, false, Countries.ENG_WALES, ReferenceStatus.GOOD, matcher.Value);
+                return true;
+            }
+            matcher = censusRegexs["EW_CENSUS_1911_PATTERN78"].Match(text);
+            if (matcher.Success)
+            {
+                Class = "RG14";
+                Piece = matcher.Groups[1].ToString();
+                Schedule = matcher.Groups[2].ToString();
+                SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
+                return true;
+            }
+            matcher = censusRegexs["EW_CENSUS_1911_PATTERN78b"].Match(text);
+            if (matcher.Success)
+            {
+                Class = "RG14";
+                Piece = matcher.Groups[1].ToString();
+                Schedule = "Missing";
+                SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.INCOMPLETE, matcher.Value);
                 return true;
             }
             matcher = censusRegexs["EW_CENSUS_PATTERN3"].Match(text);
@@ -826,7 +837,7 @@ namespace FTAnalyzer
                 Roll = matcher.Groups[3].ToString();
                 Page = matcher.Groups[5].ToString();
                 Family = matcher.Groups[6].ToString();
-                SetFlagsandCountry(false, false, Countries.CANADA, ReferenceStatus.GOOD, matcher.Value);
+                SetFlagsandCountry(false, false, Countries.CANADA, ReferenceStatus.INCOMPLETE, matcher.Value);
                 return true;
             }
             matcher = censusRegexs["CANADA_CENSUS_PATTERN2"].Match(text);
