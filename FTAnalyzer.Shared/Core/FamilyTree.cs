@@ -697,7 +697,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
                 output.Append($"Lost Cousins facts with bad/missing census fact: {LCnoCensus}\n\n");
             if (missingTotal > 0)
             {
-                output.Append("You have " + missingTotal + " Census facts with no Lost Cousins fact");
+                output.Append($"You have {missingTotal} Census facts with no Lost Cousins fact");
                 output.Append("\nClick the Lost Cousins website link to add them today.");
             }
             return output.ToString();
@@ -1497,6 +1497,8 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
                 HashSet<string> individualIDs = new HashSet<string>();
                 foreach (Family f in families)
                 {
+                    if (f.FamilyID == "F1445" || f.FamilyID == "F1446")
+                        Console.Write("stop");
                     CensusFamily cf = new CensusFamily(f, censusDate);
                     if (cf.Process(censusDate, censusDone, checkCensus))
                     {

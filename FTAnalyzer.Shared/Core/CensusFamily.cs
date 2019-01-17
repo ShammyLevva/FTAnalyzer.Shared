@@ -53,7 +53,7 @@ namespace FTAnalyzer
             bool result = false;
             var facts = new List<Fact>();
             CensusDate = censusDate;
-            if (IsValidFamily())
+            if (IsValidFamily()) // valid family is one where any member is alive on census
             {
                 if (IsValidIndividual(Wife, censusDone, true, checkCensus))
                 {
@@ -123,14 +123,14 @@ namespace FTAnalyzer
         bool IsValidFamily()
         {
             Individual eldestChild = Children.OrderBy(x => x.BirthDate).FirstOrDefault();
-            if (MarriageDate.IsKnown && MarriageDate.IsAfter(CensusDate) && (eldestChild == null || eldestChild.BirthDate.IsAfter(CensusDate)))
-                return false;
+            if (eldestChild != null && eldestChild.BirthDate.IsBefore(CensusDate))
+                return true;
 
             if (FamilyType == SOLOINDIVIDUAL || FamilyType == PRE_MARRIAGE)
                 return true; // allow solo individual families to be processed
 
             // valid family if both parent are 16+ or sole parent >=16
-            return (Husband == null || Husband?.GetMaxAge(CensusDate) >= 16) && (Wife == null || Wife?.GetMaxAge(CensusDate) >= 16);
+            return (Husband != null && Husband.BirthDate.IsBefore(CensusDate)) || (Wife != null && Wife.BirthDate.IsBefore(CensusDate));
         }
 
         public string Surname
