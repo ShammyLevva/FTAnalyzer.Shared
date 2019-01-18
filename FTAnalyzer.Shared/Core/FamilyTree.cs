@@ -1497,8 +1497,6 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
                 HashSet<string> individualIDs = new HashSet<string>();
                 foreach (Family f in families)
                 {
-                    if (f.FamilyID == "F1445" || f.FamilyID == "F1446")
-                        Console.Write("stop");
                     CensusFamily cf = new CensusFamily(f, censusDate);
                     if (cf.Process(censusDate, censusDone, checkCensus))
                     {
