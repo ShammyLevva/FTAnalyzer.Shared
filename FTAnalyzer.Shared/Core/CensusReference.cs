@@ -62,7 +62,7 @@ namespace FTAnalyzer
         static readonly string US_CENSUS_1940_PATTERN = @"District *(\d{1,5}[AB]?-?\d{0,4}[AB]?).*?P(age)? *(\d{1,3}[ABCD]?).*?T627 ?,? *(\d{1,5}-?[AB]?)";
         static readonly string US_CENSUS_1940_PATTERN2 = @"ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?).*? *P(age)? *(\d{1,3}[ABCD]?).*?T627.*?roll ?(\d{1,5}-?[AB]?)";
         static readonly string US_CENSUS_1940_PATTERN3 = @"1940 *(.*?)(Roll)? *M*?-*?_*?T0*?627_(.*?) *P(age)? *(\d{1,4}[ABCD]?) *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?)";
-        static readonly string US_CENSUS_1940_PATTERN4 = @"(Roll)? *M*?-*?_*?T0*?627_(.*?) *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?) *P(age)? *(\d{1,4}[ABCD]?)";
+        static readonly string US_CENSUS_1940_PATTERN4 = @"(Roll)?( *M*?-*?_*?T0*?627_)?(.*?) *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?) *P(age)? *(\d{1,4}[ABCD]?)";
 
         static readonly string CANADA_CENSUS_PATTERN = @"Year *(\d{4}) *Census *(.*?) *Roll *(.*?) *P(age)? *(\d{1,4}[ABCD]?) *Family *(\d{1,4})";
         static readonly string CANADA_CENSUS_PATTERN2 = @"(\d{4}) *Census[ -]*District *(\d{1,5})\/(\d{0,4}[A-Z]{0,4}) *P(age)? *(\d{1,4}[ABCD]?) *Family *(\d{1,4})";
@@ -822,10 +822,9 @@ namespace FTAnalyzer
             if (matcher.Success)
             {
                 Class = "US1940";
-                //Place = GetOriginalPlace(matcher.Groups[1].ToString(), originalText, "T627"); the (.*?) grab at front was extremely expensive operation
-                Roll = $"{matcher.Groups[2]}";
-                ED = matcher.Groups[3].ToString();
-                Page = matcher.Groups[5].ToString();
+                Roll = $"{matcher.Groups[3]}";
+                ED = matcher.Groups[4].ToString();
+                Page = matcher.Groups[6].ToString();
                 SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
@@ -1005,7 +1004,7 @@ namespace FTAnalyzer
                 return CensusDate.UKCENSUS1891;
             if (Class.Equals("RG13"))
                 return CensusDate.UKCENSUS1901;
-            if (Class.Equals("RG14"))
+            if (Class.Equals("RG14") || Class.Equals("RG78"))
                 return CensusDate.UKCENSUS1911;
             if (Class.Equals("RG101"))
                 return CensusDate.UKCENSUS1939;
@@ -1267,7 +1266,7 @@ namespace FTAnalyzer
                 Piece = Piece.TrimStart('0');
                 Book = Book.TrimStart('0');
                 Folio = Folio.TrimStart('0').ToUpper().TrimEnd('A');
-                if (!Piece.IsNumeric() || !Folio.IsNumeric() || !Page.IsNumeric()) return false;
+                if (!Piece.IsNumeric() || !Folio.IsNumeric() || !Page.IsNumeric() || Book.Length == 0) return false;
             }
             else if (CensusYear.Overlaps(CensusDate.EWCENSUS1881) && Countries.IsEnglandWales(Country))
             {

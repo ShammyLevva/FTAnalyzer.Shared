@@ -27,7 +27,7 @@ namespace FTAnalyzer.Utilities
                             ReportsAction = "Reports Action", LostCousinsAction = "Lost Cousins Action", GeocodingAction = "Geocoding Action",
                             ExportAction = "Export Action", MapsAction = "Maps Action", CensusSearchAction = "Census Search Action",
                             BMDSearchAction = "BMD Search Action", FTAStartupAction = "FTAnalyzer Startup", FTAShutdownAction = "FTAnalyzer Shutdown",
-                            MainListsAction = "Main Lists Action", ErrorsFixesAction = "Error Fixes Action";
+                            MainListsAction = "Main Lists Action", ErrorsFixesAction = "Error Fixes Action", GEDCOMAction = "GEDCOM Action";
 
         public const string LoadProgramEvent = "Load Program", UsageEvent = "Usage Time", LoadGEDCOMEvent = "Load GEDCOM", TreetopsEvent = "Treetops Report Clicked",
                             WWIReportEvent = "WWI Report Clicked", WWIIReportEvent = "WWII Report Clicked", BirthProfileEvent = "Birth Profiles Viewed",
@@ -55,7 +55,7 @@ namespace FTAnalyzer.Utilities
                             FacebookSupportEvent = "Visited Facebook Support", FacebookUsersEvent = "Visited Facebook Usergroup", CountriesTabEvent = "Countries Tab Viewed", 
                             RegionsTabEvent = "Regions Tab Viewed", SubRegionsTabEvent = "SubRegions Tab Viewed", AddressesTabEvent = "Addresses Tab Viewed", 
                             PlacesTabEvent = "Places Tab Viewed", ExportLocationsEvent ="Locations Exported", GoogleAPIKey = "Get Google API Key",
-                            UpdateLostCousins = "Update Records on Lost Cousins";
+                            UpdateLostCousins = "Update Records on Lost Cousins", SoftwareProvider = "Software Provider", SoftwareVersion = "Software Version";
 
         public const string FactsIndividualsEvent = "Individual Facts Viewed", FactsFamiliesEvent = "Family Facts Viewed", 
                             FactsGroupIndividualsEvent = "Various Individuals Facts Viewed", FactsDuplicatesEvent = "Duplicate Facts Viewed", 

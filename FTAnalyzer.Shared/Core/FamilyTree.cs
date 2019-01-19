@@ -224,6 +224,14 @@ namespace FTAnalyzer
                 Loading = false;
                 return null;
             }
+            XmlNode treeSoftware = doc.SelectSingleNode("GED/HEAD/SOUR");
+            if(treeSoftware != null)
+            {
+                var softwareName = treeSoftware.SelectSingleNode("NAME")?.InnerText;
+                var softwareVersion = treeSoftware.SelectSingleNode("VERS")?.InnerText;
+                Task.Run(() => Analytics.TrackActionAsync(Analytics.GEDCOMAction, Analytics.SoftwareProvider, softwareName));
+                Task.Run(() => Analytics.TrackActionAsync(Analytics.GEDCOMAction, Analytics.SoftwareVersion, softwareVersion));
+            }
             XmlNode charset = doc.SelectSingleNode("GED/HEAD/CHAR");
             if (charset != null)
             {
