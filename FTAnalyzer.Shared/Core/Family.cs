@@ -484,6 +484,11 @@ namespace FTAnalyzer
 
         public string Marriage => ToString();
 
+        public string HusbandForenames => Husband == null ? string.Empty : Husband.Forenames;
+        public string HusbandSurname => Husband == null ? string.Empty : Husband.Surname;
+        public string WifeForenames => Wife == null ? string.Empty : Wife.Forenames;
+        public string WifeSurname => Wife == null ? string.Empty : Wife.Surname;
+
         string IDisplayFamily.Children
         {
             get

@@ -89,10 +89,7 @@ namespace FTAnalyzer
             return output.ToString();
         }
 
-        public void Clear()
-        {
-            surnames = null;
-        }
+        public void Clear() => surnames = null;
 
         public List<SurnameStats> Surnames(Predicate<Individual> indFilter, Predicate<Family> famFilter, IProgress<int> progress, bool ignoreCase)
         {

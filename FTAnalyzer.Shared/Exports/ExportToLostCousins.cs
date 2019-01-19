@@ -121,17 +121,20 @@ namespace FTAnalyzer.Exports
                 string webData = wc.DownloadString("https://www.lostcousins.com/pages/members/ancestors/");
                 doc.LoadHtml(webData);
                 HtmlNodeCollection rows = doc.DocumentNode.SelectNodes("//table[@class='data_table']/tr");
-                foreach(HtmlNode node in rows)
+                if (rows != null)
                 {
-                    HtmlNodeCollection columns = node.SelectNodes("td");
-                    if(columns.Count == 8 && columns[0].InnerText != "Name") // ignore header row
-                    { 
-                        string name = columns[0].InnerText.ClearWhiteSpace();
-                        string birthYear = columns[2].InnerText.ClearWhiteSpace();
-                        string reference = columns[4].InnerText.ClearWhiteSpace();
-                        string census = columns[5].InnerText.ClearWhiteSpace();
-                        LostCousin lc = new LostCousin(name, birthYear, reference, census);
-                        websiteList.Add(lc);
+                    foreach (HtmlNode node in rows)
+                    {
+                        HtmlNodeCollection columns = node.SelectNodes("td");
+                        if (columns != null && columns.Count == 8 && columns[0].InnerText != "Name") // ignore header row
+                        {
+                            string name = columns[0].InnerText.ClearWhiteSpace();
+                            string birthYear = columns[2].InnerText.ClearWhiteSpace();
+                            string reference = columns[4].InnerText.ClearWhiteSpace();
+                            string census = columns[5].InnerText.ClearWhiteSpace();
+                            LostCousin lc = new LostCousin(name, birthYear, reference, census);
+                            websiteList.Add(lc);
+                        }
                     }
                 }
             }

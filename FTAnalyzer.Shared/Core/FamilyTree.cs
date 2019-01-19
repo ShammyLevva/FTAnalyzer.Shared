@@ -310,6 +310,7 @@ namespace FTAnalyzer
                     outputText.Report("File has invalid GEDCOM data. Individual found with no ID. Search file for 0 @@ INDI\n");
                 else
                 {
+                    // debugging of individuals - outputText.Report($"Loaded Individual: {individual.ToString()}\n");
                     individuals.Add(individual);
                     if (individualLookup.ContainsKey(individual.IndividualID))
                         outputText.Report($"More than one INDI record found with ID value {individual.IndividualID}\n");
@@ -732,7 +733,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
         List<CensusIndividual> GetMissingLCIndividuals(CensusDate censusDate, Predicate<CensusIndividual> relationFilter, StringBuilder output)
         {
             IEnumerable<CensusFamily> censusFamilies = GetAllCensusFamilies(censusDate, true, false);
-            Predicate<CensusIndividual> missingLC = x => x.MissingLostCousins(censusDate, false) && x.CensusReference?.Status == CensusReference.ReferenceStatus.GOOD;
+            bool missingLC(CensusIndividual x) => x.MissingLostCousins(censusDate, false) && x.CensusReference?.Status == CensusReference.ReferenceStatus.GOOD;
             Predicate<CensusIndividual> filter = FilterUtils.AndFilter(relationFilter, missingLC);
             List<CensusIndividual> individuals = censusFamilies.SelectMany(f => f.Members).Filter(filter).ToList();
             individuals = LCRemoveDuplicateIndividuals(individuals);

@@ -505,6 +505,8 @@ namespace FTAnalyzer
                             CensusReference = new CensusReference(this, node, pageRef);
                         }
                     }
+                    if(GeneralSettings.Default.ConvertResidenceFacts && FactType.Equals(RESIDENCE) && CensusReference.IsKnownStatus)
+                            FactType = CENSUS; // change fact type if option set and residence has a valid census reference
                     if (FactType == DEATH)
                     {
                         Comment = FamilyTree.GetText(node, "CAUS", true);

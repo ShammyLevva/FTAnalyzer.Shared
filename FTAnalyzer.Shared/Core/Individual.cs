@@ -81,8 +81,6 @@ namespace FTAnalyzer
             : this()
         {
             IndividualID = node.Attributes["ID"].Value;
-            if (IndividualID == "I126001")
-                Console.WriteLine("test");
             Name = FamilyTree.GetText(node, "NAME", false);
             Gender = FamilyTree.GetText(node, "SEX", false);
             Alias = FamilyTree.GetText(node, "ALIA", false);
@@ -860,7 +858,7 @@ namespace FTAnalyzer
                 {
                     foreach (FactSource s in f.Sources)
                     {
-                        CensusReference cr = new CensusReference(IndividualID, s.SourceTitle + " " + s.SourceText, true);
+                        CensusReference cr = new CensusReference(IndividualID, $"{s.SourceTitle} {s.SourceText}", true);
                         if (OKtoAddReference(cr, true))
                         {
                             cr.Fact.Sources.Add(s);

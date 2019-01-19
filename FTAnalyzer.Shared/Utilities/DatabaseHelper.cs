@@ -835,7 +835,7 @@ namespace FTAnalyzer.Utilities
                         else
                         {
                             FactLocation location = FactLocation.GetLocation(ind.CensusCountry);
-                            Fact f = new Fact(ind.CensusRef, Fact.LOSTCOUSINS, ind.CensusDate, location, string.Empty, true, true);
+                            Fact f = new Fact(ind.CensusRef, Fact.LC_FTA, ind.CensusDate, location, string.Empty, true, true);
                             Individual person = FamilyTree.Instance.GetIndividual(ind.IndividualID); // get the individual not the census indvidual
                             person?.AddFact(f);
                         }
