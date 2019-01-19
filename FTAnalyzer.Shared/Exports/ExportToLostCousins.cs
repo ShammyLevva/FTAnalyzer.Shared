@@ -14,7 +14,8 @@ namespace FTAnalyzer.Exports
         static List<CensusIndividual> ToProcess { get; set; }
         static NetworkCredential Credentials { get; set; }
         static CookieCollection CookieJar { get; set; }
-        static List<LostCousin> OnWebsite { get; set; }
+        static List<LostCousin> Website { get; set; }
+        static List<LostCousin> SessionList { get; set; }
         
         public static int ProcessList(List<CensusIndividual> individuals, IProgress<string> outputText)
         {
@@ -22,32 +23,45 @@ namespace FTAnalyzer.Exports
             int recordsAdded = 0;
             int recordsFailed = 0;
             int recordsPresent = 0;
+            int sessionDuplicates = 0;
             int count = 0;
-            if(OnWebsite == null)
-                OnWebsite = LoadWebsiteAncestors(outputText);
+            if (Website == null)
+                Website = LoadWebsiteAncestors(outputText);
+            if (SessionList == null)
+                SessionList = new List<LostCousin>();
             foreach (CensusIndividual ind in ToProcess)
             {
                 if (ind.CensusReference != null && ind.CensusReference.IsValidLostCousinsReference())
                 {
-                    if (!AlreadyPresent(ind, outputText))
-                    {
-                        if (AddIndividualToWebsite(ind, outputText))
-                        {
-                            outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - {ind.ToString()}, {ind.CensusReference} added.\n");
-                            recordsAdded++;
-                            DatabaseHelper.Instance.StoreLostCousinsFact(ind);
-                        }
-                        else
-                        {
-                            outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - Failed to add {ind.ToString()}, {ind.CensusReference}.\n");
-                            recordsFailed++;
-                        }
-                    }
-                    else
+                    LostCousin lc = new LostCousin($"{ind.Surname}, {ind.Forenames}", ind.BirthDate.BestYear, GetCensusSpecificFields(ind), ind.CensusDate.BestYear, ind.CensusCountry); ;
+                    if (Website.Contains(lc))
                     {
                         outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - Already Present {ind.ToString()}, {ind.CensusReference}.\n");
                         DatabaseHelper.Instance.StoreLostCousinsFact(ind);
                         recordsPresent++;
+                    }
+                    else
+                    {
+                        if (SessionList.Contains(lc))
+                        {
+                            outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - Already submitted this session {ind.ToString()}, {ind.CensusReference}. Possible duplicate Individual\n");
+                            sessionDuplicates++;
+                        }
+                        else
+                        { 
+                            if (AddIndividualToWebsite(ind, outputText))
+                            {
+                                outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - {ind.ToString()}, {ind.CensusReference} added.\n");
+                                recordsAdded++;
+                                SessionList.Add(lc);
+                                DatabaseHelper.Instance.StoreLostCousinsFact(ind);
+                            }
+                            else
+                            {
+                                outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - Failed to add {ind.ToString()}, {ind.CensusReference}.\n");
+                                recordsFailed++;
+                            }
+                        }
                     }
                 }
                 else
@@ -56,7 +70,7 @@ namespace FTAnalyzer.Exports
                     recordsFailed++;
                 }
             }
-            outputText.Report($"\nFinished writing Entries to Lost Cousins website. {recordsAdded} successfully added, {recordsPresent} already present and {recordsFailed} failed.\nView Lost Cousins Report tab to see current status.");
+            outputText.Report($"\nFinished writing Entries to Lost Cousins website. {recordsAdded} successfully added, {recordsPresent} already present, {sessionDuplicates} possible duplicates and {recordsFailed} failed.\nView Lost Cousins Report tab to see current status.");
             return recordsAdded;
         }
 
@@ -99,7 +113,7 @@ namespace FTAnalyzer.Exports
 
         static List<LostCousin> LoadWebsiteAncestors(IProgress<string> outputText)
         {
-            List<LostCousin> websiteList = new List<LostCousin>(); 
+            List<LostCousin> websiteList = new List<LostCousin>();
             try
             {
                 CookieAwareWebClient wc = new CookieAwareWebClient(CookieJar);
@@ -127,12 +141,6 @@ namespace FTAnalyzer.Exports
                 return null;
             }
             return websiteList;
-        }
-
-        static bool AlreadyPresent(CensusIndividual ind, IProgress<string> outputText)
-        {
-            LostCousin lc = new LostCousin($"{ind.Surname}, {ind.Forenames}", ind.BirthDate.BestYear, GetCensusSpecificFields(ind), ind.CensusDate.BestYear, ind.CensusCountry);
-            return OnWebsite.Contains(lc);
         }
 
         static bool AddIndividualToWebsite(CensusIndividual ind, IProgress<string> outputText)
