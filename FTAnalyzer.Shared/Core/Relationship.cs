@@ -60,7 +60,7 @@ namespace FTAnalyzer
             return OrdinalSuffix(cousinOrdinal) + " cousin " + FormatPlural(cousinGenerations) + " removed";
         }
 
-        private static string FormatPlural(long count)
+        static string FormatPlural(long count)
         {
             if (Math.Abs(count) == 1)
                 return "once";
@@ -69,7 +69,7 @@ namespace FTAnalyzer
             return count + " times";
         }
 
-        private static string AggrandiseRelationship(string relation, long distance, int offset)
+        static string AggrandiseRelationship(string relation, long distance, int offset)
         {
             distance -= offset;
             switch (distance)
@@ -85,7 +85,7 @@ namespace FTAnalyzer
             }
         }
 
-        private static string OrdinalSuffix(long number)
+        static string OrdinalSuffix(long number)
         {
             string os = string.Empty;
             if (number % 100 > 10 && number % 100 < 14)

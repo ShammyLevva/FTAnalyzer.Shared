@@ -424,7 +424,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
 
         public void UpdateRootIndividual(string rootIndividualID, IProgress<int> progress, IProgress<string> outputText, bool locationsToFollow = false)
         {
-            outputText.Report($"\nCalculating Relationships using {rootIndividualID}: {GetIndividual(rootIndividualID).Name} as root person. Please wait\n\n");
+            outputText.Report($"\nCalculating Relationships using {rootIndividualID}: {GetIndividual(rootIndividualID)?.Name} as root person. Please wait\n\n");
 
             // When the user changes the root individual, no location processing is taking place
             int locationCount = locationsToFollow ? FactLocation.AllLocations.Count() : 0;
@@ -630,6 +630,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
                 outputText.Report("show everyone as not yet found on census and the Lost Cousins report will show\n");
                 outputText.Report("no-one with a census needing to be entered onto your Lost Cousins My Ancestors page.");
             }
+            outputText.Report("\n");
         }
 
         Dictionary<CensusDate, int> MissingLCEntries;
@@ -2810,7 +2811,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             //List<FactLocation> needRev = FactLocation.AllLocations.Where(predicate).ToList();
             outputText.Report($"\n{FactLocation.GEDCOMLocationsCount} locations and addresses loaded from GEDCOM file.\n");
             outputText.Report($"    {FactLocation.GEDCOMGeocodedCount} have Lat/Long coordinates in the file.\n");
-            outputText.Report($"\n{FactLocation.LocationsCount} locations in use after processing file and generating extra locaitons for tree view.\n");
+            outputText.Report($"{FactLocation.LocationsCount} locations in use after processing file and generating extra locaitons for tree view.\n");
             outputText.Report($"    {FactLocation.AllLocations.Count(x => x.GeocodeStatus.Equals(FactLocation.Geocode.GEDCOM_USER) && x.FoundLocation.Length > 0)} are GEDCOM/User Entered and have been geocoded.\n");
             outputText.Report($"    {FactLocation.AllLocations.Count(x => x.GeocodeStatus.Equals(FactLocation.Geocode.GEDCOM_USER) && x.FoundLocation.Length == 0)} are GEDCOM/User Entered but lack a Google Location.\n");
             outputText.Report($"    {FactLocation.AllLocations.Count(x => x.GeocodeStatus.Equals(FactLocation.Geocode.MATCHED))} have a geocoding match from Google.\n");

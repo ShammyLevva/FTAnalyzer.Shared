@@ -212,7 +212,7 @@ namespace FTAnalyzer
             #endregion
         }
 
-        private static void ValidateTypoFixes()
+        static void ValidateTypoFixes()
         {
             //foreach (string typo in COUNTRY_TYPOS.Values)
             //    if (!Countries.IsKnownCountry(typo))
@@ -225,7 +225,7 @@ namespace FTAnalyzer
                     Console.WriteLine($"Country shift: {shift} is not a preferred region.");
         }
 
-        private static void ValidateCounties()
+        static void ValidateCounties()
         {
             foreach (Region region in Regions.UK_REGIONS)
             {
@@ -311,7 +311,7 @@ namespace FTAnalyzer
         #endregion
 
         #region Object Constructors
-        private FactLocation()
+        FactLocation()
         {
             OriginalText = string.Empty;
             GEDCOMLocation = string.Empty;

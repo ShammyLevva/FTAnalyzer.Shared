@@ -59,7 +59,7 @@ namespace FTAnalyzer.Filters
 
         public static IEnumerable<T> Filter<T>(this IList<T> l, Predicate<T> p) => (l as IEnumerable<T>).Filter(p);
 
-        private static bool StringMatches(string s1, string s2) => s1 != null && s1.Equals(s2, StringComparison.OrdinalIgnoreCase);
+        static bool StringMatches(string s1, string s2) => s1 != null && s1.Equals(s2, StringComparison.OrdinalIgnoreCase);
 
         public static T MostCommon<T>(this IEnumerable<T> list) => (from i in list
                                                                     group i by i into grp

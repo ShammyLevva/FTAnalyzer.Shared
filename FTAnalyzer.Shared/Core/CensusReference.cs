@@ -55,10 +55,11 @@ namespace FTAnalyzer
         static readonly string SCOT_CENSUS_PATTERN3 = @"(\(?GROS *\)?)?(\d{1,3}[AB]?)\/(\d{2}[AB]?) Page *(\d{1,4})";
 
         static readonly string US_CENSUS_PATTERN = @"Year *(\d{4}) *Census *(.*?) *Roll *(.*?) *Film (.*?) *P(age)? *(\d{1,4}[ABCD]?) *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?)";
-        static readonly string US_CENSUS_PATTERN1A = @"Year *(\d{4}) *Census *(.*?) *Roll *(.*?) *P(age)? *(\d{1,4}[ABCD]?) *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?)";
-        static readonly string US_CENSUS_PATTERN2 = @"Census *(\d{4}) *(.*?) *Roll *(.*?) *P(age)? *(\d{1,4}[ABCD]?) *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?)";
-        static readonly string US_CENSUS_PATTERN3 = @"Census *(\d{4}) *(.*?) *Ward *(.*?) *ED *(\d{1,5}[ABCD]?-?\d{0,4}[AB]?) *P(age)? *(\d{1,4}[AB]?)";
-        static readonly string US_CENSUS_PATTERN4 = @"Census *(\d{4}) *(.*?) *ED *(\d{1,5}[AB]?-?\d{0,4}[ABCD]?) *P(age)? *(\d{1,4}[AB]?)";
+        static readonly string US_CENSUS_PATTERN1A = @"Year *(\d{4}) *Census *(.*?),? *Roll *(.*?),? *P(age)? *(\d{1,4}[ABCD]?),? *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?)";
+        static readonly string US_CENSUS_PATTERN2 = @"Census,? *(\d{4}) *(.*?) *Roll *(.*?),? *P(age)? *(\d{1,4}[ABCD]?),? *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?)";
+        static readonly string US_CENSUS_PATTERN3 = @"Census,? *(\d{4}) *(.*?) *Ward *(.*?),? *ED *(\d{1,5}[ABCD]?-?\d{0,4}[AB]?),? *P(age)? *(\d{1,4}[AB]?)";
+        static readonly string US_CENSUS_PATTERN4 = @"Census,? *(\d{4}) *(.*?) *ED *(\d{1,5}[AB]?-?\d{0,4}[ABCD]?),? *P(age)? *(\d{1,4}[AB]?)(.*?)roll *(\d{1,4})";
+        static readonly string US_CENSUS_PATTERN5 = @"Census,? *(\d{4}) *(.*?) *ED *(\d{1,5}[AB]?-?\d{0,4}[ABCD]?),? *P(age)? *(\d{1,4}[AB]?)";
         static readonly string US_CENSUS_1940_PATTERN = @"District *(\d{1,5}[AB]?-?\d{0,4}[AB]?).*?P(age)? *(\d{1,3}[ABCD]?).*?T627 ?,? *(\d{1,5}-?[AB]?)";
         static readonly string US_CENSUS_1940_PATTERN2 = @"ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?).*? *P(age)? *(\d{1,3}[ABCD]?).*?T627.*?roll ?(\d{1,5}-?[AB]?)";
         static readonly string US_CENSUS_1940_PATTERN3 = @"1940 *(.*?)(Roll)? *M*?-*?_*?T0*?627_(.*?) *P(age)? *(\d{1,4}[ABCD]?) *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?)";
@@ -129,6 +130,7 @@ namespace FTAnalyzer
                 ["US_CENSUS_PATTERN2"] = new Regex(US_CENSUS_PATTERN2, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["US_CENSUS_PATTERN3"] = new Regex(US_CENSUS_PATTERN3, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["US_CENSUS_PATTERN4"] = new Regex(US_CENSUS_PATTERN4, RegexOptions.Compiled | RegexOptions.IgnoreCase),
+                ["US_CENSUS_PATTERN5"] = new Regex(US_CENSUS_PATTERN5, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["US_CENSUS_1940_PATTERN"] = new Regex(US_CENSUS_1940_PATTERN, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["US_CENSUS_1940_PATTERN2"] = new Regex(US_CENSUS_1940_PATTERN2, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["US_CENSUS_1940_PATTERN3"] = new Regex(US_CENSUS_1940_PATTERN3, RegexOptions.Compiled | RegexOptions.IgnoreCase),
@@ -281,7 +283,7 @@ namespace FTAnalyzer
             }
         }
 
-        private bool GetCensusReference(XmlNode n)
+        bool GetCensusReference(XmlNode n)
         {
             if (GeneralSettings.Default.SkipCensusReferences)
                 return false;
@@ -292,7 +294,7 @@ namespace FTAnalyzer
             return GetCensusReference(text);
         }
 
-        private bool GetCensusReference(string text)
+        bool GetCensusReference(string text)
         {
             if (GeneralSettings.Default.SkipCensusReferences)
                 return false;
@@ -778,6 +780,16 @@ namespace FTAnalyzer
                 return true;
             }
             matcher = censusRegexs["US_CENSUS_PATTERN4"].Match(text);
+            if (matcher.Success)
+            {
+                Class = $"US{matcher.Groups[1]}";
+                ED = matcher.Groups[3].ToString();
+                Page = matcher.Groups[5].ToString();
+                Roll = matcher.Groups[7].ToString().TrimStart('0');
+                SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.GOOD, matcher.Value);
+                return true;
+            }
+            matcher = censusRegexs["US_CENSUS_PATTERN5"].Match(text);
             if (matcher.Success)
             {
                 Class = $"US{matcher.Groups[1]}";

@@ -94,7 +94,7 @@ namespace FTAnalyzer
 
         public override int GetMaxCharCount(int byteCount) => byteCount;
 
-        private int ConvertToAnsel(int unicode)
+        int ConvertToAnsel(int unicode)
         {
           switch(unicode) {
 
@@ -479,7 +479,7 @@ namespace FTAnalyzer
         * Conversion table for ANSEL characters coded in one byte
         */
 
-        private int ConvertOneByteToUnicode(int ansel)
+        int ConvertOneByteToUnicode(int ansel)
         {
             switch (ansel)
             {
@@ -558,7 +558,7 @@ namespace FTAnalyzer
         * Conversion table for ANSEL characters coded in two bytes
         */
 
-        private int ConvertTwoBytesToUnicode(int ansel)
+        int ConvertTwoBytesToUnicode(int ansel)
         {
             switch (ansel)
             {

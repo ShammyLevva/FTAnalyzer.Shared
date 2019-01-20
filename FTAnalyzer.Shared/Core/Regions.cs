@@ -851,7 +851,7 @@ namespace FTAnalyzer
             return MODERN_COUNTIES.FirstOrDefault(c => c.CountyCode.Equals(code));
         }
 
-        private static void AppendValidRegions(ISet<Region> regions)
+        static void AppendValidRegions(ISet<Region> regions)
         {
             foreach (Region r in regions)
             {
@@ -882,7 +882,7 @@ namespace FTAnalyzer
         #endregion
 
         #region Alternates
-        private static void AddScottishRegionAlternates()
+        static void AddScottishRegionAlternates()
         {
             // add Anglicised shires
             ANGUS.AddAlternateName("Forfarshire");
@@ -935,7 +935,7 @@ namespace FTAnalyzer
             BORDERS.AddAlternateName("Scottish Borders");
         }
 
-        private static void AddWelshRegionAlternates()
+        static void AddWelshRegionAlternates()
         { // http://www.gazetteer.org.uk/contents.php
             ANGLESEY.AddAlternateName("Sir Fon");
             ANGLESEY.AddAlternateName("Isle of Anglesey");
@@ -968,7 +968,7 @@ namespace FTAnalyzer
             RADNOR.AddAlternateName("Sir Faesyfed");
         }
 
-        private static void AddNorthernIrelandRegionAlternates()
+        static void AddNorthernIrelandRegionAlternates()
         {
             ANTRIM.AddAlternateName("County Antrim");
             ARMAGH.AddAlternateName("County Armagh");
@@ -986,7 +986,7 @@ namespace FTAnalyzer
             LONDONDERRY.AddAlternateName("Co Derry");
         }
 
-        private static void AddEnglishRegionAlternates()
+        static void AddEnglishRegionAlternates()
         {
             BEDS.AddAlternateName("Beds");
             BERKS.AddAlternateName("Berks");
@@ -1055,7 +1055,7 @@ namespace FTAnalyzer
             MANCHESTER.AddAlternateName("Greater Manchester");
         }
 
-        private static void AddIrishRegionAlternates()
+        static void AddIrishRegionAlternates()
         {
            CARLOW.AddAlternateName("Co Carlow");        
            CARLOW.AddAlternateName("County Carlow");    
@@ -1116,7 +1116,7 @@ namespace FTAnalyzer
            CONNACHT.AddAlternateName("Connaught");
         }
 
-        private static void AddCanadianRegionAlternates()
+        static void AddCanadianRegionAlternates()
         {
             BRITISH_COLUMBIA.AddAlternateName("Colombie-Britannique");
             NEW_BRUNSWICK.AddAlternateName("Nouveau-Brunswick");
@@ -1135,13 +1135,13 @@ namespace FTAnalyzer
             YUKON.AddAlternateName("Territoire du Yukon");
         }
 
-        private static void AddUSStatesAlternates()
+        static void AddUSStatesAlternates()
         {
             DC.AddAlternateName("DC");
             DC.AddAlternateName("Dist of Columbia");
         }
 
-        private static void AddAustralianRegionAlternates()
+        static void AddAustralianRegionAlternates()
         {
             ACT.AddAlternateName("ACT");
             TASMANIA.AddAlternateName("Van Diemen's Land");
@@ -1149,7 +1149,7 @@ namespace FTAnalyzer
             TASMANIA.AddAlternateName("VDL");
         }
 
-        private static void AddNewZealandRegionAlternates()
+        static void AddNewZealandRegionAlternates()
         {
             AUCKLAND.AddAlternateName("Tāmaki-makau-rau");
             BAY_OF_PLENTY.AddAlternateName("Te Moana a Toi Te Huatahi");
@@ -1171,7 +1171,7 @@ namespace FTAnalyzer
         #endregion
 
         #region Conversions
-        private static void AddConversions()
+        static void AddConversions()
         {
             #region Scottish Conversions
             AddConversion(ABERDEEN, OS_ABERDEENSHIRE);
@@ -2229,7 +2229,7 @@ namespace FTAnalyzer
         }
 
         #region Conversion Functions
-        private static void AddConversion(Region region, ModernCounty county)
+        static void AddConversion(Region region, ModernCounty county)
         {
             List<ModernCounty> counties;
             if (CONVERSIONS.ContainsKey(region))
@@ -2245,7 +2245,7 @@ namespace FTAnalyzer
                 counties.Add(county);
         }
 
-        private static void SetRegionsConversions()
+        static void SetRegionsConversions()
         {
             foreach (Region region in PREFERRED_REGIONS)
                 region.SetCountyCodes(GetCounties(region));

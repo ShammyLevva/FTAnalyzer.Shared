@@ -44,7 +44,7 @@ namespace FTAnalyzer
         public string Alias { get; set; }
 
         #region Constructors
-        private Individual()
+        Individual()
         {
             IndividualID = string.Empty;
             _forenames = string.Empty;
@@ -257,7 +257,7 @@ namespace FTAnalyzer
 
         public IList<Fact> PersonalFacts => Facts;
 
-        private IList<Fact> FamilyFacts
+        IList<Fact> FamilyFacts
         {
             get
             {
@@ -459,7 +459,7 @@ namespace FTAnalyzer
             }
         }
 
-        private int MaxAgeAtDeath => GetAge(DeathDate).MaxAge;
+        int MaxAgeAtDeath => GetAge(DeathDate).MaxAge;
 
         public Age LifeSpan => GetAge(FactDate.TODAY);
 

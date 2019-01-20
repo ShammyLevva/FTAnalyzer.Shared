@@ -61,8 +61,8 @@ namespace FTAnalyzer
             CENSUS_FTA, CHILDREN, PARENT, BIRTH_CALC
                     });
 
-        private static Dictionary<string, string> CUSTOM_TAGS = new Dictionary<string, string>();
-        private static HashSet<string> COMMENT_FACTS = new HashSet<string>();
+        static Dictionary<string, string> CUSTOM_TAGS = new Dictionary<string, string>();
+        static HashSet<string> COMMENT_FACTS = new HashSet<string>();
 
         static Fact()
         {
@@ -148,6 +148,7 @@ namespace FTAnalyzer
             CUSTOM_TAGS.Add("1901 UK CENSUS", CENSUS);
             CUSTOM_TAGS.Add("1911 UK CENSUS", CENSUS);
             CUSTOM_TAGS.Add("1939 UK CENSUS", CENSUS);
+            CUSTOM_TAGS.Add("1939 UK REGISTER", CENSUS);
             CUSTOM_TAGS.Add("REGISTER UK 1939", CENSUS);
             CUSTOM_TAGS.Add("CENSUS 1790", CENSUS);
             CUSTOM_TAGS.Add("CENSUS 1800", CENSUS);
@@ -754,7 +755,7 @@ namespace FTAnalyzer
             FactErrorMessage = message;
         }
 
-        private string FixFactTypes(string tag)
+        string FixFactTypes(string tag)
         {
             string initialChars = tag.ToUpper().Substring(0, Math.Min(tag.Length, 4));
             if (initialChars == "BIRT" || initialChars == "MARR" || initialChars == "DEAT")
@@ -960,7 +961,7 @@ namespace FTAnalyzer
             Location.FTAnalyzerCreated = false;
         }
 
-        private bool SetCertificatePresent()
+        bool SetCertificatePresent()
         {
             return Sources.Any(fs =>
             {

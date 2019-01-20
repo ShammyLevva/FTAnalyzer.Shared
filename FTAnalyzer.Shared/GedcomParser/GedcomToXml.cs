@@ -54,7 +54,7 @@ namespace FTAnalyzer
             return doc;
         }
 
-        private static MemoryStream CloneStream(Stream stream)
+        static MemoryStream CloneStream(Stream stream)
         {
             MemoryStream mstream = new MemoryStream();
             stream.Position = 0;

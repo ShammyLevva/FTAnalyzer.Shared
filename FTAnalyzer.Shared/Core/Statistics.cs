@@ -12,11 +12,11 @@ namespace FTAnalyzer
 {
     class Statistics
     {
-        private static Statistics instance;
-        private static FamilyTree ft;
-        private List<SurnameStats> surnames;
+        static Statistics instance;
+        static FamilyTree ft;
+        List<SurnameStats> surnames;
 
-        private Statistics()
+        Statistics()
         {
             ft = FamilyTree.Instance;
         }
