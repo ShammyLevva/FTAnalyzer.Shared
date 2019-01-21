@@ -498,6 +498,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
                 outputText.Report($"\n    Hide Ignored Duplicates: {GeneralSettings.Default.HideIgnoredDuplicates}");
                 outputText.Report($"\nThe current census options are set:");
                 outputText.Report($"\n    Treat Residence Facts As Census Facts: {GeneralSettings.Default.UseResidenceAsCensus}");
+                outputText.Report($"\n    Convert Residences with valid census reference to Census Facts: {GeneralSettings.Default.ConvertResidenceFacts}");
                 outputText.Report($"\n    Tolerate Slightly Inaccurate Census Dates: {GeneralSettings.Default.TolerateInaccurateCensusDate}");
                 outputText.Report($"\n    Family Census Facts Apply To Only Parents: {GeneralSettings.Default.OnlyCensusParents}");
                 outputText.Report($"\n    Use Compact Census References: {GeneralSettings.Default.UseCompactCensusRef}");
@@ -523,6 +524,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
         {
             if (unknownFactTypes.Count > 0 && !GeneralSettings.Default.IgnoreFactTypeWarnings)
             {
+                outputText.Report("\nThe following unknown fact types were reported.\nNB. This isn't an error if you deliberately created these fact types.\nThis is simply highlighting the types so you can check for any possible errors/duplicate types.\n");
                 foreach (string tag in unknownFactTypes)
                 {
                     int count = AllExportFacts.Count(f => f.FactType == tag);
@@ -871,11 +873,11 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             //            return individuals.FirstOrDefault(i => i.IndividualID == individualID);
             if (string.IsNullOrEmpty(individualID))
                 return null;
-            Individual person = null;
+            individualLookup.TryGetValue(individualID, out Individual person);
             while (individualID.StartsWith("I0") && person == null)
             {
+                if (individualID.Length >= 2) individualID = "I" + individualID.Substring(2);
                 individualLookup.TryGetValue(individualID, out person);
-                individualID = "I" + individualID.Substring(2);
             }
             return person;
         }
