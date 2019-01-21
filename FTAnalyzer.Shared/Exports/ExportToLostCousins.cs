@@ -72,6 +72,9 @@ namespace FTAnalyzer.Exports
                 }
             }
             outputText.Report($"\nFinished writing Entries to Lost Cousins website. {recordsAdded} successfully added, {recordsPresent} already present, {sessionDuplicates} possible duplicates and {recordsFailed} failed.\nView Lost Cousins Report tab to see current status.");
+            int ftanalyzerfacts = Website.FindAll(lc => lc.FTAnalyzerFact).Count;
+            int manualfacts = Website.FindAll(lc => !lc.FTAnalyzerFact).Count;
+            Task.Run(() => Analytics.TrackActionAsync(Analytics.LostCousinsAction, Analytics.ReadLostCousins, $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm")}: {manualfacts} manual & {ftanalyzerfacts} -> {ftanalyzerfacts+recordsAdded} FTAnalyzer entries"));
             return recordsAdded;
         }
 
@@ -150,9 +153,6 @@ namespace FTAnalyzer.Exports
                 outputText.Report($"Problem accessing Lost Cousins Website to read current ancestor list. Error message is: {e.Message}\n");
                 return null;
             }
-            int ftanalyzerfacts = websiteList.FindAll(lc => lc.FTAnalyzerFact).Count;
-            int manualfacts = websiteList.FindAll(lc => !lc.FTAnalyzerFact).Count;
-            Task.Run(() => Analytics.TrackActionAsync(Analytics.LostCousinsAction, Analytics.ReadLostCousins, $"{manualfacts} manual & {ftanalyzerfacts} FTAnalyzer entries"));
             return websiteList;
         }
 
