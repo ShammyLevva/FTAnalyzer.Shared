@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 
 namespace FTAnalyzer
@@ -11,7 +12,7 @@ namespace FTAnalyzer
             if (rootPerson.Equals(indToFind))
                 return "root person";
             CommonAncestor commonAncestor = indToFind.CommonAncestor;
-            long rootDistance = (long)(Math.Log((double)commonAncestor.Ind.Ahnentafel) / Math.Log(2.0));
+            decimal rootDistance = (decimal)(Math.Log((double)commonAncestor.Ind.Ahnentafel) / Math.Log(2.0));
             long toFindDistance = commonAncestor.Distance;
 
             // DIRECT DESCENDANT - PARENT
@@ -55,12 +56,12 @@ namespace FTAnalyzer
                 return AggrandiseRelationship(relation, toFindDistance, 1);
             }
             // COUSINS, GENERATIONALLY REMOVED
-            long cousinOrdinal = Math.Min(rootDistance, toFindDistance) - 1;
-            long cousinGenerations = Math.Abs(rootDistance - toFindDistance);
+            decimal cousinOrdinal = Math.Min(rootDistance, toFindDistance) - 1;
+            decimal cousinGenerations = Math.Abs(rootDistance - toFindDistance);
             return OrdinalSuffix(cousinOrdinal) + " cousin " + FormatPlural(cousinGenerations) + " removed";
         }
 
-        static string FormatPlural(long count)
+        static string FormatPlural(decimal count)
         {
             if (Math.Abs(count) == 1)
                 return "once";
@@ -69,7 +70,7 @@ namespace FTAnalyzer
             return count + " times";
         }
 
-        static string AggrandiseRelationship(string relation, long distance, int offset)
+        static string AggrandiseRelationship(string relation, decimal distance, int offset)
         {
             distance -= offset;
             switch (distance)
@@ -85,7 +86,7 @@ namespace FTAnalyzer
             }
         }
 
-        static string OrdinalSuffix(long number)
+        static string OrdinalSuffix(decimal number)
         {
             string os = string.Empty;
             if (number % 100 > 10 && number % 100 < 14)
@@ -94,7 +95,7 @@ namespace FTAnalyzer
                 os = "";
             else
             {
-                long last = number % 10;
+                decimal last = number % 10;
                 switch (last)
                 {
                     case 1:
@@ -114,7 +115,7 @@ namespace FTAnalyzer
             return number + os;
         }
 
-        public static string AhnentafelToString(decimal ahnentafel)
+        public static string AhnentafelToString(BigInteger ahnentafel)
         {
             StringBuilder output = new StringBuilder();
             StringBuilder relations = new StringBuilder();

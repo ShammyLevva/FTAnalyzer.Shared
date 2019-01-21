@@ -15,6 +15,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Xml;
+using System.Numerics;
 
 #if __PC__
 using FTAnalyzer.Controls;
@@ -42,7 +43,7 @@ namespace FTAnalyzer
         SortableBindingList<DuplicateIndividual> duplicates;
         readonly static int DATA_ERROR_GROUPS = 28;
         static XmlNodeList noteNodes;
-        decimal maxAhnentafel;
+        BigInteger maxAhnentafel;
         Dictionary<string, Individual> individualLookup;
         string rootIndividualID = string.Empty;
 
@@ -1281,11 +1282,12 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
                 // add parents to queue
                 if (family.Husband != null && parents.IsNaturalFather && indiv.RelationType == Individual.DIRECT)
                 {
-                    if (family.Husband.RelationType != Individual.UNKNOWN && family.Husband.Ahnentafel != indiv.Ahnentafel * 2)
-                        AlreadyDirect(family.Husband, indiv.Ahnentafel * 2, outputText);
+                    BigInteger newAhnentafel = indiv.Ahnentafel * 2;
+                    if (family.Husband.RelationType != Individual.UNKNOWN && family.Husband.Ahnentafel != newAhnentafel)
+                        AlreadyDirect(family.Husband, newAhnentafel, outputText);
                     else
                     {
-                        family.Husband.Ahnentafel = indiv.Ahnentafel * 2;
+                        family.Husband.Ahnentafel = newAhnentafel;
                         if (family.Husband.Ahnentafel > maxAhnentafel)
                             maxAhnentafel = family.Husband.Ahnentafel;
                         queue.Enqueue(family.Husband); // add to directs queue only if natural father of direct
@@ -1294,11 +1296,12 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
 
                 if (family.Wife != null && parents.IsNaturalMother && indiv.RelationType == Individual.DIRECT)
                 {
-                    if (family.Wife.RelationType != Individual.UNKNOWN && family.Wife.Ahnentafel != indiv.Ahnentafel * 2 + 1)
-                        AlreadyDirect(family.Wife, indiv.Ahnentafel * 2 + 1, outputText);
+                    BigInteger newAhnentafel = indiv.Ahnentafel * 2 +1;
+                    if (family.Wife.RelationType != Individual.UNKNOWN && family.Wife.Ahnentafel != newAhnentafel)
+                        AlreadyDirect(family.Wife, newAhnentafel, outputText);
                     else
                     {
-                        family.Wife.Ahnentafel = indiv.Ahnentafel * 2 + 1;
+                        family.Wife.Ahnentafel = newAhnentafel;
                         if (family.Wife.Ahnentafel > maxAhnentafel)
                             maxAhnentafel = family.Wife.Ahnentafel;
                         queue.Enqueue(family.Wife); // add to directs queue only if natural mother of direct
@@ -1307,7 +1310,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             }
         }
 
-        void AlreadyDirect(Individual parent, decimal newAhnatafel, IProgress<string> outputText)
+        void AlreadyDirect(Individual parent, BigInteger newAhnatafel, IProgress<string> outputText)
         {
             if (GeneralSettings.Default.ShowMultiAncestors)
             {
@@ -1351,7 +1354,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
                     {
                         child.RelationType = Individual.BLOOD;
                         child.Ahnentafel = isRootPerson ? indiv.Ahnentafel - 2 : indiv.Ahnentafel - 1;
-                        child.BudgieCode = "-" + Math.Abs(child.Ahnentafel).ToString().PadLeft(2, '0') + "c";
+                        child.BudgieCode = "-" + Math.Abs((decimal)child.Ahnentafel).ToString().PadLeft(2, '0') + "c";
                         queue.Enqueue(child);
                     }
                 }

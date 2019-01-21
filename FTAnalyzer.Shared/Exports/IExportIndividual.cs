@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 
 namespace FTAnalyzer
 {
@@ -17,7 +18,7 @@ namespace FTAnalyzer
         new Age LifeSpan { get; }
         new string Relation { get; }
         new string BudgieCode { get; }
-        new decimal Ahnentafel { get; }
+        new BigInteger Ahnentafel { get; }
         bool HasRangedBirthDate { get; }
         bool HasParents { get; }
         int CensusFactCount { get; }

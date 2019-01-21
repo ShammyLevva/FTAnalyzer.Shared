@@ -1,10 +1,10 @@
+using FTAnalyzer.Properties;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Reflection;
 using System.Xml;
-using FTAnalyzer.Properties;
 using static FTAnalyzer.ColourValues;
 
 namespace FTAnalyzer
@@ -34,10 +34,10 @@ namespace FTAnalyzer
         public bool HasOnlyOneParent { get; set; }
         public bool Infamily { get; set; }
         public bool IsFlaggedAsLiving { get; private set; }
-        public decimal Ahnentafel { get; set; }
+        public BigInteger Ahnentafel { get; set; }
         public string BudgieCode { get; set; }
         public string RelationToRoot { get; set; }
-        public long RelationSort { get; set; }
+        public decimal RelationSort { get; set; }
         public CommonAncestor CommonAncestor { get; set; }
         public string UnrecognisedCensusNotes { get; private set; }
         public IList<Fact> Facts { get; private set; }

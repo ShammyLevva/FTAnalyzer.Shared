@@ -1,4 +1,6 @@
-﻿namespace FTAnalyzer
+﻿using System.Numerics;
+
+namespace FTAnalyzer
 {
     public interface IDisplayCensus
     {
@@ -17,6 +19,6 @@
         string CensusRef { get; }
         string Relation { get; }
         string RelationToRoot { get; }
-        decimal Ahnentafel { get; }
+        BigInteger Ahnentafel { get; }
     }
 }

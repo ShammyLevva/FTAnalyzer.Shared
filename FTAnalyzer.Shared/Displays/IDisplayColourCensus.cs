@@ -1,4 +1,5 @@
 ﻿using FTAnalyzer.Utilities;
+using System.Numerics;
 using static FTAnalyzer.ColourValues;
 
 namespace FTAnalyzer
@@ -122,6 +123,6 @@ namespace FTAnalyzer
         [ColumnDetail("Location", 250)]
         FactLocation BestLocation(FactDate when);
         [ColumnDetail("Ahnentafel", 70, ColumnDetail.ColumnAlignment.Right)]
-        decimal Ahnentafel { get; }
+        BigInteger Ahnentafel { get; }
     }
 }

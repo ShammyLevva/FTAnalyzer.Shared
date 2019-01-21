@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using FTAnalyzer.Utilities;
+﻿using FTAnalyzer.Utilities;
+using System.Numerics;
 
 namespace FTAnalyzer
 {
@@ -36,7 +36,7 @@ namespace FTAnalyzer
         [ColumnDetail("Budgie Code", 90)]
         string BudgieCode { get; }
         [ColumnDetail("Ahnentafel", 70, ColumnDetail.ColumnAlignment.Right)]
-        decimal Ahnentafel { get; }
+        BigInteger Ahnentafel { get; }
 #if __PC__
         [ColumnDetail("Has Notes", 60, ColumnDetail.ColumnAlignment.Center)]
         bool HasNotes { get; }

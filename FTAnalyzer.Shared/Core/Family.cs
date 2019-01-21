@@ -430,7 +430,7 @@ namespace FTAnalyzer
                     {
                         string prefix = (directChild < childcount) ? "+" : "-";
                         var code = Math.Abs(directChild - childcount);
-                        string ahnentafel = Math.Floor(ind.Ahnentafel / 2).ToString();
+                        string ahnentafel = Math.Floor((decimal)(ind.Ahnentafel / 2)).ToString();
                         child.BudgieCode = ahnentafel.PadLeft(lenAhnentafel, '0') + prefix + code.ToString("D2");
                     }
                 }

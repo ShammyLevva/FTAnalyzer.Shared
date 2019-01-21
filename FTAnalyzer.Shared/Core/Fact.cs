@@ -166,22 +166,31 @@ namespace FTAnalyzer
             CUSTOM_TAGS.Add("CENSUS 1920", CENSUS);
             CUSTOM_TAGS.Add("CENSUS 1930", CENSUS);
             CUSTOM_TAGS.Add("CENSUS 1940", CENSUS);
+            CUSTOM_TAGS.Add("CENSUS - US", CENSUS);
+            CUSTOM_TAGS.Add("CENSUS - STATE", CENSUS);
+            CUSTOM_TAGS.Add("CENSUS- US", CENSUS);
+            CUSTOM_TAGS.Add("CENSUS- STATE", CENSUS);
             CUSTOM_TAGS.Add("BAPTISED", BAPTISM);
             CUSTOM_TAGS.Add("BIRTH REG", BIRTH);
             CUSTOM_TAGS.Add("BIRTH", BIRTH);
             CUSTOM_TAGS.Add("ALTERNATE BIRTH", BIRTH);
+            CUSTOM_TAGS.Add("ALTERNATIVE BIRTH", BIRTH);
             CUSTOM_TAGS.Add("BIRTH CERTIFICATE", BIRTH);
             CUSTOM_TAGS.Add("BIRTH CERT", BIRTH);
             CUSTOM_TAGS.Add("MARRIAGE REG", MARRIAGE);
             CUSTOM_TAGS.Add("MARRIAGE", MARRIAGE);
             CUSTOM_TAGS.Add("MARRIAGE CERTIFICATE", MARRIAGE);
             CUSTOM_TAGS.Add("MARRIAGE CERT", MARRIAGE);
+            CUSTOM_TAGS.Add("ALTERNATE MARRIAGE", BIRTH);
+            CUSTOM_TAGS.Add("ALTERNATIVE MARRIAGE", BIRTH);
             CUSTOM_TAGS.Add("SAME SEX MARRIAGE", MARRIAGE);
             CUSTOM_TAGS.Add("CIVIL", MARRIAGE);
             CUSTOM_TAGS.Add("CIVIL PARTNER", MARRIAGE);
             CUSTOM_TAGS.Add("CIVIL PARTNERSHIP", MARRIAGE);
             CUSTOM_TAGS.Add("DEATH REG", DEATH);
             CUSTOM_TAGS.Add("DEATH", DEATH);
+            CUSTOM_TAGS.Add("ALTERNATE DEATH", DEATH);
+            CUSTOM_TAGS.Add("ALTERNATIVE DEATH", DEATH);
             CUSTOM_TAGS.Add("DEATH CERTIFICATE", DEATH);
             CUSTOM_TAGS.Add("DEATH CERT", DEATH);
             CUSTOM_TAGS.Add("DEATH NOTICE", DEATH);
@@ -442,7 +451,12 @@ namespace FTAnalyzer
                     if (FactType.Equals(CUSTOM_EVENT) || FactType.Equals(CUSTOM_FACT))
                     {
                         string tag = FamilyTree.GetText(node, "TYPE", false).ToUpper();
-                        if (CUSTOM_TAGS.TryGetValue(tag, out string factType))
+                        if(tag.StartsWith("CENSUS") || tag.StartsWith("1939 REGISTER"))
+                        {
+                            FactType = CENSUS;
+                            CheckCensusDate(tag);
+                        }
+                        else if (CUSTOM_TAGS.TryGetValue(tag, out string factType))
                         {
                             FactType = factType;
                             CheckCensusDate(tag);

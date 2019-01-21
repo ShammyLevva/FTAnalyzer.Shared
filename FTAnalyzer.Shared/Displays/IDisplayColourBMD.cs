@@ -1,4 +1,5 @@
 ﻿using FTAnalyzer.Utilities;
+using System.Numerics;
 
 namespace FTAnalyzer
 {
@@ -47,6 +48,6 @@ namespace FTAnalyzer
         [ColumnDetail("Best Location", 150)]
         FactLocation BestLocation(FactDate when);
         [ColumnDetail("Ahnentafel", 70, ColumnDetail.ColumnAlignment.Right)]
-        decimal Ahnentafel { get; }
+        BigInteger Ahnentafel { get; }
     }
 }
