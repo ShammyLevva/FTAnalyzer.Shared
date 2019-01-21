@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace FTAnalyzer.Exports
@@ -33,7 +34,7 @@ namespace FTAnalyzer.Exports
             {
                 if (ind.CensusReference != null && ind.CensusReference.IsValidLostCousinsReference())
                 {
-                    LostCousin lc = new LostCousin($"{ind.Surname}, {ind.Forenames}", ind.BirthDate.BestYear, GetCensusSpecificFields(ind), ind.CensusDate.BestYear, ind.CensusCountry); ;
+                    LostCousin lc = new LostCousin($"{ind.Surname}, {ind.Forenames}", ind.BirthDate.BestYear, GetCensusSpecificFields(ind), ind.CensusDate.BestYear, ind.CensusCountry, true); ;
                     if (Website.Contains(lc))
                     {
                         outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - Already Present {ind.ToString()}, {ind.CensusReference}.\n");
@@ -129,10 +130,16 @@ namespace FTAnalyzer.Exports
                         if (columns != null && columns.Count == 8 && columns[0].InnerText != "Name") // ignore header row
                         {
                             string name = columns[0].InnerText.ClearWhiteSpace();
+                            bool ftanalyzer = false;
+                            if (columns[0].ChildNodes.Count == 5)
+                            {
+                                HtmlAttribute notesNode = columns[0].ChildNodes[3].Attributes["title"];
+                                ftanalyzer = notesNode == null ? false : notesNode.Value.Contains("Added_By_FTAnalyzer");
+                            }
                             string birthYear = columns[2].InnerText.ClearWhiteSpace();
                             string reference = columns[4].InnerText.ClearWhiteSpace();
                             string census = columns[5].InnerText.ClearWhiteSpace();
-                            LostCousin lc = new LostCousin(name, birthYear, reference, census);
+                            LostCousin lc = new LostCousin(name, birthYear, reference, census, ftanalyzer);
                             websiteList.Add(lc);
                         }
                     }
@@ -143,6 +150,9 @@ namespace FTAnalyzer.Exports
                 outputText.Report($"Problem accessing Lost Cousins Website to read current ancestor list. Error message is: {e.Message}\n");
                 return null;
             }
+            int ftanalyzerfacts = websiteList.FindAll(lc => lc.FTAnalyzerFact).Count;
+            int manualfacts = websiteList.FindAll(lc => !lc.FTAnalyzerFact).Count;
+            Task.Run(() => Analytics.TrackActionAsync(Analytics.UpdateLostCousins, Analytics.ReadLostCousins, $"{manualfacts} manual & {ftanalyzerfacts} FTAnalyzer entries"));
             return websiteList;
         }
 

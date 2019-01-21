@@ -8,13 +8,17 @@ namespace FTAnalyzer
         public int BirthYear { get; }
         public string Reference { get; }
         public CensusDate CensusDate { get; }
+        public bool FTAnalyzerFact { get; }
         string SurnameMetaphone { get; }
         string ForenamesMetaphone { get; }
-        public LostCousin(string name, int birthYear, string reference, int censusYear, string censusCountry)
+        
+
+        public LostCousin(string name, int birthYear, string reference, int censusYear, string censusCountry, bool ftanalyzer)
         {
             Name = name;
             BirthYear = birthYear;
             Reference = FixReference(reference);
+            FTAnalyzerFact = ftanalyzer;
             if (censusYear == 1841 && Countries.IsEnglandWales(censusCountry))
                 CensusDate = CensusDate.EWCENSUS1841;
             if (censusYear == 1881 && Countries.IsEnglandWales(censusCountry))
@@ -47,12 +51,13 @@ namespace FTAnalyzer
             }
         }
 
-        public LostCousin(string name, string birthYear, string reference, string census)
+        public LostCousin(string name, string birthYear, string reference, string census, bool ftanalyzer)
         {
             Name = name;
             int.TryParse(birthYear, out int result);
             BirthYear = result;
             Reference = reference;
+            FTAnalyzerFact = ftanalyzer;
             if(census.StartsWith("England"))
             {
                 if (census.EndsWith("1841")) CensusDate = CensusDate.EWCENSUS1841;

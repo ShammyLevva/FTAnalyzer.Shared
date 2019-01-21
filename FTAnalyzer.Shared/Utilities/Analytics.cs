@@ -55,7 +55,8 @@ namespace FTAnalyzer.Utilities
                             FacebookSupportEvent = "Visited Facebook Support", FacebookUsersEvent = "Visited Facebook Usergroup", CountriesTabEvent = "Countries Tab Viewed", 
                             RegionsTabEvent = "Regions Tab Viewed", SubRegionsTabEvent = "SubRegions Tab Viewed", AddressesTabEvent = "Addresses Tab Viewed", 
                             PlacesTabEvent = "Places Tab Viewed", ExportLocationsEvent ="Locations Exported", GoogleAPIKey = "Get Google API Key",
-                            UpdateLostCousins = "Update Records on Lost Cousins", SoftwareProvider = "Software Provider", SoftwareVersion = "Software Version";
+                            ReadLostCousins = "Read Lost Cousins Records", UpdateLostCousins = "Update Records on Lost Cousins", PreviewLostCousins = "Preview records for update",
+                            SoftwareProvider = "Software Provider", SoftwareVersion = "Software Version";
 
         public const string FactsIndividualsEvent = "Individual Facts Viewed", FactsFamiliesEvent = "Family Facts Viewed", 
                             FactsGroupIndividualsEvent = "Various Individuals Facts Viewed", FactsDuplicatesEvent = "Duplicate Facts Viewed", 

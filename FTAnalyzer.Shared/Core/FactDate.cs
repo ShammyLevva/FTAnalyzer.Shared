@@ -335,7 +335,8 @@ namespace FTAnalyzer
 
             str = str.Replace("ABT ABT", "ABT"); // fix any ABT X QTR's that will have been changed to ABT ABT
             str = str.Replace("BET ABT", "ABT"); // fix any BET XXX-XXX QTR's that will have been changed to BET ABT
-
+            str = str.Replace("ABT1", "ABT 1");
+            str = str.Replace("ABT2", "ABT 2");
             str = str.Replace("MON", "");
             str = str.Replace("TUE", "");
             str = str.Replace("WED", "");
