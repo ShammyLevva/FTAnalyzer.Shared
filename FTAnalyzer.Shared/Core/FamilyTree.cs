@@ -871,9 +871,12 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             //            return individuals.FirstOrDefault(i => i.IndividualID == individualID);
             if (string.IsNullOrEmpty(individualID))
                 return null;
-            while (individualID.StartsWith("I0"))
+            Individual person = null;
+            while (individualID.StartsWith("I0") && person == null)
+            {
+                individualLookup.TryGetValue(individualID, out person);
                 individualID = "I" + individualID.Substring(2);
-            individualLookup.TryGetValue(individualID, out Individual person);
+            }
             return person;
         }
 
@@ -1360,6 +1363,13 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
         {
             ClearRelations();
             RootPerson = GetIndividual(startID);
+            if(RootPerson == null)
+            {
+                startID = individuals[0].IndividualID;
+                RootPerson = GetIndividual(startID);
+                if (RootPerson == null)
+                    throw new NotFoundException("Unable to find a Root Person in the file");
+            }
             Individual ind = RootPerson;
             ind.RelationType = Individual.DIRECT;
             ind.Ahnentafel = 1;
