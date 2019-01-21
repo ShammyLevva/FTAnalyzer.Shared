@@ -26,7 +26,7 @@ namespace FTAnalyzer.Utilities
         Version ProgramVersion { get; set; }
         bool restoring;
 
-#region Constructor/Destructor
+        #region Constructor/Destructor
         DatabaseHelper()
         {
             DatabasePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Family Tree Analyzer");
@@ -34,6 +34,7 @@ namespace FTAnalyzer.Utilities
             CheckDatabaseConnection();
             InstanceConnection = new SQLiteConnection(connectionString);
             restoring = false;
+
         }
 
         public static DatabaseHelper Instance
@@ -321,7 +322,7 @@ namespace FTAnalyzer.Utilities
                 UIHelpers.ShowMessage($"Error upgrading database. Error is :{ex.Message}", "FTAnalyzer");
             }
         }
-        #endregion
+#endregion
 
 #if __PC__
 #region Lat/Long Routines
