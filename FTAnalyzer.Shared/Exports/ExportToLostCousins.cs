@@ -152,7 +152,7 @@ namespace FTAnalyzer.Exports
             }
             int ftanalyzerfacts = websiteList.FindAll(lc => lc.FTAnalyzerFact).Count;
             int manualfacts = websiteList.FindAll(lc => !lc.FTAnalyzerFact).Count;
-            Task.Run(() => Analytics.TrackActionAsync(Analytics.UpdateLostCousins, Analytics.ReadLostCousins, $"{manualfacts} manual & {ftanalyzerfacts} FTAnalyzer entries"));
+            Task.Run(() => Analytics.TrackActionAsync(Analytics.LostCousinsAction, Analytics.ReadLostCousins, $"{manualfacts} manual & {ftanalyzerfacts} FTAnalyzer entries"));
             return websiteList;
         }
 
