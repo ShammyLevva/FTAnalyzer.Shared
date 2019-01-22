@@ -3,6 +3,7 @@ using FTAnalyzer.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -430,7 +431,8 @@ namespace FTAnalyzer
                     {
                         string prefix = (directChild < childcount) ? "+" : "-";
                         var code = Math.Abs(directChild - childcount);
-                        string ahnentafel = Math.Floor((decimal)(ind.Ahnentafel / 2)).ToString();
+                        BigInteger floor = ind.Ahnentafel / 2;
+                        string ahnentafel = floor.ToString();
                         child.BudgieCode = ahnentafel.PadLeft(lenAhnentafel, '0') + prefix + code.ToString("D2");
                     }
                 }

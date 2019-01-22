@@ -48,7 +48,7 @@ namespace FTAnalyzer
             }
             else
             {
-                ForenamesMetaphone = string.Empty;
+                ForenameMetaphone = string.Empty;
                 SurnameMetaphone = string.Empty;
             }
         }

@@ -1310,16 +1310,16 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             }
         }
 
-        void AlreadyDirect(Individual parent, BigInteger newAhnatafel, IProgress<string> outputText)
+        void AlreadyDirect(Individual parent, BigInteger newAhnentafel, IProgress<string> outputText)
         {
             if (GeneralSettings.Default.ShowMultiAncestors)
             {
                 // Hmm interesting a direct parent who is already a direct
                 string currentRelationship = Relationship.CalculateRelationship(RootPerson, parent);
                 string currentLine = Relationship.AhnentafelToString(parent.Ahnentafel);
-                string newLine = Relationship.AhnentafelToString(newAhnatafel);
-                if (parent.Ahnentafel > newAhnatafel)
-                    parent.Ahnentafel = newAhnatafel; // set to lower line if new direct
+                string newLine = Relationship.AhnentafelToString(newAhnentafel);
+                if (parent.Ahnentafel > newAhnentafel)
+                    parent.Ahnentafel = newAhnentafel; // set to lower line if new direct
                 if (outputText != null)
                 {
                     outputText.Report($"{parent.Name} detected as a direct ancestor more than once as:\n");
@@ -1354,7 +1354,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
                     {
                         child.RelationType = Individual.BLOOD;
                         child.Ahnentafel = isRootPerson ? indiv.Ahnentafel - 2 : indiv.Ahnentafel - 1;
-                        child.BudgieCode = "-" + Math.Abs((decimal)child.Ahnentafel).ToString().PadLeft(2, '0') + "c";
+                        child.BudgieCode = "-" + child.Ahnentafel.ToString().PadLeft(2, '0') + "c";
                         queue.Enqueue(child);
                     }
                 }
@@ -1469,13 +1469,9 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             IEnumerable<Individual> married = GetAllRelationsOfType(Individual.MARRIEDTODB);
             Individual rootPerson = GetIndividual(startID);
             foreach (Individual i in directs)
-            {
                 i.RelationToRoot = Relationship.CalculateRelationship(rootPerson, i);
-            }
             foreach (Individual i in blood)
-            {
                 i.RelationToRoot = Relationship.CalculateRelationship(rootPerson, i);
-            }
             foreach (Individual i in married)
             {
                 foreach (Family f in i.FamiliesAsSpouse)
