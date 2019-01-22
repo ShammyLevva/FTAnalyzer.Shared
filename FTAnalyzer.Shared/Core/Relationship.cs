@@ -12,7 +12,7 @@ namespace FTAnalyzer
             if (rootPerson.Equals(indToFind))
                 return "root person";
             CommonAncestor commonAncestor = indToFind.CommonAncestor;
-            decimal rootDistance = (decimal)(Math.Log((double)commonAncestor.Ind.Ahnentafel) / Math.Log(2.0));
+            long rootDistance = (long)(BigInteger.Log10(commonAncestor.Ind.Ahnentafel) / Math.Log(2.0));
             long toFindDistance = commonAncestor.Distance;
 
             // DIRECT DESCENDANT - PARENT
@@ -40,7 +40,7 @@ namespace FTAnalyzer
                     case 2:
                         return "cousin";
                     default:
-                        return OrdinalSuffix(toFindDistance - 1) + " cousin";
+                        return $"{OrdinalSuffix(toFindDistance - 1)} cousin";
                 }
             }
             // AUNT / UNCLE
@@ -56,12 +56,12 @@ namespace FTAnalyzer
                 return AggrandiseRelationship(relation, toFindDistance, 1);
             }
             // COUSINS, GENERATIONALLY REMOVED
-            decimal cousinOrdinal = Math.Min(rootDistance, toFindDistance) - 1;
-            decimal cousinGenerations = Math.Abs(rootDistance - toFindDistance);
-            return OrdinalSuffix(cousinOrdinal) + " cousin " + FormatPlural(cousinGenerations) + " removed";
+            long cousinOrdinal = Math.Min(rootDistance, toFindDistance) - 1;
+            long cousinGenerations = Math.Abs(rootDistance - toFindDistance);
+            return $"{OrdinalSuffix(cousinOrdinal)} cousin {FormatPlural(cousinGenerations)} removed";
         }
 
-        static string FormatPlural(decimal count)
+        static string FormatPlural(long count)
         {
             if (Math.Abs(count) == 1)
                 return "once";
@@ -70,7 +70,7 @@ namespace FTAnalyzer
             return count + " times";
         }
 
-        static string AggrandiseRelationship(string relation, decimal distance, int offset)
+        static string AggrandiseRelationship(string relation, long distance, int offset)
         {
             distance -= offset;
             switch (distance)
@@ -86,7 +86,7 @@ namespace FTAnalyzer
             }
         }
 
-        static string OrdinalSuffix(decimal number)
+        static string OrdinalSuffix(long number)
         {
             string os = string.Empty;
             if (number % 100 > 10 && number % 100 < 14)
