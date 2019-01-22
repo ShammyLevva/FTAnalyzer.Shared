@@ -10,7 +10,7 @@ namespace FTAnalyzer
         public CensusDate CensusDate { get; }
         public bool FTAnalyzerFact { get; }
         string SurnameMetaphone { get; }
-        string ForenamesMetaphone { get; }
+        string ForenameMetaphone { get; }
         
 
         public LostCousin(string name, int birthYear, string reference, int censusYear, string censusCountry, bool ftanalyzer)
@@ -41,7 +41,9 @@ namespace FTAnalyzer
             {
                 string forenames = Name.Substring(ptr + 2);
                 string surname = Name.Substring(0, ptr);
-                ForenamesMetaphone = new DoubleMetaphone(forenames).PrimaryKey;
+                int pos = forenames.IndexOf(" ", StringComparison.Ordinal);
+                string forename = forenames == null ? string.Empty : (pos > 0 ? forenames.Substring(0, pos) : forenames);
+                ForenameMetaphone = new DoubleMetaphone(forename).PrimaryKey;
                 SurnameMetaphone = new DoubleMetaphone(surname).PrimaryKey;
             }
             else
@@ -89,7 +91,7 @@ namespace FTAnalyzer
         public bool Equals(LostCousin other)
         {
             return CensusDate == other.CensusDate &&
-                    (Name == other.Name || (ForenamesMetaphone == other.ForenamesMetaphone &&
+                    (Name == other.Name || (ForenameMetaphone == other.ForenameMetaphone &&
                                             SurnameMetaphone == other.SurnameMetaphone)) &&
                     Math.Abs(BirthYear - other.BirthYear) < 2 &&
                     Reference == other.Reference;
