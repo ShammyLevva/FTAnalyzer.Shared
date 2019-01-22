@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace FTAnalyzer
 {
@@ -41,8 +43,7 @@ namespace FTAnalyzer
                     int months = BirthDate.MonthsDifference(CensusDate);
                     return $"{months}m";
                 }
-                else
-                    return "0";
+                return "0";
             }
         }
 
@@ -76,5 +77,41 @@ namespace FTAnalyzer
             !CensusLocation.IsKnownCountry || Countries.IsUnitedKingdom(location) ? CensusLocation.IsUnitedKingdom : CensusLocation.Country.Equals(location);
 
         public override string ToString() => $"{IndividualID}: {Name} b.{BirthDate}";
+
+        IComparer<IDisplayCensus> IColumnComparer<IDisplayCensus>.GetComparer(string columnName, bool ascending)
+        {
+            switch (columnName)
+            {
+                case "FamilyID": return CompareComparableProperty<IDisplayCensus>(f => f.FamilyID, ascending);
+                case "Position": return CompareComparableProperty<IDisplayCensus>(f => f.Position, ascending);
+                case "IndividualID": return CompareComparableProperty<IDisplayCensus>(f => f.IndividualID, ascending);
+                case "CensusLocation": return CompareComparableProperty<IDisplayCensus>(f => f.CensusLocation, ascending);
+                case "CensusName": return CompareComparableProperty<IDisplayCensus>(f => f.CensusName, ascending);
+                case "Age": return CompareComparableProperty<IDisplayCensus>(f => f.Age, ascending);
+                case "Occupation": return CompareComparableProperty<IDisplayCensus>(f => f.Occupation, ascending);
+                case "BirthDate": return CompareComparableProperty<IDisplayCensus>(f => f.BirthDate, ascending);
+                case "BirthLocation": return CompareComparableProperty<IDisplayCensus>(f => f.BirthLocation, ascending);
+                case "DeathDate": return CompareComparableProperty<IDisplayCensus>(f => f.DeathDate, ascending);
+                case "DeathLocation": return CompareComparableProperty<IDisplayCensus>(f => f.DeathLocation, ascending);
+                case "CensusStatus": return CompareComparableProperty<IDisplayCensus>(f => f.CensusStatus, ascending);
+                case "CensusRef": return CompareComparableProperty<IDisplayCensus>(f => f.CensusRef, ascending);
+                case "Relation": return CompareComparableProperty<IDisplayCensus>(f => f.Relation, ascending);
+                case "RelationToRoot": return CompareComparableProperty<IDisplayCensus>(f => f.RelationToRoot, ascending);
+                case "Ahnentafel": return CompareComparableProperty<IDisplayCensus>(f => f.Ahnentafel, ascending);
+                default: return null;
+            }
+
+        }
+
+        Comparer<T> CompareComparableProperty<T>(Func<IDisplayCensus, IComparable> accessor, bool ascending)
+        {
+            return Comparer<T>.Create((x, y) =>
+            {
+                var a = accessor(x as IDisplayCensus);
+                var b = accessor(y as IDisplayCensus);
+                int result = a.CompareTo(b);
+                return ascending ? result : -result;
+            });
+        }
     }
 }
