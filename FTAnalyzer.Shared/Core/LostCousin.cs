@@ -60,17 +60,17 @@ namespace FTAnalyzer
             BirthYear = result;
             Reference = reference;
             FTAnalyzerFact = ftanalyzer;
-            if(census.StartsWith("England"))
+            if(census.StartsWith("England", StringComparison.Ordinal))
             {
-                if (census.EndsWith("1841")) CensusDate = CensusDate.EWCENSUS1841;
-                if (census.EndsWith("1881")) CensusDate = CensusDate.EWCENSUS1881;
-                if (census.EndsWith("1911")) CensusDate = CensusDate.EWCENSUS1911;
+                if (census.EndsWith("1841", StringComparison.Ordinal)) CensusDate = CensusDate.EWCENSUS1841;
+                if (census.EndsWith("1881", StringComparison.Ordinal)) CensusDate = CensusDate.EWCENSUS1881;
+                if (census.EndsWith("1911", StringComparison.Ordinal)) CensusDate = CensusDate.EWCENSUS1911;
             }
-            if (census.StartsWith("Scotland") && census.EndsWith("1881")) CensusDate = CensusDate.SCOTCENSUS1881;
-            if (census.StartsWith("Canada") && census.EndsWith("1881")) CensusDate = CensusDate.SCOTCENSUS1881;
-            if (census.StartsWith("Ireland") && census.EndsWith("1881")) CensusDate = CensusDate.SCOTCENSUS1881;
-            if (census.StartsWith("United States") && census.EndsWith("1880")) CensusDate = CensusDate.USCENSUS1880;
-            if (census.StartsWith("United States") && census.EndsWith("1940")) CensusDate = CensusDate.USCENSUS1940;
+            if (census.StartsWith("Scotland", StringComparison.Ordinal) && census.EndsWith("1881", StringComparison.Ordinal)) CensusDate = CensusDate.SCOTCENSUS1881;
+            if (census.StartsWith("Canada", StringComparison.Ordinal) && census.EndsWith("1881", StringComparison.Ordinal)) CensusDate = CensusDate.SCOTCENSUS1881;
+            if (census.StartsWith("Ireland", StringComparison.Ordinal) && census.EndsWith("1881", StringComparison.Ordinal)) CensusDate = CensusDate.SCOTCENSUS1881;
+            if (census.StartsWith("United States", StringComparison.Ordinal) && census.EndsWith("1880", StringComparison.Ordinal)) CensusDate = CensusDate.USCENSUS1880;
+            if (census.StartsWith("United States", StringComparison.Ordinal) && census.EndsWith("1940", StringComparison.Ordinal)) CensusDate = CensusDate.USCENSUS1940;
         }
 
         string FixReference(string reference)
