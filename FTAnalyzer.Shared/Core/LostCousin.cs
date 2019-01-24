@@ -93,7 +93,7 @@ namespace FTAnalyzer
             return CensusDate == other.CensusDate &&
                     (Name == other.Name || (ForenameMetaphone == other.ForenameMetaphone &&
                                             SurnameMetaphone == other.SurnameMetaphone)) &&
-                    Math.Abs(BirthYear - other.BirthYear) < 2 &&
+                    Math.Abs(BirthYear - other.BirthYear) < 5 &&
                     Reference == other.Reference;
         }
     }
