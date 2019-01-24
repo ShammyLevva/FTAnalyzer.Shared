@@ -88,10 +88,11 @@ namespace FTAnalyzer.Utilities
             return sb.ToString().Normalize(NormalizationForm.FormC);
         }
 
-        public static string ClearWhiteSpace(this String text)
+        public static string ClearWhiteSpace(this string text)
         {
             return text.Replace(Environment.NewLine, " ").Replace("\n", " ")
-                       .Replace("\t", " ").Replace("   ", " ").Replace("  ", " ")
+                       .Replace("\t", " ").Replace("   ", " ").Replace("   ", " ")
+                       .Replace("  ", " ").Replace("  ", " ").Replace("  ", " ")
                        .Replace("  ", " ").Replace("  ", " ").Replace("  ", " ")
                        .Replace(";", " ").Replace(":", " ").Replace("~", " ")
                        .Trim();

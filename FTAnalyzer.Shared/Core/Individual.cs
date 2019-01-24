@@ -1,4 +1,5 @@
 using FTAnalyzer.Properties;
+using FTAnalyzer.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -896,6 +897,7 @@ namespace FTAnalyzer
             {
                 bool checkNotes = true;
                 string notes = CensusReference.ClearCommonPhrases(Notes);
+                notes = notes.ClearWhiteSpace();
                 while (checkNotes)
                 {
                     checkNotes = false;
@@ -914,7 +916,7 @@ namespace FTAnalyzer
                         if (pos != -1)
                         {
                             notes = notes.Remove(pos, cr.MatchString.Length);
-                            checkNotes = notes.Length > 0 && cr.MatchString.Length > 0;
+                            checkNotes = notes.Length > 10 && cr.MatchString.Length > 0;
                         }
                     }
                 }
