@@ -637,6 +637,10 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
         }
 
         Dictionary<CensusDate, int> MissingLCEntries;
+        int LCFound = 0;
+        int LCMissing = 0;
+        int LCUploadable = 0;
+        int LCInvalidRef = 0;
 
         public string UpdateLostCousinsReport(Predicate<Individual> relationFilter)
         {
@@ -713,37 +717,68 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
                 output.Append($"You have {missingTotal} Census facts with no Lost Cousins fact");
                 output.Append("\nClick the Lost Cousins website link to add them today.");
             }
+            LCFound = LCtotal;
+            LCMissing = missingTotal;
             return output.ToString();
         }
 
-        public string LCOutput(List<CensusIndividual> LCUpdates, Predicate<CensusIndividual> relationFilter)
+        public string LCOutput(List<CensusIndividual> LCUpdates, List<CensusIndividual> LCInvalidReferences, Predicate<CensusIndividual> relationFilter)
         {
+            LCInvalidRef = 0;
             StringBuilder output = new StringBuilder();
-            LCUpdates.AddRange(GetMissingLCIndividuals(CensusDate.EWCENSUS1881, relationFilter, output));
-            LCUpdates.AddRange(GetMissingLCIndividuals(CensusDate.EWCENSUS1841, relationFilter, output));
-            LCUpdates.AddRange(GetMissingLCIndividuals(CensusDate.EWCENSUS1911, relationFilter, output));
+            Tuple<List<CensusIndividual>, List<CensusIndividual>> result;
+            result = GetMissingLCIndividuals(CensusDate.EWCENSUS1881, relationFilter, output);
+            LCUpdates.AddRange(result.Item1);
+            LCInvalidReferences.AddRange(result.Item2);
+            result = GetMissingLCIndividuals(CensusDate.EWCENSUS1841, relationFilter, output);
+            LCUpdates.AddRange(result.Item1);
+            LCInvalidReferences.AddRange(result.Item2);
+            result = GetMissingLCIndividuals(CensusDate.EWCENSUS1911, relationFilter, output);
+            LCUpdates.AddRange(result.Item1);
+            LCInvalidReferences.AddRange(result.Item2);
             output.Append($"————————————————————————————————————————————————————\n");
-            LCUpdates.AddRange(GetMissingLCIndividuals(CensusDate.SCOTCENSUS1881, relationFilter, output));
+            result = GetMissingLCIndividuals(CensusDate.SCOTCENSUS1881, relationFilter, output);
+            LCUpdates.AddRange(result.Item1);
+            LCInvalidReferences.AddRange(result.Item2);
             //LCUpdates.AddRange(GetMissingLCIndividuals(CensusDate.IRELANDCENSUS1911, rtbLCUpdateData));
-            LCUpdates.AddRange(GetMissingLCIndividuals(CensusDate.CANADACENSUS1881, relationFilter, output));
+            //LCUpdates.AddRange(result.Item1);
+            //LCInvalidReferences.AddRange(result.Item2);
+            result = GetMissingLCIndividuals(CensusDate.CANADACENSUS1881, relationFilter, output);
+            LCUpdates.AddRange(result.Item1);
+            LCInvalidReferences.AddRange(result.Item2);
             output.Append($"————————————————————————————————————————————————————\n");
-            LCUpdates.AddRange(GetMissingLCIndividuals(CensusDate.USCENSUS1880, relationFilter, output));
-            LCUpdates.AddRange(GetMissingLCIndividuals(CensusDate.USCENSUS1940, relationFilter, output));
+            result = GetMissingLCIndividuals(CensusDate.USCENSUS1880, relationFilter, output);
+            LCUpdates.AddRange(result.Item1);
+            LCInvalidReferences.AddRange(result.Item2);
+            result = GetMissingLCIndividuals(CensusDate.USCENSUS1940, relationFilter, output);
+            LCUpdates.AddRange(result.Item1);
+            LCInvalidReferences.AddRange(result.Item2);
             output.Append($"————————————————————————————————————————————————————\n");
             output.Append($"{LCUpdates.Count} possible records to upload to Lost Cousins.");
+            LCUploadable = LCUpdates.Count;
+            LCInvalidRef = LCInvalidReferences.Count;
+            string stats = $"{LCMissing} census records ({LCUploadable} uploadable, {LCInvalidRef} invalid refs), and {LCFound} already entered.";
+            Task.Run(() => Analytics.TrackActionAsync(Analytics.LostCousinsAction, Analytics.LostCousinsStats, stats));
             return output.ToString();
         }
 
-        List<CensusIndividual> GetMissingLCIndividuals(CensusDate censusDate, Predicate<CensusIndividual> relationFilter, StringBuilder output)
+        Tuple<List<CensusIndividual>, List<CensusIndividual>> GetMissingLCIndividuals(CensusDate censusDate, Predicate<CensusIndividual> relationFilter, StringBuilder output)
         {
             IEnumerable<CensusFamily> censusFamilies = GetAllCensusFamilies(censusDate, true, false);
+
             bool missingLC(CensusIndividual x) => x.MissingLostCousins(censusDate, false) && x.CensusReference?.Status == CensusReference.ReferenceStatus.GOOD;
-            Predicate<CensusIndividual> filter = FilterUtils.AndFilter(relationFilter, missingLC);
-            List<CensusIndividual> individuals = censusFamilies.SelectMany(f => f.Members).Filter(filter).ToList();
-            individuals = LCRemoveDuplicateIndividuals(individuals);
+            Predicate<CensusIndividual> missingFilter = FilterUtils.AndFilter(relationFilter, missingLC);
+            List<CensusIndividual> missingIndiv = censusFamilies.SelectMany(f => f.Members).Filter(missingFilter).ToList();
+            missingIndiv = LCRemoveDuplicateIndividuals(missingIndiv);
+
+            bool invalidRef(CensusIndividual x) => x.MissingLostCousins(censusDate, false) && x.CensusReference?.Status != CensusReference.ReferenceStatus.GOOD;
+            Predicate<CensusIndividual> invalidRefFilter = FilterUtils.AndFilter(relationFilter, invalidRef);
+            List<CensusIndividual> invalidRefIndiv = censusFamilies.SelectMany(f => f.Members).Filter(invalidRefFilter).ToList();
+            invalidRefIndiv = LCRemoveDuplicateIndividuals(invalidRefIndiv);
+
             int missing = MissingLCEntries[censusDate];
-            output.Append($"{censusDate}: {individuals.Count} possible {missing - individuals.Count} without valid census ref\n");
-            return individuals;
+            output.Append($"{censusDate}: {missingIndiv.Count} possible {missing - missingIndiv.Count} without valid census ref\n");
+            return Tuple.Create(missingIndiv, invalidRefIndiv);
         }
 
         List<CensusIndividual> LCRemoveDuplicateIndividuals(List<CensusIndividual> individuals)
