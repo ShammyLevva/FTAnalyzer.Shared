@@ -12,7 +12,7 @@ namespace FTAnalyzer
             if (rootPerson.Equals(indToFind))
                 return "root person";
             CommonAncestor commonAncestor = indToFind.CommonAncestor;
-            long rootDistance = (long)(BigInteger.Log10(commonAncestor.Ind.Ahnentafel) / Math.Log(2.0));
+            long rootDistance = (long)(BigInteger.Log(commonAncestor.Ind.Ahnentafel) / Math.Log(2.0));
             long toFindDistance = commonAncestor.Distance;
 
             // DIRECT DESCENDANT - PARENT
