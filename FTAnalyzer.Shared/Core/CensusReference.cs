@@ -338,7 +338,9 @@ namespace FTAnalyzer
         public static string ClearCommonPhrases(string input)
         {
             string output = input.Replace(".", " ").Replace(",", " ").Replace("(", " ")
-                                 .Replace(")", " ").Replace("{", " ").Replace("}", " ").ClearWhiteSpace();
+                                 .Replace(")", " ").Replace("{", " ").Replace("}", " ")
+                                 .Replace("«b»"," ").Replace("«i»"," ").Replace("«/b»", " ")
+                                 .Replace("«/i»", " ").ClearWhiteSpace();
             return output.Replace("Registration District", "RD", StringComparison.OrdinalIgnoreCase)
                         .Replace("Pg", "Page", StringComparison.OrdinalIgnoreCase)
                         .Replace("PN", "Piece", StringComparison.OrdinalIgnoreCase)

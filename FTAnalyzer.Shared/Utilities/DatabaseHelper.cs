@@ -170,6 +170,7 @@ namespace FTAnalyzer.Utilities
                 Version v7_0_0_0 = new Version("7.0.0.0");
                 Version v7_3_0_0 = new Version("7.3.0.0");
                 Version v7_3_0_1 = new Version("7.3.0.1");
+                Version v7_3_3_0 = new Version("7.3.3.0");
                 if (dbVersion < v3_0_0_0)
                 {
                     // Version is less than 3.0.0.0 or none existent so copy latest database from empty database
@@ -310,6 +311,27 @@ namespace FTAnalyzer.Utilities
                     }
                     catch (SQLiteException) { } // don't complain if adding field already exists due to beta testing.
                     using (SQLiteCommand cmd = new SQLiteCommand("update versions set Database = '7.3.0.1'", InstanceConnection))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                if (dbVersion < v7_3_3_0)
+                {
+                    try
+                    {
+                        using (SQLiteCommand cmd = new SQLiteCommand("SELECT count(*) FROM LostCousins", InstanceConnection))
+                        {
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+                    catch (SQLiteException)
+                    {
+                        using (SQLiteCommand cmd = new SQLiteCommand("create table LostCousins(CensusYear INTEGER(4), CensusCountry STRING (20), CensusRef STRING(25), IndID STRING(10), FullName String(80) constraint pkLostCousins primary key(CensusYear, CensusCountry, CensusRef, IndID))", InstanceConnection))
+                        {
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+                    using (SQLiteCommand cmd = new SQLiteCommand("update versions set Database = '7.3.3.0'", InstanceConnection))
                     {
                         cmd.ExecuteNonQuery();
                     }
