@@ -74,7 +74,7 @@ namespace FTAnalyzer.Exports
             outputText.Report($"\nFinished writing Entries to Lost Cousins website. {recordsAdded} successfully added, {recordsPresent} already present, {sessionDuplicates} possible duplicates and {recordsFailed} failed.\nView Lost Cousins Report tab to see current status.");
             int ftanalyzerfacts = Website.FindAll(lc => lc.FTAnalyzerFact).Count;
             int manualfacts = Website.FindAll(lc => !lc.FTAnalyzerFact).Count;
-            Task.Run(() => Analytics.TrackActionAsync(Analytics.LostCousinsAction, Analytics.ReadLostCousins, $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm")}: {manualfacts} manual & {ftanalyzerfacts} -> {ftanalyzerfacts+recordsAdded} FTAnalyzer entries"));
+            Task.Run(() => Analytics.TrackActionAsync(Analytics.LostCousinsAction, Analytics.ReadLostCousins, $"{DateTime.Now.ToUniversalTime().ToString("yyyy-MM-dd HH:mm")}: {manualfacts} manual & {ftanalyzerfacts} -> {ftanalyzerfacts+recordsAdded} FTAnalyzer entries"));
             return recordsAdded;
         }
 

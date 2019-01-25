@@ -170,7 +170,7 @@ namespace FTAnalyzer.Utilities
                 Version v7_0_0_0 = new Version("7.0.0.0");
                 Version v7_3_0_0 = new Version("7.3.0.0");
                 Version v7_3_0_1 = new Version("7.3.0.1");
-                Version v7_3_3_0 = new Version("7.3.3.0");
+                Version v7_3_3_2 = new Version("7.3.3.2");
                 if (dbVersion < v3_0_0_0)
                 {
                     // Version is less than 3.0.0.0 or none existent so copy latest database from empty database
@@ -289,7 +289,7 @@ namespace FTAnalyzer.Utilities
                 {
                     try
                     {
-                        using (SQLiteCommand cmd = new SQLiteCommand("create table LostCousins(CensusYear INTEGER(4), CensusCountry STRING (20), CensusRef STRING(25), IndID STRING(10), FullName String(80) constraint pkLostCousins primary key(CensusYear, CensusCountry, CensusRef, IndID))", InstanceConnection))
+                        using (SQLiteCommand cmd = new SQLiteCommand("create table LostCousins (CensusYear INTEGER(4), CensusCountry STRING (20), CensusRef STRING(25), IndID STRING(10), FullName String(80), constraint pkLostCousins primary key (CensusYear, CensusCountry, CensusRef, IndID))", InstanceConnection))
                         {
                             cmd.ExecuteNonQuery();
                         }
@@ -315,7 +315,7 @@ namespace FTAnalyzer.Utilities
                         cmd.ExecuteNonQuery();
                     }
                 }
-                if (dbVersion < v7_3_3_0)
+                if (dbVersion < v7_3_3_2)
                 {
                     try
                     {
@@ -326,12 +326,12 @@ namespace FTAnalyzer.Utilities
                     }
                     catch (SQLiteException)
                     {
-                        using (SQLiteCommand cmd = new SQLiteCommand("create table LostCousins(CensusYear INTEGER(4), CensusCountry STRING (20), CensusRef STRING(25), IndID STRING(10), FullName String(80) constraint pkLostCousins primary key(CensusYear, CensusCountry, CensusRef, IndID))", InstanceConnection))
+                        using (SQLiteCommand cmd = new SQLiteCommand("create table LostCousins (CensusYear INTEGER(4), CensusCountry STRING (20), CensusRef STRING(25), IndID STRING(10), FullName String(80), constraint pkLostCousins primary key (CensusYear, CensusCountry, CensusRef, IndID))", InstanceConnection))
                         {
                             cmd.ExecuteNonQuery();
                         }
                     }
-                    using (SQLiteCommand cmd = new SQLiteCommand("update versions set Database = '7.3.3.0'", InstanceConnection))
+                    using (SQLiteCommand cmd = new SQLiteCommand("update versions set Database = '7.3.3.2'", InstanceConnection))
                     {
                         cmd.ExecuteNonQuery();
                     }
