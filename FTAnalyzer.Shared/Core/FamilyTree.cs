@@ -641,6 +641,11 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
         int LCMissing = 0;
         int LCUploadable = 0;
         int LCInvalidRef = 0;
+#if __PC__
+        string separator = $"————————————————————————————————————————————————————\n";
+#elif __MACOS__
+        string separator = $"————————————————————————————————\n";
+#endif
 
         public string UpdateLostCousinsReport(Predicate<Individual> relationFilter)
         {
@@ -690,14 +695,14 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             output.Append($"1881 England & Wales Census: {countEW1881} Found, {missingEW1881} Missing\n");
             output.Append($"1841 England & Wales Census: {countEW1841} Found, {missingEW1841} Missing\n");
             output.Append($"1911 England & Wales Census: {countEW1911} Found, {missingEW1911} Missing\n");
-            output.Append($"————————————————————————————————————————————————————\n");
+            output.Append(separator);
             output.Append($"1881 Scotland Census: {countSco1881} Found, {missingSco1881} Missing\n");
             output.Append($"1911 Ireland Census: {countIre1911} Found, {missingIre1911} Missing\n");
             output.Append($"1881 Canada Census: {countCan1881} Found, {missingCan1881} Missing\n");
-            output.Append($"————————————————————————————————————————————————————\n");
+            output.Append(separator);
             output.Append($"1880 US Census: {countUS1880} Found, {missingUS1880} Missing\n");
             output.Append($"1940 US Census: {countUS1940} Found, {missingUS1940} Missing\n");
-            output.Append($"————————————————————————————————————————————————————\n");
+            output.Append(separator);
             if (moreThanOneLCfact > 0)
                 output.Append($"Duplicate Lost Cousins facts: {moreThanOneLCfact}\n");
             if (LCtotal > total)
@@ -705,7 +710,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             //if (noCountryTotal > 0)
             //    rtbLostCousins.AppendText($"Census facts with no census country and no Lost Cousins fact : {noCountryTotal}\n");
             if (moreThanOneLCfact > 0 || LCtotal > total) // || noCountryTotal > 0)
-                output.Append($"————————————————————————————————————————————————————\n");
+                output.Append(separator);
             output.Append($"Totals: {LCtotal} Found, {missingTotal} Missing");
 
             if (LCnoCensus > 0 || missingTotal > 0)
@@ -736,7 +741,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             result = GetMissingLCIndividuals(CensusDate.EWCENSUS1911, relationFilter, output);
             LCUpdates.AddRange(result.Item1);
             LCInvalidReferences.AddRange(result.Item2);
-            output.Append($"————————————————————————————————————————————————————\n");
+            output.Append(separator);
             result = GetMissingLCIndividuals(CensusDate.SCOTCENSUS1881, relationFilter, output);
             LCUpdates.AddRange(result.Item1);
             LCInvalidReferences.AddRange(result.Item2);
@@ -746,14 +751,14 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             result = GetMissingLCIndividuals(CensusDate.CANADACENSUS1881, relationFilter, output);
             LCUpdates.AddRange(result.Item1);
             LCInvalidReferences.AddRange(result.Item2);
-            output.Append($"————————————————————————————————————————————————————\n");
+            output.Append(separator);
             result = GetMissingLCIndividuals(CensusDate.USCENSUS1880, relationFilter, output);
             LCUpdates.AddRange(result.Item1);
             LCInvalidReferences.AddRange(result.Item2);
             result = GetMissingLCIndividuals(CensusDate.USCENSUS1940, relationFilter, output);
             LCUpdates.AddRange(result.Item1);
             LCInvalidReferences.AddRange(result.Item2);
-            output.Append($"————————————————————————————————————————————————————\n");
+            output.Append(separator);
             output.Append($"{LCUpdates.Count} possible records to upload to Lost Cousins.");
             LCUploadable = LCUpdates.Count;
             LCInvalidRef = LCInvalidReferences.Count;
@@ -1808,7 +1813,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
                 progress.Report(20 + (record++ / totalRecords));
                 try
                 {
-                    #region Death facts
+#region Death facts
                     if (ind.DeathDate.IsKnown)
                     {
                         if (ind.BirthDate.IsAfter(ind.DeathDate))
