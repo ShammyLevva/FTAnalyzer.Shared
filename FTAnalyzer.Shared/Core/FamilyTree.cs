@@ -87,6 +87,8 @@ namespace FTAnalyzer
         {
             if (node == null) return string.Empty;
             XmlNodeList notes = node.SelectNodes("NOTE");
+            if (notes.Count == 0)
+                notes = node.SelectNodes("DATA/TEXT");
             if (notes.Count == 0) return string.Empty;
             var result = new StringBuilder();
             try

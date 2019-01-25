@@ -807,7 +807,7 @@ namespace FTAnalyzer
                 if (CensusDate.IsCensusCountry(FactDate, Location) || !Location.IsKnownCountry)
                 {
                     //                    FactErrorNumber = (int) FamilyTree.Dataerror.RESIDENCE_CENSUS_DATE;
-                    FactErrorLevel = Fact.FactError.WARNINGALLOW;
+                    FactErrorLevel = FactError.WARNINGALLOW;
                     FactErrorMessage = $"Warning : Residence date {FactDate} is in a census year but doesn't overlap census date.";
                     if (!GeneralSettings.Default.TolerateInaccurateCensusDate)
                         FactErrorMessage += " This would be accepted as a census fact with Tolerate slightly inaccurate census dates option.";

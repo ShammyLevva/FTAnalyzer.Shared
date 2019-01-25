@@ -340,7 +340,8 @@ namespace FTAnalyzer
             string output = input.Replace(".", " ").Replace(",", " ").Replace("(", " ")
                                  .Replace(")", " ").Replace("{", " ").Replace("}", " ")
                                  .Replace("«b»"," ").Replace("«i»"," ").Replace("«/b»", " ")
-                                 .Replace("«/i»", " ").ClearWhiteSpace();
+                                 .Replace("«/i»", " ").Replace(@"\i", " ").Replace(@"\i0", " ")
+                                 .ClearWhiteSpace();
             return output.Replace("Registration District", "RD", StringComparison.OrdinalIgnoreCase)
                         .Replace("Pg", "Page", StringComparison.OrdinalIgnoreCase)
                         .Replace("PN", "Piece", StringComparison.OrdinalIgnoreCase)
@@ -361,6 +362,10 @@ namespace FTAnalyzer
                         .Replace("Family No", "Family", StringComparison.OrdinalIgnoreCase)
                         .Replace("Page Number", "Page", StringComparison.OrdinalIgnoreCase)
                         .Replace("Page No", "Page", StringComparison.OrdinalIgnoreCase)
+                        .Replace("Book No", "Book", StringComparison.OrdinalIgnoreCase)
+                        .Replace("Book Number", "Book", StringComparison.OrdinalIgnoreCase)
+                        .Replace("Folio No", "Folio", StringComparison.OrdinalIgnoreCase)
+                        .Replace("Folio Number", "Folio", StringComparison.OrdinalIgnoreCase)
                         .Replace("Piece Number", "Piece", StringComparison.OrdinalIgnoreCase)
                         .Replace("Piece No", "Piece", StringComparison.OrdinalIgnoreCase)
                         .ClearWhiteSpace();
