@@ -9,8 +9,8 @@ namespace FTAnalyzer
         public string Reference { get; }
         public CensusDate CensusDate { get; }
         public bool FTAnalyzerFact { get; }
-        string SurnameMetaphone { get; }
-        string ForenameMetaphone { get; }
+        string SurnameMetaphone { get; set; }
+        string ForenameMetaphone { get; set; }
         
 
         public LostCousin(string name, int birthYear, string reference, int censusYear, string censusCountry, bool ftanalyzer)
@@ -33,9 +33,13 @@ namespace FTAnalyzer
                 CensusDate = CensusDate.EWCENSUS1911;
             if (censusYear == 1880 && censusCountry == Countries.UNITED_STATES)
                 CensusDate = CensusDate.USCENSUS1880;
-            if (censusYear ==1940 && censusCountry == Countries.UNITED_STATES)
+            if (censusYear == 1940 && censusCountry == Countries.UNITED_STATES)
                 CensusDate = CensusDate.USCENSUS1940;
+            SetMetaphones();
+        }
 
+        void SetMetaphones()
+        {
             int ptr = Name.IndexOf(",", StringComparison.Ordinal);
             if (ptr > 0)
             {
@@ -56,6 +60,7 @@ namespace FTAnalyzer
         public LostCousin(string name, string birthYear, string reference, string census, bool ftanalyzer)
         {
             Name = name;
+            SetMetaphones();
             int.TryParse(birthYear, out int result);
             BirthYear = result;
             Reference = reference;
@@ -71,6 +76,7 @@ namespace FTAnalyzer
             if (census.StartsWith("Ireland", StringComparison.Ordinal) && census.EndsWith("1881", StringComparison.Ordinal)) CensusDate = CensusDate.SCOTCENSUS1881;
             if (census.StartsWith("United States", StringComparison.Ordinal) && census.EndsWith("1880", StringComparison.Ordinal)) CensusDate = CensusDate.USCENSUS1880;
             if (census.StartsWith("United States", StringComparison.Ordinal) && census.EndsWith("1940", StringComparison.Ordinal)) CensusDate = CensusDate.USCENSUS1940;
+
         }
 
         string FixReference(string reference)

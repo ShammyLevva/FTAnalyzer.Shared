@@ -358,6 +358,7 @@ namespace FTAnalyzer
                                  .ClearWhiteSpace();
             return output.Replace("Registration District", "RD", StringComparison.OrdinalIgnoreCase)
                         .Replace("RegistrationDistrict", "RD", StringComparison.OrdinalIgnoreCase)
+                        .Replace("Reg District", "RD", StringComparison.OrdinalIgnoreCase)
                         .Replace("Pg", "Page", StringComparison.OrdinalIgnoreCase)
                         .Replace("PN", "Piece", StringComparison.OrdinalIgnoreCase)
                         .Replace("Schedule No", "SN", StringComparison.OrdinalIgnoreCase)

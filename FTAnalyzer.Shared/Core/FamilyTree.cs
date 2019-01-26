@@ -3160,7 +3160,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             var result = new HashSet<string>();
             IEnumerable<Individual> unrecognised = AllIndividuals.Filter(i => i.UnrecognisedCensusNotes.Length > 0);
             foreach (Individual i in unrecognised)
-                result.Add(i.UnrecognisedCensusNotes + "\n--------------------------------------------------------------------------------\n");
+                result.Add(i.UnrecognisedCensusNotes);
             return result;
         }
 
