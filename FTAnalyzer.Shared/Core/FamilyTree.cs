@@ -76,7 +76,11 @@ namespace FTAnalyzer
             XmlNode text = node.SelectSingleNode(".//TEXT");
             if (text != null && lookForText && text.ChildNodes.Count > 0)
                 return GetContinuationText(text.ChildNodes);
-            return node.FirstChild != null && node.FirstChild.Value != null ? node.FirstChild.Value.Trim() : string.Empty;
+            if (node.FirstChild == null || node.FirstChild.Value == null)
+                return string.Empty;
+            if (node.FirstChild.NextSibling != null)
+                return GetSiblingText(node.FirstChild, node.ChildNodes);
+            return node.FirstChild.Value.Trim();
         }
 
         public static string GetText(XmlNode node, string tag, bool lookForText) => GetText(GetChildNode(node, tag), lookForText);
@@ -121,7 +125,7 @@ namespace FTAnalyzer
                 if (node.Attributes["ID"] != null && node.Attributes["ID"].Value == reference.Value)
                 {
                     result.AppendLine(GetContinuationText(node.ChildNodes));
-                    return result.ToString();
+                    return result.ToString().Trim();
                 }
             }
             return string.Empty;
@@ -138,7 +142,20 @@ namespace FTAnalyzer
                     result.Append(child.InnerText);
             }
             result.AppendLine();
-            return result.ToString();
+            return result.ToString().Trim();
+        }
+
+        static string GetSiblingText(XmlNode firstline, XmlNodeList nodeList)
+        {
+            var result = new StringBuilder();
+            result.Append(firstline.Value.Trim());
+            foreach (XmlNode child in nodeList)
+            {
+                if (child.Name.Equals("CONC"))
+                    result.Append(child.InnerText);
+            }
+            result.AppendLine();
+            return result.ToString().Trim();
         }
 
         public static string ValidFilename(string filename)
@@ -291,7 +308,7 @@ namespace FTAnalyzer
             {
                 var fs = new FactSource(n);
                 sources.Add(fs);
-                progress.Report((100 * counter++) / sourceMax);
+                progress.Report(100 * counter++ / sourceMax);
             }
             outputText.Report($"Loaded {counter} sources.\n");
             progress.Report(100);
@@ -644,9 +661,9 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
         int LCUploadable = 0;
         int LCInvalidRef = 0;
 #if __PC__
-        string separator = $"————————————————————————————————————————————————————\n";
+        readonly string separator = $"————————————————————————————————————————————————————\n";
 #elif __MACOS__
-        string separator = $"————————————————————————————————\n";
+        readonly string separator = $"————————————————————————————————\n";
 #endif
 
         public string UpdateLostCousinsReport(Predicate<Individual> relationFilter)
@@ -3146,9 +3163,40 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
                 result.Add(i.UnrecognisedCensusNotes + "\n--------------------------------------------------------------------------------\n");
             return result;
         }
-#endregion
 
-#region Today
+        public void WriteUnrecognisedReferencesFile(IEnumerable<string> unrecognisedResults, IEnumerable<string> missingResults, IEnumerable<string> notesResults, string filename)
+        {
+            StreamWriter output = new StreamWriter(new FileStream(filename, FileMode.Create, FileAccess.Write), Encoding.UTF8);
+            int count = 0;
+            if (unrecognisedResults.Count() > 0)
+            {
+                output.WriteLine("Census fact details where a Census reference was expected but went unrecognised");
+                unrecognisedResults = unrecognisedResults.OrderBy(x => x.ToString());
+                foreach (string line in unrecognisedResults)
+                    output.WriteLine($"{++count}: {line}");
+            }
+            if (missingResults.Count() > 0)
+            {
+                count = 0;
+                output.WriteLine("\n\nCensus fact details where a Census Reference was missing or not detected");
+                missingResults = missingResults.OrderBy(x => x.ToString());
+                foreach (string line in missingResults)
+                    output.WriteLine($"{++count}: {line}");
+            }
+            if (notesResults.Count() > 0)
+            {
+                count = 0;
+                output.WriteLine("\n\nNotes with no census recognised references\nThese are usually NOT census references and are included in case there are some that got missed");
+                notesResults = notesResults.OrderBy(x => x.ToString());
+                foreach (string line in notesResults)
+                    output.WriteLine($"{++count}: {line}");
+            }
+            output.Close();
+        }
+
+        #endregion
+
+        #region Today
         public void AddTodaysFacts(DateTime chosenDate, bool wholeMonth, int stepSize, IProgress<int> progress, IProgress<string> outputText)
         {
             string dateDesc;
