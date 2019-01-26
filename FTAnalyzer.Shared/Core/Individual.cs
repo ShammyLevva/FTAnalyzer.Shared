@@ -340,7 +340,8 @@ namespace FTAnalyzer
                     Surname = UNKNOWN_NAME;
                     _forenames = name;
                 }
-                if (Surname == "?" || Surname.ToLower() == "mnu" || Surname.ToLower() == "lnu" || Surname.ToLower() == "_____" || Surname.Length == 0)
+                if (Surname.ToLower() == "mnu" || Surname.ToLower() == "lnu" || Surname.Length == 0 ||
+                  ((Surname[0] == '.' || Surname[0] == '?' || Surname[0] == '_') && Surname.Distinct().Count() == 1)) // if all chars are same and is . ? or _
                     Surname = UNKNOWN_NAME;
                 if (GeneralSettings.Default.TreatFemaleSurnamesAsUnknown && !IsMale && Surname.StartsWith("(", StringComparison.Ordinal) && Surname.EndsWith(")", StringComparison.Ordinal))
                     Surname = UNKNOWN_NAME;
