@@ -3168,6 +3168,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
         {
             StreamWriter output = new StreamWriter(new FileStream(filename, FileMode.Create, FileAccess.Write), Encoding.UTF8);
             int count = 0;
+            output.WriteLine("Note the counts on the loading page may not match the counts in the file as duplicates not written out each time\n");
             if (unrecognisedResults.Count() > 0)
             {
                 output.WriteLine("Census fact details where a Census reference was expected but went unrecognised");

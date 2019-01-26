@@ -48,7 +48,8 @@ namespace FTAnalyzer
         static readonly string EW_CENSUS_1911_PATTERN78b = @"RG *78\/? *Piece *(\d{1,5})";
 
         static readonly string EW_1939_REGISTER_PATTERN1 = @"RG *101\/?\\? *(\d{1,6}[A-Z]?) *.\/?\\? *(\d{1,3}) *.\/?\\? *(\d{1,3}).+([A-Z]{4})";
-        static readonly string EW_1939_REGISTER_PATTERN2 = @"RG *101\/?\\? *(\d{1,6}[A-Z]?).*? ED ([A-Z]{4}) RD (\d{1,4}-\d)";
+        static readonly string EW_1939_REGISTER_PATTERN2 = @"RG *101\/?\\? *(\d{1,6}[A-Z]?).*? ED ([A-Z]{4}) RD (.*?) Marital";
+        static readonly string EW_1939_REGISTER_PATTERN3 = @"RG *101\/?\\? *(\d{1,6}[A-Z]?)";
 
         static readonly string SCOT_CENSUSYEAR_PATTERN = @"(1[89]\d[15]).{1,10}(\(?GROS *\)?)?Parish *([A-Z .'-]+) *ED *(\d{1,3}[AB]?) *Page *(\d{1,4}) *Line *(\d{1,2})";
         static readonly string SCOT_CENSUSYEAR_PATTERN2 = @"(1[89]\d[15]).{1,10}(\(?GROS *\)?)?(\d{1,3}\/\d{1,2}[AB]?) (\d{3}\/\d{2}) (\d{3,4})";
@@ -124,6 +125,7 @@ namespace FTAnalyzer
 
                 ["EW_1939_REGISTER_PATTERN1"] = new Regex(EW_1939_REGISTER_PATTERN1, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["EW_1939_REGISTER_PATTERN2"] = new Regex(EW_1939_REGISTER_PATTERN2, RegexOptions.Compiled | RegexOptions.IgnoreCase),
+                ["EW_1939_REGISTER_PATTERN3"] = new Regex(EW_1939_REGISTER_PATTERN3, RegexOptions.Compiled | RegexOptions.IgnoreCase),
 
                 ["SCOT_CENSUSYEAR_PATTERN"] = new Regex(SCOT_CENSUSYEAR_PATTERN, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["SCOT_CENSUSYEAR_PATTERN2"] = new Regex(SCOT_CENSUSYEAR_PATTERN2, RegexOptions.Compiled | RegexOptions.IgnoreCase),
@@ -302,7 +304,7 @@ namespace FTAnalyzer
             return GetCensusReference(text, false); // we have already checked sources so don't do it again.
         }
 
-        bool GetCensusReference(string text, bool checksources = true)
+        bool GetCensusReference(string text, bool checksources = true, bool updateUnknownRef = true)
         {
             if (GeneralSettings.Default.SkipCensusReferences)
                 return false;
@@ -315,10 +317,13 @@ namespace FTAnalyzer
                 }
                 // no match so store text 
                 Status = ReferenceStatus.UNRECOGNISED;
-                if (unknownCensusRef.Length == 0)
-                    unknownCensusRef = $"Unknown Census Ref: {text}";
-                else
-                    unknownCensusRef += $" {text}";
+                if (updateUnknownRef)
+                {
+                    if (unknownCensusRef.Length == 0)
+                        unknownCensusRef = $"Unknown Census Ref: {text}";
+                    else
+                        unknownCensusRef += $" {text}";
+                }
             }
             if (checksources)
             {
@@ -340,7 +345,7 @@ namespace FTAnalyzer
             return false;
         }
 
-        public void CheckFullUnknownReference() => GetCensusReference(UnknownRef, false);
+        public void CheckFullUnknownReference() => GetCensusReference(UnknownRef, false, false);
 
         string UnknownRef => unknownCensusRef.Length > 20 ? unknownCensusRef.Substring(20) : string.Empty;
 
@@ -721,6 +726,17 @@ namespace FTAnalyzer
                 ED = matcher.Groups[2].ToString();
                 Page = "Missing";
                 Schedule = matcher.Groups[3].ToString();
+                SetFlagsandCountry(true, false, Countries.ENG_WALES, ReferenceStatus.INCOMPLETE, matcher.Value);
+                return true;
+            }
+            matcher = censusRegexs["EW_1939_REGISTER_PATTERN3"].Match(text);
+            if (matcher.Success)
+            {
+                Class = "RG101";
+                Piece = matcher.Groups[1].ToString();
+                ED = "Missing";
+                Page = "Missing";
+                Schedule = "Missing";
                 SetFlagsandCountry(true, false, Countries.ENG_WALES, ReferenceStatus.INCOMPLETE, matcher.Value);
                 return true;
             }
