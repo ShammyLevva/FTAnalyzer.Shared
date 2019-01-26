@@ -48,6 +48,7 @@ namespace FTAnalyzer
         static readonly string EW_CENSUS_1911_PATTERN78b = @"RG *78\/? *Piece *(\d{1,5})";
 
         static readonly string EW_1939_REGISTER_PATTERN1 = @"RG *101\/?\\? *(\d{1,6}[A-Z]?) *.\/?\\? *(\d{1,3}) *.\/?\\? *(\d{1,3}).+([A-Z]{4})";
+        static readonly string EW_1939_REGISTER_PATTERN2 = @"RG *101\/?\\? *(\d{1,6}[A-Z]?).*? ED ([A-Z]{4}) RD (\d{1,4}-\d)";
 
         static readonly string SCOT_CENSUSYEAR_PATTERN = @"(1[89]\d[15]).{1,10}(\(?GROS *\)?)?Parish *([A-Z .'-]+) *ED *(\d{1,3}[AB]?) *Page *(\d{1,4}) *Line *(\d{1,2})";
         static readonly string SCOT_CENSUSYEAR_PATTERN2 = @"(1[89]\d[15]).{1,10}(\(?GROS *\)?)?(\d{1,3}\/\d{1,2}[AB]?) (\d{3}\/\d{2}) (\d{3,4})";
@@ -122,6 +123,7 @@ namespace FTAnalyzer
                 ["EW_CENSUS_1911_PATTERN78b"] = new Regex(EW_CENSUS_1911_PATTERN78b, RegexOptions.Compiled | RegexOptions.IgnoreCase),
 
                 ["EW_1939_REGISTER_PATTERN1"] = new Regex(EW_1939_REGISTER_PATTERN1, RegexOptions.Compiled | RegexOptions.IgnoreCase),
+                ["EW_1939_REGISTER_PATTERN2"] = new Regex(EW_1939_REGISTER_PATTERN2, RegexOptions.Compiled | RegexOptions.IgnoreCase),
 
                 ["SCOT_CENSUSYEAR_PATTERN"] = new Regex(SCOT_CENSUSYEAR_PATTERN, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["SCOT_CENSUSYEAR_PATTERN2"] = new Regex(SCOT_CENSUSYEAR_PATTERN2, RegexOptions.Compiled | RegexOptions.IgnoreCase),
@@ -294,13 +296,13 @@ namespace FTAnalyzer
             if (GeneralSettings.Default.SkipCensusReferences)
                 return false;
             string text = FamilyTree.GetText(n, "PAGE", true);
-            if (GetCensusReference(text))
+            if (GetCensusReference(text, true))
                 return true;
             text = FamilyTree.GetNotes(n);
-            return GetCensusReference(text);
+            return GetCensusReference(text, false); // we have already checked sources so don't do it again.
         }
 
-        bool GetCensusReference(string text)
+        bool GetCensusReference(string text, bool checksources = true)
         {
             if (GeneralSettings.Default.SkipCensusReferences)
                 return false;
@@ -316,24 +318,31 @@ namespace FTAnalyzer
                 if (unknownCensusRef.Length == 0)
                     unknownCensusRef = $"Unknown Census Ref: {text}";
                 else
-                    unknownCensusRef += $"\n{text}";
+                    unknownCensusRef += $" {text}";
             }
-            // now check sources to see if census reference is in title page
-            foreach (FactSource fs in Fact.Sources)
+            if (checksources)
             {
-                if (CheckPatterns(fs.SourceTitle))
+                // now check sources to see if census reference is in title page
+                foreach (FactSource fs in Fact.Sources)
                 {
-                    ReferenceText = fs.SourceTitle;
-                    return true;
-                }
-                if (CheckPatterns(fs.Publication))
-                {
-                    ReferenceText = fs.Publication;
-                    return true;
+                    if (CheckPatterns(fs.SourceTitle))
+                    {
+                        ReferenceText = fs.SourceTitle;
+                        return true;
+                    }
+                    if (CheckPatterns(fs.Publication))
+                    {
+                        ReferenceText = fs.Publication;
+                        return true;
+                    }
                 }
             }
             return false;
         }
+
+        public void CheckFullUnknownReference() => GetCensusReference(UnknownRef, false);
+
+        string UnknownRef => unknownCensusRef.Length > 20 ? unknownCensusRef.Substring(20) : string.Empty;
 
         public static string ClearCommonPhrases(string input)
         {
@@ -702,6 +711,17 @@ namespace FTAnalyzer
                 string letterCode = matcher.Groups[4].ToString();
                 ED = CheckLetterCode(letterCode);
                 SetFlagsandCountry(true, false, Countries.ENG_WALES, ReferenceStatus.GOOD, matcher.Value);
+                return true;
+            }
+            matcher = censusRegexs["EW_1939_REGISTER_PATTERN2"].Match(text);
+            if (matcher.Success)
+            {
+                Class = "RG101";
+                Piece = matcher.Groups[1].ToString();
+                ED = matcher.Groups[2].ToString();
+                Page = "Missing";
+                Schedule = matcher.Groups[3].ToString();
+                SetFlagsandCountry(true, false, Countries.ENG_WALES, ReferenceStatus.INCOMPLETE, matcher.Value);
                 return true;
             }
             matcher = censusRegexs["SCOT_CENSUSYEAR_PATTERN"].Match(text);
