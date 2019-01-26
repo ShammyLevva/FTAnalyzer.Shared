@@ -343,6 +343,7 @@ namespace FTAnalyzer
                                  .Replace("«/i»", " ").Replace(@"\i", " ").Replace(@"\i0", " ")
                                  .ClearWhiteSpace();
             return output.Replace("Registration District", "RD", StringComparison.OrdinalIgnoreCase)
+                        .Replace("RegistrationDistrict", "RD", StringComparison.OrdinalIgnoreCase)
                         .Replace("Pg", "Page", StringComparison.OrdinalIgnoreCase)
                         .Replace("PN", "Piece", StringComparison.OrdinalIgnoreCase)
                         .Replace("Schedule No", "SN", StringComparison.OrdinalIgnoreCase)
@@ -351,6 +352,7 @@ namespace FTAnalyzer
                         .Replace("ED institution or vessel", "ED", StringComparison.OrdinalIgnoreCase)
                         .Replace("Enumeration District ED", "ED", StringComparison.OrdinalIgnoreCase)
                         .Replace("Enumeration District", "ED", StringComparison.OrdinalIgnoreCase)
+                        .Replace("EnumerationDistrict", "ED", StringComparison.OrdinalIgnoreCase)
                         .Replace("Sub District", "SD", StringComparison.OrdinalIgnoreCase)
                         .Replace("Sheet number and letter", "Page", StringComparison.OrdinalIgnoreCase)
                         .Replace("Sheet", "Page", StringComparison.OrdinalIgnoreCase)
