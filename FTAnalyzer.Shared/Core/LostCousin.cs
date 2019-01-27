@@ -11,7 +11,6 @@ namespace FTAnalyzer
         public bool FTAnalyzerFact { get; }
         string SurnameMetaphone { get; set; }
         string ForenameMetaphone { get; set; }
-        
 
         public LostCousin(string name, int birthYear, string reference, int censusYear, string censusCountry, bool ftanalyzer)
         {
@@ -96,11 +95,13 @@ namespace FTAnalyzer
 
         public bool Equals(LostCousin other)
         {
-            return CensusDate == other.CensusDate &&
-                    (Name == other.Name || (ForenameMetaphone == other.ForenameMetaphone &&
-                                            SurnameMetaphone == other.SurnameMetaphone)) &&
-                    Math.Abs(BirthYear - other.BirthYear) < 5 &&
-                    Reference == other.Reference;
+            if(CensusDate != other.CensusDate || Reference != other.Reference || Math.Abs(BirthYear - other.BirthYear) >= 5)
+                return false;
+            if (Name == other.Name)
+                return true;
+            if (ForenameMetaphone == other.ForenameMetaphone && SurnameMetaphone == other.SurnameMetaphone)
+                return true;
+            return false;
         }
     }
 }

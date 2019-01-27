@@ -34,6 +34,8 @@ namespace FTAnalyzer
         {
             get
             {
+                if(Age.MaxAge - Age.MinAge <= 2) // range is tight in years
+                    return ((Age.MinAge+Age.MaxAge)/2).ToString();
                 if (Age.MinAge > 0)
                     return Age.MinAge.ToString();
                 if (Age.MaxAge > 0)
