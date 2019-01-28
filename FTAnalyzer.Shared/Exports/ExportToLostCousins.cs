@@ -17,7 +17,7 @@ namespace FTAnalyzer.Exports
         static CookieCollection CookieJar { get; set; }
         static List<LostCousin> Website { get; set; }
         static List<LostCousin> SessionList { get; set; }
-        
+
         public static int ProcessList(List<CensusIndividual> individuals, IProgress<string> outputText)
         {
             ToProcess = individuals;
@@ -49,7 +49,7 @@ namespace FTAnalyzer.Exports
                             sessionDuplicates++;
                         }
                         else
-                        { 
+                        {
                             if (AddIndividualToWebsite(ind, outputText))
                             {
                                 outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - {ind.ToString()}, {ind.CensusReference} added.\n");
@@ -74,7 +74,7 @@ namespace FTAnalyzer.Exports
             outputText.Report($"\nFinished writing Entries to Lost Cousins website. {recordsAdded} successfully added, {recordsPresent} already present, {sessionDuplicates} possible duplicates and {recordsFailed} failed.\nView Lost Cousins Report tab to see current status.");
             int ftanalyzerfacts = Website.FindAll(lc => lc.FTAnalyzerFact).Count;
             int manualfacts = Website.FindAll(lc => !lc.FTAnalyzerFact).Count;
-            Task.Run(() => Analytics.TrackActionAsync(Analytics.LostCousinsAction, Analytics.ReadLostCousins, $"{DateTime.Now.ToUniversalTime().ToString("yyyy-MM-dd HH:mm")}: {manualfacts} manual & {ftanalyzerfacts} -> {ftanalyzerfacts+recordsAdded} FTAnalyzer entries"));
+            Task.Run(() => Analytics.TrackActionAsync(Analytics.LostCousinsAction, Analytics.ReadLostCousins, $"{DateTime.Now.ToUniversalTime().ToString("yyyy-MM-dd HH:mm")}: {manualfacts} manual & {ftanalyzerfacts} -> {ftanalyzerfacts + recordsAdded} FTAnalyzer entries"));
             return recordsAdded;
         }
 
@@ -102,9 +102,9 @@ namespace FTAnalyzer.Exports
                 }
                 resp = req.GetResponse() as HttpWebResponse;
                 CookieJar = resp.Cookies;
-                return CookieJar.Count == 2 && (CookieJar[0].Name=="lostcousins_user_login" || CookieJar[1].Name == "lostcousins_user_login");
+                return CookieJar.Count == 2 && (CookieJar[0].Name == "lostcousins_user_login" || CookieJar[1].Name == "lostcousins_user_login");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 UIHelpers.ShowMessage($"Problem accessing Lost Cousins Website. Check you are connected to internet. Error message is: {e.Message}");
                 return false;
@@ -113,6 +113,18 @@ namespace FTAnalyzer.Exports
             {
                 resp?.Close();
             }
+        }
+
+        public static SortableBindingList<IDisplayLostCousin> VerifyAncestors(IProgress<string> outputText)
+        {
+            SortableBindingList<IDisplayLostCousin> result = new SortableBindingList<IDisplayLostCousin>();
+            if (Website == null)
+                Website = LoadWebsiteAncestors(outputText);
+            foreach(LostCousin lostCousin in Website)
+            {
+                result.Add(lostCousin as IDisplayLostCousin);
+            }
+            return result;
         }
 
         static List<LostCousin> LoadWebsiteAncestors(IProgress<string> outputText)
@@ -134,15 +146,23 @@ namespace FTAnalyzer.Exports
                         {
                             string name = columns[0].InnerText.ClearWhiteSpace();
                             bool ftanalyzer = false;
+                            string weblink = string.Empty;
                             if (columns[0].ChildNodes.Count == 5)
                             {
                                 HtmlAttribute notesNode = columns[0].ChildNodes[3].Attributes["title"];
                                 ftanalyzer = notesNode == null ? false : notesNode.Value.Contains("Added_By_FTAnalyzer");
                             }
                             string birthYear = columns[2].InnerText.ClearWhiteSpace();
+                            if (columns[4].ChildNodes.Count > 4)
+                            {
+                                string weblinkText = columns[4].ChildNodes[3].OuterHtml;
+                                int pos = weblinkText.IndexOf('"', 10);
+                                if(pos > -1)
+                                    weblink = weblinkText.Substring(9, pos - 9).Trim();
+                            }
                             string reference = columns[4].InnerText.ClearWhiteSpace();
                             string census = columns[5].InnerText.ClearWhiteSpace();
-                            LostCousin lc = new LostCousin(name, birthYear, reference, census, ftanalyzer);
+                            LostCousin lc = new LostCousin(name, birthYear, reference, census, weblink, ftanalyzer);
                             websiteList.Add(lc);
                         }
                     }

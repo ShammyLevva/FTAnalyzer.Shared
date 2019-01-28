@@ -2,15 +2,18 @@
 
 namespace FTAnalyzer
 {
-    public class LostCousin : IEquatable<LostCousin>
+    public class LostCousin : IEquatable<LostCousin>, IDisplayLostCousin
     {
         public string Name { get; }
         public int BirthYear { get; }
         public string Reference { get; }
         public CensusDate CensusDate { get; }
+        public string WebLink { get; }
         public bool FTAnalyzerFact { get; }
         string SurnameMetaphone { get; set; }
         string ForenameMetaphone { get; set; }
+
+        public enum Status { Good = 1, FuzzyNameAge = 2, NotPrecise = 3, Bad = 4}
 
         public LostCousin(string name, int birthYear, string reference, int censusYear, string censusCountry, bool ftanalyzer)
         {
@@ -37,6 +40,29 @@ namespace FTAnalyzer
             SetMetaphones();
         }
 
+        public LostCousin(string name, string birthYear, string reference, string census, string weblink, bool ftanalyzer)
+        { // Lost from website constructor
+            Name = name;
+            SetMetaphones();
+            int.TryParse(birthYear, out int result);
+            BirthYear = result;
+            Reference = reference;
+            WebLink = weblink;
+            FTAnalyzerFact = ftanalyzer;
+            if(census.StartsWith("England", StringComparison.Ordinal))
+            {
+                if (census.EndsWith("1841", StringComparison.Ordinal)) CensusDate = CensusDate.EWCENSUS1841;
+                if (census.EndsWith("1881", StringComparison.Ordinal)) CensusDate = CensusDate.EWCENSUS1881;
+                if (census.EndsWith("1911", StringComparison.Ordinal)) CensusDate = CensusDate.EWCENSUS1911;
+            }
+            if (census.StartsWith("Scotland", StringComparison.Ordinal) && census.EndsWith("1881", StringComparison.Ordinal)) CensusDate = CensusDate.SCOTCENSUS1881;
+            if (census.StartsWith("Canada", StringComparison.Ordinal) && census.EndsWith("1881", StringComparison.Ordinal)) CensusDate = CensusDate.SCOTCENSUS1881;
+            if (census.StartsWith("Ireland", StringComparison.Ordinal) && census.EndsWith("1881", StringComparison.Ordinal)) CensusDate = CensusDate.SCOTCENSUS1881;
+            if (census.StartsWith("United States", StringComparison.Ordinal) && census.EndsWith("1880", StringComparison.Ordinal)) CensusDate = CensusDate.USCENSUS1880;
+            if (census.StartsWith("United States", StringComparison.Ordinal) && census.EndsWith("1940", StringComparison.Ordinal)) CensusDate = CensusDate.USCENSUS1940;
+
+        }
+
         void SetMetaphones()
         {
             int ptr = Name.IndexOf(",", StringComparison.Ordinal);
@@ -56,27 +82,8 @@ namespace FTAnalyzer
             }
         }
 
-        public LostCousin(string name, string birthYear, string reference, string census, bool ftanalyzer)
-        {
-            Name = name;
-            SetMetaphones();
-            int.TryParse(birthYear, out int result);
-            BirthYear = result;
-            Reference = reference;
-            FTAnalyzerFact = ftanalyzer;
-            if(census.StartsWith("England", StringComparison.Ordinal))
-            {
-                if (census.EndsWith("1841", StringComparison.Ordinal)) CensusDate = CensusDate.EWCENSUS1841;
-                if (census.EndsWith("1881", StringComparison.Ordinal)) CensusDate = CensusDate.EWCENSUS1881;
-                if (census.EndsWith("1911", StringComparison.Ordinal)) CensusDate = CensusDate.EWCENSUS1911;
-            }
-            if (census.StartsWith("Scotland", StringComparison.Ordinal) && census.EndsWith("1881", StringComparison.Ordinal)) CensusDate = CensusDate.SCOTCENSUS1881;
-            if (census.StartsWith("Canada", StringComparison.Ordinal) && census.EndsWith("1881", StringComparison.Ordinal)) CensusDate = CensusDate.SCOTCENSUS1881;
-            if (census.StartsWith("Ireland", StringComparison.Ordinal) && census.EndsWith("1881", StringComparison.Ordinal)) CensusDate = CensusDate.SCOTCENSUS1881;
-            if (census.StartsWith("United States", StringComparison.Ordinal) && census.EndsWith("1880", StringComparison.Ordinal)) CensusDate = CensusDate.USCENSUS1880;
-            if (census.StartsWith("United States", StringComparison.Ordinal) && census.EndsWith("1940", StringComparison.Ordinal)) CensusDate = CensusDate.USCENSUS1940;
-
-        }
+        public Status LostCousinsStatus => Status.Good;
+        public Status GEDCOMStatus => Status.Good;
 
         string FixReference(string reference)
         {
