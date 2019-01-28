@@ -96,6 +96,7 @@ namespace FTAnalyzer.Exports
                 req.AllowAutoRedirect = false;
                 byte[] bytes = Encoding.ASCII.GetBytes(formParams);
                 req.ContentLength = bytes.Length;
+                req.Timeout = 10000;
                 using (Stream os = req.GetRequestStream())
                 {
                     os.Write(bytes, 0, bytes.Length);
@@ -126,6 +127,8 @@ namespace FTAnalyzer.Exports
             }
             return result;
         }
+
+        public static void EmptyCookieJar() => CookieJar = null;
 
         static List<LostCousin> LoadWebsiteAncestors(IProgress<string> outputText)
         {
