@@ -935,8 +935,8 @@
 		<Parish Region="Midlothian" Name="Portobello" RD="684-2"/>
 		<Parish Region="MidLothian" Name="Edinburgh Tolbooth" RD="685/T"/>
 		<Parish Region="MidLothian" Name="Edinburgh" RD="685"/>
-		<Parish Region="MidLothian" Name="Edinburgh St George" RD="685-1"/>
-		<Parish Region="MidLothian" Name="Edinburgh St Andrews" RD="685-2"/>
+    <Parish Region="MidLothian" Name="Edinburgh St George" RD="685-1"/>
+    <Parish Region="MidLothian" Name="Edinburgh St Cuthberts" RD="685-2"/>
 		<Parish Region="MidLothian" Name="Edinburgh Canongate" RD="685-3"/>
 		<Parish Region="MidLothian" Name="Edinburgh St Giles" RD="685-4"/>
 		<Parish Region="MidLothian" Name="Edinburgh Newington" RD="685-5"/>
@@ -945,7 +945,8 @@
 		<Parish Region="MidLothian" Name="Fala Soutra" RD="686"/>
 		<Parish Region="MidLothian" Name="Glencorse" RD="687"/>
 		<Parish Region="Midlothian" Name="Heriot" RD="688"/>
-		<Parish Region="Midlothian" Name="Kirknewton and East Calder" RD="690"/>
+    <Parish Region="Midlothian" Name="Inveresk" RD="689"/>
+    <Parish Region="Midlothian" Name="Kirknewton and East Calder" RD="690"/>
 		<Parish Region="Midlothian" Name="Lasswade" RD="691"/>
 		<Parish Region="MidLothian" Name="Leith North" RD="692-1"/>
 		<Parish Region="MidLothian" Name="Leith South" RD="692-2"/>
