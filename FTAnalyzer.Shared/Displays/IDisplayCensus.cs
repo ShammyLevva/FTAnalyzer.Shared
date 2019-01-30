@@ -27,6 +27,8 @@ namespace FTAnalyzer
         FactDate DeathDate { get; }
         [ColumnDetail("Death Location", 250)]
         FactLocation DeathLocation { get; }
+        [ColumnDetail("Census", 75)]
+        string Census { get; }
         [ColumnDetail("Census Status", 150)]
         string CensusStatus { get; }
         [ColumnDetail("Census Reference", 300)]

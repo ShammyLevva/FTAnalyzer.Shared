@@ -7,6 +7,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using System.Windows.Controls;
 
 namespace FTAnalyzer.Exports
 {
@@ -17,6 +18,7 @@ namespace FTAnalyzer.Exports
         static CookieCollection CookieJar { get; set; }
         static List<LostCousin> Website { get; set; }
         static List<LostCousin> SessionList { get; set; }
+        static List<Uri> WebLinks { get; set; }
 
         public static int ProcessList(List<CensusIndividual> individuals, IProgress<string> outputText)
         {
@@ -121,11 +123,28 @@ namespace FTAnalyzer.Exports
             SortableBindingList<IDisplayLostCousin> result = new SortableBindingList<IDisplayLostCousin>();
             if (Website == null)
                 Website = LoadWebsiteAncestors(outputText);
+            WebLinks = new List<Uri>();
             foreach(LostCousin lostCousin in Website)
             {
                 result.Add(lostCousin as IDisplayLostCousin);
+                if (!WebLinks.Contains(lostCousin.WebLink))
+                    WebLinks.Add(lostCousin.WebLink);
             }
             return result;
+        }
+
+        //public static void CheckWebLinks(IProgress<string> outputText)
+        //{
+        //    foreach (Uri weblink in WebLinks)
+        //    {
+        //        FindMyPastChecker.GetWebPage(weblink.OriginalString);
+        //    }
+        //}
+
+        static bool OnPreRequest(HttpWebRequest request)
+        {
+            request.AllowAutoRedirect = true;
+            return true;
         }
 
         public static void EmptyCookieJar() => CookieJar = null;

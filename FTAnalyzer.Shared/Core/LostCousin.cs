@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web;
 
 namespace FTAnalyzer
 {
@@ -8,7 +9,7 @@ namespace FTAnalyzer
         public int BirthYear { get; }
         public string Reference { get; }
         public CensusDate CensusDate { get; }
-        public string WebLink { get; }
+        public Uri WebLink { get; }
         public bool FTAnalyzerFact { get; }
         string SurnameMetaphone { get; set; }
         string ForenameMetaphone { get; set; }
@@ -47,7 +48,8 @@ namespace FTAnalyzer
             int.TryParse(birthYear, out int result);
             BirthYear = result;
             Reference = reference;
-            WebLink = weblink;
+            int ptr = weblink.IndexOf("&p=");
+            WebLink = ptr == -1 ? null : new Uri(HttpUtility.UrlDecode(weblink.Substring(ptr + 3)));
             FTAnalyzerFact = ftanalyzer;
             if(census.StartsWith("England", StringComparison.Ordinal))
             {
