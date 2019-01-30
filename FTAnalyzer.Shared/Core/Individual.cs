@@ -12,7 +12,7 @@ namespace FTAnalyzer
 {
     public class Individual : IComparable<Individual>,
         IDisplayIndividual, IDisplayLooseDeath, IDisplayLooseBirth, IExportIndividual,
-        IDisplayColourCensus, IDisplayColourBMD, IDisplayMissingData
+        IDisplayColourCensus, IDisplayColourBMD, IDisplayMissingData, IDisplayLooseInfo
     {
         // define relation type from direct ancestor to related by marriage and 
         // MARRIAGEDB ie: married to a direct or blood relation
@@ -1548,7 +1548,26 @@ namespace FTAnalyzer
                 case "Surname": return new NameComparer<IDisplayLooseDeath>(ascending, false);
                 case "BirthDate": return CompareComparableProperty<IDisplayLooseDeath>(i => i.DeathDate, ascending);
                 case "BirthLocation": return CompareComparableProperty<IDisplayLooseDeath>(i => i.DeathLocation, ascending);
-                case "LooseBirth": return CompareComparableProperty<IDisplayLooseDeath>(i => i.LooseDeathDate, ascending);
+                case "DeathDate": return CompareComparableProperty<IDisplayLooseDeath>(i => i.DeathDate, ascending);
+                case "DeathLocation": return CompareComparableProperty<IDisplayLooseDeath>(i => i.DeathLocation, ascending);
+                case "LooseDeath": return CompareComparableProperty<IDisplayLooseDeath>(i => i.LooseDeathDate, ascending);
+                default: return null;
+            }
+        }
+
+        IComparer<IDisplayLooseInfo> IColumnComparer<IDisplayLooseInfo>.GetComparer(string columnName, bool ascending)
+        {
+            switch (columnName)
+            {
+                case "IndividualID": return CompareComparableProperty<IDisplayLooseInfo>(i => i.IndividualID, ascending);
+                case "Forenames": return new NameComparer<IDisplayLooseInfo>(ascending, true);
+                case "Surname": return new NameComparer<IDisplayLooseInfo>(ascending, false);
+                case "BirthDate": return CompareComparableProperty<IDisplayLooseInfo>(i => i.BirthDate, ascending);
+                case "BirthLocation": return CompareComparableProperty<IDisplayLooseInfo>(i => i.BirthLocation, ascending);
+                case "DeathDate": return CompareComparableProperty<IDisplayLooseInfo>(i => i.DeathDate, ascending);
+                case "DeathLocation": return CompareComparableProperty<IDisplayLooseInfo>(i => i.DeathLocation, ascending);
+                case "LooseBirth": return CompareComparableProperty<IDisplayLooseInfo>(i => i.LooseDeathDate, ascending);
+                case "LooseDeath": return CompareComparableProperty<IDisplayLooseInfo>(i => i.LooseDeathDate, ascending);
                 default: return null;
             }
         }

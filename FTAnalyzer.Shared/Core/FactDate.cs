@@ -144,6 +144,8 @@ namespace FTAnalyzer
             str = EnhancedTextInfo.RemoveSupriousDateCharacters(str.Trim().ToUpper());
             if(!Properties.NonGedcomDate.Default.UseNonGedcomDates || Properties.NonGedcomDate.Default.Separator != ".")
                 str = str.Replace(".", " ");
+            // remove date qualifiers first
+            str = str.Replace("@#DGREGORIAN@", "").Replace("@#DJULIAN@", ""); //.Replace("@#DFRENCH R@", ""); // .Replace("@#DHEBREW@", "");
             str = str.Replace(". ", " "); // even if Non GEDCOM date separator is a dot, dot space is invalid.
             str = str.Replace("&", " AND ");
             str = str.Replace(",", " ");
@@ -241,7 +243,7 @@ namespace FTAnalyzer
             str = str.Replace("FEBRUAR", "FEB");
             str = str.Replace("OKTOBER", "OCT");
             str = str.Replace("DEZEMBER", "DEC");
-
+            
             str = str.Replace("SEPT", "SEP"); // avoids confusing french translation by removing T before checking for french
             str = str.Replace("M01", "JAN");
             str = str.Replace("M02", "FEB");

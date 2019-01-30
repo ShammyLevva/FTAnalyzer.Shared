@@ -55,6 +55,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Displays\IDisplayIndividual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Displays\IDisplayLocation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Displays\IDisplayLooseBirth.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Displays\IDisplayLooseInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Displays\IDisplayLooseDeath.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Displays\IDisplayLostCousin.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Displays\IDisplayMissingData.cs" />

@@ -40,6 +40,7 @@ namespace FTAnalyzer
         SortableBindingList<IDisplayLocation>[] displayLocations;
         SortableBindingList<IDisplayLooseDeath> looseDeaths;
         SortableBindingList<IDisplayLooseBirth> looseBirths;
+        SortableBindingList<IDisplayLooseInfo> looseInfo;
         SortableBindingList<DuplicateIndividual> duplicates;
         readonly static int DATA_ERROR_GROUPS = 28;
         static XmlNodeList noteNodes;
@@ -987,9 +988,35 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             foreach (Individual ind in individuals)
                 ind.SetFullName();
         }
-#endregion
+        #endregion
 
-#region Loose Births
+#region Loose Info
+        public SortableBindingList<IDisplayLooseInfo> LooseInfo()
+        {
+            if (looseInfo != null)
+                return looseInfo;
+            if (looseBirths == null)
+                LooseBirths();
+            if (looseDeaths == null)
+                LooseDeaths();
+            SortableBindingList<IDisplayLooseInfo> result = new SortableBindingList<IDisplayLooseInfo>();
+            try
+            {
+                foreach (Individual ind in looseBirths)
+                    result.Add(ind as IDisplayLooseInfo);
+                foreach (Individual ind in looseDeaths)
+                    result.Add(ind as IDisplayLooseInfo);
+            }
+            catch (Exception ex)
+            {
+                throw new LooseDataException($"Problem calculating Loose Info. Error was {ex.Message}");
+            }
+            looseInfo = result;
+            return result;
+        }
+        #endregion
+
+        #region Loose Births
 
         public SortableBindingList<IDisplayLooseBirth> LooseBirths()
         {

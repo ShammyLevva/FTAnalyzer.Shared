@@ -58,7 +58,7 @@ namespace FTAnalyzer.Utilities
                             ReadLostCousins = "Read Lost Cousins Records", UpdateLostCousins = "Update Records on Lost Cousins", PreviewLostCousins = "Preview records for update",
                             SoftwareProvider = "Software Provider", SoftwareVersion = "Software Version", LostCousinsStats = "Lost Cousins Statistics";
 
-        public const string FactsIndividualsEvent = "Individual Facts Viewed", FactsFamiliesEvent = "Family Facts Viewed", 
+        public const string FactsIndividualsEvent = "Individual Facts Viewed", FactsFamiliesEvent = "Family Facts Viewed", LooseInfoEvent = "Loose Info Tab Viewed",
                             FactsGroupIndividualsEvent = "Various Individuals Facts Viewed", FactsDuplicatesEvent = "Duplicate Facts Viewed", 
                             FactsCensusRefEvent = "Census References Facts Viewed", FactsSourceEvent = "Facts for Source Viewed", FactsCensusRefIssueEvent = "Census Ref Issue Viewed";
 
