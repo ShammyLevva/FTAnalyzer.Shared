@@ -24,7 +24,7 @@ namespace FTAnalyzer
                 "Lost Cousins tag in non supported Year",
                 "Residence census date warnings",
                 "Census date range too wide/Unknown",
-                "Fact warning/error detected",
+                "Uncategorised error",
                 "Unknown Fact Type",
                 "Flagged as living but has death date",
                 "Children Status Total Mismatch",
