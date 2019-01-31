@@ -126,7 +126,7 @@ namespace FTAnalyzer
             if (eldestChild != null && eldestChild.BirthDate.IsBefore(CensusDate))
                 return true;
 
-            if (FamilyType == SOLOINDIVIDUAL || FamilyType == PRE_MARRIAGE)
+            if (FamilyType == SOLOINDIVIDUAL || FamilyType == PRE_MARRIAGE || FamilyType == UNKNOWN)
                 return true; // allow solo individual families to be processed
 
             // valid family if both parent are 16+ or sole parent >=16

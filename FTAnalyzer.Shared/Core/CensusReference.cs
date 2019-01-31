@@ -317,7 +317,10 @@ namespace FTAnalyzer
             if (GeneralSettings.Default.SkipCensusReferences)
                 return false;
             string text = FamilyTree.GetText(n, "PAGE", true);
-            if (GetCensusReference(text, true))
+            if (GetCensusReference(text, true) && Status == ReferenceStatus.GOOD)
+                return true;
+            text = FamilyTree.GetText(n, "DATA", true);
+            if (GetCensusReference(text, false) && Status == ReferenceStatus.GOOD)
                 return true;
             text = FamilyTree.GetNotes(n);
             return GetCensusReference(text, false); // we have already checked sources so don't do it again.
@@ -334,6 +337,7 @@ namespace FTAnalyzer
                     ReferenceText = text.Trim();
                     return true;
                 }
+                else
                 // no match so store text 
                 Status = ReferenceStatus.UNRECOGNISED;
                 if (updateUnknownRef)
@@ -1372,6 +1376,7 @@ namespace FTAnalyzer
         }
 
         public bool IsKnownStatus => Status.Equals(ReferenceStatus.GOOD) || Status.Equals(ReferenceStatus.INCOMPLETE);
+        public bool IsGoodStatus => Status.Equals(ReferenceStatus.GOOD);
 
         public string Reference
         {

@@ -791,12 +791,12 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
         {
             IEnumerable<CensusFamily> censusFamilies = GetAllCensusFamilies(censusDate, true, false);
 
-            bool missingLC(CensusIndividual x) => x.MissingLostCousins(censusDate, false) && x.CensusReference?.Status == CensusReference.ReferenceStatus.GOOD;
+            bool missingLC(CensusIndividual x) => x.MissingLostCousins(censusDate, false) && x.CensusReference!=null && x.CensusReference.IsGoodStatus;
             Predicate<CensusIndividual> missingFilter = FilterUtils.AndFilter(relationFilter, missingLC);
             List<CensusIndividual> missingIndiv = censusFamilies.SelectMany(f => f.Members).Filter(missingFilter).ToList();
             missingIndiv = LCRemoveDuplicateIndividuals(missingIndiv);
 
-            bool invalidRef(CensusIndividual x) => x.MissingLostCousins(censusDate, false) && x.CensusReference?.Status != CensusReference.ReferenceStatus.GOOD;
+            bool invalidRef(CensusIndividual x) => x.MissingLostCousins(censusDate, false) && x.CensusReference != null && !x.CensusReference.IsGoodStatus;
             Predicate<CensusIndividual> invalidRefFilter = FilterUtils.AndFilter(relationFilter, invalidRef);
             List<CensusIndividual> invalidRefIndiv = censusFamilies.SelectMany(f => f.Members).Filter(invalidRefFilter).ToList();
             invalidRefIndiv = LCRemoveDuplicateIndividuals(invalidRefIndiv);
@@ -1614,8 +1614,6 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
                 // also add all individuals that don't ever appear as a child as they may have census facts for when they are children
                 foreach (Individual ind in individuals.Filter(x => x.FamiliesAsChild.Count == 0))
                 {
-                    if (ind.IndividualID == "I3317" || ind.IndividualID == "I5251" || ind.IndividualID == "I2832")
-                        Console.WriteLine("Stop");
                     CensusFamily cf = new CensusFamily(new Family(ind, Instance.NextPreMarriageFamily), censusDate);
                     if (!individualIDs.Contains(ind.IndividualID) && cf.Process(censusDate, censusDone, checkCensus))
                     {

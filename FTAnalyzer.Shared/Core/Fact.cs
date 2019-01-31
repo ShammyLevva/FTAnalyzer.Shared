@@ -512,9 +512,9 @@ namespace FTAnalyzer
                     if (IsCensusFact)
                     {
                         CheckForSharedFacts(node);
-                        if (CensusReference == CensusReference.UNKNOWN)
+                        if (!CensusReference.IsKnownStatus)
                             CensusReference = new CensusReference(this, node);
-                        else if (!CensusReference.IsKnownStatus)
+                        else if (!CensusReference.IsGoodStatus)
                             CensusReference.CheckFullUnknownReference();
                     }
                     if(GeneralSettings.Default.ConvertResidenceFacts && FactType.Equals(RESIDENCE) && CensusReference.IsKnownStatus)
@@ -782,7 +782,7 @@ namespace FTAnalyzer
 
         public void SetCensusReferenceDetails(CensusReference cr, CensusLocation cl, string comment)
         {
-            if (cr.IsKnownStatus && !CensusReference.IsKnownStatus)
+            if ((cr.IsKnownStatus && !CensusReference.IsKnownStatus) || (cr.IsGoodStatus && !CensusReference.IsGoodStatus))
                 CensusReference = cr;
             if (Location.IsBlank || !Location.IsKnown)
                 Location = cl.Equals(CensusLocation.UNKNOWN) ?
