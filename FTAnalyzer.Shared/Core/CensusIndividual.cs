@@ -35,18 +35,24 @@ namespace FTAnalyzer
         {
             get
             {
-                if(Age.MaxAge - Age.MinAge <= 2) // range is tight in years
-                    return ((Age.MinAge+Age.MaxAge)/2).ToString();
-                if (Age.MinAge > 0)
-                    return Age.MinAge.ToString();
-                if (Age.MaxAge > 0)
-                    return Age.MaxAge.ToString();
+                int range = Age.MaxAge - Age.MinAge;
+                if (range >= 6 && CensusDate != CensusDate.UKCENSUS1841 && Age.MinAge > 16) //allow 5.99 year ranges if 1841
+                    return "Unknown";
+                int midpoint = (Age.MinAge + Age.MaxAge) / 2;
+                if (CensusDate == CensusDate.UKCENSUS1841 && Age.MinAge > 16)
+                {
+                    int multiple = midpoint / 5;
+                    return (multiple * 5).ToString();
+                }
+                if (range >= 3)
+                    return "Unknown"; // only narrow ranges if not 1841
                 if (BirthDate.IsKnown)
                 {
                     int months = BirthDate.MonthsDifference(CensusDate);
+                    if (months < 0) months = 0;
                     return $"{months}m";
                 }
-                return "0";
+                return midpoint.ToString();
             }
         }
 

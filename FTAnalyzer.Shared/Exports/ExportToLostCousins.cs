@@ -34,7 +34,12 @@ namespace FTAnalyzer.Exports
                 SessionList = new List<LostCousin>();
             foreach (CensusIndividual ind in ToProcess)
             {
-                if (ind.CensusReference != null && ind.CensusReference.IsValidLostCousinsReference())
+                if (ind.LCAge.Equals("Unknown"))
+                {
+                    outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - Cannot determine age at census {ind.ToString()}.\n");
+                    recordsFailed++;
+                }
+                else if (ind.CensusReference != null && ind.CensusReference.IsValidLostCousinsReference())
                 {
                     LostCousin lc = new LostCousin($"{ind.Surname}, {ind.Forenames}", ind.BirthDate.BestYear, GetCensusSpecificFields(ind), ind.CensusDate.BestYear, ind.CensusCountry, true); ;
                     if (Website.Contains(lc))
@@ -74,6 +79,11 @@ namespace FTAnalyzer.Exports
                 }
             }
             outputText.Report($"\nFinished writing Entries to Lost Cousins website. {recordsAdded} successfully added, {recordsPresent} already present, {sessionDuplicates} possible duplicates and {recordsFailed} failed.\nView Lost Cousins Report tab to see current status.");
+            outputText.Report("\n\nPlease note you MUST check the entries by clicking the arrow next to the census reference on the list on my ancestors page.\n");
+            outputText.Report("This only needs done once per household and will link to the census on Find My Past.\n");
+            outputText.Report("If you have any errors you can correct them on your my ancestors page. The most common will be Age and different spelling of names.\n");
+            outputText.Report("Occasionally you may have got a census reference wrong in which case the page either wont exist or will show the wrong family.");
+            outputText.Report("\n\nNote if you fail to check your entries you will fail to match with your Lost Cousins.");
             int ftanalyzerfacts = Website.FindAll(lc => lc.FTAnalyzerFact).Count;
             int manualfacts = Website.FindAll(lc => !lc.FTAnalyzerFact).Count;
             Task.Run(() => Analytics.TrackActionAsync(Analytics.LostCousinsAction, Analytics.ReadLostCousins, $"{DateTime.Now.ToUniversalTime().ToString("yyyy-MM-dd HH:mm")}: {manualfacts} manual & {ftanalyzerfacts} -> {ftanalyzerfacts + recordsAdded} FTAnalyzer entries"));
@@ -245,7 +255,7 @@ namespace FTAnalyzer.Exports
                 output.Append($"&maiden_name={ind.Surname}");
             else
                 output.Append("&maiden_name=");
-            output.Append($"&corrected_surname=&corrected_forename=&corrected_other_names=");
+            output.Append($"&corrected_surname={ind.Surname}&corrected_forename={ind.Forename}&corrected_other_names={ind.OtherNames}");
             if (ind.BirthDate.IsExact)
                 output.Append($"&corrected_birth_day={ind.BirthDate.StartDate.Day}&corrected_birth_month={ind.BirthDate.StartDate.Month}&corrected_birth_year={ind.BirthDate.StartDate.Year}");
             else
