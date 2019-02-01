@@ -61,7 +61,7 @@ namespace FTAnalyzer.Utilities
             StringBuilder sb = new StringBuilder();
             foreach(char ch in text)
             {
-                if (ch == 147)
+                if (ch == 147 || ch == '-' || ch==8211)
                     sb.Append('-');
                 else if (ch >= ' ' && ch <= 'Z')
                     sb.Append(ch);

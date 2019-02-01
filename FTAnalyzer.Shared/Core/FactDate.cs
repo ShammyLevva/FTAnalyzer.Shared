@@ -28,20 +28,20 @@ namespace FTAnalyzer
         static readonly string FULLEARLY = "d MMM yyy";
         static readonly string DISPLAY = "d MMM yyyy";
         static readonly string CHECKING = "d MMM";
-        static readonly string DATE_PATTERN = "^(\\d{0,2} )?([A-Za-z]{0,3}) *(\\d{0,4})$";
-        static readonly string INTERPRETED_DATE_PATTERN = "^INT (\\d{0,2} )?([A-Za-z]{0,3}) *(\\d{0,4}) .*$";
+        static readonly string DATE_PATTERN = "^(\\d{0,2} )?([A-Z]{0,3}) *(\\d{0,4})$";
+        static readonly string INTERPRETED_DATE_PATTERN = "^INT (\\d{0,2} )?([A-Z]{0,3}) *(\\d{0,4}) .*$";
         static readonly string EARLY_DATE_PATTERN = "^(\\d{3})$";
-        static readonly string DOUBLE_DATE_PATTERN = "^(\\d{0,2} )?([A-Za-z]{0,3}) *(\\d{0,4})/(\\d{0,2})$";
-        static readonly string DOUBLE_DATE_PATTERN2 = "^(\\d{0,2} )?([A-Za-z]{0,3}) *(\\d{4})/(\\d{4})$";
-        static readonly string DOUBLE_DATE_PATTERN3 = "^(\\d{0,2} )?([A-Za-z]{0,3}) *(\\d{3})/(\\d{2,3})$";
+        static readonly string DOUBLE_DATE_PATTERN = "^(\\d{0,2} )?([A-Z]{0,3}) *(\\d{0,4})/(\\d{0,2})$";
+        static readonly string DOUBLE_DATE_PATTERN2 = "^(\\d{0,2} )?([A-Z]{0,3}) *(\\d{4})/(\\d{4})$";
+        static readonly string DOUBLE_DATE_PATTERN3 = "^(\\d{0,2} )?([A-Z]{0,3}) *(\\d{3})/(\\d{2,3})$";
         static readonly string POSTFIX = "(\\d{1,2})(?:ST|ND|RD|TH)(.*)";
         static readonly string BETWEENFIX = "(\\d{4}) *- *(\\d{4})";
-        static readonly string BETWEENFIX2 = "([A-Za-z]{0,3}) *(\\d{4}) *- *([A-Za-z]{0,3}) *(\\d{4})";
-        static readonly string BETWEENFIX3 = "(\\d{0,2} )?([A-Za-z]{0,3}) *(\\d{4}) *- *(\\d{0,2} )?([A-Za-z]{0,3}) *(\\d{4})";
-        static readonly string BETWEENFIX4 = "(\\d{1,2}) *- *(\\d{1,2} )?([A-Za-z]{0,3}) *(\\d{4})";
-        static readonly string BETWEENFIX5 = "(\\d{1,2} )?([A-Za-z]{0,3}) *- *(\\d{1,2} )?([A-Za-z]{0,3}) *(\\d{4})";
-        static readonly string USDATEFIX = "^([A-Za-z]{3}) *(\\d{1,2} )(\\d{4})$";
-        static readonly string SPACEFIX = "^(\\d{1,2}) *([A-Za-z]{3}) *(\\d{0,4})$";
+        static readonly string BETWEENFIX2 = "([A-Z]{0,3}) *(\\d{4}) *- *([A-Z]{0,3}) *(\\d{4})";
+        static readonly string BETWEENFIX3 = "(\\d{0,2} )?([A-Z]{0,3}) *(\\d{4}) *- *(\\d{0,2} )?([A-Z]{0,3}) *(\\d{4})";
+        static readonly string BETWEENFIX4 = "(\\d{1,2}) *- *(\\d{1,2} )?([A-Z]{0,3}) *(\\d{4})";
+        static readonly string BETWEENFIX5 = "(\\d{1,2} )?([A-Z]{0,3}) *- *(\\d{1,2} )?([A-Z]{0,3}) *(\\d{4})";
+        static readonly string USDATEFIX = "^([A-Z]{3}) *(\\d{1,2} )(\\d{4})$";
+        static readonly string SPACEFIX = "^(\\d{1,2}) *([A-Z]{3}) *(\\d{0,4})$";
         static readonly string QUAKERFIX = "^(\\d{1,2})D (\\d{1,2})M (\\d{0,4})$";
 
         public static FactDate UNKNOWN_DATE;
@@ -435,6 +435,7 @@ namespace FTAnalyzer
                 int year = int.Parse(matcher.Groups[3].ToString());
                 return new DateTime(year, month, day).ToString("dd MMMM yyyy");
             }
+            str = str.TrimEnd('-');
             return str.Trim();
         }
 
@@ -442,21 +443,21 @@ namespace FTAnalyzer
         {
             Match matcher = _datePatterns["BETWEENFIX"].Match(str);
             if (matcher.Success)
-                return new Tuple<bool, string>(true, "BET " + matcher.Groups[1] + " AND " + matcher.Groups[2]);
+                return new Tuple<bool, string>(true, $"BET {matcher.Groups[1]} AND {matcher.Groups[2]}");
             matcher = _datePatterns["BETWEENFIX2"].Match(str);
             if (matcher.Success)
-                return new Tuple<bool, string>(true, "BET " + matcher.Groups[1] + " " + matcher.Groups[2] + " AND " + matcher.Groups[3] + " " + matcher.Groups[4]);
+                return new Tuple<bool, string>(true, $"BET {matcher.Groups[1]} {matcher.Groups[2]} AND {matcher.Groups[3]} {matcher.Groups[4]}");
             matcher = _datePatterns["BETWEENFIX3"].Match(str);
             if (matcher.Success)
-                return new Tuple<bool, string>(true, "BET " + matcher.Groups[1] + matcher.Groups[2] + " " + matcher.Groups[3] + " AND " + matcher.Groups[4] + matcher.Groups[5] + " " + matcher.Groups[6]);
+                return new Tuple<bool, string>(true, $"BET {matcher.Groups[1]}{matcher.Groups[2]} {matcher.Groups[3]} AND {matcher.Groups[4]}{matcher.Groups[5]} {matcher.Groups[6]}");
             matcher = _datePatterns["BETWEENFIX4"].Match(str);
             if (matcher.Success)
-                return new Tuple<bool, string>(true, "BET " + matcher.Groups[1] + " " + matcher.Groups[3] + " " + matcher.Groups[4] + " AND " + matcher.Groups[2] + matcher.Groups[3] + " " + matcher.Groups[4]);
+                return new Tuple<bool, string>(true, $"BET {matcher.Groups[1]} {matcher.Groups[3]} {matcher.Groups[4]} AND {matcher.Groups[2]}{matcher.Groups[3]} {matcher.Groups[4]}");
             matcher = _datePatterns["BETWEENFIX5"].Match(str);
             if (matcher.Success)
-                return new Tuple<bool, string>(true, "BET " + matcher.Groups[1] + matcher.Groups[2] + " " + matcher.Groups[5] + " AND " + matcher.Groups[3] + matcher.Groups[4] + " " + matcher.Groups[5]);
+                return new Tuple<bool, string>(true, $"BET {matcher.Groups[1]}{matcher.Groups[2]} {matcher.Groups[5]} AND {matcher.Groups[3]}{matcher.Groups[4]} {matcher.Groups[5]}");
             return new Tuple<bool, string>(false, string.Empty);
-        }
+       }
 
         #region Process Dates
 
