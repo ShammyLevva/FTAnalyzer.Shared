@@ -667,7 +667,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
         readonly string separator = $"————————————————————————————————\n";
 #endif
 
-        public string UpdateLostCousinsReport(Predicate<Individual> relationFilter)
+        public string UpdateLostCousinsReport(Predicate<Individual> relationFilter, IProgress<int> progress)
         {
             StringBuilder output = new StringBuilder();
             output.Append("Lost Cousins facts recorded:\n\n");
@@ -747,7 +747,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             return output.ToString();
         }
 
-        public string LCOutput(List<CensusIndividual> LCUpdates, List<CensusIndividual> LCInvalidReferences, Predicate<CensusIndividual> relationFilter)
+        public string LCOutput(List<CensusIndividual> LCUpdates, List<CensusIndividual> LCInvalidReferences, Predicate<CensusIndividual> relationFilter, IProgress<int> progress)
         {
             LCInvalidRef = 0;
             StringBuilder output = new StringBuilder();
@@ -806,11 +806,11 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             return Tuple.Create(missingIndiv, invalidRefIndiv);
         }
 
-        List<CensusIndividual> LCRemoveDuplicateIndividuals(List<CensusIndividual> individuals)
+        List<CensusIndividual> LCRemoveDuplicateIndividuals(List<CensusIndividual> lcIndividuals)
         {
             List<CensusIndividual> output = new List<CensusIndividual>();
             List<string> ids = new List<string>();
-            foreach (CensusIndividual ind in individuals)
+            foreach (CensusIndividual ind in lcIndividuals)
             {
                 if (!ids.Contains(ind.IndividualID))
                 {
