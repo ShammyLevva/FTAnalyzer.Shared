@@ -899,7 +899,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
 
         public IEnumerable<FactSource> AllSources => sources;
 
-        public IEnumerable<DataError> AllDataErrors => DataErrorTypes.SelectMany(dg => dg.Errors);
+        public IEnumerable<IDisplayDataError> AllDataErrors => DataErrorTypes.SelectMany(dg => dg.Errors);
 
         public int IndividualCount => individuals.Count;
 

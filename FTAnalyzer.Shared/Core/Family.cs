@@ -355,6 +355,17 @@ namespace FTAnalyzer
             }
         }
 
+        public string Surname
+        {
+            get
+            {
+                if (Husband != null) return Husband.Surname;
+                return Wife == null ? string.Empty : Wife.Surname;
+            }
+        }
+
+        public string Forenames => $"{HusbandForenames} {WifeForenames}".Trim();
+
         public string MarriageFilename => FamilyTree.ValidFilename($"{FamilyID} - Marriage of {FamilyName}.html");
 
         public string ChildrenFilename => FamilyTree.ValidFilename($"{FamilyID} - Children of {FamilyName}.html");

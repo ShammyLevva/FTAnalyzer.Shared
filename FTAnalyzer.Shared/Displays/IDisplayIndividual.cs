@@ -9,7 +9,7 @@ namespace FTAnalyzer
         string IndividualID { get; }
         [ColumnDetail("Forenames", 100)]
         string Forenames { get; }
-        [ColumnDetail("Surnames", 75)]
+        [ColumnDetail("Surname", 75)]
         string Surname { get; }
         [ColumnDetail("Gender", 40, ColumnDetail.ColumnAlignment.Center)]
         string Gender { get; }

@@ -43,6 +43,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Displays\DisplayDuplicateIndividual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Displays\DisplayFact.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Displays\DisplayOccupation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Displays\IDisplayDataError.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Displays\IDisplayCensus.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Displays\IDisplayChildrenStatus.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Displays\IDisplayColourBMD.cs" />

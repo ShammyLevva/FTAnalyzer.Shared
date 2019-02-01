@@ -133,7 +133,7 @@ namespace FTAnalyzer
             return (Husband != null && Husband.BirthDate.IsBefore(CensusDate)) || (Wife != null && Wife.BirthDate.IsBefore(CensusDate));
         }
 
-        public string Surname
+        public new string Surname
         {
             get
             {

@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using FTAnalyzer.Utilities;
 
 namespace FTAnalyzer
 {
-    public class DataError : IColumnComparer<DataError>
+    public class DataError : IColumnComparer<DataError>, IDisplayDataError
     {
         public DataError(int errorType, Fact.FactError errorLevel, Individual ind, string description)
         {
@@ -33,26 +32,20 @@ namespace FTAnalyzer
         Family family;
 
 #if __PC__
-        [ColumnDetail("Icon", 50)]
         public System.Drawing.Image Icon { get; private set; }
 #endif
-        [ColumnDetail("Error Type", 200)]
         public string ErrorType { get; private set; }
-        [ColumnDetail("Ref", 60)]
         public string Reference => individual == null ? family.FamilyID : individual.IndividualID;
-        [ColumnDetail("Name", 200)]
-        public string Name { get { return individual == null ? family.FamilyName : individual.Name; } }
-        [ColumnDetail("Description", 500)]
+        public string Name => individual == null ? family.FamilyName : individual.Name;
+        public string Forenames => individual == null ? family.Forenames : individual.Forenames;
+        public string Surname => individual == null ? family.Surname : individual.Surname;
         public string Description { get; private set; }
-        [ColumnDetail("Born", 150)]
         public FactDate Born => individual == null ? FactDate.UNKNOWN_DATE : individual.BirthDate;
-        [ColumnDetail("Died", 150)]
         public FactDate Died => individual == null ? FactDate.UNKNOWN_DATE : individual.DeathDate;
+        
 #if __PC__
-        [ColumnDetail("Family", 50)]
         public bool IsFamily => individual == null;
 #elif __MACOS__ || __IOS__
-        [ColumnDetail("Family", 50)]
         public string IsFamily => individual == null ? "Yes" : "No";
 #endif
         public IComparer<DataError> GetComparer(string columnName, bool ascending)

@@ -123,6 +123,9 @@ namespace FTAnalyzer
         {
             switch(str)
             {
+                case "SUBMITTED":
+                case "PRIVATE":
+                    return UNKNOWN_DATE.ToString();
                 case "DECEASED":
                 case "DEAD":
                     str = $"BEF {TODAY.ToString()}";
@@ -346,6 +349,8 @@ namespace FTAnalyzer
             str = str.Replace("FRI", "");
             str = str.Replace("SAT", "");
             str = str.Replace("SUN", "");
+
+            str = str.Replace("DIED IN INFANCY", "INFANT");
 
             if (str.IndexOf("TO", StringComparison.Ordinal) > 1)
             {  // contains TO but doesn't start with TO
