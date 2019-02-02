@@ -822,7 +822,7 @@ namespace FTAnalyzer
             {
                 Folio = matcher.Groups[1].ToString();
                 Page = matcher.Groups[2].ToString();
-                Class = matcher.Groups[3].ToString().Replace("RG ","RG");
+                Class = matcher.Groups[3].ToString().Replace("RG ", "RG");
                 Piece = matcher.Groups[4].ToString();
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
                 return true;
@@ -958,7 +958,7 @@ namespace FTAnalyzer
                 Page = matcher.Groups[5].ToString();
                 ED = matcher.Groups[6].ToString();
                 SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.GOOD, matcher.Value);
-                if (Roll.StartsWith("T627")) Roll = Roll.Substring(5);
+                if (Roll.StartsWith("T627", StringComparison.Ordinal)) Roll = Roll.Substring(5);
                 return true;
             }
             matcher = censusRegexs["US_CENSUS_PATTERN2"].Match(text);

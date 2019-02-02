@@ -412,7 +412,6 @@ namespace FTAnalyzer
 
         void CreateLostCousinsFacts(IProgress<string> outputText)
         {
-#if __PC__
             try
             {
                 int count = DatabaseHelper.Instance.AddLostCousinsFacts();
@@ -422,8 +421,7 @@ namespace FTAnalyzer
             {
                 outputText.Report($"Error loading previously submitted Lost Cousins data. {ex.Message}");
             }
-#endif
-}
+        }
 
 public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
         {
