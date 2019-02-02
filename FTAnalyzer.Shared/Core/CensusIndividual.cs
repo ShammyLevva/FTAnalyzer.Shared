@@ -46,7 +46,7 @@ namespace FTAnalyzer
                 }
                 if (range >= 3)
                     return "Unknown"; // only narrow ranges if not 1841
-                if (BirthDate.IsKnown)
+                if (BirthDate.IsKnown && Age.MinAge == 0 && Age.MaxAge == 0)
                 {
                     int months = BirthDate.MonthsDifference(CensusDate);
                     if (months < 0) months = 0;
