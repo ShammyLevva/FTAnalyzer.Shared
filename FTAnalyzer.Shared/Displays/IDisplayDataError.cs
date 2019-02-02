@@ -1,11 +1,8 @@
 ﻿using FTAnalyzer.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace FTAnalyzer
 {
-    public interface IDisplayDataError
+    public interface IDisplayDataError : IColumnComparer<IDisplayDataError>
     {
 #if __PC__
         [ColumnDetail("Icon", 50)]

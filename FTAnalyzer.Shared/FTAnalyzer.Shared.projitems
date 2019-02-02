@@ -136,9 +136,6 @@
     <Content Include="$(MSBuildThisFileDirectory)Resources\FactLocationFixesSchema.xsd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="$(MSBuildThisFileDirectory)Resources\Geocodes-Empty.s3db">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="$(MSBuildThisFileDirectory)Resources\GINAP.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -156,6 +153,9 @@
     </Content>
     <Content Include="$(MSBuildThisFileDirectory)Resources\OS50kGazetteer.txt" />
     <Content Include="$(MSBuildThisFileDirectory)Resources\ScottishParishes.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)Resources\Geocodes-Empty.s3db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

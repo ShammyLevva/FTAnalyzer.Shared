@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace FTAnalyzer
 {
-    public class DataError : IColumnComparer<DataError>, IDisplayDataError
+    public class DataError : IDisplayDataError
     {
         public DataError(int errorType, Fact.FactError errorLevel, Individual ind, string description)
         {
@@ -48,27 +48,27 @@ namespace FTAnalyzer
 #elif __MACOS__ || __IOS__
         public string IsFamily => individual == null ? "Yes" : "No";
 #endif
-        public IComparer<DataError> GetComparer(string columnName, bool ascending)
+        public IComparer<IDisplayDataError> GetComparer(string columnName, bool ascending)
         {
             switch (columnName)
             {
-                case "ErrorType": return CompareComparableProperty<DataError>(f => f.ErrorType, ascending);
-                case "Reference": return CompareComparableProperty<DataError>(f => f.Reference, ascending);
-                case "Name": return CompareComparableProperty<DataError>(f => f.Name, ascending);
-                case "Description": return CompareComparableProperty<DataError>(f => f.Description, ascending);
-                case "Born": return CompareComparableProperty<DataError>(f => f.Born, ascending);
-                case "Died": return CompareComparableProperty<DataError>(f => f.Died, ascending);
-                case "IsFamily": return CompareComparableProperty<DataError>(f => f.IsFamily, ascending);
+                case "ErrorType": return CompareComparableProperty<IDisplayDataError>(f => f.ErrorType, ascending);
+                case "Reference": return CompareComparableProperty<IDisplayDataError>(f => f.Reference, ascending);
+                case "Name": return CompareComparableProperty<IDisplayDataError>(f => f.Name, ascending);
+                case "Description": return CompareComparableProperty<IDisplayDataError>(f => f.Description, ascending);
+                case "Born": return CompareComparableProperty<IDisplayDataError>(f => f.Born, ascending);
+                case "Died": return CompareComparableProperty<IDisplayDataError>(f => f.Died, ascending);
+                case "IsFamily": return CompareComparableProperty<IDisplayDataError>(f => f.IsFamily, ascending);
                 default: return null;
             }
         }
 
-        Comparer<T> CompareComparableProperty<T>(Func<DataError, IComparable> accessor, bool ascending)
+        Comparer<T> CompareComparableProperty<T>(Func<IDisplayDataError, IComparable> accessor, bool ascending)
         {
             return Comparer<T>.Create((x, y) =>
             {
-                var c1 = accessor(x as DataError);
-                var c2 = accessor(y as DataError);
+                var c1 = accessor(x as IDisplayDataError);
+                var c2 = accessor(y as IDisplayDataError);
                 var result = c1.CompareTo(c2);
                 return ascending ? result : -result;
             });
