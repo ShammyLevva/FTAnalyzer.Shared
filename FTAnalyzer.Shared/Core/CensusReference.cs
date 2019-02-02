@@ -338,8 +338,8 @@ namespace FTAnalyzer
                     return true;
                 }
                 else
-                // no match so store text 
-                Status = ReferenceStatus.UNRECOGNISED;
+                    // no match so store text 
+                    Status = ReferenceStatus.UNRECOGNISED;
                 if (updateUnknownRef)
                 {
                     if (unknownCensusRef.Length == 0)
@@ -376,7 +376,7 @@ namespace FTAnalyzer
         {
             string output = input.Replace(".", " ").Replace(",", " ").Replace("(", " ")
                                  .Replace(")", " ").Replace("{", " ").Replace("}", " ")
-                                 .Replace("«b»"," ").Replace("«i»"," ").Replace("«/b»", " ")
+                                 .Replace("«b»", " ").Replace("«i»", " ").Replace("«/b»", " ")
                                  .Replace("«/i»", " ").Replace(@"\i", " ").Replace(@"\i0", " ")
                                  .ClearWhiteSpace();
             return output.Replace("Registration District", "RD", StringComparison.OrdinalIgnoreCase)
@@ -1164,7 +1164,7 @@ namespace FTAnalyzer
             Country = country;
             Status = status;
             MatchString = matchstring;
-            if(country == Countries.UNITED_STATES) FixUS1940Prefix();
+            if (country == Countries.UNITED_STATES) FixUS1940Prefix();
         }
 
         string GetOriginalPlace(string match, string originalText, string stopText)
@@ -1459,14 +1459,14 @@ namespace FTAnalyzer
                 return string.Empty;
             }
         }
-        
+
         void FixUS1940Prefix()
         {
             Roll = Roll.ToUpper().Replace('-', '_');
-            if (Roll.StartsWith("T627_")) Roll = Roll.Substring(5);
-            else if (Roll.StartsWith("T0627_")) Roll = Roll.Substring(6);
-            else if (Roll.StartsWith("M_T627_")) Roll = Roll.Substring(7);
-            else if (Roll.StartsWith("M_T0627_")) Roll = Roll.Substring(8);
+            if (Roll.StartsWith("T627_", StringComparison.Ordinal)) Roll = Roll.Substring(5);
+            else if (Roll.StartsWith("T0627_", StringComparison.Ordinal)) Roll = Roll.Substring(6);
+            else if (Roll.StartsWith("M_T627_", StringComparison.Ordinal)) Roll = Roll.Substring(7);
+            else if (Roll.StartsWith("M_T0627_", StringComparison.Ordinal)) Roll = Roll.Substring(8);
         }
 
         static readonly Regex LCEDregex = new Regex(@"\d{1,3}[A-Z]?", RegexOptions.Compiled | RegexOptions.IgnoreCase);
@@ -1478,7 +1478,7 @@ namespace FTAnalyzer
             //use Peter's code to check all the entries are valid
             if (CensusYear.Overlaps(CensusDate.EWCENSUS1841) && Countries.IsEnglandWales(Country))
             {
-                if (Piece.StartsWith("HO107"))
+                if (Piece.StartsWith("HO107", StringComparison.Ordinal))
                     Piece = Piece.Substring(5);
                 Piece = Piece.TrimStart('0');
                 Book = Book.TrimStart('0');
@@ -1487,9 +1487,9 @@ namespace FTAnalyzer
             }
             else if (CensusYear.Overlaps(CensusDate.EWCENSUS1881) && Countries.IsEnglandWales(Country))
             {
-                if (Piece.StartsWith("RG78"))
+                if (Piece.StartsWith("RG78", StringComparison.Ordinal))
                     return false;
-                if (Piece.StartsWith("RG11"))
+                if (Piece.StartsWith("RG11", StringComparison.Ordinal))
                     Piece = Piece.Substring(4);
                 Piece = Piece.TrimStart('0');
                 Folio = Folio.TrimStart('0').ToUpper().TrimEnd('A');
@@ -1528,7 +1528,7 @@ namespace FTAnalyzer
             }
             else if (CensusYear.Overlaps(CensusDate.CANADACENSUS1881) && Country == Countries.CANADA)
             {
-                if (Roll.ToUpper().StartsWith("C_"))
+                if (Roll.ToUpper().StartsWith("C_", StringComparison.Ordinal))
                     Roll = Roll.Substring(2);
 
 
@@ -1538,9 +1538,9 @@ namespace FTAnalyzer
             }
             else if (CensusYear.Overlaps(CensusDate.EWCENSUS1911) && Countries.IsEnglandWales(Country))
             {
-                if (Piece.StartsWith("RG14"))
+                if (Piece.StartsWith("RG14", StringComparison.Ordinal))
                     Piece = Piece.Substring(4);
-                if (Piece.StartsWith("PN"))
+                if (Piece.StartsWith("PN", StringComparison.Ordinal))
                     Piece = Piece.Substring(2);
                 Piece = Piece.TrimStart('0');
                 Schedule = Schedule.TrimStart('0');
@@ -1550,7 +1550,7 @@ namespace FTAnalyzer
             }
             else if (CensusYear.Overlaps(CensusDate.USCENSUS1880) && Country == Countries.UNITED_STATES)
             {
-                if (Roll.ToUpper().StartsWith("T9"))
+                if (Roll.ToUpper().StartsWith("T9", StringComparison.Ordinal))
                     Roll = Roll.Substring(2);
                 Roll = Roll.TrimStart('-').TrimStart('_').TrimStart('0');
                 Page = NumericToAlpha(Page.TrimStart('0'));
@@ -1570,15 +1570,15 @@ namespace FTAnalyzer
             if (page.Length > 3)
             {
                 string prefix = page.Substring(0, page.Length - 2);
-                if (Page.EndsWith(".1")) return prefix + "A";
-                if (Page.EndsWith(".2")) return prefix + "B";
-                if (Page.EndsWith(".3")) return prefix + "C";
-                if (Page.EndsWith(".4")) return prefix + "D";
-                if (Page.EndsWith(".5")) return prefix + "E";
-                if (Page.EndsWith(".6")) return prefix + "F";
-                if (Page.EndsWith(".7")) return prefix + "G";
-                if (Page.EndsWith(".8")) return prefix + "H";
-                if (Page.EndsWith(".9")) return prefix + "I";
+                if (Page.EndsWith(".1", StringComparison.Ordinal)) return prefix + "A";
+                if (Page.EndsWith(".2", StringComparison.Ordinal)) return prefix + "B";
+                if (Page.EndsWith(".3", StringComparison.Ordinal)) return prefix + "C";
+                if (Page.EndsWith(".4", StringComparison.Ordinal)) return prefix + "D";
+                if (Page.EndsWith(".5", StringComparison.Ordinal)) return prefix + "E";
+                if (Page.EndsWith(".6", StringComparison.Ordinal)) return prefix + "F";
+                if (Page.EndsWith(".7", StringComparison.Ordinal)) return prefix + "G";
+                if (Page.EndsWith(".8", StringComparison.Ordinal)) return prefix + "H";
+                if (Page.EndsWith(".9", StringComparison.Ordinal)) return prefix + "I";
             }
             return page;
         }

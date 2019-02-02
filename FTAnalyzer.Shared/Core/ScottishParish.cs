@@ -19,17 +19,16 @@ namespace FTAnalyzer
         public string Region { get; private set; }
 
         static Regex ParishRegex = new Regex(@"\d{1,3}-\d{1,2}?[AB]?", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
-        static ScottishParish()
-        {
-            LoadScottishParishes(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location));
-        }
-
+#if __PC__
+        static ScottishParish() => LoadScottishParishes(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location));
+#elif __MACOS__
+        static ScottishParish() => LoadScottishParishes(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location), ".."));
+#endif
         public static void LoadScottishParishes(string startPath)
         {
             // load Scottish Parishes from XML file
             if (startPath == null) return;
-            string filename = Path.Combine(startPath, @"Resources\ScottishParishes.xml");
+            string filename = Path.Combine(startPath, "Resources", "ScottishParishes.xml");
             if (File.Exists(filename))
             {
                 XmlDocument xmlDoc = new XmlDocument();

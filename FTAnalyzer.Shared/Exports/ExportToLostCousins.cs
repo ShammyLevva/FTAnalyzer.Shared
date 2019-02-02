@@ -181,7 +181,7 @@ namespace FTAnalyzer.Exports
                             if (columns[0].ChildNodes.Count == 5)
                             {
                                 HtmlAttribute notesNode = columns[0].ChildNodes[3].Attributes["title"];
-                                ftanalyzer = notesNode == null ? false : notesNode.Value.Contains("Added_By_FTAnalyzer");
+                                ftanalyzer = notesNode != null && notesNode.Value.Contains("Added_By_FTAnalyzer");
                             }
                             string birthYear = columns[2].InnerText.ClearWhiteSpace();
                             if (columns[4].ChildNodes.Count > 4)
@@ -309,6 +309,7 @@ namespace FTAnalyzer.Exports
                 case Individual.UNKNOWN:
                 case Individual.UNSET:
                 case Individual.LINKED:
+                    return "Unknown&descent=";
                 default:
                     return "Unknown&descent=";
             }

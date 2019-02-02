@@ -20,23 +20,17 @@ namespace FTAnalyzer
         public string County { get; private set; }
         public string Location { get; private set; }
 
-        static CensusLocation()
-        {
-            LoadCensusLocationFile(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location));
-#region Test CensusLocation.xml file
-            //foreach(KeyValuePair<Tuple<string, string>, CensusLocation> kvp in CENSUSLOCATIONS)
-            //{
-            //    FactLocation.GetLocation(kvp.Value.Location); // force creation of location facts
-            //}
-#endregion
-        }
-
+#if __PC__
+        static CensusLocation() => LoadCensusLocationFile(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location));
+#elif __MACOS__
+        static CensusLocation() => LoadCensusLocationFile(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location), ".."));
+#endif
         public static void LoadCensusLocationFile(string startPath)
         {
-            #region Census Locations
+#region Census Locations
             // load Census Locations from XML file
             if (startPath == null) return;
-            string filename = Path.Combine(startPath, @"Resources\CensusLocations.xml");
+            string filename = Path.Combine(startPath, "Resources", "CensusLocations.xml");
             if (File.Exists(filename))
             {
                 XmlDocument xmlDoc = new XmlDocument();
@@ -54,7 +48,7 @@ namespace FTAnalyzer
                     CENSUSLOCATIONS.Add(new Tuple<string, string>(year, piece), cl);
                 }
             }
-            #endregion
+#endregion
         }
 
         public CensusLocation(string location) : this(string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, location) { }
