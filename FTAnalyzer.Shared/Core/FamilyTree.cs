@@ -710,16 +710,16 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             int missingTotal = missingEW1841 + missingEW1881 + missingSco1881 + missingCan1881 + missingEW1911 + missingIre1911 + missingUS1880 + missingUS1940;
             int noCountryTotal = LostCousinsCensusYearFacts - missingTotal - LCtotal - duplicateLCCensusFacts;
 
-            output.Append($"1881 England & Wales Census: {countEW1881} Found, {missingEW1881} Missing\n");
-            output.Append($"1841 England & Wales Census: {countEW1841} Found, {missingEW1841} Missing\n");
-            output.Append($"1911 England & Wales Census: {countEW1911} Found, {missingEW1911} Missing\n");
+            output.Append($"1881 England & Wales Census: {countEW1881} LC Records, {missingEW1881} Missing LC Record\n");
+            output.Append($"1841 England & Wales Census: {countEW1841} LC Records, {missingEW1841} Missing LC Record\n");
+            output.Append($"1911 England & Wales Census: {countEW1911} LC Records, {missingEW1911} Missing LC Record\n");
             output.Append(separator);
-            output.Append($"1881 Scotland Census: {countSco1881} Found, {missingSco1881} Missing\n");
-            output.Append($"1911 Ireland Census: {countIre1911} Found, {missingIre1911} Missing\n");
-            output.Append($"1881 Canada Census: {countCan1881} Found, {missingCan1881} Missing\n");
+            output.Append($"1881 Scotland Census: {countSco1881} LC Records, {missingSco1881} Missing LC Record\n");
+            output.Append($"1911 Ireland Census: {countIre1911} LC Records, {missingIre1911} Missing LC Record\n");
+            output.Append($"1881 Canada Census: {countCan1881} LC Records, {missingCan1881} Missing LC Record\n");
             output.Append(separator);
-            output.Append($"1880 US Census: {countUS1880} Found, {missingUS1880} Missing\n");
-            output.Append($"1940 US Census: {countUS1940} Found, {missingUS1940} Missing\n");
+            output.Append($"1880 US Census: {countUS1880} LC Records, {missingUS1880} Missing LC Record\n");
+            output.Append($"1940 US Census: {countUS1940} LC Records, {missingUS1940} Missing LC Record\n");
             output.Append(separator);
             if (moreThanOneLCfact > 0)
                 output.Append($"Duplicate Lost Cousins facts: {moreThanOneLCfact}\n");
@@ -729,7 +729,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             //    rtbLostCousins.AppendText($"Census facts with no census country and no Lost Cousins fact : {noCountryTotal}\n");
             if (moreThanOneLCfact > 0 || LCtotal > total) // || noCountryTotal > 0)
                 output.Append(separator);
-            output.Append($"Totals: {LCtotal} Found, {missingTotal} Missing");
+            output.Append($"Totals: {LCtotal} Lost Cousin Records, {missingTotal} Missing Lost Cousins Record");
 
             if (LCnoCensus > 0 || missingTotal > 0)
                 output.Append("\n\n");
@@ -738,7 +738,8 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             if (missingTotal > 0)
             {
                 output.Append($"You have {missingTotal} Census facts with no Lost Cousins fact");
-                output.Append("\nClick the Lost Cousins website link to add them today.");
+                output.Append("\nUse the Updates tab to automatically upload them today.");
+                output.Append("\nUse the Lost Cousins Website Link to join if you aren't already a member.");
             }
             LCFound = LCtotal;
             LCMissing = missingTotal;
@@ -780,7 +781,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             output.Append($"{LCUpdates.Count} possible records to upload to Lost Cousins.");
             LCUploadable = LCUpdates.Count;
             LCInvalidRef = LCInvalidReferences.Count;
-            string stats = $"{LCMissing} census records ({LCUploadable} uploadable, {LCInvalidRef} invalid refs), and {LCFound} already entered.";
+            string stats = $"{LCMissing} census records ({LCUploadable} uploadable, {LCInvalidRef} invalid LC refs), and {LCFound} already entered.";
             Task.Run(() => Analytics.TrackActionAsync(Analytics.LostCousinsAction, Analytics.LostCousinsStats, stats));
             return output.ToString();
         }
@@ -800,7 +801,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             invalidRefIndiv = LCRemoveDuplicateIndividuals(invalidRefIndiv);
 
             int missing = MissingLCEntries[censusDate];
-            output.Append($"{censusDate}: {missingIndiv.Count} possible {missing - missingIndiv.Count} without valid census ref\n");
+            output.Append($"{censusDate}: {missingIndiv.Count} possible {missing - missingIndiv.Count} without valid Lost Cousins ref\n");
             return Tuple.Create(missingIndiv, invalidRefIndiv);
         }
 
