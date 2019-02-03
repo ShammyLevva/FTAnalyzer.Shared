@@ -103,6 +103,7 @@ namespace FTAnalyzer
                 case "DeathDate": return CompareComparableProperty<IDisplayCensus>(f => f.DeathDate, ascending);
                 case "DeathLocation": return CompareComparableProperty<IDisplayCensus>(f => f.DeathLocation, ascending);
                 case "CensusStatus": return CompareComparableProperty<IDisplayCensus>(f => f.CensusStatus, ascending);
+                case "Census": return CompareComparableProperty<IDisplayCensus>(f => f.Census, ascending);
                 case "CensusRef": return CompareComparableProperty<IDisplayCensus>(f => f.CensusRef, ascending);
                 case "Relation": return CompareComparableProperty<IDisplayCensus>(f => f.Relation, ascending);
                 case "RelationToRoot": return CompareComparableProperty<IDisplayCensus>(f => f.RelationToRoot, ascending);

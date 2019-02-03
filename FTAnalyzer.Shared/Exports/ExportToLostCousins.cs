@@ -1,4 +1,5 @@
-﻿using FTAnalyzer.Utilities;
+﻿using FTAnalyzer.Properties;
+using FTAnalyzer.Utilities;
 using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
@@ -31,6 +32,8 @@ namespace FTAnalyzer.Exports
                 Website = LoadWebsiteAncestors(outputText);
             if (SessionList == null)
                 SessionList = new List<LostCousin>();
+            bool alias = GeneralSettings.Default.ShowAliasInName; 
+            GeneralSettings.Default.ShowAliasInName = false; // turn off adding alias in name when exporting
             foreach (CensusIndividual ind in ToProcess)
             {
                 if (ind.LCAge.Equals("Unknown"))
@@ -44,7 +47,7 @@ namespace FTAnalyzer.Exports
                     if (Website.Contains(lc))
                     {
                         outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - Already Present {ind.ToString()}, {ind.CensusReference}.\n");
-                        DatabaseHelper.Instance.StoreLostCousinsFact(ind);
+                        DatabaseHelper.Instance.StoreLostCousinsFact(ind, outputText);
                         recordsPresent++;
                     }
                     else
@@ -61,7 +64,7 @@ namespace FTAnalyzer.Exports
                                 outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - {ind.ToString()}, {ind.CensusReference} added.\n");
                                 recordsAdded++;
                                 SessionList.Add(lc);
-                                DatabaseHelper.Instance.StoreLostCousinsFact(ind);
+                                DatabaseHelper.Instance.StoreLostCousinsFact(ind, outputText);
                             }
                             else
                             {
@@ -77,6 +80,7 @@ namespace FTAnalyzer.Exports
                     recordsFailed++;
                 }
             }
+            GeneralSettings.Default.ShowAliasInName = alias;
             outputText.Report($"\nFinished writing Entries to Lost Cousins website. {recordsAdded} successfully added, {recordsPresent} already present, {sessionDuplicates} possible duplicates and {recordsFailed} failed.\nView Lost Cousins Report tab to see current status.");
             outputText.Report("\n\nPlease note you MUST check the entries by clicking the arrow next to the census reference on the list on my ancestors page.\n");
             outputText.Report("This only needs done once per household and will link to the census on Find My Past.\n");
@@ -246,15 +250,15 @@ namespace FTAnalyzer.Exports
             StringBuilder output = new StringBuilder("stage=submit&similar=");
             output.Append(GetCensusSpecificFields(ind));
             output.Append($"&surname={ind.SurnameAtDate(ind.CensusDate)}");
-            output.Append($"&forename={ind.Forename}");
-            output.Append($"&other_names={ind.OtherNames}");
+            output.Append($"&forename={RemoveQuoted(ind.Forename)}");
+            output.Append($"&other_names={RemoveQuoted(ind.OtherNames)}");
             output.Append($"&age={ind.LCAge}");
             output.Append($"&relation_type={GetLCDescendantStatus(ind)}");
             if (!ind.IsMale && ind.Surname != ind.SurnameAtDate(ind.CensusDate))
                 output.Append($"&maiden_name={ind.Surname}");
             else
                 output.Append("&maiden_name=");
-            output.Append($"&corrected_surname={ind.Surname}&corrected_forename={ind.Forename}&corrected_other_names={ind.OtherNames}");
+            output.Append($"&corrected_surname={ind.Surname}&corrected_forename={RemoveQuoted(ind.Forename)}&corrected_other_names={RemoveQuoted(ind.OtherNames)}");
             if (ind.BirthDate.IsExact)
                 output.Append($"&corrected_birth_day={ind.BirthDate.StartDate.Day}&corrected_birth_month={ind.BirthDate.StartDate.Month}&corrected_birth_year={ind.BirthDate.StartDate.Year}");
             else
@@ -262,6 +266,20 @@ namespace FTAnalyzer.Exports
             output.Append("&baptism_day=&baptism_month=&baptism_year=");
             output.Append($"&piece_number=&notes=Added_By_FTAnalyzer{Suffix()}"); 
             return output.ToString();
+        }
+
+        static string RemoveQuoted(string input)
+        {
+            string output = input;
+            int startptr = input.IndexOf('\'');
+            if (startptr == -1) startptr = input.IndexOf('\"');
+            if(startptr !=-1)
+            {
+                int endptr = input.IndexOf('\'', startptr);
+                if (endptr == -1) endptr = input.IndexOf('\"', startptr);
+                output = input.Substring(0, startptr) + input.Substring(endptr);
+            }
+            return output.Replace('\'', ' ').Replace('\"', ' ').Replace("  "," ").Replace("  ", " ");
         }
 
         static string Suffix()
