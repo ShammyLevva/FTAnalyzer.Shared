@@ -779,6 +779,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             LCInvalidReferences.AddRange(result.Item2);
             output.Append(separator);
             output.Append($"{LCUpdates.Count} possible records to upload to Lost Cousins.");
+            output.Append("\n\nUse the login form on the left to login to activate upload button");
             LCUploadable = LCUpdates.Count;
             LCInvalidRef = LCInvalidReferences.Count;
             string stats = $"{LCMissing} census records ({LCUploadable} uploadable, {LCInvalidRef} invalid LC refs), and {LCFound} already entered.";
@@ -934,7 +935,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             if (string.IsNullOrEmpty(individualID))
                 return null;
             individualLookup.TryGetValue(individualID, out Individual person);
-            while (individualID.StartsWith("I0") && person == null)
+            while (individualID.StartsWith("I0", StringComparison.Ordinal) && person == null)
             {
                 if (individualID.Length >= 2) individualID = "I" + individualID.Substring(2);
                 individualLookup.TryGetValue(individualID, out person);
