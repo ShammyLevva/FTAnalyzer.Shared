@@ -33,8 +33,11 @@ namespace FTAnalyzer.Utilities
                            .Replace("Wwii ", "WWII")
                            .Replace("Ww Ii ", "WW II")
                            .Replace("1St", "1st")
+                           .Replace("1Th", "1th") // 11th
                            .Replace("2Nd", "2nd")
+                           .Replace("2Th", "2th") // 12th
                            .Replace("3Rd", "3rd")
+                           .Replace("3Th", "3th") // 13th
                            .Replace("4Th", "4th")
                            .Replace("5Th", "5th")
                            .Replace("6Th", "6th")
