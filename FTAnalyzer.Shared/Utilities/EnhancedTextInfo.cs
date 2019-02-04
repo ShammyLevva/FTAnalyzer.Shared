@@ -94,10 +94,10 @@ namespace FTAnalyzer.Utilities
         public static string ClearWhiteSpace(this string text)
         {
             return text.Replace(Environment.NewLine, " ").Replace("\n", " ")
+                       .Replace(";", " ").Replace(":", " ").Replace("~", " ")
                        .Replace("\t", " ").Replace("   ", " ").Replace("   ", " ")
                        .Replace("  ", " ").Replace("  ", " ").Replace("  ", " ")
                        .Replace("  ", " ").Replace("  ", " ").Replace("  ", " ")
-                       .Replace(";", " ").Replace(":", " ").Replace("~", " ")
                        .Trim();
         }
 

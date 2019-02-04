@@ -151,28 +151,11 @@ namespace FTAnalyzer
             str = str.Replace("@#DGREGORIAN@", "").Replace("@#DJULIAN@", ""); //.Replace("@#DFRENCH R@", ""); // .Replace("@#DHEBREW@", "");
             str = str.Replace(". ", " "); // even if Non GEDCOM date separator is a dot, dot space is invalid.
             str = str.Replace("&", " AND ");
-            str = str.Replace(",", " ");
-            str = str.Replace("(", " ");
-            str = str.Replace(")", " ");
-            str = str.Replace("?", " ");
-            str = str.Replace("!", " ");
-            str = str.Replace("#", " ");
-            str = str.Replace("$", " ");
-            str = str.Replace("%", " ");
-            str = str.Replace("^", " ");
-            str = str.Replace("'", " ");
-            str = str.Replace(":", " ");
-            str = str.Replace(";", " ");
-            str = str.Replace("@", " ");
-            str = str.Replace("<", "BEF ");
-            str = str.Replace(">", "AFT ");
-            str = str.Replace("=", " ");
-            str = str.Replace("?", " ");
-            str = str.Replace("#", " ");
-            str = str.Replace(" / ", "/");
-            str = str.Replace("\'", " ");
-            str = str.Replace("\"", " ");
-            str = str.Replace("`", " ").ClearWhiteSpace();
+            str = str.Replace(",", " ").Replace("(", " ").Replace(")", " ").Replace("?", " ").Replace("!", " ");
+            str = str.Replace("#", " ").Replace("$", " ").Replace("%", " ").Replace("^", " ").Replace("'", " ");
+            str = str.Replace(":", " ").Replace(";", " ").Replace("@", " ").Replace("=", " ").Replace("?", " ");
+            str = str.Replace("~", "ABT ").Replace("<", "BEF ").Replace(">", "AFT ").Replace("#", " ");
+            str = str.Replace(" / ", "/").Replace("\'", " ").Replace("\"", " ").Replace("`", " ").ClearWhiteSpace();
 
             str = str.Replace("JANUARY", "JAN");
             str = str.Replace("FEBRUARY", "FEB");
