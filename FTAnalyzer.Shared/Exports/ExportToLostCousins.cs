@@ -250,15 +250,15 @@ namespace FTAnalyzer.Exports
             StringBuilder output = new StringBuilder("stage=submit&similar=");
             output.Append(GetCensusSpecificFields(ind));
             output.Append($"&surname={ind.SurnameAtDate(ind.CensusDate)}");
-            output.Append($"&forename={RemoveQuoted(ind.Forename)}");
-            output.Append($"&other_names={RemoveQuoted(ind.OtherNames)}");
+            output.Append($"&forename={ValidLostCousinsString(ind.Forename)}");
+            output.Append($"&other_names={ValidLostCousinsString(ind.OtherNames)}");
             output.Append($"&age={ind.LCAge}");
             output.Append($"&relation_type={GetLCDescendantStatus(ind)}");
             if (!ind.IsMale && ind.Surname != ind.SurnameAtDate(ind.CensusDate))
                 output.Append($"&maiden_name={ind.Surname}");
             else
                 output.Append("&maiden_name=");
-            output.Append($"&corrected_surname={ind.Surname}&corrected_forename={RemoveQuoted(ind.Forename)}&corrected_other_names={RemoveQuoted(ind.OtherNames)}");
+            output.Append($"&corrected_surname={ind.Surname}&corrected_forename={ValidLostCousinsString(ind.Forename)}&corrected_other_names={ValidLostCousinsString(ind.OtherNames)}");
             if (ind.BirthDate.IsExact)
                 output.Append($"&corrected_birth_day={ind.BirthDate.StartDate.Day}&corrected_birth_month={ind.BirthDate.StartDate.Month}&corrected_birth_year={ind.BirthDate.StartDate.Year}");
             else
@@ -266,6 +266,13 @@ namespace FTAnalyzer.Exports
             output.Append("&baptism_day=&baptism_month=&baptism_year=");
             output.Append($"&piece_number=&notes=Added_By_FTAnalyzer{Suffix()}"); 
             return output.ToString();
+        }
+
+        static string ValidLostCousinsString(string input)
+        {
+            string output = RemoveQuoted(input);
+            output = output.Remove('[').Remove(']').Remove('{').Remove('}').Remove('?');
+            return output;
         }
 
         static string RemoveQuoted(string input)
