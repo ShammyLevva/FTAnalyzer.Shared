@@ -560,7 +560,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             {
                 Individual ind = GetIndividual(t.Item1);
                 Fact fact = t.Item2;
-                if (ind != null)
+                if (ind != null && !ind.Facts.Contains(fact))
                     ind.AddFact(fact);
             }
         }
