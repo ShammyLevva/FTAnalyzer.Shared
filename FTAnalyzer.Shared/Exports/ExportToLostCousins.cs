@@ -249,44 +249,27 @@ namespace FTAnalyzer.Exports
         {
             StringBuilder output = new StringBuilder("stage=submit&similar=");
             output.Append(GetCensusSpecificFields(ind));
-            output.Append($"&surname={ind.SurnameAtDate(ind.CensusDate)}");
-            output.Append($"&forename={ValidLostCousinsString(ind.Forename)}");
-            output.Append($"&other_names={ValidLostCousinsString(ind.OtherNames)}");
+            output.Append($"&surname={ind.LCSurnameAtDate(ind.CensusDate)}");
+            output.Append($"&forename={ind.LCForename}");
+            output.Append($"&other_names={ind.LCOtherNames}");
             output.Append($"&age={ind.LCAge}");
             output.Append($"&relation_type={GetLCDescendantStatus(ind)}");
-            if (!ind.IsMale && ind.Surname != ind.SurnameAtDate(ind.CensusDate))
-                output.Append($"&maiden_name={ind.Surname}");
+            if (!ind.IsMale && ind.LCSurname != ind.LCSurnameAtDate(ind.CensusDate))
+                output.Append($"&maiden_name={ind.LCSurname}");
             else
                 output.Append("&maiden_name=");
-            output.Append($"&corrected_surname={ind.Surname}&corrected_forename={ValidLostCousinsString(ind.Forename)}&corrected_other_names={ValidLostCousinsString(ind.OtherNames)}");
+            output.Append($"&corrected_surname={ind.LCSurname}&corrected_forename={ind.LCForename}&corrected_other_names={ind.LCOtherNames}");
             if (ind.BirthDate.IsExact)
                 output.Append($"&corrected_birth_day={ind.BirthDate.StartDate.Day}&corrected_birth_month={ind.BirthDate.StartDate.Month}&corrected_birth_year={ind.BirthDate.StartDate.Year}");
             else
                 output.Append($"&corrected_birth_day=&corrected_birth_month=&corrected_birth_year=");
             output.Append("&baptism_day=&baptism_month=&baptism_year=");
-            output.Append($"&piece_number=&notes=Added_By_FTAnalyzer{Suffix()}"); 
+#if __PC__
+            output.Append($"&piece_number=&notes=Added_By_FTAnalyzer-v{MainForm.VERSION}{Suffix()}");
+#elif __MACOS__
+            output.Append($"&piece_number=&notes=Added_By_FTAnalyzer-{App.Version}{Suffix()}");
+#endif
             return output.ToString();
-        }
-
-        static string ValidLostCousinsString(string input)
-        {
-            string output = RemoveQuoted(input);
-            output = output.Remove('[').Remove(']').Remove('{').Remove('}').Remove('?');
-            return output;
-        }
-
-        static string RemoveQuoted(string input)
-        {
-            string output = input;
-            int startptr = input.IndexOf('\'');
-            if (startptr == -1) startptr = input.IndexOf('\"');
-            if(startptr !=-1)
-            {
-                int endptr = input.IndexOf('\'', startptr);
-                if (endptr == -1) endptr = input.IndexOf('\"', startptr);
-                output = input.Substring(0, startptr) + input.Substring(endptr);
-            }
-            return output.Replace('\'', ' ').Replace('\"', ' ').Replace("  "," ").Replace("  ", " ");
         }
 
         static string Suffix()

@@ -889,6 +889,33 @@ namespace FTAnalyzer
             }
         }
 
+        public string LCSurnameAtDate(CensusDate date) => ValidLostCousinsString(SurnameAtDate(date));
+        public string LCSurname => ValidLostCousinsString(Surname);
+        public string LCForename => ValidLostCousinsString(Forename);
+        public string LCOtherNames => ValidLostCousinsString(OtherNames);
+
+        string ValidLostCousinsString(string input)
+        {
+            string output = RemoveQuoted(input);
+            output = output.Remove('[').Remove(']').Remove('{').Remove('}').Remove('?');
+            return output;
+        }
+
+        string RemoveQuoted(string input)
+        {
+            string output = input;
+            int startptr = input.IndexOf('\'');
+            if (startptr == -1) startptr = input.IndexOf('\"');
+            if (startptr != -1)
+            {
+                int endptr = input.IndexOf('\'', startptr);
+                if (endptr == -1) endptr = input.IndexOf('\"', startptr);
+                output = (startptr < input.Length ? input.Substring(0, startptr) : string.Empty) + (endptr < input.Length ? input.Substring(endptr) : string.Empty);
+            }
+            return output.Replace('\'', ' ').Replace('\"', ' ').Replace("  ", " ").Replace("  ", " ");
+        }
+
+
         /// <summary>
         /// Checks the notes against an individual to see if any census data exists
         /// </summary>
