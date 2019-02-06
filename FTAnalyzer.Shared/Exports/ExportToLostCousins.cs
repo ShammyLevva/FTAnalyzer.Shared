@@ -47,7 +47,8 @@ namespace FTAnalyzer.Exports
                     if (Website.Contains(lc))
                     {
                         outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - Already Present {ind.ToString()}, {ind.CensusReference}.\n");
-                        DatabaseHelper.Instance.StoreLostCousinsFact(ind, outputText);
+                        if(!DatabaseHelper.Instance.LostCousinsExists(ind))
+                            DatabaseHelper.Instance.StoreLostCousinsFact(ind, outputText);
                         recordsPresent++;
                     }
                     else
@@ -337,9 +338,7 @@ namespace FTAnalyzer.Exports
         {
             WebRequest request = base.GetWebRequest(address);
             if (request is HttpWebRequest webRequest)
-            {
                 webRequest.CookieContainer = _cookieJar;
-            }
             return request;
         }
     }

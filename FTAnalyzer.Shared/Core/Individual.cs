@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
+using System.Text;
 using System.Xml;
 using static FTAnalyzer.ColourValues;
 
@@ -896,14 +897,19 @@ namespace FTAnalyzer
 
         string ValidLostCousinsString(string input)
         {
-            string output = RemoveQuoted(input);
-            output = output.Remove('[').Remove(']').Remove('{').Remove('}').Remove('?');
-            return output;
+            StringBuilder output = new StringBuilder();
+            input = RemoveQuoted(input);
+            foreach (char c in input)
+            {
+                if (c == '-' || c == '\'' || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
+                    output.Append(c);
+            }
+            return output.ToString();
         }
 
         string RemoveQuoted(string input)
         {
-            string output = input;
+            string output = input.Replace("UNKNOWN", "");
             int startptr = input.IndexOf('\'');
             if (startptr == -1) startptr = input.IndexOf('\"');
             if (startptr != -1)
@@ -990,7 +996,7 @@ namespace FTAnalyzer
             {
                 foreach (Family marriage in FamiliesAsSpouse.OrderBy(f => f.MarriageDate))
                 {
-                    if ((marriage.MarriageDate.Equals(date) || marriage.MarriageDate.IsBefore(date)) && marriage.Husband != null)
+                    if ((marriage.MarriageDate.Equals(date) || marriage.MarriageDate.IsBefore(date)) && marriage.Husband != null && marriage.Husband.Surname != "UNKNOWN")
                         name = marriage.Husband.Surname;
                 }
             }

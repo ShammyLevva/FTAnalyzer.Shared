@@ -795,9 +795,9 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             Predicate<CensusIndividual> missingFilter = FilterUtils.AndFilter(relationFilter, missingLC);
             List<CensusIndividual> missingIndiv = censusFamilies.SelectMany(f => f.Members).Filter(missingFilter).ToList();
             missingIndiv = LCRemoveDuplicateIndividuals(missingIndiv);
-
             bool invalidRef(CensusIndividual x) => x.MissingLostCousins(censusDate, false) && x.CensusReference != null && !x.CensusReference.IsGoodStatus;
-            Predicate<CensusIndividual> invalidRefFilter = FilterUtils.AndFilter(relationFilter, invalidRef);
+            bool nameFilter(CensusIndividual x) => x.LCForename.Length > 0 && x.LCSurname.Length > 0;
+            Predicate<CensusIndividual> invalidRefFilter = FilterUtils.AndFilter(relationFilter, invalidRef, nameFilter);
             List<CensusIndividual> invalidRefIndiv = censusFamilies.SelectMany(f => f.Members).Filter(invalidRefFilter).ToList();
             invalidRefIndiv = LCRemoveDuplicateIndividuals(invalidRefIndiv);
 
