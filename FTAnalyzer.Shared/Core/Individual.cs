@@ -115,6 +115,7 @@ namespace FTAnalyzer
             AddFacts(node, Fact.SOCIAL_SECURITY, outputText);
             AddFacts(node, Fact.TITLE, outputText);
             AddFacts(node, Fact.WEIGHT, outputText);
+            AddFacts(node, Fact.RACE, outputText);
 
             // Individual events - key facts first
             AddFacts(node, Fact.BIRTH, outputText);

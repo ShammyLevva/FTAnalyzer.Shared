@@ -30,8 +30,8 @@ namespace FTAnalyzer
                 SEALED_TO_SPOUSE = "SLGS", SEPARATION = "_SEPR", SERVICE_NUMBER = "_MILTID", SOCIAL_SECURITY = "SSN", TITLE = "TITL",
                 UNKNOWN = "UNKN", WEIGHT = "_WEIG", WILL = "WILL", HASHTAG = "_HASHTAG", OBITUARY = "OBIT", CENSUS_SUMMARY = "CEN_SUMM";
 
-        public const string ARRIVAL = "*ARRI", CHANGE = "*CHNG", CHILDLESS = "*CHILD", CHILDREN = "*CHILDREN", CONTACT = "*CONT", 
-                DEPARTURE = "*DEPT", FAMILYSEARCH = "*IGI", LC_FTA = "*LOST_FTA", LOOSEBIRTH = "*LOOSEB",
+        public const string ARRIVAL = "*ARRI", CHANGE = "*CHNG", CHILDLESS = "*CHILD", CHILDREN = "*CHILDREN", CONTACT = "*CONT",
+                DEPARTURE = "*DEPT", FAMILYSEARCH = "*IGI", LC_FTA = "*LOST_FTA", LOOSEBIRTH = "*LOOSEB", RACE = "RACE",
                 LOOSEDEATH = "*LOOSED", LOSTCOUSINS = "*LOST", MISSING = "*MISSING", PARENT = "*PARENT", REPORT = "*REPORT",
                 UNMARRIED = "*UNMAR", WEBSITE = "*WEBSITE", WITNESS = "*WITNE", WORLD_EVENT = "*WORLD_EVENT";
 
@@ -272,6 +272,7 @@ namespace FTAnalyzer
             COMMENT_FACTS.Add(WITNESS);
             COMMENT_FACTS.Add(HASHTAG);
             COMMENT_FACTS.Add(OBITUARY);
+            COMMENT_FACTS.Add(RACE);
         }
 
         internal static string GetFactTypeDescription(string factType)
@@ -363,6 +364,7 @@ namespace FTAnalyzer
                 case PHYSICAL_DESC: return "Physical description";
                 case PROBATE: return "Probate";
                 case PROPERTY: return "Property";
+                case RACE: return "Race";
                 case REFERENCE: return "Reference ID";
                 case RELIGION: return "Religion";
                 case REPORT: return "Fact Report";
