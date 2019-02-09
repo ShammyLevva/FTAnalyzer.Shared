@@ -65,7 +65,8 @@ namespace FTAnalyzer.Exports
                                 outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - {ind.ToString()}, {ind.CensusReference} added.\n");
                                 recordsAdded++;
                                 SessionList.Add(lc);
-                                DatabaseHelper.Instance.StoreLostCousinsFact(ind, outputText);
+                                if (!DatabaseHelper.Instance.LostCousinsExists(ind))
+                                    DatabaseHelper.Instance.StoreLostCousinsFact(ind, outputText);
                             }
                             else
                             {
@@ -237,6 +238,8 @@ namespace FTAnalyzer.Exports
             }
             catch (Exception e)
             {
+                if (e.Message.Contains("UNIQUE constraint failed:")) // already written so silently ignore adding to database.
+                    return true;
                 outputText.Report($"Problem accessing Lost Cousins Website to send record below. Error message is: {e.Message}\n");
                 return false;
             }
