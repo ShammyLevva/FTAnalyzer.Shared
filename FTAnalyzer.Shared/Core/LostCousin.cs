@@ -62,7 +62,6 @@ namespace FTAnalyzer
             if (census.StartsWith("Ireland", StringComparison.Ordinal) && census.EndsWith("1881", StringComparison.Ordinal)) CensusDate = CensusDate.SCOTCENSUS1881;
             if (census.StartsWith("United States", StringComparison.Ordinal) && census.EndsWith("1880", StringComparison.Ordinal)) CensusDate = CensusDate.USCENSUS1880;
             if (census.StartsWith("United States", StringComparison.Ordinal) && census.EndsWith("1940", StringComparison.Ordinal)) CensusDate = CensusDate.USCENSUS1940;
-
         }
 
         void SetMetaphones()
@@ -84,8 +83,7 @@ namespace FTAnalyzer
             }
         }
 
-        public Status LostCousinsStatus => Status.Good;
-        public Status GEDCOMStatus => Status.Good;
+        public bool Verified => false;
 
         string FixReference(string reference)
         {
@@ -97,10 +95,7 @@ namespace FTAnalyzer
             return output;
         }
 
-        public override string ToString()
-        {
-            return $"{Name} b.{BirthYear}, ref: {Reference} {CensusDate}";
-        }
+        public override string ToString() => $"{Name} b.{BirthYear}, ref: {Reference} {CensusDate}";
 
         public bool Equals(LostCousin other)
         {

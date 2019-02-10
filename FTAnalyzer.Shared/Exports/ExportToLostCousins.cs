@@ -262,7 +262,7 @@ namespace FTAnalyzer.Exports
                 output.Append($"&maiden_name={ind.LCSurname}");
             else
                 output.Append("&maiden_name=");
-            output.Append($"&corrected_surname={ind.LCSurname}&corrected_forename={ind.LCForename}&corrected_other_names={ind.LCOtherNames}");
+            output.Append($"&corrected_surname={ind.LCSurnameAtDate(ind.CensusDate)}&corrected_forename={ind.LCForename}&corrected_other_names={ind.LCOtherNames}");
             if (ind.BirthDate.IsExact)
                 output.Append($"&corrected_birth_day={ind.BirthDate.StartDate.Day}&corrected_birth_month={ind.BirthDate.StartDate.Month}&corrected_birth_year={ind.BirthDate.StartDate.Year}");
             else

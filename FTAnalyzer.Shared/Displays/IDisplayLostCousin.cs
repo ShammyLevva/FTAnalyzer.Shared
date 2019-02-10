@@ -11,7 +11,6 @@ namespace FTAnalyzer
         string Reference { get; }
         CensusDate CensusDate { get; }
         bool FTAnalyzerFact { get; }
-        LostCousin.Status LostCousinsStatus { get; }
-        LostCousin.Status GEDCOMStatus { get; }
+        bool Verified { get; }
     }
 }
