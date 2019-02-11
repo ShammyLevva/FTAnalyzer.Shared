@@ -41,6 +41,11 @@ namespace FTAnalyzer.Exports
                     outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - Cannot determine age at census {ind.ToString()}.\n");
                     recordsFailed++;
                 }
+                else if(ind.LCSurname.Length == 0 || ind.LCForename.Length == 0)
+                {
+                    outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - Cannot process person with unknown forename or surname {ind.ToString()}.\n");
+                    recordsFailed++;
+                }
                 else if (ind.CensusReference != null && ind.CensusReference.IsValidLostCousinsReference())
                 {
                     LostCousin lc = new LostCousin($"{ind.Surname}, {ind.Forenames}", ind.BirthDate.BestYear, GetCensusSpecificFields(ind), ind.CensusDate.BestYear, ind.CensusCountry, true); ;
@@ -49,6 +54,7 @@ namespace FTAnalyzer.Exports
                         outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - Already Present {ind.ToString()}, {ind.CensusReference}.\n");
                         if(!DatabaseHelper.Instance.LostCousinsExists(ind))
                             DatabaseHelper.Instance.StoreLostCousinsFact(ind, outputText);
+                        AddLostCousinsFact(ind);
                         recordsPresent++;
                     }
                     else
@@ -67,6 +73,7 @@ namespace FTAnalyzer.Exports
                                 SessionList.Add(lc);
                                 if (!DatabaseHelper.Instance.LostCousinsExists(ind))
                                     DatabaseHelper.Instance.StoreLostCousinsFact(ind, outputText);
+                                AddLostCousinsFact(ind);
                             }
                             else
                             {
@@ -83,8 +90,8 @@ namespace FTAnalyzer.Exports
                 }
             }
             GeneralSettings.Default.ShowAliasInName = alias;
-            outputText.Report($"\nFinished writing Entries to Lost Cousins website. {recordsAdded} successfully added, {recordsPresent} already present, {sessionDuplicates} possible duplicates and {recordsFailed} failed.\nView Lost Cousins Report tab to see current status.");
-            outputText.Report("\n\nPlease note you MUST check the entries by clicking the arrow next to the census reference on the list on my ancestors page.\n");
+            outputText.Report($"\nFinished writing Entries to Lost Cousins website. {recordsAdded} successfully added, {recordsPresent} already present, {sessionDuplicates} possible duplicates and {recordsFailed} failed.\nView Lost Cousins Report tab to see current status.\n");
+            outputText.Report("\nPlease note you MUST check the entries by clicking the arrow next to the census reference on the list on my ancestors page.\n");
             outputText.Report("This only needs done once per household and will link to the census on Find My Past.\n");
             outputText.Report("If you have any errors you can correct them on your my ancestors page. The most common will be Age and different spelling of names.\n");
             outputText.Report("Occasionally you may have got a census reference wrong in which case the page either wont exist or will show the wrong family.");
@@ -93,6 +100,15 @@ namespace FTAnalyzer.Exports
             int manualfacts = Website.FindAll(lc => !lc.FTAnalyzerFact).Count;
             Task.Run(() => Analytics.TrackActionAsync(Analytics.LostCousinsAction, Analytics.ReadLostCousins, $"{DateTime.Now.ToUniversalTime().ToString("yyyy-MM-dd HH:mm")}: {manualfacts} manual & {ftanalyzerfacts} -> {ftanalyzerfacts + recordsAdded} FTAnalyzer entries"));
             return recordsAdded;
+        }
+
+        static void AddLostCousinsFact(CensusIndividual ind)
+        {
+            FactLocation location = FactLocation.GetLocation(ind.CensusCountry);
+            Fact f = new Fact(ind.CensusRef, Fact.LC_FTA, ind.CensusDate, location, string.Empty, true, true);
+            Individual person = FamilyTree.Instance.GetIndividual(ind.IndividualID); // get the individual not the census indvidual
+            if(person != null && !person.HasLostCousinsFactAtDate(ind.CensusDate))
+                person.AddFact(f);
         }
 
         public static bool CheckLostCousinsLogin(string email, string password)
@@ -147,14 +163,6 @@ namespace FTAnalyzer.Exports
             }
             return result;
         }
-
-        //public static void CheckWebLinks(IProgress<string> outputText)
-        //{
-        //    foreach (Uri weblink in WebLinks)
-        //    {
-        //        FindMyPastChecker.GetWebPage(weblink.OriginalString);
-        //    }
-        //}
 
         static bool OnPreRequest(HttpWebRequest request)
         {

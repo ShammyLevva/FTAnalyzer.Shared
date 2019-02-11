@@ -215,6 +215,15 @@ namespace FTAnalyzer
 
         public bool HasRangedBirthDate => BirthDate.DateType == FactDate.FactDateType.BET && BirthDate.StartDate.Year != BirthDate.EndDate.Year;
 
+        public bool HasLostCousinsFactAtDate(CensusDate date)
+        {
+            foreach (Fact f in AllFacts)
+                if (f.FactType == Fact.LOSTCOUSINS || f.FactType == Fact.LC_FTA)
+                    if (f.FactDate.Overlaps(date))
+                        return true;
+            return false;
+        }
+
         public bool HasLostCousinsFact
         {
             get
@@ -919,7 +928,8 @@ namespace FTAnalyzer
                 if (endptr == -1) endptr = input.IndexOf('\"', startptr);
                 output = (startptr < input.Length ? input.Substring(0, startptr) : string.Empty) + (endptr < input.Length ? input.Substring(endptr) : string.Empty);
             }
-            return output.Replace('\'', ' ').Replace('\"', ' ').Replace("  ", " ").Replace("  ", " ");
+            output = output.Replace("--","").Replace('\'', ' ').Replace('\"', ' ').Replace("  ", " ").Replace("  ", " ");
+            return output.TrimEnd('-').Trim();
         }
 
 

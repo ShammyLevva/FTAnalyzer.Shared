@@ -796,13 +796,16 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             List<CensusIndividual> missingIndiv = censusFamilies.SelectMany(f => f.Members).Filter(missingFilter).ToList();
             missingIndiv = LCRemoveDuplicateIndividuals(missingIndiv);
             bool invalidRef(CensusIndividual x) => x.MissingLostCousins(censusDate, false) && x.CensusReference != null && !x.CensusReference.IsGoodStatus;
-            bool nameFilter(CensusIndividual x) => x.LCForename.Length > 0 && x.LCSurname.Length > 0;
-            Predicate<CensusIndividual> invalidRefFilter = FilterUtils.AndFilter(relationFilter, invalidRef, nameFilter);
+            //bool nameFilter(CensusIndividual x) => x.LCForename.Length > 0 && x.LCSurname.Length > 0 && x.Surname != Individual.UNKNOWN_NAME && x.LCSurname !=Individual.UNKNOWN_NAME;
+            //bool ageFilter(CensusIndividual x) => x.Age != Age.Unknown;
+            Predicate<CensusIndividual> invalidRefFilter = FilterUtils.AndFilter(relationFilter, invalidRef);
+                //FilterUtils.AndFilter(FilterUtils.AndFilter(relationFilter, invalidRef), FilterUtils.AndFilter<CensusIndividual>(nameFilter, ageFilter));
+
             List<CensusIndividual> invalidRefIndiv = censusFamilies.SelectMany(f => f.Members).Filter(invalidRefFilter).ToList();
             invalidRefIndiv = LCRemoveDuplicateIndividuals(invalidRefIndiv);
 
             int missing = MissingLCEntries[censusDate];
-            output.Append($"{censusDate}: {missingIndiv.Count} possible {missing - missingIndiv.Count} without valid Lost Cousins ref\n");
+            output.Append($"{censusDate}: {missingIndiv.Count} possible {missing - missingIndiv.Count} without valid Lost Cousins details\n");
             return Tuple.Create(missingIndiv, invalidRefIndiv);
         }
 
