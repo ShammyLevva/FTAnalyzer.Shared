@@ -1,4 +1,5 @@
-﻿using FTAnalyzer.Properties;
+﻿using AppKit;
+using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
 using HtmlAgilityPack;
 using System;
@@ -13,6 +14,9 @@ namespace FTAnalyzer.Exports
 {
     public static class ExportToLostCousins
     {
+#if __MACOS__
+        static AppDelegate App => (AppDelegate)NSApplication.SharedApplication.Delegate;
+#endif
         static List<CensusIndividual> ToProcess { get; set; }
         static NetworkCredential Credentials { get; set; }
         static CookieCollection CookieJar { get; set; }
@@ -48,7 +52,7 @@ namespace FTAnalyzer.Exports
                 }
                 else if (ind.CensusReference != null && ind.CensusReference.IsValidLostCousinsReference())
                 {
-                    LostCousin lc = new LostCousin($"{ind.Surname}, {ind.Forenames}", ind.BirthDate.BestYear, GetCensusSpecificFields(ind), ind.CensusDate.BestYear, ind.CensusCountry, true); ;
+                    LostCousin lc = new LostCousin($"{ind.Surname}, {ind.Forenames}", ind.BirthDate.BestYear, GetCensusSpecificFields(ind), ind.CensusDate.BestYear, ind.CensusCountry, true);
                     if (Website.Contains(lc))
                     {
                         outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - Already Present {ind.ToString()}, {ind.CensusReference}.\n");
