@@ -100,7 +100,7 @@ namespace FTAnalyzer.Utilities
             analyticsSession = new AnalyticsSession();
             tracker = new SimpleTracker("UA-125850339-2", analyticsSession, trackerEnvironment);
             var app = (AppDelegate)NSApplication.SharedApplication.Delegate;
-            AppVersion = app.Version;
+            AppVersion = FamilyTree.Instance.Version;
             DeploymentType = "Mac Website";
             string resolution = NSScreen.MainScreen.Frame.ToString();
 #elif __IOS__
@@ -118,7 +118,7 @@ namespace FTAnalyzer.Utilities
             analyticsSession = new AnalyticsSession();
             tracker = new SimpleTracker("UA-125850339-2", analyticsSession, trackerEnvironment);
             var app = (AppDelegate)UIApplication.SharedApplication.Delegate;
-            AppVersion = app.Version;
+            AppVersion = FamilyTree.Instance.Version;
             DeploymentType = "Mac Website";
             string resolution = UIScreen.MainScreen.Bounds.ToString();
 

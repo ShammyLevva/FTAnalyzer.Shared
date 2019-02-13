@@ -214,11 +214,7 @@ namespace FTAnalyzer.Exports
 
         static void WriteHeader(string filename)
         {
-#if __PC__
-            var version = MainForm.VERSION;
-#elif __MACOS__ || __IOS__
-            var version = App.Version;
-#endif
+            var version = FamilyTree.Instance.Version;
             output.WriteLine($"0 HEAD");
             output.WriteLine($"1 SOUR Family Tree Analyzer");
             output.WriteLine($"2 VERS {version}");

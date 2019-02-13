@@ -1,5 +1,4 @@
-﻿using AppKit;
-using FTAnalyzer.Properties;
+﻿using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
 using HtmlAgilityPack;
 using System;
@@ -14,9 +13,6 @@ namespace FTAnalyzer.Exports
 {
     public static class ExportToLostCousins
     {
-#if __MACOS__
-        static AppDelegate App => (AppDelegate)NSApplication.SharedApplication.Delegate;
-#endif
         static List<CensusIndividual> ToProcess { get; set; }
         static NetworkCredential Credentials { get; set; }
         static CookieCollection CookieJar { get; set; }
@@ -280,11 +276,7 @@ namespace FTAnalyzer.Exports
             else
                 output.Append($"&corrected_birth_day=&corrected_birth_month=&corrected_birth_year=");
             output.Append("&baptism_day=&baptism_month=&baptism_year=");
-#if __PC__
-            output.Append($"&piece_number=&notes=Added_By_FTAnalyzer-v{MainForm.VERSION}{Suffix()}");
-#elif __MACOS__
-            output.Append($"&piece_number=&notes=Added_By_FTAnalyzer-{App.Version}{Suffix()}");
-#endif
+            output.Append($"&piece_number=&notes=Added_By_FTAnalyzer-{FamilyTree.Instance.Version}{Suffix()}");
             return output.ToString();
         }
 

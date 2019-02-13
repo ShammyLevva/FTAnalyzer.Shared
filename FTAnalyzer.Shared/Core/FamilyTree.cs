@@ -52,6 +52,7 @@ namespace FTAnalyzer
         int PreMarriageFamilies { get; set; }
         public bool Geocoding { get; set; }
         public List<NonDuplicate> NonDuplicates { get; private set; }
+        public string Version { get; set; }
         #endregion
 
         #region Static Functions
