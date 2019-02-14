@@ -63,7 +63,6 @@ namespace FTAnalyzer.Exports
                         {
                             outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - Already submitted this session {ind.CensusString}, {ind.CensusReference}. Possible duplicate Individual\n");
                             sessionDuplicates++;
-
                         }
                         else
                         {
