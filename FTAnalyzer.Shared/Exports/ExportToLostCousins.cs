@@ -38,20 +38,20 @@ namespace FTAnalyzer.Exports
             {
                 if (ind.LCAge.Equals("Unknown"))
                 {
-                    outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - Cannot determine age at census {ind.ToString()}.\n");
+                    outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - Cannot determine age at census {ind.CensusString}.\n");
                     recordsFailed++;
                 }
-                else if(ind.LCSurname.Length == 0 || ind.LCForename.Length == 0)
+                else if(ind.LCSurnameAtDate(ind.CensusDate).Length == 0 || ind.LCForename.Length == 0)
                 {
-                    outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - Cannot process person with unknown forename or surname {ind.ToString()}.\n");
+                    outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - Cannot process person with unknown forename or surname {ind.CensusString}.\n");
                     recordsFailed++;
                 }
                 else if (ind.CensusReference != null && ind.CensusReference.IsValidLostCousinsReference())
                 {
-                    LostCousin lc = new LostCousin($"{ind.Surname}, {ind.Forenames}", ind.BirthDate.BestYear, GetCensusSpecificFields(ind), ind.CensusDate.BestYear, ind.CensusCountry, true);
+                    LostCousin lc = new LostCousin($"{ind.SurnameAtDate(ind.CensusDate)}, {ind.Forenames}", ind.BirthDate.BestYear, GetCensusSpecificFields(ind), ind.CensusDate.BestYear, ind.CensusCountry, true);
                     if (Website.Contains(lc))
                     {
-                        outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - Already Present {ind.ToString()}, {ind.CensusReference}.\n");
+                        outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - Already Present {ind.CensusString}, {ind.CensusReference}.\n");
                         if(!DatabaseHelper.Instance.LostCousinsExists(ind))
                             DatabaseHelper.Instance.StoreLostCousinsFact(ind, outputText);
                         AddLostCousinsFact(ind);
@@ -61,14 +61,15 @@ namespace FTAnalyzer.Exports
                     {
                         if (SessionList.Contains(lc))
                         {
-                            outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - Already submitted this session {ind.ToString()}, {ind.CensusReference}. Possible duplicate Individual\n");
+                            outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - Already submitted this session {ind.CensusString}, {ind.CensusReference}. Possible duplicate Individual\n");
                             sessionDuplicates++;
+
                         }
                         else
                         {
                             if (AddIndividualToWebsite(ind, outputText))
                             {
-                                outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - {ind.ToString()}, {ind.CensusReference} added.\n");
+                                outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - {ind.CensusString}, {ind.CensusReference} added.\n");
                                 recordsAdded++;
                                 SessionList.Add(lc);
                                 if (!DatabaseHelper.Instance.LostCousinsExists(ind))
@@ -77,7 +78,7 @@ namespace FTAnalyzer.Exports
                             }
                             else
                             {
-                                outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - Failed to add {ind.ToString()}, {ind.CensusReference}.\n");
+                                outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - Failed to add {ind.CensusString}, {ind.CensusReference}.\n");
                                 recordsFailed++;
                             }
                         }
@@ -85,7 +86,7 @@ namespace FTAnalyzer.Exports
                 }
                 else
                 {
-                    outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - Failed to add {ind.ToString()}, {ind.CensusReference}. Census Reference problem.\n");
+                    outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - Failed to add {ind.CensusString}, {ind.CensusReference}. Census Reference problem.\n");
                     recordsFailed++;
                 }
             }

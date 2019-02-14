@@ -30,6 +30,7 @@ namespace FTAnalyzer
         public bool IsKnownCensusReference => CensusReference != null && CensusReference.IsKnownStatus;
         public string CensusCountry => CensusReference == null ? string.Empty : CensusReference.Country;
         public string Census => CensusDate.ToString();
+        public string CensusString => $"{IndividualID}: {Forename} {SurnameAtDate(CensusDate)} b.{BirthDate}";
 
         public string LCAge
         {
