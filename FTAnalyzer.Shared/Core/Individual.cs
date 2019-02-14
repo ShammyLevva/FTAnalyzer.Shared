@@ -900,18 +900,20 @@ namespace FTAnalyzer
             }
         }
 
-        public string LCSurnameAtDate(CensusDate date) => ValidLostCousinsString(SurnameAtDate(date));
-        public string LCSurname => ValidLostCousinsString(Surname);
-        public string LCForename => ValidLostCousinsString(Forename);
-        public string LCOtherNames => ValidLostCousinsString(OtherNames);
+        public string LCSurnameAtDate(CensusDate date) => ValidLostCousinsString(SurnameAtDate(date), false);
+        public string LCSurname => ValidLostCousinsString(Surname, false);
+        public string LCForename => ValidLostCousinsString(Forename, false);
+        public string LCOtherNames => ValidLostCousinsString(OtherNames, true);
 
-        string ValidLostCousinsString(string input)
+        string ValidLostCousinsString(string input, bool allowspace)
         {
             StringBuilder output = new StringBuilder();
             input = RemoveQuoted(input);
             foreach (char c in input)
             {
                 if (c == '-' || c == '\'' || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
+                    output.Append(c);
+                if (allowspace && c == ' ')
                     output.Append(c);
             }
             return output.ToString();
