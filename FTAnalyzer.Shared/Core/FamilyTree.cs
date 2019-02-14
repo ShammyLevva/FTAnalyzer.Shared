@@ -27,7 +27,7 @@ namespace FTAnalyzer
 {
     public class FamilyTree
     {
-        #region Variables
+#region Variables
         static FamilyTree instance;
 
         IList<FactSource> sources;
@@ -55,7 +55,7 @@ namespace FTAnalyzer
         public string Version { get; set; }
         #endregion
 
-        #region Static Functions
+#region Static Functions
 
         FamilyTree() => ResetData();
 
@@ -186,7 +186,7 @@ namespace FTAnalyzer
         }
         #endregion
 
-        #region Load Gedcom XML
+#region Load Gedcom XML
         public void ResetData()
         {
             DataLoaded = false;
@@ -1020,7 +1020,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
         }
         #endregion
 
-        #region Loose Births
+#region Loose Births
 
         public SortableBindingList<IDisplayLooseBirth> LooseBirths()
         {
@@ -3226,7 +3226,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
 
         #endregion
 
-        #region Today
+#region Today
         public void AddTodaysFacts(DateTime chosenDate, bool wholeMonth, int stepSize, IProgress<int> progress, IProgress<string> outputText)
         {
             string dateDesc;

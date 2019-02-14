@@ -677,7 +677,7 @@ namespace FTAnalyzer
                     {
                         if (when.Country.Equals(Countries.SCOTLAND) && Countries.IsEnglandWales(censusFact.Country))
                             return false;
-                        if (Countries.IsUnitedKingdom(when.Country) && censusFact.IsOverseasUKCensus(censusFact.Country))
+                        if (Countries.IsUnitedKingdom(when.Country) && (Countries.IsUnitedKingdom(censusFact.Country) || censusFact.IsOverseasUKCensus(censusFact.Country)))
                             return true;
                     }
                 }
