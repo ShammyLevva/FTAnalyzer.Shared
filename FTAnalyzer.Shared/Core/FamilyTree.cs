@@ -218,6 +218,7 @@ namespace FTAnalyzer
         {
             looseBirths = null;
             looseDeaths = null;
+            looseInfo = null;
         }
 
         public void CheckUnknownFactTypes(string factType)
