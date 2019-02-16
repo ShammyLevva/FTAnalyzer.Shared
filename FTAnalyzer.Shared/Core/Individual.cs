@@ -916,7 +916,7 @@ namespace FTAnalyzer
                 if (allowspace && c == ' ')
                     output.Append(c);
             }
-            return output.ToString();
+            return output.ToString().Replace("--","-").Replace("--", "-").Replace("--", "-");
         }
 
         string RemoveQuoted(string input)
