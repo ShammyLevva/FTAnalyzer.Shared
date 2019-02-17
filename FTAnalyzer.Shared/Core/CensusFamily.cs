@@ -62,7 +62,6 @@ namespace FTAnalyzer
                 }
                 else
                     Wife = null;
-
                 // overwrite bestLocation by husbands as most commonly the family
                 // end up at husbands location after marriage
                 if (IsValidIndividual(Husband, censusDone, true, checkCensus))
@@ -72,7 +71,6 @@ namespace FTAnalyzer
                 }
                 else
                     Husband = null;
-
                 // update bestLocation by marriage date as Husband and Wife 
                 // locations are often birth locations
                 var marriage = GetPreferredFact(Fact.MARRIAGE);
