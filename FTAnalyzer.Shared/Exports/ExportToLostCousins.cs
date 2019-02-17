@@ -201,9 +201,12 @@ namespace FTAnalyzer.Exports
                             if (columns[4].ChildNodes.Count > 4)
                             {
                                 string weblinkText = columns[4].ChildNodes[3].OuterHtml;
-                                int pos = weblinkText.IndexOf('"', 10);
-                                if(pos > -1)
-                                    weblink = weblinkText.Substring(9, pos - 9).Trim();
+                                if (weblinkText.Length > 10)
+                                {
+                                    int pos = weblinkText.IndexOf('"', 10);
+                                    if (pos > -1)
+                                        weblink = weblinkText.Substring(9, pos - 9).Trim();
+                                }
                             }
                             string reference = columns[4].InnerText.ClearWhiteSpace();
                             string census = columns[5].InnerText.ClearWhiteSpace();
