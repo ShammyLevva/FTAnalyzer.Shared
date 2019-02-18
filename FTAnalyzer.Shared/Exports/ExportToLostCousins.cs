@@ -19,10 +19,12 @@ namespace FTAnalyzer.Exports
         static List<LostCousin> Website { get; set; }
         static List<LostCousin> SessionList { get; set; }
         static List<Uri> WebLinks { get; set; }
+        static string _previousRef;
 
         public static int ProcessList(List<CensusIndividual> individuals, IProgress<string> outputText)
         {
             ToProcess = individuals;
+            _previousRef = string.Empty;
             int recordsAdded = 0;
             int recordsFailed = 0;
             int recordsPresent = 0;
@@ -216,6 +218,7 @@ namespace FTAnalyzer.Exports
                     }
                 }
             }
+
             catch (Exception e)
             {
                 outputText.Report($"Problem accessing Lost Cousins Website to read current ancestor list. Error message is: {e.Message}\n");
@@ -262,8 +265,14 @@ namespace FTAnalyzer.Exports
 
         static string BuildParameterString(CensusIndividual ind)
         {
-            StringBuilder output = new StringBuilder("stage=submit&similar=");
-            output.Append(GetCensusSpecificFields(ind));
+            StringBuilder output = new StringBuilder("stage=submit");
+            string newRef = GetCensusSpecificFields(ind);
+            if (newRef == _previousRef)
+                output.Append("&similar=1");
+            else
+                output.Append("&similar=");
+            _previousRef = newRef;
+            output.Append(newRef);
             output.Append($"&surname={ind.LCSurnameAtDate(ind.CensusDate)}");
             output.Append($"&forename={ind.LCForename}");
             output.Append($"&other_names={ind.LCOtherNames}");
