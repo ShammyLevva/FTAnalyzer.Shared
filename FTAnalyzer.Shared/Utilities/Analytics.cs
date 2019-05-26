@@ -60,7 +60,8 @@ namespace FTAnalyzer.Utilities
 
         public const string FactsIndividualsEvent = "Individual Facts Viewed", FactsFamiliesEvent = "Family Facts Viewed", LooseInfoEvent = "Loose Info Tab Viewed",
                             FactsGroupIndividualsEvent = "Various Individuals Facts Viewed", FactsDuplicatesEvent = "Duplicate Facts Viewed", 
-                            FactsCensusRefEvent = "Census References Facts Viewed", FactsSourceEvent = "Facts for Source Viewed", FactsCensusRefIssueEvent = "Census Ref Issue Viewed";
+                            FactsCensusRefEvent = "Census References Facts Viewed", FactsSourceEvent = "Facts for Source Viewed", FactsCensusRefIssueEvent = "Census Ref Issue Viewed",
+                            BirthdayEffectEvent = "Birthday Effect Report Viewed";
 
         public static string AppVersion { get; }
         public static string OSVersion { get; }
@@ -175,6 +176,7 @@ namespace FTAnalyzer.Utilities
             if (version.StartsWith("10.0.16299")) return "Windows 10 (1709)";
             if (version.StartsWith("10.0.17134")) return "Windows 10 (1803)";
             if (version.StartsWith("10.0.17763")) return "Windows 10 (1809)";
+            if (version.StartsWith("10.0.18362")) return "Windows 10 (1903)";
             return version;
         }
 #endif

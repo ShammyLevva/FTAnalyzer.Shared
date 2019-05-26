@@ -55,6 +55,8 @@ namespace FTAnalyzer
             CensusDate = censusDate;
             if (IsValidFamily()) // valid family is one where any member is alive on census
             {
+                if (censusDate == CensusDate.UKCENSUS1841)
+                    Console.Write("break");
                 if (IsValidIndividual(Wife, censusDone, true, checkCensus))
                 {
                     result = true;

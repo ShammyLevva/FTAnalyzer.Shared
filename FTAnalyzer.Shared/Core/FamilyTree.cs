@@ -462,13 +462,11 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             {
                 string filename = Path.Combine(startPath, @"Resources\GINAP.txt");
                 if (File.Exists(filename))
-                {
                     ReadStandardisedNameFile(filename);
-                }
             }
             catch (Exception e)
             {
-                Console.WriteLine("Failed to load Standardised names error was : " + e.Message);
+                Console.WriteLine($"Failed to load Standardised names error was : {e.Message}");
             }
         }
 
@@ -910,9 +908,9 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
 
         public List<Individual> DeadOrAlive => individuals.Filter(x => x.DeathDate.IsKnown && x.IsFlaggedAsLiving).ToList();
 
-        public string NextSoloFamily { get { return "SF" + ++SoloFamilies; } }
+        public string NextSoloFamily { get { return $"SF{++SoloFamilies}"; } }
 
-        public string NextPreMarriageFamily { get { return "PM" + ++PreMarriageFamilies; } }
+        public string NextPreMarriageFamily { get { return $"PM{++PreMarriageFamilies}"; } }
 #endregion
 
 #region Property Functions
@@ -942,7 +940,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             individualLookup.TryGetValue(individualID, out Individual person);
             while (individualID.StartsWith("I0", StringComparison.Ordinal) && person == null)
             {
-                if (individualID.Length >= 2) individualID = "I" + individualID.Substring(2);
+                if (individualID.Length >= 2) individualID = $"I{individualID.Substring(2)}";
                 individualLookup.TryGetValue(individualID, out person);
             }
             return person;
@@ -1445,7 +1443,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
                     {
                         child.RelationType = Individual.BLOOD;
                         child.Ahnentafel = isRootPerson ? indiv.Ahnentafel - 2 : indiv.Ahnentafel - 1;
-                        child.BudgieCode = "-" + child.Ahnentafel.ToString().PadLeft(2, '0') + "c";
+                        child.BudgieCode = $"-{child.Ahnentafel.ToString().PadLeft(2, '0')}c";
                         queue.Enqueue(child);
                     }
                 }
@@ -2193,12 +2191,35 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
                 case 3:
                     uri = BuildFamilySearchQuery(censusCountry, censusYear, person);
                     break;
+                case 4:
+                    uri = BuildScotlandsPeopleCensusQuery(censusYear, person);    
+                    break;
             }
             if (uri != null)
             {
                 SpecialMethods.VisitWebsite(uri);
                 Analytics.TrackAction(Analytics.CensusSearchAction, $"Searching {provider} {censusYear}");
             }
+        }
+
+        string BuildScotlandsPeopleCensusQuery(int censusYear, Individual person)
+        {
+            // &surname=Bisset&surname_so=fuzzy&forename=Alexander&forename_so=syn&second_person_forename_so=exact&age_from=10&age_to=16&record_type=census&year%5B0%5D=1841
+            FactDate censusFactDate = new FactDate(censusYear.ToString());
+            StringBuilder path = new StringBuilder();
+            path.Append("https://www.scotlandspeople.gov.uk/record-results?search_type=people&dl_cat=census");
+            string surname = person.SurnameAtDate(censusFactDate);
+            if (surname != "?" && surname.ToUpper() != Individual.UNKNOWN_NAME)
+                path.Append($"&surname={HttpUtility.UrlEncode(surname)}&surname_so=fuzzy");
+            if (person.Forename != "?" && person.Forename.ToUpper() != Individual.UNKNOWN_NAME)
+                path.Append($"&forename={HttpUtility.UrlEncode(person.Forenames)}&forename_so=syn");
+            Age age = person.GetAge(censusFactDate);
+            if(censusYear == 1841 && age.MaxAge > 15)
+                path.Append($"&age_from={age.MinAge-1}&age_to={age.MaxAge+5}");
+            else
+                path.Append($"&age_from={age.MinAge-1}&age_to={age.MaxAge+1}");
+            path.Append($"&record_type=census&year%5B0%5D={censusYear}");
+            return path.ToString();
         }
 
         string BuildFamilySearchQuery(string country, int censusYear, Individual person)
@@ -2209,16 +2230,16 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             StringBuilder path = new StringBuilder();
             path.Append("https://www.familysearch.org/search/record/results#count=20&query=");
             if (person.Forename != "?" && person.Forename.ToUpper() != Individual.UNKNOWN_NAME)
-                path.Append("%2B" + FamilySearch.GIVENNAME + "%3A%22" + HttpUtility.UrlEncode(person.Forenames) + "%22%7E%20");
+                path.Append($"%2B{FamilySearch.GIVENNAME}%3A%22{HttpUtility.UrlEncode(person.Forenames)}%22%7E%20");
             string surname = person.SurnameAtDate(censusFactDate);
             if (surname != "?" && surname.ToUpper() != Individual.UNKNOWN_NAME)
-                path.Append("%2B" + FamilySearch.SURNAME + "%3A" + HttpUtility.UrlEncode(surname) + "%7E%20");
-            path.Append("%2B" + FamilySearch.RECORD_TYPE + "%3A%283%29");
+                path.Append($"%2B{FamilySearch.SURNAME}%3A{HttpUtility.UrlEncode(surname)}%7E%20");
+            path.Append($"%2B{FamilySearch.RECORD_TYPE}%3A%283%29");
             if (person.BirthDate.IsKnown)
             {
                 int startYear = person.BirthDate.StartDate.Year - 1;
                 int endYear = person.BirthDate.EndDate.Year + 1;
-                path.Append("%2B" + FamilySearch.BIRTH_YEAR + "%3A" + startYear + "-" + endYear + "%7E%20");
+                path.Append($"%2B{FamilySearch.BIRTH_YEAR}%3A{startYear}-{endYear}%7E%20");
             }
             string location = Countries.UNKNOWN_COUNTRY;
             if (person.BirthLocation.IsKnown)
@@ -2226,20 +2247,20 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
                 location = person.BirthLocation.Country != country
                     ? person.BirthLocation.Country
                     : person.BirthLocation.GetLocation(FactLocation.REGION).ToString().Replace(",", "");
-                path.Append("%2B" + FamilySearch.BIRTH_LOCATION + "%3A" + HttpUtility.UrlEncode(location) + "%7E%20");
+                path.Append($"%2B{FamilySearch.BIRTH_LOCATION}%3A{HttpUtility.UrlEncode(location)}%7E%20");
             }
             int collection = FamilySearch.CensusCollectionID(country, censusYear);
             if (collection > 0)
-                path.Append("&collection_id=" + collection);
+                path.Append($"&collection_id={collection}");
             else
             {
                 collection = FamilySearch.CensusCollectionID(location, censusYear);
                 if (collection > 0)
-                    path.Append("&collection_id=" + collection);
+                    path.Append($"&collection_id={collection}");
                 else if (Countries.IsUnitedKingdom(country))
-                {
-                    collection = FamilySearch.CensusCollectionID(Countries.ENGLAND, censusYear);
-                    path.Append("&collection_id=" + collection);
+            {
+                collection = FamilySearch.CensusCollectionID(Countries.ENGLAND, censusYear);
+                path.Append($"&collection_id={collection}");
                 }
                 else if (Countries.IsKnownCountry(country))
                 { // TODO
@@ -2261,7 +2282,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             StringBuilder query = new StringBuilder();
             if (censusCountry.Equals(Countries.UNITED_KINGDOM))
             {
-                query.Append("gl=" + censusYear + "uki&");
+                query.Append($"gl={censusYear}uki&");
                 query.Append("gss=ms_f-68&");
             }
             else if (censusCountry.Equals(Countries.IRELAND))
@@ -2273,7 +2294,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             }
             else if (censusCountry.Equals(Countries.UNITED_STATES))
             {
-                query.Append("db=" + censusYear + "usfedcen&");
+                query.Append($"db={censusYear} usfedcen&");
                 query.Append("gss=ms_db&");
             }
             else if (censusCountry.Equals(Countries.CANADA))
@@ -2281,7 +2302,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
                 if (censusYear == 1921)
                     query.Append("db=cancen1921&");
                 else
-                    query.Append("db=" + censusYear + "canada&");
+                    query.Append($"db={censusYear}canada&");
             }
             query.Append("rank=1&");
             query.Append("new=1&");
@@ -2289,14 +2310,14 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             query.Append("MSAV=1&");
             query.Append("msT=1&");
             if (person.Forenames != "?" && person.Forenames.ToUpper() != Individual.UNKNOWN_NAME)
-                query.Append("gsfn=" + HttpUtility.UrlEncode(person.Forenames) + "&");
+                query.Append($"gsfn={HttpUtility.UrlEncode(person.Forenames)}&");
             string surname = string.Empty;
             if (person.Surname != "?" && person.Surname.ToUpper() != Individual.UNKNOWN_NAME)
                 surname = person.Surname;
             if (person.MarriedName != "?" && person.MarriedName.ToUpper() != Individual.UNKNOWN_NAME && person.MarriedName != person.Surname)
-                surname += " " + person.MarriedName;
+                surname += $" {person.MarriedName}";
             surname = surname.Trim();
-            query.Append("gsln=" + HttpUtility.UrlEncode(surname) + "&");
+            query.Append($"gsln={HttpUtility.UrlEncode(surname)}&");
             if (person.BirthDate.IsKnown)
             {
                 int startYear = person.BirthDate.StartDate.Year;
@@ -2324,13 +2345,13 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
                     }
                     if (year > censusYear) year = censusYear;
                 }
-                query.Append("msbdy=" + year + "&");
-                query.Append("msbdp=" + range + "&");
+                query.Append($"msbdy={year}&");
+                query.Append($"msbdp={range}&");
             }
             if (person.BirthLocation.IsKnown)
             {
                 string location = person.BirthLocation.GetLocation(FactLocation.SUBREGION).ToString();
-                query.Append("msbpn__ftp=" + HttpUtility.UrlEncode(location) + "&");
+                query.Append($"msbpn__ftp={HttpUtility.UrlEncode(location)}&");
             }
             query.Append("uidh=2t2");
             uri.Query = query.ToString();
@@ -2351,7 +2372,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             if (person.Surname != "?" && person.Surname.ToUpper() != Individual.UNKNOWN_NAME)
                 surname = person.Surname;
             if (person.MarriedName != "?" && person.MarriedName.ToUpper() != Individual.UNKNOWN_NAME && person.MarriedName != person.Surname)
-                surname += " " + person.MarriedName;
+                surname += $" {person.MarriedName}";
             surname = HttpUtility.UrlEncode(surname.Trim());
             query.Append($"name={forename}_{surname}&name_x=ps_ps&");
             if (person.BirthDate.IsKnown)
@@ -2409,19 +2430,19 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
                 Path = "/cgi/search.pl"
             };
             StringBuilder query = new StringBuilder();
-            query.Append("y=" + censusYear + "&");
+            query.Append($"y={censusYear}&");
             if (person.Forenames != "?" && person.Forenames.ToUpper() != Individual.UNKNOWN_NAME)
             {
                 int pos = person.Forenames.IndexOf(" ", StringComparison.Ordinal);
                 string forename = person.Forenames;
                 if (pos > 0)
                     forename = person.Forenames.Substring(0, pos); //strip out any middle names as FreeCen searches better without then
-                query.Append("g=" + HttpUtility.UrlEncode(forename) + "&");
+                query.Append($"g={HttpUtility.UrlEncode(forename)}&");
             }
             string surname = person.SurnameAtDate(censusFactDate);
             if (surname != "?" && surname.ToUpper() != Individual.UNKNOWN_NAME)
             {
-                query.Append("s=" + HttpUtility.UrlEncode(surname) + "&");
+                query.Append($"s={HttpUtility.UrlEncode(surname)}&");
                 query.Append("p=on&");
             }
             if (person.BirthDate.IsKnown)
@@ -2456,13 +2477,13 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
                     query.Append("r=10&");
                 }
                 if (year > censusYear) year = censusYear;
-                query.Append("a=" + year + "&");
+                query.Append($"a={year}&");
             }
             if (person.BirthLocation.IsKnown)
             {
                 string location = person.BirthLocation.SubRegion;
-                query.Append("t=" + HttpUtility.UrlEncode(location) + "&");
-                query.Append("b=" + person.BirthLocation.FreeCenCountyCode + "&");
+                query.Append($"t={HttpUtility.UrlEncode(location)}&");
+                query.Append($"b={person.BirthLocation.FreeCenCountyCode}&");
             }
             query.Append("c=all&"); // initially set to search all counties need a routine to return FreeCen county codes 
             query.Append("z=Find&"); // executes search
@@ -2487,7 +2508,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             else
                 uri.Path = "/results/world-records-in-census-land-and-surveys";
             StringBuilder query = new StringBuilder();
-            query.Append("eventyear=" + censusYear + "&eventyear_offset=0&");
+            query.Append($"eventyear={censusYear}&eventyear_offset=0&");
 
             if (person.Forenames != "?" && person.Forenames.ToUpper() != Individual.UNKNOWN_NAME)
             {
@@ -2495,13 +2516,13 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
                 string forenames = person.Forenames;
                 if (pos > 0)
                     forenames = person.Forenames.Substring(0, pos); //strip out any middle names as searches better without then
-                query.Append("firstname=" + HttpUtility.UrlEncode(forenames) + "&");
+                query.Append($"firstname={HttpUtility.UrlEncode(forenames)}&");
                 query.Append("firstname_variants=true&");
             }
             string surname = person.SurnameAtDate(censusFactDate);
             if (surname != "?" && surname.ToUpper() != Individual.UNKNOWN_NAME)
             {
-                query.Append("lastName=" + HttpUtility.UrlEncode(surname) + "&");
+                query.Append($"lastName={HttpUtility.UrlEncode(surname)} &");
                 query.Append("lastname_variants=true&");
             }
             if (person.BirthDate.IsKnown)
@@ -2530,8 +2551,8 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
                     }
                     if (year > censusYear) year = censusYear;
                 }
-                query.Append("yearofbirth=" + year + "&");
-                query.Append("yearofbirth_offset=" + range + "&");
+                query.Append($"yearofbirth={year} &");
+                query.Append($"yearofbirth_offset={range}&");
             }
             if(censusYear == 1911 && Countries.IsUnitedKingdom(censusCountry))
             {
@@ -2578,13 +2599,13 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
                 string forenames = person.Forenames;
                 if (pos > 0)
                     forenames = person.Forenames.Substring(0, pos); //strip out any middle names as searches better without then
-                query.Append("firstname=" + HttpUtility.UrlEncode(forenames) + "&");
+                query.Append($"firstname={HttpUtility.UrlEncode(forenames)}&");
                 query.Append("firstname_variants=true&");
             }
             string surname = person.SurnameAtDate(censusFactDate);
             if (surname != "?" && surname.ToUpper() != Individual.UNKNOWN_NAME)
             {
-                query.Append("lastName=" + HttpUtility.UrlEncode(surname) + "&");
+                query.Append($"lastName={HttpUtility.UrlEncode(surname)}&");
                 query.Append("lastname_variants=true&");
             }
             if (person.BirthDate.IsKnown)
@@ -2613,8 +2634,8 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
                     }
                     if (year > 1939) year = 1939;
                 }
-                query.Append("yearofbirth=" + year + "&");
-                query.Append("yearofbirth_offset=" + range + "&");
+                query.Append($"yearofbirth={year} &");
+                query.Append($"yearofbirth_offset={range}&");
             }
             uri.Query = query.ToString();
             return uri.ToString();
@@ -2650,19 +2671,95 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
                     factdate = FactDate.UNKNOWN_DATE; // errors in facts corrupts loose births or deaths
             }
             string provider = string.Empty;
+            Tuple<string, string> uris = new Tuple<string, string>(null,null);
             switch (searchProvider)
             {
                 case 0: uri = BuildAncestryQuery(st, individual, factdate, bmdRegion); provider = "Ancestry"; break;
                 case 1: uri = BuildFindMyPastQuery(st, individual, factdate, bmdRegion); provider = "FindMyPast"; break;
                 case 2: uri = BuildFreeBMDQuery(st, individual, factdate); provider = "FreeBMD"; break;
                 case 3: uri = BuildFamilySearchQuery(st, individual, factdate); provider = "FamilySearch"; break;
-//                case 4: uri = BuildGROQuery(st, individual, factdate); provider = "GRO"; break;
+                case 4: uris = BuildScotlandsPeopleQuery(st, individual, factdate); provider = "ScotlandsPeople"; break;
+//                case 5: uri = BuildGROQuery(st, individual, factdate); provider = "GRO"; break;
             }
-            if (uri != null)
+            if (!string.IsNullOrEmpty(uri))
             {
                 SpecialMethods.VisitWebsite(uri);
                 Analytics.TrackAction(Analytics.BMDSearchAction, $"Searching {provider} BMDs");
             }
+            if (searchProvider == 4)
+            { 
+                if(!string.IsNullOrEmpty(uris.Item1))
+                {
+                    SpecialMethods.VisitWebsite(uris.Item1);
+                    Analytics.TrackAction(Analytics.BMDSearchAction, $"Searching {provider} OPR BMDs");
+                }
+                if (!string.IsNullOrEmpty(uris.Item2))
+                {
+                    SpecialMethods.VisitWebsite(uris.Item2);
+                    Analytics.TrackAction(Analytics.BMDSearchAction, $"Searching {provider} Statutory BMDs");
+                }
+            }
+        }
+
+        Tuple<string, string> BuildScotlandsPeopleQuery(SearchType st, Individual individual, FactDate factdate)
+        {
+            string oprResult = string.Empty;
+            string statutoryResult = string.Empty;
+            bool oprrecords = factdate.StartDate.Year >= 1553 || factdate.EndDate.Year >= 1553;
+            bool statutory = factdate.StartDate.Year >= 1855 || factdate.EndDate.Year >= 1855;
+            UriBuilder uri = new UriBuilder
+            {
+                Host = "www.scotlandspeople.gov.uk",
+                Path = "record-results"
+            };
+            if (statutory)
+            {
+                StringBuilder query = new StringBuilder();
+                query.Append("search_type=people");
+                query.Append("&dl_cat=statutory"); 
+                if (st == SearchType.BIRTH)
+                    query.Append("&dl_rec=statutory-births");
+                else if (st == SearchType.MARRIAGE)
+                    query.Append("&dl_rec=statutory-marriages");
+                else if (st == SearchType.DEATH)
+                    query.Append("&dl_rec=statutory-deaths");
+                string surname = GetSurname(st, individual, false);
+                query.Append($"&surname={HttpUtility.UrlEncode(surname)}&surname_so=soundex");
+                if (individual.Forename != "?" && individual.Forename.ToUpper() != Individual.UNKNOWN_NAME)
+                    query.Append($"&forename={HttpUtility.UrlEncode(individual.Forename)}&forename_so=syn");
+                if (st == SearchType.BIRTH)
+                    query.Append("&record_type=stat_births");
+                else if (st == SearchType.MARRIAGE)
+                    query.Append("&record_type=stat_marriages");
+                else if (st == SearchType.DEATH)
+                    query.Append("&record_type=stat_deaths");
+                int fromYear = Math.Max(1855, factdate.StartDate.Year - 1); // -1 to add a years tolerance either side
+                int toYear = Math.Min(factdate.EndDate.Year + 1, FactDate.TODAY.StartDate.Year); // +1 to add a years tolerance either side
+                query.Append($"&from_year={fromYear}&to_year={toYear}");
+                uri.Query = query.ToString();
+                oprResult= uri.ToString();
+            }
+            if (oprrecords)
+            {
+                StringBuilder query = new StringBuilder();
+                query.Append("search_type=people");
+                if (st == SearchType.BIRTH)
+                    query.Append("event=%28B%20OR%20C%20OR%20S%29&record_type%5B0%5D=opr_births&church_type=Old%20Parish%20Registers&dl_cat=church&dl_rec=church-births-baptisms");
+                else if (st == SearchType.MARRIAGE)
+                    query.Append("&event=M&record_type%5B0%5D=opr_marriages&church_type=Old%20Parish%20Registers&dl_cat=church&dl_rec=church-banns-marriages");
+                else if (st == SearchType.DEATH)
+                    query.Append("&event=D&record_type%5B0%5D=opr_deaths&church_type=Old%20Parish%20Registers&dl_cat=church&dl_rec=church-deaths-burials");
+                string surname = GetSurname(st, individual, false);
+                query.Append($"&surname={HttpUtility.UrlEncode(surname)}&surname_so=soundex");
+                if (individual.Forename != "?" && individual.Forename.ToUpper() != Individual.UNKNOWN_NAME)
+                    query.Append($"&forename={HttpUtility.UrlEncode(individual.Forename)}&forename_so=syn");
+                int fromYear = Math.Max(factdate.StartDate.Year -1, 1553);
+                int toYear = Math.Min(factdate.EndDate.Year + 1, 1854);
+                query.Append($"&from_year={fromYear}&to_year={toYear}");
+                uri.Query = query.ToString();
+                statutoryResult = uri.ToString();
+            }
+            return new Tuple<string, string>(oprResult,statutoryResult);
         }
 
         string BuildFamilySearchQuery(SearchType st, Individual individual, FactDate factdate)
@@ -2677,9 +2774,9 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             query.Append("count=20&query=");
 
             if (individual.Forename != "?" && individual.Forename.ToUpper() != Individual.UNKNOWN_NAME)
-                query.Append("%2Bgivenname%3A" + HttpUtility.UrlEncode(individual.Forename) + "~%20");
+                query.Append($"%2Bgivenname%3A{HttpUtility.UrlEncode(individual.Forename)}~%20");
             string surname = GetSurname(st, individual, false);
-            query.Append("%2Bsurname%3A" + HttpUtility.UrlEncode(surname) + "~%20");
+            query.Append($"%2Bsurname%3A{HttpUtility.UrlEncode(surname)} ~%20");
             if (individual.BirthDate.IsKnown)
             {
                 int startYear = individual.BirthDate.StartDate.Year;
@@ -2688,16 +2785,16 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
                     startYear = endYear - 9;
                 else if (endYear == FactDate.MAXDATE.Year)
                     endYear = startYear + 9;
-                query.Append("%2Bbirth_year%3A" + startYear + "-" + endYear + "~%20");
+                query.Append($"%2Bbirth_year%3A{startYear}-{endYear}~%20");
             }
             if (st.Equals(SearchType.BIRTH) && individual.BirthLocation.IsKnown)
             {  // add birth place if searching for a birth
                 string location = individual.BirthLocation.GetLocation(FactLocation.SUBREGION).ToString();
-                query.Append("%2Bbirth_place%3A%22" + HttpUtility.UrlEncode(location) + "%22~%20");
+                query.Append($"%2Bbirth_place%3A%22{HttpUtility.UrlEncode(location)}%22~%20");
             }
             string record_country = RecordCountry(st, individual, factdate);
             if (Countries.IsKnownCountry(record_country))
-                query.Append("%2Brecord_country%3A" + HttpUtility.UrlEncode(record_country));
+                query.Append($"%2Brecord_country%3A{HttpUtility.UrlEncode(record_country)}");
             uri.Query = query.ToString();
             return uri.ToString();
         }
@@ -2748,9 +2845,9 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
                 uri.Path = uri.Path + "/church-registers~wills-and-probate~deaths-and-burials";
             StringBuilder query = new StringBuilder();
             if (individual.Forenames != "?" && individual.Forenames.ToUpper() != Individual.UNKNOWN_NAME)
-                query.Append("firstname=" + HttpUtility.UrlEncode(individual.Forenames) + "&firstname_variants=true&");
+                query.Append($"firstname={HttpUtility.UrlEncode(individual.Forenames)}&firstname_variants=true&");
             string surname = GetSurname(st, individual, false);
-            query.Append("lastname=" + HttpUtility.UrlEncode(surname) + "&lastname_variants=true&");
+            query.Append($"lastname={HttpUtility.UrlEncode(surname)}&lastname_variants=true&");
             AppendYearandRange(individual.BirthDate, query, "yearofbirth=", "yearofbirth_offset=", true);
             if (st.Equals(SearchType.MARRIAGE))
                 AppendYearandRange(factdate, query, "yearofmarriage=", "yearofmarriage_offset=", true);
@@ -2767,7 +2864,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             if (individual.Surname != "?" && individual.Surname.ToUpper() != Individual.UNKNOWN_NAME)
                 surname = individual.Surname;
             if (st.Equals(SearchType.DEATH) && individual.MarriedName != "?" && individual.MarriedName.ToUpper() != Individual.UNKNOWN_NAME && individual.MarriedName != individual.Surname)
-                surname = ancestry ? surname + " " + individual.MarriedName : individual.MarriedName; // for ancestry combine names for others sites just use marriedName if death search
+                surname = ancestry ? $"{surname} {individual.MarriedName}" : individual.MarriedName; // for ancestry combine names for others sites just use marriedName if death search
             surname = surname.Trim();
             return surname;
         }
@@ -2794,16 +2891,16 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             query.Append("MSAV=1&");
             query.Append("msT=1&");
             if (individual.Forenames != "?" && individual.Forenames.ToUpper() != Individual.UNKNOWN_NAME)
-                query.Append("gsfn=" + HttpUtility.UrlEncode(individual.Forenames) + "&");
+                query.Append($"gsfn={HttpUtility.UrlEncode(individual.Forenames)}&");
             string surname = GetSurname(st, individual, true);
-            query.Append("gsln=" + HttpUtility.UrlEncode(surname) + "&");
+            query.Append($"gsln={HttpUtility.UrlEncode(surname)}&");
             AppendYearandRange(individual.BirthDate, query, "msbdy=", "msbdp=", false);
             if (individual.BirthDate.IsKnown)
                 query.Append("&msbdy_x=1");
             if (individual.BirthLocation.IsKnown)
             {
                 string location = individual.BirthLocation.GetLocation(FactLocation.SUBREGION).ToString();
-                query.Append("msbpn__ftp=" + HttpUtility.UrlEncode(location) + "&");
+                query.Append($"msbpn__ftp={HttpUtility.UrlEncode(location)}&");
             }
             if (st.Equals(SearchType.DEATH) && factdate.IsKnown)
             {
@@ -2903,7 +3000,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
 
         public void WriteGeocodeStatstoRTB(string title, IProgress<string> outputText)
         {
-            outputText.Report("\n" + title);
+            outputText.Report($"\n{title}");
             // write geocode results - ignore UNKNOWN entry
             int notsearched = FactLocation.AllLocations.Count(x => x.GeocodeStatus.Equals(FactLocation.Geocode.NOT_SEARCHED));
             int needsReverse = FactLocation.AllLocations.Count(x => x.NeedsReverseGeocoding);
@@ -3340,7 +3437,6 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             }
             catch (Exception)
             {
-                //log.Error("Error processing wiki date for " + dateNode);
                 fd = defaultDate;
             }
             return fd;

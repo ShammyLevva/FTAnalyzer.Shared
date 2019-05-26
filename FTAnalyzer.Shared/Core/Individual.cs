@@ -2,6 +2,7 @@ using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
@@ -522,6 +523,22 @@ namespace FTAnalyzer
                 return service == null ? string.Empty : service.Comment;
             }
         }
+
+        public bool BirthdayEffect
+        {
+            get
+            {
+                if (BirthDate.IsExact && DeathDate.IsExact)
+                {
+                    DateTime amendedDeath = new DateTime(BirthDate.StartDate.Year, DeathDate.StartDate.Month, DeathDate.StartDate.Day); // set death date to be same year as birth
+                    var diff = Math.Abs((amendedDeath - BirthDate.StartDate).Days);
+                    return diff < 16;
+                }
+                return false;
+            }
+        }
+
+        public string BirthMonth => BirthDate.IsExact ? BirthDate.StartDate.ToString("MM : MMMM", CultureInfo.InvariantCulture) : "00 : Unknown";
 
         public IList<Family> FamiliesAsSpouse { get; }
 

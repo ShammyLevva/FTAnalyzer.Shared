@@ -910,6 +910,7 @@ namespace FTAnalyzer
 
         public bool CensusYearMatches(CensusDate censusDate)
         {
+            if (IsAfter(censusDate)) return false; // if the date is after the census date then it can't be a census record
             if (censusDate == null) return false;
             if (StartDate.Year != EndDate.Year) return false;
             // both this & that have exact years now return whether this and that match given a census date can go over a year end
