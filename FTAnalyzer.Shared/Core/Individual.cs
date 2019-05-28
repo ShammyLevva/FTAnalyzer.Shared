@@ -544,6 +544,27 @@ namespace FTAnalyzer
 
         public IList<ParentalRelationship> FamiliesAsChild { get; }
 
+        public string FamilyIDsAsParent {
+            get
+            {
+                string result = string.Empty;
+                foreach(Family f in FamiliesAsSpouse)
+                    result += f.FamilyID + ",";
+                return result.Length == 0 ? result : result.Substring(0, result.Length - 1);
+            }
+        }
+
+        public string FamilyIDsAsChild
+        {
+            get
+            {
+                string result = string.Empty;
+                foreach(ParentalRelationship pr in FamiliesAsChild)
+                    result += pr.Family.FamilyID + ",";
+                return result.Length == 0 ? result : result.Substring(0, result.Length - 1);
+            }
+        }
+
         public bool IsNaturalChildOf(Individual parent)
         {
             foreach (ParentalRelationship pr in FamiliesAsChild)

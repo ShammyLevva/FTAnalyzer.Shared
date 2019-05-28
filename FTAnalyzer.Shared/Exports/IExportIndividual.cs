@@ -29,5 +29,7 @@ namespace FTAnalyzer
         DateTime BirthEnd { get; }
         DateTime DeathStart { get; }
         DateTime DeathEnd { get; }
+        string FamilyIDsAsParent { get; }
+        string FamilyIDsAsChild { get; }
     }
 }
