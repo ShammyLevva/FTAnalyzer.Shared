@@ -1396,6 +1396,33 @@ namespace FTAnalyzer
             }
         }
 
+        public Individual FirstSpouse
+        {
+            get
+            {
+                Family fam = Marriages(0);
+                return fam == null ? null : fam.Spouse(this);
+            }
+        }
+
+        public Individual SecondSpouse
+        {
+            get
+            {
+                Family fam = Marriages(1);
+                return fam == null ? null : fam.Spouse(this);
+            }
+        }
+
+        public Individual ThirdSpouse
+        {
+            get
+            {
+                Family fam = Marriages(2);
+                return fam == null ? null : fam.Spouse(this);
+            }
+        }
+
         public BMDColour Death
         {
             get

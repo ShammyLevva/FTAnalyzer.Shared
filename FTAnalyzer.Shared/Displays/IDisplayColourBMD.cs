@@ -45,8 +45,6 @@ namespace FTAnalyzer
         FactLocation BirthLocation { get; }
         [ColumnDetail("Death Location", 150)]
         FactLocation DeathLocation { get; }
-        [ColumnDetail("Best Location", 150)]
-        FactLocation BestLocation(FactDate when);
         [ColumnDetail("Ahnentafel", 70, ColumnDetail.ColumnAlignment.Right)]
         BigInteger Ahnentafel { get; }
     }

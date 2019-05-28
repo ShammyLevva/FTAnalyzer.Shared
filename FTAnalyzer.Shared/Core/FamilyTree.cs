@@ -2647,7 +2647,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
 
         public enum SearchType { BIRTH = 0, MARRIAGE = 1, DEATH = 2 };
 
-        public void SearchBMD(SearchType st, Individual individual, FactDate factdate, int searchProvider, string bmdRegion)
+        public void SearchBMD(SearchType st, Individual individual, FactDate factdate, int searchProvider, string bmdRegion, Individual spouse)
         {
             string uri = null;
             if (!factdate.IsKnown || factdate.DateType.Equals(FactDate.FactDateType.AFT) || factdate.DateType.Equals(FactDate.FactDateType.BEF))
@@ -2657,11 +2657,13 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
                     CheckLooseBirth(individual);
                     factdate = individual.LooseBirthDate;
                 }
-                //if(st.Equals(SearchType.MARRIAGE))
-                //{
+                if(st.Equals(SearchType.MARRIAGE))
+                {
+                    if (factdate.StartDate < individual.BirthDate.StartDate.AddYears(GeneralSettings.Default.MinParentalAge))
+                        factdate = new FactDate(individual.BirthDate.StartDate.AddYears(GeneralSettings.Default.MinParentalAge), factdate.EndDate);
                 //    CheckLooseMarriage(individual);
                 //    factdate = individual.LooseMarriageDate;
-                //}
+                }
                 if (st.Equals(SearchType.DEATH))
                 {
                     CheckLooseDeath(individual);
@@ -2678,7 +2680,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
                 case 1: uri = BuildFindMyPastQuery(st, individual, factdate, bmdRegion); provider = "FindMyPast"; break;
                 case 2: uri = BuildFreeBMDQuery(st, individual, factdate); provider = "FreeBMD"; break;
                 case 3: uri = BuildFamilySearchQuery(st, individual, factdate); provider = "FamilySearch"; break;
-                case 4: uris = BuildScotlandsPeopleQuery(st, individual, factdate); provider = "ScotlandsPeople"; break;
+                case 4: uris = BuildScotlandsPeopleQuery(st, individual, factdate, spouse); provider = "ScotlandsPeople"; break;
 //                case 5: uri = BuildGROQuery(st, individual, factdate); provider = "GRO"; break;
             }
             if (!string.IsNullOrEmpty(uri))
@@ -2701,11 +2703,11 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             }
         }
 
-        Tuple<string, string> BuildScotlandsPeopleQuery(SearchType st, Individual individual, FactDate factdate)
+        Tuple<string, string> BuildScotlandsPeopleQuery(SearchType st, Individual individual, FactDate factdate, Individual spouse)
         {
             string oprResult = string.Empty;
             string statutoryResult = string.Empty;
-            bool oprrecords = factdate.StartDate.Year >= 1553 || factdate.EndDate.Year >= 1553;
+            bool oprrecords = factdate.EndDate.Year >= 1553 && factdate.StartDate.Year < 1855;
             bool statutory = factdate.StartDate.Year >= 1855 || factdate.EndDate.Year >= 1855;
             UriBuilder uri = new UriBuilder
             {
@@ -2723,14 +2725,17 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
                     query.Append("&dl_rec=statutory-marriages");
                 else if (st == SearchType.DEATH)
                     query.Append("&dl_rec=statutory-deaths");
-                string surname = GetSurname(st, individual, false);
-                query.Append($"&surname={HttpUtility.UrlEncode(surname)}&surname_so=soundex");
+                query.Append($"&surname={HttpUtility.UrlEncode(individual.Surname)}&surname_so=soundex");
                 if (individual.Forename != "?" && individual.Forename.ToUpper() != Individual.UNKNOWN_NAME)
                     query.Append($"&forename={HttpUtility.UrlEncode(individual.Forename)}&forename_so=syn");
                 if (st == SearchType.BIRTH)
                     query.Append("&record_type=stat_births");
                 else if (st == SearchType.MARRIAGE)
+                {
                     query.Append("&record_type=stat_marriages");
+                    if(spouse != null)
+                        query.Append($"&spsurname={HttpUtility.UrlEncode(spouse.Surname)}&spsurname_so=soundex&spforename={HttpUtility.UrlEncode(spouse.Forename)}&spforename_so=syn");
+                }
                 else if (st == SearchType.DEATH)
                     query.Append("&record_type=stat_deaths");
                 int fromYear = Math.Max(1855, factdate.StartDate.Year - 1); // -1 to add a years tolerance either side
@@ -2749,10 +2754,11 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
                     query.Append("&event=M&record_type%5B0%5D=opr_marriages&church_type=Old%20Parish%20Registers&dl_cat=church&dl_rec=church-banns-marriages");
                 else if (st == SearchType.DEATH)
                     query.Append("&event=D&record_type%5B0%5D=opr_deaths&church_type=Old%20Parish%20Registers&dl_cat=church&dl_rec=church-deaths-burials");
-                string surname = GetSurname(st, individual, false);
-                query.Append($"&surname={HttpUtility.UrlEncode(surname)}&surname_so=soundex");
+                query.Append($"&surname={HttpUtility.UrlEncode(individual.Surname)}&surname_so=soundex");
                 if (individual.Forename != "?" && individual.Forename.ToUpper() != Individual.UNKNOWN_NAME)
                     query.Append($"&forename={HttpUtility.UrlEncode(individual.Forename)}&forename_so=syn");
+                if(st == SearchType.MARRIAGE && spouse != null)
+                    query.Append($"&spouse_name={HttpUtility.UrlEncode(spouse.Surname)}&spouse_name_so=fuzzy");
                 int fromYear = Math.Max(factdate.StartDate.Year -1, 1553);
                 int toYear = Math.Min(factdate.EndDate.Year + 1, 1854);
                 query.Append($"&from_year={fromYear}&to_year={toYear}");
