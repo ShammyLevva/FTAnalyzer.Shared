@@ -2168,6 +2168,8 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
                     return "FreeCen";
                 case 3:
                     return "FamilySearch";
+                case 4:
+                    return "ScotlandsPeople";
                 default:
                     return "FamilySearch";
             }

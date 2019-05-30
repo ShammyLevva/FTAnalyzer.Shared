@@ -1574,7 +1574,35 @@ namespace FTAnalyzer
             }
         }
 
-        public IComparer<IDisplayColourCensus> GetComparer(string columnName, bool ascending)
+        IComparer<IDisplayColourBMD> IColumnComparer<IDisplayColourBMD>.GetComparer(string columnName, bool ascending)
+        {
+            switch (columnName)
+            {
+                case "IndividualID": return CompareComparableProperty<IDisplayColourBMD>(i => i.IndividualID, ascending);
+                case "Forenames": return new NameComparer<IDisplayColourBMD>(ascending, true);
+                case "Surname": return new NameComparer<IDisplayColourBMD>(ascending, false);
+                case "Relation": return CompareComparableProperty<IDisplayColourBMD>(i => i.Relation, ascending);
+                case "RelationToRoot": return CompareComparableProperty<IDisplayColourBMD>(i => i.RelationToRoot, ascending);
+                case "Birth": return CompareComparableProperty<IDisplayColourBMD>(i => (int)i.Birth, ascending);
+                case "Baptism": return CompareComparableProperty<IDisplayColourBMD>(i => (int)i.BaptChri, ascending);
+                case "Marriage 1": return CompareComparableProperty<IDisplayColourBMD>(i => (int)i.Marriage1, ascending);
+                case "Marriage 2": return CompareComparableProperty<IDisplayColourBMD>(i => (int)i.Marriage2, ascending);
+                case "Marriage 3": return CompareComparableProperty<IDisplayColourBMD>(i => (int)i.Marriage3, ascending);
+                case "Death": return CompareComparableProperty<IDisplayColourBMD>(i => (int)i.Death, ascending);
+                case "Burial": return CompareComparableProperty<IDisplayColourBMD>(i => (int)i.CremBuri, ascending);
+                case "BirthDate": return CompareComparableProperty<IDisplayColourBMD>(i => i.BirthDate, ascending);
+                case "DeathDate": return CompareComparableProperty<IDisplayColourBMD>(i => i.DeathDate, ascending);
+                case "First Marriage": return CompareComparableProperty<IDisplayColourBMD>(i => i.FirstMarriage, ascending);
+                case "Second Marriage": return CompareComparableProperty<IDisplayColourBMD>(i => i.SecondMarriage, ascending);
+                case "Third Marriage": return CompareComparableProperty<IDisplayColourBMD>(i => i.ThirdMarriage, ascending);
+                case "BirthLocation": return CompareComparableProperty<IDisplayColourBMD>(i => i.BirthLocation, ascending);
+                case "DeathLocation": return CompareComparableProperty<IDisplayColourBMD>(i => i.DeathLocation, ascending);
+                case "Ahnentafel": return CompareComparableProperty<IDisplayColourBMD>(i => i.Ahnentafel, ascending);
+                default: return null;
+            }
+        }
+
+        IComparer<IDisplayColourCensus> IColumnComparer<IDisplayColourCensus>.GetComparer(string columnName, bool ascending)
         {
             switch (columnName)
             {

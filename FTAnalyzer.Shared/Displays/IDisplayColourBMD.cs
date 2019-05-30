@@ -3,7 +3,7 @@ using System.Numerics;
 
 namespace FTAnalyzer
 {
-    public interface IDisplayColourBMD
+    public interface IDisplayColourBMD : IColumnComparer<IDisplayColourBMD>
     {
         [ColumnDetail("Ref", 60)]
         string IndividualID { get; }
@@ -13,7 +13,7 @@ namespace FTAnalyzer
         string Surname { get; }
         [ColumnDetail("Relation", 120)]
         string Relation { get; }
-        [ColumnDetail("Relation to Root", 160)]
+        [ColumnDetail("Relation to Root", 170)]
         string RelationToRoot { get; }
         
         [ColumnDetail("Birth", 60)]
