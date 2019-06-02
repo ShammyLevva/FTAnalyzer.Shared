@@ -517,7 +517,7 @@ namespace FTAnalyzer
                         if (!CensusReference.IsKnownStatus)
                             CensusReference = new CensusReference(this, node);
                         else if (!CensusReference.IsGoodStatus)
-                            CensusReference.CheckFullUnknownReference();
+                            CensusReference.CheckFullUnknownReference(CensusReference.Status);
                     }
                     if(GeneralSettings.Default.ConvertResidenceFacts && FactType.Equals(RESIDENCE) && CensusReference.IsKnownStatus)
                             FactType = CENSUS; // change fact type if option set and residence has a valid census reference

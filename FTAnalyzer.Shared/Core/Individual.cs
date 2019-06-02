@@ -16,7 +16,7 @@ namespace FTAnalyzer
         IDisplayIndividual, IDisplayLooseDeath, IDisplayLooseBirth, IExportIndividual,
         IDisplayColourCensus, IDisplayColourBMD, IDisplayMissingData, IDisplayLooseInfo
     {
-        // define relation type from direct ancestor to related by marriage and 
+        // edefine relation type from direct ancestor to related by marriage and 
         // MARRIAGEDB ie: married to a direct or blood relation
         public const int UNKNOWN = 1, DIRECT = 2, DESCENDANT = 4, BLOOD = 8, MARRIEDTODB = 16, MARRIAGE = 32, LINKED = 64, UNSET = 128;
         public const string UNKNOWN_NAME = "UNKNOWN";

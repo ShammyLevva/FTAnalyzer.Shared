@@ -238,10 +238,13 @@ namespace FTAnalyzer
             Fact = fact;
             if (GetCensusReference(node))
                 SetCensusReferenceDetails();
-            else
+            if(Status != ReferenceStatus.GOOD)
             {
+                var tempStatus = Status;
                 if (GetCensusReference(Fact.Comment))
                     SetCensusReferenceDetails();
+                if ((Status == ReferenceStatus.BLANK || Status == ReferenceStatus.UNRECOGNISED) && tempStatus == ReferenceStatus.INCOMPLETE)
+                    Status = tempStatus; // if we found an incomplete status don't throw that away if comment had no status
             }
             if (fact.FactDate.IsKnown)
             {
@@ -316,17 +319,21 @@ namespace FTAnalyzer
         {
             if (GeneralSettings.Default.SkipCensusReferences)
                 return false;
+            bool pageCheck;
+            bool dataCheck;
             string text = FamilyTree.GetText(n, "PAGE", true);
-            if (GetCensusReference(text, true) && Status == ReferenceStatus.GOOD)
+            pageCheck = GetCensusReference(text, true);
+            if (pageCheck && Status == ReferenceStatus.GOOD)
                 return true;
             text = FamilyTree.GetText(n, "DATA", true);
-            if (GetCensusReference(text, false) && Status == ReferenceStatus.GOOD)
+            dataCheck = GetCensusReference(text, false);
+            if (dataCheck && Status == ReferenceStatus.GOOD)
                 return true;
             text = FamilyTree.GetNotes(n);
-            return GetCensusReference(text, false); // we have already checked sources so don't do it again.
+            return pageCheck || dataCheck || GetCensusReference(text, false); // if any of the checks worked but were incomplete return true
         }
 
-        bool GetCensusReference(string text, bool checksources = true, bool updateUnknownRef = true)
+        bool GetCensusReference(string text, bool checksources = true, bool updateUnknownRef = true, ReferenceStatus oldstatus = ReferenceStatus.BLANK)
         {
             if (GeneralSettings.Default.SkipCensusReferences)
                 return false;
@@ -337,7 +344,7 @@ namespace FTAnalyzer
                     ReferenceText = text.Trim();
                     return true;
                 }
-                else
+                else if(oldstatus == ReferenceStatus.BLANK)
                     // no match so store text 
                     Status = ReferenceStatus.UNRECOGNISED;
                 if (updateUnknownRef)
@@ -368,7 +375,7 @@ namespace FTAnalyzer
             return false;
         }
 
-        public void CheckFullUnknownReference() => GetCensusReference(UnknownRef, false, false);
+        public void CheckFullUnknownReference(ReferenceStatus status) => GetCensusReference(UnknownRef, false, false, status);
 
         string UnknownRef => unknownCensusRef.Length > 20 ? unknownCensusRef.Substring(20) : string.Empty;
 
