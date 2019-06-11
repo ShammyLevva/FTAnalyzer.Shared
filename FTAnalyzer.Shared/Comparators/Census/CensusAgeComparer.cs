@@ -6,22 +6,22 @@ namespace FTAnalyzer
     {
         public int Compare(CensusIndividual i1, CensusIndividual i2)
         {
-            if (i1.CensusStatus.Equals(i2.CensusStatus))
+            if (i1.CensusStatus == i2.CensusStatus)
                 // same status so sort by date
                 return SortBirthdate(i1, i2);
-            if (i1.CensusStatus.Equals(CensusIndividual.HUSBAND))
+            if (i1.CensusStatus == CensusIndividual.HUSBAND)
                 return -1;
-            if (i2.CensusStatus.Equals(CensusIndividual.HUSBAND))
+            if (i2.CensusStatus == CensusIndividual.HUSBAND)
                 return 1;
             // neither is husband so is one a wife
-            if (i1.CensusStatus.Equals(CensusIndividual.WIFE))
+            if (i1.CensusStatus == CensusIndividual.WIFE)
                 return -1;
-            if (i2.CensusStatus.Equals(CensusIndividual.WIFE))
+            if (i2.CensusStatus == CensusIndividual.WIFE)
                 return 1;
             // neither is husband or wife so is one a child
-            if (i1.CensusStatus.Equals(CensusIndividual.CHILD))
+            if (i1.CensusStatus == CensusIndividual.CHILD)
                 return -1;
-            if (i2.CensusStatus.Equals(CensusIndividual.CHILD))
+            if (i2.CensusStatus == CensusIndividual.CHILD)
                 return 1;
             return 0;
         }

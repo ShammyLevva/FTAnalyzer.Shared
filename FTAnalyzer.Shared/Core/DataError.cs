@@ -29,7 +29,7 @@ namespace FTAnalyzer
         }
 
         readonly Individual individual;
-        Family family;
+        readonly Family family;
 
 #if __PC__
         public System.Drawing.Image Icon { get; private set; }
@@ -58,7 +58,7 @@ namespace FTAnalyzer
                 case "Description": return CompareComparableProperty<IDisplayDataError>(f => f.Description, ascending);
                 case "Born": return CompareComparableProperty<IDisplayDataError>(f => f.Born, ascending);
                 case "Died": return CompareComparableProperty<IDisplayDataError>(f => f.Died, ascending);
-                case "IsFamily": return CompareComparableProperty<IDisplayDataError>(f => f.IsFamily, ascending);
+                //case "IsFamily": return CompareComparableProperty<IDisplayDataError>(f => f.IsFamily, ascending);
                 default: return null;
             }
         }

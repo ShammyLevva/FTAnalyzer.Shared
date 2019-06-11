@@ -28,9 +28,9 @@ namespace FTAnalyzer
         int _relationType;
         List<Fact> _allfacts;
         List<Fact> _allFileFacts;
-        DoubleMetaphone surnameMetaphone;
-        DoubleMetaphone forenameMetaphone;
-        Dictionary<string, Fact> preferredFacts;
+        readonly DoubleMetaphone surnameMetaphone;
+        readonly DoubleMetaphone forenameMetaphone;
+        readonly Dictionary<string, Fact> preferredFacts;
         public string Notes { get; private set; }
         public string StandardisedName { get; private set; }
         public bool HasParents { get; set; }
@@ -1132,7 +1132,7 @@ namespace FTAnalyzer
             {
                 IndividualID = IndividualID.Substring(0, 1) + IndividualID.Substring(1).PadLeft(length, '0');
             }
-            catch (Exception)
+            catch (ArgumentOutOfRangeException)
             {  // don't error if Individual isn't of type Ixxxx
             }
         }
@@ -1422,7 +1422,7 @@ namespace FTAnalyzer
             get
             {
                 Family fam = Marriages(0);
-                return fam == null ? null : fam.Spouse(this);
+                return fam?.Spouse(this);
             }
         }
 
@@ -1431,7 +1431,7 @@ namespace FTAnalyzer
             get
             {
                 Family fam = Marriages(1);
-                return fam == null ? null : fam.Spouse(this);
+                return fam?.Spouse(this);
             }
         }
 
@@ -1440,7 +1440,7 @@ namespace FTAnalyzer
             get
             {
                 Family fam = Marriages(2);
-                return fam == null ? null : fam.Spouse(this);
+                return fam?.Spouse(this);
             }
         }
 

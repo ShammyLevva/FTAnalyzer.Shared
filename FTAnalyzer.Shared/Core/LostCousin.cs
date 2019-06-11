@@ -48,14 +48,17 @@ namespace FTAnalyzer
             int.TryParse(birthYear, out int result);
             BirthYear = result;
             Reference = reference;
-            int ptr = weblink.IndexOf("&p=");
+            int ptr = weblink.IndexOf("&p=", StringComparison.Ordinal);
             WebLink = ptr == -1 ? null : new Uri(HttpUtility.UrlDecode(weblink.Substring(ptr + 3)));
             FTAnalyzerFact = ftanalyzer;
-            if(census.StartsWith("England", StringComparison.Ordinal))
+            if (census.StartsWith("England", StringComparison.Ordinal))
             {
                 if (census.EndsWith("1841", StringComparison.Ordinal)) CensusDate = CensusDate.EWCENSUS1841;
                 if (census.EndsWith("1881", StringComparison.Ordinal)) CensusDate = CensusDate.EWCENSUS1881;
                 if (census.EndsWith("1911", StringComparison.Ordinal)) CensusDate = CensusDate.EWCENSUS1911;
+            }
+            else
+            {
             }
             if (census.StartsWith("Scotland", StringComparison.Ordinal) && census.EndsWith("1881", StringComparison.Ordinal)) CensusDate = CensusDate.SCOTCENSUS1881;
             if (census.StartsWith("Canada", StringComparison.Ordinal) && census.EndsWith("1881", StringComparison.Ordinal)) CensusDate = CensusDate.SCOTCENSUS1881;
