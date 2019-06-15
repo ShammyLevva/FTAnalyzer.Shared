@@ -878,11 +878,10 @@ namespace FTAnalyzer
 
         public void AddFact(Fact fact)
         {
-            FamilyTree ft = FamilyTree.Instance;
-            if (ft.FactBeforeBirth(this, fact))
+            if (FamilyTree.FactBeforeBirth(this, fact))
                 fact.SetError((int)FamilyTree.Dataerror.FACTS_BEFORE_BIRTH, Fact.FactError.ERROR,
                     $"{fact.FactTypeDescription} fact recorded: {fact.FactDate} before individual was born");
-            if (ft.FactAfterDeath(this, fact))
+            if (FamilyTree.FactAfterDeath(this, fact))
                 fact.SetError((int)FamilyTree.Dataerror.FACTS_AFTER_DEATH, Fact.FactError.ERROR,
                     $"{fact.FactTypeDescription} fact recorded: {fact.FactDate} after individual died");
 
@@ -1218,7 +1217,7 @@ namespace FTAnalyzer
             return CheckOutOfCountry("C1");
         }
 
-        public bool OutOfCountryCheck(CensusDate census, FactLocation location)
+        public static bool OutOfCountryCheck(CensusDate census, FactLocation location)
         {
             return (Countries.IsUnitedKingdom(census.Country) && !location.IsUnitedKingdom) ||
                   (!Countries.IsUnitedKingdom(census.Country) && census.Country != location.Country);

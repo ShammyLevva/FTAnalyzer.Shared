@@ -42,7 +42,7 @@ namespace FTAnalyzer
         SortableBindingList<IDisplayLooseBirth> looseBirths;
         SortableBindingList<IDisplayLooseInfo> looseInfo;
         SortableBindingList<DuplicateIndividual> duplicates;
-        readonly static int DATA_ERROR_GROUPS = 28;
+        const int DATA_ERROR_GROUPS = 28;
         static XmlNodeList noteNodes;
         BigInteger maxAhnentafel;
         Dictionary<string, Individual> individualLookup;
@@ -370,7 +370,7 @@ namespace FTAnalyzer
         {
             if (string.IsNullOrEmpty(rootIndividualID)) 
                 rootIndividualID = individuals[0].IndividualID;
-            UpdateRootIndividual(rootIndividualID, progress, outputText, true);
+            UpdateRootIndividual(rootIndividualID, progress, outputText); //, true);
             CreateSharedFacts();
             CreateLostCousinsFacts(outputText);
             CountCensusFacts(outputText);
@@ -390,7 +390,7 @@ namespace FTAnalyzer
         {
             int max = list.Count;
             int counter = 0;
-            int value = 0;
+            int value;
             foreach (XmlNode node in list)
             {
                 string place = GetText(node, false);
@@ -416,7 +416,7 @@ namespace FTAnalyzer
         {
             try
             {
-                int count = DatabaseHelper.Instance.AddLostCousinsFacts();
+                int count = DatabaseHelper.AddLostCousinsFacts();
                 outputText.Report($"Created {count} Lost Cousins facts from records previously uploaded by FTAnalyzer");
             }
             catch (Exception ex)
@@ -425,13 +425,13 @@ namespace FTAnalyzer
             }
         }
 
-public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
+        public static bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
         {
             outputText.Report("");
 #if __PC__
             try
             {
-                DatabaseHelper.Instance.LoadGeoLocations();
+                DatabaseHelper.LoadGeoLocations();
                 WriteGeocodeStatstoRTB(string.Empty, outputText);
             }
             catch (Exception ex)
@@ -443,12 +443,12 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             return true;
         }
 
-        public void UpdateRootIndividual(string rootIndividualID, IProgress<int> progress, IProgress<string> outputText, bool locationsToFollow = false)
+        public void UpdateRootIndividual(string rootIndividualID, IProgress<int> progress, IProgress<string> outputText) //, bool locationsToFollow = false)
         {
             outputText.Report($"\nCalculating Relationships using {rootIndividualID}: {GetIndividual(rootIndividualID)?.Name} as root person. Please wait\n\n");
 
             // When the user changes the root individual, no location processing is taking place
-            int locationCount = locationsToFollow ? FactLocation.AllLocations.Count() : 0;
+            //int locationCount = locationsToFollow ? FactLocation.AllLocations.Count() : 0;
             SetRelations(rootIndividualID, outputText);
             progress?.Report(10);
             SetRelationDescriptions(rootIndividualID);
@@ -665,7 +665,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
         readonly string separator = $"————————————————————————————————\n";
 #endif
 
-        public string UpdateLostCousinsReport(Predicate<Individual> relationFilter, IProgress<int> progress)
+        public string UpdateLostCousinsReport(Predicate<Individual> relationFilter)
         {
             StringBuilder output = new StringBuilder();
             output.Append("Lost Cousins facts recorded:\n\n");
@@ -746,7 +746,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             return output.ToString();
         }
 
-        public string LCOutput(List<CensusIndividual> LCUpdates, List<CensusIndividual> LCInvalidReferences, Predicate<CensusIndividual> relationFilter, IProgress<int> progress)
+        public string LCOutput(List<CensusIndividual> LCUpdates, List<CensusIndividual> LCInvalidReferences, Predicate<CensusIndividual> relationFilter)
         {
             LCInvalidRef = 0;
             StringBuilder output = new StringBuilder();
@@ -1404,7 +1404,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             if (GeneralSettings.Default.ShowMultiAncestors)
             {
                 // Hmm interesting a direct parent who is already a direct
-                string currentRelationship = Relationship.CalculateRelationship(RootPerson, parent);
+                //string currentRelationship = Relationship.CalculateRelationship(RootPerson, parent);
                 string currentLine = Relationship.AhnentafelToString(parent.Ahnentafel);
                 string newLine = Relationship.AhnentafelToString(newAhnentafel);
                 if (parent.Ahnentafel > newAhnentafel)
@@ -1431,25 +1431,25 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             }
         }
 
-        void AddChildrenToQueue(Individual indiv, Queue<Individual> queue, bool isRootPerson)
-        {
-            IEnumerable<Family> parentFamilies = indiv.FamiliesAsSpouse;
-            foreach (Family family in parentFamilies)
-            {
-                foreach (Individual child in family.Children)
-                {
-                    // add child to queue
-                    if (child.RelationType == Individual.BLOOD || child.RelationType == Individual.UNKNOWN)
-                    {
-                        child.RelationType = Individual.BLOOD;
-                        child.Ahnentafel = isRootPerson ? indiv.Ahnentafel - 2 : indiv.Ahnentafel - 1;
-                        child.BudgieCode = $"-{child.Ahnentafel.ToString().PadLeft(2, '0')}c";
-                        queue.Enqueue(child);
-                    }
-                }
-                family.SetBudgieCode(indiv, 2);
-            }
-        }
+        //void AddChildrenToQueue(Individual indiv, Queue<Individual> queue, bool isRootPerson)
+        //{
+        //    IEnumerable<Family> parentFamilies = indiv.FamiliesAsSpouse;
+        //    foreach (Family family in parentFamilies)
+        //    {
+        //        foreach (Individual child in family.Children)
+        //        {
+        //            // add child to queue
+        //            if (child.RelationType == Individual.BLOOD || child.RelationType == Individual.UNKNOWN)
+        //            {
+        //                child.RelationType = Individual.BLOOD;
+        //                child.Ahnentafel = isRootPerson ? indiv.Ahnentafel - 2 : indiv.Ahnentafel - 1;
+        //                child.BudgieCode = $"-{child.Ahnentafel.ToString().PadLeft(2, '0')}c";
+        //                queue.Enqueue(child);
+        //            }
+        //        }
+        //        family.SetBudgieCode(indiv, 2);
+        //    }
+        //}
 
         public Individual RootPerson { get; set; }
 
@@ -1694,7 +1694,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             }
         }
 
-        public SortableBindingList<IDisplayFact> GetSourceDisplayFacts(FactSource source)
+        public static SortableBindingList<IDisplayFact> GetSourceDisplayFacts(FactSource source)
         {
             SortableBindingList<IDisplayFact> result = new SortableBindingList<IDisplayFact>();
             foreach (Fact f in source.Facts)
@@ -2123,7 +2123,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
 
         public IList<DataErrorGroup> DataErrorTypes { get; private set; }
 
-        public bool FactBeforeBirth(Individual ind, Fact f)
+        public static bool FactBeforeBirth(Individual ind, Fact f)
         {
             if (f.FactType != Fact.BIRTH & f.FactType != Fact.BIRTH_CALC && Fact.LOOSE_BIRTH_FACTS.Contains(f.FactType) && f.FactDate.IsBefore(ind.BirthDate))
             {
@@ -2138,7 +2138,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             return false;
         }
 
-        public bool FactAfterDeath(Individual ind, Fact f) => Fact.LOOSE_DEATH_FACTS.Contains(f.FactType) && f.FactDate.IsAfter(ind.DeathDate);
+        public static bool FactAfterDeath(Individual ind, Fact f) => Fact.LOOSE_DEATH_FACTS.Contains(f.FactType) && f.FactDate.IsAfter(ind.DeathDate);
 
         public enum Dataerror
         {
@@ -2156,7 +2156,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
 
 #region Census Searching
 
-        public string ProviderName(int censusProvider)
+        public static string ProviderName(int censusProvider)
         {
             switch(censusProvider)
             {
@@ -2276,6 +2276,8 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
         {
             if (censusYear == 1939 && censusCountry.Equals(Countries.UNITED_KINGDOM))
                 return BuildAncestry1939Query(person, censusRegion);
+            if (censusYear == 1940 && censusCountry.Equals(Countries.UNITED_STATES))
+                return BuildAncestry1940Query(person);
             UriBuilder uri = new UriBuilder
             {
                 Host = $"search.ancestry{censusRegion}",
@@ -2363,7 +2365,65 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
         {
             UriBuilder uri = new UriBuilder
             {
-                Host = "search.ancestry.co.uk",
+                Host = $"search.ancestry{censusRegion}",
+                Path = "search/collections/1939ukregister/"
+            };
+            StringBuilder query = new StringBuilder();
+            string forename = string.Empty;
+            string surname = string.Empty;
+            if (person.Forenames != "?" && person.Forenames.ToUpper() != Individual.UNKNOWN_NAME)
+                forename = HttpUtility.UrlEncode(person.Forenames);
+            if (person.Surname != "?" && person.Surname.ToUpper() != Individual.UNKNOWN_NAME)
+                surname = person.Surname;
+            if (person.MarriedName != "?" && person.MarriedName.ToUpper() != Individual.UNKNOWN_NAME && person.MarriedName != person.Surname)
+                surname += $" {person.MarriedName}";
+            surname = HttpUtility.UrlEncode(surname.Trim());
+            query.Append($"name={forename}_{surname}&name_x=ps_ps&");
+            if (person.BirthDate.IsKnown)
+            {
+                int startYear = person.BirthDate.StartDate.Year;
+                int endYear = person.BirthDate.EndDate.Year;
+                int year, range;
+                if (startYear == FactDate.MINDATE.Year)
+                {
+                    year = endYear - 9;
+                    range = 10;
+                }
+                else if (endYear == FactDate.MAXDATE.Year)
+                {
+                    year = startYear + 9;
+                    range = 10;
+                }
+                else
+                {
+                    year = (endYear + startYear + 1) / 2;
+                    range = (endYear - startYear + 1) / 2;
+                    if (2 < range && range < 5) range = 5;
+                    if (range > 5)
+                    {
+                        year = startYear + 5;
+                        range = 10;
+                    }
+                    if (year > 1939) year = 1939;
+                }
+                query.Append($"birth={year}&");
+                query.Append($"birth_x={range}-0-0&");
+            }
+            FactLocation bestLocation = person.BestLocation(CensusDate.UKCENSUS1939);
+            if (bestLocation.IsKnown)
+            {
+                string location = HttpUtility.UrlEncode(bestLocation.ToString());
+                query.Append($"residence={location}");
+            }
+            uri.Query = query.ToString();
+            return uri.ToString();
+        }
+
+        string BuildAncestry1940Query(Individual person, string censusRegion = ".com")
+        {
+            UriBuilder uri = new UriBuilder
+            {
+                Host = $"search.ancestry{censusRegion}",
                 Path = "search/collections/1939ukregister/"
             };
             StringBuilder query = new StringBuilder();
@@ -2680,7 +2740,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             {
                 case 0: uri = BuildAncestryQuery(st, individual, factdate, bmdRegion); provider = "Ancestry"; break;
                 case 1: uri = BuildFindMyPastQuery(st, individual, factdate, bmdRegion); provider = "FindMyPast"; break;
-                case 2: uri = BuildFreeBMDQuery(st, individual, factdate); provider = "FreeBMD"; break;
+//                case 2: uri = BuildFreeBMDQuery(st, individual, factdate); provider = "FreeBMD"; break;
                 case 3: uri = BuildFamilySearchQuery(st, individual, factdate); provider = "FamilySearch"; break;
                 case 4: uris = BuildScotlandsPeopleQuery(st, individual, factdate, spouse); provider = "ScotlandsPeople"; break;
 //                case 5: uri = BuildGROQuery(st, individual, factdate); provider = "GRO"; break;
@@ -2821,12 +2881,10 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             return record_country;
         }
 
-#pragma warning disable RECS0154 // Parameter is never used
-        string BuildFreeBMDQuery(SearchType st, Individual individual, FactDate factdate)
-#pragma warning restore RECS0154 // Parameter is never used
-        {
-            throw new CensusSearchException("Not Yet"); // TODO: Add FreeBMD searching
-        }
+        //string BuildFreeBMDQuery(SearchType st, Individual individual, FactDate factdate)
+        //{
+        //    throw new CensusSearchException("Not Yet"); // TODO: Add FreeBMD searching
+        //}
 
         string BuildFindMyPastQuery(SearchType st, Individual individual, FactDate factdate, string bmdRegion)
         {
@@ -2846,11 +2904,11 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             else
                 uri.Path = "results/world-records-in-birth-marriage-death-and-parish-records";
             if (st.Equals(SearchType.BIRTH))
-                uri.Path = uri.Path + "/births-and-baptisms~church-registers";
+                uri.Path += "/births-and-baptisms~church-registers";
             if (st.Equals(SearchType.MARRIAGE))
-                uri.Path = uri.Path + "/church-registers~marriages-and-divorces";
+                uri.Path += "/church-registers~marriages-and-divorces";
             if (st.Equals(SearchType.DEATH))
-                uri.Path = uri.Path + "/church-registers~wills-and-probate~deaths-and-burials";
+                uri.Path += "/church-registers~wills-and-probate~deaths-and-burials";
             StringBuilder query = new StringBuilder();
             if (individual.Forenames != "?" && individual.Forenames.ToUpper() != Individual.UNKNOWN_NAME)
                 query.Append($"firstname={HttpUtility.UrlEncode(individual.Forenames)}&firstname_variants=true&");
@@ -3006,7 +3064,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
 
 #region Geocoding
 
-        public void WriteGeocodeStatstoRTB(string title, IProgress<string> outputText)
+        public static void WriteGeocodeStatstoRTB(string title, IProgress<string> outputText)
         {
             outputText.Report($"\n{title}");
             // write geocode results - ignore UNKNOWN entry
@@ -3041,7 +3099,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
 #endregion
 
 #region Relationship Groups
-        public List<Individual> GetFamily(Individual startIndividiual)
+        public static List<Individual> GetFamily(Individual startIndividiual)
         {
             List<Individual> results = new List<Individual>();
             foreach (Family f in startIndividiual.FamiliesAsSpouse)
@@ -3057,7 +3115,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             return results;
         }
 
-        public List<Individual> GetAncestors(Individual startIndividual)
+        public static List<Individual> GetAncestors(Individual startIndividual)
         {
             List<Individual> results = new List<Individual>();
             Queue<Individual> queue = new Queue<Individual>();
@@ -3083,7 +3141,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             return results;
         }
 
-        public List<Individual> GetDescendants(Individual startIndividual)
+        public static List<Individual> GetDescendants(Individual startIndividual)
         {
             List<Individual> results = new List<Individual>();
             List<Individual> processed = new List<Individual>();
@@ -3116,13 +3174,13 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             return results;
         }
 
-        public List<Individual> GetAllRelations(Individual ind)
+        public static List<Individual> GetAllRelations(Individual ind)
         {
             return GetFamily(ind).Union(GetAncestors(ind).Union(GetDescendants(ind))).ToList();
         }
-#endregion
+        #endregion
 
-#region Duplicates Processing
+        #region Duplicates Processing
         decimal maleProgress;
         decimal femaleProgress;
         decimal progressMaximum;
@@ -3146,8 +3204,8 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             {
                 var tasks = new List<Task>
                 {
-                    Task.Run(() => IdentifyDuplicates(ct, progress, males, ref maleProgress)),
-                    Task.Run(() => IdentifyDuplicates(ct, progress, females, ref femaleProgress))
+                    Task.Run(() => IdentifyDuplicates(progress, males, ref maleProgress, ct)),
+                    Task.Run(() => IdentifyDuplicates(progress, females, ref femaleProgress, ct))
                 };
                 await Task.WhenAll(tasks);
             }
@@ -3174,7 +3232,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             return score;
         }
 
-        void IdentifyDuplicates(CancellationToken ct, IProgress<int> progress, IEnumerable<Individual> enumerable, ref decimal threadProgress)
+        void IdentifyDuplicates(IProgress<int> progress, IEnumerable<Individual> enumerable, ref decimal threadProgress, CancellationToken ct)
         {
             //log.Debug("FamilyTree.IdentifyDuplicates");
             var index = 0;
@@ -3299,7 +3357,7 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             return result;
         }
 
-        public void WriteUnrecognisedReferencesFile(IEnumerable<string> unrecognisedResults, IEnumerable<string> missingResults, IEnumerable<string> notesResults, string filename)
+        public static void WriteUnrecognisedReferencesFile(IEnumerable<string> unrecognisedResults, IEnumerable<string> missingResults, IEnumerable<string> notesResults, string filename)
         {
             StreamWriter output = new StreamWriter(new FileStream(filename, FileMode.Create, FileAccess.Write), Encoding.UTF8);
             int count = 0;
@@ -3416,9 +3474,9 @@ public bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
             return events;
         }
 
-        static Regex brackets = new Regex("{{.*}}", RegexOptions.Compiled);
-        static Regex links = new Regex("<a href=.*</a>", RegexOptions.Compiled);
-        static Regex quotes = new Regex("(.*)quot(.*)quot(.*)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        static readonly Regex brackets = new Regex("{{.*}}", RegexOptions.Compiled);
+        static readonly Regex links = new Regex("<a href=.*</a>", RegexOptions.Compiled);
+        static readonly Regex quotes = new Regex("(.*)quot(.*)quot(.*)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         string FixWikiFormatting(string input)
         {
