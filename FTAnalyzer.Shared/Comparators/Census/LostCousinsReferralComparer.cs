@@ -17,7 +17,7 @@ namespace FTAnalyzer
                         {
                             if (x.Age.Equals(y.Age))
                             {
-                                return x.Surname.Equals(y.Surname)
+                                return x.Surname == y.Surname
                                     ? string.Compare(x.Forenames, y.Forenames, StringComparison.Ordinal)
                                     : string.Compare(x.Surname, y.Surname, StringComparison.Ordinal);
                             }

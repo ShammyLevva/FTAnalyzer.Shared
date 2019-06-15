@@ -316,6 +316,19 @@ namespace FTAnalyzer
             }
         }
 
+        public IList<IDisplayFact> AllLifeLineFacts
+        {
+            get
+            {
+                List<IDisplayFact> allLifeLineFacts = new List<IDisplayFact>();
+                foreach (Fact f in AllFacts)
+                    if (f.Location.IsGeoCoded(false) && f.Location.GeocodeStatus != FactLocation.Geocode.UNKNOWN && f.FactType != Fact.LC_FTA && f.FactType != Fact.LOSTCOUSINS)
+                        allLifeLineFacts.Add(new DisplayFact(this, f));
+                allLifeLineFacts.Sort();
+                return allLifeLineFacts;
+            }
+        }
+
         public int GeoLocationCount => AllGeocodedFacts.Count;
 
         public IList<FactLocation> Locations { get; }
