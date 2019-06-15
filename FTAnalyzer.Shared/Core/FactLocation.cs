@@ -64,8 +64,8 @@ namespace FTAnalyzer
 #if __PC__
         public Mapping.GeoResponse.CResult.CGeometry.CViewPort ViewPort { get; set; }
 #endif
-        List<Individual> individuals;
-        string[] _Parts;
+        readonly List<Individual> individuals;
+        readonly string[] _Parts;
         bool _created;
 
         static Dictionary<string, string> COUNTRY_TYPOS = new Dictionary<string, string>();
@@ -278,17 +278,17 @@ namespace FTAnalyzer
             }
         }
 
-        static string GoogleFixLevel(int level)
-        {
-            switch (level)
-            {
-                case UNKNOWN: return "MultiLevelFix";
-                case COUNTRY: return "CountryFix";
-                case REGION: return "RegionFix";
-                case SUBREGION: return "SubRegionFix";
-                default: return "UNKNOWN";
-            }
-        }
+        //static string GoogleFixLevel(int level)
+        //{
+        //    switch (level)
+        //    {
+        //        case UNKNOWN: return "MultiLevelFix";
+        //        case COUNTRY: return "CountryFix";
+        //        case REGION: return "RegionFix";
+        //        case SUBREGION: return "SubRegionFix";
+        //        default: return "UNKNOWN";
+        //    }
+        //}
 
         static void SetupGeocodes()
         {
@@ -526,15 +526,15 @@ namespace FTAnalyzer
             loc.FoundLevel = -2;
 #if __PC__
             loc.ViewPort = new Mapping.GeoResponse.CResult.CGeometry.CViewPort();
-            if (DatabaseHelper.Instance.IsLocationInDatabase(loc.ToString()))
+            if (DatabaseHelper.IsLocationInDatabase(loc.ToString()))
             {   // check whether the location in database is geocoded.
                 FactLocation inDatabase = new FactLocation(loc.ToString());
-                DatabaseHelper.Instance.GetLocationDetails(inDatabase);
+                DatabaseHelper.GetLocationDetails(inDatabase);
                 if (!inDatabase.IsGeoCoded(true) || !loc.GecodingMatches(inDatabase))
-                    DatabaseHelper.Instance.UpdateGeocode(loc); // only update if existing record wasn't geocoded or doesn't match database contents
+                    DatabaseHelper.UpdateGeocode(loc); // only update if existing record wasn't geocoded or doesn't match database contents
             }
             else
-                DatabaseHelper.Instance.InsertGeocode(loc);
+                DatabaseHelper.InsertGeocode(loc);
 #endif
         }
 
@@ -731,8 +731,7 @@ namespace FTAnalyzer
 
         void FixCountryTypos()
         {
-            string result = string.Empty;
-            COUNTRY_TYPOS.TryGetValue(Country, out result);
+            COUNTRY_TYPOS.TryGetValue(Country, out string result);
             if (!string.IsNullOrEmpty(result))
                 Country = result;
             else
@@ -746,10 +745,9 @@ namespace FTAnalyzer
 
         string FixRegionTypos(string toFix)
         {
-            string result = string.Empty;
             if (Country == Countries.AUSTRALIA && toFix.Equals("WA"))
                 return "Western Australia"; // fix for WA = Washington
-            REGION_TYPOS.TryGetValue(toFix, out result);
+            REGION_TYPOS.TryGetValue(toFix, out string result);
             if (!string.IsNullOrEmpty(result))
                 return result;
             string fixCase = EnhancedTextInfo.ToTitleCase(toFix.ToLower());
@@ -759,8 +757,7 @@ namespace FTAnalyzer
 
         void ShiftCountryToRegion()
         {
-            string result = string.Empty;
-            COUNTRY_SHIFTS.TryGetValue(Country, out result);
+            COUNTRY_SHIFTS.TryGetValue(Country, out string result);
             if (string.IsNullOrEmpty(result))
             {
                 string fixCase = EnhancedTextInfo.ToTitleCase(Country.ToLower());
@@ -781,8 +778,7 @@ namespace FTAnalyzer
         {
             if (!Countries.IsUnitedKingdom(Country))
                 return; // don't shift regions if not UK
-            string result = string.Empty;
-            REGION_SHIFTS.TryGetValue(Region, out result);
+            REGION_SHIFTS.TryGetValue(Region, out string result);
             if (string.IsNullOrEmpty(result))
             {
                 string fixCase = EnhancedTextInfo.ToTitleCase(Region.ToLower());
@@ -885,24 +881,21 @@ namespace FTAnalyzer
                     return result;
 
                 // now check the individual part fixes
-                string countryFix = string.Empty;
-                string regionFix = string.Empty;
-                string subRegionFix = string.Empty;
-                LOCAL_GOOGLE_FIXES.TryGetValue(new Tuple<int, string>(COUNTRY, Country.ToUpperInvariant()), out countryFix);
+                LOCAL_GOOGLE_FIXES.TryGetValue(new Tuple<int, string>(COUNTRY, Country.ToUpperInvariant()), out string countryFix);
                 if (countryFix == null)
                 {
                     GOOGLE_FIXES.TryGetValue(new Tuple<int, string>(COUNTRY, Country.ToUpperInvariant()), out countryFix);
                     if (countryFix == null)
                         countryFix = Country;
                 }
-                LOCAL_GOOGLE_FIXES.TryGetValue(new Tuple<int, string>(REGION, Region.ToUpperInvariant()), out regionFix);
+                LOCAL_GOOGLE_FIXES.TryGetValue(new Tuple<int, string>(REGION, Region.ToUpperInvariant()), out string regionFix);
                 if (regionFix == null)
                 {
                     GOOGLE_FIXES.TryGetValue(new Tuple<int, string>(REGION, Region.ToUpperInvariant()), out regionFix);
                     if (regionFix == null)
                         regionFix = Region;
                 }
-                LOCAL_GOOGLE_FIXES.TryGetValue(new Tuple<int, string>(SUBREGION, SubRegion.ToUpperInvariant()), out subRegionFix);
+                LOCAL_GOOGLE_FIXES.TryGetValue(new Tuple<int, string>(SUBREGION, SubRegion.ToUpperInvariant()), out string subRegionFix);
                 if (subRegionFix == null)
                 {
                     GOOGLE_FIXES.TryGetValue(new Tuple<int, string>(SUBREGION, SubRegion.ToUpperInvariant()), out subRegionFix);
@@ -1077,7 +1070,7 @@ namespace FTAnalyzer
             // remaining options return false ie: Geocode.OUT_OF_BOUNDS, Geocode.NO_MATCH, Geocode.NOT_SEARCHED, Geocode.INCORRECT
         }
 
-        static Regex numericFix = new Regex("\\d+[A-Za-z]?", RegexOptions.Compiled);
+        static readonly Regex numericFix = new Regex("\\d+[A-Za-z]?", RegexOptions.Compiled);
 
         string FixNumerics(string addressField, bool returnNumber)
         {

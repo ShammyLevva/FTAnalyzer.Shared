@@ -411,7 +411,6 @@ namespace FTAnalyzer
                 progress.Report(value);
             }
         }
-
         void CreateLostCousinsFacts(IProgress<string> outputText)
         {
             try
@@ -2277,7 +2276,7 @@ namespace FTAnalyzer
             if (censusYear == 1939 && censusCountry.Equals(Countries.UNITED_KINGDOM))
                 return BuildAncestry1939Query(person, censusRegion);
             if (censusYear == 1940 && censusCountry.Equals(Countries.UNITED_STATES))
-                return BuildAncestry1940Query(person);
+                return BuildAncestry1940Query(person, censusRegion);
             UriBuilder uri = new UriBuilder
             {
                 Host = $"search.ancestry{censusRegion}",
@@ -2424,7 +2423,7 @@ namespace FTAnalyzer
             UriBuilder uri = new UriBuilder
             {
                 Host = $"search.ancestry{censusRegion}",
-                Path = "search/collections/1939ukregister/"
+                Path = "search/collections/1940usfedcen/"
             };
             StringBuilder query = new StringBuilder();
             string forename = string.Empty;

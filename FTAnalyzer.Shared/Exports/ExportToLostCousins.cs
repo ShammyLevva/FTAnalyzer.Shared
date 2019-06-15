@@ -54,8 +54,8 @@ namespace FTAnalyzer.Exports
                     if (Website.Contains(lc))
                     {
                         outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - Already Present {ind.CensusString}, {ind.CensusReference}.\n");
-                        if(!DatabaseHelper.Instance.LostCousinsExists(ind))
-                            DatabaseHelper.Instance.StoreLostCousinsFact(ind, outputText);
+                        if(!DatabaseHelper.LostCousinsExists(ind))
+                            DatabaseHelper.StoreLostCousinsFact(ind, outputText);
                         AddLostCousinsFact(ind);
                         recordsPresent++;
                     }
@@ -73,8 +73,8 @@ namespace FTAnalyzer.Exports
                                 outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - {ind.CensusString}, {ind.CensusReference} added.\n");
                                 recordsAdded++;
                                 SessionList.Add(lc);
-                                if (!DatabaseHelper.Instance.LostCousinsExists(ind))
-                                    DatabaseHelper.Instance.StoreLostCousinsFact(ind, outputText);
+                                if (!DatabaseHelper.LostCousinsExists(ind))
+                                    DatabaseHelper.StoreLostCousinsFact(ind, outputText);
                                 AddLostCousinsFact(ind);
                             }
                             else
@@ -166,11 +166,11 @@ namespace FTAnalyzer.Exports
             return result;
         }
 
-        static bool OnPreRequest(HttpWebRequest request)
-        {
-            request.AllowAutoRedirect = true;
-            return true;
-        }
+        //static bool OnPreRequest(HttpWebRequest request)
+        //{
+        //    request.AllowAutoRedirect = true;
+        //    return true;
+        //}
 
         public static void EmptyCookieJar() => CookieJar = null;
 
@@ -346,7 +346,7 @@ namespace FTAnalyzer.Exports
 
     class CookieAwareWebClient : WebClient
     {
-        CookieContainer _cookieJar = new CookieContainer();
+        readonly CookieContainer _cookieJar = new CookieContainer();
 
         internal CookieAwareWebClient(CookieCollection cookies)
         {
