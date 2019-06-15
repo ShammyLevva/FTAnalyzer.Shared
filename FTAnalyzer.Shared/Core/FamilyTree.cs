@@ -2405,8 +2405,8 @@ namespace FTAnalyzer
                     }
                     if (year > 1939) year = 1939;
                 }
-                query.Append($"birth={year}&");
-                query.Append($"birth_x={range}-0-0&");
+                query.Append($"&birth={year}&");
+                query.Append($"&birth_x={range}-0-0&");
             }
             FactLocation bestLocation = person.BestLocation(CensusDate.UKCENSUS1939);
             if (bestLocation.IsKnown)
@@ -2420,6 +2420,7 @@ namespace FTAnalyzer
 
         string BuildAncestry1940Query(Individual person, string censusRegion = ".com")
         {
+            // ?name=Sylvia+Esther_Buck+Sweitzer&birth=1932_ohio-usa_38&birth_x=1-0-0&name_x=ps_ps
             UriBuilder uri = new UriBuilder
             {
                 Host = $"search.ancestry{censusRegion}",
@@ -2435,7 +2436,7 @@ namespace FTAnalyzer
             if (person.MarriedName != "?" && person.MarriedName.ToUpper() != Individual.UNKNOWN_NAME && person.MarriedName != person.Surname)
                 surname += $" {person.MarriedName}";
             surname = HttpUtility.UrlEncode(surname.Trim());
-            query.Append($"name={forename}_{surname}&name_x=ps_ps&");
+            query.Append($"name={forename}_{surname}");
             if (person.BirthDate.IsKnown)
             {
                 int startYear = person.BirthDate.StartDate.Year;
@@ -2463,8 +2464,8 @@ namespace FTAnalyzer
                     }
                     if (year > 1939) year = 1939;
                 }
-                query.Append($"birth={year}&");
-                query.Append($"birth_x={range}-0-0&");
+                query.Append($"&birth={year}&");
+                query.Append($"&birth_x={range}-0-0&");
             }
             FactLocation bestLocation = person.BestLocation(CensusDate.UKCENSUS1939);
             if (bestLocation.IsKnown)
