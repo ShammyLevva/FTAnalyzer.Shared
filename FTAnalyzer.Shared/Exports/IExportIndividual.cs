@@ -31,5 +31,7 @@ namespace FTAnalyzer
         DateTime DeathEnd { get; }
         string FamilyIDsAsParent { get; }
         string FamilyIDsAsChild { get; }
+        new int ChildrenCount { get; }
+        new int MarriageCount { get; }
     }
 }
