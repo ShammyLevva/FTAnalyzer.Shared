@@ -10,15 +10,15 @@ namespace FTAnalyzer
 {
     public class ScottishParish
     {
-        static Dictionary<string, ScottishParish> SCOTTISHPARISHES = new Dictionary<string, ScottishParish>();
-        static Dictionary<string, string> SCOTTISHPARISHNAMES = new Dictionary<string, string>();
+        static readonly Dictionary<string, ScottishParish> SCOTTISHPARISHES = new Dictionary<string, ScottishParish>();
+        static readonly Dictionary<string, string> SCOTTISHPARISHNAMES = new Dictionary<string, string>();
         public static ScottishParish UNKNOWN_PARISH = new ScottishParish("UNK", "Unknown", Countries.SCOTLAND);
         public string RegistrationDistrict { get; private set; }
         public FactLocation Location { get; private set; }
         public string Name { get; private set; }
         public string Region { get; private set; }
 
-        static Regex ParishRegex = new Regex(@"\d{1,3}-\d{1,2}?[AB]?", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        static readonly Regex ParishRegex = new Regex(@"\d{1,3}-\d{1,2}?[AB]?", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 #if __PC__
         static ScottishParish() => LoadScottishParishes(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location));
 #elif __MACOS__
@@ -67,7 +67,7 @@ namespace FTAnalyzer
 
         public static bool IsParishID(string rd)
         {
-            if (int.TryParse(rd, out int result))
+            if (int.TryParse(rd, out _))
                 return true;
             rd.ToLower().Replace(" ", "-").Replace("/", "-");
             Match match = ParishRegex.Match(rd);

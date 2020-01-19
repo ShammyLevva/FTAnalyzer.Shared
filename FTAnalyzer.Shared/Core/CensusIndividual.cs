@@ -110,7 +110,6 @@ namespace FTAnalyzer
                 case "Ahnentafel": return CompareComparableProperty<IDisplayCensus>(f => f.Ahnentafel, ascending);
                 default: return null;
             }
-
         }
 
         Comparer<T> CompareComparableProperty<T>(Func<IDisplayCensus, IComparable> accessor, bool ascending)

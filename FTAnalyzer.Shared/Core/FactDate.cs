@@ -251,6 +251,7 @@ namespace FTAnalyzer
             str = str.Replace("BTW", "BET");
             str = str.Replace("UNTIL", "TO");
             str = str.Replace("CIRCA", "ABT");
+            str = str.Replace("CA", "ABT");
             str = str.Replace("AROUND", "ABT");
             str = str.Replace("APPROX", "ABT");
 

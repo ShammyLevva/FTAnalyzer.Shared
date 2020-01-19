@@ -9,7 +9,7 @@ namespace FTAnalyzer.Utilities
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Method)]
 
-    public class ColumnDetail : Attribute
+    public sealed class ColumnDetail : Attribute
     {
         public string ColumnName { get; }
         public float ColumnWidth { get; }

@@ -256,12 +256,15 @@ namespace FTAnalyzer
             COMMENT_FACTS.Add(CHILDREN1911);
             COMMENT_FACTS.Add(DESTINATION);
             COMMENT_FACTS.Add(FAMILYSEARCH);
+            COMMENT_FACTS.Add(HASHTAG);
             COMMENT_FACTS.Add(HEIGHT);
             COMMENT_FACTS.Add(MISSING);
             COMMENT_FACTS.Add(NAME);
-            COMMENT_FACTS.Add(NATIONALITY);
             COMMENT_FACTS.Add(NAMESAKE);
+            COMMENT_FACTS.Add(NATIONALITY);
+            COMMENT_FACTS.Add(OBITUARY);
             COMMENT_FACTS.Add(PARENT);
+            COMMENT_FACTS.Add(RACE);
             COMMENT_FACTS.Add(REFERENCE);
             COMMENT_FACTS.Add(RELIGION);
             COMMENT_FACTS.Add(SOCIAL_SECURITY);
@@ -269,10 +272,8 @@ namespace FTAnalyzer
             COMMENT_FACTS.Add(UNKNOWN);
             COMMENT_FACTS.Add(UNMARRIED);
             COMMENT_FACTS.Add(WEIGHT);
+            COMMENT_FACTS.Add(WILL);
             COMMENT_FACTS.Add(WITNESS);
-            COMMENT_FACTS.Add(HASHTAG);
-            COMMENT_FACTS.Add(OBITUARY);
-            COMMENT_FACTS.Add(RACE);
         }
 
         internal static string GetFactTypeDescription(string factType)

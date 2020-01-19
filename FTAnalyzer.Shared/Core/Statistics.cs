@@ -16,19 +16,14 @@ namespace FTAnalyzer
         static FamilyTree ft;
         List<SurnameStats> surnames;
 
-        Statistics()
-        {
-            ft = FamilyTree.Instance;
-        }
+        Statistics() => ft = FamilyTree.Instance;
 
         public static Statistics Instance
         {
             get
             {
                 if (instance == null)
-                {
                     instance = new Statistics();
-                }
                 return instance;
             }
         }
