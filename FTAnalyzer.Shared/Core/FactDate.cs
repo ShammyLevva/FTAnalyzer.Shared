@@ -15,34 +15,34 @@ namespace FTAnalyzer
         public static readonly IFormatProvider CULTURE = new CultureInfo("en-GB", true);
         public static readonly int MAXYEARS = 110;
         public static readonly int MINYEARS = 0;
-        static readonly int LOW = 0;
-        static readonly int HIGH = 1;
+        const int LOW = 0;
+        const int HIGH = 1;
 
         public readonly static string FULL = "d MMM yyyy";
-        static readonly string YEAR = "yyyy";
-        static readonly string EARLYYEAR = "yyy";
-        static readonly string MONTHYEAR = "MMM yyyy";
-        static readonly string MONTHYEAREARLY = "MMM yyy";
-        static readonly string DAYMONTH = "d MMM";
-        static readonly string MONTH = "MMM";
-        static readonly string FULLEARLY = "d MMM yyy";
-        static readonly string DISPLAY = "d MMM yyyy";
-        static readonly string CHECKING = "d MMM";
-        static readonly string DATE_PATTERN = "^(\\d{0,2} )?([A-Z]{0,3}) *(\\d{0,4})$";
-        static readonly string INTERPRETED_DATE_PATTERN = "^INT (\\d{0,2} )?([A-Z]{0,3}) *(\\d{0,4}) .*$";
-        static readonly string EARLY_DATE_PATTERN = "^(\\d{3})$";
-        static readonly string DOUBLE_DATE_PATTERN = "^(\\d{0,2} )?([A-Z]{0,3}) *(\\d{0,4})/(\\d{0,2})$";
-        static readonly string DOUBLE_DATE_PATTERN2 = "^(\\d{0,2} )?([A-Z]{0,3}) *(\\d{4})/(\\d{4})$";
-        static readonly string DOUBLE_DATE_PATTERN3 = "^(\\d{0,2} )?([A-Z]{0,3}) *(\\d{3})/(\\d{2,3})$";
-        static readonly string POSTFIX = "(\\d{1,2})(?:ST|ND|RD|TH)(.*)";
-        static readonly string BETWEENFIX = "(\\d{4}) *- *(\\d{4})";
-        static readonly string BETWEENFIX2 = "([A-Z]{0,3}) *(\\d{4}) *- *([A-Z]{0,3}) *(\\d{4})";
-        static readonly string BETWEENFIX3 = "(\\d{0,2} )?([A-Z]{0,3}) *(\\d{4}) *- *(\\d{0,2} )?([A-Z]{0,3}) *(\\d{4})";
-        static readonly string BETWEENFIX4 = "(\\d{1,2}) *- *(\\d{1,2} )?([A-Z]{0,3}) *(\\d{4})";
-        static readonly string BETWEENFIX5 = "(\\d{1,2} )?([A-Z]{0,3}) *- *(\\d{1,2} )?([A-Z]{0,3}) *(\\d{4})";
-        static readonly string USDATEFIX = "^([A-Z]{3}) *(\\d{1,2} )(\\d{4})$";
-        static readonly string SPACEFIX = "^(\\d{1,2}) *([A-Z]{3}) *(\\d{0,4})$";
-        static readonly string QUAKERFIX = "^(\\d{1,2})D (\\d{1,2})M (\\d{0,4})$";
+        const string YEAR = "yyyy";
+        const string EARLYYEAR = "yyy";
+        const string MONTHYEAR = "MMM yyyy";
+        const string MONTHYEAREARLY = "MMM yyy";
+        const string DAYMONTH = "d MMM";
+        const string MONTH = "MMM";
+        const string FULLEARLY = "d MMM yyy";
+        const string DISPLAY = "d MMM yyyy";
+        const string CHECKING = "d MMM";
+        const string DATE_PATTERN = "^(\\d{0,2} )?([A-Z]{0,3}) *(\\d{0,4})$";
+        const string INTERPRETED_DATE_PATTERN = "^INT (\\d{0,2} )?([A-Z]{0,3}) *(\\d{0,4}) .*$";
+        const string EARLY_DATE_PATTERN = "^(\\d{3})$";
+        const string DOUBLE_DATE_PATTERN = "^(\\d{0,2} )?([A-Z]{0,3}) *(\\d{0,4})/(\\d{0,2})$";
+        const string DOUBLE_DATE_PATTERN2 = "^(\\d{0,2} )?([A-Z]{0,3}) *(\\d{4})/(\\d{4})$";
+        const string DOUBLE_DATE_PATTERN3 = "^(\\d{0,2} )?([A-Z]{0,3}) *(\\d{3})/(\\d{2,3})$";
+        const string POSTFIX = "(\\d{1,2})(?:ST|ND|RD|TH)(.*)";
+        const string BETWEENFIX = "(\\d{4}) *- *(\\d{4})";
+        const string BETWEENFIX2 = "([A-Z]{0,3}) *(\\d{4}) *- *([A-Z]{0,3}) *(\\d{4})";
+        const string BETWEENFIX3 = "(\\d{0,2} )?([A-Z]{0,3}) *(\\d{4}) *- *(\\d{0,2} )?([A-Z]{0,3}) *(\\d{4})";
+        const string BETWEENFIX4 = "(\\d{1,2}) *- *(\\d{1,2} )?([A-Z]{0,3}) *(\\d{4})";
+        const string BETWEENFIX5 = "(\\d{1,2} )?([A-Z]{0,3}) *- *(\\d{1,2} )?([A-Z]{0,3}) *(\\d{4})";
+        const string USDATEFIX = "^([A-Z]{3}) *(\\d{1,2} )(\\d{4})$";
+        const string SPACEFIX = "^(\\d{1,2}) *([A-Z]{3}) *(\\d{0,4})$";
+        const string QUAKERFIX = "^(\\d{1,2})D (\\d{1,2})M (\\d{0,4})$";
 
         public static FactDate UNKNOWN_DATE;
         public static FactDate MARRIAGE_LESS_THAN_13;
@@ -560,7 +560,7 @@ namespace FTAnalyzer
                             throw new FactDateException("Invalid BETween date no AND found");
                         fromdate = processDate.Substring(4, pos - 4);
                         todate = processDate.Substring(pos + 1);
-                        pos = pos - 4; // from to code in next block expects to jump 5 chars not 1.
+                        pos -= 4; // from to code in next block expects to jump 5 chars not 1.
                     }
                     else
                     {
@@ -849,6 +849,11 @@ namespace FTAnalyzer
 
         #endregion
 
+        #region Logical Operations Overrides
+
+
+        #endregion
+        
         #region Logical operations
         /*
          * @return whether that FactDate is before this FactDate
@@ -1014,6 +1019,14 @@ namespace FTAnalyzer
             return a.Equals(b);
         }
 
+
+        public static bool operator <(FactDate left, FactDate right) => left is null ? right is object : left.CompareTo(right) < 0;
+
+        public static bool operator <=(FactDate left, FactDate right) => left is null || left.CompareTo(right) <= 0;
+
+        public static bool operator >(FactDate left, FactDate right) => left is object && left.CompareTo(right) > 0;
+
+        public static bool operator >=(FactDate left, FactDate right) => left is null ? right is null : left.CompareTo(right) >= 0;
 
         public static bool operator !=(FactDate a, FactDate b) => !(a == b);
 
