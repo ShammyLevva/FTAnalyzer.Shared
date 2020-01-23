@@ -120,6 +120,8 @@ namespace FTAnalyzer.Exports
             {
                 if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
                     return false;
+                if (password.Length > 15)
+                    password = password.Substring(0, 15);
                 string formParams = $"stage=submit&email={HttpUtility.UrlEncode(email)}&password={password}{Suffix()}";
                 HttpWebRequest req = WebRequest.Create("https://www.lostcousins.com/pages/login/") as HttpWebRequest;
                 req.Referer = "https://www.lostcousins.com/pages/login/";
