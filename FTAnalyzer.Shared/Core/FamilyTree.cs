@@ -2181,16 +2181,16 @@ namespace FTAnalyzer
             switch (censusProvider)
             {
                 case 0:
-                    uri = BuildAncestryQuery(censusCountry, censusYear, person, censusRegion);
+                    uri = BuildAncestryCensusQuery(censusCountry, censusYear, person, censusRegion);
                     break;
                 case 1:
-                    uri = censusYear == 1939 && censusCountry.Equals(Countries.UNITED_KINGDOM) ? BuildFindMyPast1939Query(person, censusRegion) : BuildFindMyPastQuery(censusCountry, censusYear, person, censusRegion);
+                    uri = censusYear == 1939 && censusCountry.Equals(Countries.UNITED_KINGDOM) ? BuildFindMyPast1939Query(person, censusRegion) : BuildFindMyPastCensusQuery(censusCountry, censusYear, person, censusRegion);
                     break;
                 case 2:
-                    uri = BuildFreeCenQuery(censusCountry, censusYear, person);
+                    uri = BuildFreeCenCensusQuery(censusCountry, censusYear, person);
                     break;
                 case 3:
-                    uri = BuildFamilySearchQuery(censusCountry, censusYear, person);
+                    uri = BuildFamilySearchCensusQuery(censusCountry, censusYear, person);
                     break;
                 case 4:
                     uri = BuildScotlandsPeopleCensusQuery(censusYear, person);    
@@ -2223,24 +2223,24 @@ namespace FTAnalyzer
             return path.ToString();
         }
 
-        string BuildFamilySearchQuery(string country, int censusYear, Individual person)
+        string BuildFamilySearchCensusQuery(string country, int censusYear, Individual person)
         {
             FactDate censusFactDate = new FactDate(censusYear.ToString());
-            // bad  https://familysearch.org/search/record/results%23count=20&query=%2Bgivenname%3ACharles~%20%2Bsurname%3AGalloway~%20%2Brecord_type%3A(3)&collection_id=2046756
-            // good https://familysearch.org/search/record/results#count=20&query=%2Bgivenname%3ACharles%7E%20%2Bsurname%3ABisset%7E%20%2Brecord_country%3AScotland%20%2Brecord_type%3A%283%29&collection_id=2046756
+
+            //updated https://www.familysearch.org/search/record/results?givenname=bisset&surname=william&record_type=3&offset=0&count=20
             StringBuilder path = new StringBuilder();
-            path.Append("https://www.familysearch.org/search/record/results#count=20&query=");
+            path.Append("https://www.familysearch.org/search/record/results?");
             if (person.Forename != "?" && person.Forename.ToUpper() != Individual.UNKNOWN_NAME)
-                path.Append($"%2B{FamilySearch.GIVENNAME}%3A%22{HttpUtility.UrlEncode(person.Forenames)}%22%7E%20");
+                path.Append($"{FamilySearch.GIVENNAME}={HttpUtility.UrlEncode(person.Forenames)}");
             string surname = person.SurnameAtDate(censusFactDate);
             if (surname != "?" && surname.ToUpper() != Individual.UNKNOWN_NAME)
-                path.Append($"%2B{FamilySearch.SURNAME}%3A{HttpUtility.UrlEncode(surname)}%7E%20");
-            path.Append($"%2B{FamilySearch.RECORD_TYPE}%3A%283%29");
+                path.Append($"&{FamilySearch.SURNAME}={HttpUtility.UrlEncode(surname)}");
+            path.Append($"&{FamilySearch.RECORD_TYPE}=3");
             if (person.BirthDate.IsKnown)
             {
                 int startYear = person.BirthDate.StartDate.Year - 1;
                 int endYear = person.BirthDate.EndDate.Year + 1;
-                path.Append($"%2B{FamilySearch.BIRTH_YEAR}%3A{startYear}-{endYear}%7E%20");
+                path.Append($"&{FamilySearch.BIRTH_YEAR}={startYear}-{endYear}");
             }
             string location = Countries.UNKNOWN_COUNTRY;
             if (person.BirthLocation.IsKnown)
@@ -2248,7 +2248,7 @@ namespace FTAnalyzer
                 location = person.BirthLocation.Country != country
                     ? person.BirthLocation.Country
                     : person.BirthLocation.GetLocation(FactLocation.REGION).ToString().Replace(",", "");
-                path.Append($"%2B{FamilySearch.BIRTH_LOCATION}%3A{HttpUtility.UrlEncode(location)}%7E%20");
+                path.Append($"&{FamilySearch.BIRTH_LOCATION}={HttpUtility.UrlEncode(location)}");
             }
             int collection = FamilySearch.CensusCollectionID(country, censusYear);
             if (collection > 0)
@@ -2271,7 +2271,7 @@ namespace FTAnalyzer
             return path.Replace("+", "%20").ToString();
         }
 
-        string BuildAncestryQuery(string censusCountry, int censusYear, Individual person, string censusRegion = ".com")
+        string BuildAncestryCensusQuery(string censusCountry, int censusYear, Individual person, string censusRegion = ".com")
         {
             if (censusYear == 1939 && censusCountry.Equals(Countries.UNITED_KINGDOM))
                 return BuildAncestry1939Query(person, censusRegion);
@@ -2477,7 +2477,7 @@ namespace FTAnalyzer
             return uri.ToString();
         }
 
-        string BuildFreeCenQuery(string censusCountry, int censusYear, Individual person)
+        string BuildFreeCenCensusQuery(string censusCountry, int censusYear, Individual person)
         {
             if (!censusCountry.Equals(Countries.UNITED_KINGDOM) && !censusCountry.Equals("Unknown"))
             {
@@ -2553,7 +2553,7 @@ namespace FTAnalyzer
             return uri.ToString();
         }
 
-        string BuildFindMyPastQuery(string censusCountry, int censusYear, Individual person, string censusRegion = ".com")
+        string BuildFindMyPastCensusQuery(string censusCountry, int censusYear, Individual person, string censusRegion = ".com")
         {
             // new http://search.findmypast.co.uk/results/united-kingdom-records-in-census-land-and-surveys?firstname=peter&firstname_variants=true&lastname=moir&lastname_variants=true&eventyear=1881&eventyear_offset=2&yearofbirth=1825&yearofbirth_offset=2
             FactDate censusFactDate = new FactDate(censusYear.ToString());

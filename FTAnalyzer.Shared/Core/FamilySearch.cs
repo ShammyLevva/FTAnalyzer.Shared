@@ -32,6 +32,7 @@
                     case 1891 : return 1865747;
                     case 1901 : return 1888129;
                     case 1911 : return 1921547;
+                    case 1939 : return 2836130;
                 }
             } 
             else if(censusCountry == Countries.SCOTLAND)
