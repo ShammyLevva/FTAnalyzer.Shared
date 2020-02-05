@@ -9,85 +9,86 @@ namespace FTAnalyzer
 {
     public class CensusReference : IComparable<CensusReference>
     {
-        static readonly string EW_CENSUS_PATTERN = @"RG *(\d{1,3}) *\/?Piece *(\d{1,5}) *\/?Folio *(\d{1,4}[a-z]?) *\/?Page *(\d{1,3})";
-        static readonly string EW_CENSUS_PATTERN1 = @"RG *(\d{1,3}) *Piece\/Folio *(\d{1,5})[\/ ]*(\d{1,4}[a-z]?) *Page *(\d{1,3})";
-        static readonly string EW_CENSUS_PATTERN2 = @"RG *(\d{1,3}) *Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?)";
-        static readonly string EW_CENSUS_PATTERN3 = @"(\d{4}) .*?Census.*? *Piece *(\d{1,5}) *Book *(\d{1,3}).*?Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3})";
-        static readonly string EW_CENSUS_PATTERN4 = @"(\d{4}) .*?Census.*? *Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3})";
-        static readonly string EW_CENSUS_PATTERN5 = @"(\d{4}) .*?Census.*? *Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?)";
-        static readonly string EW_CENSUS_PATTERN6 = @"Census *(\d{4}).*? *Piece *(\d{1,5}) *Book *(\d{1,3}).*?Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3})";
-        static readonly string EW_CENSUS_PATTERN7 = @"Census *(\d{4}).*? *Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3})";
-        static readonly string EW_CENSUS_PATTERN8 = @"Census *(\d{4}).*? *Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?)";
-        static readonly string EW_CENSUS_PATTERN9 = @"(\d{4}) *- *.*? *Piece *(\d{1,5}) *Book *(\d{1,3}).*?Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3})";
-        static readonly string EW_CENSUS_PATTERN10 = @"(\d{4}) *- *.*? *Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3})";
-        static readonly string EW_CENSUS_PATTERN11 = @"(\d{4}) *- *.*? *Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?)";
-        static readonly string EW_CENSUS_PATTERN12 = @"Piece (RG\d{1,2})\/(\d{1,5}).*? *Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3})";
-        static readonly string EW_CENSUS_PATTERN13 = @"(RG *\d{1,2})-(\d{1,5})-(\d{1,4}[a-z]?)-(\d{1,3})";
-        static readonly string EW_CENSUS_PATTERN14 = @"Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3}).*?(RG *\d{1,2})\/(\d{1,5})";
+        const string EW_CENSUS_PATTERN = @"RG *(\d{1,3}) *\/?Piece *(\d{1,5}) *\/?Folio *(\d{1,4}[a-z]?) *\/?Page *(\d{1,3})";
+        const string EW_CENSUS_PATTERN1 = @"RG *(\d{1,3}) *Piece\/Folio *(\d{1,5})[\/ ]*(\d{1,4}[a-z]?) *Page *(\d{1,3})";
+        const string EW_CENSUS_PATTERN2 = @"RG *(\d{1,3}) *Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?)";
+        const string EW_CENSUS_PATTERN3 = @"(\d{4}) .*?Census.*? *Piece *(\d{1,5}) *Book *(\d{1,3}).*?Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3})";
+        const string EW_CENSUS_PATTERN4 = @"(\d{4}) .*?Census.*? *Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3})";
+        const string EW_CENSUS_PATTERN5 = @"(\d{4}) .*?Census.*? *Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?)";
+        const string EW_CENSUS_PATTERN6 = @"Census *(\d{4}).*? *Piece *(\d{1,5}) *Book *(\d{1,3}).*?Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3})";
+        const string EW_CENSUS_PATTERN7 = @"Census *(\d{4}).*? *Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3})";
+        const string EW_CENSUS_PATTERN8 = @"Census *(\d{4}).*? *Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?)";
+        const string EW_CENSUS_PATTERN9 = @"(\d{4}) *- *.*? *Piece *(\d{1,5}) *Book *(\d{1,3}).*?Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3})";
+        const string EW_CENSUS_PATTERN10 = @"(\d{4}) *- *.*? *Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3})";
+        const string EW_CENSUS_PATTERN11 = @"(\d{4}) *- *.*? *Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?)";
+        const string EW_CENSUS_PATTERN12 = @"Piece (RG\d{1,2})\/(\d{1,5}).*? *Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3})";
+        const string EW_CENSUS_PATTERN13 = @"(RG *\d{1,2})-(\d{1,5})-(\d{1,4}[a-z]?)-(\d{1,3})";
+        const string EW_CENSUS_PATTERN14 = @"Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3}).*?(RG *\d{1,2})\/(\d{1,5})";
 
-        static readonly string EW_CENSUS_PATTERN_FH = @"RG *(\d{1,2})\/(\d{1,5}) F(olio)? ?(\d{1,4}[a-z]?) P(age)? ?(\d{1,3})";
-        static readonly string EW_CENSUS_PATTERN_FH2 = @"RG *(\d{1,2})\/(\d{1,5}) ED *(\d{1,4}[a-z]?) F(olio)? ?(\d{1,4}[a-z]?) P(age)? ?(\d{1,3})";
-        static readonly string EW_CENSUS_PATTERN_FH3 = @"RG *(\d{1,2}) *Piece *(\d{1,5}) ED *(\d{1,4}[a-z]?) F(olio)? ?(\d{1,4}[a-z]?) P(age)? ?(\d{1,3})";
+        const string EW_CENSUS_PATTERN_FH = @"RG *(\d{1,2})\/(\d{1,5}) F(olio)? ?(\d{1,4}[a-z]?) P(age)? ?(\d{1,3})";
+        const string EW_CENSUS_PATTERN_FH2 = @"RG *(\d{1,2})\/(\d{1,5}) ED *(\d{1,4}[a-z]?) F(olio)? ?(\d{1,4}[a-z]?) P(age)? ?(\d{1,3})";
+        const string EW_CENSUS_PATTERN_FH3 = @"RG *(\d{1,2}) *Piece *(\d{1,5}) ED *(\d{1,4}[a-z]?) F(olio)? ?(\d{1,4}[a-z]?) P(age)? ?(\d{1,3})";
 
-        static readonly string EW_CENSUS_PATTERN_FS1 = @"(\d{4}).*?Census.*?p *(\d{1,3}) *Piece\/Folio *(\d{1,4}[a-z]?)\/(\d{1,3})";
+        const string EW_CENSUS_PATTERN_FS1 = @"(\d{4}).*?Census.*?p *(\d{1,3}) *Piece\/Folio *(\d{1,4}[a-z]?)\/(\d{1,3})";
 
-        static readonly string EW_MISSINGCLASS_PATTERN = @"Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3})";
-        static readonly string EW_MISSINGCLASS_PATTERN2 = @"Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?)";
+        const string EW_MISSINGCLASS_PATTERN = @"Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3})";
+        const string EW_MISSINGCLASS_PATTERN2 = @"Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?)";
         
-        static readonly string EW_CENSUS_1841_51_PATTERN = @"HO *107 *Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3})";
-        static readonly string EW_CENSUS_1841_51_PATTERN2 = @"HO *107 *Piece *(\d{1,5}) *Book *(\d{1,3}).*?Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3})";
-        static readonly string EW_CENSUS_1841_51_PATTERN2A = @"HO *107 *Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?).*?Book *(\d{1,3}) *Page *(\d{1,3})";
-        static readonly string EW_CENSUS_1841_51_PATTERN3 = @"HO *107 *Piece *(\d{1,5}).*Folio *(\d{1,4}[a-z]?)?\/?(\d{1,4}[a-z]?) *Page *(\d{1,3})";
-        static readonly string EW_CENSUS_1841_51_PATTERN4 = @"HO *107 *Piece *(\d{1,5}) *Book *(\d{1,3}).*?Page *(\d{1,3})";
-        static readonly string EW_CENSUS_1841_51_PATTERN5 = @"HO *107 *Piece *(\d{1,5}).*?Page *(\d{1,3})";
-        static readonly string EW_CENSUS_1841_51_PATTERN6 = @"Folio *(\d{1,4}[a-z]?)\/? *(Book)? *(\d{1,4}[a-z]?)? *P(age) *(\d{1,3}).*?HO[ \/]?107\/(\d{1,5})\/?(\d{1,3})?";
-        static readonly string EW_CENSUS_1841_51_PATTERN6A = @"Book *(\d{1,3}).*?Folio *(\d{1,4}[a-z]?)\/?(\d{1,2})? *Page *(\d{1,3}).*?HO[ \/]?107\/(\d{1,5})";
-        static readonly string EW_CENSUS_1841_51_PATTERN7 = @"HO *107-(\d{1,5})-(\d{1,3})-(\d{1,4}[a-z]?)-(\d{1,3})";
-        static readonly string EW_CENSUS_1841_51_PATTERN_FH = @"HO *107\/(\d{1,5})\/(\d{1,3}) .*?F(olio)? *(\d{1,4}[a-z]?) P(age)? *(\d{1,3})";
-        static readonly string EW_CENSUS_1841_51_PATTERN_FH2 = @"HO *107\/(\d{1,5}) ED *(\d{1,4}[a-z]?) F(olio)? *(\d{1,4}[a-z]?) P(age)? *(\d{1,3})";
-        static readonly string EW_CENSUS_1841_51_PATTERN_FH3 = @"HO *107\/(\d{1,5}) .*?F(olio)? *(\d{1,4}[a-z]?)\/(\d{1,4}) P(age)? *(\d{1,3})";
-        static readonly string EW_CENSUS_1841_51_PATTERN_FH4 = @"HO *107\/(\d{1,5}) .*?F(olio)? *(\d{1,4}[a-z]?) P(age)? *(\d{1,3})";
+        const string EW_CENSUS_1841_51_PATTERN = @"HO *107 *Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3})";
+        const string EW_CENSUS_1841_51_PATTERN2 = @"HO *107 *Piece *(\d{1,5}) *Book *(\d{1,3}).*?Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3})";
+        const string EW_CENSUS_1841_51_PATTERN2A = @"HO *107 *Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?).*?Book *(\d{1,3}) *Page *(\d{1,3})";
+        const string EW_CENSUS_1841_51_PATTERN3 = @"HO *107 *Piece *(\d{1,5}).*Folio *(\d{1,4}[a-z]?)?\/?(\d{1,4}[a-z]?) *Page *(\d{1,3})";
+        const string EW_CENSUS_1841_51_PATTERN4 = @"HO *107 *Piece *(\d{1,5}) *Book *(\d{1,3}).*?Page *(\d{1,3})";
+        const string EW_CENSUS_1841_51_PATTERN5 = @"HO *107 *Piece *(\d{1,5}).*?Page *(\d{1,3})";
+        const string EW_CENSUS_1841_51_PATTERN6 = @"Folio *(\d{1,4}[a-z]?)\/? *(Book)? *(\d{1,4}[a-z]?)? *P(age) *(\d{1,3}).*?HO[ \/]?107\/(\d{1,5})\/?(\d{1,3})?";
+        const string EW_CENSUS_1841_51_PATTERN6A = @"Book *(\d{1,3}).*?Folio *(\d{1,4}[a-z]?)\/?(\d{1,2})? *Page *(\d{1,3}).*?HO[ \/]?107\/(\d{1,5})";
+        const string EW_CENSUS_1841_51_PATTERN7 = @"HO *107-(\d{1,5})-(\d{1,3})-(\d{1,4}[a-z]?)-(\d{1,3})";
+        const string EW_CENSUS_1841_51_PATTERN_FH = @"HO *107\/(\d{1,5})\/(\d{1,3}) .*?F(olio)? *(\d{1,4}[a-z]?) P(age)? *(\d{1,3})";
+        const string EW_CENSUS_1841_51_PATTERN_FH2 = @"HO *107\/(\d{1,5}) ED *(\d{1,4}[a-z]?) F(olio)? *(\d{1,4}[a-z]?) P(age)? *(\d{1,3})";
+        const string EW_CENSUS_1841_51_PATTERN_FH3 = @"HO *107\/(\d{1,5}) .*?F(olio)? *(\d{1,4}[a-z]?)\/(\d{1,4}) P(age)? *(\d{1,3})";
+        const string EW_CENSUS_1841_51_PATTERN_FH4 = @"HO *107\/(\d{1,5}) .*?F(olio)? *(\d{1,4}[a-z]?) P(age)? *(\d{1,3})";
 
-        static readonly string EW_CENSUS_1911_PATTERN = @"RG *14\/?( *Piece *)?(\d{1,6}) .*?SN *(\d{1,4})";
-        static readonly string EW_CENSUS_1911_PATTERN2 = @"1911 Census.*? *Piece *(\d{1,6}) *SN *(\d{1,4})";
-        static readonly string EW_CENSUS_1911_PATTERN3 = @"Census *1911.*? *Piece *(\d{1,6}) *SN *(\d{1,4})";
-        static readonly string EW_CENSUS_1911_PATTERN4 = @"RG *14\/? *Piece *(\d{1,6})$";
-        static readonly string EW_CENSUS_1911_PATTERN5 = @"RG *14\/? *Piece *(\d{1,6}) *Page *(\d{1,3})";
-        static readonly string EW_CENSUS_1911_PATTERN6 = @"RG *14\/? *RD *(\d{1,4}) *ED *(\d{1,3}) (\d{1,5})";
-        static readonly string EW_CENSUS_1911_PATTERN78 = @"RG *78\/? *Piece *(\d{1,6}) .*?SN *(\d{1,4})";
-        static readonly string EW_CENSUS_1911_PATTERN78b = @"RG *78\/? *Piece *(\d{1,5})";
+        const string EW_CENSUS_1911_PATTERN = @"RG *14\/?( *Piece *)?(\d{1,6}) .*?SN *(\d{1,4})";
+        const string EW_CENSUS_1911_PATTERN2 = @"1911 Census.*? *Piece *(\d{1,6}) *SN *(\d{1,4})";
+        const string EW_CENSUS_1911_PATTERN3 = @"Census *1911.*? *Piece *(\d{1,6}) *SN *(\d{1,4})";
+        const string EW_CENSUS_1911_PATTERN4 = @"RG *14\/? *Piece *(\d{1,6})$";
+        const string EW_CENSUS_1911_PATTERN5 = @"RG *14\/? *Piece *(\d{1,6}) *Page *(\d{1,3})";
+        const string EW_CENSUS_1911_PATTERN6 = @"RG *14\/? *RD *(\d{1,4}) *ED *(\d{1,3}) (\d{1,5})";
+        const string EW_CENSUS_1911_PATTERN78 = @"RG *78\/? *Piece *(\d{1,6}) .*?SN *(\d{1,4})";
+        const string EW_CENSUS_1911_PATTERN78b = @"RG *78\/? *Piece *(\d{1,5})";
 
-        static readonly string EW_1939_REGISTER_PATTERN1 = @"RG *101\/?\\? *(\d{1,6}[A-Z]?) *.\/?\\? *(\d{1,3}) *.\/?\\? *(\d{1,3}).+([A-Z]{4})";
-        static readonly string EW_1939_REGISTER_PATTERN2 = @"RG *101\/?\\? *(\d{1,6}[A-Z]?).*? ED ([A-Z]{4}) RD (.*?) Marital";
-        static readonly string EW_1939_REGISTER_PATTERN3 = @"RG *101\/?\\? *(\d{1,6}[A-Z]?)";
+        const string EW_1939_REGISTER_PATTERN1 = @"RG *101\/?\\? *(\d{1,6}[A-Z]?) *.\/?\\? *(\d{1,3}) *.\/?\\? *(\d{1,3}).+([A-Z]{4})";
+        const string EW_1939_REGISTER_PATTERN2 = @"RG *101\/?\\? *(\d{1,6}[A-Z]?).*? ED ([A-Z]{4}) RD (.*?) Marital";
+        const string EW_1939_REGISTER_PATTERN3 = @"RG *101\/?\\? *(\d{1,6}[A-Z]?)";
 
-        static readonly string SCOT_CENSUSYEAR_PATTERN = @"(1[89]\d[15]).{1,10}(\(?GROS *\)?)?Parish *([A-Z .'-]+) *ED *(\d{1,3}[AB]?) *Page *(\d{1,4}) *Line *(\d{1,2})";
-        static readonly string SCOT_CENSUSYEAR_PATTERN2 = @"(1[89]\d[15]).{1,10}(\(?GROS *\)?)?(\d{1,3}\/\d{1,2}[AB]?) (\d{3}\/\d{2}) (\d{3,4})";
-        static readonly string SCOT_CENSUSYEAR_PATTERN3 = @"(1[89]\d[15]).{1,10}(\(?GROS *\)?)?(\d{1,3}[AB]?)\/(\d{2}[AB]?) Page *(\d{1,4})";
-        static readonly string SCOT_CENSUSYEAR_PATTERN4 = @"SCT(1[89]\d[15])\/?(\d{1,3}[AB]?) *f(olio)? *(\d{1,3}[AB]?) *p(age)? *(\d{1,4})";
-        static readonly string SCOT_CENSUS_PATTERN = @"Parish *([A-Z .'-]+) *ED *(\d{1,3}[AB]?) *Page *(\d{1,4}) *Line *(\d{1,2})";
-        static readonly string SCOT_CENSUS_PATTERN2 = @"(\(?GROS *\)?) *(\d{1,3}\/\d{1,2}[AB]?) (\d{3}\/\d{2}) (\d{3,4})";
-        static readonly string SCOT_CENSUS_PATTERN3 = @"(\(?GROS *\)?) *(\d{1,3}[AB]?-?\d?)\/(\d{2}[AB]?) Page *(\d{1,4})";
+        const string SCOT_CENSUSYEAR_PATTERN = @"(1[89]\d[15]).{1,10}(\(?GROS *\)?)?Parish *([A-Z .'-]+) *ED *(\d{1,3}[AB]?) *Page *(\d{1,4}) *Line *(\d{1,2})";
+        const string SCOT_CENSUSYEAR_PATTERN2 = @"(1[89]\d[15]).{1,10}(\(?GROS *\)?)?(\d{1,3}\/\d{1,2}[AB]?) (\d{3}\/\d{2}) (\d{3,4})";
+        const string SCOT_CENSUSYEAR_PATTERN3 = @"(1[89]\d[15]).{1,10}(\(?GROS *\)?)?(\d{1,3}[AB]?)\/(\d{2}[AB]?) Page *(\d{1,4})";
+        const string SCOT_CENSUSYEAR_PATTERN4 = @"SCT(1[89]\d[15])\/?(\d{1,3}[AB]?) *f(olio)? *(\d{1,3}[AB]?) *p(age)? *(\d{1,4})";
+        const string SCOT_CENSUS_PATTERN = @"Parish *([A-Z .'-]+) *ED *(\d{1,3}[AB]?) *Page *(\d{1,4}) *Line *(\d{1,2})";
+        const string SCOT_CENSUS_PATTERN2 = @"(\(?GROS *\)?) *(\d{1,3}\/\d{1,2}[AB]?) (\d{3}\/\d{2}) (\d{3,4})";
+        const string SCOT_CENSUS_PATTERN3 = @"(\(?GROS *\)?) *(\d{1,3}[AB]?-?\d?)\/(\d{2}[AB]?) Page *(\d{1,4})";
+        const string SCOT_CENSUS_PATTERN4 = @"(1[89]\d[15]) *(\(?GROS *\)?) *(\d{1,3}[AB]?[-\/]?\d?) *(\d{1,2}[AB]?)\/ *(\d{1,4})";
 
-        static readonly string US_CENSUS_PATTERN = @"Year *(\d{4}) *Census *(.*?) *Roll *(.*?) *Film (.*?) *P(age)? *(\d{1,4}[ABCD]?) *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?)";
-        static readonly string US_CENSUS_PATTERN1A = @"Year *(\d{4}) *Census *(.*?),? *Roll *(.*?),? *P(age)? *(\d{1,4}[ABCD]?),? *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?)";
-        static readonly string US_CENSUS_PATTERN2 = @"Census,? *(\d{4}) *(.*?) *Roll *(.*?),? *P(age)? *(\d{1,4}[ABCD]?),? *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?)";
-        static readonly string US_CENSUS_PATTERN3 = @"Census,? *(\d{4}) *(.*?) *Ward *(.*?),? *ED *(\d{1,5}[ABCD]?-?\d{0,4}[AB]?),? *P(age)? *(\d{1,4}[AB]?)";
-        static readonly string US_CENSUS_PATTERN4 = @"Census,? *(\d{4}) *(.*?) *ED *(\d{1,5}[AB]?-?\d{0,4}[ABCD]?),? *P(age)? *(\d{1,4}[AB]?)(.*?)roll *(\d{1,4})";
-        static readonly string US_CENSUS_PATTERN5 = @"Census,? *(\d{4}) *(.*?) *ED *(\d{1,5}[AB]?-?\d{0,4}[ABCD]?),? *P(age)? *(\d{1,4}[AB]?)";
-        static readonly string US_CENSUS_1940_PATTERN = @"District *(\d{1,5}[AB]?-?\d{0,4}[AB]?).*?P(age)? *(\d{1,3}[ABCD]?).*?T627 ?,? *(\d{1,5}-?[AB]?)";
-        static readonly string US_CENSUS_1940_PATTERN2 = @"ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?).*? *P(age)? *(\d{1,3}[ABCD]?).*?T627.*?roll ?(\d{1,5}-?[AB]?)";
-        static readonly string US_CENSUS_1940_PATTERN3 = @"1940 *(.*?)(Roll)? *M*?-*?_*?T0*?627_(.*?) *P(age)? *(\d{1,4}[ABCD]?) *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?)";
-        static readonly string US_CENSUS_1940_PATTERN4 = @"( *M?[-_]?T0?627[-_]?)?Roll( *M?[-_]?T0?627[-_]?)? *(\d{0,5})(.*?) *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?) *P(age)? *(\d{1,4}[ABCD]?)";
+        const string US_CENSUS_PATTERN = @"Year *(\d{4}) *Census *(.*?) *Roll *(.*?) *Film (.*?) *P(age)? *(\d{1,4}[ABCD]?) *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?)";
+        const string US_CENSUS_PATTERN1A = @"Year *(\d{4}) *Census *(.*?),? *Roll *(.*?),? *P(age)? *(\d{1,4}[ABCD]?),? *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?)";
+        const string US_CENSUS_PATTERN2 = @"Census,? *(\d{4}) *(.*?) *Roll *(.*?),? *P(age)? *(\d{1,4}[ABCD]?),? *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?)";
+        const string US_CENSUS_PATTERN3 = @"Census,? *(\d{4}) *(.*?) *Ward *(.*?),? *ED *(\d{1,5}[ABCD]?-?\d{0,4}[AB]?),? *P(age)? *(\d{1,4}[AB]?)";
+        const string US_CENSUS_PATTERN4 = @"Census,? *(\d{4}) *(.*?) *ED *(\d{1,5}[AB]?-?\d{0,4}[ABCD]?),? *P(age)? *(\d{1,4}[AB]?)(.*?)roll *(\d{1,4})";
+        const string US_CENSUS_PATTERN5 = @"Census,? *(\d{4}) *(.*?) *ED *(\d{1,5}[AB]?-?\d{0,4}[ABCD]?),? *P(age)? *(\d{1,4}[AB]?)";
+        const string US_CENSUS_1940_PATTERN = @"District *(\d{1,5}[AB]?-?\d{0,4}[AB]?).*?P(age)? *(\d{1,3}[ABCD]?).*?T627 ?,? *(\d{1,5}-?[AB]?)";
+        const string US_CENSUS_1940_PATTERN2 = @"ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?).*? *P(age)? *(\d{1,3}[ABCD]?).*?T627.*?roll ?(\d{1,5}-?[AB]?)";
+        const string US_CENSUS_1940_PATTERN3 = @"1940 *(.*?)(Roll)? *M*?-*?_*?T0*?627_(.*?) *P(age)? *(\d{1,4}[ABCD]?) *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?)";
+        const string US_CENSUS_1940_PATTERN4 = @"( *M?[-_]?T0?627[-_]?)?Roll( *M?[-_]?T0?627[-_]?)? *(\d{0,5})(.*?) *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?) *P(age)? *(\d{1,4}[ABCD]?)";
 
-        static readonly string CANADA_CENSUS_PATTERN = @"Year *(\d{4}) *Census *(.*?) *Roll *(.*?) *P(age)? *(\d{1,4}[ABCD]?) *Family *(\d{1,4})";
-        static readonly string CANADA_CENSUS_PATTERN2 = @"(\d{4}) *Census[ -]*District *(\d{1,5})\/(\d{0,4}[A-Z]{0,4}) *P(age)? *(\d{1,4}[ABCD]?) *Family *(\d{1,4})";
+        const string CANADA_CENSUS_PATTERN = @"Year *(\d{4}) *Census *(.*?) *Roll *(.*?) *P(age)? *(\d{1,4}[ABCD]?) *Family *(\d{1,4})";
+        const string CANADA_CENSUS_PATTERN2 = @"(\d{4}) *Census[ -]*District *(\d{1,5})\/(\d{0,4}[A-Z]{0,4}) *P(age)? *(\d{1,4}[ABCD]?) *Family *(\d{1,4})";
 
-        static readonly string LC_CENSUS_PATTERN_EW = @"(\d{1,5})\/(\d{1,3})\/(\d{1,3}).*?England & Wales (1841|1881)";
-        static readonly string LC_CENSUS_PATTERN_1911_EW = @"(\d{1,5})\/(\d{1,3}).*?England & Wales 1911";
-        static readonly string LC_CENSUS_PATTERN_SCOT = @"(\d{1,5}-?[AB12]?)\/(\d{1,3})\/(\d{1,3}).*?Scotland 1881";
-        static readonly string LC_CENSUS_PATTERN_1940US = @"(T627[-_])(\d{1,5}-?[AB]?)\/(\d{1,2}[AB]?-\d{1,2}[AB]?)\/(\d{1,3}[AB]?).*?US 1880";
-        static readonly string LC_CENSUS_PATTERN_1881CANADA = @"(\d{1,5})\/(\d{0,4}[A-Z]{0,4})\/(\d{0,3})\/(\d{1,3})\/?(\d{1,3})?.*?Canada 1881";
+        const string LC_CENSUS_PATTERN_EW = @"(\d{1,5})\/(\d{1,3})\/(\d{1,3}).*?England & Wales (1841|1881)";
+        const string LC_CENSUS_PATTERN_1911_EW = @"(\d{1,5})\/(\d{1,3}).*?England & Wales 1911";
+        const string LC_CENSUS_PATTERN_SCOT = @"(\d{1,5}-?[AB12]?)\/(\d{1,3})\/(\d{1,3}).*?Scotland 1881";
+        const string LC_CENSUS_PATTERN_1940US = @"(T627[-_])(\d{1,5}-?[AB]?)\/(\d{1,2}[AB]?-\d{1,2}[AB]?)\/(\d{1,3}[AB]?).*?US 1880";
+        const string LC_CENSUS_PATTERN_1881CANADA = @"(\d{1,5})\/(\d{0,4}[A-Z]{0,4})\/(\d{0,3})\/(\d{1,3})\/?(\d{1,3})?.*?Canada 1881";
 
         static readonly Dictionary<string, Regex> censusRegexs;
 
@@ -153,6 +154,7 @@ namespace FTAnalyzer
                 ["SCOT_CENSUS_PATTERN"] = new Regex(SCOT_CENSUS_PATTERN, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["SCOT_CENSUS_PATTERN2"] = new Regex(SCOT_CENSUS_PATTERN2, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["SCOT_CENSUS_PATTERN3"] = new Regex(SCOT_CENSUS_PATTERN3, RegexOptions.Compiled | RegexOptions.IgnoreCase),
+                ["SCOT_CENSUS_PATTERN4"] = new Regex(SCOT_CENSUS_PATTERN4, RegexOptions.Compiled | RegexOptions.IgnoreCase),
 
                 ["US_CENSUS_PATTERN"] = new Regex(US_CENSUS_PATTERN, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["US_CENSUS_PATTERN1A"] = new Regex(US_CENSUS_PATTERN1A, RegexOptions.Compiled | RegexOptions.IgnoreCase),
@@ -178,7 +180,7 @@ namespace FTAnalyzer
 
         public enum ReferenceStatus { BLANK = 0, UNRECOGNISED = 1, INCOMPLETE = 2, GOOD = 3 };
         public static CensusReference UNKNOWN = new CensusReference();
-        static readonly string MISSING = "Missing";
+        const string MISSING = "Missing";
 
         string unknownCensusRef;
         string Place { get; set; }
@@ -950,6 +952,17 @@ namespace FTAnalyzer
                 Parish = matcher.Groups[2].ToString().TrimStart('0');
                 ED = matcher.Groups[3].ToString().Replace("/00", "").TrimStart('0');
                 Page = matcher.Groups[4].ToString().TrimStart('0');
+                SetFlagsandCountry(true, false, Countries.SCOTLAND, ReferenceStatus.GOOD, matcher.Value);
+                return true;
+            }
+            matcher = censusRegexs["SCOT_CENSUS_PATTERN4"].Match(text);
+            if (matcher.Success)
+            {
+                Class = "SCOT";
+                CensusYear = new FactDate(matcher.Groups[1].ToString());
+                Parish = matcher.Groups[3].ToString().TrimStart('0');
+                ED = matcher.Groups[4].ToString().Replace("/00", "").TrimStart('0');
+                Page = matcher.Groups[5].ToString().TrimStart('0');
                 SetFlagsandCountry(true, false, Countries.SCOTLAND, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
