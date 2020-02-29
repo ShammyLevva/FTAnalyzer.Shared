@@ -13,7 +13,7 @@ namespace FTAnalyzer
     {
         public const string ADOPTION = "ADOP", ADULT_CHRISTENING = "CHRA", AFN = "AFN", ALIAS = "ALIA", ANNULMENT = "ANUL",
                 BAPTISM = "BAPM", BAPTISM_LDS = "BAPL", BAR_MITZVAH = "BARM", BAS_MITZVAH = "BASM", BIRTH = "BIRT",
-                BIRTH_CALC = "_BIRTHCALC", BLESSING = "BLESS", BURIAL = "BURI", CASTE = "CAST", CAUSE_OF_DEATH = "_DCAUSE",
+                BIRTH_CALC = "_BIRTHCALC", BLESSING = "BLESS", BURIAL = "BURI", CASTE = "CAST", CAUSE_OF_DEATH = "CAUS",
                 CENSUS = "CENS", CENSUS_FTA = "_CENSFTA", CHILDREN1911 = "CHILDREN1911", CHRISTENING = "CHR",
                 CIRCUMCISION = "_CIRC", CONFIRMATION = "CONF", CONFIRMATION_LDS = "CONL", CREMATION = "CREM",
                 CUSTOM_EVENT = "EVEN", CUSTOM_FACT = "FACT", DEATH = "DEAT", DEGREE = "_DEG", DESTINATION = "_DEST",
@@ -35,7 +35,7 @@ namespace FTAnalyzer
                 LOOSEDEATH = "*LOOSED", LOSTCOUSINS = "*LOST", MISSING = "*MISSING", PARENT = "*PARENT", REPORT = "*REPORT",
                 UNMARRIED = "*UNMAR", WEBSITE = "*WEBSITE", WITNESS = "*WITNE", WORLD_EVENT = "*WORLD_EVENT";
 
-       // public const string ANCESTRY_DEATH_CAUSE = "_DCAUSE";
+        public const string ANCESTRY_DEATH_CAUSE = "_DCAUSE";
 
         public static ISet<string> LOOSE_BIRTH_FACTS = new HashSet<string>(new string[] {
             CHRISTENING, BAPTISM, RESIDENCE, WITNESS, EMIGRATION, IMMIGRATION, ARRIVAL, DEPARTURE, 
@@ -250,7 +250,7 @@ namespace FTAnalyzer
             CUSTOM_TAGS.Add("PROPERTY", PROPERTY);
 
             // Convert non standard fact types to standard ones
-            //NON_STANDARD_FACTS.Add(ANCESTRY_DEATH_CAUSE, CAUSE_OF_DEATH);
+            NON_STANDARD_FACTS.Add(ANCESTRY_DEATH_CAUSE, CAUSE_OF_DEATH);
 
             // Create list of Comment facts treat text as comment rather than location
             COMMENT_FACTS.Add(AFN);
@@ -767,6 +767,8 @@ namespace FTAnalyzer
         #endregion
 
         public static string ReverseLocation(string location) => string.Join(",", location.Split(',').Reverse());
+
+        public void ChangeNonStandardFactType(string factType) => FactType = factType;
 
         public void SetError(int number, FactError level, string message)
         {

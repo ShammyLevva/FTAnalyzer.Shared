@@ -823,6 +823,8 @@ namespace FTAnalyzer
                     if (factType != Fact.NAME || !preferredFact)
                     {  // don't add first name in file as a fact as already given by SURNAME & FORENAME tags
                         Fact f = new Fact(n, this, preferredFact, null, outputText);
+                        if (nonStandardFactType != null)
+                            f.ChangeNonStandardFactType(factType);
                         f.Location.FTAnalyzerCreated = false;
                         if (!f.Location.IsValidLatLong)
                             outputText.Report($"Found problem with Lat/Long for Location '{f.Location}' in facts for {IndividualID}: {Name}");
@@ -891,7 +893,7 @@ namespace FTAnalyzer
         {
             foreach(KeyValuePair<string, string> factType in Fact.NON_STANDARD_FACTS)
             {
-                AddFacts(node, factType.Key, outputText, factType.Value);
+                AddFacts(node, factType.Value, outputText, factType.Key);
             }
         }
 
