@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 #if __PC__
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 #endif
 
 namespace FTAnalyzer

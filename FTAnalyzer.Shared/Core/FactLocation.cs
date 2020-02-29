@@ -348,8 +348,8 @@ namespace FTAnalyzer
             Latitude = double.TryParse(latitude, out double temp) ? temp : 0;
             Longitude = double.TryParse(longitude, out temp) ? temp : 0;
 #if __PC__
-            GeoAPI.Geometries.Coordinate point = new GeoAPI.Geometries.Coordinate(Longitude, Latitude);
-            GeoAPI.Geometries.Coordinate mpoint = Mapping.MapTransforms.TransformCoordinate(point);
+            NetTopologySuite.Geometries.Coordinate point = new NetTopologySuite.Geometries.Coordinate(Longitude, Latitude);
+            NetTopologySuite.Geometries.Coordinate mpoint = Mapping.MapTransforms.TransformCoordinate(point);
 
             LongitudeM = mpoint.X;
             LatitudeM = mpoint.Y;
