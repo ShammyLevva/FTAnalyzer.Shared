@@ -127,6 +127,7 @@ namespace FTAnalyzer
             // Individuals events non key facts
             AddFacts(node, Fact.ADOPTION, outputText);
             AddFacts(node, Fact.ADULT_CHRISTENING, outputText);
+            AddFacts(node, Fact.ANNULMENT, outputText);
             AddFacts(node, Fact.BAPTISM, outputText);
             AddFacts(node, Fact.BAPTISM_LDS, outputText);
             AddFacts(node, Fact.BAR_MITZVAH, outputText);
@@ -134,19 +135,24 @@ namespace FTAnalyzer
             AddFacts(node, Fact.BLESSING, outputText);
             AddFacts(node, Fact.BURIAL, outputText);
             AddFacts(node, Fact.CASTE, outputText);
+            AddFacts(node, Fact.CAUSE_OF_DEATH, outputText);
             AddFacts(node, Fact.CHRISTENING, outputText);
             AddFacts(node, Fact.CIRCUMCISION, outputText);
             AddFacts(node, Fact.CONFIRMATION, outputText);
             AddFacts(node, Fact.CONFIRMATION_LDS, outputText);
             AddFacts(node, Fact.CREMATION, outputText);
             AddFacts(node, Fact.DESTINATION, outputText);
+            AddFacts(node, Fact.DIVORCE, outputText);
+            AddFacts(node, Fact.DIVORCE_FILED, outputText);
             AddFacts(node, Fact.DNA, outputText);
             AddFacts(node, Fact.ELECTION, outputText);
             AddFacts(node, Fact.EMIGRATION, outputText);
             AddFacts(node, Fact.EMPLOYMENT, outputText);
             AddFacts(node, Fact.ENDOWMENT_LDS, outputText);
+            AddFacts(node, Fact.ENGAGEMENT, outputText);
             AddFacts(node, Fact.EXCOMMUNICATION, outputText);
             AddFacts(node, Fact.FIRST_COMMUNION, outputText);
+            AddFacts(node, Fact.FUNERAL, outputText);
             AddFacts(node, Fact.GRADUATION, outputText);
             AddFacts(node, Fact.IMMIGRATION, outputText);
             AddFacts(node, Fact.INITIATORY_LDS, outputText);
@@ -154,6 +160,7 @@ namespace FTAnalyzer
             AddFacts(node, Fact.MILITARY, outputText);
             AddFacts(node, Fact.MISSION_LDS, outputText);
             AddFacts(node, Fact.NATURALIZATION, outputText);
+            AddFacts(node, Fact.OBITUARY, outputText);
             AddFacts(node, Fact.ORDINANCE, outputText);
             AddFacts(node, Fact.ORDINATION, outputText);
             AddFacts(node, Fact.PROBATE, outputText);
@@ -163,6 +170,8 @@ namespace FTAnalyzer
             AddFacts(node, Fact.SEALED_TO_PARENTS, outputText);
             AddFacts(node, Fact.SERVICE_NUMBER, outputText);
             AddFacts(node, Fact.WILL, outputText);
+
+            AddNonStandardFacts(node, outputText);
 
             // Custom facts
             AddFacts(node, Fact.CUSTOM_EVENT, outputText);
@@ -801,9 +810,11 @@ namespace FTAnalyzer
 
         #region Fact Functions
 
-        void AddFacts(XmlNode node, string factType, IProgress<string> outputText)
+        void AddFacts(XmlNode node, string factType, IProgress<string> outputText) => AddFacts(node, factType, outputText, null);
+        
+        void AddFacts(XmlNode node, string factType, IProgress<string> outputText, string nonStandardFactType)
         {
-            XmlNodeList list = node.SelectNodes(factType);
+            XmlNodeList list = nonStandardFactType != null ? node.SelectNodes(nonStandardFactType) : node.SelectNodes(factType);
             bool preferredFact = true;
             foreach (XmlNode n in list)
             {
@@ -873,6 +884,14 @@ namespace FTAnalyzer
                     }
                 }
                 preferredFact = false;
+            }
+        }
+
+        void AddNonStandardFacts(XmlNode node, IProgress<string> outputText)
+        {
+            foreach(KeyValuePair<string, string> factType in Fact.NON_STANDARD_FACTS)
+            {
+                AddFacts(node, factType.Key, outputText, factType.Value);
             }
         }
 

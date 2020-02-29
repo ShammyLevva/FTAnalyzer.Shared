@@ -35,6 +35,8 @@ namespace FTAnalyzer
                 LOOSEDEATH = "*LOOSED", LOSTCOUSINS = "*LOST", MISSING = "*MISSING", PARENT = "*PARENT", REPORT = "*REPORT",
                 UNMARRIED = "*UNMAR", WEBSITE = "*WEBSITE", WITNESS = "*WITNE", WORLD_EVENT = "*WORLD_EVENT";
 
+       // public const string ANCESTRY_DEATH_CAUSE = "_DCAUSE";
+
         public static ISet<string> LOOSE_BIRTH_FACTS = new HashSet<string>(new string[] {
             CHRISTENING, BAPTISM, RESIDENCE, WITNESS, EMIGRATION, IMMIGRATION, ARRIVAL, DEPARTURE, 
             EDUCATION, DEGREE, ADOPTION, BAR_MITZVAH, BAS_MITZVAH, ADULT_CHRISTENING, CONFIRMATION, 
@@ -61,6 +63,7 @@ namespace FTAnalyzer
             CENSUS_FTA, CHILDREN, PARENT, BIRTH_CALC
                     });
 
+        public static readonly Dictionary<string, string> NON_STANDARD_FACTS = new Dictionary<string,string>();
         static readonly Dictionary<string, string> CUSTOM_TAGS = new Dictionary<string, string>();
         static readonly HashSet<string> COMMENT_FACTS = new HashSet<string>();
 
@@ -245,6 +248,9 @@ namespace FTAnalyzer
             CUSTOM_TAGS.Add("MILITARY DISCHARGE", MILITARY);
             CUSTOM_TAGS.Add("MILITARY AWARD", MILITARY);
             CUSTOM_TAGS.Add("PROPERTY", PROPERTY);
+
+            // Convert non standard fact types to standard ones
+            //NON_STANDARD_FACTS.Add(ANCESTRY_DEATH_CAUSE, CAUSE_OF_DEATH);
 
             // Create list of Comment facts treat text as comment rather than location
             COMMENT_FACTS.Add(AFN);
