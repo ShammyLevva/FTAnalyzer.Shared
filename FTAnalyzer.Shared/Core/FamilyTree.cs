@@ -1159,6 +1159,8 @@ namespace FTAnalyzer
                 month = 12;
             if (month < 1)
                 month = 1;
+            if (month == 2 && day == 29 & !DateTime.IsLeapYear(year))
+                day = 28;
             return new DateTime(year, month, day);
         }
 

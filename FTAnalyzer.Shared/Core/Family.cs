@@ -1,4 +1,5 @@
-﻿using FTAnalyzer.Properties;
+﻿using FTAnalyzer.Exports;
+using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using System.Xml;
 
 namespace FTAnalyzer
 {
-    public class Family : IDisplayFamily
+    public class Family : IDisplayFamily, IJsonFamily
     {
         public static string UNKNOWN = "Unknown", SOLOINDIVIDUAL = "Solo", PRE_MARRIAGE = "Pre-Marriage";
         public static string SINGLE = "Single", MARRIED = "Married", UNMARRIED = "Unmarried";
@@ -492,8 +493,10 @@ namespace FTAnalyzer
         #region IDisplayFamily Members
 
         string IDisplayFamily.Husband => Husband == null ? string.Empty : $"{Husband.Name} (b.{Husband.BirthDate})";
+        string IJsonFamily.Husband => Husband == null ? string.Empty : $"{Husband.Name} (b.{Husband.BirthDate})";
 
         string IDisplayFamily.Wife => Wife == null ? string.Empty : $"{Wife.Name} (b. {Wife.BirthDate})";
+        string IJsonFamily.Wife => Wife == null ? string.Empty : $"{Wife.Name} (b. {Wife.BirthDate})";
 
         public string Marriage => ToString();
 

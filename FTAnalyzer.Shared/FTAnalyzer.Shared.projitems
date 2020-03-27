@@ -66,6 +66,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\TextFactDateException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\InvalidDoubleDateException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\CensusSearchException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Exports\Convertors\JsonFactDateConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exports\DNA_GEDCOM.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exports\ExportFact.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exports\ExportReferrals.cs" />
@@ -73,6 +74,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Exports\ExportToLostCousins.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exports\IExportIndividual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exports\IExportReferrals.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Exports\IJsonFamily.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Exports\IJsonIndividual.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Exports\JsonExport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exports\NonDuplicate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Fact.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\FactDate.cs" />

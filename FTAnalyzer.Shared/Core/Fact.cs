@@ -20,7 +20,7 @@ namespace FTAnalyzer
                 DIVORCE = "DIV", DIVORCE_FILED = "DIVF", DNA = "_DNA", EDUCATION = "EDUC", ELECTION = "_ELEC",
                 EMAIL = "EMAIL", EMIGRATION = "EMIG", EMPLOYMENT = "_EMPLOY", ENDOWMENT_LDS = "ENDL", ENGAGEMENT = "ENGA",
                 EXCOMMUNICATION = "_EXCM", FIRST_COMMUNION = "FCOM", FUNERAL = "_FUN", GENDER = "SEX", GRADUATION = "GRAD",
-                HEIGHT = "_HEIG", IMMIGRATION = "IMMI", INITIATORY_LDS = "_INIT", LEGATEE = "LEGA", MARRIAGE = "MARR",
+                HEIGHT = "_HEIG", IMMIGRATION = "IMMI", INITIATORY_LDS = "_INIT", INDI = "INDI", LEGATEE = "LEGA", MARRIAGE = "MARR",
                 MARRIAGE_BANN = "MARB", MARR_CONTRACT = "MARC", MARR_LICENSE = "MARL", MARR_SETTLEMENT = "MARS",
                 MEDICAL_CONDITION = "_MDCL", MILITARY = "_MILT", MISSION_LDS = "_MISN", NAME = "NAME",
                 NAMESAKE = "_NAMS", NATIONALITY = "NATI", NATURALIZATION = "NATU", NAT_ID_NO = "IDNO", NUM_CHILDREN = "NCHI",
@@ -340,6 +340,7 @@ namespace FTAnalyzer
                 case HASHTAG: return "Hashtag";
                 case HEIGHT: return "Height";
                 case IMMIGRATION: return "Immigration";
+                case INDI: return "Name";
                 case INITIATORY_LDS: return "Initiatory (LDS)";
                 case LC_FTA: return "Lost Cousins (FTAnalyzer)";
                 case LEGATEE: return "Legatee";
@@ -663,7 +664,7 @@ namespace FTAnalyzer
             return result;
         }
 
-        public Fact(string factRef, string factType, FactDate date, FactLocation loc, string comment = "", bool preferred = true, bool createdByFTA = false)
+        public Fact(string factRef, string factType, FactDate date, FactLocation loc, string comment = "", bool preferred = true, bool createdByFTA = false, Individual ind = null)
             : this(factRef, preferred)
         {
             FactType = factType;
@@ -672,6 +673,7 @@ namespace FTAnalyzer
             Created = createdByFTA;
             Place = string.Empty;
             Location = loc;
+            Individual = ind;
         }
 
         #endregion

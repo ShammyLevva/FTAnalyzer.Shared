@@ -1,3 +1,4 @@
+using FTAnalyzer.Exports;
 using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
 using System;
@@ -14,7 +15,8 @@ namespace FTAnalyzer
 {
     public class Individual : IComparable<Individual>,
         IDisplayIndividual, IDisplayLooseDeath, IDisplayLooseBirth, IExportIndividual,
-        IDisplayColourCensus, IDisplayColourBMD, IDisplayMissingData, IDisplayLooseInfo
+        IDisplayColourCensus, IDisplayColourBMD, IDisplayMissingData, IDisplayLooseInfo,
+        IJsonIndividual
     {
         // edefine relation type from direct ancestor to related by marriage and 
         // MARRIAGEDB ie: married to a direct or blood relation
@@ -92,7 +94,8 @@ namespace FTAnalyzer
             surnameMetaphone = new DoubleMetaphone(Surname);
             Notes = FamilyTree.GetNotes(node);
             StandardisedName = FamilyTree.Instance.GetStandardisedName(IsMale, Forename);
-
+            Fact nameFact = new Fact(IndividualID, Fact.INDI, FactDate.UNKNOWN_DATE, FactLocation.BLANK_LOCATION,Name, true, true, this);
+            AddFact(nameFact);
             // Individual attributes
             AddFacts(node, Fact.NAME, outputText);
             AddFacts(node, Fact.AFN, outputText);
@@ -183,6 +186,7 @@ namespace FTAnalyzer
                 AddCensusSourceFacts();
                 AddCensusNoteFacts();
             }
+            AddIndividualsSources(node, outputText);
         }
 
         internal Individual(Individual i)
@@ -809,6 +813,28 @@ namespace FTAnalyzer
         #endregion
 
         #region Fact Functions
+
+        void AddIndividualsSources(XmlNode node, IProgress<string> outputText)
+        {
+            Fact nameFact = GetFacts(Fact.INDI).First();
+            // now iterate through source elements of the fact finding all sources
+            XmlNodeList list = node.SelectNodes("SOUR");
+            foreach (XmlNode n in list)
+            {
+                if (n.Attributes["REF"] != null)
+                {   // only process sources with a reference
+                    string srcref = n.Attributes["REF"].Value;
+                    FactSource source = FamilyTree.Instance.GetSource(srcref);
+                    if (source != null)
+                    {
+                        nameFact.Sources.Add(source);
+                        source.AddFact(nameFact);
+                    }
+                    else
+                        outputText.Report($"Source {srcref} not found.\n");
+                }
+            }
+        }
 
         void AddFacts(XmlNode node, string factType, IProgress<string> outputText) => AddFacts(node, factType, outputText, null);
         
