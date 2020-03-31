@@ -68,7 +68,7 @@ namespace FTAnalyzer
         const string SCOT_CENSUS_PATTERN = @"Parish *([A-Z .'-]+) *ED *(\d{1,3}[AB]?) *Page *(\d{1,4}) *Line *(\d{1,2})";
         const string SCOT_CENSUS_PATTERN2 = @"(\(?GROS *\)?) *(\d{1,3}\/\d{1,2}[AB]?) (\d{3}\/\d{2}) (\d{3,4})";
         const string SCOT_CENSUS_PATTERN3 = @"(\(?GROS *\)?) *(\d{1,3}[AB]?-?\d?)\/(\d{2}[AB]?) Page *(\d{1,4})";
-        const string SCOT_CENSUS_PATTERN4 = @"(1[89]\d[15]) *(\(?GROS *\)?) *(\d{1,3}[AB]?[-\/]?\d?) *(\d{1,2}[AB]?)\/ *(\d{1,4})";
+        const string SCOT_CENSUS_PATTERN4 = @"(1[89]\d[15])? *(\(?GROS *\)?) *(\d{1,3}[AB]?[-\/]?\d?) *\/? *(\d{1,2}[AB]?) *\/ *(\d{1,4})";
 
         const string US_CENSUS_PATTERN = @"Year *(\d{4}) *Census *(.*?) *Roll *(.*?) *Film (.*?) *P(age)? *(\d{1,4}[ABCD]?) *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?)";
         const string US_CENSUS_PATTERN1A = @"Year *(\d{4}) *Census *(.*?),? *Roll *(.*?),? *P(age)? *(\d{1,4}[ABCD]?),? *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?)";
@@ -883,7 +883,9 @@ namespace FTAnalyzer
             {
                 Class = "SCOT";
                 CensusYear = CensusDate.GetUKCensusDateFromYear(matcher.Groups[1].ToString());
-                Parish = matcher.Groups[3].ToString();
+                if (CensusYear.BestYear == 1881)
+                    CensusYear = CensusDate.SCOTCENSUS1881;
+                Parish = matcher.Groups[3].ToString().TrimEnd('/');
                 ED = matcher.Groups[4].ToString();
                 Page = matcher.Groups[5].ToString();
                 SetFlagsandCountry(true, false, Countries.SCOTLAND, ReferenceStatus.GOOD, matcher.Value);
@@ -894,7 +896,9 @@ namespace FTAnalyzer
             {
                 Class = "SCOT";
                 CensusYear = CensusDate.GetUKCensusDateFromYear(matcher.Groups[1].ToString());
-                Parish = matcher.Groups[3].ToString().Replace("/00", "").Replace("/", "-");
+                if (CensusYear.BestYear == 1881)
+                    CensusYear = CensusDate.SCOTCENSUS1881;
+                Parish = matcher.Groups[3].ToString().Replace("/00", "").TrimEnd('/').Replace("/", "-");
                 ED = matcher.Groups[4].ToString().Replace("/00", "").TrimStart('0');
                 Page = matcher.Groups[5].ToString().TrimStart('0');
                 SetFlagsandCountry(true, false, Countries.SCOTLAND, ReferenceStatus.GOOD, matcher.Value);
@@ -905,7 +909,9 @@ namespace FTAnalyzer
             {
                 Class = "SCOT";
                 CensusYear = CensusDate.GetUKCensusDateFromYear(matcher.Groups[1].ToString());
-                Parish = matcher.Groups[3].ToString().TrimStart('0');
+                if (CensusYear.BestYear == 1881)
+                    CensusYear = CensusDate.SCOTCENSUS1881;
+                Parish = matcher.Groups[3].ToString().TrimStart('0').TrimEnd('/');
                 ED = matcher.Groups[4].ToString().Replace("/00", "").TrimStart('0');
                 Page = matcher.Groups[5].ToString().TrimStart('0');
                 SetFlagsandCountry(true, false, Countries.SCOTLAND, ReferenceStatus.GOOD, matcher.Value);
@@ -916,7 +922,9 @@ namespace FTAnalyzer
             {
                 Class = "SCOT";
                 CensusYear = CensusDate.GetUKCensusDateFromYear(matcher.Groups[1].ToString());
-                Parish = matcher.Groups[2].ToString().TrimStart('0');
+                if (CensusYear.BestYear == 1881)
+                    CensusYear = CensusDate.SCOTCENSUS1881;
+                Parish = matcher.Groups[2].ToString().TrimStart('0').TrimEnd('/');
                 ED = matcher.Groups[4].ToString().Replace("/00", "").TrimStart('0');
                 Page = matcher.Groups[6].ToString().TrimStart('0');
                 SetFlagsandCountry(true, false, Countries.SCOTLAND, ReferenceStatus.GOOD, matcher.Value);
@@ -927,7 +935,7 @@ namespace FTAnalyzer
             {
                 Class = "SCOT";
                 CensusYear = FactDate.UNKNOWN_DATE;
-                Parish = matcher.Groups[1].ToString().Trim();
+                Parish = matcher.Groups[1].ToString().Trim().TrimEnd('/');
                 ED = matcher.Groups[2].ToString();
                 Page = matcher.Groups[3].ToString();
                 SetFlagsandCountry(true, false, Countries.SCOTLAND, ReferenceStatus.GOOD, matcher.Value);
@@ -938,7 +946,7 @@ namespace FTAnalyzer
             {
                 Class = "SCOT";
                 CensusYear = FactDate.UNKNOWN_DATE;
-                Parish = matcher.Groups[2].ToString().Replace("/00", "").Replace("/", "-").Replace("-0", "-");
+                Parish = matcher.Groups[2].ToString().TrimEnd('/').Replace("/00", "").Replace("/", "-").Replace("-0", "-");
                 ED = matcher.Groups[3].ToString().Replace("/00", "").TrimStart('0');
                 Page = matcher.Groups[4].ToString().TrimStart('0');
                 SetFlagsandCountry(true, false, Countries.SCOTLAND, ReferenceStatus.GOOD, matcher.Value);
@@ -949,7 +957,7 @@ namespace FTAnalyzer
             {
                 Class = "SCOT";
                 CensusYear = FactDate.UNKNOWN_DATE;
-                Parish = matcher.Groups[2].ToString().TrimStart('0');
+                Parish = matcher.Groups[2].ToString().TrimStart('0').TrimEnd('/');
                 ED = matcher.Groups[3].ToString().Replace("/00", "").TrimStart('0');
                 Page = matcher.Groups[4].ToString().TrimStart('0');
                 SetFlagsandCountry(true, false, Countries.SCOTLAND, ReferenceStatus.GOOD, matcher.Value);
@@ -960,7 +968,9 @@ namespace FTAnalyzer
             {
                 Class = "SCOT";
                 CensusYear = new FactDate(matcher.Groups[1].ToString());
-                Parish = matcher.Groups[3].ToString().TrimStart('0');
+                if (CensusYear.BestYear == 1881)
+                    CensusYear = CensusDate.SCOTCENSUS1881;
+                Parish = matcher.Groups[3].ToString().TrimStart('0').TrimEnd('/');
                 ED = matcher.Groups[4].ToString().Replace("/00", "").TrimStart('0');
                 Page = matcher.Groups[5].ToString().TrimStart('0');
                 SetFlagsandCountry(true, false, Countries.SCOTLAND, ReferenceStatus.GOOD, matcher.Value);
