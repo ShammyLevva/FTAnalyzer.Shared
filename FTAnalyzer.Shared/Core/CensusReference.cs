@@ -68,7 +68,8 @@ namespace FTAnalyzer
         const string SCOT_CENSUS_PATTERN = @"Parish *([A-Z .'-]+) *ED *(\d{1,3}[AB]?) *Page *(\d{1,4}) *Line *(\d{1,2})";
         const string SCOT_CENSUS_PATTERN2 = @"(\(?GROS *\)?) *(\d{1,3}\/\d{1,2}[AB]?) (\d{3}\/\d{2}) (\d{3,4})";
         const string SCOT_CENSUS_PATTERN3 = @"(\(?GROS *\)?) *(\d{1,3}[AB]?-?\d?)\/(\d{2}[AB]?) Page *(\d{1,4})";
-        const string SCOT_CENSUS_PATTERN4 = @"(1[89]\d[15])? *(\(?GROS *\)?) *(\d{1,3}[AB]?[-\/]?\d?) *\/? *(\d{1,2}[AB]?) *\/ *(\d{1,4})";
+        const string SCOT_CENSUS_PATTERN4 = @"(1[89]\d[15])? *(\(?GROS *\)?) *(\d{1,3}[AB]?[-\/]?\d? ) *\/? *(\d{1,2}[AB]?) *\/ *(\d{1,4})";
+        const string SCOT_CENSUS_PATTERN5 = @"(1[89]\d1)? *(\(?CENSUS *\)?) *(\d{1,3}[AB]?[-\/]?\d? ) *\/? *(\d{1,2}[AB]?) *\/ *(\d{1,4})";
 
         const string US_CENSUS_PATTERN = @"Year *(\d{4}) *Census *(.*?) *Roll *(.*?) *Film (.*?) *P(age)? *(\d{1,4}[ABCD]?) *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?)";
         const string US_CENSUS_PATTERN1A = @"Year *(\d{4}) *Census *(.*?),? *Roll *(.*?),? *P(age)? *(\d{1,4}[ABCD]?),? *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?)";
@@ -155,6 +156,7 @@ namespace FTAnalyzer
                 ["SCOT_CENSUS_PATTERN2"] = new Regex(SCOT_CENSUS_PATTERN2, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["SCOT_CENSUS_PATTERN3"] = new Regex(SCOT_CENSUS_PATTERN3, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["SCOT_CENSUS_PATTERN4"] = new Regex(SCOT_CENSUS_PATTERN4, RegexOptions.Compiled | RegexOptions.IgnoreCase),
+                ["SCOT_CENSUS_PATTERN5"] = new Regex(SCOT_CENSUS_PATTERN5, RegexOptions.Compiled | RegexOptions.IgnoreCase),
 
                 ["US_CENSUS_PATTERN"] = new Regex(US_CENSUS_PATTERN, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["US_CENSUS_PATTERN1A"] = new Regex(US_CENSUS_PATTERN1A, RegexOptions.Compiled | RegexOptions.IgnoreCase),
@@ -970,7 +972,20 @@ namespace FTAnalyzer
                 CensusYear = new FactDate(matcher.Groups[1].ToString());
                 if (CensusYear.BestYear == 1881)
                     CensusYear = CensusDate.SCOTCENSUS1881;
-                Parish = matcher.Groups[3].ToString().TrimStart('0').TrimEnd('/');
+                Parish = matcher.Groups[3].ToString().Trim().TrimStart('0').TrimEnd('/');
+                ED = matcher.Groups[4].ToString().Replace("/00", "").TrimStart('0');
+                Page = matcher.Groups[5].ToString().TrimStart('0');
+                SetFlagsandCountry(true, false, Countries.SCOTLAND, ReferenceStatus.GOOD, matcher.Value);
+                return true;
+            }
+            matcher = censusRegexs["SCOT_CENSUS_PATTERN5"].Match(text);
+            if (matcher.Success)
+            {
+                Class = "SCOT";
+                CensusYear = new FactDate(matcher.Groups[1].ToString());
+                if (CensusYear.BestYear == 1881)
+                    CensusYear = CensusDate.SCOTCENSUS1881;
+                Parish = matcher.Groups[3].ToString().Trim().TrimStart('0').TrimEnd('/');
                 ED = matcher.Groups[4].ToString().Replace("/00", "").TrimStart('0');
                 Page = matcher.Groups[5].ToString().TrimStart('0');
                 SetFlagsandCountry(true, false, Countries.SCOTLAND, ReferenceStatus.GOOD, matcher.Value);

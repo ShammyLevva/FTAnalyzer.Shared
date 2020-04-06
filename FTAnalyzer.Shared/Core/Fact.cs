@@ -418,6 +418,7 @@ namespace FTAnalyzer
             Tag = string.Empty;
             Preferred = preferred;
             Reference = reference;
+            SourcePages = new List<string>();
         }
 
         public Fact(XmlNode node, Family family, bool preferred, IProgress<string> outputText)
@@ -508,23 +509,27 @@ namespace FTAnalyzer
                         {   // only process sources with a reference
                             string srcref = n.Attributes["REF"].Value;
                             FactSource source = ft.GetSource(srcref);
+                            string pageText = FamilyTree.GetText(n, "PAGE", true); // Source page text
                             if (source != null)
                             {
                                 Sources.Add(source);
                                 source.AddFact(this);
+                                if(!SourcePages.Contains(pageText))
+                                    SourcePages.Add(pageText);
                             }
                             else
                                 outputText.Report($"Source {srcref} not found.\n");
+                            if (IsCensusFact)
+                                CensusReference = new CensusReference(this, n);
                         }
-                        if (IsCensusFact)
-                            CensusReference = new CensusReference(this, n);
                     }
                     // if we have checked the sources and no census ref see if its been added as a comment to this fact
                     if (IsCensusFact)
                     {
                         CheckForSharedFacts(node);
+
                         if (!CensusReference.IsKnownStatus)
-                            CensusReference = new CensusReference(this, node);
+                            CensusReference = new CensusReference(this, node, CensusReference); //pass in existing reference so as to not lose any unknown references
                         else if (!CensusReference.IsGoodStatus)
                             CensusReference.CheckFullUnknownReference(CensusReference.Status);
                     }
@@ -762,6 +767,8 @@ namespace FTAnalyzer
         }
 
         public IList<FactSource> Sources { get; private set; }
+
+        public List<string> SourcePages { get; private set; }
 
         public string Country => Location == null ? "UNKNOWN" : Location.Country;
 
