@@ -22,13 +22,19 @@ namespace FTAnalyzer
 
         public FactSource(XmlNode node)
         {
+            bool noteRead = false;
             SourceID = node.Attributes["ID"].Value;
             SourceTitle = FamilyTree.GetText(node, "TITL", true);
             Publication = FamilyTree.GetText(node, "PUBL", true);
             Author = FamilyTree.GetText(node, "AUTH", true);
             SourceText = FamilyTree.GetText(node, "TEXT", true);
+            if (string.IsNullOrEmpty(SourceText))
+            {
+                SourceText = FamilyTree.GetText(node, "NOTE", true);
+                noteRead = true;
+            }
             SourceMedium = FamilyTree.GetText(node, "REPO/CALN/MEDI", true);
-            if (SourceMedium.Length == 0)
+            if (!noteRead && SourceMedium.Length == 0)
                 SourceMedium = FamilyTree.GetText(node, "NOTE/CONC", true);
             Facts = new List<Fact>();
         }
