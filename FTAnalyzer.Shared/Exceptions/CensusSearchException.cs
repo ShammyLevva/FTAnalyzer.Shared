@@ -8,5 +8,10 @@ namespace FTAnalyzer
         public CensusSearchException(string message)
             : base(message)
         { }
+
+        protected CensusSearchException(System.Runtime.Serialization.SerializationInfo serializationInfo, System.Runtime.Serialization.StreamingContext streamingContext)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

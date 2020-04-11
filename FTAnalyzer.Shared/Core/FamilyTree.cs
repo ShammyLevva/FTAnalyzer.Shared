@@ -3176,10 +3176,7 @@ namespace FTAnalyzer
             return results;
         }
 
-        public static List<Individual> GetAllRelations(Individual ind)
-        {
-            return GetFamily(ind).Union(GetAncestors(ind).Union(GetDescendants(ind))).ToList();
-        }
+        public static List<Individual> GetAllRelations(Individual ind) => GetFamily(ind).Union(GetAncestors(ind).Union(GetDescendants(ind))).ToList();
         #endregion
 
         #region Duplicates Processing

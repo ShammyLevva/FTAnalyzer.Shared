@@ -6,9 +6,6 @@ namespace FTAnalyzer.Events
     {
         public string Message { get; private set; }
 
-        public GoogleWaitingEventArgs(string message)
-        {
-            this.Message = message;
-        }
+        public GoogleWaitingEventArgs(string message) => this.Message = message;
     }
 }

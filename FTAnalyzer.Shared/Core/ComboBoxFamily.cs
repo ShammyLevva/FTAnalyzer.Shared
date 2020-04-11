@@ -28,9 +28,6 @@ namespace FTAnalyzer
             return FamilyID.Equals(that.FamilyID);
         }
 
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
+        public override int GetHashCode() => base.GetHashCode();
     }
 }

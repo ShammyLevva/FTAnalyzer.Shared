@@ -31,9 +31,6 @@ namespace FTAnalyzer
                     a.Marriages == b.Marriages;
         }
 
-        public int GetHashCode(SurnameStats obj)
-        {
-            return base.GetHashCode();
-        }
+        public int GetHashCode(SurnameStats obj) => base.GetHashCode();
     }
 }

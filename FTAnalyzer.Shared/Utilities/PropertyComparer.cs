@@ -8,9 +8,9 @@ namespace FTAnalyzer.Utilities
 {
     public class PropertyComparer<T> : IComparer<T>
     {
-        private readonly IComparer comparer;
-        private PropertyDescriptor propertyDescriptor;
-        private int reverse;
+        readonly IComparer comparer;
+        PropertyDescriptor propertyDescriptor;
+        int reverse;
 
         public PropertyComparer(PropertyDescriptor property, ListSortDirection direction)
         {
@@ -39,15 +39,9 @@ namespace FTAnalyzer.Utilities
 
         #endregion
 
-        void SetPropertyDescriptor(PropertyDescriptor descriptor)
-        {
-            propertyDescriptor = descriptor;
-        }
+        void SetPropertyDescriptor(PropertyDescriptor descriptor) => propertyDescriptor = descriptor;
 
-        void SetListSortDirection(ListSortDirection direction)
-        {
-            reverse = direction == ListSortDirection.Ascending ? 1 : -1;
-        }
+        void SetListSortDirection(ListSortDirection direction) => reverse = direction == ListSortDirection.Ascending ? 1 : -1;
 
         public void SetPropertyAndDirection(PropertyDescriptor descriptor, ListSortDirection direction)
         {

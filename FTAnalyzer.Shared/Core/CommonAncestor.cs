@@ -8,9 +8,9 @@
 
         public CommonAncestor(Individual ind, int distance, bool step)
         {
-            this.Ind = ind;
-            this.Distance = distance;
-            this.Step = step;
+            Ind = ind;
+            Distance = distance;
+            Step = step;
         }
     }
 }

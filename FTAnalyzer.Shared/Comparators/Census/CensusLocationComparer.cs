@@ -5,13 +5,9 @@ namespace FTAnalyzer
 
         public int Level { get; }
 
-        public CensusLocationComparer() {
-            Level = FactLocation.PLACE;
-        }
-        
-        public CensusLocationComparer(int level) {
-            Level = level;
-        }
+        public CensusLocationComparer() => Level = FactLocation.PLACE;
+
+        public CensusLocationComparer(int level) => Level = level;
 
         public override int Compare(CensusIndividual x, CensusIndividual y)
         {

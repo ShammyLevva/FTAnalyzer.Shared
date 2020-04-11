@@ -81,32 +81,14 @@ namespace FTAnalyzer
         }
 
         /// <summary>The primary metaphone key for the current word</summary>
-        public string PrimaryKey
-        {
-            get
-            {
-                return m_primaryKeyString;
-            }
-        }
+        public string PrimaryKey => m_primaryKeyString;
 
         /// <summary>The alternate metaphone key for the current word, or null if the current
         ///     word does not have an alternate key by Double Metaphone</summary>
-        public string AlternateKey
-        {
-            get
-            {
-                return m_hasAlternate ? m_alternateKeyString : null;
-            }
-        }
+        public string AlternateKey => m_hasAlternate ? m_alternateKeyString : null;
 
         /// <summary>OrFamilySearchnal word for which the keys were computed</summary>
-        public string Word
-        {
-            get
-            {
-                return m_orFamilySearchnalWord;
-            }
-        }
+        public string Word => m_orFamilySearchnalWord;
 
         /// <summary>Static wrapper around the class, enables computation of metaphone keys
         ///     without instantiating a class.</summary>

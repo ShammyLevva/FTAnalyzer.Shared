@@ -29,10 +29,7 @@ namespace FTAnalyzer.Utilities
         }
 
         public FilterList(IEnumerable<T> elements)
-            : base(elements)
-        {
-            allItems.AddRange(elements);
-        }
+            : base(elements) => allItems.AddRange(elements);
 
         public void Filter(Predicate<T> filter)
         {

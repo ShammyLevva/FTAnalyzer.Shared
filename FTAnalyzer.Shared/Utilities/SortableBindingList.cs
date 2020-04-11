@@ -88,11 +88,9 @@ namespace FTAnalyzer.Utilities
 
         void InternalMergeSort(List<T> inputList, PropertyComparer<T> comparer, int left, int right)
         {
-            int mid = 0;
-
             if (left < right)
             {
-                mid = (left + right) / 2;
+                int mid = (left + right) / 2;
                 InternalMergeSort(inputList, comparer, left, mid);
                 InternalMergeSort(inputList, comparer, (mid + 1), right);
                 MergeSortedList(inputList, comparer, left, mid, right);
@@ -133,16 +131,10 @@ namespace FTAnalyzer.Utilities
         }
         #region EventHandler
         public event EventHandler SortStarted;
-        public void OnSortStarted()
-        {
-            SortStarted?.Invoke(null, EventArgs.Empty);
-        }
+        public void OnSortStarted() => SortStarted?.Invoke(null, EventArgs.Empty);
 
         public event EventHandler SortFinished;
-        public void OnSortFinished()
-        {
-            SortFinished?.Invoke(null, EventArgs.Empty);
-        }
+        public void OnSortFinished() => SortFinished?.Invoke(null, EventArgs.Empty);
         #endregion
 
     }

@@ -6,10 +6,7 @@ namespace FTAnalyzer
     {
         public bool CountSortLow { get; set; }
 
-        public FamilySizeComparer(bool countSortLow)
-        {
-            CountSortLow = countSortLow;
-        }
+        public FamilySizeComparer(bool countSortLow) => CountSortLow = countSortLow;
 
         public override int Compare(IDisplayFamily x, IDisplayFamily y)
         {

@@ -44,9 +44,6 @@ namespace FTAnalyzer
             return result;
         }
 
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
+        public override int GetHashCode() => base.GetHashCode();
     }
 }

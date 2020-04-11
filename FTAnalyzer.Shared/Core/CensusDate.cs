@@ -20,7 +20,18 @@ namespace FTAnalyzer
         public static CensusDate UKCENSUS1891 = new CensusDate("05 APR 1891", "UK Census 1891", Countries.UNITED_KINGDOM, "C1891");
         public static CensusDate UKCENSUS1901 = new CensusDate("31 MAR 1901", "UK Census 1901", Countries.UNITED_KINGDOM, "C1901");
         public static CensusDate UKCENSUS1911 = new CensusDate("02 APR 1911", "UK Census 1911", Countries.UNITED_KINGDOM, "C1911");
+        public static CensusDate UKCENSUS1921 = new CensusDate("19 JUN 1921", "UK Census 1921", Countries.UNITED_KINGDOM, "C1921");
+        public static CensusDate UKCENSUS1931 = new CensusDate("26 APR 1931", "UK Census 1931", Countries.UNITED_KINGDOM, "C1931");
         public static CensusDate UKCENSUS1939 = new CensusDate("29 SEP 1939", "UK National Register 1939", Countries.UNITED_KINGDOM, "C1939");
+        public static CensusDate UKCENSUS1951 = new CensusDate("08 APR 1951", "UK Census 1951", Countries.UNITED_KINGDOM, "C1951");
+        public static CensusDate UKCENSUS1961 = new CensusDate("23 APR 1961", "UK Census 1961", Countries.UNITED_KINGDOM, "C1961");
+        public static CensusDate UKCENSUS1966 = new CensusDate("24 APR 1966", "UK Census 1966", Countries.UNITED_KINGDOM, "C1966");
+        public static CensusDate UKCENSUS1971 = new CensusDate("25 APR 1971", "UK Census 1971", Countries.UNITED_KINGDOM, "C1971");
+        public static CensusDate UKCENSUS1981 = new CensusDate("05 APR 1981", "UK Census 1981", Countries.UNITED_KINGDOM, "C1981");
+        public static CensusDate UKCENSUS1991 = new CensusDate("21 APR 1991", "UK Census 1991", Countries.UNITED_KINGDOM, "C1991");
+        public static CensusDate UKCENSUS2001 = new CensusDate("29 APR 2001", "UK Census 2001", Countries.UNITED_KINGDOM, "C2001");
+        public static CensusDate UKCENSUS2011 = new CensusDate("27 MAR 2011", "UK Census 2011", Countries.UNITED_KINGDOM, "C2011");
+//        public static CensusDate UKCENSUS2021 = new CensusDate("02 APR 2021", "UK Census 2021", Countries.UNITED_KINGDOM, "C2021");
 
         public static CensusDate EWCENSUS1841 = new CensusDate("06 JUN 1841", "England & Wales Census 1841", Countries.ENG_WALES, "C1841");
         public static CensusDate EWCENSUS1881 = new CensusDate("03 APR 1881", "England & Wales Census 1881", Countries.ENG_WALES, "C1881");
@@ -55,6 +66,14 @@ namespace FTAnalyzer
         public static CensusDate USCENSUS1920 = new CensusDate("BET 1 JAN 1920 AND 31 DEC 1920", "US Federal Census 1920", Countries.UNITED_STATES, "US1920");
         public static CensusDate USCENSUS1930 = new CensusDate("BET 1 OCT 1929 AND 31 DEC 1930", "US Federal Census 1930", Countries.UNITED_STATES, "US1930");
         public static CensusDate USCENSUS1940 = new CensusDate("BET 1 APR 1940 AND 31 MAY 1940", "US Federal Census 1940", Countries.UNITED_STATES, "US1940");
+        public static CensusDate USCENSUS1950 = new CensusDate("BET 1 APR 1950 AND 31 MAY 1950", "US Federal Census 1950", Countries.UNITED_STATES, "US1950");
+        public static CensusDate USCENSUS1960 = new CensusDate("BET 1 APR 1950 AND 31 MAY 1960", "US Federal Census 1960", Countries.UNITED_STATES, "US1960");
+        public static CensusDate USCENSUS1970 = new CensusDate("BET 1 APR 1950 AND 31 MAY 1970", "US Federal Census 1970", Countries.UNITED_STATES, "US1970");
+        public static CensusDate USCENSUS1980 = new CensusDate("BET 1 APR 1950 AND 31 MAY 1980", "US Federal Census 1980", Countries.UNITED_STATES, "US1980");
+        public static CensusDate USCENSUS1990 = new CensusDate("BET 1 APR 1950 AND 31 MAY 1990", "US Federal Census 1990", Countries.UNITED_STATES, "US1990");
+        public static CensusDate USCENSUS2000 = new CensusDate("BET 1 APR 1950 AND 31 MAY 2000", "US Federal Census 2000", Countries.UNITED_STATES, "US2000");
+        public static CensusDate USCENSUS2010 = new CensusDate("BET 1 APR 1950 AND 31 MAY 2010", "US Federal Census 2010", Countries.UNITED_STATES, "US2010");
+        public static CensusDate USCENSUS2020 = new CensusDate("BET 1 APR 1950 AND 31 MAY 2020", "US Federal Census 2020", Countries.UNITED_STATES, "US2020");
 
         public static CensusDate CANADACENSUS1851 = new CensusDate("BET 1851 AND 1852", "Canadian Census 1851/2", Countries.CANADA, "Can1851");
         public static CensusDate CANADACENSUS1861 = new CensusDate("1861", "Canadian Census 1861", Countries.CANADA, "Can1861");
@@ -63,22 +82,41 @@ namespace FTAnalyzer
         public static CensusDate CANADACENSUS1891 = new CensusDate("6 APR 1891", "Canadian Census 1891", Countries.CANADA, "Can1891");
         public static CensusDate CANADACENSUS1901 = new CensusDate("31 MAR 1901", "Canadian Census 1901", Countries.CANADA, "Can1901");
         public static CensusDate CANADACENSUS1906 = new CensusDate("1906", "Canadian Census 1906", Countries.CANADA, "Can1906");
+        public static CensusDate CANADACENSUS1911 = new CensusDate("1 JUN 1911", "Canadian Census 1911", Countries.CANADA, "Can1911");
         public static CensusDate CANADACENSUS1916 = new CensusDate("1916", "Canadian Census 1916", Countries.CANADA, "Can1916");
         public static CensusDate CANADACENSUS1921 = new CensusDate("1 JUN 1921", "Canadian Census 1921", Countries.CANADA, "Can1921");
-        public static CensusDate CANADACENSUS1911 = new CensusDate("1 JUN 1911", "Canadian Census 1911", Countries.CANADA, "Can1911");
+        public static CensusDate CANADACENSUS1931 = new CensusDate("1 JUN 1931", "Canadian Census 1931", Countries.CANADA, "Can1931");
+        public static CensusDate CANADACENSUS1941 = new CensusDate("1 JUN 1941", "Canadian Census 1941", Countries.CANADA, "Can1941");
+        public static CensusDate CANADACENSUS1951 = new CensusDate("1 JUN 1951", "Canadian Census 1951", Countries.CANADA, "Can1951");
+        public static CensusDate CANADACENSUS1961 = new CensusDate("1 JUN 1961", "Canadian Census 1961", Countries.CANADA, "Can1961");
+        public static CensusDate CANADACENSUS1971 = new CensusDate("1 JUN 1971", "Canadian Census 1971", Countries.CANADA, "Can1971");
+        public static CensusDate CANADACENSUS1976 = new CensusDate("1976", "Canadian Census 1976", Countries.CANADA, "Can1976");
+        public static CensusDate CANADACENSUS1981 = new CensusDate("1 JUN 1981", "Canadian Census 1981", Countries.CANADA, "Can1981");
+        public static CensusDate CANADACENSUS1986 = new CensusDate("1986", "Canadian Census 1986", Countries.CANADA, "Can1986");
+        public static CensusDate CANADACENSUS1991 = new CensusDate("1 JUN 1991", "Canadian Census 1991", Countries.CANADA, "Can1991");
+        public static CensusDate CANADACENSUS1996 = new CensusDate("1996", "Canadian Census 1996", Countries.CANADA, "Can1996");
+        public static CensusDate CANADACENSUS2001 = new CensusDate("1 JUN 2001", "Canadian Census 2001", Countries.CANADA, "Can2001");
+        public static CensusDate CANADACENSUS2006 = new CensusDate("2006", "Canadian Census 2006", Countries.CANADA, "Can2006");
+        public static CensusDate CANADACENSUS2011 = new CensusDate("1 JUN 2011", "Canadian Census 2011", Countries.CANADA, "Can2011");
+        public static CensusDate CANADACENSUS2016 = new CensusDate("2016", "Canadian Census 2016", Countries.CANADA, "Can2016");
 
         static readonly ISet<CensusDate> UK_CENSUS = new HashSet<CensusDate>(new CensusDate[] {
-            UKCENSUS1841, UKCENSUS1851, UKCENSUS1861, UKCENSUS1871, UKCENSUS1881, UKCENSUS1891, UKCENSUS1901, UKCENSUS1911, UKCENSUS1939
+            UKCENSUS1841, UKCENSUS1851, UKCENSUS1861, UKCENSUS1871, UKCENSUS1881, UKCENSUS1891, UKCENSUS1901, UKCENSUS1911, UKCENSUS1939,
+            UKCENSUS1921, UKCENSUS1931, UKCENSUS1951, UKCENSUS1961, UKCENSUS1966, UKCENSUS1971, UKCENSUS1981, UKCENSUS1991, UKCENSUS2001,
+            UKCENSUS2011
         });
 
         static readonly ISet<CensusDate> US_FEDERAL_CENSUS = new HashSet<CensusDate>(new CensusDate[] {
-            USCENSUS1790, USCENSUS1800, USCENSUS1810, USCENSUS1820, USCENSUS1830, USCENSUS1840, USCENSUS1850, USCENSUS1860, USCENSUS1870, USCENSUS1880, USCENSUS1890,
-            USCENSUS1900, USCENSUS1910, USCENSUS1920, USCENSUS1930, USCENSUS1940
+            USCENSUS1790, USCENSUS1800, USCENSUS1810, USCENSUS1820, USCENSUS1830, USCENSUS1840, USCENSUS1850, USCENSUS1860, USCENSUS1870, 
+            USCENSUS1880, USCENSUS1890, USCENSUS1900, USCENSUS1910, USCENSUS1920, USCENSUS1930, USCENSUS1940, USCENSUS1950, USCENSUS1960, 
+            USCENSUS1970, USCENSUS1980, USCENSUS1990, USCENSUS2000, USCENSUS2010, USCENSUS2020
         });
 
         static readonly ISet<CensusDate> CANADIAN_CENSUS = new HashSet<CensusDate>(new CensusDate[] {
             CANADACENSUS1851, CANADACENSUS1861, CANADACENSUS1871, CANADACENSUS1881, CANADACENSUS1891, CANADACENSUS1901, CANADACENSUS1906,
-            CANADACENSUS1911, CANADACENSUS1916, CANADACENSUS1921
+            CANADACENSUS1911, CANADACENSUS1916, CANADACENSUS1921, CANADACENSUS1931, CANADACENSUS1941, CANADACENSUS1951, CANADACENSUS1961,
+            CANADACENSUS1971, CANADACENSUS1976, CANADACENSUS1981, CANADACENSUS1986, CANADACENSUS1991, CANADACENSUS1996, CANADACENSUS2001,
+            CANADACENSUS2006, CANADACENSUS2011, CANADACENSUS2016
         });
 
         public static ISet<CensusDate> SUPPORTED_CENSUS = new HashSet<CensusDate>(new CensusDate[] {

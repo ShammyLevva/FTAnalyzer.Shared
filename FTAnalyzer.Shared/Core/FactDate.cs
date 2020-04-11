@@ -849,11 +849,6 @@ namespace FTAnalyzer
         }
 
         #endregion
-
-        #region Logical Operations Overrides
-
-
-        #endregion
         
         #region Logical operations
         /*
@@ -1019,7 +1014,6 @@ namespace FTAnalyzer
                 return false;
             return a.Equals(b);
         }
-
 
         public static bool operator <(FactDate left, FactDate right) => left is null ? right is object : left.CompareTo(right) < 0;
 

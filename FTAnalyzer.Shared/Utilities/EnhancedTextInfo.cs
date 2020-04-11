@@ -91,15 +91,13 @@ namespace FTAnalyzer.Utilities
             return sb.ToString().Normalize(NormalizationForm.FormC);
         }
 
-        public static string ClearWhiteSpace(this string text)
-        {
-            return text.Replace(Environment.NewLine, " ").Replace("\n", " ")
-                       .Replace(";", " ").Replace(":", " ").Replace("~", " ")
-                       .Replace("\t", " ").Replace("   ", " ").Replace("   ", " ")
-                       .Replace("  ", " ").Replace("  ", " ").Replace("  ", " ")
-                       .Replace("  ", " ").Replace("  ", " ").Replace("  ", " ")
-                       .Trim();
-        }
+        public static string ClearWhiteSpace(this string text) =>
+            text.Replace(Environment.NewLine, " ").Replace("\n", " ")
+                .Replace(";", " ").Replace(":", " ").Replace("~", " ")
+                .Replace("\t", " ").Replace("   ", " ").Replace("   ", " ")
+                .Replace("  ", " ").Replace("  ", " ").Replace("  ", " ")
+                .Replace("  ", " ").Replace("  ", " ").Replace("  ", " ")
+                .Trim();
 
         public static string Replace(this string str, string oldValue, string newValue, StringComparison comparison)
         {

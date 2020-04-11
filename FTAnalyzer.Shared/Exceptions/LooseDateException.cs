@@ -8,5 +8,10 @@ namespace FTAnalyzer
         public LooseDataException(string message)
             : base(message)
         { }
+
+        protected LooseDataException(System.Runtime.Serialization.SerializationInfo serializationInfo, System.Runtime.Serialization.StreamingContext streamingContext)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

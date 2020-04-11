@@ -70,9 +70,6 @@ namespace FTAnalyzer
             return result ?? UNKNOWN;
         }
 
-        public override string ToString()
-        {
-            return Location.Length == 0 ? "UNKNOWN" : Location;
-        }
+        public override string ToString() => Location.Length == 0 ? "UNKNOWN" : Location;
     }
 }

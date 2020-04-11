@@ -42,10 +42,7 @@ namespace FTAnalyzer
         public IList<DataError> Errors { get; private set; }
         readonly int errorNumber;
 
-        public static string ErrorDescription(int errorNumber)
-        {
-            return DATAERROR[errorNumber];
-        }
+        public static string ErrorDescription(int errorNumber) => DATAERROR[errorNumber];
 
         public DataErrorGroup(int errorNumber, IList<DataError> errors)
         {
@@ -53,9 +50,6 @@ namespace FTAnalyzer
             Errors = errors;
         }
 
-        public override string ToString()
-        {
-            return ErrorDescription(errorNumber);
-        }
+        public override string ToString() => ErrorDescription(errorNumber);
     }
 }

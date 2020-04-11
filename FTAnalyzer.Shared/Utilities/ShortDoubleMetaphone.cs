@@ -69,19 +69,16 @@ namespace FTAnalyzer
 		
 		/// The ushort versions of the primary and alternate keys
 		private ushort m_primaryShortKey, m_alternateShortKey;
-		
+
         /// <summary>Default ctor, initializes to an empty string and 0 keys</summary>
-		public ShortDoubleMetaphone()
-		{
-			m_primaryShortKey = m_alternateShortKey = 0;
-		}
-		
+        public ShortDoubleMetaphone() => m_primaryShortKey = m_alternateShortKey = 0;
+
         /// <summary>Initializes the base class with the given word, then computes
         ///     ushort representations of the metaphone keys computed by the
         ///     base class</summary>
         /// 
         /// <param name="word">Word for which to compute metaphone keys</param>
-		public ShortDoubleMetaphone(String word) : base(word)
+        public ShortDoubleMetaphone(String word) : base(word)
 		{
 			m_primaryShortKey = ShortDoubleMetaphone.MetaphoneKeyToShort(this.PrimaryKey);
 			if (this.AlternateKey != null) {
@@ -112,23 +109,15 @@ namespace FTAnalyzer
 			} else {
 				m_alternateShortKey = METAPHONE_INVALID_KEY;
 			}
-		}			
-		
-        /// <summary>The primary metaphone key, represented as a ushort</summary>
-		public ushort PrimaryShortKey {
-			get {
-				return m_primaryShortKey;
-			}
 		}
-		
+
+        /// <summary>The primary metaphone key, represented as a ushort</summary>
+        public ushort PrimaryShortKey => m_primaryShortKey;
+
         /// <summary>The alternative metaphone key, or METAPHONE_INVALID_KEY if the current
         ///     word has no alternate key by double metaphone</summary>
-		public ushort AlternateShortKey {
-			get {
-				return m_alternateShortKey;
-			}
-		}
-		
+        public ushort AlternateShortKey => m_alternateShortKey;
+
         /// <summary>Represents a string metaphone key as a ushort</summary>
         /// 
         /// <param name="metaphoneKey">String metaphone key.  Must be four chars long; if you change 
@@ -136,7 +125,7 @@ namespace FTAnalyzer
         ///     tests are not performed, for performance reasons.</param>
         /// 
         /// <returns>ushort representation of the given metahphone key</returns>
-		static private ushort MetaphoneKeyToShort(String metaphoneKey) {
+        static private ushort MetaphoneKeyToShort(String metaphoneKey) {
 			ushort result, charResult;
 			Char currentChar;
 			

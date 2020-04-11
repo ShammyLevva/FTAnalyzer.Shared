@@ -64,16 +64,10 @@ namespace FTAnalyzer.Exports
         private char Separator { get; set; }
 
         public CsvFileReader(Stream stream, char separator = ',')
-            : base(stream)
-        {
-            Separator = separator;
-        }
+            : base(stream) => Separator = separator;
 
         public CsvFileReader(string filename, char separator = ',')
-            : base(filename)
-        {
-            Separator = separator;
-        }
+            : base(filename) => Separator = separator;
 
         /// <summary>
         /// Reads a row of data from a CSV file

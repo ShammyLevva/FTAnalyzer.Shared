@@ -12,7 +12,6 @@
 using System.IO;
 namespace FTAnalyzer
 {
-
     public class AnselOutputStreamWriter : StreamWriter
     {
         public AnselOutputStreamWriter(Stream output) : base(output, new AnselEncoding()){}

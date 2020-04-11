@@ -6,14 +6,9 @@ namespace FTAnalyzer
     {
         int Ascending { get; }
 
-        public DefaultIndividualComparer(bool ascending)
-        {
-             Ascending = ascending ? 1 : -1;
-        }
+        public DefaultIndividualComparer(bool ascending) => Ascending = ascending ? 1 : -1;
 
-        public override int Compare(Individual x, Individual y)
-        {
-            return Ascending * string.Compare(x.IndividualID, y.IndividualID, System.StringComparison.Ordinal);
-        }
+        public override int Compare(Individual x, Individual y) => 
+            Ascending * string.Compare(x.IndividualID, y.IndividualID, System.StringComparison.Ordinal);
     }
 }
