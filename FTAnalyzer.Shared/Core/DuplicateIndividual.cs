@@ -16,14 +16,21 @@
         public void CalculateScore()
         {
             Score = 0;
-            if (IndividualA.Surname.Equals(IndividualB.Surname) && IndividualA.Surname != Individual.UNKNOWN_NAME)
-                Score += 20;
-            if (IndividualA.Forename.Equals(IndividualB.Forename) && IndividualA.Forename != Individual.UNKNOWN_NAME)
-                Score += 20;
+            Score += NameScore(IndividualA, IndividualB);
             ScoreDates(IndividualA.BirthDate, IndividualB.BirthDate);
             ScoreDates(IndividualA.DeathDate, IndividualB.DeathDate);
             LocationScore();
             Score += SharedParents() + SharedChildren() + DifferentParentsPenalty();
+        }
+
+        int NameScore(Individual indA, Individual indB)
+        {
+            int score = 0;
+            if (indA.Surname.Equals(indB.Surname) && indA.Surname != Individual.UNKNOWN_NAME)
+                score += 20;
+            if (indA.Forename.Equals(indB.Forename) && indA.Forename != Individual.UNKNOWN_NAME)
+                score += 20;
+            return score;
         }
 
         void LocationScore()
@@ -92,8 +99,12 @@
                 {
                     if (parentA.Father == parentB.Father)
                         score += 50;
+                    else
+                        score += NameScore(parentA.Father, parentB.Father);
                     if (parentA.Mother == parentB.Mother)
                         score += 50;
+                    else
+                        score += NameScore(parentA.Mother, parentB.Mother);
                 }
             }
             return score;
