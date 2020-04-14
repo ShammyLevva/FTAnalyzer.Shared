@@ -75,7 +75,7 @@ namespace FTAnalyzer
             };
             UNKNOWN_DATE = new FactDate("UNKNOWN");
             MARRIAGE_LESS_THAN_13 = new FactDate("1600");
-            SAME_SEX_MARRIAGE = new FactDate("AFT 2000");
+            SAME_SEX_MARRIAGE = new FactDate("AFT 1 APR 2001");
             TODAY = new FactDate(DateTime.Now.ToString("dd MMM yyyy", CULTURE));
         }
 

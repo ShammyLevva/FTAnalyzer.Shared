@@ -415,6 +415,8 @@ namespace FTAnalyzer
 
         public bool HasAnyChildrenStatus => Facts.Any(f => f.FactType == Fact.CHILDREN1911);
 
+        public Individual EldestChild => Children.Count == 0 ? null : Children[0];
+
         #endregion
 
         public void SetBudgieCode(Individual ind, int lenAhnentafel)

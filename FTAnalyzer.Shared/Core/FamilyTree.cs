@@ -1330,22 +1330,7 @@ namespace FTAnalyzer
 
 #endregion
 
-#region TreeTops
-
-        public IEnumerable<IDisplayIndividual> GetTreeTops(Predicate<Individual> filter) => individuals.Filter(ind => filter(ind));
-        public IEnumerable<IExportIndividual> GetExportTreeTops(Predicate<Individual> filter) => individuals.Filter(ind => filter(ind));
-
-#endregion
-
-#region WorldWars
-
-        public IEnumerable<IDisplayIndividual> GetWorldWars(Predicate<Individual> filter) => individuals.Filter(ind => ind.IsMale && filter(ind));
-        public IEnumerable<IExportIndividual> GetExportWorldWars(Predicate<Individual> filter) => individuals.Filter(ind => ind.IsMale && filter(ind));
-
-#endregion
-
 #region Relationship Functions
-
         void ClearRelations()
         {
             foreach (Individual i in individuals)
@@ -1600,7 +1585,6 @@ namespace FTAnalyzer
 #endregion
 
 #region Displays
-
         public IEnumerable<CensusFamily> GetAllCensusFamilies(CensusDate censusDate, bool censusDone, bool checkCensus)
         {
             if (censusDate != null)
@@ -1767,6 +1751,19 @@ namespace FTAnalyzer
 
         public SortableBindingList<Individual> AllWorkers(string job) => new SortableBindingList<Individual>(occupations[job]);
 
+        public SortableBindingList<IDisplayFamily> PossiblyMissingChildFamilies
+        {
+            get
+            {
+                SortableBindingList<IDisplayFamily> result = new SortableBindingList<IDisplayFamily>();
+                foreach (Family fam in families)
+                    if(fam.EldestChild !=null && fam.MarriageDate.IsKnown && fam.EldestChild.BirthDate.IsKnown && 
+                      !fam.EldestChild.BirthDate.IsLongYearSpan && fam.EldestChild.BirthDate.BestYear > fam.MarriageDate.BestYear + 3)
+                        result.Add(fam);
+                return result;
+            }
+        }
+
         public List<IDisplayColourCensus> ColourCensus(string country, RelationTypes relType, string surname, 
                                                        ComboBoxFamily family, bool IgnoreMissingBirthDates, bool IgnoreMissingDeathDates)
         {
@@ -1855,13 +1852,13 @@ namespace FTAnalyzer
             for (int i = 0; i < DATA_ERROR_GROUPS; i++)
                 errors[i] = new List<DataError>();
             // calculate error lists
-#region Individual Fact Errors
+    #region Individual Fact Errors
             foreach (Individual ind in AllIndividuals)
             {
                 progress.Report(20 + (record++ / totalRecords));
                 try
                 {
-#region Death facts
+        #region Death facts
                     if (ind.DeathDate.IsKnown)
                     {
                         if (ind.BirthDate.IsAfter(ind.DeathDate))
@@ -1877,7 +1874,7 @@ namespace FTAnalyzer
                             errors[(int)Dataerror.LIVING_WITH_DEATH_DATE].Add(new DataError((int)Dataerror.LIVING_WITH_DEATH_DATE, ind, $"Flagged as living but has death date of {ind.DeathDate}"));
                     }
 #endregion
-#region Error facts
+        #region Error facts
                     foreach (Fact f in ind.ErrorFacts)
                     {
                         bool added = false;
@@ -1932,7 +1929,7 @@ namespace FTAnalyzer
                             errors[(int)Dataerror.FACT_ERROR].Add(new DataError((int)Dataerror.FACT_ERROR, f.FactErrorLevel, ind, f.FactErrorMessage));
                     }
 #endregion
-#region All Facts
+        #region All Facts
                     foreach (Fact f in ind.AllFacts)
                     {
                         if (FactBeforeBirth(ind, f))
@@ -1987,7 +1984,7 @@ namespace FTAnalyzer
                     }
 #endregion
 #endregion
-#region Parents Facts
+        #region Parents Facts
                     foreach (ParentalRelationship parents in ind.FamiliesAsChild)
                     {
                         Family asChild = parents.Family;
@@ -2090,7 +2087,7 @@ namespace FTAnalyzer
 #endif
             }
 #endregion
-#region Family Fact Errors
+    #region Family Fact Errors
             catchCount = 0;
             foreach (Family fam in AllFamilies)
             {
@@ -2116,7 +2113,7 @@ namespace FTAnalyzer
                        catchCount++;
                 }
             }
-#endregion
+    #endregion
 
             for (int i = 0; i < DATA_ERROR_GROUPS; i++)
                 DataErrorTypes.Add(new DataErrorGroup(i, errors[i]));
@@ -3179,7 +3176,7 @@ namespace FTAnalyzer
         public static List<Individual> GetAllRelations(Individual ind) => GetFamily(ind).Union(GetAncestors(ind).Union(GetDescendants(ind))).ToList();
         #endregion
 
-        #region Duplicates Processing
+#region Duplicates Processing
         decimal maleProgress;
         decimal femaleProgress;
         decimal progressMaximum;
@@ -3538,6 +3535,21 @@ namespace FTAnalyzer
             return doc;
         }
 
-#endregion
+        #endregion
+
+#region WorldWars
+
+        public IEnumerable<IDisplayIndividual> GetWorldWars(Predicate<Individual> filter) => individuals.Filter(ind => ind.IsMale && filter(ind));
+        public IEnumerable<IExportIndividual> GetExportWorldWars(Predicate<Individual> filter) => individuals.Filter(ind => ind.IsMale && filter(ind));
+
+        #endregion
+
+#region TreeTops
+
+        public IEnumerable<IDisplayIndividual> GetTreeTops(Predicate<Individual> filter) => individuals.Filter(ind => filter(ind));
+        public IEnumerable<IExportIndividual> GetExportTreeTops(Predicate<Individual> filter) => individuals.Filter(ind => filter(ind));
+
+        #endregion
+
     }
 }
