@@ -2563,7 +2563,7 @@ namespace FTAnalyzer
             if (censusCountry.Equals(Countries.UNITED_STATES))
                 uri.Path = "/results/united-states-records-in-census-land-and-surveys";
             else if (Countries.IsUnitedKingdom(censusCountry))
-                uri.Path = "/results/united-kingdom-records-in-census-land-and-surveys";
+                uri.Path = $"/search-world-records/{censusYear}-england-wales-and-scotland-census";
             else if (censusCountry.Equals(Countries.IRELAND))
                 uri.Path = "/results/ireland-records-in-census-land-and-surveys";
             else
