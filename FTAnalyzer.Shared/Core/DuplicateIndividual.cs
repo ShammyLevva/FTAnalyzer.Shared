@@ -26,10 +26,13 @@
         int NameScore(Individual indA, Individual indB)
         {
             int score = 0;
-            if (indA.Surname.Equals(indB.Surname) && indA.Surname != Individual.UNKNOWN_NAME)
-                score += 20;
-            if (indA.Forename.Equals(indB.Forename) && indA.Forename != Individual.UNKNOWN_NAME)
-                score += 20;
+            if (indA != null && indB != null)
+            {
+                if (indA.Surname.Equals(indB.Surname) && indA.Surname != Individual.UNKNOWN_NAME)
+                    score += 20;
+                if (indA.Forename.Equals(indB.Forename) && indA.Forename != Individual.UNKNOWN_NAME)
+                    score += 20;
+            }
             return score;
         }
 
