@@ -1566,10 +1566,10 @@ namespace FTAnalyzer
             if (marriage == null)
                 return string.Empty;
             if (IndividualID == marriage.HusbandID && marriage.Wife != null)
-                return $"To {marriage.Wife.Name}: {marriage.ToString()}";
+                return $"To {marriage.Wife.Name}: {marriage}";
             if (IndividualID == marriage.WifeID && marriage.Husband != null)
-                return $"To {marriage.Husband.Name}: {marriage.ToString()}";
-            return $"Married: {marriage.ToString()}";
+                return $"To {marriage.Husband.Name}: {marriage}";
+            return $"Married: {marriage}";
         }
 
         public int NumMissingLostCousins(string country)

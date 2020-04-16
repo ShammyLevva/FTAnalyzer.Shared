@@ -21,5 +21,17 @@ namespace FTAnalyzer
         protected InvalidGEDCOMException(SerializationInfo serializationInfo, StreamingContext streamingContext)
              : base(serializationInfo, streamingContext)
         { }
+
+        public InvalidGEDCOMException()
+        {
+        }
+
+        public InvalidGEDCOMException(string message) : base(message)
+        {
+        }
+
+        public InvalidGEDCOMException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
     }
 }

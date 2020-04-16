@@ -12,5 +12,13 @@ namespace FTAnalyzer
         protected CensusSearchException(System.Runtime.Serialization.SerializationInfo serializationInfo, System.Runtime.Serialization.StreamingContext streamingContext)
             : base(serializationInfo, streamingContext)
         { }
+
+        public CensusSearchException()
+        {
+        }
+
+        public CensusSearchException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
     }
 }

@@ -12,5 +12,13 @@ namespace FTAnalyzer
         protected FactDateException(System.Runtime.Serialization.SerializationInfo serializationInfo, System.Runtime.Serialization.StreamingContext streamingContext)
             : base(serializationInfo, streamingContext)
         { }
+
+        public FactDateException()
+        {
+        }
+
+        public FactDateException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
     }
 }
