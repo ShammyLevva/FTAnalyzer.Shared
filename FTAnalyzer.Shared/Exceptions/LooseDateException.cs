@@ -10,8 +10,7 @@ namespace FTAnalyzer
         { }
 
         protected LooseDataException(System.Runtime.Serialization.SerializationInfo serializationInfo, System.Runtime.Serialization.StreamingContext streamingContext)
-        {
-            throw new NotImplementedException();
-        }
+            : base(serializationInfo, streamingContext)
+        { }
     }
 }
