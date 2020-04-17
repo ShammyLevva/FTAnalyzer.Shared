@@ -60,7 +60,7 @@ namespace FTAnalyzer
                     });
 
         public static ISet<string> CREATED_FACTS = new HashSet<string>(new string[] {
-            CENSUS_FTA, CHILDREN, PARENT, BIRTH_CALC
+            CENSUS_FTA, CHILDREN, PARENT, BIRTH_CALC, LC_FTA
                     });
 
         public static readonly Dictionary<string, string> NON_STANDARD_FACTS = new Dictionary<string,string>();
