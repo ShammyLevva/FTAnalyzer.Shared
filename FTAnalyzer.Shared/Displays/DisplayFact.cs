@@ -56,6 +56,7 @@ namespace FTAnalyzer
         public string SurnameAtDate => Ind == null ? string.Empty : Ind.SurnameAtDate(FactDate);
         public string FactHash => Ind == null ? Fact.Preferred + Fact.FactTypeDescription + Fact.DateString + Fact.Location.OriginalText :
                                               Ind.IndividualID + Fact.Preferred + Fact.FactTypeDescription + Fact.DateString + Fact.Location.OriginalText;
+        public string ErrorComment => Fact.FactErrorMessage;
 
         public int CompareTo(object obj)
         {

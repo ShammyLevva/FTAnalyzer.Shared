@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Xml;
 using FTAnalyzer.Utilities;
+using System.Web;
 
 namespace FTAnalyzer
 {
@@ -198,7 +199,7 @@ namespace FTAnalyzer
         public string ED { get; internal set; }
         public string SD { get; internal set; }
         public string Family { get; internal set; }
-        string ReferenceText { get; set; }
+        public string ReferenceText { get; set; }
         CensusLocation CensusLocation { get; set; }
         public Fact Fact { get; private set; }
         public bool IsUKCensus { get; private set; }
@@ -385,11 +386,13 @@ namespace FTAnalyzer
 
         public static string ClearCommonPhrases(string input)
         {
-            string output = input.Replace(".", " ").Replace(",", " ").Replace("(", " ")
-                                 .Replace(")", " ").Replace("{", " ").Replace("}", " ")
-                                 .Replace("«b»", " ").Replace("«i»", " ").Replace("«/b»", " ")
-                                 .Replace("«/i»", " ").Replace(@"\i", " ").Replace(@"\i0", " ")
-                                 .ClearWhiteSpace();
+            string output = HttpUtility.UrlDecode(input) // fixes issues with web formatted text
+                                .Replace(".", " ").Replace(",", " ").Replace("(", " ")
+                                .Replace(")", " ").Replace("{", " ").Replace("}", " ")
+                                .Replace("«b»", " ").Replace("«i»", " ").Replace("«/b»", " ")
+                                .Replace("«/i»", " ").Replace(@"\i", " ").Replace(@"\i0", " ")
+                                .Replace("&nbsp"," ").Replace(";", " ")
+                                .ClearWhiteSpace();
             return output.Replace("Registration District", "RD", StringComparison.OrdinalIgnoreCase)
                         .Replace("RegistrationDistrict", "RD", StringComparison.OrdinalIgnoreCase)
                         .Replace("Reg District", "RD", StringComparison.OrdinalIgnoreCase)

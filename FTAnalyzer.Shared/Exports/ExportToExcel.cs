@@ -62,19 +62,27 @@ namespace FTAnalyzer.Utilities
 
             for (int j = 0; j < columnscount; j++)
             {   //Get column headers  and make it as bold in excel columns
-                output.Write(q + table.Columns[j].ColumnName + q);
-                if (j < columnscount - 1)
-                    output.Write(",");
+                var column = table.Rows[0][j];
+                if (column.ToString() != "System.Drawing.Bitmap")
+                {
+                    output.Write(q + table.Columns[j].ColumnName + q);
+                    if (j < columnscount - 1)
+                        output.Write(",");
+                }
             }
             output.WriteLine();
             foreach (DataRow row in table.Rows)
             {
                 //write in new row
-                for (int i = 0; i < columnscount; i++)
+                for (int col = 0; col < columnscount; col++)
                 {
-                    output.Write(q + row[i].ToString().Replace("\"", "")  + q);
-                    if (i < columnscount - 1)
-                        output.Write(",");
+                    var cell = row[col];
+                    if (cell.ToString() != "System.Drawing.Bitmap")
+                    {
+                        output.Write(q + row[col].ToString().Replace("\"", "") + q);
+                        if (col < columnscount - 1)
+                            output.Write(",");
+                    }
                 }
                 output.WriteLine();
             }

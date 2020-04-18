@@ -65,5 +65,7 @@ namespace FTAnalyzer
         [ColumnDetail("Ignored Fact", 80, ColumnDetail.ColumnAlignment.Right)]
         string IgnoredFact { get; }
 #endif
+        [ColumnDetail("Error Comment", 2500, ColumnDetail.ColumnAlignment.Left)]
+        string ErrorComment { get; }
     }
 }

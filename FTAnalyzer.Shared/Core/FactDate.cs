@@ -129,7 +129,7 @@ namespace FTAnalyzer
                     return UNKNOWN_DATE.ToString();
                 case "DECEASED":
                 case "DEAD":
-                    str = $"BEF {TODAY.ToString()}";
+                    str = $"BEF {TODAY}";
                     break;
                 case "STILLBORN":
                 case "INFANT":
@@ -380,7 +380,7 @@ namespace FTAnalyzer
             matcher = _datePatterns["POSTFIX"].Match(str);
             if (matcher.Success)
             {
-                string result = $"{matcher.Groups[1]}{matcher.Groups[2].ToString()}";
+                string result = $"{matcher.Groups[1]}{matcher.Groups[2]}";
                 return result.Trim();
             }
             if (Properties.NonGedcomDate.Default.UseNonGedcomDates)
