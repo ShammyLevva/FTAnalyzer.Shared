@@ -13,6 +13,23 @@ namespace FTAnalyzer.Utilities
             pi.SetValue(dgv, setting, null);
         }
 #endif
+        public static string Right(this string sValue, int iMaxLength)
+        {
+            //Check if the value is valid
+            if (string.IsNullOrEmpty(sValue))
+            {
+                //Set valid empty string as string could be null
+                sValue = string.Empty;
+            }
+            else if (sValue.Length > iMaxLength)
+            {
+                //Make the string no longer than the max length
+                sValue = sValue.Substring(sValue.Length - iMaxLength, iMaxLength);
+            }
+
+            //Return the string
+            return sValue;
+        }
 
         public static DateTime TryAddYears(this DateTime date, int years)
         {
@@ -42,7 +59,7 @@ namespace FTAnalyzer.Utilities
         public static bool IsNumeric(this string input)
         {
             if (input.Length == 0) return false;
-            return int.TryParse(input, out int result);
+            return int.TryParse(input, out _);
         }
     }
 }
