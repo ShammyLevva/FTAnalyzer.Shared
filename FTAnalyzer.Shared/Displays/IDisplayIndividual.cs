@@ -29,6 +29,8 @@ namespace FTAnalyzer
         string Relation { get; }
         [ColumnDetail("Relation to Root", 160)]    
         string RelationToRoot { get; }
+        [ColumnDetail("FamilySearch ID", 120)]
+        string FamilySeachID { get; }
         [ColumnDetail("Marriages", 60, ColumnDetail.ColumnAlignment.Right)]
         int MarriageCount { get; }
         [ColumnDetail("Children", 60, ColumnDetail.ColumnAlignment.Right)]

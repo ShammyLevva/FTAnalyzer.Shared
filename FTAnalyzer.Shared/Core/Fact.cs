@@ -30,8 +30,8 @@ namespace FTAnalyzer
                 SEALED_TO_SPOUSE = "SLGS", SEPARATION = "_SEPR", SERVICE_NUMBER = "_MILTID", SOCIAL_SECURITY = "SSN", TITLE = "TITL",
                 UNKNOWN = "UNKN", WEIGHT = "_WEIG", WILL = "WILL", HASHTAG = "_HASHTAG", OBITUARY = "OBIT", CENSUS_SUMMARY = "CEN_SUMM";
 
-        public const string ARRIVAL = "*ARRI", CHILDLESS = "*CHILD", CHILDREN = "*CHILDREN", CONTACT = "*CONT",
-                DEPARTURE = "*DEPT", FAMILYSEARCH = "*IGI", LC_FTA = "*LOST_FTA", LOOSEBIRTH = "*LOOSEB", RACE = "RACE",
+        public const string ARRIVAL = "*ARRI", CHILDLESS = "*CHILD", CHILDREN = "*CHILDREN", CONTACT = "*CONT", DEPARTURE = "*DEPT",
+                FAMILYSEARCH = "*IGI", FAMILYSEARCH_ID = "FSID", LC_FTA = "*LOST_FTA", LOOSEBIRTH = "*LOOSEB", RACE = "RACE",
                 LOOSEDEATH = "*LOOSED", LOSTCOUSINS = "*LOST", MISSING = "*MISSING", PARENT = "*PARENT", REPORT = "*REPORT",
                 UNMARRIED = "*UNMAR", WEBSITE = "*WEBSITE", WITNESS = "*WITNE", WORLD_EVENT = "*WORLD_EVENT";
 
@@ -333,7 +333,8 @@ namespace FTAnalyzer
                 case ENDOWMENT_LDS: return "Endowment (LDS)";
                 case ENGAGEMENT: return "Engagement";
                 case EXCOMMUNICATION: return "Excommunication";
-                case FAMILYSEARCH: return "Familysearch";
+                case FAMILYSEARCH: return "FamilySearch";
+                case FAMILYSEARCH_ID: return "FamilySearch ID";
                 case FIRST_COMMUNION: return "First communion";
                 case FUNERAL: return "Funeral";
                 case GENDER: return "Gender";

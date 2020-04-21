@@ -42,6 +42,7 @@ namespace FTAnalyzer
         public BigInteger Ahnentafel { get; set; }
         public string BudgieCode { get; set; }
         public string RelationToRoot { get; set; }
+        public string FamilySearchID { get; private set; }
         public decimal RelationSort { get; set; }
         public CommonAncestor CommonAncestor { get; set; }
         public string UnrecognisedCensusNotes { get; private set; }
@@ -59,6 +60,7 @@ namespace FTAnalyzer
             MarriedName = string.Empty;
             StandardisedName = string.Empty;
             UnrecognisedCensusNotes = string.Empty;
+            FamilySearchID = string.Empty;
             IsFlaggedAsLiving = false;
             Gender = "U";
             Alias = string.Empty;
@@ -89,6 +91,7 @@ namespace FTAnalyzer
             Name = FamilyTree.GetText(node, "NAME", false);
             Gender = FamilyTree.GetText(node, "SEX", false);
             Alias = FamilyTree.GetText(node, "ALIA", false);
+            FamilySearchID = FamilyTree.GetText(node, "FSID", false);
             IsFlaggedAsLiving = node.SelectSingleNode("_FLGS/__LIVING") != null;
             forenameMetaphone = new DoubleMetaphone(Forename);
             surnameMetaphone = new DoubleMetaphone(Surname);
@@ -103,6 +106,7 @@ namespace FTAnalyzer
             AddFacts(node, Fact.DEGREE, outputText);
             AddFacts(node, Fact.EDUCATION, outputText);
             AddFacts(node, Fact.EMAIL, outputText);
+            AddFacts(node, Fact.FAMILYSEARCH_ID, outputText);
             AddFacts(node, Fact.HEIGHT, outputText);
             AddFacts(node, Fact.MEDICAL_CONDITION, outputText);
             AddFacts(node, Fact.NAMESAKE, outputText);
@@ -209,6 +213,7 @@ namespace FTAnalyzer
                 BudgieCode = i.BudgieCode;
                 _relationType = i._relationType;
                 RelationToRoot = i.RelationToRoot;
+                FamilySearchID = i.FamilySearchID;
                 Infamily = i.Infamily;
                 Notes = i.Notes;
                 HasParents = i.HasParents;
@@ -1624,6 +1629,7 @@ namespace FTAnalyzer
                 case "Occupation": return CompareComparableProperty<IDisplayIndividual>(i => i.Occupation, ascending);
                 case "Relation": return CompareComparableProperty<IDisplayIndividual>(i => i.Relation, ascending);
                 case "RelationToRoot": return CompareComparableProperty<IDisplayIndividual>(i => i.RelationToRoot, ascending);
+                case "FamilySearchID": return CompareComparableProperty<IDisplayIndividual>(i => i.FamilySearchID, ascending);
                 case "MarriageCount": return CompareComparableProperty<IDisplayIndividual>(i => i.MarriageCount, ascending);
                 case "ChildrenCount": return CompareComparableProperty<IDisplayIndividual>(i => i.ChildrenCount, ascending);
                 case "BudgieCode": return CompareComparableProperty<IDisplayIndividual>(i => i.BudgieCode, ascending);
