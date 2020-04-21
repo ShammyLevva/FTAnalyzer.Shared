@@ -84,7 +84,11 @@ namespace FTAnalyzer.Utilities
             tracker = new SimpleTracker("UA-125850339-2", analyticsSession, trackerEnvironment);
             AppVersion = MainForm.VERSION;
             OSVersion = SetWindowsVersion(os.Version.ToString());
-            DeploymentType = ApplicationDeployment.IsNetworkDeployed ? "ClickOnce" : "Zip File";
+            bool windowsStoreApp = Application.ExecutablePath.Contains("WindowsApps");
+            bool debugging = Application.ExecutablePath.Contains("GitRepo");
+            DeploymentType = ApplicationDeployment.IsNetworkDeployed ? "ClickOnce" : 
+                            windowsStoreApp ? "Windows Store" :
+                            debugging ? "Development" : "Zip File";
             string resolution = Screen.PrimaryScreen.Bounds.ToString();
 #elif __MACOS__
             var userDefaults = new NSUserDefaults();

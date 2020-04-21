@@ -85,6 +85,7 @@ namespace FTAnalyzer
 
         const string CANADA_CENSUS_PATTERN = @"Year *(\d{4}) *Census *(.*?) *Roll *(.*?) *P(age)? *(\d{1,4}[ABCD]?) *Family *(\d{1,4})";
         const string CANADA_CENSUS_PATTERN2 = @"(\d{4}) *Census[ -]*District *(\d{1,5})\/(\d{0,4}[A-Z]{0,4}) *P(age)? *(\d{1,4}[ABCD]?) *Family *(\d{1,4})";
+        const string CANADA_CENSUS_PATTERN3 = @"(\d{4}) *Census[ -]*(RG\d{2}) *District *(\d{1,5}) *Sub-District *(\d{0,2}[A-Z]{0,4}) *Family *(\d{1,4}) *P(age)? *(\d{1,4}[ABCD]?)";
 
         const string LC_CENSUS_PATTERN_EW = @"(\d{1,5})\/(\d{1,3})\/(\d{1,3}).*?England & Wales (1841|1881)";
         const string LC_CENSUS_PATTERN_1911_EW = @"(\d{1,5})\/(\d{1,3}).*?England & Wales 1911";
@@ -172,6 +173,7 @@ namespace FTAnalyzer
 
                 ["CANADA_CENSUS_PATTERN"] = new Regex(CANADA_CENSUS_PATTERN, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["CANADA_CENSUS_PATTERN2"] = new Regex(CANADA_CENSUS_PATTERN2, RegexOptions.Compiled | RegexOptions.IgnoreCase),
+                ["CANADA_CENSUS_PATTERN3"] = new Regex(CANADA_CENSUS_PATTERN3, RegexOptions.Compiled | RegexOptions.IgnoreCase),
 
                 ["LC_CENSUS_PATTERN_EW"] = new Regex(LC_CENSUS_PATTERN_EW, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["LC_CENSUS_PATTERN_1911_EW"] = new Regex(LC_CENSUS_PATTERN_1911_EW, RegexOptions.Compiled | RegexOptions.IgnoreCase),
@@ -1119,6 +1121,18 @@ namespace FTAnalyzer
                 SD = matcher.Groups[3].ToString();
                 Page = matcher.Groups[5].ToString();
                 Family = matcher.Groups[6].ToString();
+                SetFlagsandCountry(false, false, Countries.CANADA, ReferenceStatus.GOOD, matcher.Value);
+                return true;
+            }
+            matcher = censusRegexs["CANADA_CENSUS_PATTERN3"].Match(text);
+            if (matcher.Success)
+            {
+                Class = $"CAN{matcher.Groups[1]}";
+                RD = matcher.Groups[2].ToString();
+                ED = matcher.Groups[3].ToString();
+                SD = matcher.Groups[4].ToString();
+                Family = matcher.Groups[5].ToString();
+                Page = matcher.Groups[6].ToString();
                 SetFlagsandCountry(false, false, Countries.CANADA, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
