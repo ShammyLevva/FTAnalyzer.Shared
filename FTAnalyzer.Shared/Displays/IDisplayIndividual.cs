@@ -30,7 +30,7 @@ namespace FTAnalyzer
         [ColumnDetail("Relation to Root", 160)]    
         string RelationToRoot { get; }
         [ColumnDetail("FamilySearch ID", 120)]
-        string FamilySeachID { get; }
+        string FamilySearchID { get; }
         [ColumnDetail("Marriages", 60, ColumnDetail.ColumnAlignment.Right)]
         int MarriageCount { get; }
         [ColumnDetail("Children", 60, ColumnDetail.ColumnAlignment.Right)]
