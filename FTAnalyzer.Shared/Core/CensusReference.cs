@@ -1306,12 +1306,15 @@ namespace FTAnalyzer
             if (CensusDate.IsUKCensusYear(CensusYear, true))
             {
                 string year = CensusYear.StartDate.Year.ToString();
+                string defaultRegion = Settings.Default.defaultURLRegion;
+                if (defaultRegion == null)
+                    defaultRegion = ".co.uk";
                 if (year.Equals("1911") && Countries.IsEnglandWales(Country) && Piece.Length > 0 && Schedule.Length > 0)
-                    return @"http://search.findmypast.co.uk/search-world-records/1911-census-for-england-and-wales?pieceno=" + Piece + @"&schedule=" + Schedule;
+                    return @"http://search.findmypast" + defaultRegion + "/search-world-records/1911-census-for-england-and-wales?pieceno=" + Piece + @"&schedule=" + Schedule;
                 if (year.Equals("1939") && Countries.IsEnglandWales(Country) && Piece.Length > 0 && !ED.Equals("UNKNOWN"))
                 {
                     string dir = Piece.Length > 1 ? Piece.Substring(0, Piece.Length - 1) : Piece; //strip last letter from piece
-                    return @"https://search.findmypast.co.uk/record?id=tna%2fr39%2f" + dir + "%2f" + Piece.ToLower() + "%2f" + Page + "%2f" + Schedule;
+                    return @"https://search.findmypast" + defaultRegion + "/record?id=tna%2fr39%2f" + dir + "%2f" + Piece.ToLower() + "%2f" + Page + "%2f" + Schedule;
                 }
                 if (Countries.IsUnitedKingdom(Country))
                 {
@@ -1330,9 +1333,13 @@ namespace FTAnalyzer
                             querystring = querystring + @"&page=" + Page;
                     }
                     if (year.Equals("1841") && Book.Length > 0 && !Book.Equals(MISSING))
-                        return @"http://search.findmypast.co.uk/search-world-records/1841-england-wales-and-scotland-census?" + querystring + @"&book=" + Book;
+                        return @"http://search.findmypast" + defaultRegion + "/search-world-records/1841-england-wales-and-scotland-census?" + querystring + @"&book=" + Book;
                     if (querystring.Length > 0)
-                        return @"http://search.findmypast.co.uk/search-world-records/" + year + "-england-wales-and-scotland-census?" + querystring;
+                    {
+                        
+                        return year=="1911" ? @"https ://search.findmypast.co.uk/search-world-Records/1911-census-for-england-and-wales" + querystring :
+                            @"http://search.findmypast" + defaultRegion + "/search-world-records/" + year + "-england-wales-and-scotland-census?" + querystring;
+                    }
                 }
             }
             return string.Empty;

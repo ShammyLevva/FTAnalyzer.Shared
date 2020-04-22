@@ -2563,7 +2563,10 @@ namespace FTAnalyzer
             if (censusCountry.Equals(Countries.UNITED_STATES))
                 uri.Path = "/results/united-states-records-in-census-land-and-surveys";
             else if (Countries.IsUnitedKingdom(censusCountry))
-                uri.Path = $"/search-world-records/{censusYear}-england-wales-and-scotland-census";
+            {
+                uri.Path = censusYear == 1911 ? $"/search-world-records/1911-census-for-england-and-wales" :
+                $"/search-world-records/{censusYear}-england-wales-and-scotland-census";
+            }
             else if (censusCountry.Equals(Countries.IRELAND))
                 uri.Path = "/results/ireland-records-in-census-land-and-surveys";
             else
