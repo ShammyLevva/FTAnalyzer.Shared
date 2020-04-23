@@ -17,12 +17,11 @@ namespace FTAnalyzer
     {
         public static XmlDocument LoadFile(Stream stream, Encoding encoding, IProgress<string> outputText, bool reportBadLines)
         {
-            XmlDocument doc = null;
             StreamReader reader;
             reader = FileHandling.Default.RetryFailedLines
                 ? new StreamReader(CheckInvalidCR(CloneStream(stream)), encoding)
                 : new StreamReader(CloneStream(stream), encoding);
-            doc = Parse(reader, outputText, reportBadLines);
+            XmlDocument doc = Parse(reader, outputText, reportBadLines);
             if (doc?.SelectNodes("GED/INDI").Count == 0)
             { // if there is a problem with the file return with opposite line ends
                 reader = FileHandling.Default.RetryFailedLines
@@ -36,12 +35,11 @@ namespace FTAnalyzer
 
         public static XmlDocument LoadAnselFile(Stream stream, IProgress<string> outputText, bool reportBadLines)
         {
-            XmlDocument doc = null;
             StreamReader reader;
             reader = FileHandling.Default.RetryFailedLines
                     ? new AnselInputStreamReader(CheckInvalidCR(CloneStream(stream)))
                     : new AnselInputStreamReader(CloneStream(stream));
-            doc = Parse(reader, outputText, reportBadLines);
+            XmlDocument doc = Parse(reader, outputText, reportBadLines);
             if (doc?.SelectNodes("GED/INDI").Count == 0)
             {
                 // if there is a problem with the file return with opposite line ends
@@ -90,27 +88,27 @@ namespace FTAnalyzer
             return outfs;
         }
 
-        static MemoryStream CheckSpuriousOD(MemoryStream infs)
-        {
-            MemoryStream outfs = new MemoryStream();
-            byte b = (byte)infs.ReadByte();
-            long streamLength = infs.Length;
-            while (infs.Position < streamLength)
-            {
-                while (b == 0x0d && infs.Position < streamLength)
-                {
-                    b = (byte)infs.ReadByte();
-                    if (b == 0x0a)
-                    { // we have 0x0d 0x0a so write out the 0x0d and the 0x0a will follow in the normal write.
-                        outfs.WriteByte(0x0d);
-                    } // otherwise we drop though and have ignored the 0x0d on its own
-                }
-                outfs.WriteByte(b);
-                b = (byte)infs.ReadByte();
-            }
-            outfs.Position = 0;
-            return outfs;
-        }
+        //static MemoryStream CheckSpuriousOD(MemoryStream infs)
+        //{
+        //    MemoryStream outfs = new MemoryStream();
+        //    byte b = (byte)infs.ReadByte();
+        //    long streamLength = infs.Length;
+        //    while (infs.Position < streamLength)
+        //    {
+        //        while (b == 0x0d && infs.Position < streamLength)
+        //        {
+        //            b = (byte)infs.ReadByte();
+        //            if (b == 0x0a)
+        //            { // we have 0x0d 0x0a so write out the 0x0d and the 0x0a will follow in the normal write.
+        //                outfs.WriteByte(0x0d);
+        //            } // otherwise we drop though and have ignored the 0x0d on its own
+        //        }
+        //        outfs.WriteByte(b);
+        //        b = (byte)infs.ReadByte();
+        //    }
+        //    outfs.Position = 0;
+        //    return outfs;
+        //}
 
         static XmlDocument Parse(StreamReader reader, IProgress<string> outputText, bool reportBadLines)
         {
@@ -141,7 +139,7 @@ namespace FTAnalyzer
                         //need to check if nextline is valid if not line=line+nextline and nextline=reader.ReadLine();
                         while (nextline?.Length <= 1 || (nextline?.Length > 1 && (!char.IsNumber(nextline[0]) || !nextline[1].Equals(' '))))
                         {  // concat if next line not a number space combo
-                            line = line + nextline;
+                            line += nextline;
                             lineNr++;
                             nextline = reader.ReadLine();
                         }
