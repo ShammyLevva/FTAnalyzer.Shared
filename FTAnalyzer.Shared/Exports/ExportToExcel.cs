@@ -56,37 +56,38 @@ namespace FTAnalyzer.Utilities
         static void WriteFile(DataTable table, string filename)
         {
             string q = "\"";
-            StreamWriter output = new StreamWriter(new FileStream(filename, FileMode.Create, FileAccess.Write), Encoding.UTF8);
-            //am getting my grid's column headers
-            int columnscount = table.Columns.Count;
-
-            for (int j = 0; j < columnscount; j++)
-            {   //Get column headers  and make it as bold in excel columns
-                var column = table.Rows[0][j];
-                if (column.ToString() != "System.Drawing.Bitmap")
-                {
-                    output.Write(q + table.Columns[j].ColumnName + q);
-                    if (j < columnscount - 1)
-                        output.Write(",");
-                }
-            }
-            output.WriteLine();
-            foreach (DataRow row in table.Rows)
+            using (StreamWriter output = new StreamWriter(new FileStream(filename, FileMode.Create, FileAccess.Write), Encoding.UTF8))
             {
-                //write in new row
-                for (int col = 0; col < columnscount; col++)
-                {
-                    var cell = row[col];
-                    if (cell.ToString() != "System.Drawing.Bitmap")
+                //am getting my grid's column headers
+                int columnscount = table.Columns.Count;
+
+                for (int j = 0; j < columnscount; j++)
+                {   //Get column headers  and make it as bold in excel columns
+                    var column = table.Rows[0][j];
+                    if (column.ToString() != "System.Drawing.Bitmap")
                     {
-                        output.Write(q + row[col].ToString().Replace("\"", "") + q);
-                        if (col < columnscount - 1)
+                        output.Write(q + table.Columns[j].ColumnName + q);
+                        if (j < columnscount - 1)
                             output.Write(",");
                     }
                 }
                 output.WriteLine();
+                foreach (DataRow row in table.Rows)
+                {
+                    //write in new row
+                    for (int col = 0; col < columnscount; col++)
+                    {
+                        var cell = row[col];
+                        if (cell.ToString() != "System.Drawing.Bitmap")
+                        {
+                            output.Write(q + row[col].ToString().Replace("\"", "") + q);
+                            if (col < columnscount - 1)
+                                output.Write(",");
+                        }
+                    }
+                    output.WriteLine();
+                }
             }
-            output.Close();
         }
     }
 }

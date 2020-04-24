@@ -471,19 +471,20 @@ namespace FTAnalyzer
 
         void ReadStandardisedNameFile(string filename)
         {
-            StreamReader reader = new StreamReader(filename);
-            while (!reader.EndOfStream)
+            using (StreamReader reader = new StreamReader(filename))
             {
-                string line = reader.ReadLine();
-                string[] values = line.Split(',');
-                if (line.IndexOf(",", StringComparison.Ordinal) > 0 && (values[0] == "1" || values[0] == "2"))
+                while (!reader.EndOfStream)
                 {
-                    StandardisedName original = new StandardisedName(values[0] == "2", values[2]);
-                    StandardisedName standardised = new StandardisedName(values[1] == "2", values[3]);
-                    names.Add(original, standardised);
+                    string line = reader.ReadLine();
+                    string[] values = line.Split(',');
+                    if (line.IndexOf(",", StringComparison.Ordinal) > 0 && (values[0] == "1" || values[0] == "2"))
+                    {
+                        StandardisedName original = new StandardisedName(values[0] == "2", values[2]);
+                        StandardisedName standardised = new StandardisedName(values[1] == "2", values[3]);
+                        names.Add(original, standardised);
+                    }
                 }
             }
-            reader.Close();
         }
 
         public string GetStandardisedName(bool IsMale, string name)
@@ -3358,33 +3359,34 @@ namespace FTAnalyzer
 
         public static void WriteUnrecognisedReferencesFile(IEnumerable<string> unrecognisedResults, IEnumerable<string> missingResults, IEnumerable<string> notesResults, string filename)
         {
-            StreamWriter output = new StreamWriter(new FileStream(filename, FileMode.Create, FileAccess.Write), Encoding.UTF8);
-            int count = 0;
-            output.WriteLine("Note the counts on the loading page may not match the counts in the file as duplicates not written out each time\n");
-            if (unrecognisedResults.Count() > 0)
+            using (StreamWriter output = new StreamWriter(new FileStream(filename, FileMode.Create, FileAccess.Write), Encoding.UTF8))
             {
-                output.WriteLine("Census fact details where a Census reference was expected but went unrecognised");
-                unrecognisedResults = unrecognisedResults.OrderBy(x => x.ToString());
-                foreach (string line in unrecognisedResults)
-                    output.WriteLine($"{++count}: {line}");
+                int count = 0;
+                output.WriteLine("Note the counts on the loading page may not match the counts in the file as duplicates not written out each time\n");
+                if (unrecognisedResults.Count() > 0)
+                {
+                    output.WriteLine("Census fact details where a Census reference was expected but went unrecognised");
+                    unrecognisedResults = unrecognisedResults.OrderBy(x => x.ToString());
+                    foreach (string line in unrecognisedResults)
+                        output.WriteLine($"{++count}: {line}");
+                }
+                if (missingResults.Count() > 0)
+                {
+                    count = 0;
+                    output.WriteLine("\n\nCensus fact details where a Census Reference was missing or not detected");
+                    missingResults = missingResults.OrderBy(x => x.ToString());
+                    foreach (string line in missingResults)
+                        output.WriteLine($"{++count}: {line}");
+                }
+                if (notesResults.Count() > 0)
+                {
+                    count = 0;
+                    output.WriteLine("\n\nNotes with no census recognised references\nThese are usually NOT census references and are included in case there are some that got missed");
+                    notesResults = notesResults.OrderBy(x => x.ToString());
+                    foreach (string line in notesResults)
+                        output.WriteLine($"{++count}: {line}");
+                }
             }
-            if (missingResults.Count() > 0)
-            {
-                count = 0;
-                output.WriteLine("\n\nCensus fact details where a Census Reference was missing or not detected");
-                missingResults = missingResults.OrderBy(x => x.ToString());
-                foreach (string line in missingResults)
-                    output.WriteLine($"{++count}: {line}");
-            }
-            if (notesResults.Count() > 0)
-            {
-                count = 0;
-                output.WriteLine("\n\nNotes with no census recognised references\nThese are usually NOT census references and are included in case there are some that got missed");
-                notesResults = notesResults.OrderBy(x => x.ToString());
-                foreach (string line in notesResults)
-                    output.WriteLine($"{++count}: {line}");
-            }
-            output.Close();
         }
 
         #endregion

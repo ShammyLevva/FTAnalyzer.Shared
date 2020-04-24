@@ -100,7 +100,7 @@ namespace FTAnalyzer.Exports
             outputText.Report("\n\nNote if you fail to check your entries you will fail to match with your Lost Cousins.");
             int ftanalyzerfacts = Website.FindAll(lc => lc.FTAnalyzerFact).Count;
             int manualfacts = Website.FindAll(lc => !lc.FTAnalyzerFact).Count;
-            Task.Run(() => Analytics.TrackActionAsync(Analytics.LostCousinsAction, Analytics.ReadLostCousins, $"{DateTime.Now.ToUniversalTime().ToString("yyyy-MM-dd HH:mm")}: {manualfacts} manual & {ftanalyzerfacts} -> {ftanalyzerfacts + recordsAdded} FTAnalyzer entries"));
+            Task.Run(() => Analytics.TrackActionAsync(Analytics.LostCousinsAction, Analytics.ReadLostCousins, $"{DateTime.Now.ToUniversalTime():yyyy-MM-dd HH:mm}: {manualfacts} manual & {ftanalyzerfacts} -> {ftanalyzerfacts + recordsAdded} FTAnalyzer entries"));
             return recordsAdded;
         }
 

@@ -18,37 +18,41 @@ namespace FTAnalyzer
         public static XmlDocument LoadFile(Stream stream, Encoding encoding, IProgress<string> outputText, bool reportBadLines)
         {
             StreamReader reader;
-            reader = FileHandling.Default.RetryFailedLines
+            XmlDocument doc;
+            using (reader = FileHandling.Default.RetryFailedLines
                 ? new StreamReader(CheckInvalidCR(CloneStream(stream)), encoding)
-                : new StreamReader(CloneStream(stream), encoding);
-            XmlDocument doc = Parse(reader, outputText, reportBadLines);
-            if (doc?.SelectNodes("GED/INDI").Count == 0)
-            { // if there is a problem with the file return with opposite line ends
-                reader = FileHandling.Default.RetryFailedLines
-                    ? new StreamReader(CloneStream(stream), encoding)
-                    : new StreamReader(CheckInvalidCR(CloneStream(stream)), encoding);
-                doc = Parse(reader, outputText, false);
+                : new StreamReader(CloneStream(stream), encoding))
+            {
+                 doc = Parse(reader, outputText, reportBadLines);
+                if (doc?.SelectNodes("GED/INDI").Count == 0)
+                { // if there is a problem with the file return with opposite line ends
+                    reader = FileHandling.Default.RetryFailedLines
+                        ? new StreamReader(CloneStream(stream), encoding)
+                        : new StreamReader(CheckInvalidCR(CloneStream(stream)), encoding);
+                    doc = Parse(reader, outputText, false);
+                }
             }
-            reader.Close();
             return doc;
         }
 
         public static XmlDocument LoadAnselFile(Stream stream, IProgress<string> outputText, bool reportBadLines)
         {
             StreamReader reader;
-            reader = FileHandling.Default.RetryFailedLines
+            XmlDocument doc;
+            using (reader = FileHandling.Default.RetryFailedLines
                     ? new AnselInputStreamReader(CheckInvalidCR(CloneStream(stream)))
-                    : new AnselInputStreamReader(CloneStream(stream));
-            XmlDocument doc = Parse(reader, outputText, reportBadLines);
-            if (doc?.SelectNodes("GED/INDI").Count == 0)
+                    : new AnselInputStreamReader(CloneStream(stream)))
             {
-                // if there is a problem with the file return with opposite line ends
-                reader = FileHandling.Default.RetryFailedLines
-                    ? new AnselInputStreamReader(CloneStream(stream))
-                    : new AnselInputStreamReader(CheckInvalidCR(CloneStream(stream)));
-                doc = Parse(reader, outputText, false);
+                doc = Parse(reader, outputText, reportBadLines);
+                if (doc?.SelectNodes("GED/INDI").Count == 0)
+                {
+                    // if there is a problem with the file return with opposite line ends
+                    reader = FileHandling.Default.RetryFailedLines
+                        ? new AnselInputStreamReader(CloneStream(stream))
+                        : new AnselInputStreamReader(CheckInvalidCR(CloneStream(stream)));
+                    doc = Parse(reader, outputText, false);
+                }
             }
-            reader.Close();
             return doc;
         }
 
@@ -331,27 +335,30 @@ namespace FTAnalyzer
                     {
                         tempFile = tempFile.Substring(0, tempFile.Length - 3) + "html";
                         stream.Position = 0;
-                        FileStream fileStream = new FileStream(tempFile, FileMode.Create, FileAccess.Write);
-                        StreamWriter writer = new StreamWriter(fileStream);
-                        StreamReader reader = new StreamReader(stream);
-                        writer.WriteLine("<html><head><Title>Gedcom File</Title></head><body>");
-                        writer.WriteLine("<h4>Line Errors</h4>");
-                        writer.WriteLine("<table border='1'><tr><th>Line Number</th><th>Line Contents</th><th>Error Description</th></tr>");
-                        foreach (KeyValuePair<long, Tuple<string, string>> kvp in lineErrors)
-                            writer.WriteLine($"<tr><td><a href='#{kvp.Key}'>{kvp.Key}</a></td><td>{kvp.Value.Item1}</td><td>{kvp.Value.Item2}</td></tr>");
-                        writer.WriteLine("</table><h4>GEDCOM Contents</h4><table border='1'><tr><th>Line Number</th><th>Line Contents</th></tr>");
-                        string line = reader.ReadLine();
-                        long lineNr = 1;
-                        while (line != null)
+                        using (FileStream fileStream = new FileStream(tempFile, FileMode.Create, FileAccess.Write))
                         {
-                            if (lineErrors.ContainsKey(lineNr))
-                                writer.WriteLine($"<tr id='{lineNr}'><td>{lineNr++}</td><td>{line}</td></tr>");
-                            else
-                                writer.WriteLine($"<tr><td>{lineNr++}</td><td>{line}</td></tr>");
-                            line = reader.ReadLine();
+                            StreamWriter writer = new StreamWriter(fileStream);
+                            StreamReader reader = new StreamReader(stream);
+                            writer.WriteLine("<html><head><Title>Gedcom File</Title></head><body>");
+                            writer.WriteLine("<h4>Line Errors</h4>");
+                            writer.WriteLine("<table border='1'><tr><th>Line Number</th><th>Line Contents</th><th>Error Description</th></tr>");
+                            foreach (KeyValuePair<long, Tuple<string, string>> kvp in lineErrors)
+                                writer.WriteLine($"<tr><td><a href='#{kvp.Key}'>{kvp.Key}</a></td><td>{kvp.Value.Item1}</td><td>{kvp.Value.Item2}</td></tr>");
+                            writer.WriteLine("</table><h4>GEDCOM Contents</h4><table border='1'><tr><th>Line Number</th><th>Line Contents</th></tr>");
+                            string line = reader.ReadLine();
+                            long lineNr = 1;
+                            while (line != null)
+                            {
+                                if (lineErrors.ContainsKey(lineNr))
+                                    writer.WriteLine($"<tr id='{lineNr}'><td>{lineNr++}</td><td>{line}</td></tr>");
+                                else
+                                    writer.WriteLine($"<tr><td>{lineNr++}</td><td>{line}</td></tr>");
+                                line = reader.ReadLine();
+                            }
+                            writer.Write("</table></body></html>");
+                            reader.Close();
+                            writer.Close();
                         }
-                        writer.Write("</table></body></html>");
-                        fileStream.Close();
                         SpecialMethods.VisitWebsite(tempFile);
                     }
                 }

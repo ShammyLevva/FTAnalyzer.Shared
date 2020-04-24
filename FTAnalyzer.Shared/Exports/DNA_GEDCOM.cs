@@ -16,7 +16,7 @@ namespace FTAnalyzer.Exports
     public static class DNA_GEDCOM
     {
         static readonly FactDate PrivacyDate = new FactDate(DateTime.Now.AddYears(-100).ToString("dd MMM yyyy", FactDate.CULTURE));
-        static FamilyTree ft = FamilyTree.Instance;
+        static readonly FamilyTree ft = FamilyTree.Instance;
         static bool _includeSiblings;
         static bool _includeDescendants;
         static bool _privatise;
@@ -100,36 +100,38 @@ namespace FTAnalyzer.Exports
             List<Family> families = new List<Family>();
             List<Individual> spouses = new List<Individual>();
             _privateID = 1;
-            output = new StreamWriter(new FileStream(filename, FileMode.Create, FileAccess.Write), Encoding.UTF8);
-            WriteHeader(filename);
-            processed = new List<Individual>();
-            foreach (Individual ind in ft.DirectLineIndividuals)
+            using (output = new StreamWriter(new FileStream(filename, FileMode.Create, FileAccess.Write), Encoding.UTF8))
             {
-                WriteIndividual(ind);
-                foreach (ParentalRelationship asChild in ind.FamiliesAsChild)
+                WriteHeader(filename);
+                processed = new List<Individual>();
+                foreach (Individual ind in ft.DirectLineIndividuals)
                 {
-                    if (asChild.IsNaturalFather || asChild.IsNaturalMother)
+                    WriteIndividual(ind);
+                    foreach (ParentalRelationship asChild in ind.FamiliesAsChild)
                     {
-                        output.WriteLine($"1 FAMC @{asChild.Family.FamilyID}@");
-                        if (!families.Contains(asChild.Family))
-                            families.Add(asChild.Family);
+                        if (asChild.IsNaturalFather || asChild.IsNaturalMother)
+                        {
+                            output.WriteLine($"1 FAMC @{asChild.Family.FamilyID}@");
+                            if (!families.Contains(asChild.Family))
+                                families.Add(asChild.Family);
+                        }
+                    }
+                    foreach (Family asSpouse in ind.FamiliesAsSpouse)
+                    {
+                        output.WriteLine($"1 FAMS @{asSpouse.FamilyID}@");
+                        var spouse = asSpouse.Spouse(ind);
+                        if (spouse?.RelationType != Individual.DIRECT && spouse?.RelationType != Individual.DESCENDANT)
+                            spouses.Add(spouse); // we have a spouse that isn't a direct so is a step relation add to list to write
+                        if (!families.Contains(asSpouse))
+                            families.Add(asSpouse);
                     }
                 }
-                foreach (Family asSpouse in ind.FamiliesAsSpouse)
-                {
-                    output.WriteLine($"1 FAMS @{asSpouse.FamilyID}@");
-                    var spouse = asSpouse.Spouse(ind);
-                    if (spouse?.RelationType != Individual.DIRECT && spouse?.RelationType != Individual.DESCENDANT)
-                        spouses.Add(spouse); // we have a spouse that isn't a direct so is a step relation add to list to write
-                    if (!families.Contains(asSpouse))
-                        families.Add(asSpouse);
-                }
+                WriteSpouses(spouses);
+                if (_includeSiblings)
+                    WriteSiblings(families);
+                WriteFamilies(families);
+                WriteFooter();
             }
-            WriteSpouses(spouses);
-            if (_includeSiblings)
-                WriteSiblings(families);
-            WriteFamilies(families);
-            WriteFooter();
             UIHelpers.ShowMessage("Minimalist GEDCOM file written for use with DNA Matching. Upload today.");
         }
 
