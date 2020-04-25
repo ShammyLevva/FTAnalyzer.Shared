@@ -5,7 +5,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Web.UI.WebControls;
 using System.Xml;
+using FTAnalyzer.Mapping;
 using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
 
@@ -62,7 +64,7 @@ namespace FTAnalyzer
             }
         }
 #if __PC__
-        public Mapping.GeoResponse.CResult.CGeometry.CViewPort ViewPort { get; set; }
+        public GeoResponse.CResult.CGeometry.CViewPort ViewPort { get; set; }
 #endif
         readonly List<Individual> individuals;
         readonly string[] _Parts;
@@ -563,7 +565,7 @@ namespace FTAnalyzer
 
             // set unknown location as unknown so it doesn't keep hassling to be searched
             BLANK_LOCATION = new FactLocation(string.Empty, "0.0", "0.0", Geocode.UNKNOWN);
-            UNKNOWN_LOCATION = new FactLocation("Unknown", "0.0", "0.0", Geocode.UNKNOWN);
+            UNKNOWN_LOCATION = new FactLocation("Unknown", "0.0", "0.0", Geocode.GEDCOM_USER);
             LOCATIONS.Add("Unknown", UNKNOWN_LOCATION);
             if (!GeneralSettings.Default.SkipFixingLocations)
                 LoadConversions(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location));
@@ -1110,6 +1112,29 @@ namespace FTAnalyzer
 #endregion
 
         public bool IsWithinUKBounds => Longitude >= -7.974074 && Longitude <= 1.879409 && Latitude >= 49.814376 && Latitude <= 60.970872;
+
+        public string Bounds
+        {
+            get
+            {
+                string result = string.Empty;
+#if __PC__
+                if (ViewPort != null)
+                {
+                    if (EmptyViewPort)
+                        DatabaseHelper.GetLocationDetails(this);
+                    if (!EmptyViewPort)
+                    {
+                        GeoResponse.CResult.CGeometry.CViewPort latLongViewPort = MapTransforms.ReverseTransformViewport(ViewPort);
+                        result = $"&bounds={latLongViewPort.NorthEast.Lat},{latLongViewPort.NorthEast.Long}|{latLongViewPort.SouthWest.Lat},{latLongViewPort.SouthWest.Long}";
+                    }
+                }
+#endif
+                return result;
+            }
+        }
+
+        public bool EmptyViewPort => ViewPort.NorthEast.Lat == 0 && ViewPort.NorthEast.Long == 0 && ViewPort.SouthWest.Lat == 0 && ViewPort.SouthWest.Long == 0;
 
         //public string OSGridMapReference
         //{
