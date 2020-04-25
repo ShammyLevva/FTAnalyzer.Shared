@@ -10,7 +10,7 @@ namespace FTAnalyzer.Exports
     /// <summary>
     /// Class to store one CSV row
     /// </summary>
-    public class CsvRow : List<string>
+    public class CsvRowCollection : List<string>
     {
         public string LineText { get; set; }
     }
@@ -34,7 +34,7 @@ namespace FTAnalyzer.Exports
         /// Writes a single row to a CSV file.
         /// </summary>
         /// <param name="row">The row to be written</param>
-        public void WriteRow(CsvRow row)
+        public void WriteRow(CsvRowCollection row)
         {
             StringBuilder builder = new StringBuilder();
             bool firstColumn = true;
@@ -74,7 +74,7 @@ namespace FTAnalyzer.Exports
         /// </summary>
         /// <param name="row"></param>
         /// <returns></returns>
-        public bool ReadRow(CsvRow row)
+        public bool ReadRow(CsvRowCollection row)
         {
             row.LineText = ReadLine();
             if (string.IsNullOrEmpty(row.LineText))

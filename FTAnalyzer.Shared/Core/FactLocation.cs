@@ -257,7 +257,7 @@ namespace FTAnalyzer
                         AddGoogleFixes(LOCAL_GOOGLE_FIXES, n, SUBREGION);
                     foreach (XmlNode n in xmlDoc.SelectNodes("GoogleGeocodes/MultiLevelFixes/MultiLevelFix"))
                         AddGoogleFixes(LOCAL_GOOGLE_FIXES, n, UNKNOWN);
-                    progress.Report(string.Format("\nLoaded {0} Google Fixes.", LOCAL_GOOGLE_FIXES.Count()));
+                    progress.Report(string.Format("\nLoaded {0} Google Fixes.", LOCAL_GOOGLE_FIXES.Count));
                 }
             }
             catch (Exception e)
@@ -747,7 +747,7 @@ namespace FTAnalyzer
 
         string FixRegionTypos(string toFix)
         {
-            if (Country == Countries.AUSTRALIA && toFix.Equals("WA"))
+            if (Country == Countries.AUSTRALIA && toFix.Equals("WA", StringComparison.OrdinalIgnoreCase))
                 return "Western Australia"; // fix for WA = Washington
             REGION_TYPOS.TryGetValue(toFix, out string result);
             if (!string.IsNullOrEmpty(result))
@@ -1090,7 +1090,7 @@ namespace FTAnalyzer
 
         public bool CensusCountryMatches(string s, bool includeUnknownCountries)
         {
-            if (Country.Equals(s))
+            if (Country.Equals(s, StringComparison.OrdinalIgnoreCase))
                 return true;
             if (includeUnknownCountries)
             {

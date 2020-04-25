@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace FTAnalyzer
 {
@@ -6,8 +7,10 @@ namespace FTAnalyzer
     {
         public override int Compare(IDisplayLooseBirth x, IDisplayLooseBirth y)
         {
-            return x.Surname.Equals(y.Surname)
-                ? x.Forenames.Equals(y.Forenames)
+            if (x == null || y == null)
+                return 0;
+            return x.Surname.Equals(y.Surname, StringComparison.OrdinalIgnoreCase)
+                ? x.Forenames.Equals(y.Forenames, StringComparison.OrdinalIgnoreCase)
                     ? x.BirthDate.CompareTo(y.BirthDate)
                     : string.Compare(x.Forenames, y.Forenames, System.StringComparison.Ordinal)
                 : string.Compare(x.Surname, y.Surname, System.StringComparison.Ordinal);

@@ -73,7 +73,7 @@ namespace FTAnalyzer
         {
             if (node == null)
                 return string.Empty;
-            if (node.Name.Equals("PAGE") || node.Name.Equals("TITL") || node.Name.Equals("NOTE"))
+            if (node.Name.Equals("PAGE", StringComparison.OrdinalIgnoreCase) || node.Name.Equals("TITL", StringComparison.OrdinalIgnoreCase) || node.Name.Equals("NOTE", StringComparison.OrdinalIgnoreCase))
                 return node.InnerText.Trim();
             XmlNode text = node.SelectSingleNode(".//TEXT");
             if (text != null && lookForText && text.ChildNodes.Count > 0)
@@ -138,9 +138,9 @@ namespace FTAnalyzer
             var result = new StringBuilder();
             foreach (XmlNode child in nodeList)
             {
-                if (child.Name.Equals("#text") || child.Name.Equals("CONT"))
+                if (child.Name.Equals("#text", StringComparison.OrdinalIgnoreCase) || child.Name.Equals("CONT", StringComparison.OrdinalIgnoreCase))
                     result.AppendLine(); // We have a new continuation so start a new line
-                if (!child.Name.Equals("SOUR"))
+                if (!child.Name.Equals("SOUR", StringComparison.OrdinalIgnoreCase))
                     result.Append(child.InnerText);
             }
             result.AppendLine();
@@ -153,7 +153,7 @@ namespace FTAnalyzer
             result.Append(firstline.Value.Trim());
             foreach (XmlNode child in nodeList)
             {
-                if (child.Name.Equals("CONC"))
+                if (child.Name.Equals("CONC", StringComparison.OrdinalIgnoreCase))
                     result.Append(child.InnerText);
             }
             result.AppendLine();
@@ -560,7 +560,7 @@ namespace FTAnalyzer
             {
                 Individual ind = GetIndividual(t.Item1);
                 Fact fact = t.Item2;
-                if (ind != null && !ind.Facts.Contains(fact))
+                if (ind != null && !ind.IndividualFacts.Contains(fact))
                     ind.AddFact(fact);
             }
         }
@@ -1778,17 +1778,17 @@ namespace FTAnalyzer
                     filter = FilterUtils.AndFilter(filter, surnameFilter);
                 }
                 Predicate<Individual> dateFilter;
-                if (country.Equals(Countries.UNITED_STATES))
+                if (country.Equals(Countries.UNITED_STATES, StringComparison.OrdinalIgnoreCase))
                     dateFilter = i => (i.BirthDate.StartsBefore(CensusDate.USCENSUS1940) || !i.BirthDate.IsKnown) &&
                                       (i.DeathDate.EndsAfter(CensusDate.USCENSUS1790) || !i.DeathDate.IsKnown) &&
                                       (i.BirthDate.IsKnown || !IgnoreMissingBirthDates) &&
                                       (i.DeathDate.IsKnown || !IgnoreMissingDeathDates);
-                else if (country.Equals(Countries.CANADA))
+                else if (country.Equals(Countries.CANADA, StringComparison.OrdinalIgnoreCase))
                     dateFilter = i => (i.BirthDate.StartsBefore(CensusDate.CANADACENSUS1921) || !i.BirthDate.IsKnown) &&
                                       (i.DeathDate.EndsAfter(CensusDate.CANADACENSUS1851) || !i.DeathDate.IsKnown) &&
                                       (i.BirthDate.IsKnown || !IgnoreMissingBirthDates) &&
                                       (i.DeathDate.IsKnown || !IgnoreMissingDeathDates);
-                else if (country.Equals(Countries.IRELAND))
+                else if (country.Equals(Countries.IRELAND, StringComparison.OrdinalIgnoreCase))
                     dateFilter = i => (i.BirthDate.StartsBefore(CensusDate.IRELANDCENSUS1911) || !i.BirthDate.IsKnown) &&
                                       (i.DeathDate.EndsAfter(CensusDate.IRELANDCENSUS1901) || !i.DeathDate.IsKnown) &&
                                       (i.BirthDate.IsKnown || !IgnoreMissingBirthDates) &&
@@ -1963,7 +1963,7 @@ namespace FTAnalyzer
                     var dupList = new List<Fact>();
                     foreach (string dfs in dup)
                     {
-                        var df = ind.AllFacts.First(x => x.EqualHash.Equals(dfs));
+                        var df = ind.AllFacts.First(x => x.EqualHash.Equals(dfs, StringComparison.OrdinalIgnoreCase));
                         if (df != null)
                         {
                             dupList.Add(df);
@@ -1975,7 +1975,7 @@ namespace FTAnalyzer
                     var possDuplicates = ind.AllFileFacts.GroupBy(x => x.PossiblyEqualHash).Where(g => g.Count() > 1).Select(y => y.Key).ToList();
                     foreach (string pd in possDuplicates)
                     {
-                        var pdf = ind.AllFacts.First(x => x.PossiblyEqualHash.Equals(pd));
+                        var pdf = ind.AllFacts.First(x => x.PossiblyEqualHash.Equals(pd, StringComparison.OrdinalIgnoreCase));
                         if (pdf != null && !dupList.Contains(pdf))
                         {
                             errors[(int)Dataerror.POSSIBLE_DUPLICATE_FACT].Add(
@@ -2184,7 +2184,8 @@ namespace FTAnalyzer
                     uri = BuildAncestryCensusQuery(censusCountry, censusYear, person, censusRegion);
                     break;
                 case 1:
-                    uri = censusYear == 1939 && censusCountry.Equals(Countries.UNITED_KINGDOM) ? BuildFindMyPast1939Query(person, censusRegion) : BuildFindMyPastCensusQuery(censusCountry, censusYear, person, censusRegion);
+                    uri = censusYear == 1939 && censusCountry.Equals(Countries.UNITED_KINGDOM, StringComparison.OrdinalIgnoreCase) ? 
+                        BuildFindMyPast1939Query(person, censusRegion) : BuildFindMyPastCensusQuery(censusCountry, censusYear, person, censusRegion);
                     break;
                 case 2:
                     uri = BuildFreeCenCensusQuery(censusCountry, censusYear, person);
@@ -2273,9 +2274,9 @@ namespace FTAnalyzer
 
         string BuildAncestryCensusQuery(string censusCountry, int censusYear, Individual person, string censusRegion = ".com")
         {
-            if (censusYear == 1939 && censusCountry.Equals(Countries.UNITED_KINGDOM))
+            if (censusYear == 1939 && censusCountry.Equals(Countries.UNITED_KINGDOM, StringComparison.OrdinalIgnoreCase))
                 return BuildAncestry1939Query(person, censusRegion);
-            if (censusYear == 1940 && censusCountry.Equals(Countries.UNITED_STATES))
+            if (censusYear == 1940 && censusCountry.Equals(Countries.UNITED_STATES, StringComparison.OrdinalIgnoreCase))
                 return BuildAncestry1940Query(person, censusRegion);
             UriBuilder uri = new UriBuilder
             {
@@ -2283,24 +2284,24 @@ namespace FTAnalyzer
                 Path = "cgi-bin/sse.dll"
             };
             StringBuilder query = new StringBuilder();
-            if (censusCountry.Equals(Countries.UNITED_KINGDOM))
+            if (censusCountry.Equals(Countries.UNITED_KINGDOM, StringComparison.OrdinalIgnoreCase))
             {
                 query.Append($"gl={censusYear}uki&");
                 query.Append("gss=ms_f-68&");
             }
-            else if (censusCountry.Equals(Countries.IRELAND))
+            else if (censusCountry.Equals(Countries.IRELAND, StringComparison.OrdinalIgnoreCase))
             {
                 if (censusYear == 1901)
                     query.Append("db=websearch-4150&");
                 if (censusYear == 1911)
                     query.Append("db=websearch-4050&");
             }
-            else if (censusCountry.Equals(Countries.UNITED_STATES))
+            else if (censusCountry.Equals(Countries.UNITED_STATES, StringComparison.OrdinalIgnoreCase))
             {
                 query.Append($"db={censusYear} usfedcen&");
                 query.Append("gss=ms_db&");
             }
-            else if (censusCountry.Equals(Countries.CANADA))
+            else if (censusCountry.Equals(Countries.CANADA, StringComparison.OrdinalIgnoreCase))
             {
                 if (censusYear == 1921)
                     query.Append("db=cancen1921&");
@@ -2479,7 +2480,7 @@ namespace FTAnalyzer
 
         string BuildFreeCenCensusQuery(string censusCountry, int censusYear, Individual person)
         {
-            if (!censusCountry.Equals(Countries.UNITED_KINGDOM) && !censusCountry.Equals("Unknown"))
+            if (!censusCountry.Equals(Countries.UNITED_KINGDOM, StringComparison.OrdinalIgnoreCase) && !censusCountry.Equals("Unknown", StringComparison.OrdinalIgnoreCase))
             {
                 throw new CensusSearchException("Sorry only UK searches can be done on FreeCEN.");
             }
@@ -2561,14 +2562,14 @@ namespace FTAnalyzer
             {
                 Host = $"search.findmypast{censusRegion}"
             };
-            if (censusCountry.Equals(Countries.UNITED_STATES))
+            if (censusCountry.Equals(Countries.UNITED_STATES, StringComparison.OrdinalIgnoreCase))
                 uri.Path = "/results/united-states-records-in-census-land-and-surveys";
             else if (Countries.IsUnitedKingdom(censusCountry))
             {
                 uri.Path = censusYear == 1911 ? $"/search-world-records/1911-census-for-england-and-wales" :
                 $"/search-world-records/{censusYear}-england-wales-and-scotland-census";
             }
-            else if (censusCountry.Equals(Countries.IRELAND))
+            else if (censusCountry.Equals(Countries.IRELAND, StringComparison.OrdinalIgnoreCase))
                 uri.Path = "/results/ireland-records-in-census-land-and-surveys";
             else
                 uri.Path = "/results/world-records-in-census-land-and-surveys";
@@ -3243,8 +3244,8 @@ namespace FTAnalyzer
                 {
                     if (indA.GenderMatches(indB) && indA.Name != Individual.UNKNOWN_NAME && indB.Name != Individual.UNKNOWN_NAME)
                     {
-                        if (indA.SurnameMetaphone.Equals(indB.SurnameMetaphone) &&
-                            (indA.ForenameMetaphone.Equals(indB.ForenameMetaphone) || indA.StandardisedName.Equals(indB.StandardisedName)) &&
+                        if (indA.SurnameMetaphone.Equals(indB.SurnameMetaphone, StringComparison.OrdinalIgnoreCase) &&
+                            (indA.ForenameMetaphone.Equals(indB.ForenameMetaphone, StringComparison.OrdinalIgnoreCase) || indA.StandardisedName.Equals(indB.StandardisedName, StringComparison.OrdinalIgnoreCase)) &&
                             indA.BirthDate.Distance(indB.BirthDate) < 5)
                         {
                             var test = new DuplicateIndividual(indA, indB);

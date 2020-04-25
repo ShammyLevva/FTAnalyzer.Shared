@@ -25,6 +25,8 @@ namespace FTAnalyzer
     { 
         public bool Equals(SurnameStats a, SurnameStats b)
         {
+            if (a == null || b == null)
+                return false;
             return a.Surname.ToUpper() == b.Surname.ToUpper() &&
                     a.Individuals == b.Individuals &&
                     a.Families == b.Families &&

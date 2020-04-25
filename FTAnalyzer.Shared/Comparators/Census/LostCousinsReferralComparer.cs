@@ -7,13 +7,15 @@ namespace FTAnalyzer
     {
         public override int Compare(ExportReferrals x, ExportReferrals y)
         {
-            if (x.ShortCode.Equals(y.ShortCode))
+            if (x == null || y == null)
+                return 0;
+            if (x.ShortCode.Equals(y.ShortCode, StringComparison.OrdinalIgnoreCase))
             {
-                if (x.Census.Equals(y.Census))
+                if (x.Census.Equals(y.Census, StringComparison.OrdinalIgnoreCase))
                 {
-                    if (x.CensusReference.Equals(y.CensusReference))
+                    if (x.CensusReference.Equals(y.CensusReference, StringComparison.OrdinalIgnoreCase))
                     {
-                        if (x.FamilyID.Equals(y.FamilyID))
+                        if (x.FamilyID.Equals(y.FamilyID, StringComparison.OrdinalIgnoreCase))
                         {
                             if (x.Age.Equals(y.Age))
                             {

@@ -46,7 +46,7 @@ namespace FTAnalyzer
         public decimal RelationSort { get; set; }
         public CommonAncestor CommonAncestor { get; set; }
         public string UnrecognisedCensusNotes { get; private set; }
-        public IList<Fact> Facts { get; private set; }
+        public IList<Fact> IndividualFacts { get; private set; }
         public string Alias { get; set; }
 
         #region Constructors
@@ -74,7 +74,7 @@ namespace FTAnalyzer
             HasParents = false;
             HasOnlyOneParent = false;
             ReferralFamilyID = string.Empty;
-            Facts = new List<Fact>();
+            IndividualFacts = new List<Fact>();
             ErrorFacts = new List<Fact>();
             Locations = new List<FactLocation>();
             FamiliesAsChild = new List<ParentalRelationship>();
@@ -220,7 +220,7 @@ namespace FTAnalyzer
                 HasOnlyOneParent = i.HasOnlyOneParent;
                 ReferralFamilyID = i.ReferralFamilyID;
                 CommonAncestor = i.CommonAncestor;
-                Facts = new List<Fact>(i.Facts);
+                IndividualFacts = new List<Fact>(i.IndividualFacts);
                 ErrorFacts = new List<Fact>(i.ErrorFacts);
                 Locations = new List<FactLocation>(i.Locations);
                 FamiliesAsChild = new List<ParentalRelationship>(i.FamiliesAsChild);
@@ -286,7 +286,7 @@ namespace FTAnalyzer
             }
         }
 
-        public IList<Fact> PersonalFacts => Facts;
+        public IList<Fact> PersonalFacts => IndividualFacts;
 
         IList<Fact> FamilyFacts
         {
@@ -306,7 +306,7 @@ namespace FTAnalyzer
         {
             get
             {
-                int currentFactCount = Facts.Count + FamilyFacts.Count;
+                int currentFactCount = IndividualFacts.Count + FamilyFacts.Count;
                 if (_allfacts == null || currentFactCount != Factcount)
                 {
                     _allfacts = new List<Fact>();
@@ -620,9 +620,9 @@ namespace FTAnalyzer
             }
         }
 
-        public int FactCount(string factType) => Facts.Count(f => f.FactType == factType && f.FactErrorLevel == Fact.FactError.GOOD);
+        public int FactCount(string factType) => IndividualFacts.Count(f => f.FactType == factType && f.FactErrorLevel == Fact.FactError.GOOD);
 
-        public int ResidenceCensusFactCount => Facts.Count(f => f.FactType == Fact.RESIDENCE && f.IsCensusFact);
+        public int ResidenceCensusFactCount => IndividualFacts.Count(f => f.FactType == Fact.RESIDENCE && f.IsCensusFact);
 
         public int ErrorFactCount(string factType, Fact.FactError errorLevel) => ErrorFacts.Count(f => f.FactType == factType && f.FactErrorLevel == errorLevel);
 
@@ -658,7 +658,7 @@ namespace FTAnalyzer
 
         #region Boolean Tests
 
-        public bool IsMale => _gender.Equals("M");
+        public bool IsMale => _gender.Equals("M", StringComparison.OrdinalIgnoreCase);
 
         public bool IsInFamily => Infamily;
 
@@ -673,12 +673,12 @@ namespace FTAnalyzer
             });
         }
 
-        public bool HasMilitaryFacts => Facts.Any(f => f.FactType == Fact.MILITARY || f.FactType == Fact.SERVICE_NUMBER);
+        public bool HasMilitaryFacts => IndividualFacts.Any(f => f.FactType == Fact.MILITARY || f.FactType == Fact.SERVICE_NUMBER);
 
         public bool HasCensusLocation(CensusDate when)
         {
             if (when == null) return false;
-            foreach (Fact f in Facts)
+            foreach (Fact f in IndividualFacts)
             {
                 if (f.IsValidCensus(when) && f.Location.ToString().Length > 0)
                     return true;
@@ -689,7 +689,7 @@ namespace FTAnalyzer
         public Fact CensusFact(FactDate factDate)
         {
             if (factDate == null) return null;
-            foreach (Fact f in Facts)
+            foreach (Fact f in IndividualFacts)
             {
                 if (f.IsValidCensus(factDate))
                     return f;
@@ -702,7 +702,7 @@ namespace FTAnalyzer
         public bool CensusFactExists(FactDate factDate, bool includeCreated)
         {
             if (factDate == null) return false;
-            foreach (Fact f in Facts)
+            foreach (Fact f in IndividualFacts)
             {
                 if (f.IsValidCensus(factDate))
                     return !f.Created || includeCreated;
@@ -715,7 +715,7 @@ namespace FTAnalyzer
         public bool IsCensusDone(CensusDate when, bool includeUnknownCountries, bool checkCountry)
         {
             if (when == null) return false;
-            foreach (Fact f in Facts)
+            foreach (Fact f in IndividualFacts)
             {
                 if (f.IsValidCensus(when))
                 {
@@ -730,12 +730,12 @@ namespace FTAnalyzer
             return false;
         }
 
-        public bool IsTaggedMissingCensus(CensusDate when) => when != null && Facts.Any(x => x.FactType == Fact.MISSING && x.FactDate.Overlaps(when));
+        public bool IsTaggedMissingCensus(CensusDate when) => when != null && IndividualFacts.Any(x => x.FactType == Fact.MISSING && x.FactDate.Overlaps(when));
 
         public bool IsLostCousinsEntered(CensusDate when) => IsLostCousinsEntered(when, true);
         public bool IsLostCousinsEntered(CensusDate when, bool includeUnknownCountries)
         {
-            foreach (Fact f in Facts)
+            foreach (Fact f in IndividualFacts)
             {
                 if (f.IsValidLostCousins(when))
                 {
@@ -744,7 +744,7 @@ namespace FTAnalyzer
                     Fact censusFact = GetCensusFact(f);
                     if (censusFact != null)
                     {
-                        if (when.Country.Equals(Countries.SCOTLAND) && Countries.IsEnglandWales(censusFact.Country))
+                        if (when.Country.Equals(Countries.SCOTLAND, StringComparison.OrdinalIgnoreCase) && Countries.IsEnglandWales(censusFact.Country))
                             return false;
                         if (Countries.IsUnitedKingdom(when.Country) && (Countries.IsUnitedKingdom(censusFact.Country) || censusFact.IsOverseasUKCensus(censusFact.Country)))
                             return true;
@@ -955,7 +955,7 @@ namespace FTAnalyzer
 
         void AddGoodFact(Fact fact)
         {
-            Facts.Add(fact);
+            IndividualFacts.Add(fact);
             if (fact.Preferred && !preferredFacts.ContainsKey(fact.FactType))
                 preferredFacts.Add(fact.FactType, fact);
             AddLocation(fact);
@@ -967,7 +967,7 @@ namespace FTAnalyzer
         void AddCensusSourceFacts()
         {
             List<Fact> toAdd = new List<Fact>(); // we can't vary the facts collection whilst looping
-            foreach (Fact f in Facts)
+            foreach (Fact f in IndividualFacts)
             {
                 if (!f.IsCensusFact && !CensusFactExists(f.FactDate, true))
                 {
@@ -1094,7 +1094,7 @@ namespace FTAnalyzer
             }
         }
 
-        public Fact GetPreferredFact(string factType) => preferredFacts.ContainsKey(factType) ? preferredFacts[factType] : Facts.FirstOrDefault(f => f.FactType == factType);
+        public Fact GetPreferredFact(string factType) => preferredFacts.ContainsKey(factType) ? preferredFacts[factType] : IndividualFacts.FirstOrDefault(f => f.FactType == factType);
 
         public FactDate GetPreferredFactDate(string factType)
         {
@@ -1103,7 +1103,7 @@ namespace FTAnalyzer
         }
         
         // Returns all facts of the given type.
-        public IEnumerable<Fact> GetFacts(string factType) => Facts.Where(f => f.FactType == factType);
+        public IEnumerable<Fact> GetFacts(string factType) => IndividualFacts.Where(f => f.FactType == factType);
 
         public string SurnameAtDate(FactDate date)
         {
@@ -1121,8 +1121,10 @@ namespace FTAnalyzer
 
         public void QuestionGender(Family family, bool pHusband)
         {
+            if (family == null)
+                return;
             string description;
-            if (Gender.Equals("U"))
+            if (Gender.Equals("U", StringComparison.OrdinalIgnoreCase))
             {
                 string spouse = pHusband ? "husband" : "wife";
                 description = $"Unknown gender but appears as a {spouse} in family {family.FamilyRef} check gender setting";
@@ -1179,15 +1181,15 @@ namespace FTAnalyzer
             }
         }
 
-        public int LostCousinsFacts => Facts.Count(f => f.FactType == Fact.LOSTCOUSINS || f.FactType == Fact.LC_FTA);
+        public int LostCousinsFacts => IndividualFacts.Count(f => f.FactType == Fact.LOSTCOUSINS || f.FactType == Fact.LC_FTA);
 
         public string ReferralFamilyID { get; set; }
 
         public Fact GetCensusFact(Fact lcFact, bool includeCreated = true)
         {
             return includeCreated
-                ? Facts.FirstOrDefault(x => x.IsCensusFact && x.FactDate.Overlaps(lcFact.FactDate))
-                : Facts.FirstOrDefault(x => x.IsCensusFact && !x.Created && x.FactDate.Overlaps(lcFact.FactDate));
+                ? IndividualFacts.FirstOrDefault(x => x.IsCensusFact && x.FactDate.Overlaps(lcFact.FactDate))
+                : IndividualFacts.FirstOrDefault(x => x.IsCensusFact && !x.Created && x.FactDate.Overlaps(lcFact.FactDate));
         }
 
         public void FixIndividualID(int length)
@@ -1247,24 +1249,24 @@ namespace FTAnalyzer
         public bool AliveOnAnyCensus(string country)
         {
             int ukCensus = (int)C1841 + (int)C1851 + (int)C1861 + (int)C1871 + (int)C1881 + (int)C1891 + (int)C1901 + (int)C1911 + (int)C1939;
-            if (country.Equals(Countries.UNITED_STATES))
+            if (country.Equals(Countries.UNITED_STATES, StringComparison.OrdinalIgnoreCase))
                 return ((int)US1790 + (int)US1800 + (int)US1810 + (int)US1810 + (int)US1820 + (int)US1830 + (int)US1840 + (int)US1850 + (int)US1860 + (int)US1870 + (int)US1880 + (int)US1890 + (int)US1900 + (int)US1910 + (int)US1920 + (int)US1930 + (int)US1940) > 0;
-            if (country.Equals(Countries.CANADA))
+            if (country.Equals(Countries.CANADA, StringComparison.OrdinalIgnoreCase))
                 return ((int)Can1851 + (int)Can1861 + (int)Can1871 + (int)Can1881 + (int)Can1891 + (int)Can1901 + (int)Can1906 + (int)Can1911 + (int)Can1916 + (int)Can1921) > 0;
-            if (country.Equals(Countries.IRELAND))
+            if (country.Equals(Countries.IRELAND, StringComparison.OrdinalIgnoreCase))
                 return ((int)Ire1901 + (int)Ire1911) > 0;
-            if (country.Equals(Countries.SCOTLAND))
+            if (country.Equals(Countries.SCOTLAND, StringComparison.OrdinalIgnoreCase))
                 return (ukCensus + (int)V1865 + (int)V1875 + (int)V1885 + (int)V1895 + (int)V1905 + (int)V1915 + (int)V1920 + (int)V1925) > 0;
             return ukCensus > 0;
         }
 
         public bool OutOfCountryOnAllCensus(string country)
         {
-            if (country.Equals(Countries.UNITED_STATES))
+            if (country.Equals(Countries.UNITED_STATES, StringComparison.OrdinalIgnoreCase))
                 return CheckOutOfCountry("US1");
-            if (country.Equals(Countries.CANADA))
+            if (country.Equals(Countries.CANADA, StringComparison.OrdinalIgnoreCase))
                 return CheckOutOfCountry("Can1");
-            if (country.Equals(Countries.IRELAND))
+            if (country.Equals(Countries.IRELAND, StringComparison.OrdinalIgnoreCase))
                 return CheckOutOfCountry("Ire1");
             return CheckOutOfCountry("C1");
         }
@@ -1544,11 +1546,11 @@ namespace FTAnalyzer
             // TODO Add scoring mechanism
         }
 
-        public int LostCousinsCensusFactCount => Facts.Count(f => f.IsLCCensusFact);
+        public int LostCousinsCensusFactCount => IndividualFacts.Count(f => f.IsLCCensusFact);
 
-        public int CensusFactCount => Facts.Count(f => f.IsCensusFact);
+        public int CensusFactCount => IndividualFacts.Count(f => f.IsCensusFact);
 
-        public int CensusDateFactCount(CensusDate censusDate) => Facts.Count(f => f.IsValidCensus(censusDate));
+        public int CensusDateFactCount(CensusDate censusDate) => IndividualFacts.Count(f => f.IsValidCensus(censusDate));
 
         public bool IsLivingError => IsFlaggedAsLiving && DeathDate.IsKnown;
 
@@ -1587,7 +1589,7 @@ namespace FTAnalyzer
         #region Basic Class Functions
         public override bool Equals(object obj)
         {
-            return obj is Individual && IndividualID.Equals(((Individual)obj).IndividualID);
+            return obj is Individual && IndividualID.Equals(((Individual)obj).IndividualID, StringComparison.OrdinalIgnoreCase);
         }
 
         public override int GetHashCode() => base.GetHashCode();

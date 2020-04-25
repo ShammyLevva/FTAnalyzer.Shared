@@ -96,7 +96,7 @@ namespace FTAnalyzer
             {
                 stat.Individuals = ignoreCase ? 
                         ft.AllIndividuals.Filter(indFilter).Count(x => x.Surname.Equals(stat.Surname, StringComparison.OrdinalIgnoreCase))
-                      : ft.AllIndividuals.Filter(indFilter).Count(x => x.Surname.Equals(stat.Surname));
+                      : ft.AllIndividuals.Filter(indFilter).Count(x => x.Surname.Equals(stat.Surname, StringComparison.OrdinalIgnoreCase));
                 stat.Families = ft.AllFamilies.Filter(famFilter).Count(x => x.ContainsSurname(stat.Surname, ignoreCase));
                 stat.Marriages = ft.AllFamilies.Filter(famFilter).Count(x => x.ContainsSurname(stat.Surname, ignoreCase) && x.MaritalStatus == Family.MARRIED);
                 value++;

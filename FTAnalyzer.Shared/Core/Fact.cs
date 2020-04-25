@@ -461,10 +461,10 @@ namespace FTAnalyzer
                         }
                     }
                     Preferred = preferred;
-                    if (FactType.Equals(CUSTOM_EVENT) || FactType.Equals(CUSTOM_FACT))
+                    if (FactType.Equals(CUSTOM_EVENT, StringComparison.OrdinalIgnoreCase) || FactType.Equals(CUSTOM_FACT, StringComparison.OrdinalIgnoreCase))
                     {
                         string tag = FamilyTree.GetText(node, "TYPE", false).ToUpper();
-                        if(tag.StartsWith("CENSUS") || tag.StartsWith("1939 REGISTER"))
+                        if(tag.StartsWith("CENSUS", StringComparison.OrdinalIgnoreCase) || tag.StartsWith("1939 REGISTER", StringComparison.OrdinalIgnoreCase))
                         {
                             FactType = CENSUS;
                             CheckCensusDate(tag);
@@ -491,15 +491,15 @@ namespace FTAnalyzer
                         Location.GEDCOMLatLong = true;
                     
                     // only check UK census dates for errors as those are used for colour census
-                    if (FactType.Equals(CENSUS) && Location.IsUnitedKingdom)
+                    if (FactType.Equals(CENSUS, StringComparison.OrdinalIgnoreCase) && Location.IsUnitedKingdom)
                         CheckCensusDate("Census");
 
                     // need to check residence after setting location
-                    if (FactType.Equals(RESIDENCE) && GeneralSettings.Default.UseResidenceAsCensus)
+                    if (FactType.Equals(RESIDENCE, StringComparison.OrdinalIgnoreCase) && GeneralSettings.Default.UseResidenceAsCensus)
                         CheckResidenceCensusDate();
 
                     // check Children Status is valid
-                    if (FactType.Equals(CHILDREN1911))
+                    if (FactType.Equals(CHILDREN1911, StringComparison.OrdinalIgnoreCase))
                         CheckValidChildrenStatus(node);
 
                     // now iterate through source elements of the fact finding all sources
@@ -534,7 +534,7 @@ namespace FTAnalyzer
                         else if (!CensusReference.IsGoodStatus)
                             CensusReference.CheckFullUnknownReference(CensusReference.Status);
                     }
-                    if(GeneralSettings.Default.ConvertResidenceFacts && FactType.Equals(RESIDENCE) && CensusReference.IsKnownStatus)
+                    if(GeneralSettings.Default.ConvertResidenceFacts && FactType.Equals(RESIDENCE, StringComparison.OrdinalIgnoreCase) && CensusReference.IsKnownStatus)
                             FactType = CENSUS; // change fact type if option set and residence has a valid census reference
                     if (FactType == DEATH)
                     {
@@ -732,17 +732,17 @@ namespace FTAnalyzer
                     return true;
                 if (FactDate.CensusYearMatches(CensusDate.EWCENSUS1881) && Countries.IsEnglandWales(Country))
                     return true;
-                if (FactDate.CensusYearMatches(CensusDate.SCOTCENSUS1881) && Country.Equals(Countries.SCOTLAND))
+                if (FactDate.CensusYearMatches(CensusDate.SCOTCENSUS1881) && Country.Equals(Countries.SCOTLAND, StringComparison.OrdinalIgnoreCase))
                     return true;
-                if (FactDate.CensusYearMatches(CensusDate.CANADACENSUS1881) && Country.Equals(Countries.CANADA))
+                if (FactDate.CensusYearMatches(CensusDate.CANADACENSUS1881) && Country.Equals(Countries.CANADA, StringComparison.OrdinalIgnoreCase))
                     return true;
                 if (FactDate.CensusYearMatches(CensusDate.EWCENSUS1911) && Countries.IsEnglandWales(Country))
                     return true;
-                if (FactDate.CensusYearMatches(CensusDate.IRELANDCENSUS1911) && Country.Equals(Countries.IRELAND))
+                if (FactDate.CensusYearMatches(CensusDate.IRELANDCENSUS1911) && Country.Equals(Countries.IRELAND, StringComparison.OrdinalIgnoreCase))
                     return true;
-                if (FactDate.CensusYearMatches(CensusDate.USCENSUS1880) && Country.Equals(Countries.UNITED_STATES))
+                if (FactDate.CensusYearMatches(CensusDate.USCENSUS1880) && Country.Equals(Countries.UNITED_STATES, StringComparison.OrdinalIgnoreCase))
                     return true;
-                if (FactDate.CensusYearMatches(CensusDate.USCENSUS1940) && Country.Equals(Countries.UNITED_STATES))
+                if (FactDate.CensusYearMatches(CensusDate.USCENSUS1940) && Country.Equals(Countries.UNITED_STATES, StringComparison.OrdinalIgnoreCase))
                     return true;
                 return false;
             }
@@ -974,8 +974,8 @@ namespace FTAnalyzer
                 latitude = "0.0";
             if (string.IsNullOrEmpty(longitude))
                 longitude = "0.0";
-            FactLocation.Geocode geocode = 
-                (latitude.Equals("0.0") && longitude.Equals("0.0")) ? FactLocation.Geocode.NOT_SEARCHED : FactLocation.Geocode.GEDCOM_USER;
+            FactLocation.Geocode geocode =  (latitude.Equals("0.0", StringComparison.OrdinalIgnoreCase) && longitude.Equals("0.0", StringComparison.OrdinalIgnoreCase)) ? 
+                    FactLocation.Geocode.NOT_SEARCHED : FactLocation.Geocode.GEDCOM_USER;
             if (addrTagText.Length > 0)
             {    //we have an address decide to add it to place or not
                 if (string.IsNullOrEmpty(Place) || addrTagText.Contains(Place))
@@ -996,10 +996,10 @@ namespace FTAnalyzer
         {
             return Sources.Any(fs =>
             {
-                return (FactType.Equals(BIRTH) && fs.IsBirthCert()) ||
-                    (FactType.Equals(DEATH) && fs.IsDeathCert()) ||
-                    (FactType.Equals(MARRIAGE) && fs.IsMarriageCert()) ||
-                    (FactType.Equals(CENSUS) && fs.IsCensusCert());
+                return (FactType.Equals(BIRTH, StringComparison.OrdinalIgnoreCase) && fs.IsBirthCert()) ||
+                    (FactType.Equals(DEATH, StringComparison.OrdinalIgnoreCase) && fs.IsDeathCert()) ||
+                    (FactType.Equals(MARRIAGE, StringComparison.OrdinalIgnoreCase) && fs.IsMarriageCert()) ||
+                    (FactType.Equals(CENSUS, StringComparison.OrdinalIgnoreCase) && fs.IsCensusCert());
             });
         }
 
@@ -1019,8 +1019,8 @@ namespace FTAnalyzer
             FactDate.IsKnown && (FactType == LOSTCOUSINS || FactType == LC_FTA) &&
             FactDate.CensusYearMatches(censusDate) && FactDate.IsNotBEForeOrAFTer && FactErrorLevel == FactError.GOOD;
 
-        public bool IsOverseasUKCensus(string country) =>
-            country.Equals(Countries.OVERSEAS_UK) || (!Countries.IsUnitedKingdom(country) && CensusReference != null && CensusReference.IsUKCensus);
+        public bool IsOverseasUKCensus(string country) => !string.IsNullOrEmpty(country) &&
+            (country.Equals(Countries.OVERSEAS_UK, StringComparison.OrdinalIgnoreCase) || (!Countries.IsUnitedKingdom(country) && CensusReference != null && CensusReference.IsUKCensus));
 
         public override string ToString() => 
             FactTypeDescription + ": " + FactDate + (Location.ToString().Length > 0 ? " at " + Location : string.Empty) + (Comment.Length > 0 ? "  (" + Comment + ")" : string.Empty);

@@ -13,8 +13,8 @@ namespace FTAnalyzer
 {
     public class Family : IDisplayFamily, IJsonFamily
     {
-        public static string UNKNOWN = "Unknown", SOLOINDIVIDUAL = "Solo", PRE_MARRIAGE = "Pre-Marriage";
-        public static string SINGLE = "Single", MARRIED = "Married", UNMARRIED = "Unmarried";
+        public const string UNKNOWN = "Unknown", SOLOINDIVIDUAL = "Solo", PRE_MARRIAGE = "Pre-Marriage";
+        public const string SINGLE = "Single", MARRIED = "Married", UNMARRIED = "Unmarried";
 
         public string FamilyID { get; private set; }
         public IList<Fact> Facts { get; private set; }
@@ -375,7 +375,7 @@ namespace FTAnalyzer
         {
             get
             {
-                if (FamilyType.Equals(SOLOINDIVIDUAL))
+                if (FamilyType.Equals(SOLOINDIVIDUAL, StringComparison.OrdinalIgnoreCase))
                 {
                     var name = Husband?.Name ?? Wife?.Name ?? string.Empty;
                     return $"Solo Family {FamilyID}: {name}";
@@ -395,7 +395,7 @@ namespace FTAnalyzer
 
         public bool ContainsSurname(string surname, bool ignoreCase) =>
                 ignoreCase ? Members.Any(x => x.Surname.Equals(surname, StringComparison.OrdinalIgnoreCase)) :
-                             Members.Any(x => x.Surname.Equals(surname));
+                             Members.Any(x => x.Surname.Equals(surname, StringComparison.OrdinalIgnoreCase));
 
         public bool On1911Census
         {
@@ -570,7 +570,7 @@ namespace FTAnalyzer
 
         public bool BothParentsAlive(FactDate when)
         {
-            if (Husband == null || Wife == null || FamilyType.Equals(SOLOINDIVIDUAL))
+            if (Husband == null || Wife == null || FamilyType.Equals(SOLOINDIVIDUAL, StringComparison.OrdinalIgnoreCase))
                 return false;
             return Husband.IsAlive(when) && Wife.IsAlive(when) && Husband.GetAge(when).MinAge > 13 && Wife.GetAge(when).MinAge > 13;
         }

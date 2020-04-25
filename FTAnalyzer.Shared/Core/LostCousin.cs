@@ -20,7 +20,7 @@ namespace FTAnalyzer
         {
             Name = name;
             BirthYear = birthYear;
-            Reference = FixReference(reference);
+            Reference = string.IsNullOrEmpty(reference) ? string.Empty : FixReference(reference);
             FTAnalyzerFact = ftanalyzer;
             if (censusYear == 1841 && Countries.IsEnglandWales(censusCountry))
                 CensusDate = CensusDate.EWCENSUS1841;
@@ -45,25 +45,28 @@ namespace FTAnalyzer
         { // Lost from website constructor
             Name = name;
             SetMetaphones();
-            int.TryParse(birthYear, out int result);
+            _ = int.TryParse(birthYear, out int result);
             BirthYear = result;
             Reference = reference;
-            int ptr = weblink.IndexOf("&p=", StringComparison.Ordinal);
+            int ptr = string.IsNullOrEmpty(weblink) ? -1 : weblink.IndexOf("&p=", StringComparison.Ordinal);
             WebLink = ptr == -1 ? null : new Uri(HttpUtility.UrlDecode(weblink.Substring(ptr + 3)));
             FTAnalyzerFact = ftanalyzer;
-            if (census.StartsWith("England", StringComparison.Ordinal))
+            if (!string.IsNullOrEmpty(census))
             {
-                if (census.EndsWith("1841", StringComparison.Ordinal)) CensusDate = CensusDate.EWCENSUS1841;
-                if (census.EndsWith("1881", StringComparison.Ordinal)) CensusDate = CensusDate.EWCENSUS1881;
-                if (census.EndsWith("1911", StringComparison.Ordinal)) CensusDate = CensusDate.EWCENSUS1911;
-            }
-            else
-            {
-                if (census.StartsWith("Scotland", StringComparison.Ordinal) && census.EndsWith("1881", StringComparison.Ordinal)) CensusDate = CensusDate.SCOTCENSUS1881;
-                if (census.StartsWith("Canada", StringComparison.Ordinal) && census.EndsWith("1881", StringComparison.Ordinal)) CensusDate = CensusDate.SCOTCENSUS1881;
-                if (census.StartsWith("Ireland", StringComparison.Ordinal) && census.EndsWith("1881", StringComparison.Ordinal)) CensusDate = CensusDate.SCOTCENSUS1881;
-                if (census.StartsWith("United States", StringComparison.Ordinal) && census.EndsWith("1880", StringComparison.Ordinal)) CensusDate = CensusDate.USCENSUS1880;
-                if (census.StartsWith("United States", StringComparison.Ordinal) && census.EndsWith("1940", StringComparison.Ordinal)) CensusDate = CensusDate.USCENSUS1940;
+                if (census.StartsWith("England", StringComparison.Ordinal))
+                {
+                    if (census.EndsWith("1841", StringComparison.Ordinal)) CensusDate = CensusDate.EWCENSUS1841;
+                    if (census.EndsWith("1881", StringComparison.Ordinal)) CensusDate = CensusDate.EWCENSUS1881;
+                    if (census.EndsWith("1911", StringComparison.Ordinal)) CensusDate = CensusDate.EWCENSUS1911;
+                }
+                else
+                {
+                    if (census.StartsWith("Scotland", StringComparison.Ordinal) && census.EndsWith("1881", StringComparison.Ordinal)) CensusDate = CensusDate.SCOTCENSUS1881;
+                    if (census.StartsWith("Canada", StringComparison.Ordinal) && census.EndsWith("1881", StringComparison.Ordinal)) CensusDate = CensusDate.SCOTCENSUS1881;
+                    if (census.StartsWith("Ireland", StringComparison.Ordinal) && census.EndsWith("1881", StringComparison.Ordinal)) CensusDate = CensusDate.SCOTCENSUS1881;
+                    if (census.StartsWith("United States", StringComparison.Ordinal) && census.EndsWith("1880", StringComparison.Ordinal)) CensusDate = CensusDate.USCENSUS1880;
+                    if (census.StartsWith("United States", StringComparison.Ordinal) && census.EndsWith("1940", StringComparison.Ordinal)) CensusDate = CensusDate.USCENSUS1940;
+                }
             }
         }
 
@@ -102,6 +105,8 @@ namespace FTAnalyzer
 
         public bool Equals(LostCousin other)
         {
+            if (other == null)
+                return false;
             if(CensusDate != other.CensusDate || Reference != other.Reference || Math.Abs(BirthYear - other.BirthYear) >= 5)
                 return false;
             if (Name == other.Name)
@@ -109,6 +114,16 @@ namespace FTAnalyzer
             if (ForenameMetaphone == other.ForenameMetaphone && SurnameMetaphone == other.SurnameMetaphone)
                 return true;
             return false;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 }

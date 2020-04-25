@@ -67,7 +67,7 @@ namespace FTAnalyzer
         public override bool Equals(object obj)
         {
             DisplayFact that = (DisplayFact)obj;
-            return FactHash.Equals(that.FactHash); //this.Ind.Equals(that.Ind) && this.Fact.Equals(that.Fact);
+            return FactHash.Equals(that.FactHash, StringComparison.OrdinalIgnoreCase); //this.Ind.Equals(that.Ind) && this.Fact.Equals(that.Fact);
         }
 
         public override int GetHashCode() => base.GetHashCode();

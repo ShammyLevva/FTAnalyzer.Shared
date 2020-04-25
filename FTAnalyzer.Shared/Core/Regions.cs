@@ -848,7 +848,7 @@ namespace FTAnalyzer
 
         public static ModernCounty OS_GetCounty(string code)
         {
-            return MODERN_COUNTIES.FirstOrDefault(c => c.CountyCode.Equals(code));
+            return MODERN_COUNTIES.FirstOrDefault(c => c.CountyCode.Equals(code, StringComparison.OrdinalIgnoreCase));
         }
 
         static void AppendValidRegions(ISet<Region> regions)
@@ -869,7 +869,7 @@ namespace FTAnalyzer
 
         public static bool IsPreferredRegion(string region)
         {
-            return PREFERRED_REGIONS.Any(x => x.PreferredName.Equals(region));
+            return PREFERRED_REGIONS.Any(x => x.PreferredName.Equals(region, StringComparison.OrdinalIgnoreCase));
         }
 
         public static Region GetRegion(string region)

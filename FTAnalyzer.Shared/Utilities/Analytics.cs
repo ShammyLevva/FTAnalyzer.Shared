@@ -147,8 +147,8 @@ namespace FTAnalyzer.Utilities
         {
             try
             {
-                await tracker.TrackEventAsync(category, action, value);
-                await tracker.TrackScreenviewAsync(category);
+                await tracker.TrackEventAsync(category, action, value).ConfigureAwait(false);
+                await tracker.TrackScreenviewAsync(category).ConfigureAwait(false);
             }
             catch (Exception e)
                 { Console.WriteLine(e.Message); }
@@ -160,7 +160,7 @@ namespace FTAnalyzer.Utilities
             try
             {
                 TimeSpan duration = DateTime.Now - Settings.Default.StartTime;
-                await SpecialMethods.TrackEventAsync(tracker, FTAShutdownAction, UsageEvent, duration.ToString("c"));
+                await SpecialMethods.TrackEventAsync(tracker, FTAShutdownAction, UsageEvent, duration.ToString("c")).ConfigureAwait(false);
             }
             catch (Exception e)
             { Console.WriteLine(e.Message); }
@@ -168,21 +168,22 @@ namespace FTAnalyzer.Utilities
 
         static string SetWindowsVersion(string version)
         {
-            if (version.StartsWith("6.1.7600")) return "Windows 7";
-            if (version.StartsWith("6.1.7601")) return "Windows 7 SP1";
-            if (version.StartsWith("6.2.9200")) return "Windows 8";
-            if (version.StartsWith("6.3.9200")) return "Windows 8.1";
-            if (version.StartsWith("6.3.9600")) return "Windows 8.1 Update 1";
-            if (version.StartsWith("10.0.10240")) return "Windows 10";
-            if (version.StartsWith("10.0.10586")) return "Windows 10 (1511)";
-            if (version.StartsWith("10.0.14393")) return "Windows 10 (1607)";
-            if (version.StartsWith("10.0.15063")) return "Windows 10 (1703)";
-            if (version.StartsWith("10.0.16299")) return "Windows 10 (1709)";
-            if (version.StartsWith("10.0.17134")) return "Windows 10 (1803)";
-            if (version.StartsWith("10.0.17763")) return "Windows 10 (1809)";
-            if (version.StartsWith("10.0.18362")) return "Windows 10 (1903)";
-            if (version.StartsWith("10.0.18363")) return "Windows 10 (1909)";
-            if (version.StartsWith("10.0.19041")) return "Windows 10 (2004)";
+            if (version.StartsWith("6.1.7600", StringComparison.OrdinalIgnoreCase)) return "Windows 7";
+            if (version.StartsWith("6.1.7601", StringComparison.OrdinalIgnoreCase)) return "Windows 7 SP1";
+            if (version.StartsWith("6.2.9200", StringComparison.OrdinalIgnoreCase)) return "Windows 8";
+            if (version.StartsWith("6.3.9200", StringComparison.OrdinalIgnoreCase)) return "Windows 8.1";
+            if (version.StartsWith("6.3.9600", StringComparison.OrdinalIgnoreCase)) return "Windows 8.1 Update 1";
+            if (version.StartsWith("10.0.10240", StringComparison.OrdinalIgnoreCase)) return "Windows 10";
+            if (version.StartsWith("10.0.10586", StringComparison.OrdinalIgnoreCase)) return "Windows 10 (1511)";
+            if (version.StartsWith("10.0.14393", StringComparison.OrdinalIgnoreCase)) return "Windows 10 (1607)";
+            if (version.StartsWith("10.0.15063", StringComparison.OrdinalIgnoreCase)) return "Windows 10 (1703)";
+            if (version.StartsWith("10.0.16299", StringComparison.OrdinalIgnoreCase)) return "Windows 10 (1709)";
+            if (version.StartsWith("10.0.17134", StringComparison.OrdinalIgnoreCase)) return "Windows 10 (1803)";
+            if (version.StartsWith("10.0.17763", StringComparison.OrdinalIgnoreCase)) return "Windows 10 (1809)";
+            if (version.StartsWith("10.0.18362", StringComparison.OrdinalIgnoreCase)) return "Windows 10 (1903)";
+            if (version.StartsWith("10.0.18363", StringComparison.OrdinalIgnoreCase)) return "Windows 10 (1909)";
+            if (version.StartsWith("10.0.19041", StringComparison.OrdinalIgnoreCase)) return "Windows 10 (2004)";
+            version += Environment.Is64BitProcess ? " (x64)" : " (x32)";
             return version;
         }
 #endif
