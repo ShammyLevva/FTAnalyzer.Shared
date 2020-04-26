@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace FTAnalyzer
 {
@@ -12,6 +13,10 @@ namespace FTAnalyzer
         }
 
         public NotFoundException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
+
+        protected NotFoundException(SerializationInfo serializationInfo, StreamingContext streamingContext)
         {
         }
     }

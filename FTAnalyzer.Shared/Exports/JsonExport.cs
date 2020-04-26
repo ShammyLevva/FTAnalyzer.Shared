@@ -30,6 +30,7 @@ namespace FTAnalyzer.Exports
 
         public void WriteJsonData(StreamWriter output)
         {
+            if (output is null) return;
             var jsonSerializerSettings = new JsonSerializerSettings()
             {
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore

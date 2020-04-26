@@ -162,6 +162,7 @@ namespace FTAnalyzer
 
         public static string ValidFilename(string filename)
         {
+            filename = filename ?? string.Empty;
             int pos = filename.IndexOfAny(Path.GetInvalidFileNameChars());
             if (pos == -1)
                 return filename;
@@ -3207,7 +3208,7 @@ namespace FTAnalyzer
                     Task.Run(() => IdentifyDuplicates(progress, males, ref maleProgress, ct)),
                     Task.Run(() => IdentifyDuplicates(progress, females, ref femaleProgress, ct))
                 };
-                await Task.WhenAll(tasks);
+                await Task.WhenAll(tasks).ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {
@@ -3363,14 +3364,14 @@ namespace FTAnalyzer
             {
                 int count = 0;
                 output.WriteLine("Note the counts on the loading page may not match the counts in the file as duplicates not written out each time\n");
-                if (unrecognisedResults.Count() > 0)
+                if (unrecognisedResults.Any())
                 {
                     output.WriteLine("Census fact details where a Census reference was expected but went unrecognised");
                     unrecognisedResults = unrecognisedResults.OrderBy(x => x.ToString());
                     foreach (string line in unrecognisedResults)
                         output.WriteLine($"{++count}: {line}");
                 }
-                if (missingResults.Count() > 0)
+                if (missingResults.Any())
                 {
                     count = 0;
                     output.WriteLine("\n\nCensus fact details where a Census Reference was missing or not detected");
@@ -3378,7 +3379,7 @@ namespace FTAnalyzer
                     foreach (string line in missingResults)
                         output.WriteLine($"{++count}: {line}");
                 }
-                if (notesResults.Count() > 0)
+                if (notesResults.Any())
                 {
                     count = 0;
                     output.WriteLine("\n\nNotes with no census recognised references\nThese are usually NOT census references and are included in case there are some that got missed");

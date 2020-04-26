@@ -38,7 +38,8 @@ namespace FTAnalyzer
         public const int METAPHONE_KEY_LENGTH = 4;//The length of the metaphone keys produced.  4 is sweet spot
 
         ///StringBuilders used to construct the keys
-        StringBuilder m_primaryKey, m_alternateKey;
+        readonly StringBuilder m_primaryKey;
+        readonly StringBuilder m_alternateKey;
 
         ///Actual keys, populated after construction
         string m_primaryKeyString, m_alternateKeyString;
@@ -112,6 +113,7 @@ namespace FTAnalyzer
         ///     and computes new keys for this word</param>
         public void ComputeKeys(string word)
         {
+            word = word ?? string.Empty;
             m_primaryKey.Length = 0;
             m_alternateKey.Length = 0;
 
@@ -133,7 +135,7 @@ namespace FTAnalyzer
             m_last = m_length - 1;
 
             //Padd with four spaces, so word can be over-indexed without fear of exception
-            m_word = String.Concat(m_word, "     ");
+            m_word = string.Concat(m_word, "     ");
 
             //Convert to upper case, since metaphone is not case sensitive
             m_word = m_word.ToUpper();

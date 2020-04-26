@@ -30,8 +30,8 @@ namespace FTAnalyzer
         public string Country { get; set; }
         public string Region { get; set; }
         public string SubRegion { get; set; }
-        public string Address { get => Address1; set { Address1 = value; AddressNoNumerics = FixNumerics(value, false); } }
-        public string Place { get => Place1; set { Place1 = value; PlaceNoNumerics = FixNumerics(value, false); } }
+        public string Address { get => Address1; set { Address1 = value; AddressNoNumerics = FixNumerics(value ?? string.Empty, false); } }
+        public string Place { get => Place1; set { Place1 = value; PlaceNoNumerics = FixNumerics(value ?? string.Empty, false); } }
         public string CountryMetaphone { get; private set; }
         public string RegionMetaphone { get; private set; }
         public string SubRegionMetaphone { get; private set; }
@@ -618,6 +618,7 @@ namespace FTAnalyzer
 
         public static void CopyLocationDetails(FactLocation from, FactLocation to)
         {
+            if (to is null || from is null) return;
             to.Latitude = from.Latitude;
             to.Longitude = from.Longitude;
             to.LatitudeM = from.LatitudeM;

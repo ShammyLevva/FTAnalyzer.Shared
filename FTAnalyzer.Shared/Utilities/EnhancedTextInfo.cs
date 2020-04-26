@@ -6,7 +6,7 @@ namespace FTAnalyzer.Utilities
 {
     public static class EnhancedTextInfo
     {
-        static TextInfo txtInfo = new CultureInfo("en-GB").TextInfo;
+        static readonly TextInfo txtInfo = new CultureInfo("en-GB").TextInfo;
 
         public static string ToTitleCase(string input)
         {
@@ -43,7 +43,8 @@ namespace FTAnalyzer.Utilities
                            .Replace("6Th", "6th")
                            .Replace("7Th", "7th")
                            .Replace("8Th", "8th")
-                           .Replace("9Th", "9th");
+                           .Replace("9Th", "9th")
+                           .Replace("0Th", "0th");
             return output;
         }
 
@@ -62,6 +63,7 @@ namespace FTAnalyzer.Utilities
         public static string RemoveSupriousDateCharacters(string text)
         {
             StringBuilder sb = new StringBuilder();
+            text = text ?? string.Empty;
             foreach(char ch in text)
             {
                 if (ch == 147 || ch == '-' || ch==8211)
@@ -76,6 +78,7 @@ namespace FTAnalyzer.Utilities
 
         public static string RemoveDiacritics(string text)
         {
+            if (text is null) return string.Empty;
             if (!Properties.FileHandling.Default.ConvertDiacritics)
                 return text; // only process if user wants to remove diacrits
             string formD = text.Normalize(NormalizationForm.FormD);

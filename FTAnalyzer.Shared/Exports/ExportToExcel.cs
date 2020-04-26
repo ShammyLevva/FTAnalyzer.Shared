@@ -18,18 +18,20 @@ namespace FTAnalyzer.Utilities
         {
             try
             {
-                SaveFileDialog saveFileDialog = new SaveFileDialog();
-                string initialDir = (string)Application.UserAppDataRegistry.GetValue("Excel Export Individual Path");
-                saveFileDialog.InitialDirectory = initialDir ?? Environment.SpecialFolder.MyDocuments.ToString();
-                saveFileDialog.Filter = "Comma Separated Value (*.csv)|*.csv";
-                saveFileDialog.FilterIndex = 1;
-                DialogResult dr = saveFileDialog.ShowDialog();
-                if (dr == DialogResult.OK)
+                using (SaveFileDialog saveFileDialog = new SaveFileDialog())
                 {
-                    string path = Path.GetDirectoryName(saveFileDialog.FileName);
-                    Application.UserAppDataRegistry.SetValue("Excel Export Individual Path", path);
-                    WriteFile(dt, saveFileDialog.FileName);
-                    UIHelpers.ShowMessage($"File written to {saveFileDialog.FileName}", "FTAnalyzer");
+                    string initialDir = (string)Application.UserAppDataRegistry.GetValue("Excel Export Individual Path");
+                    saveFileDialog.InitialDirectory = initialDir ?? Environment.SpecialFolder.MyDocuments.ToString();
+                    saveFileDialog.Filter = "Comma Separated Value (*.csv)|*.csv";
+                    saveFileDialog.FilterIndex = 1;
+                    DialogResult dr = saveFileDialog.ShowDialog();
+                    if (dr == DialogResult.OK)
+                    {
+                        string path = Path.GetDirectoryName(saveFileDialog.FileName);
+                        Application.UserAppDataRegistry.SetValue("Excel Export Individual Path", path);
+                        WriteFile(dt, saveFileDialog.FileName);
+                        UIHelpers.ShowMessage($"File written to {saveFileDialog.FileName}", "FTAnalyzer");
+                    }
                 }
             }
             catch (Exception ex)

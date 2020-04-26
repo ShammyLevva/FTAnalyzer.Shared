@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace FTAnalyzer
 {
@@ -14,6 +15,10 @@ namespace FTAnalyzer
         }
 
         public OpenDatabaseException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
+
+        protected OpenDatabaseException(SerializationInfo serializationInfo, StreamingContext streamingContext)
         {
         }
     }

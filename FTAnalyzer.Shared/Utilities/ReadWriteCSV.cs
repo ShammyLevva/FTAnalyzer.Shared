@@ -36,6 +36,7 @@ namespace FTAnalyzer.Exports
         /// <param name="row">The row to be written</param>
         public void WriteRow(CsvRow row)
         {
+            if (row is null) return;
             StringBuilder builder = new StringBuilder();
             bool firstColumn = true;
             foreach (string value in row)
@@ -76,6 +77,7 @@ namespace FTAnalyzer.Exports
         /// <returns></returns>
         public bool ReadRow(CsvRow row)
         {
+            if (row is null) return false;
             row.LineText = ReadLine();
             if (string.IsNullOrEmpty(row.LineText))
                 return false;

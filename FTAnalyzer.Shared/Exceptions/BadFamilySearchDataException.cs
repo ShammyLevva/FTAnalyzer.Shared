@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace FTAnalyzer
 {
@@ -14,6 +15,10 @@ namespace FTAnalyzer
         }
 
         public BadFamilySearchDataException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
+
+        protected BadFamilySearchDataException(SerializationInfo serializationInfo, StreamingContext streamingContext)
         {
         }
     }

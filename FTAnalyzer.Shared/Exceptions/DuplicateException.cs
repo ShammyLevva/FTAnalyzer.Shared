@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace FTAnalyzer
 {
@@ -13,6 +14,10 @@ namespace FTAnalyzer
         {
         }
        public DuplicateException()
+        {
+        }
+
+        protected DuplicateException(SerializationInfo serializationInfo, StreamingContext streamingContext)
         {
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace FTAnalyzer
 {
@@ -14,6 +15,9 @@ namespace FTAnalyzer
         }
 
         public InvalidLocationCSVFileException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
+        protected InvalidLocationCSVFileException(SerializationInfo serializationInfo, StreamingContext streamingContext)
         {
         }
     }

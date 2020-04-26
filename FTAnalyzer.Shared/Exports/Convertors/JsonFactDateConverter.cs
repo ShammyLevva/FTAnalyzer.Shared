@@ -12,6 +12,7 @@ namespace FTAnalyzer.Exports
 
         public override void WriteJson(JsonWriter writer, FactDate value, JsonSerializer serializer)
         {
+            if (writer is null || value is null || serializer is null) return;
             writer.WriteStartObject();
             writer.WritePropertyName("DateString");
             writer.WriteValue(value.DateString);

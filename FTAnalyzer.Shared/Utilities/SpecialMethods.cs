@@ -99,7 +99,7 @@ namespace FTAnalyzer.Utilities
                 GoogleAdWordsId = "201-455-7333",
                 UserLanguage = CultureInfo.CurrentUICulture.EnglishName
             };
-            return await tracker.TrackAsync(eventTrackingParameters);
+            return await tracker.TrackAsync(eventTrackingParameters).ConfigureAwait(false);
         }
 
         public static async Task<TrackingResult> TrackScreenviewAsync(this SimpleTracker tracker, string screen)
@@ -119,7 +119,7 @@ namespace FTAnalyzer.Utilities
                 GoogleAdWordsId = "201-455-7333",
                 UserLanguage = CultureInfo.CurrentUICulture.EnglishName
             };
-            return await tracker.TrackAsync(screenViewTrackingParameters);
+            return await tracker.TrackAsync(screenViewTrackingParameters).ConfigureAwait(false);
         }
     }
 }
