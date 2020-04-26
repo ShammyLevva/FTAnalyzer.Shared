@@ -8,7 +8,7 @@ namespace FTAnalyzer
 {
     public class CensusLocation
     {
-        static Dictionary<Tuple<string, string>, CensusLocation> CENSUSLOCATIONS = new Dictionary<Tuple<string, string>, CensusLocation>();
+        static readonly Dictionary<Tuple<string, string>, CensusLocation> CENSUSLOCATIONS = new Dictionary<Tuple<string, string>, CensusLocation>();
         public static CensusLocation UNKNOWN = new CensusLocation(string.Empty);
         public static CensusLocation SCOTLAND = new CensusLocation(Countries.SCOTLAND);
         public static CensusLocation UNITED_STATES = new CensusLocation(Countries.UNITED_STATES);
