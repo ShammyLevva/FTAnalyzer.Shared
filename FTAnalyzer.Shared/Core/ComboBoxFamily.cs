@@ -16,7 +16,7 @@ namespace FTAnalyzer
             if(Wife != null)
                 result.Append(Husband == null ? Wife.Name : " and " + Wife.Name);
             if (result.Length > 0)
-                return $"{FamilyID}: {result.ToString()} {base.ToString()}";
+                return $"{FamilyID}: {result} {base.ToString()}";
             return $"{FamilyID}: {base.ToString()}";
         }
 

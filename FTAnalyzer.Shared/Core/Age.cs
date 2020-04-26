@@ -46,8 +46,8 @@ namespace FTAnalyzer
                 _age = $">= {MinAge}"; // if age over maximum return maximum
         }
 
-        static readonly string pattern = @"^(?<year>\d{1,3}y)? ?(?<month>\d{1,2}m)? ?(?<day>\d{1,2}d)?$";
-        static Regex ydm = new Regex(pattern, RegexOptions.Compiled);
+        const string pattern = @"^(?<year>\d{1,3}y)? ?(?<month>\d{1,2}m)? ?(?<day>\d{1,2}d)?$";
+        static readonly Regex ydm = new Regex(pattern, RegexOptions.Compiled);
 
         public Age(string gedcomAge, FactDate when)
             : this()
