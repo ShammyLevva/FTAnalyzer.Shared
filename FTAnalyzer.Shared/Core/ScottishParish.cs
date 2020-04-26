@@ -31,8 +31,11 @@ namespace FTAnalyzer
             string filename = Path.Combine(startPath, "Resources", "ScottishParishes.xml");
             if (File.Exists(filename))
             {
-                XmlDocument xmlDoc = new XmlDocument();
-                xmlDoc.Load(filename);
+                XmlDocument xmlDoc = new XmlDocument() { XmlResolver = null };
+                string xml = File.ReadAllText(filename);
+                StringReader sreader = new StringReader(xml);
+                using (XmlReader reader = XmlReader.Create(sreader, new XmlReaderSettings() { XmlResolver = null }))
+                    xmlDoc.Load(reader);
                 //xmlDoc.Validate(something);
                 foreach (XmlNode n in xmlDoc.SelectNodes("ScottishParish/ByID/Parish"))
                 {
@@ -67,9 +70,10 @@ namespace FTAnalyzer
 
         public static bool IsParishID(string rd)
         {
+            if (rd is null) return false;
             if (int.TryParse(rd, out _))
                 return true;
-            rd.ToLower().Replace(" ", "-").Replace("/", "-");
+            rd = rd.ToLower().Replace(" ", "-").Replace("/", "-");
             Match match = ParishRegex.Match(rd);
             return match.Success;
         }

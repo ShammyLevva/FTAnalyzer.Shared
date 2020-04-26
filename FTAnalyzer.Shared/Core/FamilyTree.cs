@@ -3512,7 +3512,7 @@ namespace FTAnalyzer
         XmlDocument GetWikipediaData(string URL)
         {
             string result = string.Empty;
-            var doc = new XmlDocument();
+            var doc = new XmlDocument() { XmlResolver = null };
             try
             {
                 //doc.Load(URL); // using doc.load throws XmlException slowing down loading of data
@@ -3522,11 +3522,16 @@ namespace FTAnalyzer
                 Encoding encode = Encoding.GetEncoding("utf-8");
                 using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
                 {
-                    var reader = new StreamReader(response.GetResponseStream(), encode);
-                    result = reader.ReadToEnd();
+                    using (var reader = new StreamReader(response.GetResponseStream(), encode))
+                    {
+                        result = reader.ReadToEnd();
+                        if (!result.Contains("No events found for this query"))
+                        {
+                            using (XmlReader xmlReader = XmlReader.Create(result, new XmlReaderSettings() { XmlResolver = null }))
+                                doc.Load(xmlReader);
+                        }
+                    }
                 }
-                if (!result.Contains("No events found for this query"))
-                    doc.LoadXml(result);
             }
             catch (XmlException)
             {
@@ -3539,7 +3544,6 @@ namespace FTAnalyzer
             }
             return doc;
         }
-
         #endregion
 
 #region WorldWars

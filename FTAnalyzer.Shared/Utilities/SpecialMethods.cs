@@ -45,9 +45,10 @@ namespace FTAnalyzer.Utilities
 #endif
         public static void VisitWebsite(string url)
         {
+            Process process = null;
             try
             {
-                Process process = new Process();
+                process = new Process();
                 process.StartInfo.UseShellExecute = true;
                 process.StartInfo.FileName = url;
                 process.Start();
@@ -73,6 +74,7 @@ namespace FTAnalyzer.Utilities
                     UIHelpers.ShowMessage($"Error processing web request. Error was : {e.Message}\nSite was: {url}");
                 }
             }
+            process?.Dispose();
         }
 
         public static async Task<TrackingResult> TrackEventAsync(this SimpleTracker tracker, string category, string action, string label, long value = 1)

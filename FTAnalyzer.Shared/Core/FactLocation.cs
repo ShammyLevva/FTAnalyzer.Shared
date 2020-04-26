@@ -109,8 +109,11 @@ namespace FTAnalyzer
             Console.WriteLine($"Loading factlocation fixes from: {filename}");
             if (File.Exists(filename) && !GeneralSettings.Default.SkipFixingLocations) // don't load file if skipping fixing locations
             {
-                XmlDocument xmlDoc = new XmlDocument();
-                xmlDoc.Load(filename);
+                XmlDocument xmlDoc = new XmlDocument() { XmlResolver = null };
+                string xml = File.ReadAllText(filename);
+                StringReader sreader = new StringReader(xml);
+                using (XmlReader reader = XmlReader.Create(sreader, new XmlReaderSettings() { XmlResolver = null }))
+                    xmlDoc.Load(reader);
                 foreach (XmlNode n in xmlDoc.SelectNodes("Data/Fixes/CountryTypos/CountryTypo"))
                 {
                     string from = n.Attributes["from"].Value;
@@ -248,7 +251,10 @@ namespace FTAnalyzer
                 if (File.Exists(filename))
                 {
                     XmlDocument xmlDoc = new XmlDocument() { XmlResolver = null };
-                    xmlDoc.Load(filename);
+                    string xml = File.ReadAllText(filename);
+                    StringReader sreader = new StringReader(xml);
+                    using (XmlReader reader = XmlReader.Create(sreader, new XmlReaderSettings() { XmlResolver = null }))
+                        xmlDoc.Load(reader);
                     foreach (XmlNode n in xmlDoc.SelectNodes("GoogleGeocodes/CountryFixes/CountryFix"))
                         AddGoogleFixes(LOCAL_GOOGLE_FIXES, n, COUNTRY);
                     foreach (XmlNode n in xmlDoc.SelectNodes("GoogleGeocodes/RegionFixes/RegionFix"))
