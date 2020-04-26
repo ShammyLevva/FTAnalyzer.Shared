@@ -598,6 +598,7 @@ namespace FTAnalyzer
 
         public bool IsNaturalChildOf(Individual parent)
         {
+            if (parent is null) return false;
             foreach (ParentalRelationship pr in FamiliesAsChild)
             {
                 if (pr.Family != null)
@@ -730,11 +731,12 @@ namespace FTAnalyzer
             return false;
         }
 
-        public bool IsTaggedMissingCensus(CensusDate when) => when != null && Facts.Any(x => x.FactType == Fact.MISSING && x.FactDate.Overlaps(when));
+        public bool IsTaggedMissingCensus(CensusDate when) => when is object && Facts.Any(x => x.FactType == Fact.MISSING && x.FactDate.Overlaps(when));
 
-        public bool IsLostCousinsEntered(CensusDate when) => IsLostCousinsEntered(when, true);
+        public bool IsLostCousinsEntered(CensusDate when) => when is null ? false : IsLostCousinsEntered(when, true);
         public bool IsLostCousinsEntered(CensusDate when, bool includeUnknownCountries)
         {
+            if (when is null) return false;
             foreach (Fact f in Facts)
             {
                 if (f.IsValidLostCousins(when))
@@ -1123,6 +1125,7 @@ namespace FTAnalyzer
 
         public void QuestionGender(Family family, bool pHusband)
         {
+            if (family is null) return;
             string description;
             if (Gender.Equals("U"))
             {
@@ -1248,6 +1251,7 @@ namespace FTAnalyzer
 
         public bool AliveOnAnyCensus(string country)
         {
+            if (country is null) return false;
             int ukCensus = (int)C1841 + (int)C1851 + (int)C1861 + (int)C1871 + (int)C1881 + (int)C1891 + (int)C1901 + (int)C1911 + (int)C1939;
             if (country.Equals(Countries.UNITED_STATES))
                 return ((int)US1790 + (int)US1800 + (int)US1810 + (int)US1810 + (int)US1820 + (int)US1830 + (int)US1840 + (int)US1850 + (int)US1860 + (int)US1870 + (int)US1880 + (int)US1890 + (int)US1900 + (int)US1910 + (int)US1920 + (int)US1930 + (int)US1940) > 0;
@@ -1262,6 +1266,7 @@ namespace FTAnalyzer
 
         public bool OutOfCountryOnAllCensus(string country)
         {
+            if (country is null) return false;
             if (country.Equals(Countries.UNITED_STATES))
                 return CheckOutOfCountry("US1");
             if (country.Equals(Countries.CANADA))
@@ -1271,16 +1276,12 @@ namespace FTAnalyzer
             return CheckOutOfCountry("C1");
         }
 
-        public static bool OutOfCountryCheck(CensusDate census, FactLocation location)
-        {
-            return (Countries.IsUnitedKingdom(census.Country) && !location.IsUnitedKingdom) ||
-                  (!Countries.IsUnitedKingdom(census.Country) && census.Country != location.Country);
-        }
+        public static bool OutOfCountryCheck(CensusDate census, FactLocation location) => 
+                    census is object && location is object && // checks census & location are not null
+                  ((Countries.IsUnitedKingdom(census.Country) && !location.IsUnitedKingdom) ||
+                  (!Countries.IsUnitedKingdom(census.Country) && census.Country != location.Country));
 
-        public bool OutOfCountry(CensusDate census)
-        {
-            return CheckOutOfCountry(census.PropertyName);
-        }
+        public bool OutOfCountry(CensusDate census) => census is null ? false : CheckOutOfCountry(census.PropertyName);
 
         bool CheckOutOfCountry(string prefix)
         {

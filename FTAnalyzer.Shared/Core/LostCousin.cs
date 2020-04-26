@@ -20,7 +20,7 @@ namespace FTAnalyzer
         {
             Name = name;
             BirthYear = birthYear;
-            Reference = FixReference(reference);
+            Reference = FixReference(reference ?? string.Empty);
             FTAnalyzerFact = ftanalyzer;
             if (censusYear == 1841 && Countries.IsEnglandWales(censusCountry))
                 CensusDate = CensusDate.EWCENSUS1841;
@@ -45,12 +45,13 @@ namespace FTAnalyzer
         { // Lost from website constructor
             Name = name;
             SetMetaphones();
-            int.TryParse(birthYear, out int result);
+            _ = int.TryParse(birthYear, out int result);
             BirthYear = result;
             Reference = reference;
-            int ptr = weblink.IndexOf("&p=", StringComparison.Ordinal);
+            int ptr = weblink is null ? -1 : weblink.IndexOf("&p=", StringComparison.Ordinal);
             WebLink = ptr == -1 ? null : new Uri(HttpUtility.UrlDecode(weblink.Substring(ptr + 3)));
             FTAnalyzerFact = ftanalyzer;
+            census = census ?? string.Empty;
             if (census.StartsWith("England", StringComparison.Ordinal))
             {
                 if (census.EndsWith("1841", StringComparison.Ordinal)) CensusDate = CensusDate.EWCENSUS1841;
@@ -102,6 +103,7 @@ namespace FTAnalyzer
 
         public bool Equals(LostCousin other)
         {
+            if (other is null) return false;
             if(CensusDate != other.CensusDate || Reference != other.Reference || Math.Abs(BirthYear - other.BirthYear) >= 5)
                 return false;
             if (Name == other.Name)

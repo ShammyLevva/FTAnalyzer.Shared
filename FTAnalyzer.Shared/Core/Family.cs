@@ -14,7 +14,7 @@ namespace FTAnalyzer
     public class Family : IDisplayFamily, IJsonFamily
     {
         public const string UNKNOWN = "Unknown", SOLOINDIVIDUAL = "Solo", PRE_MARRIAGE = "Pre-Marriage";
-        public const string SINGLE = "Single", MARRIED = "Married", UNMARRIED = "Unmarried";
+        public const string IS_SINGLE = "Single", MARRIED = "Married", UNMARRIED = "Unmarried";
 
         public string FamilyID { get; private set; }
         public IList<Fact> Facts { get; private set; }
@@ -318,7 +318,7 @@ namespace FTAnalyzer
             get
             {
                 if (Husband is null || Wife is null || !MarriageDate.IsKnown)
-                    return SINGLE;
+                    return IS_SINGLE;
                 foreach (Fact f in Facts)
                     if (f.IsMarriageFact)
                         return MARRIED;
@@ -386,6 +386,7 @@ namespace FTAnalyzer
 
         public Individual Spouse(Individual ind)
         {
+            if (ind is null) return null;
             if (ind.Equals(Husband))
                 return Wife;
             if (ind.Equals(Wife))
@@ -421,6 +422,7 @@ namespace FTAnalyzer
 
         public void SetBudgieCode(Individual ind, int lenAhnentafel)
         {
+            if (ind is null) return;
             Individual spouse = ind.IsMale ? Wife : Husband;
             if (spouse != null && string.IsNullOrEmpty(spouse.BudgieCode))
                 spouse.BudgieCode = ind.BudgieCode + "*s";
@@ -465,6 +467,7 @@ namespace FTAnalyzer
 
         public void SetSpouseRelation(Individual ind, int relationType)
         {
+            if (ind is null) return;
             Individual spouse = ind.IsMale ? Wife : Husband;
             if (spouse != null)
                 spouse.RelationType = relationType;
@@ -472,6 +475,7 @@ namespace FTAnalyzer
 
         public void SetChildRelation(Queue<Individual> queue, int relationType)
         {
+            if (queue is null) return;
             foreach (Individual child in Children)
             {
                 var previousType = child.RelationType;
@@ -487,6 +491,7 @@ namespace FTAnalyzer
 
         public void SetChildrenCommonRelation(Individual parent, CommonAncestor commonAncestor)
         {
+            if (parent is null || commonAncestor is null) return;
             foreach (var child in Children)
                 if (child.CommonAncestor is null || child.CommonAncestor.Distance > commonAncestor.Distance + 1)
                     child.CommonAncestor = new CommonAncestor(commonAncestor.Ind, commonAncestor.Distance + 1, !child.IsNaturalChildOf(parent) || commonAncestor.Step);
