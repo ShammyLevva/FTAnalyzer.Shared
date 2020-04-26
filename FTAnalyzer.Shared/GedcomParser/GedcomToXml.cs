@@ -19,17 +19,21 @@ namespace FTAnalyzer
         {
             StreamReader reader;
             XmlDocument doc;
-            using (reader = FileHandling.Default.RetryFailedLines
-                ? new StreamReader(CheckInvalidCR(CloneStream(stream)), encoding)
-                : new StreamReader(CloneStream(stream), encoding))
+            using (MemoryStream cloned = CloneStream(stream))
             {
-                doc = Parse(reader, outputText, reportBadLines);
-                if (doc?.SelectNodes("GED/INDI").Count == 0)
-                { // if there is a problem with the file return with opposite line ends
-                    reader = FileHandling.Default.RetryFailedLines
-                        ? new StreamReader(CloneStream(stream), encoding)
-                        : new StreamReader(CheckInvalidCR(CloneStream(stream)), encoding);
-                    doc = Parse(reader, outputText, false);
+                using (reader = FileHandling.Default.RetryFailedLines
+                    ? new StreamReader(CheckInvalidCR(cloned), encoding)
+                    : new StreamReader(cloned, encoding))
+                {
+                    doc = Parse(reader, outputText, reportBadLines);
+                    if (doc?.SelectNodes("GED/INDI").Count == 0)
+
+                    { // if there is a problem with the file return with opposite line ends
+                        reader = FileHandling.Default.RetryFailedLines
+                            ? new StreamReader(cloned, encoding)
+                            : new StreamReader(CheckInvalidCR(cloned), encoding);
+                        doc = Parse(reader, outputText, false);
+                    }
                 }
             }
             return doc;
@@ -39,18 +43,36 @@ namespace FTAnalyzer
         {
             StreamReader reader;
             XmlDocument doc;
-            using (reader = FileHandling.Default.RetryFailedLines
-                    ? new AnselInputStreamReader(CheckInvalidCR(CloneStream(stream)))
-                    : new AnselInputStreamReader(CloneStream(stream)))
+            using (MemoryStream cloned = CloneStream(stream))
             {
-                doc = Parse(reader, outputText, reportBadLines);
-                if (doc?.SelectNodes("GED/INDI").Count == 0)
+                if (FileHandling.Default.RetryFailedLines)
                 {
-                    // if there is a problem with the file return with opposite line ends
-                    reader = FileHandling.Default.RetryFailedLines
-                        ? new AnselInputStreamReader(CloneStream(stream))
-                        : new AnselInputStreamReader(CheckInvalidCR(CloneStream(stream)));
-                    doc = Parse(reader, outputText, false);
+                    using (MemoryStream checkInvalidStream = CheckInvalidCR(cloned))
+                    {
+                        using (reader = new AnselInputStreamReader(checkInvalidStream))
+                        {
+                            doc = Parse(reader, outputText, reportBadLines);
+                            if (doc?.SelectNodes("GED/INDI").Count == 0)
+                            {
+                                // if there is a problem with the file return with opposite line ends
+                                reader = new AnselInputStreamReader(checkInvalidStream);
+                                doc = Parse(reader, outputText, false);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    using (reader = new AnselInputStreamReader(cloned))
+                    {
+                        doc = Parse(reader, outputText, reportBadLines);
+                        if (doc?.SelectNodes("GED/INDI").Count == 0)
+                        {
+                            // if there is a problem with the file return with opposite line ends
+                            reader = new AnselInputStreamReader(cloned);
+                            doc = Parse(reader, outputText, false);
+                        }
+                    }
                 }
             }
             return doc;
@@ -128,7 +150,7 @@ namespace FTAnalyzer
             Dictionary<long, Tuple<string, string>> lineErrors = new Dictionary<long, Tuple<string, string>>();
             Stack<string> stack = new Stack<string>();
             stack.Push("GED");
-            XmlDocument document = new XmlDocument();
+            XmlDocument document = new XmlDocument() { XmlResolver = null };
             XmlNode node = document.CreateElement("GED");
             document.AppendChild(node);
             try
@@ -193,7 +215,7 @@ namespace FTAnalyzer
                             xref = "";
                             if (line.StartsWith("@", StringComparison.Ordinal) && tag != "_HASHTAG" & tag != "NAME")
                             {
-                                if (!token1.Equals("CONT") && !token1.Equals("CONC"))
+                                if (!token1.Equals("CONT", StringComparison.Ordinal) && !token1.Equals("CONC", StringComparison.Ordinal))
                                 {
                                     token2 = FirstWord(line);
                                     if (token2.Length == 1 || (!token2.EndsWith("@", StringComparison.Ordinal) && !token2.EndsWith("@,", StringComparison.Ordinal)))
@@ -204,7 +226,7 @@ namespace FTAnalyzer
                                     line = Remainder(line);
                                 }
                             }
-                            if (token1.Equals("CONT") || token1.Equals("CONC"))
+                            if (token1.Equals("CONT", StringComparison.Ordinal) || token1.Equals("CONC", StringComparison.Ordinal))
                             {
                                 // check if nextline does not start with a number ie: could be a wrapped line, if so then concatenate
                                 while (nextline != null && !nextline.Trim().StartsWithNumeric())
@@ -218,10 +240,10 @@ namespace FTAnalyzer
 
                             // perform validation on the CHAR field (character code)
                             string valtrim = value.Trim();
-                            if (tag.Equals("CHAR"))
+                            if (tag.Equals("CHAR", StringComparison.Ordinal))
                             {
-                                if (!(valtrim.Equals("ANSEL") || valtrim.Equals("ASCII") || valtrim.Equals("ANSI") ||
-                                     valtrim.Equals("UTF-8") || valtrim.Equals("UNICODE")))
+                                if (!(valtrim.Equals("ANSEL", StringComparison.Ordinal) || valtrim.Equals("ASCII", StringComparison.Ordinal) || valtrim.Equals("ANSI", StringComparison.Ordinal) ||
+                                     valtrim.Equals("UTF-8", StringComparison.Ordinal) || valtrim.Equals("UNICODE", StringComparison.Ordinal)))
                                 {
                                     outputText.Report($"WARNING: Character set is {value}: should be ANSEL, ANSI, ASCII, UTF-8 or UNICODE\n");
                                 }
@@ -235,7 +257,7 @@ namespace FTAnalyzer
                                 prevlevel--;
                             }
 
-                            if (!tag.Equals("TRLR"))
+                            if (!tag.Equals("TRLR", StringComparison.Ordinal))
                             {
                                 XmlNode newNode = document.CreateElement(tag);
                                 node.AppendChild(newNode);
