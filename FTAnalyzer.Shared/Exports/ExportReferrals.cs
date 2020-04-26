@@ -2,8 +2,8 @@
 {
     public class ExportReferrals : IExportReferrals
     {
-        Individual Individual;
-        Fact Fact;
+        readonly Individual Individual;
+        readonly Fact Fact;
         readonly Fact censusFact;
 
         public ExportReferrals(Individual ind, Fact f)

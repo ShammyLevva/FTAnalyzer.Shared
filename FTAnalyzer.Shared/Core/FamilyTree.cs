@@ -2125,6 +2125,7 @@ namespace FTAnalyzer
 
         public static bool FactBeforeBirth(Individual ind, Fact f)
         {
+            if (ind is null || f is null) return false;
             if (f.FactType != Fact.BIRTH & f.FactType != Fact.BIRTH_CALC && Fact.LOOSE_BIRTH_FACTS.Contains(f.FactType) && f.FactDate.IsBefore(ind.BirthDate))
             {
                 if (f.FactType == Fact.CHRISTENING || f.FactType == Fact.BAPTISM)
@@ -3106,15 +3107,18 @@ namespace FTAnalyzer
         public static List<Individual> GetFamily(Individual startIndividiual)
         {
             List<Individual> results = new List<Individual>();
-            foreach (Family f in startIndividiual.FamiliesAsSpouse)
+            if (startIndividiual is object) // checks not null
             {
-                foreach (Individual i in f.Members)
-                    results.Add(i);
-            }
-            foreach (ParentalRelationship pr in startIndividiual.FamiliesAsChild)
-            {
-                foreach (Individual i in pr.Family.Members)
-                    results.Add(i);
+                foreach (Family f in startIndividiual.FamiliesAsSpouse)
+                {
+                    foreach (Individual i in f.Members)
+                        results.Add(i);
+                }
+                foreach (ParentalRelationship pr in startIndividiual.FamiliesAsChild)
+                {
+                    foreach (Individual i in pr.Family.Members)
+                        results.Add(i);
+                }
             }
             return results;
         }

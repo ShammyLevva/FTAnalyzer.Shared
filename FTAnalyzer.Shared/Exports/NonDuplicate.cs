@@ -28,19 +28,19 @@ namespace FTAnalyzer
         public override bool Equals(object obj)
         {
             NonDuplicate that = (NonDuplicate)obj;
-            bool result = (this.IndividualA_ID == that.IndividualA_ID &&
-                   this.IndividualA_Name == that.IndividualA_Name &&
-                   this.IndividualA_BirthDate == that.IndividualA_BirthDate &&
-                   this.IndividualB_ID == that.IndividualB_ID &&
-                   this.IndividualB_Name == that.IndividualB_Name &&
-                   this.IndividualB_BirthDate == that.IndividualB_BirthDate)
+            bool result = (IndividualA_ID == that.IndividualA_ID &&
+                   IndividualA_Name == that.IndividualA_Name &&
+                   IndividualA_BirthDate == that.IndividualA_BirthDate &&
+                   IndividualB_ID == that.IndividualB_ID &&
+                   IndividualB_Name == that.IndividualB_Name &&
+                   IndividualB_BirthDate == that.IndividualB_BirthDate)
                 ||
-                (this.IndividualA_ID == that.IndividualB_ID &&
-                   this.IndividualA_Name == that.IndividualB_Name &&
-                   this.IndividualA_BirthDate == that.IndividualB_BirthDate &&
-                   this.IndividualB_ID == that.IndividualA_ID &&
-                   this.IndividualB_Name == that.IndividualA_Name &&
-                   this.IndividualB_BirthDate == that.IndividualA_BirthDate);
+                (IndividualA_ID == that.IndividualB_ID &&
+                   IndividualA_Name == that.IndividualB_Name &&
+                   IndividualA_BirthDate == that.IndividualB_BirthDate &&
+                   IndividualB_ID == that.IndividualA_ID &&
+                   IndividualB_Name == that.IndividualA_Name &&
+                   IndividualB_BirthDate == that.IndividualA_BirthDate);
             return result;
         }
 
