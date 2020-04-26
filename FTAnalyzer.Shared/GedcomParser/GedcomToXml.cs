@@ -17,23 +17,18 @@ namespace FTAnalyzer
     {
         public static XmlDocument LoadFile(Stream stream, Encoding encoding, IProgress<string> outputText, bool reportBadLines)
         {
-            StreamReader reader;
             XmlDocument doc;
-            using (MemoryStream cloned = CloneStream(stream))
+            MemoryStream cloned = CloneStream(stream);
+            using (var reader = new StreamReader(FileHandling.Default.RetryFailedLines ? CheckInvalidCR(cloned) : cloned, encoding))
             {
-                using (reader = FileHandling.Default.RetryFailedLines
-                    ? new StreamReader(CheckInvalidCR(cloned), encoding)
-                    : new StreamReader(cloned, encoding))
+                doc = Parse(reader, outputText, reportBadLines);
+            }
+            if (doc?.SelectNodes("GED/INDI").Count == 0)
+            { // if there is a problem with the file return with opposite line ends
+                cloned = CloneStream(stream);
+                using (var reader = new StreamReader(FileHandling.Default.RetryFailedLines ? cloned : CheckInvalidCR(cloned), encoding))
                 {
-                    doc = Parse(reader, outputText, reportBadLines);
-                    if (doc?.SelectNodes("GED/INDI").Count == 0)
-
-                    { // if there is a problem with the file return with opposite line ends
-                        reader = FileHandling.Default.RetryFailedLines
-                            ? new StreamReader(cloned, encoding)
-                            : new StreamReader(CheckInvalidCR(cloned), encoding);
-                        doc = Parse(reader, outputText, false);
-                    }
+                    doc = Parse(reader, outputText, false);
                 }
             }
             return doc;
@@ -41,19 +36,18 @@ namespace FTAnalyzer
 
         public static XmlDocument LoadAnselFile(Stream stream, IProgress<string> outputText, bool reportBadLines)
         {
-            StreamReader reader;
             XmlDocument doc;
-            using (reader = FileHandling.Default.RetryFailedLines
-                    ? new AnselInputStreamReader(CheckInvalidCR(CloneStream(stream)))
-                    : new AnselInputStreamReader(CloneStream(stream)))
+            MemoryStream cloned = CloneStream(stream);
+            using (var reader = new AnselInputStreamReader(FileHandling.Default.RetryFailedLines ? CheckInvalidCR(cloned) : cloned))
             {
                 doc = Parse(reader, outputText, reportBadLines);
-                if (doc?.SelectNodes("GED/INDI").Count == 0)
+            }
+            if (doc?.SelectNodes("GED/INDI").Count == 0)
+            {
+                // if there is a problem with the file return with opposite line ends
+                cloned = CloneStream(stream);
+                using (var reader = new AnselInputStreamReader(FileHandling.Default.RetryFailedLines ? cloned  : CheckInvalidCR(cloned)))
                 {
-                    // if there is a problem with the file return with opposite line ends
-                    reader = FileHandling.Default.RetryFailedLines
-                        ? new AnselInputStreamReader(CloneStream(stream))
-                        : new AnselInputStreamReader(CheckInvalidCR(CloneStream(stream)));
                     doc = Parse(reader, outputText, false);
                 }
             }
