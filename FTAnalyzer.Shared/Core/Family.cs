@@ -26,8 +26,8 @@ namespace FTAnalyzer
         public int ExpectedDead { get; internal set; }
         public string FamilyType { get; internal set; }
 
-        IDictionary<string, Fact> _preferredFacts;
-        FamilyTree ft = FamilyTree.Instance;
+        readonly IDictionary<string, Fact> _preferredFacts;
+        readonly FamilyTree ft = FamilyTree.Instance;
 
         Family(string familyID)
         {

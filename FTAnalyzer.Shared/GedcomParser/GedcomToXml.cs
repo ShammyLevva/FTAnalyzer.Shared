@@ -23,7 +23,7 @@ namespace FTAnalyzer
                 ? new StreamReader(CheckInvalidCR(CloneStream(stream)), encoding)
                 : new StreamReader(CloneStream(stream), encoding))
             {
-                 doc = Parse(reader, outputText, reportBadLines);
+                doc = Parse(reader, outputText, reportBadLines);
                 if (doc?.SelectNodes("GED/INDI").Count == 0)
                 { // if there is a problem with the file return with opposite line ends
                     reader = FileHandling.Default.RetryFailedLines
@@ -69,7 +69,7 @@ namespace FTAnalyzer
         {
             MemoryStream outfs = new MemoryStream();
             long streamLength = infs.Length;
-            byte b; 
+            byte b;
             while (infs.Position < streamLength)
             {
                 b = (byte)infs.ReadByte();
@@ -165,7 +165,7 @@ namespace FTAnalyzer
                                 throw new InvalidGEDCOMException($"First character in a should be numeric '{line}'", line, lineNr);
 
                             // check the level number
-                            
+
                             if (thislevel > prevlevel && !(thislevel == prevlevel + 1))
                                 throw new InvalidGEDCOMException($"Level numbers must increase by 1", line, lineNr);
                             if (thislevel < 0)
@@ -335,35 +335,35 @@ namespace FTAnalyzer
                     {
                         tempFile = tempFile.Substring(0, tempFile.Length - 3) + "html";
                         stream.Position = 0;
-                        using (FileStream fileStream = new FileStream(tempFile, FileMode.Create, FileAccess.Write))
+                        FileStream fileStream = new FileStream(tempFile, FileMode.Create, FileAccess.Write);
+                        using (StreamWriter writer = new StreamWriter(fileStream))
                         {
-                            StreamWriter writer = new StreamWriter(fileStream);
-                            StreamReader reader = new StreamReader(stream);
-                            writer.WriteLine("<html><head><Title>Gedcom File</Title></head><body>");
-                            writer.WriteLine("<h4>Line Errors</h4>");
-                            writer.WriteLine("<table border='1'><tr><th>Line Number</th><th>Line Contents</th><th>Error Description</th></tr>");
-                            foreach (KeyValuePair<long, Tuple<string, string>> kvp in lineErrors)
-                                writer.WriteLine($"<tr><td><a href='#{kvp.Key}'>{kvp.Key}</a></td><td>{kvp.Value.Item1}</td><td>{kvp.Value.Item2}</td></tr>");
-                            writer.WriteLine("</table><h4>GEDCOM Contents</h4><table border='1'><tr><th>Line Number</th><th>Line Contents</th></tr>");
-                            string line = reader.ReadLine();
-                            long lineNr = 1;
-                            while (line != null)
+                            using (StreamReader reader = new StreamReader(stream))
                             {
-                                if (lineErrors.ContainsKey(lineNr))
-                                    writer.WriteLine($"<tr id='{lineNr}'><td>{lineNr++}</td><td>{line}</td></tr>");
-                                else
-                                    writer.WriteLine($"<tr><td>{lineNr++}</td><td>{line}</td></tr>");
-                                line = reader.ReadLine();
+                                writer.WriteLine("<html><head><Title>Gedcom File</Title></head><body>");
+                                writer.WriteLine("<h4>Line Errors</h4>");
+                                writer.WriteLine("<table border='1'><tr><th>Line Number</th><th>Line Contents</th><th>Error Description</th></tr>");
+                                foreach (KeyValuePair<long, Tuple<string, string>> kvp in lineErrors)
+                                    writer.WriteLine($"<tr><td><a href='#{kvp.Key}'>{kvp.Key}</a></td><td>{kvp.Value.Item1}</td><td>{kvp.Value.Item2}</td></tr>");
+                                writer.WriteLine("</table><h4>GEDCOM Contents</h4><table border='1'><tr><th>Line Number</th><th>Line Contents</th></tr>");
+                                string line = reader.ReadLine();
+                                long lineNr = 1;
+                                while (line != null)
+                                {
+                                    if (lineErrors.ContainsKey(lineNr))
+                                        writer.WriteLine($"<tr id='{lineNr}'><td>{lineNr++}</td><td>{line}</td></tr>");
+                                    else
+                                        writer.WriteLine($"<tr><td>{lineNr++}</td><td>{line}</td></tr>");
+                                    line = reader.ReadLine();
+                                }
+                                writer.Write("</table></body></html>");
                             }
-                            writer.Write("</table></body></html>");
-                            reader.Close();
-                            writer.Close();
                         }
                         SpecialMethods.VisitWebsite(tempFile);
                     }
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine($"Error: {e.Message}");
             }
