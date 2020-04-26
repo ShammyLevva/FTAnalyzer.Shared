@@ -147,8 +147,8 @@ namespace FTAnalyzer.Utilities
         {
             try
             {
-                await tracker.TrackEventAsync(category, action, value);
-                await tracker.TrackScreenviewAsync(category);
+                await tracker.TrackEventAsync(category, action, value).ConfigureAwait(false);
+                await tracker.TrackScreenviewAsync(category).ConfigureAwait(false);
             }
             catch (Exception e)
                 { Console.WriteLine(e.Message); }
@@ -160,7 +160,7 @@ namespace FTAnalyzer.Utilities
             try
             {
                 TimeSpan duration = DateTime.Now - Settings.Default.StartTime;
-                await SpecialMethods.TrackEventAsync(tracker, FTAShutdownAction, UsageEvent, duration.ToString("c"));
+                await SpecialMethods.TrackEventAsync(tracker, FTAShutdownAction, UsageEvent, duration.ToString("c")).ConfigureAwait(false);
             }
             catch (Exception e)
             { Console.WriteLine(e.Message); }

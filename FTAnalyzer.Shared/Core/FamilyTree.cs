@@ -3516,7 +3516,7 @@ namespace FTAnalyzer
             try
             {
                 //doc.Load(URL); // using doc.load throws XmlException slowing down loading of data
-                HttpWebRequest request = WebRequest.Create(URL) as HttpWebRequest;
+                HttpWebRequest request = WebRequest.Create(new Uri(URL)) as HttpWebRequest;
                 request.ContentType = "application/xml";
                 request.Accept = "application/xml";
                 Encoding encode = Encoding.GetEncoding("utf-8");

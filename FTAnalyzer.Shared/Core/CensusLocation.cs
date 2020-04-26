@@ -33,7 +33,7 @@ namespace FTAnalyzer
             string filename = Path.Combine(startPath, "Resources", "CensusLocations.xml");
             if (File.Exists(filename))
             {
-                XmlDocument xmlDoc = new XmlDocument();
+                XmlDocument xmlDoc = new XmlDocument() { XmlResolver = null };
                 xmlDoc.Load(filename);
                 //xmlDoc.Validate(something);
                 foreach (XmlNode n in xmlDoc.SelectNodes("CensusLocations/Location"))

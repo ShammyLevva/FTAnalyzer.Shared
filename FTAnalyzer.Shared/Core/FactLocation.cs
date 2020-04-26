@@ -79,8 +79,8 @@ namespace FTAnalyzer
         static Dictionary<Tuple<int, string>, string> GOOGLE_FIXES = new Dictionary<Tuple<int, string>, string>();
         static Dictionary<Tuple<int, string>, string> LOCAL_GOOGLE_FIXES;
 
-        public static Dictionary<string, string> COUNTRY_SHIFTS = new Dictionary<string, string>();
-        public static Dictionary<string, string> CITY_ADD_COUNTRY = new Dictionary<string, string>();
+        static Dictionary<string, string> COUNTRY_SHIFTS = new Dictionary<string, string>();
+        static Dictionary<string, string> CITY_ADD_COUNTRY = new Dictionary<string, string>();
         public static Dictionary<Geocode, string> Geocodes;
         public static FactLocation UNKNOWN_LOCATION;
         public static FactLocation BLANK_LOCATION;
@@ -247,7 +247,7 @@ namespace FTAnalyzer
                 string filename = Path.Combine(MappingSettings.Default.CustomMapPath, "GoogleFixes.xml");
                 if (File.Exists(filename))
                 {
-                    XmlDocument xmlDoc = new XmlDocument();
+                    XmlDocument xmlDoc = new XmlDocument() { XmlResolver = null };
                     xmlDoc.Load(filename);
                     foreach (XmlNode n in xmlDoc.SelectNodes("GoogleGeocodes/CountryFixes/CountryFix"))
                         AddGoogleFixes(LOCAL_GOOGLE_FIXES, n, COUNTRY);
@@ -257,7 +257,7 @@ namespace FTAnalyzer
                         AddGoogleFixes(LOCAL_GOOGLE_FIXES, n, SUBREGION);
                     foreach (XmlNode n in xmlDoc.SelectNodes("GoogleGeocodes/MultiLevelFixes/MultiLevelFix"))
                         AddGoogleFixes(LOCAL_GOOGLE_FIXES, n, UNKNOWN);
-                    progress.Report(string.Format("\nLoaded {0} Google Fixes.", LOCAL_GOOGLE_FIXES.Count()));
+                    progress.Report(string.Format("\nLoaded {0} Google Fixes.", LOCAL_GOOGLE_FIXES.Count));
                 }
             }
             catch (Exception e)

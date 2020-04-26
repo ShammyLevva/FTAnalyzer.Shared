@@ -13,8 +13,8 @@ namespace FTAnalyzer
 {
     public class Family : IDisplayFamily, IJsonFamily
     {
-        public static string UNKNOWN = "Unknown", SOLOINDIVIDUAL = "Solo", PRE_MARRIAGE = "Pre-Marriage";
-        public static string SINGLE = "Single", MARRIED = "Married", UNMARRIED = "Unmarried";
+        public const string UNKNOWN = "Unknown", SOLOINDIVIDUAL = "Solo", PRE_MARRIAGE = "Pre-Marriage";
+        public const string SINGLE = "Single", MARRIED = "Married", UNMARRIED = "Unmarried";
 
         public string FamilyID { get; private set; }
         public IList<Fact> Facts { get; private set; }

@@ -123,7 +123,7 @@ namespace FTAnalyzer.Exports
                 if (password.Length > 15)
                     password = password.Substring(0, 15);
                 string formParams = $"stage=submit&email={HttpUtility.UrlEncode(email)}&password={password}{Suffix()}";
-                HttpWebRequest req = WebRequest.Create("https://www.lostcousins.com/pages/login/") as HttpWebRequest;
+                HttpWebRequest req = WebRequest.Create(new Uri("https://www.lostcousins.com/pages/login/")) as HttpWebRequest;
                 req.Referer = "https://www.lostcousins.com/pages/login/";
                 req.ContentType = "application/x-www-form-urlencoded";
                 req.Method = "POST";
@@ -235,7 +235,7 @@ namespace FTAnalyzer.Exports
             try
             {
                 string formParams = BuildParameterString(ind);
-                HttpWebRequest req = WebRequest.Create("https://www.lostcousins.com/pages/members/ancestors/add_ancestor.mhtml") as HttpWebRequest;
+                HttpWebRequest req = WebRequest.Create(new Uri("https://www.lostcousins.com/pages/members/ancestors/add_ancestor.mhtml")) as HttpWebRequest;
                 req.Referer = "https://www.lostcousins.com/pages/members/ancestors/add_ancestor.mhtml";
                 req.ContentType = "application/x-www-form-urlencoded";
                 req.Method = "POST";
