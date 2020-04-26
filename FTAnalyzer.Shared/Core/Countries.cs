@@ -7,8 +7,6 @@ namespace FTAnalyzer
 {
     public static class Countries
     {
-        static readonly IDictionary<string, FactLocation> locationCache = new Dictionary<string, FactLocation>();
-
         public const string SCOTLAND = "Scotland", ENGLAND = "England", CANADA = "Canada", UNITED_STATES = "United States",
             WALES = "Wales", IRELAND = "Ireland", UNITED_KINGDOM = "United Kingdom", NEW_ZEALAND = "New Zealand", AUSTRALIA = "Australia",
             UNKNOWN_COUNTRY = "Unknown", ENG_WALES = "England and Wales", INDIA = "India", FRANCE = "France", GERMANY = "Germany",

@@ -181,41 +181,43 @@ namespace FTAnalyzer.Exports
             List<LostCousin> websiteList = new List<LostCousin>();
             try
             {
-                CookieAwareWebClient wc = new CookieAwareWebClient(CookieJar);
-                HtmlDocument doc = new HtmlDocument();
-                string webData = wc.DownloadString("https://www.lostcousins.com/pages/members/ancestors/");
-                doc.LoadHtml(webData);
-                HtmlNodeCollection rows = doc.DocumentNode.SelectNodes("//table[@class='data_table']/tr");
-                if (rows != null)
+                using (CookieAwareWebClient wc = new CookieAwareWebClient(CookieJar))
                 {
-                    foreach (HtmlNode node in rows)
+                    HtmlDocument doc = new HtmlDocument();
+                    string webData = wc.DownloadString("https://www.lostcousins.com/pages/members/ancestors/");
+                    doc.LoadHtml(webData);
+                    HtmlNodeCollection rows = doc.DocumentNode.SelectNodes("//table[@class='data_table']/tr");
+                    if (rows != null)
                     {
-                        HtmlNodeCollection columns = node.SelectNodes("td");
-                        if (columns != null && columns.Count == 8 && columns[0].InnerText != "Name") // ignore header row
+                        foreach (HtmlNode node in rows)
                         {
-                            string name = columns[0].InnerText.ClearWhiteSpace();
-                            bool ftanalyzer = false;
-                            string weblink = string.Empty;
-                            if (columns[0].ChildNodes.Count == 5)
+                            HtmlNodeCollection columns = node.SelectNodes("td");
+                            if (columns != null && columns.Count == 8 && columns[0].InnerText != "Name") // ignore header row
                             {
-                                HtmlAttribute notesNode = columns[0].ChildNodes[3].Attributes["title"];
-                                ftanalyzer = notesNode != null && notesNode.Value.Contains("Added_By_FTAnalyzer");
-                            }
-                            string birthYear = columns[2].InnerText.ClearWhiteSpace();
-                            if (columns[4].ChildNodes.Count > 4)
-                            {
-                                string weblinkText = columns[4].ChildNodes[3].OuterHtml;
-                                if (weblinkText.Length > 10)
+                                string name = columns[0].InnerText.ClearWhiteSpace();
+                                bool ftanalyzer = false;
+                                string weblink = string.Empty;
+                                if (columns[0].ChildNodes.Count == 5)
                                 {
-                                    int pos = weblinkText.IndexOf('"', 10);
-                                    if (pos > -1)
-                                        weblink = weblinkText.Substring(9, pos - 9).Trim();
+                                    HtmlAttribute notesNode = columns[0].ChildNodes[3].Attributes["title"];
+                                    ftanalyzer = notesNode != null && notesNode.Value.Contains("Added_By_FTAnalyzer");
                                 }
+                                string birthYear = columns[2].InnerText.ClearWhiteSpace();
+                                if (columns[4].ChildNodes.Count > 4)
+                                {
+                                    string weblinkText = columns[4].ChildNodes[3].OuterHtml;
+                                    if (weblinkText.Length > 10)
+                                    {
+                                        int pos = weblinkText.IndexOf('"', 10);
+                                        if (pos > -1)
+                                            weblink = weblinkText.Substring(9, pos - 9).Trim();
+                                    }
+                                }
+                                string reference = columns[4].InnerText.ClearWhiteSpace();
+                                string census = columns[5].InnerText.ClearWhiteSpace();
+                                LostCousin lc = new LostCousin(name, birthYear, reference, census, weblink, ftanalyzer);
+                                websiteList.Add(lc);
                             }
-                            string reference = columns[4].InnerText.ClearWhiteSpace();
-                            string census = columns[5].InnerText.ClearWhiteSpace();
-                            LostCousin lc = new LostCousin(name, birthYear, reference, census, weblink, ftanalyzer);
-                            websiteList.Add(lc);
                         }
                     }
                 }

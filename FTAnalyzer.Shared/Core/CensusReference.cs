@@ -1139,7 +1139,7 @@ namespace FTAnalyzer
             matcher = censusRegexs["LC_CENSUS_PATTERN_EW"].Match(text);
             if (matcher.Success)
             {
-                if (matcher.Groups[4].ToString().Equals("1881"))
+                if (matcher.Groups[4].ToString().Equals("1881", StringComparison.OrdinalIgnoreCase))
                     Class = "RG11";
                 else
                     Class = "HO107";
@@ -1221,7 +1221,7 @@ namespace FTAnalyzer
 
         string CheckLetterCode(string letterCode)
         {
-            if (letterCode.Equals("CODE"))
+            if (!string.IsNullOrEmpty(letterCode) && letterCode.Equals("CODE", StringComparison.OrdinalIgnoreCase))
                 return "UNKNOWN";
             //TODO: Check that the code is one of the valid codes 
             return letterCode;
