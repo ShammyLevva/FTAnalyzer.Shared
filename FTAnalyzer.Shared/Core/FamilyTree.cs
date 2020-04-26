@@ -3212,7 +3212,7 @@ namespace FTAnalyzer
                     Task.Run(() => IdentifyDuplicates(progress, males, ref maleProgress, ct)),
                     Task.Run(() => IdentifyDuplicates(progress, females, ref femaleProgress, ct))
                 };
-                await Task.WhenAll(tasks).ConfigureAwait(false);
+                await Task.WhenAll(tasks).ConfigureAwait(true);
             }
             catch (OperationCanceledException)
             {
