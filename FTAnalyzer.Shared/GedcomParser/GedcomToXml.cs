@@ -43,36 +43,18 @@ namespace FTAnalyzer
         {
             StreamReader reader;
             XmlDocument doc;
-            using (MemoryStream cloned = CloneStream(stream))
+            using (reader = FileHandling.Default.RetryFailedLines
+                    ? new AnselInputStreamReader(CheckInvalidCR(CloneStream(stream)))
+                    : new AnselInputStreamReader(CloneStream(stream)))
             {
-                if (FileHandling.Default.RetryFailedLines)
+                doc = Parse(reader, outputText, reportBadLines);
+                if (doc?.SelectNodes("GED/INDI").Count == 0)
                 {
-                    using (MemoryStream checkInvalidStream = CheckInvalidCR(cloned))
-                    {
-                        using (reader = new AnselInputStreamReader(checkInvalidStream))
-                        {
-                            doc = Parse(reader, outputText, reportBadLines);
-                            if (doc?.SelectNodes("GED/INDI").Count == 0)
-                            {
-                                // if there is a problem with the file return with opposite line ends
-                                reader = new AnselInputStreamReader(checkInvalidStream);
-                                doc = Parse(reader, outputText, false);
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    using (reader = new AnselInputStreamReader(cloned))
-                    {
-                        doc = Parse(reader, outputText, reportBadLines);
-                        if (doc?.SelectNodes("GED/INDI").Count == 0)
-                        {
-                            // if there is a problem with the file return with opposite line ends
-                            reader = new AnselInputStreamReader(cloned);
-                            doc = Parse(reader, outputText, false);
-                        }
-                    }
+                    // if there is a problem with the file return with opposite line ends
+                    reader = FileHandling.Default.RetryFailedLines
+                        ? new AnselInputStreamReader(CloneStream(stream))
+                        : new AnselInputStreamReader(CheckInvalidCR(CloneStream(stream)));
+                    doc = Parse(reader, outputText, false);
                 }
             }
             return doc;
