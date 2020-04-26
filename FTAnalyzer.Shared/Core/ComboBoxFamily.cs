@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 
 namespace FTAnalyzer
 {
@@ -26,7 +25,7 @@ namespace FTAnalyzer
             if (obj == null || obj.GetType() != typeof(ComboBoxFamily))
                 return false;
             Family that = obj as Family;
-            return FamilyID.Equals(that.FamilyID, StringComparison.OrdinalIgnoreCase);
+            return FamilyID.Equals(that.FamilyID);
         }
 
         public override int GetHashCode() => base.GetHashCode();

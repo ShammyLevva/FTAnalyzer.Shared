@@ -38,7 +38,7 @@ namespace FTAnalyzer.Exports
             GeneralSettings.Default.ShowAliasInName = false; // turn off adding alias in name when exporting
             foreach (CensusIndividual ind in ToProcess)
             {
-                if (ind.LCAge.Equals("Unknown", StringComparison.OrdinalIgnoreCase))
+                if (ind.LCAge.Equals("Unknown"))
                 {
                     outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - Cannot determine age at census {ind.CensusString}.\n");
                     recordsFailed++;

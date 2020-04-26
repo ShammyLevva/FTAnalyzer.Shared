@@ -105,7 +105,7 @@ namespace FTAnalyzer
             DateString = str.Length == 0 ? "UNKNOWN" : str.ToUpper();
             StartDate = MINDATE;
             EndDate = MAXDATE;
-            if (!DateString.Equals("UNKNOWN", StringComparison.OrdinalIgnoreCase))
+            if (!DateString.Equals("UNKNOWN"))
                 ProcessDate(DateString, factRef);
         }
 
@@ -491,7 +491,7 @@ namespace FTAnalyzer
                     DateType = FactDateType.BET;
                     output.Append("BET ");
                 }
-                if (check.Equals("01 JAN", StringComparison.OrdinalIgnoreCase))
+                if (check.Equals("01 JAN"))
                     output.Append(Format(YEAR, StartDate));
                 else
                     output.Append(Format(DISPLAY, StartDate));
@@ -501,7 +501,7 @@ namespace FTAnalyzer
             if (EndDate != MAXDATE && EndDate != StartDate)
             {
                 check = Format(CHECKING, EndDate);
-                if (check.Equals("31 DEC", StringComparison.OrdinalIgnoreCase))
+                if (check.Equals("31 DEC"))
                 {
                     // add 1 day to take it to 1st Jan following year
                     // this makes the range of "bef 1900" change to 
@@ -835,7 +835,7 @@ namespace FTAnalyzer
         {
             get
             {
-                if (DateString.Equals("UNKNOWN", StringComparison.OrdinalIgnoreCase))
+                if (DateString.Equals("UNKNOWN"))
                     return UNKNOWN_DATE;
                 if (StartDate == MINDATE)
                     return new FactDate(EndDate, EndDate);
@@ -1000,7 +1000,7 @@ namespace FTAnalyzer
                 return false;
             FactDate f = (FactDate)obj;
             // two FactDates are equal if same datestring or same start and- enddates
-            return DateString.ToUpper().Equals(f.DateString.ToUpper(), StringComparison.OrdinalIgnoreCase) ||
+            return DateString.ToUpper().Equals(f.DateString.ToUpper()) ||
                    (StartDate.Equals(f.StartDate) && EndDate.Equals(f.EndDate));
         }
 

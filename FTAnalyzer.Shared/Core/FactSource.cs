@@ -68,16 +68,16 @@ namespace FTAnalyzer
             }
         }
 
-        public bool IsBirthCert() => SourceMedium.Contains("Official Document", StringComparison.OrdinalIgnoreCase) &&
+        public bool IsBirthCert() => SourceMedium.Contains("Official Document") &&
                    SourceTitle.ToUpper().IndexOf(BIRTHCERT, StringComparison.Ordinal) >= 0;
 
-        public bool IsDeathCert() => SourceMedium.Contains("Official Document", StringComparison.OrdinalIgnoreCase) &&
+        public bool IsDeathCert() => SourceMedium.Contains("Official Document") &&
                    SourceTitle.ToUpper().IndexOf(DEATHCERT, StringComparison.Ordinal) >= 0;
 
-        public bool IsMarriageCert() => SourceMedium.Contains("Official Document", StringComparison.OrdinalIgnoreCase) &&
+        public bool IsMarriageCert() => SourceMedium.Contains("Official Document") &&
                    SourceTitle.ToUpper().IndexOf(MARRIAGECERT, StringComparison.Ordinal) >= 0;
 
-        public bool IsCensusCert() => SourceMedium.Equals("Official Document", StringComparison.OrdinalIgnoreCase) &&
+        public bool IsCensusCert() => SourceMedium.Equals("Official Document") &&
                    SourceTitle.ToUpper().IndexOf(CENSUSCERT, StringComparison.Ordinal) >= 0;
 
         public override string ToString() => SourceTitle;

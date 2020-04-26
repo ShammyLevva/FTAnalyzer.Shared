@@ -88,7 +88,7 @@ namespace FTAnalyzer
 
         static string OrdinalSuffix(long number)
         {
-            string os;
+            string os = string.Empty;
             if (number % 100 > 10 && number % 100 < 14)
                 os = "th";
             else if (number == 0)

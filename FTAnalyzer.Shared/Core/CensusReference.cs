@@ -288,7 +288,7 @@ namespace FTAnalyzer
         void SetCensusReferenceDetails()
         {
             unknownCensusRef = string.Empty;
-            if (Class.Equals("SCOT", StringComparison.OrdinalIgnoreCase))
+            if (Class.Equals("SCOT"))
             {
                 CensusLocation = CensusLocation.SCOTLAND;
                 if (Parish.Length > 0)
@@ -1252,47 +1252,47 @@ namespace FTAnalyzer
 
         string GetUKCensusClass(string year)
         {
-            if (year.Equals("1841", StringComparison.OrdinalIgnoreCase) || year.Equals("1851", StringComparison.OrdinalIgnoreCase))
+            if (year.Equals("1841") || year.Equals("1851"))
                 return "HO107";
-            if (year.Equals("1861", StringComparison.OrdinalIgnoreCase))
+            if (year.Equals("1861"))
                 return "RG9";
-            if (year.Equals("1871", StringComparison.OrdinalIgnoreCase))
+            if (year.Equals("1871"))
                 return "RG10";
-            if (year.Equals("1881", StringComparison.OrdinalIgnoreCase))
+            if (year.Equals("1881"))
                 return "RG11";
-            if (year.Equals("1891", StringComparison.OrdinalIgnoreCase))
+            if (year.Equals("1891"))
                 return "RG12";
-            if (year.Equals("1901", StringComparison.OrdinalIgnoreCase))
+            if (year.Equals("1901"))
                 return "RG13";
-            if (year.Equals("1911", StringComparison.OrdinalIgnoreCase))
+            if (year.Equals("1911"))
                 return "RG14";
             return string.Empty;
         }
 
         FactDate GetCensusYearFromReference()
         {
-            if (Class.Equals("SCOT", StringComparison.OrdinalIgnoreCase))
+            if (Class.Equals("SCOT"))
                 return FactDate.UNKNOWN_DATE;
-            if (Class.Equals("HO107", StringComparison.OrdinalIgnoreCase))
+            if (Class.Equals("HO107"))
             {
                 bool success = int.TryParse(Piece, out int piecenumber);
                 if (success && piecenumber > 1465) // piece numbers go 1-1465 for 1841 and 1466+ for 1851.
                     return CensusDate.UKCENSUS1851;
                 return CensusDate.UKCENSUS1841;
             }
-            if (Class.Equals("RG9", StringComparison.OrdinalIgnoreCase) || Class.Equals("RG09", StringComparison.OrdinalIgnoreCase))
+            if (Class.Equals("RG9") || Class.Equals("RG09"))
                 return CensusDate.UKCENSUS1861;
-            if (Class.Equals("RG10", StringComparison.OrdinalIgnoreCase))
+            if (Class.Equals("RG10"))
                 return CensusDate.UKCENSUS1871;
-            if (Class.Equals("RG11", StringComparison.OrdinalIgnoreCase))
+            if (Class.Equals("RG11"))
                 return CensusDate.UKCENSUS1881;
-            if (Class.Equals("RG12", StringComparison.OrdinalIgnoreCase))
+            if (Class.Equals("RG12"))
                 return CensusDate.UKCENSUS1891;
-            if (Class.Equals("RG13", StringComparison.OrdinalIgnoreCase))
+            if (Class.Equals("RG13"))
                 return CensusDate.UKCENSUS1901;
-            if (Class.Equals("RG14", StringComparison.OrdinalIgnoreCase) || Class.Equals("RG78", StringComparison.OrdinalIgnoreCase))
+            if (Class.Equals("RG14") || Class.Equals("RG78"))
                 return CensusDate.UKCENSUS1911;
-            if (Class.Equals("RG101", StringComparison.OrdinalIgnoreCase))
+            if (Class.Equals("RG101"))
                 return CensusDate.UKCENSUS1939;
             if (Class.StartsWith("US", StringComparison.Ordinal))
                 return CensusDate.GetUSCensusDateFromReference(Class);
@@ -1309,9 +1309,9 @@ namespace FTAnalyzer
                 string defaultRegion = Settings.Default.defaultURLRegion;
                 if (defaultRegion == null)
                     defaultRegion = ".co.uk";
-                if (year.Equals("1911", StringComparison.OrdinalIgnoreCase) && Countries.IsEnglandWales(Country) && Piece.Length > 0 && Schedule.Length > 0)
+                if (year.Equals("1911") && Countries.IsEnglandWales(Country) && Piece.Length > 0 && Schedule.Length > 0)
                     return @"http://search.findmypast" + defaultRegion + "/search-world-records/1911-census-for-england-and-wales?pieceno=" + Piece + @"&schedule=" + Schedule;
-                if (year.Equals("1939", StringComparison.OrdinalIgnoreCase) && Countries.IsEnglandWales(Country) && Piece.Length > 0 && !ED.Equals("UNKNOWN", StringComparison.OrdinalIgnoreCase))
+                if (year.Equals("1939") && Countries.IsEnglandWales(Country) && Piece.Length > 0 && !ED.Equals("UNKNOWN"))
                 {
                     string dir = Piece.Length > 1 ? Piece.Substring(0, Piece.Length - 1) : Piece; //strip last letter from piece
                     return @"https://search.findmypast" + defaultRegion + "/record?id=tna%2fr39%2f" + dir + "%2f" + Piece.ToLower() + "%2f" + Page + "%2f" + Schedule;
@@ -1319,21 +1319,20 @@ namespace FTAnalyzer
                 if (Countries.IsUnitedKingdom(Country))
                 {
                     string querystring = string.Empty;
-                    if (!Country.Equals(Countries.SCOTLAND, StringComparison.OrdinalIgnoreCase))
+                    if (!Country.Equals(Countries.SCOTLAND))
                     {
-                        if (Piece.Length > 0 && !Piece.Equals(MISSING, StringComparison.OrdinalIgnoreCase))
+                        if (Piece.Length > 0 && !Piece.Equals(MISSING))
                             querystring = @"pieceno=" + Piece;
-                        if (Folio.Length > 0 && !Folio.Equals(MISSING, StringComparison.OrdinalIgnoreCase))
+                        if (Folio.Length > 0 && !Folio.Equals(MISSING))
                         {
                             string lastChar = Folio.Substring(Folio.Length).ToUpper();
-                            if (!lastChar.Equals("F", StringComparison.OrdinalIgnoreCase) &&
-                                !lastChar.Equals("R", StringComparison.OrdinalIgnoreCase) && !lastChar.Equals("O", StringComparison.OrdinalIgnoreCase))
+                            if (!lastChar.Equals("F") && !lastChar.Equals("R") && !lastChar.Equals("O"))
                                 querystring = querystring + @"&folio=" + Folio;
                         }
-                        if (Page.Length > 0 && !Page.Equals(MISSING, StringComparison.OrdinalIgnoreCase))
+                        if (Page.Length > 0 && !Page.Equals(MISSING))
                             querystring = querystring + @"&page=" + Page;
                     }
-                    if (year.Equals("1841", StringComparison.OrdinalIgnoreCase) && Book.Length > 0 && !Book.Equals(MISSING, StringComparison.OrdinalIgnoreCase))
+                    if (year.Equals("1841") && Book.Length > 0 && !Book.Equals(MISSING))
                         return @"http://search.findmypast" + defaultRegion + "/search-world-records/1841-england-wales-and-scotland-census?" + querystring + @"&book=" + Book;
                     if (querystring.Length > 0)
                     {
@@ -1349,9 +1348,9 @@ namespace FTAnalyzer
         string GetCensusReferenceCountry(string censusClass, string censusPiece)
         {
             bool success = int.TryParse(censusPiece, out int piece);
-            if (success && !string.IsNullOrEmpty(censusClass) && !string.IsNullOrEmpty(censusPiece) && piece > 0)
+            if (success && censusClass.Length > 0 && censusPiece.Length > 0 && piece > 0)
             {
-                if (censusClass.Equals("HO107", StringComparison.OrdinalIgnoreCase)) //1841 & 1851
+                if (censusClass.Equals("HO107")) //1841 & 1851
                 {
                     if (piece <= 1357)
                         return Countries.ENGLAND;
@@ -1371,7 +1370,7 @@ namespace FTAnalyzer
                     if (piece <= 2531)
                         return Countries.CHANNEL_ISLANDS;
                 }
-                else if (censusClass.Equals("RG9", StringComparison.OrdinalIgnoreCase) || censusClass.Equals("RG09", StringComparison.OrdinalIgnoreCase)) //1861
+                else if (censusClass.Equals("RG9") || censusClass.Equals("RG09")) //1861
                 {
                     if (piece <= 3973)
                         return Countries.ENGLAND;
@@ -1384,7 +1383,7 @@ namespace FTAnalyzer
                     if (piece <= 4540)
                         return Countries.OVERSEAS_UK;
                 }
-                else if (censusClass.Equals("RG10", StringComparison.OrdinalIgnoreCase)) //1871
+                else if (censusClass.Equals("RG10")) //1871
                 {
                     if (piece <= 5291)
                         return Countries.ENGLAND;
@@ -1397,7 +1396,7 @@ namespace FTAnalyzer
                     if (piece <= 5785)
                         return Countries.OVERSEAS_UK;
                 }
-                else if (censusClass.Equals("RG11", StringComparison.OrdinalIgnoreCase)) //1881
+                else if (censusClass.Equals("RG11")) //1881
                 {
                     if (piece <= 5216)
                         return Countries.ENGLAND;
@@ -1410,7 +1409,7 @@ namespace FTAnalyzer
                     if (piece <= 5643)
                         return Countries.OVERSEAS_UK;
                 }
-                else if (censusClass.Equals("RG12", StringComparison.OrdinalIgnoreCase)) // 1891
+                else if (censusClass.Equals("RG12")) // 1891
                 {
                     if (piece <= 4334)
                         return Countries.ENGLAND;
@@ -1423,7 +1422,7 @@ namespace FTAnalyzer
                     if (piece <= 4708)
                         return Countries.OVERSEAS_UK;
                 }
-                else if (censusClass.Equals("RG13", StringComparison.OrdinalIgnoreCase)) //1901
+                else if (censusClass.Equals("RG13")) //1901
                 {
                     if (piece <= 4914)
                         return Countries.ENGLAND;
@@ -1436,7 +1435,7 @@ namespace FTAnalyzer
                     if (piece <= 5338)
                         return Countries.OVERSEAS_UK;
                 }
-                else if (censusClass.Equals("RG14", StringComparison.OrdinalIgnoreCase)) //1911
+                else if (censusClass.Equals("RG14")) //1911
                 {
                     if (piece <= 31678)
                         return Countries.ENGLAND;
@@ -1511,7 +1510,7 @@ namespace FTAnalyzer
                 }
                 else if (Parish.Length > 0)
                 {
-                    if (Fact.Location.Country.Equals(Countries.SCOTLAND, StringComparison.OrdinalIgnoreCase) && (Fact.FactDate.Overlaps(CensusDate.UKCENSUS1841) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1851) ||
+                    if (Fact.Location.Country.Equals(Countries.SCOTLAND) && (Fact.FactDate.Overlaps(CensusDate.UKCENSUS1841) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1851) ||
                         Fact.FactDate.Overlaps(CensusDate.UKCENSUS1861) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1871) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1881) ||
                         Fact.FactDate.Overlaps(CensusDate.UKCENSUS1891) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1901) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1911)))
                     {

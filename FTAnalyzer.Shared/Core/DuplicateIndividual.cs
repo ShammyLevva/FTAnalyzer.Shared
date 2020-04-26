@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace FTAnalyzer
+﻿namespace FTAnalyzer
 {
     public class DuplicateIndividual
     {
@@ -30,9 +28,9 @@ namespace FTAnalyzer
             int score = 0;
             if (indA != null && indB != null)
             {
-                if (indA.Surname.Equals(indB.Surname, StringComparison.OrdinalIgnoreCase) && indA.Surname != Individual.UNKNOWN_NAME)
+                if (indA.Surname.Equals(indB.Surname) && indA.Surname != Individual.UNKNOWN_NAME)
                     score += 20;
-                if (indA.Forename.Equals(indB.Forename, StringComparison.OrdinalIgnoreCase) && indA.Forename != Individual.UNKNOWN_NAME)
+                if (indA.Forename.Equals(indB.Forename) && indA.Forename != Individual.UNKNOWN_NAME)
                     score += 20;
             }
             return score;
@@ -44,30 +42,30 @@ namespace FTAnalyzer
                 return;
             if (IndividualA.BirthLocation.Equals(IndividualB.BirthLocation))
                 Score += 75;
-            if (IndividualA.BirthLocation.Country.Equals(IndividualB.BirthLocation.Country, StringComparison.OrdinalIgnoreCase))
+            if (IndividualA.BirthLocation.Country.Equals(IndividualB.BirthLocation.Country))
                 Score += 10;
-            if (IndividualA.BirthLocation.Region.Equals(IndividualB.BirthLocation.Region, StringComparison.OrdinalIgnoreCase))
+            if (IndividualA.BirthLocation.Region.Equals(IndividualB.BirthLocation.Region))
                 Score += 10;
-            if (IndividualA.BirthLocation.SubRegion.Equals(IndividualB.BirthLocation.SubRegion, StringComparison.OrdinalIgnoreCase))
+            if (IndividualA.BirthLocation.SubRegion.Equals(IndividualB.BirthLocation.SubRegion))
                 Score += 20;
-            if (IndividualA.BirthLocation.Address.Equals(IndividualB.BirthLocation.Address, StringComparison.OrdinalIgnoreCase))
+            if (IndividualA.BirthLocation.Address.Equals(IndividualB.BirthLocation.Address))
                 Score += 40;
-            if (IndividualA.BirthLocation.Place.Equals(IndividualB.BirthLocation.Place, StringComparison.OrdinalIgnoreCase))
+            if (IndividualA.BirthLocation.Place.Equals(IndividualB.BirthLocation.Place))
                 Score += 40;
 
-            if (IndividualA.BirthLocation.CountryMetaphone.Equals(IndividualB.BirthLocation.CountryMetaphone, StringComparison.OrdinalIgnoreCase))
+            if (IndividualA.BirthLocation.CountryMetaphone.Equals(IndividualB.BirthLocation.CountryMetaphone))
                 Score += 5;
-            if (IndividualA.BirthLocation.RegionMetaphone.Equals(IndividualB.BirthLocation.RegionMetaphone, StringComparison.OrdinalIgnoreCase))
+            if (IndividualA.BirthLocation.RegionMetaphone.Equals(IndividualB.BirthLocation.RegionMetaphone))
                 Score += 5;
-            if (IndividualA.BirthLocation.SubRegionMetaphone.Equals(IndividualB.BirthLocation.SubRegionMetaphone, StringComparison.OrdinalIgnoreCase))
+            if (IndividualA.BirthLocation.SubRegionMetaphone.Equals(IndividualB.BirthLocation.SubRegionMetaphone))
                 Score += 10;
-            if (IndividualA.BirthLocation.AddressMetaphone.Equals(IndividualB.BirthLocation.AddressMetaphone, StringComparison.OrdinalIgnoreCase))
+            if (IndividualA.BirthLocation.AddressMetaphone.Equals(IndividualB.BirthLocation.AddressMetaphone))
                 Score += 20;
-            if (IndividualA.BirthLocation.PlaceMetaphone.Equals(IndividualB.BirthLocation.PlaceMetaphone, StringComparison.OrdinalIgnoreCase))
+            if (IndividualA.BirthLocation.PlaceMetaphone.Equals(IndividualB.BirthLocation.PlaceMetaphone))
                 Score += 20;
 
             if (IndividualA.BirthLocation.IsKnownCountry && IndividualB.BirthLocation.IsKnownCountry &&
-                !IndividualA.BirthLocation.Country.Equals(IndividualB.BirthLocation.Country, StringComparison.OrdinalIgnoreCase))
+                !IndividualA.BirthLocation.Country.Equals(IndividualB.BirthLocation.Country))
                 Score -= 250;
         }
 

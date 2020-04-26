@@ -32,12 +32,10 @@ namespace FTAnalyzer.Utilities
 
         public static void SetFonts(Form form)
         {
-            if (form is null)
-                return;
             try
             {
                 foreach (Control theControl in GetAllControls(form))
-                    if (theControl.Font.Name.Equals(Properties.FontSettings.Default.SelectedFont.Name, StringComparison.OrdinalIgnoreCase))
+                    if (theControl.Font.Name.Equals(Properties.FontSettings.Default.SelectedFont.Name))
                         theControl.Font = Properties.FontSettings.Default.SelectedFont;
             } catch (Exception e)
             {
@@ -45,15 +43,13 @@ namespace FTAnalyzer.Utilities
             }
         }
 #endif
-        public static void VisitWebsite(Uri url)
+        public static void VisitWebsite(string url)
         {
-            if (url == null)
-                return;
-            Process process = new Process();
             try
             {
+                Process process = new Process();
                 process.StartInfo.UseShellExecute = true;
-                process.StartInfo.FileName = url.ToString();
+                process.StartInfo.FileName = url;
                 process.Start();
             }
             catch (Exception e)
@@ -61,25 +57,21 @@ namespace FTAnalyzer.Utilities
                 // hack because of this: https://github.com/dotnet/corefx/issues/10361
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
-                    string urlstring = url.ToString().Replace("&", "^&");
-                    Process.Start(new ProcessStartInfo("cmd", $"/c start {urlstring}") { CreateNoWindow = true });
+                    url = url.Replace("&", "^&");
+                    Process.Start(new ProcessStartInfo("cmd", $"/c start {url}") { CreateNoWindow = true });
                 }
                 else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 {
-                    Process.Start("xdg-open", url.ToString());
+                    Process.Start("xdg-open", url);
                 }
                 else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                 {
-                    Process.Start("open", url.ToString());
+                    Process.Start("open", url);
                 }
                 else
                 {
                     UIHelpers.ShowMessage($"Error processing web request. Error was : {e.Message}\nSite was: {url}");
                 }
-            }
-            finally
-            {
-                process.Dispose();
             }
         }
 
@@ -96,7 +88,7 @@ namespace FTAnalyzer.Utilities
                 Label = label,
                 Value = value,
                 ScreenName = category,
-                CacheBuster = tracker == null ? string.Empty : tracker.AnalyticsSession.GenerateCacheBuster(),
+                CacheBuster = tracker.AnalyticsSession.GenerateCacheBuster(),
                 ScreenResolution = Analytics.Resolution,
                 CustomDimension1 = Analytics.DeploymentType,
                 CustomDimension2 = Analytics.OSVersion,
@@ -104,7 +96,7 @@ namespace FTAnalyzer.Utilities
                 GoogleAdWordsId = "201-455-7333",
                 UserLanguage = CultureInfo.CurrentUICulture.EnglishName
             };
-            return await tracker.TrackAsync(eventTrackingParameters).ConfigureAwait(false);
+            return await tracker.TrackAsync(eventTrackingParameters);
         }
 
         public static async Task<TrackingResult> TrackScreenviewAsync(this SimpleTracker tracker, string screen)
@@ -116,7 +108,7 @@ namespace FTAnalyzer.Utilities
                 ApplicationName = "FTAnalyzer",
                 ApplicationVersion = Analytics.AppVersion,
                 ScreenName = screen,
-                CacheBuster = tracker == null ? string.Empty : tracker.AnalyticsSession.GenerateCacheBuster(),
+                CacheBuster = tracker.AnalyticsSession.GenerateCacheBuster(),
                 ScreenResolution = Analytics.Resolution,
                 CustomDimension1 = Analytics.DeploymentType,
                 CustomDimension2 = Analytics.OSVersion,
@@ -124,7 +116,7 @@ namespace FTAnalyzer.Utilities
                 GoogleAdWordsId = "201-455-7333",
                 UserLanguage = CultureInfo.CurrentUICulture.EnglishName
             };
-            return await tracker.TrackAsync(screenViewTrackingParameters).ConfigureAwait(false);
+            return await tracker.TrackAsync(screenViewTrackingParameters);
         }
     }
 }

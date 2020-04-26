@@ -193,7 +193,7 @@ namespace FTAnalyzer
                             xref = "";
                             if (line.StartsWith("@", StringComparison.Ordinal) && tag != "_HASHTAG" & tag != "NAME")
                             {
-                                if (!token1.Equals("CONT", StringComparison.OrdinalIgnoreCase) && !token1.Equals("CONC", StringComparison.OrdinalIgnoreCase))
+                                if (!token1.Equals("CONT") && !token1.Equals("CONC"))
                                 {
                                     token2 = FirstWord(line);
                                     if (token2.Length == 1 || (!token2.EndsWith("@", StringComparison.Ordinal) && !token2.EndsWith("@,", StringComparison.Ordinal)))
@@ -204,7 +204,7 @@ namespace FTAnalyzer
                                     line = Remainder(line);
                                 }
                             }
-                            if (token1.Equals("CONT", StringComparison.OrdinalIgnoreCase) || token1.Equals("CONC", StringComparison.OrdinalIgnoreCase))
+                            if (token1.Equals("CONT") || token1.Equals("CONC"))
                             {
                                 // check if nextline does not start with a number ie: could be a wrapped line, if so then concatenate
                                 while (nextline != null && !nextline.Trim().StartsWithNumeric())
@@ -218,11 +218,10 @@ namespace FTAnalyzer
 
                             // perform validation on the CHAR field (character code)
                             string valtrim = value.Trim();
-                            if (tag.Equals("CHAR", StringComparison.OrdinalIgnoreCase))
+                            if (tag.Equals("CHAR"))
                             {
-                                if (!(valtrim.Equals("ANSEL", StringComparison.OrdinalIgnoreCase) || valtrim.Equals("ASCII", StringComparison.OrdinalIgnoreCase) || 
-                                      valtrim.Equals("ANSI", StringComparison.OrdinalIgnoreCase) ||
-                                     valtrim.Equals("UTF-8", StringComparison.OrdinalIgnoreCase) || valtrim.Equals("UNICODE", StringComparison.OrdinalIgnoreCase)))
+                                if (!(valtrim.Equals("ANSEL") || valtrim.Equals("ASCII") || valtrim.Equals("ANSI") ||
+                                     valtrim.Equals("UTF-8") || valtrim.Equals("UNICODE")))
                                 {
                                     outputText.Report($"WARNING: Character set is {value}: should be ANSEL, ANSI, ASCII, UTF-8 or UNICODE\n");
                                 }
@@ -236,7 +235,7 @@ namespace FTAnalyzer
                                 prevlevel--;
                             }
 
-                            if (!tag.Equals("TRLR", StringComparison.OrdinalIgnoreCase))
+                            if (!tag.Equals("TRLR"))
                             {
                                 XmlNode newNode = document.CreateElement(tag);
                                 node.AppendChild(newNode);
@@ -338,29 +337,27 @@ namespace FTAnalyzer
                         stream.Position = 0;
                         using (FileStream fileStream = new FileStream(tempFile, FileMode.Create, FileAccess.Write))
                         {
-                            using (StreamWriter writer = new StreamWriter(fileStream))
+                            StreamWriter writer = new StreamWriter(fileStream);
+                            StreamReader reader = new StreamReader(stream);
+                            writer.WriteLine("<html><head><Title>Gedcom File</Title></head><body>");
+                            writer.WriteLine("<h4>Line Errors</h4>");
+                            writer.WriteLine("<table border='1'><tr><th>Line Number</th><th>Line Contents</th><th>Error Description</th></tr>");
+                            foreach (KeyValuePair<long, Tuple<string, string>> kvp in lineErrors)
+                                writer.WriteLine($"<tr><td><a href='#{kvp.Key}'>{kvp.Key}</a></td><td>{kvp.Value.Item1}</td><td>{kvp.Value.Item2}</td></tr>");
+                            writer.WriteLine("</table><h4>GEDCOM Contents</h4><table border='1'><tr><th>Line Number</th><th>Line Contents</th></tr>");
+                            string line = reader.ReadLine();
+                            long lineNr = 1;
+                            while (line != null)
                             {
-                                using (StreamReader reader = new StreamReader(stream))
-                                { 
-                                    writer.WriteLine("<html><head><Title>Gedcom File</Title></head><body>");
-                                writer.WriteLine("<h4>Line Errors</h4>");
-                                writer.WriteLine("<table border='1'><tr><th>Line Number</th><th>Line Contents</th><th>Error Description</th></tr>");
-                                foreach (KeyValuePair<long, Tuple<string, string>> kvp in lineErrors)
-                                    writer.WriteLine($"<tr><td><a href='#{kvp.Key}'>{kvp.Key}</a></td><td>{kvp.Value.Item1}</td><td>{kvp.Value.Item2}</td></tr>");
-                                writer.WriteLine("</table><h4>GEDCOM Contents</h4><table border='1'><tr><th>Line Number</th><th>Line Contents</th></tr>");
-                                string line = reader.ReadLine();
-                                long lineNr = 1;
-                                while (line != null)
-                                {
-                                    if (lineErrors.ContainsKey(lineNr))
-                                        writer.WriteLine($"<tr id='{lineNr}'><td>{lineNr++}</td><td>{line}</td></tr>");
-                                    else
-                                        writer.WriteLine($"<tr><td>{lineNr++}</td><td>{line}</td></tr>");
-                                    line = reader.ReadLine();
-                                }
-                                writer.Write("</table></body></html>");
-                                }
+                                if (lineErrors.ContainsKey(lineNr))
+                                    writer.WriteLine($"<tr id='{lineNr}'><td>{lineNr++}</td><td>{line}</td></tr>");
+                                else
+                                    writer.WriteLine($"<tr><td>{lineNr++}</td><td>{line}</td></tr>");
+                                line = reader.ReadLine();
                             }
+                            writer.Write("</table></body></html>");
+                            reader.Close();
+                            writer.Close();
                         }
                         SpecialMethods.VisitWebsite(tempFile);
                     }
