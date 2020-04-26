@@ -3,7 +3,17 @@
 namespace FTAnalyzer
 {
     [Serializable]
-    class DuplicateException : Exception
+    public class DuplicateException : Exception
     {
+        public DuplicateException(string message) : base(message)
+        {
+        }
+
+        public DuplicateException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
+       public DuplicateException()
+        {
+        }
     }
 }

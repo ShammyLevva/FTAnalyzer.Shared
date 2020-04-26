@@ -34,7 +34,10 @@ namespace FTAnalyzer
             if (File.Exists(filename))
             {
                 XmlDocument xmlDoc = new XmlDocument() { XmlResolver = null };
-                xmlDoc.Load(filename);
+                string xml = File.ReadAllText(filename);
+                StringReader sreader = new StringReader(xml);
+                using (XmlReader reader = XmlReader.Create(sreader, new XmlReaderSettings() { XmlResolver = null }))
+                    xmlDoc.Load(reader);
                 //xmlDoc.Validate(something);
                 foreach (XmlNode n in xmlDoc.SelectNodes("CensusLocations/Location"))
                 {

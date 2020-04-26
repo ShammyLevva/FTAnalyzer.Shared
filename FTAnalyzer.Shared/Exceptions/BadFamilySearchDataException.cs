@@ -3,10 +3,18 @@
 namespace FTAnalyzer
 {
     [Serializable]
-    class BadFamilySearchDataException : Exception
+    public class BadFamilySearchDataException : Exception
     {
         public BadFamilySearchDataException(string message)
             : base(message)
         { }
+
+        public BadFamilySearchDataException()
+        {
+        }
+
+        public BadFamilySearchDataException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
     }
 }

@@ -45,6 +45,7 @@ namespace FTAnalyzer.Utilities
 #endif
         public static void VisitWebsite(string url)
         {
+            if (string.IsNullOrEmpty(url)) return;
             Process process = null;
             try
             {
