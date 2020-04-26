@@ -14,7 +14,7 @@ namespace FTAnalyzer
             if (Husband != null)
                 result.Append(Husband.Name);
             if(Wife != null)
-                result.Append(Husband == null ? Wife.Name : " and " + Wife.Name);
+                result.Append(Husband is null ? Wife.Name : " and " + Wife.Name);
             if (result.Length > 0)
                 return $"{FamilyID}: {result} {base.ToString()}";
             return $"{FamilyID}: {base.ToString()}";
@@ -22,7 +22,7 @@ namespace FTAnalyzer
 
         public override bool Equals(object obj)
         {
-            if (obj == null || obj.GetType() != typeof(ComboBoxFamily))
+            if (obj is null || obj.GetType() != typeof(ComboBoxFamily))
                 return false;
             Family that = obj as Family;
             return FamilyID.Equals(that.FamilyID);

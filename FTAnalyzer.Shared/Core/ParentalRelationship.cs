@@ -44,7 +44,7 @@ namespace FTAnalyzer
 
         public static ParentalRelationshipType GetRelationshipType(XmlNode node)
         {
-            if (node == null)
+            if (node is null)
                 return ParentalRelationshipType.UNKNOWN;
             switch (node.InnerText.ToLower())
             {

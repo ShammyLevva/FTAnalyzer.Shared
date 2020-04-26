@@ -551,12 +551,12 @@ namespace FTAnalyzer
                 {
                     if (FactType == DEATH || FactType == MARRIAGE)
                         throw;
-                    string message = (node == null) ? string.Empty : node.InnerText + ". ";
+                    string message = (node is null) ? string.Empty : node.InnerText + ". ";
                     throw new InvalidXMLFactException($"{message}\n            Error {te.Message} text in {FactTypeDescription} fact - a non death fact.\n");
                 }
                 catch (Exception ex)
                 {
-                    string message = (node == null) ? string.Empty : node.InnerText + ". ";
+                    string message = (node is null) ? string.Empty : node.InnerText + ". ";
                     throw new InvalidXMLFactException($"{message}\n            Error {ex.Message} in {FactTypeDescription} fact\n");
                 }
             }
@@ -625,7 +625,7 @@ namespace FTAnalyzer
         string GetAddress(string factType, XmlNode node)
         {
             XmlNode addr = node.SelectSingleNode("ADDR");
-            if (addr == null)
+            if (addr is null)
                 return string.Empty;
             if (COMMENT_FACTS.Contains(factType)) // don't parse address records if this is a comment fact
                 return string.Empty;
@@ -750,7 +750,7 @@ namespace FTAnalyzer
 
         public string DateString
         {
-            get { return FactDate == null ? string.Empty : FactDate.DateString; }
+            get { return FactDate is null ? string.Empty : FactDate.DateString; }
         }
 
         public string SourceList
@@ -771,7 +771,7 @@ namespace FTAnalyzer
 
         public List<string> SourcePages { get; private set; }
 
-        public string Country => Location == null ? "UNKNOWN" : Location.Country;
+        public string Country => Location is null ? "UNKNOWN" : Location.Country;
 
         public bool CertificatePresent { get; private set; }
 
@@ -1005,7 +1005,7 @@ namespace FTAnalyzer
 
         string UnknownFactHash => FactType == UNKNOWN ? Tag : string.Empty;
 
-        string FamilyFactHash => Family == null ? string.Empty : Family.FamilyID;
+        string FamilyFactHash => Family is null ? string.Empty : Family.FamilyID;
         
         public string PossiblyEqualHash => FactType + UnknownFactHash + FamilyFactHash +  FactDate + IsMarriageFact;
 

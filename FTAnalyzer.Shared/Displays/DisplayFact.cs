@@ -27,7 +27,7 @@ namespace FTAnalyzer
             Icon = FactImage.ErrorIcon(fact.FactErrorLevel).Icon;
 #endif
         }
-        public FactDate DateofBirth => Ind == null ? FactDate.UNKNOWN_DATE : Ind.BirthDate;
+        public FactDate DateofBirth => Ind is null ? FactDate.UNKNOWN_DATE : Ind.BirthDate;
         public string TypeOfFact => Fact.FactTypeDescription;
         public FactDate FactDate => Fact.FactDate;
         public FactLocation Location => Fact.Location;
@@ -35,7 +35,7 @@ namespace FTAnalyzer
         public double Latitude => Fact.Location.Latitude;
         public double Longitude => Fact.Location.Longitude;
         public string Comment => Fact.Comment;
-        public string IndividualID => Ind == null ? string.Empty : Ind.IndividualID;
+        public string IndividualID => Ind is null ? string.Empty : Ind.IndividualID;
         public Age AgeAtFact => Ind?.GetAge(Fact.FactDate, Fact.FactType);
         public string SourceList => Fact.SourceList;
         public CensusReference CensusReference => Fact.CensusReference;
@@ -51,10 +51,10 @@ namespace FTAnalyzer
         public string Preferred => Fact.Preferred ? "Yes" : "No";
         public string IgnoredFact => IgnoreFact ? "Yes" : "No";
 #endif
-        public string Relation => Ind == null ? string.Empty : Ind.Relation;
-        public string RelationToRoot => Ind == null ? string.Empty : Ind.RelationToRoot;
-        public string SurnameAtDate => Ind == null ? string.Empty : Ind.SurnameAtDate(FactDate);
-        public string FactHash => Ind == null ? Fact.Preferred + Fact.FactTypeDescription + Fact.DateString + Fact.Location.OriginalText :
+        public string Relation => Ind is null ? string.Empty : Ind.Relation;
+        public string RelationToRoot => Ind is null ? string.Empty : Ind.RelationToRoot;
+        public string SurnameAtDate => Ind is null ? string.Empty : Ind.SurnameAtDate(FactDate);
+        public string FactHash => Ind is null ? Fact.Preferred + Fact.FactTypeDescription + Fact.DateString + Fact.Location.OriginalText :
                                               Ind.IndividualID + Fact.Preferred + Fact.FactTypeDescription + Fact.DateString + Fact.Location.OriginalText;
         public string ErrorComment => Fact.FactErrorMessage;
 
@@ -73,7 +73,7 @@ namespace FTAnalyzer
         public override int GetHashCode() => base.GetHashCode();
 
         public override string ToString() => 
-            Ind == null ? $"{Fact.FactTypeDescription}: {Fact.FactDate} {Fact.Comment}"
+            Ind is null ? $"{Fact.FactTypeDescription}: {Fact.FactDate} {Fact.Comment}"
                         : $"{IndividualID}: {Forenames} {Surname}, {Fact}";
 
         public IComparer<IDisplayFact> GetComparer(string columnName, bool ascending)

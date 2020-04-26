@@ -75,7 +75,7 @@ namespace FTAnalyzer
                 string forenames = Name.Substring(ptr + 2);
                 string surname = Name.Substring(0, ptr);
                 int pos = forenames.IndexOf(" ", StringComparison.Ordinal);
-                string forename = forenames == null ? string.Empty : (pos > 0 ? forenames.Substring(0, pos) : forenames);
+                string forename = forenames is null ? string.Empty : (pos > 0 ? forenames.Substring(0, pos) : forenames);
                 ForenameMetaphone = new DoubleMetaphone(forename).PrimaryKey;
                 SurnameMetaphone = new DoubleMetaphone(surname).PrimaryKey;
             }

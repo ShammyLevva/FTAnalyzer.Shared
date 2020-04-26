@@ -191,8 +191,8 @@ namespace FTAnalyzer
         {
             FamilyID = f.FamilyID;
             Facts = new List<Fact>(f.Facts);
-            Husband = f.Husband == null ? null : new Individual(f.Husband);
-            Wife = f.Wife == null ? null : new Individual(f.Wife);
+            Husband = f.Husband is null ? null : new Individual(f.Husband);
+            Wife = f.Wife is null ? null : new Individual(f.Wife);
             Children = new List<Individual>(f.Children);
             _preferredFacts = new Dictionary<string, Fact>(f._preferredFacts);
             ExpectedTotal = f.ExpectedTotal;
@@ -317,7 +317,7 @@ namespace FTAnalyzer
         {
             get
             {
-                if (Husband == null || Wife == null || !MarriageDate.IsKnown)
+                if (Husband is null || Wife is null || !MarriageDate.IsKnown)
                     return SINGLE;
                 foreach (Fact f in Facts)
                     if (f.IsMarriageFact)
@@ -361,7 +361,7 @@ namespace FTAnalyzer
             get
             {
                 if (Husband != null) return Husband.Surname;
-                return Wife == null ? string.Empty : Wife.Surname;
+                return Wife is null ? string.Empty : Wife.Surname;
             }
         }
 
@@ -488,24 +488,24 @@ namespace FTAnalyzer
         public void SetChildrenCommonRelation(Individual parent, CommonAncestor commonAncestor)
         {
             foreach (var child in Children)
-                if (child.CommonAncestor == null || child.CommonAncestor.Distance > commonAncestor.Distance + 1)
+                if (child.CommonAncestor is null || child.CommonAncestor.Distance > commonAncestor.Distance + 1)
                     child.CommonAncestor = new CommonAncestor(commonAncestor.Ind, commonAncestor.Distance + 1, !child.IsNaturalChildOf(parent) || commonAncestor.Step);
         }
 
         #region IDisplayFamily Members
 
-        string IDisplayFamily.Husband => Husband == null ? string.Empty : $"{Husband.Name} (b.{Husband.BirthDate})";
-        string IJsonFamily.Husband => Husband == null ? string.Empty : $"{Husband.Name} (b.{Husband.BirthDate})";
+        string IDisplayFamily.Husband => Husband is null ? string.Empty : $"{Husband.Name} (b.{Husband.BirthDate})";
+        string IJsonFamily.Husband => Husband is null ? string.Empty : $"{Husband.Name} (b.{Husband.BirthDate})";
 
-        string IDisplayFamily.Wife => Wife == null ? string.Empty : $"{Wife.Name} (b. {Wife.BirthDate})";
-        string IJsonFamily.Wife => Wife == null ? string.Empty : $"{Wife.Name} (b. {Wife.BirthDate})";
+        string IDisplayFamily.Wife => Wife is null ? string.Empty : $"{Wife.Name} (b. {Wife.BirthDate})";
+        string IJsonFamily.Wife => Wife is null ? string.Empty : $"{Wife.Name} (b. {Wife.BirthDate})";
 
         public string Marriage => ToString();
 
-        public string HusbandForenames => Husband == null ? string.Empty : Husband.Forenames;
-        public string HusbandSurname => Husband == null ? string.Empty : Husband.Surname;
-        public string WifeForenames => Wife == null ? string.Empty : Wife.Forenames;
-        public string WifeSurname => Wife == null ? string.Empty : Wife.Surname;
+        public string HusbandForenames => Husband is null ? string.Empty : Husband.Forenames;
+        public string HusbandSurname => Husband is null ? string.Empty : Husband.Surname;
+        public string WifeForenames => Wife is null ? string.Empty : Wife.Forenames;
+        public string WifeSurname => Wife is null ? string.Empty : Wife.Surname;
 
         string IDisplayFamily.Children
         {
@@ -570,7 +570,7 @@ namespace FTAnalyzer
 
         public bool BothParentsAlive(FactDate when)
         {
-            if (Husband == null || Wife == null || FamilyType.Equals(SOLOINDIVIDUAL))
+            if (Husband is null || Wife is null || FamilyType.Equals(SOLOINDIVIDUAL))
                 return false;
             return Husband.IsAlive(when) && Wife.IsAlive(when) && Husband.GetAge(when).MinAge > 13 && Wife.GetAge(when).MinAge > 13;
         }
@@ -600,9 +600,9 @@ namespace FTAnalyzer
             {
                 var results = new List<DisplayFact>();
                 string surname, forenames;
-                if (Husband == null)
+                if (Husband is null)
                 {
-                    if (Wife == null)
+                    if (Wife is null)
                     {
                         surname = string.Empty;
                         forenames = string.Empty;
@@ -615,7 +615,7 @@ namespace FTAnalyzer
                 }
                 else
                 {
-                    if (Wife == null)
+                    if (Wife is null)
                     {
                         surname = Husband.Surname;
                         forenames = Husband.Forenames;
@@ -649,7 +649,7 @@ namespace FTAnalyzer
         public override string ToString()
         {
             var marriage = GetPreferredFact(Fact.MARRIAGE);
-            return marriage == null ? string.Empty :
+            return marriage is null ? string.Empty :
                     marriage.Location.IsBlank ? $"{MarriageDate}" :
                         $"{MarriageDate} at {marriage.Location}";
         }

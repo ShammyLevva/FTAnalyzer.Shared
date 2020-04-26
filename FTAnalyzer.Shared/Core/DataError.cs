@@ -35,18 +35,18 @@ namespace FTAnalyzer
         public System.Drawing.Image Icon { get; private set; }
 #endif
         public string ErrorType { get; private set; }
-        public string Reference => individual == null ? family.FamilyID : individual.IndividualID;
-        public string Name => individual == null ? family.FamilyName : individual.Name;
-        public string Forenames => individual == null ? family.Forenames : individual.Forenames;
-        public string Surname => individual == null ? family.Surname : individual.Surname;
+        public string Reference => individual is null ? family.FamilyID : individual.IndividualID;
+        public string Name => individual is null ? family.FamilyName : individual.Name;
+        public string Forenames => individual is null ? family.Forenames : individual.Forenames;
+        public string Surname => individual is null ? family.Surname : individual.Surname;
         public string Description { get; private set; }
-        public FactDate Born => individual == null ? FactDate.UNKNOWN_DATE : individual.BirthDate;
-        public FactDate Died => individual == null ? FactDate.UNKNOWN_DATE : individual.DeathDate;
+        public FactDate Born => individual is null ? FactDate.UNKNOWN_DATE : individual.BirthDate;
+        public FactDate Died => individual is null ? FactDate.UNKNOWN_DATE : individual.DeathDate;
         
 #if __PC__
-        public bool IsFamily => individual == null;
+        public bool IsFamily => individual is null;
 #elif __MACOS__ || __IOS__
-        public string IsFamily => individual == null ? "Yes" : "No";
+        public string IsFamily => individual is null ? "Yes" : "No";
 #endif
         public IComparer<IDisplayDataError> GetComparer(string columnName, bool ascending)
         {

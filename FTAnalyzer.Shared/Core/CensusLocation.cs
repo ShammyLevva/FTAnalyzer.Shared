@@ -29,7 +29,7 @@ namespace FTAnalyzer
         {
 #region Census Locations
             // load Census Locations from XML file
-            if (startPath == null) return;
+            if (startPath is null) return;
             string filename = Path.Combine(startPath, "Resources", "CensusLocations.xml");
             if (File.Exists(filename))
             {

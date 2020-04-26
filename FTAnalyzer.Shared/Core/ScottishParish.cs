@@ -27,7 +27,7 @@ namespace FTAnalyzer
         public static void LoadScottishParishes(string startPath)
         {
             // load Scottish Parishes from XML file
-            if (startPath == null) return;
+            if (startPath is null) return;
             string filename = Path.Combine(startPath, "Resources", "ScottishParishes.xml");
             if (File.Exists(filename))
             {

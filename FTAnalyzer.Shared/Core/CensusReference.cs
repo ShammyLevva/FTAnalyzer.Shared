@@ -1307,7 +1307,7 @@ namespace FTAnalyzer
             {
                 string year = CensusYear.StartDate.Year.ToString();
                 string defaultRegion = Settings.Default.defaultURLRegion;
-                if (defaultRegion == null)
+                if (defaultRegion is null)
                     defaultRegion = ".co.uk";
                 if (year.Equals("1911") && Countries.IsEnglandWales(Country) && Piece.Length > 0 && Schedule.Length > 0)
                     return @"http://search.findmypast" + defaultRegion + "/search-world-records/1911-census-for-england-and-wales?pieceno=" + Piece + @"&schedule=" + Schedule;

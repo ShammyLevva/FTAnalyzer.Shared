@@ -232,7 +232,7 @@ namespace FTAnalyzer.Exports
 
         static void WriteIndividual(Individual ind)
         {
-            if (ind == null || processed.Contains(ind))
+            if (ind is null || processed.Contains(ind))
                 return; // don't write out individual if already processed
             bool isPrivate = _privatise && ind.BirthDate.IsAfter(PrivacyDate) && ind.IsAlive(FactDate.TODAY);
             output.WriteLine($"0 @{ind.IndividualID}@ INDI");

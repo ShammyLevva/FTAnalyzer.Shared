@@ -13,15 +13,15 @@
             censusFact = ind.GetCensusFact(f);
         }
 
-        public string CensusReference => censusFact == null
+        public string CensusReference => censusFact is null
                     ? "Census Not Found"
-                    : censusFact.CensusReference == null ? string.Empty : censusFact.CensusReference.Reference;
+                    : censusFact.CensusReference is null ? string.Empty : censusFact.CensusReference.Reference;
         public string IndividualID => Individual.IndividualID;
         public string FamilyID => Individual.ReferralFamilyID;
         public string Forenames => Individual.Forenames;
         public string Surname => Individual.Surname;
         public Age Age => Individual.GetAge(Fact.FactDate);
-        public string Census => censusFact == null ? Fact.ToString() : censusFact.ToString();
+        public string Census => censusFact is null ? Fact.ToString() : censusFact.ToString();
         public string CensusDate => Fact.FactDate.ToString();
         public bool Include => Individual.IsBloodDirect;
 
@@ -49,7 +49,7 @@
         {
             get
             {
-                if (censusFact == null)
+                if (censusFact is null)
                     return string.Empty;
                 if (censusFact.FactDate.Overlaps(FTAnalyzer.CensusDate.EWCENSUS1881) && censusFact.Location.IsEnglandWales)
                     return "RG11";

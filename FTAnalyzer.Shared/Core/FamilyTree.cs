@@ -63,7 +63,7 @@ namespace FTAnalyzer
         {
             get
             {
-                if (instance == null)
+                if (instance is null)
                     instance = new FamilyTree();
                 return instance;
             }
@@ -71,14 +71,14 @@ namespace FTAnalyzer
 
         public static string GetText(XmlNode node, bool lookForText)
         {
-            if (node == null)
+            if (node is null)
                 return string.Empty;
             if (node.Name.Equals("PAGE") || node.Name.Equals("TITL") || node.Name.Equals("NOTE"))
                 return node.InnerText.Trim();
             XmlNode text = node.SelectSingleNode(".//TEXT");
             if (text != null && lookForText && text.ChildNodes.Count > 0)
                 return GetContinuationText(text.ChildNodes);
-            if (node.FirstChild == null || node.FirstChild.Value == null)
+            if (node.FirstChild is null || node.FirstChild.Value is null)
                 return string.Empty;
             if (node.FirstChild.NextSibling != null)
                 return GetSiblingText(node.FirstChild, node.ChildNodes);
@@ -91,7 +91,7 @@ namespace FTAnalyzer
 
         public static string GetNotes(XmlNode node)
         {
-            if (node == null) return string.Empty;
+            if (node is null) return string.Empty;
             XmlNodeList notes = node.SelectNodes("NOTE");
             if (notes.Count == 0)
                 notes = node.SelectNodes("DATA/TEXT");
@@ -119,7 +119,7 @@ namespace FTAnalyzer
 
         public static string GetNoteRef(XmlAttribute reference)
         {
-            if (noteNodes == null || reference == null)
+            if (noteNodes is null || reference is null)
                 return string.Empty;
             var result = new StringBuilder();
             foreach (XmlNode node in noteNodes)
@@ -234,14 +234,14 @@ namespace FTAnalyzer
             rootIndividualID = string.Empty;
             outputText.Report($"Loading file {filename}\n");
             XmlDocument doc = GedcomToXml.LoadFile(stream, Encoding.GetEncoding(1252), outputText, true);
-            if (doc == null)
+            if (doc is null)
             {
                 Loading = false;
                 return null;
             }
             // First check if file has a valid header record ie: it is actually a GEDCOM file
             XmlNode header = doc.SelectSingleNode("GED/HEAD");
-            if (header == null)
+            if (header is null)
             {
                 outputText.Report(string.Format($"\n\nUnable to find GEDCOM 'HEAD' record in first line of file aborting load.\nIs {filename} really a GEDCOM file"));
                 Loading = false;
@@ -274,7 +274,7 @@ namespace FTAnalyzer
                         break;
                 }
             }
-            if (doc == null || doc.SelectNodes("GED/INDI").Count == 0)
+            if (doc is null || doc.SelectNodes("GED/INDI").Count == 0)
             {
                 Loading = false;
                 return null;
@@ -329,7 +329,7 @@ namespace FTAnalyzer
             foreach (XmlNode n in list)
             {
                 var individual = new Individual(n, outputText);
-                if (individual.IndividualID == null)
+                if (individual.IndividualID is null)
                     outputText.Report("File has invalid GEDCOM data. Individual found with no ID. Search file for 0 @@ INDI\n");
                 else
                 {
@@ -491,7 +491,7 @@ namespace FTAnalyzer
         {
             StandardisedName gIn = new StandardisedName(IsMale, name);
             names.TryGetValue(gIn, out StandardisedName gOut);
-            return gOut == null ? name : gOut.Name;
+            return gOut is null ? name : gOut.Name;
         }
 
         void ReportOptions(IProgress<string> outputText)
@@ -861,7 +861,7 @@ namespace FTAnalyzer
                     c.Infamily = true;
                     c.ReferralFamilyID = f.FamilyID;
                     c.HasParents = f.Husband != null || f.Wife != null;
-                    c.HasOnlyOneParent = (f.Husband != null && f.Wife == null) || (f.Husband == null && f.Wife != null);
+                    c.HasOnlyOneParent = (f.Husband != null && f.Wife is null) || (f.Husband is null && f.Wife != null);
                 }
             }
             foreach (Individual ind in individuals)
@@ -938,7 +938,7 @@ namespace FTAnalyzer
             if (string.IsNullOrEmpty(individualID))
                 return null;
             individualLookup.TryGetValue(individualID, out Individual person);
-            while (individualID.StartsWith("I0", StringComparison.Ordinal) && person == null)
+            while (individualID.StartsWith("I0", StringComparison.Ordinal) && person is null)
             {
                 if (individualID.Length >= 2) individualID = $"I{individualID.Substring(2)}";
                 individualLookup.TryGetValue(individualID, out person);
@@ -998,9 +998,9 @@ namespace FTAnalyzer
         {
             if (looseInfo != null)
                 return looseInfo;
-            if (looseBirths == null)
+            if (looseBirths is null)
                 LooseBirths();
-            if (looseDeaths == null)
+            if (looseDeaths is null)
                 LooseDeaths();
             SortableBindingList<IDisplayLooseInfo> result = new SortableBindingList<IDisplayLooseInfo>();
             try
@@ -1444,11 +1444,11 @@ namespace FTAnalyzer
         {
             ClearRelations();
             RootPerson = GetIndividual(startID);
-            if(RootPerson == null)
+            if(RootPerson is null)
             {
                 startID = individuals[0].IndividualID;
                 RootPerson = GetIndividual(startID);
-                if (RootPerson == null)
+                if (RootPerson is null)
                     throw new NotFoundException("Unable to find a Root Person in the file");
             }
             Individual ind = RootPerson;
@@ -1552,7 +1552,7 @@ namespace FTAnalyzer
             {
                 foreach (Family f in i.FamiliesAsSpouse)
                 {
-                    if (i.RelationToRoot == null && f.Spouse(i) != null && f.Spouse(i).IsBloodDirect)
+                    if (i.RelationToRoot is null && f.Spouse(i) != null && f.Spouse(i).IsBloodDirect)
                     {
                         string relation = f.MaritalStatus != Family.MARRIED ? "partner" : i.IsMale ? "husband" : "wife";
                         i.RelationToRoot = $"{relation} of {f.Spouse(i).RelationToRoot}";
@@ -1769,7 +1769,7 @@ namespace FTAnalyzer
                                                        ComboBoxFamily family, bool IgnoreMissingBirthDates, bool IgnoreMissingDeathDates)
         {
             Predicate<Individual> filter;
-            if (family == null)
+            if (family is null)
             {
                 filter = relType.BuildFilter<Individual>(x => x.RelationType);
                 if (surname.Length > 0)
@@ -1809,7 +1809,7 @@ namespace FTAnalyzer
         public List<IDisplayColourBMD> ColourBMD(RelationTypes relType, string surname, ComboBoxFamily family)
         {
             Predicate<Individual> filter;
-            if (family == null)
+            if (family is null)
             {
                 filter = relType.BuildFilter<Individual>(x => x.RelationType);
                 if (surname.Length > 0)
@@ -1826,7 +1826,7 @@ namespace FTAnalyzer
         public List<IDisplayMissingData> MissingData(RelationTypes relType, string surname, ComboBoxFamily family)
         {
             Predicate<Individual> filter;
-            if (family == null)
+            if (family is null)
             {
                 filter = relType.BuildFilter<Individual>(x => x.RelationType);
                 if (surname.Length > 0)
@@ -2929,7 +2929,7 @@ namespace FTAnalyzer
         static string GetSurname(SearchType st, Individual individual, bool ancestry)
         {
             string surname = string.Empty;
-            if (individual == null) return surname;
+            if (individual is null) return surname;
             if (individual.Surname != "?" && individual.Surname.ToUpper() != Individual.UNKNOWN_NAME)
                 surname = individual.Surname;
             if (st.Equals(SearchType.DEATH) && individual.MarriedName != "?" && individual.MarriedName.ToUpper() != Individual.UNKNOWN_NAME && individual.MarriedName != individual.Surname)
@@ -3266,11 +3266,11 @@ namespace FTAnalyzer
         public SortableBindingList<IDisplayDuplicateIndividual> BuildDuplicateList(int minScore)
         {
             //log.Debug("FamilyTree.BuildDuplicateList");
-            //if (duplicates == null)
+            //if (duplicates is null)
                 //log.Error("BuildDuplicateList called with null duplicates");
 
             var select = new SortableBindingList<IDisplayDuplicateIndividual>();
-            if (NonDuplicates == null)
+            if (NonDuplicates is null)
                 DeserializeNonDuplicates();
             foreach (DuplicateIndividual dup in duplicates)
             {

@@ -696,9 +696,9 @@ namespace FTAnalyzer
                         throw new FactDateException($"Unrecognised date format for: {dateValue}");
                 }
                 // Now process matched string - if gDouble is not null we have a double date to check
-                string day = gDay == null ? string.Empty : gDay.ToString().Trim();
-                string month = gMonth == null ? string.Empty : gMonth.ToString().Trim();
-                string year = gYear == null ? string.Empty : gYear.ToString().Trim();
+                string day = gDay is null ? string.Empty : gDay.ToString().Trim();
+                string month = gMonth is null ? string.Empty : gMonth.ToString().Trim();
+                string year = gYear is null ? string.Empty : gYear.ToString().Trim();
 
                 if (!IsValidDoubleDate(month, year, gDouble))
                     throw new InvalidDoubleDateException(DoubleDateError);
@@ -774,7 +774,7 @@ namespace FTAnalyzer
         {
             DoubleDate = false;   // set property
             DoubleDateError = string.Empty;
-            if (gDouble == null)  // normal date so its valid double date
+            if (gDouble is null)  // normal date so its valid double date
                 return true;
             // check if valid double date if so set double date to true
             string doubleyear = gDouble.ToString().Trim();
@@ -784,7 +784,7 @@ namespace FTAnalyzer
                 doubleyear = doubleyear.Substring(1, 2);
             if (doubleyear.Length == 1 && year.Length >= 2)
                 doubleyear = year.Substring(year.Length - 2, 1) + doubleyear;
-            if (doubleyear == null || doubleyear.Length < 2 || doubleyear.Length > 4 || year.Length < 3)
+            if (doubleyear is null || doubleyear.Length < 2 || doubleyear.Length > 4 || year.Length < 3)
             {
                 DoubleDateError = "Year part of double date is an invalid length.";
                 return false;
@@ -859,7 +859,7 @@ namespace FTAnalyzer
             if (!DoubleDate && that != null && that.DoubleDate)
                 return EndDate < that.StartDate || EndDate < that.StartDate.TryAddYears(-1);
             // easy case is extremes whole of date before other
-            return that == null || EndDate < that.StartDate;
+            return that is null || EndDate < that.StartDate;
         }
 
         /*
@@ -869,7 +869,7 @@ namespace FTAnalyzer
         {
             if (!DoubleDate && that != null && that.DoubleDate)
                 return StartDate < that.StartDate || StartDate < that.StartDate.TryAddYears(-1);
-            return that == null || StartDate < that.StartDate;
+            return that is null || StartDate < that.StartDate;
         }
 
         /*
@@ -880,7 +880,7 @@ namespace FTAnalyzer
             if (DoubleDate && that != null && !that.DoubleDate)
                 return StartDate > that.EndDate || StartDate.TryAddYears(-1) > that.EndDate;
             // easy case is extremes whole of date after other
-            return that == null || StartDate > that.EndDate;
+            return that is null || StartDate > that.EndDate;
         }
 
         /*
@@ -890,20 +890,20 @@ namespace FTAnalyzer
         {
             if (DoubleDate && that != null && !that.DoubleDate)
                 return EndDate > that.EndDate || EndDate.TryAddYears(-1) > that.EndDate;
-            return that == null || EndDate > that.EndDate;
+            return that is null || EndDate > that.EndDate;
         }
 
         public bool Overlaps(FactDate that)
         {
             // two dates overlap if not entirely before or after
-            return that == null || !(IsBefore(that) || IsAfter(that));
+            return that is null || !(IsBefore(that) || IsAfter(that));
         }
 
         public bool IsNotBEForeOrAFTer => StartDate != MINDATE && EndDate != MAXDATE;
 
         public bool FactYearMatches(FactDate factDate)
         {
-            if (factDate == null) return false;
+            if (factDate is null) return false;
             if (factDate.StartDate.Year != factDate.EndDate.Year ||
                  StartDate.Year != EndDate.Year) return false;
             // both this & that have exact years now return whether this and that match
@@ -913,13 +913,13 @@ namespace FTAnalyzer
         public bool CensusYearMatches(CensusDate censusDate)
         {
             if (IsAfter(censusDate)) return false; // if the date is after the census date then it can't be a census record
-            if (censusDate == null) return false;
+            if (censusDate is null) return false;
             if (StartDate.Year != EndDate.Year) return false;
             // both this & that have exact years now return whether this and that match given a census date can go over a year end
             return StartDate.Year == censusDate.StartDate.Year || StartDate.Year == censusDate.EndDate.Year;
         }
 
-        public bool Contains(FactDate that) => that == null || StartDate < that.StartDate && EndDate > that.EndDate;
+        public bool Contains(FactDate that) => that is null || StartDate < that.StartDate && EndDate > that.EndDate;
 
         public bool IsLongYearSpan => Math.Abs(StartDate.Year - EndDate.Year) > 5;
 
@@ -996,7 +996,7 @@ namespace FTAnalyzer
         #region Overrides
         public override bool Equals(object obj)
         {
-            if (obj == null || !(obj is FactDate))
+            if (obj is null || !(obj is FactDate))
                 return false;
             FactDate f = (FactDate)obj;
             // two FactDates are equal if same datestring or same start and- enddates

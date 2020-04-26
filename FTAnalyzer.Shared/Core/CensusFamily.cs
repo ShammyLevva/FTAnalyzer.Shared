@@ -102,7 +102,7 @@ namespace FTAnalyzer
 
         bool IsValidIndividual(CensusIndividual indiv, bool censusDone, bool parentCheck, bool checkCensus)
         {
-            if (indiv == null)
+            if (indiv is null)
                 return false;
 
             DateTime birth = indiv.BirthDate.StartDate;
@@ -162,9 +162,9 @@ namespace FTAnalyzer
         }
 
         string IDisplayChildrenStatus.Husband =>
-                BaseFamily.Husband == null ? string.Empty : $"{BaseFamily.Husband.Name} (b. {BaseFamily.Husband.BirthDate})";
+                BaseFamily.Husband is null ? string.Empty : $"{BaseFamily.Husband.Name} (b. {BaseFamily.Husband.BirthDate})";
 
         string IDisplayChildrenStatus.Wife =>
-                BaseFamily.Wife == null ? string.Empty : $"{BaseFamily.Wife.Name} (b.{BaseFamily.Wife.BirthDate})";
+                BaseFamily.Wife is null ? string.Empty : $"{BaseFamily.Wife.Name} (b.{BaseFamily.Wife.BirthDate})";
     }
 }

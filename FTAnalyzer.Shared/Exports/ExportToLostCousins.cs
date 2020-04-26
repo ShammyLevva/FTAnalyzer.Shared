@@ -30,9 +30,9 @@ namespace FTAnalyzer.Exports
             int recordsPresent = 0;
             int sessionDuplicates = 0;
             int count = 0;
-            if (Website == null)
+            if (Website is null)
                 Website = LoadWebsiteAncestors(outputText);
-            if (SessionList == null)
+            if (SessionList is null)
                 SessionList = new List<LostCousin>();
             bool alias = GeneralSettings.Default.ShowAliasInName; 
             GeneralSettings.Default.ShowAliasInName = false; // turn off adding alias in name when exporting
@@ -156,7 +156,7 @@ namespace FTAnalyzer.Exports
         public static SortableBindingList<IDisplayLostCousin> VerifyAncestors(IProgress<string> outputText)
         {
             SortableBindingList<IDisplayLostCousin> result = new SortableBindingList<IDisplayLostCousin>();
-            if (Website == null)
+            if (Website is null)
                 Website = LoadWebsiteAncestors(outputText);
             WebLinks = new List<Uri>();
             foreach(LostCousin lostCousin in Website)

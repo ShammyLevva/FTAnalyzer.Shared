@@ -98,7 +98,7 @@ namespace FTAnalyzer
         {
             // load conversions from XML file
             #region Fact Location Fixes
-            if (startPath == null) return;
+            if (startPath is null) return;
 #if __MACOS__
             string filename = Path.Combine(startPath, @"../Resources/FactLocationFixes.xml");
 #elif __IOS__
@@ -543,7 +543,7 @@ namespace FTAnalyzer
         public static FactLocation LookupLocation(string place)
         {
             LOCATIONS.TryGetValue(place, out FactLocation result);
-            if (result == null)
+            if (result is null)
                 result = new FactLocation(place);
             return result;
         }
@@ -884,24 +884,24 @@ namespace FTAnalyzer
 
                 // now check the individual part fixes
                 LOCAL_GOOGLE_FIXES.TryGetValue(new Tuple<int, string>(COUNTRY, Country.ToUpperInvariant()), out string countryFix);
-                if (countryFix == null)
+                if (countryFix is null)
                 {
                     GOOGLE_FIXES.TryGetValue(new Tuple<int, string>(COUNTRY, Country.ToUpperInvariant()), out countryFix);
-                    if (countryFix == null)
+                    if (countryFix is null)
                         countryFix = Country;
                 }
                 LOCAL_GOOGLE_FIXES.TryGetValue(new Tuple<int, string>(REGION, Region.ToUpperInvariant()), out string regionFix);
-                if (regionFix == null)
+                if (regionFix is null)
                 {
                     GOOGLE_FIXES.TryGetValue(new Tuple<int, string>(REGION, Region.ToUpperInvariant()), out regionFix);
-                    if (regionFix == null)
+                    if (regionFix is null)
                         regionFix = Region;
                 }
                 LOCAL_GOOGLE_FIXES.TryGetValue(new Tuple<int, string>(SUBREGION, SubRegion.ToUpperInvariant()), out string subRegionFix);
-                if (subRegionFix == null)
+                if (subRegionFix is null)
                 {
                     GOOGLE_FIXES.TryGetValue(new Tuple<int, string>(SUBREGION, SubRegion.ToUpperInvariant()), out subRegionFix);
-                    if (subRegionFix == null)
+                    if (subRegionFix is null)
                         subRegionFix = SubRegion;
                 }
                 result = countryFix;
@@ -968,7 +968,7 @@ namespace FTAnalyzer
             get
             {
                 FREECEN_LOOKUP.TryGetValue(Region, out string result);
-                if (result == null)
+                if (result is null)
                     result = "all";
                 return result;
             }

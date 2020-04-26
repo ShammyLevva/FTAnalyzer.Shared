@@ -22,7 +22,7 @@ namespace FTAnalyzer
         {
             get
             {
-                if (instance == null)
+                if (instance is null)
                     instance = new Statistics();
                 return instance;
             }
