@@ -307,7 +307,7 @@ namespace FTAnalyzer
             get
             {
                 int currentFactCount = Facts.Count + FamilyFacts.Count;
-                if (_allfacts == null || currentFactCount != Factcount)
+                if (_allfacts is null || currentFactCount != Factcount)
                 {
                     _allfacts = new List<Fact>();
                     _allfacts.AddRange(PersonalFacts);
@@ -405,7 +405,7 @@ namespace FTAnalyzer
         {
             get
             {
-                if (_forenames == null)
+                if (_forenames is null)
                     return string.Empty;
                 int pos = _forenames.IndexOf(" ", StringComparison.Ordinal);
                 return pos > 0 ? _forenames.Substring(0, pos) : _forenames;
@@ -416,7 +416,7 @@ namespace FTAnalyzer
         {
             get
             {
-                if (_forenames == null)
+                if (_forenames is null)
                     return string.Empty;
                 int pos = _forenames.IndexOf(" ", StringComparison.Ordinal);
                 return pos > 0 ? _forenames.Substring(pos).Trim() : string.Empty;
@@ -454,12 +454,12 @@ namespace FTAnalyzer
             }
         }
 
-        public FactDate BirthDate => BirthFact == null ? FactDate.UNKNOWN_DATE : BirthFact.FactDate;
+        public FactDate BirthDate => BirthFact is null ? FactDate.UNKNOWN_DATE : BirthFact.FactDate;
 
         public DateTime BirthStart => BirthDate.StartDate != FactDate.MINDATE ? BirthDate.StartDate : BirthDate.EndDate;
         public DateTime BirthEnd => BirthDate.StartDate != FactDate.MAXDATE ? BirthDate.EndDate : BirthDate.StartDate;
 
-        public FactLocation BirthLocation => (BirthFact == null) ? FactLocation.BLANK_LOCATION : BirthFact.Location;
+        public FactLocation BirthLocation => (BirthFact is null) ? FactLocation.BLANK_LOCATION : BirthFact.Location;
 
         public Fact DeathFact
         {
@@ -479,12 +479,12 @@ namespace FTAnalyzer
             }
         }
 
-        public FactDate DeathDate => DeathFact == null ? FactDate.UNKNOWN_DATE : DeathFact.FactDate;
+        public FactDate DeathDate => DeathFact is null ? FactDate.UNKNOWN_DATE : DeathFact.FactDate;
 
         public DateTime DeathStart => DeathDate.StartDate != FactDate.MINDATE ? DeathDate.StartDate : DeathDate.EndDate;
         public DateTime DeathEnd => DeathDate.EndDate != FactDate.MAXDATE ? DeathDate.EndDate : DeathDate.StartDate;
 
-        public FactLocation DeathLocation => DeathFact == null ? FactLocation.BLANK_LOCATION : DeathFact.Location;
+        public FactLocation DeathLocation => DeathFact is null ? FactLocation.BLANK_LOCATION : DeathFact.Location;
 
         public FactDate BurialDate
         {
@@ -500,7 +500,7 @@ namespace FTAnalyzer
             get
             {
                 Fact occupation = GetPreferredFact(Fact.OCCUPATION);
-                return occupation == null ? string.Empty : occupation.Comment;
+                return occupation is null ? string.Empty : occupation.Comment;
             }
         }
 
@@ -513,7 +513,7 @@ namespace FTAnalyzer
             get
             {
                 Fact loose = GetPreferredFact(Fact.LOOSEBIRTH);
-                return loose == null ? FactDate.UNKNOWN_DATE : loose.FactDate;
+                return loose is null ? FactDate.UNKNOWN_DATE : loose.FactDate;
             }
         }
 
@@ -531,7 +531,7 @@ namespace FTAnalyzer
             get
             {
                 Fact loose = GetPreferredFact(Fact.LOOSEDEATH);
-                return loose == null ? FactDate.UNKNOWN_DATE : loose.FactDate;
+                return loose is null ? FactDate.UNKNOWN_DATE : loose.FactDate;
             }
         }
 
@@ -551,7 +551,7 @@ namespace FTAnalyzer
             get
             {
                 Fact service = GetPreferredFact(Fact.SERVICE_NUMBER);
-                return service == null ? string.Empty : service.Comment;
+                return service is null ? string.Empty : service.Comment;
             }
         }
 
@@ -677,7 +677,7 @@ namespace FTAnalyzer
 
         public bool HasCensusLocation(CensusDate when)
         {
-            if (when == null) return false;
+            if (when is null) return false;
             foreach (Fact f in Facts)
             {
                 if (f.IsValidCensus(when) && f.Location.ToString().Length > 0)
@@ -688,7 +688,7 @@ namespace FTAnalyzer
 
         public Fact CensusFact(FactDate factDate)
         {
-            if (factDate == null) return null;
+            if (factDate is null) return null;
             foreach (Fact f in Facts)
             {
                 if (f.IsValidCensus(factDate))
@@ -701,7 +701,7 @@ namespace FTAnalyzer
 
         public bool CensusFactExists(FactDate factDate, bool includeCreated)
         {
-            if (factDate == null) return false;
+            if (factDate is null) return false;
             foreach (Fact f in Facts)
             {
                 if (f.IsValidCensus(factDate))
@@ -714,7 +714,7 @@ namespace FTAnalyzer
         public bool IsCensusDone(CensusDate when, bool includeUnknownCountries) => IsCensusDone(when, includeUnknownCountries, true);
         public bool IsCensusDone(CensusDate when, bool includeUnknownCountries, bool checkCountry)
         {
-            if (when == null) return false;
+            if (when is null) return false;
             foreach (Fact f in Facts)
             {
                 if (f.IsValidCensus(when))
@@ -930,6 +930,8 @@ namespace FTAnalyzer
 
         public void AddFact(Fact fact)
         {
+            if (fact is null)
+                return;
             if (FamilyTree.FactBeforeBirth(this, fact))
                 fact.SetError((int)FamilyTree.Dataerror.FACTS_BEFORE_BIRTH, Fact.FactError.ERROR,
                     $"{fact.FactTypeDescription} fact recorded: {fact.FactDate} before individual was born");
@@ -995,7 +997,7 @@ namespace FTAnalyzer
             if (!IsLostCousinsEntered((CensusDate)cr.Fact.FactDate))
             {
                 Fact lcFact = new Fact("LostCousins", Fact.LC_FTA, cr.Fact.FactDate, cr.Fact.Location, "Lost Cousins fact created by FTAnalyzer by recognising census ref " + cr.Reference, false, true);
-                if (toAdd == null)
+                if (toAdd is null)
                     AddFact(lcFact);
                 else
                     toAdd.Add(lcFact);
@@ -1099,7 +1101,7 @@ namespace FTAnalyzer
         public FactDate GetPreferredFactDate(string factType)
         {
             Fact f = GetPreferredFact(factType);
-            return (f == null || f.FactDate == null) ? FactDate.UNKNOWN_DATE : f.FactDate;
+            return (f is null || f.FactDate is null) ? FactDate.UNKNOWN_DATE : f.FactDate;
         }
         
         // Returns all facts of the given type.
@@ -1407,10 +1409,10 @@ namespace FTAnalyzer
         BMDColour CheckMarriageStatus(Family fam)
         {
             // individual is a member of a family as parent so check family status
-            if ((IndividualID == fam.HusbandID && fam.Wife == null) ||
-                (IndividualID == fam.WifeID && fam.Husband == null))
+            if ((IndividualID == fam.HusbandID && fam.Wife is null) ||
+                (IndividualID == fam.WifeID && fam.Husband is null))
                 return BMDColour.NO_PARTNER; // no partner but has children
-            if (fam.GetPreferredFact(Fact.MARRIAGE) == null)
+            if (fam.GetPreferredFact(Fact.MARRIAGE) is null)
                 return BMDColour.NO_MARRIAGE; // has a partner but no marriage fact
             return fam.MarriageDate.DateStatus(false); // has a partner and a marriage so return date status
         }
@@ -1420,9 +1422,9 @@ namespace FTAnalyzer
             get
             {
                 Family fam = Marriages(0);
-                if (fam == null)
+                if (fam is null)
                 {
-                    if (MaxAgeAtDeath > 13 && GetPreferredFact(Fact.UNMARRIED) == null)
+                    if (MaxAgeAtDeath > 13 && GetPreferredFact(Fact.UNMARRIED) is null)
                         return BMDColour.NO_SPOUSE; // of marrying age but hasn't a partner or unmarried
                     return BMDColour.EMPTY;
                 }
@@ -1435,7 +1437,7 @@ namespace FTAnalyzer
             get
             {
                 Family fam = Marriages(1);
-                return fam == null ? BMDColour.EMPTY : CheckMarriageStatus(fam);
+                return fam is null ? BMDColour.EMPTY : CheckMarriageStatus(fam);
             }
         }
 
@@ -1444,7 +1446,7 @@ namespace FTAnalyzer
             get
             {
                 Family fam = Marriages(2);
-                return fam == null ? 0 : CheckMarriageStatus(fam);
+                return fam is null ? 0 : CheckMarriageStatus(fam);
             }
         }
 
@@ -1459,7 +1461,7 @@ namespace FTAnalyzer
             get
             {
                 Family fam = Marriages(0);
-                return fam == null ? FactDate.UNKNOWN_DATE : Marriages(0).MarriageDate;
+                return fam is null ? FactDate.UNKNOWN_DATE : Marriages(0).MarriageDate;
             }
         }
 
@@ -1468,7 +1470,7 @@ namespace FTAnalyzer
             get
             {
                 Family fam = Marriages(1);
-                return fam == null ? FactDate.UNKNOWN_DATE : Marriages(1).MarriageDate;
+                return fam is null ? FactDate.UNKNOWN_DATE : Marriages(1).MarriageDate;
             }
         }
 
@@ -1477,7 +1479,7 @@ namespace FTAnalyzer
             get
             {
                 Family fam = Marriages(2);
-                return fam == null ? FactDate.UNKNOWN_DATE : Marriages(2).MarriageDate;
+                return fam is null ? FactDate.UNKNOWN_DATE : Marriages(2).MarriageDate;
             }
         }
 
@@ -1568,7 +1570,7 @@ namespace FTAnalyzer
         string MarriageString(int number)
         {
             Family marriage = Marriages(number);
-            if (marriage == null)
+            if (marriage is null)
                 return string.Empty;
             if (IndividualID == marriage.HusbandID && marriage.Wife != null)
                 return $"To {marriage.Wife.Name}: {marriage}";
@@ -1598,7 +1600,7 @@ namespace FTAnalyzer
         {
             // Individuals are naturally ordered by surname, then forenames,
             // then date of birth.
-            if (that == null)
+            if (that is null)
                 return -1;
             int res = string.Compare(Surname, that.Surname, StringComparison.CurrentCulture);
             if (res == 0)
