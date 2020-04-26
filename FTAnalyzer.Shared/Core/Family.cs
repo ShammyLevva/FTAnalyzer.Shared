@@ -480,7 +480,6 @@ namespace FTAnalyzer
                 {
                     // add this changed individual to list 
                     // of relatives to update family of
-                    
                     queue.Enqueue(child);
                 }
             }

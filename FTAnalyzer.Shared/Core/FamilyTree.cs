@@ -162,8 +162,6 @@ namespace FTAnalyzer
 
         public static string ValidFilename(string filename)
         {
-            if (string.IsNullOrEmpty(filename))
-                return filename;
             int pos = filename.IndexOfAny(Path.GetInvalidFileNameChars());
             if (pos == -1)
                 return filename;
