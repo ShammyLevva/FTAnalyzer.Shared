@@ -561,9 +561,30 @@ namespace FTAnalyzer
             {
                 if (BirthDate.IsExact && DeathDate.IsExact)
                 {
-                    DateTime amendedDeath = new DateTime(BirthDate.StartDate.Year, DeathDate.StartDate.Month, DeathDate.StartDate.Day); // set death date to be same year as birth
-                    var diff = Math.Abs((amendedDeath - BirthDate.StartDate).Days);
-                    return diff < 16;
+                    DateTime amendedDeath;
+                    try
+                    {
+                        if (DeathDate.StartDate.Month == 2 && DeathDate.StartDate.Day == 29)
+                            amendedDeath = new DateTime(BirthDate.StartDate.Year, 2, 28); // fix issue with 29th February death dates
+                        else
+                            amendedDeath = new DateTime(BirthDate.StartDate.Year, DeathDate.StartDate.Month, DeathDate.StartDate.Day); // set death date to be same year as birth
+                        var diff = Math.Abs((amendedDeath - BirthDate.StartDate).Days);
+                        Console.WriteLine($"Processed Individual: {IndividualID}: {Name}, Diff:{diff}, Birth: {BirthDate.StartDate.ToShortDateString()} Death: {DeathDate.StartDate.ToShortDateString()}");
+                        if(diff>180)
+                        {
+                            if (BirthDate.StartDate.Month < 7)
+                                amendedDeath = amendedDeath.AddYears(-1);
+                            else
+                                amendedDeath = amendedDeath.AddYears(1);
+                            diff = Math.Abs((amendedDeath - BirthDate.StartDate).Days);
+                        }
+                        return diff < 16;
+                    }
+                    catch(ArgumentOutOfRangeException)
+                    {
+                        Console.WriteLine($"PROBLEM Individual: {IndividualID}: {Name}");
+                        return false;
+                    }
                 }
                 return false;
             }
