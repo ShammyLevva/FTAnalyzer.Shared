@@ -1766,6 +1766,22 @@ namespace FTAnalyzer
             }
         }
 
+        public SortableBindingList<IDisplayIndividual> AgedOver99
+        {
+            get
+            {
+                SortableBindingList<IDisplayIndividual> result = new SortableBindingList<IDisplayIndividual>();
+                foreach (Individual ind in individuals)
+                {
+                    int age = ind.GetMaxAge(FactDate.TODAY);
+                    Console.WriteLine($"\nName: {ind.Name}: b.{ind.BirthDate} d.{ind.DeathDate} max age={age}");
+                    if (!ind.DeathDate.IsKnown && age >= 99)
+                        result.Add(ind);
+                }
+                return result;
+            }
+        }
+
         public List<IDisplayColourCensus> ColourCensus(string country, RelationTypes relType, string surname, 
                                                        ComboBoxFamily family, bool IgnoreMissingBirthDates, bool IgnoreMissingDeathDates)
         {
