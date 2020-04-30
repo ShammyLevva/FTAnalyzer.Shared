@@ -17,19 +17,19 @@ namespace FTAnalyzer
         string RelationToRoot { get; }
         
         [ColumnDetail("Birth", 60)]
-        ColourValues.BMDColour Birth { get; }
+        ColourValues.BMDColours Birth { get; }
         [ColumnDetail("Baptism", 60)]
-        ColourValues.BMDColour BaptChri { get; }
+        ColourValues.BMDColours BaptChri { get; }
         [ColumnDetail("Marriage 1", 60)]
-        ColourValues.BMDColour Marriage1 { get; }
+        ColourValues.BMDColours Marriage1 { get; }
         [ColumnDetail("Marriage 2", 60)]
-        ColourValues.BMDColour Marriage2 { get; }
+        ColourValues.BMDColours Marriage2 { get; }
         [ColumnDetail("Marriage 3", 60)]
-        ColourValues.BMDColour Marriage3 { get; }
+        ColourValues.BMDColours Marriage3 { get; }
         [ColumnDetail("Death", 60)]
-        ColourValues.BMDColour Death { get; }
+        ColourValues.BMDColours Death { get; }
         [ColumnDetail("Burial", 60)]
-        ColourValues.BMDColour CremBuri { get; }
+        ColourValues.BMDColours CremBuri { get; }
 
         [ColumnDetail("Birth date", 170)]
         FactDate BirthDate { get; }

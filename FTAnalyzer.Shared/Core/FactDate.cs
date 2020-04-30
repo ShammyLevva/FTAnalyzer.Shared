@@ -971,26 +971,26 @@ namespace FTAnalyzer
             return minGap;
         }
 
-        public BMDColour DateStatus(bool ignoreUnknown)
+        public BMDColours DateStatus(bool ignoreUnknown)
         {
             // EMPTY = dark grey, UNKNOWN_DATE = red, OPEN_ENDED_DATE = ??, VERY_WIDE_DATE = orange_red, WIDE_DATE = orange, 
             // NARROW_DATE = yellow, JUST_YEAR_DATE = yellow_green, APPROX_DATE = pale green, EXACT_DATE = lawn_green
             if (DateType == FactDateType.UNK)
-                return ignoreUnknown ? BMDColour.EMPTY : BMDColour.UNKNOWN_DATE;
+                return ignoreUnknown ? BMDColours.EMPTY : BMDColours.UNKNOWN_DATE;
             if (DateType == FactDateType.BEF || DateType == FactDateType.AFT)
-                return BMDColour.OPEN_ENDED_DATE;
+                return BMDColours.OPEN_ENDED_DATE;
             TimeSpan ts = EndDate - StartDate;
             if (ts.Days > 365.25 * 10)
-                return BMDColour.VERY_WIDE_DATE; // more than 10 years
+                return BMDColours.VERY_WIDE_DATE; // more than 10 years
             if (ts.Days > 365.25 * 2)
-                return BMDColour.WIDE_DATE; // over 2 years less than 10 years
+                return BMDColours.WIDE_DATE; // over 2 years less than 10 years
             if (ts.Days > 365.25)
-                return BMDColour.NARROW_DATE; // over 1 year less than 2 years
+                return BMDColours.NARROW_DATE; // over 1 year less than 2 years
             if (ts.Days > 125)
-                return BMDColour.JUST_YEAR_DATE; // more than 4 months less than 1 year
+                return BMDColours.JUST_YEAR_DATE; // more than 4 months less than 1 year
             if (ts.Days > 0)
-                return BMDColour.APPROX_DATE; // less than 4 months not exact
-            return BMDColour.EXACT_DATE; // exact date
+                return BMDColours.APPROX_DATE; // less than 4 months not exact
+            return BMDColours.EXACT_DATE; // exact date
         }
 
         #endregion

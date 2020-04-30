@@ -37,7 +37,7 @@ namespace FTAnalyzer.Utilities
                 foreach (Control theControl in GetAllControls(form))
                     if (theControl.Font.Name.Equals(Properties.FontSettings.Default.SelectedFont.Name)
                         && theControl.Font.Size != Properties.FontSettings.Default.SelectedFont.Size)
-                            theControl.Font = Properties.FontSettings.Default.SelectedFont; // change font size only matching font name and size is different
+                            theControl.Font = Properties.FontSettings.Default.SelectedFont; // change font size only if matching font name and size are different
             } catch (Exception e)
             {
                 Console.WriteLine($"Error processing font: {e.Message}");
