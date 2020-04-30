@@ -88,13 +88,6 @@ namespace FTAnalyzer.Utilities
             bool windowsStoreApp = Application.ExecutablePath.Contains("WindowsApps");
             bool debugging = Application.ExecutablePath.Contains("GitRepo");
             DeploymentType = windowsStoreApp ? "Windows Store" : debugging ? "Development" : "Zip File";
-            try
-            {
-                if(ApplicationDeployment.IsNetworkDeployed)
-                    DeploymentType = "ClickOnce";
-            }
-            catch(Exception)
-            {}
             string resolution = Screen.PrimaryScreen.Bounds.ToString();
 #elif __MACOS__
             var userDefaults = new NSUserDefaults();
