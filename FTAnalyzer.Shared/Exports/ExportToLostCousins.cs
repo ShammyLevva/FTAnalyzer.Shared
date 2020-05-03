@@ -23,6 +23,7 @@ namespace FTAnalyzer.Exports
 
         public static int ProcessList(List<CensusIndividual> individuals, IProgress<string> outputText)
         {
+            if (individuals is null) return 0;
             ToProcess = individuals;
             _previousRef = string.Empty;
             int recordsAdded = 0;
