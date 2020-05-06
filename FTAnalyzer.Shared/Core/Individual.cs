@@ -486,11 +486,24 @@ namespace FTAnalyzer
 
         public FactLocation DeathLocation => DeathFact is null ? FactLocation.BLANK_LOCATION : DeathFact.Location;
 
+        public FactDate BaptismDate
+        {
+            get
+            {
+                Fact f = GetPreferredFact(Fact.BAPTISM);
+                if (f is null)
+                    f = GetPreferredFact(Fact.CHRISTENING);
+                return f?.FactDate;
+            }
+        }
+
         public FactDate BurialDate
         {
             get
             {
                 Fact f = GetPreferredFact(Fact.BURIAL);
+                if (f is null)
+                    f = GetPreferredFact(Fact.CREMATION);
                 return f?.FactDate;
             }
         }

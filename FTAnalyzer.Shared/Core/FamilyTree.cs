@@ -42,7 +42,7 @@ namespace FTAnalyzer
         SortableBindingList<IDisplayLooseBirth> looseBirths;
         SortableBindingList<IDisplayLooseInfo> looseInfo;
         SortableBindingList<DuplicateIndividual> duplicates;
-        const int DATA_ERROR_GROUPS = 28;
+        const int DATA_ERROR_GROUPS = 29;
         static XmlNodeList noteNodes;
         BigInteger maxAhnentafel;
         Dictionary<string, Individual> individualLookup;
@@ -1876,13 +1876,26 @@ namespace FTAnalyzer
                 progress.Report(20 + (record++ / totalRecords));
                 try
                 {
+                    if (ind.BaptismDate is object && ind.BaptismDate.IsKnown)
+                    {
+                        if (ind.BirthDate.IsAfter(ind.BaptismDate))
+                        {   // if birthdate after baptism and not an approx date
+                            if (ind.Birth != ColourValues.BMDColours.APPROX_DATE)
+                                errors[(int)Dataerror.BIRTH_AFTER_BAPTISM].Add(new DataError((int)Dataerror.BIRTH_AFTER_BAPTISM, ind, $"Baptised/Christened {ind.BaptismDate} before born {ind.BirthDate}"));
+                            else
+                            {   // if it is an approx birthdate only show as error if 4 months after birthdate to fudge for quarter days
+                                if (ind.BirthDate.SubtractMonths(4).IsAfter(ind.BaptismDate))
+                                    errors[(int)Dataerror.BIRTH_AFTER_BAPTISM].Add(new DataError((int)Dataerror.BIRTH_AFTER_BAPTISM, ind, $"Baptised/Christened {ind.BaptismDate} before born {ind.BirthDate}"));
+                            }
+                        }
+                    }
         #region Death facts
                     if (ind.DeathDate.IsKnown)
                     {
                         if (ind.BirthDate.IsAfter(ind.DeathDate))
-                            errors[(int)Dataerror.BIRTH_AFTER_DEATH].Add(new DataError((int)Dataerror.BIRTH_AFTER_DEATH, ind, $"Died {ind.DeathDate} before born"));
+                            errors[(int)Dataerror.BIRTH_AFTER_DEATH].Add(new DataError((int)Dataerror.BIRTH_AFTER_DEATH, ind, $"Died {ind.DeathDate} before born {ind.BirthDate}"));
                         if (ind.BurialDate != null && ind.BirthDate.IsAfter(ind.BurialDate))
-                            errors[(int)Dataerror.BIRTH_AFTER_DEATH].Add(new DataError((int)Dataerror.BIRTH_AFTER_DEATH, ind, $"Buried {ind.BurialDate} before born"));
+                            errors[(int)Dataerror.BIRTH_AFTER_DEATH].Add(new DataError((int)Dataerror.BIRTH_AFTER_DEATH, ind, $"Buried {ind.BurialDate} before born {ind.BirthDate}"));
                         if (ind.BurialDate != null && ind.BurialDate.IsBefore(ind.DeathDate) && !ind.BurialDate.Overlaps(ind.DeathDate))
                             errors[(int)Dataerror.BURIAL_BEFORE_DEATH].Add(new DataError((int)Dataerror.BURIAL_BEFORE_DEATH, ind, $"Buried {ind.BurialDate} before died {ind.DeathDate}"));
                         int minAge = ind.GetMinAge(ind.DeathDate);
@@ -2159,14 +2172,14 @@ namespace FTAnalyzer
 
         public enum Dataerror
         {
-            BIRTH_AFTER_DEATH = 0, BIRTH_AFTER_FATHER_90 = 1, BIRTH_AFTER_MOTHER_60 = 2, BIRTH_AFTER_MOTHER_DEATH = 3,
-            BIRTH_AFTER_FATHER_DEATH = 4, BIRTH_BEFORE_FATHER_13 = 5, BIRTH_BEFORE_MOTHER_13 = 6, BURIAL_BEFORE_DEATH = 7,
-            AGED_MORE_THAN_110 = 8, FACTS_BEFORE_BIRTH = 9, FACTS_AFTER_DEATH = 10, MARRIAGE_AFTER_DEATH = 11,
-            MARRIAGE_AFTER_SPOUSE_DEAD = 12, MARRIAGE_BEFORE_13 = 13, MARRIAGE_BEFORE_SPOUSE_13 = 14, LOST_COUSINS_NON_CENSUS = 15,
-            LOST_COUSINS_NOT_SUPPORTED_YEAR = 16, RESIDENCE_CENSUS_DATE = 17, CENSUS_COVERAGE = 18, FACT_ERROR = 19,
-            UNKNOWN_FACT_TYPE = 20, LIVING_WITH_DEATH_DATE = 21, CHILDRENSTATUS_TOTAL_MISMATCH = 22, DUPLICATE_FACT = 23,
-            POSSIBLE_DUPLICATE_FACT = 24, NATREG1939_INEXACT_BIRTHDATE = 25, MALE_WIFE_FEMALE_HUSBAND = 26,
-            SAME_SURNAME_COUPLE = 27, SIBLING_TOO_SOON = 28, SIBLING_PROB_TOO_SOON = 29
+            BIRTH_AFTER_BAPTISM = 0, BIRTH_AFTER_DEATH = 1, BIRTH_AFTER_FATHER_90 = 2, BIRTH_AFTER_MOTHER_60 = 3, BIRTH_AFTER_MOTHER_DEATH = 4,
+            BIRTH_AFTER_FATHER_DEATH = 5, BIRTH_BEFORE_FATHER_13 = 6, BIRTH_BEFORE_MOTHER_13 = 7, BURIAL_BEFORE_DEATH = 8,
+            AGED_MORE_THAN_110 = 9, FACTS_BEFORE_BIRTH = 10, FACTS_AFTER_DEATH = 11, MARRIAGE_AFTER_DEATH = 12,
+            MARRIAGE_AFTER_SPOUSE_DEAD = 13, MARRIAGE_BEFORE_13 = 14, MARRIAGE_BEFORE_SPOUSE_13 = 15, LOST_COUSINS_NON_CENSUS = 16,
+            LOST_COUSINS_NOT_SUPPORTED_YEAR = 17, RESIDENCE_CENSUS_DATE = 18, CENSUS_COVERAGE = 19, FACT_ERROR = 20,
+            UNKNOWN_FACT_TYPE = 21, LIVING_WITH_DEATH_DATE = 22, CHILDRENSTATUS_TOTAL_MISMATCH = 23, DUPLICATE_FACT = 24,
+            POSSIBLE_DUPLICATE_FACT = 25, NATREG1939_INEXACT_BIRTHDATE = 26, MALE_WIFE_FEMALE_HUSBAND = 27,
+            SAME_SURNAME_COUPLE = 28, SIBLING_TOO_SOON = 29, SIBLING_PROB_TOO_SOON = 30
         };
 
 #endregion

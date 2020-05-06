@@ -49,7 +49,7 @@ namespace FTAnalyzer
             BirthYear = result;
             Reference = reference;
             int ptr = weblink is null ? -1 : weblink.IndexOf("&p=", StringComparison.Ordinal);
-            WebLink = ptr == -1 ? null : new Uri(HttpUtility.UrlDecode(weblink.Substring(ptr + 3)));
+            WebLink = ptr == -1 || weblink.Length <= ptr+3 ? null : new Uri(HttpUtility.UrlDecode(weblink.Substring(ptr + 3)));
             FTAnalyzerFact = ftanalyzer;
             census = census ?? string.Empty;
             if (census.StartsWith("England", StringComparison.Ordinal))
