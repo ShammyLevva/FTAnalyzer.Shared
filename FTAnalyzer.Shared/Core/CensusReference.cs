@@ -45,6 +45,7 @@ namespace FTAnalyzer
         const string EW_CENSUS_1841_51_PATTERN6 = @"Folio *(\d{1,4}[a-z]?)\/? *(Book)? *(\d{1,4}[a-z]?)? *P(age) *(\d{1,3}).*?HO[ \/]?107\/(\d{1,5})\/?(\d{1,3})?";
         const string EW_CENSUS_1841_51_PATTERN6A = @"Book *(\d{1,3}).*?Folio *(\d{1,4}[a-z]?)\/?(\d{1,2})? *Page *(\d{1,3}).*?HO[ \/]?107\/(\d{1,5})";
         const string EW_CENSUS_1841_51_PATTERN7 = @"HO *107-(\d{1,5})-(\d{1,3})-(\d{1,4}[a-z]?)-(\d{1,3})";
+        const string EW_CENSUS_1841_51_PATTERN8 = @"HO *107\/(\d{1,5})\/(\d{1,3})\/(\d{1,4}[a-z]?)\/(\d{1,3})";
         const string EW_CENSUS_1841_51_PATTERN_FH = @"HO *107\/(\d{1,5})\/(\d{1,3}) .*?F(olio)? *(\d{1,4}[a-z]?) P(age)? *(\d{1,3})";
         const string EW_CENSUS_1841_51_PATTERN_FH2 = @"HO *107\/(\d{1,5}) ED *(\d{1,4}[a-z]?) F(olio)? *(\d{1,4}[a-z]?) P(age)? *(\d{1,3})";
         const string EW_CENSUS_1841_51_PATTERN_FH3 = @"HO *107\/(\d{1,5}) .*?F(olio)? *(\d{1,4}[a-z]?)\/(\d{1,4}) P(age)? *(\d{1,3})";
@@ -134,6 +135,7 @@ namespace FTAnalyzer
                 ["EW_CENSUS_1841_51_PATTERN6"] = new Regex(EW_CENSUS_1841_51_PATTERN6, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["EW_CENSUS_1841_51_PATTERN6A"] = new Regex(EW_CENSUS_1841_51_PATTERN6A, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["EW_CENSUS_1841_51_PATTERN7"] = new Regex(EW_CENSUS_1841_51_PATTERN7, RegexOptions.Compiled | RegexOptions.IgnoreCase),
+                ["EW_CENSUS_1841_51_PATTERN8"] = new Regex(EW_CENSUS_1841_51_PATTERN8, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["EW_CENSUS_1841_51_PATTERN_FH"] = new Regex(EW_CENSUS_1841_51_PATTERN_FH, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["EW_CENSUS_1841_51_PATTERN_FH2"] = new Regex(EW_CENSUS_1841_51_PATTERN_FH2, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["EW_CENSUS_1841_51_PATTERN_FH3"] = new Regex(EW_CENSUS_1841_51_PATTERN_FH3, RegexOptions.Compiled | RegexOptions.IgnoreCase),
@@ -604,6 +606,17 @@ namespace FTAnalyzer
                 return true;
             }
             matcher = censusRegexs["EW_CENSUS_1841_51_PATTERN7"].Match(text);
+            if (matcher.Success)
+            {
+                Class = "HO107";
+                Piece = matcher.Groups[1].ToString();
+                Book = matcher.Groups[2].ToString();
+                Folio = matcher.Groups[3].ToString();
+                Page = matcher.Groups[4].ToString();
+                SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
+                return true;
+            }
+            matcher = censusRegexs["EW_CENSUS_1841_51_PATTERN8"].Match(text);
             if (matcher.Success)
             {
                 Class = "HO107";

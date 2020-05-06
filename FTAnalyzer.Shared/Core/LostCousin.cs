@@ -73,7 +73,7 @@ namespace FTAnalyzer
             int ptr = Name.IndexOf(",", StringComparison.Ordinal);
             if (ptr > 0)
             {
-                string forenames = Name.Substring(ptr + 2);
+                string forenames = ptr + 2 < Name.Length ? Name.Substring(ptr + 2) : string.Empty;
                 string surname = Name.Substring(0, ptr);
                 int pos = forenames.IndexOf(" ", StringComparison.Ordinal);
                 string forename = forenames is null ? string.Empty : (pos > 0 ? forenames.Substring(0, pos) : forenames);
