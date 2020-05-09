@@ -203,7 +203,6 @@ namespace FTAnalyzer.Exports
                             if (columns != null && columns.Count == 8 && columns[0].InnerText != "Name") // ignore header row
                             {
                                 string name = columns[0].InnerText.ClearWhiteSpace();
-                                outputText.Report("\nDebugging: Read name = {name}");
                                 bool ftanalyzer = false;
                                 string weblink = string.Empty;
                                 if (columns[0].ChildNodes.Count == 5)
@@ -217,9 +216,7 @@ namespace FTAnalyzer.Exports
                                     string weblinkText = columns[4].ChildNodes[3].OuterHtml;
                                     if (weblinkText.Length > 10)
                                     {
-                                        outputText.Report($"\nDebugging: weblinkText.Length = {weblinkText.Length},\n        weblinkText = '{weblinkText}'");
                                         int pos = weblinkText.IndexOf('"', 10);
-                                        outputText.Report($"\nDebugging: pos = {pos}");
                                         if (pos > -1)
                                             weblink = weblinkText.Substring(9, pos - 9).Trim();
                                     }

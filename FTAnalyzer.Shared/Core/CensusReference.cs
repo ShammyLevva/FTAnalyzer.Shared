@@ -86,8 +86,10 @@ namespace FTAnalyzer
         const string US_CENSUS_1940_PATTERN4 = @"( *M?[-_]?T0?627[-_]?)?Roll( *M?[-_]?T0?627[-_]?)? *(\d{0,5})(.*?) *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?) *P(age)? *(\d{1,4}[ABCD]?)";
 
         const string CANADA_CENSUS_PATTERN = @"Year *(\d{4}) *Census *(.*?) *Roll *(.*?) *P(age)? *(\d{1,4}[ABCD]?) *Family *(\d{1,4})";
-        const string CANADA_CENSUS_PATTERN2 = @"(\d{4}) *Census[ -]*District *(\d{1,5})\/(\d{0,4}[A-Z]{0,4}) *P(age)? *(\d{1,4}[ABCD]?) *Family *(\d{1,4})";
-        const string CANADA_CENSUS_PATTERN3 = @"(\d{4}) *Census[ -]*(RG\d{2}) *District *(\d{1,5}) *Sub-District *(\d{0,2}[A-Z]{0,4}) *Family *(\d{1,4}) *P(age)? *(\d{1,4}[ABCD]?)";
+        const string CANADA_CENSUS_PATTERN2 = @"(\d{4}).*Census[ -]*District *(\d{1,5})\/(\d{0,4}[A-Z]{0,4}) *P(age)? *(\d{1,4}[ABCD]?) *Family *(\d{1,4})";
+        const string CANADA_CENSUS_PATTERN3 = @"(\d{4}).*Census[ -]*(RG\d{2}) *District *(\d{1,5}) *SD *(\d{0,2}[A-Z]{0,4}) *Family *(\d{1,4}) *P(age)? *(\d{1,4}[ABCD]?)";
+        const string CANADA_CENSUS_PATTERN4 = @"(\d{4}).*RG31 .*Item ?(\d{7}) (\d{1,3})\/ ?(\d{1,4})\/ ?(\d{1,4})\/ ?(\d{1,4})";
+        const string CANADA_CENSUS_PATTERN5 = @"(\d{4}).*RG31 .*Item ?(\d{7}) (\d{1,3})\/ ?(\d{1,4})\/ ?(\d{1,4})";
 
         const string LC_CENSUS_PATTERN_EW = @"(\d{1,5})\/(\d{1,3})\/(\d{1,3}).*?England & Wales (1841|1881)";
         const string LC_CENSUS_PATTERN_1911_EW = @"(\d{1,5})\/(\d{1,3}).*?England & Wales 1911";
@@ -178,6 +180,8 @@ namespace FTAnalyzer
                 ["CANADA_CENSUS_PATTERN"] = new Regex(CANADA_CENSUS_PATTERN, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["CANADA_CENSUS_PATTERN2"] = new Regex(CANADA_CENSUS_PATTERN2, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["CANADA_CENSUS_PATTERN3"] = new Regex(CANADA_CENSUS_PATTERN3, RegexOptions.Compiled | RegexOptions.IgnoreCase),
+                ["CANADA_CENSUS_PATTERN4"] = new Regex(CANADA_CENSUS_PATTERN4, RegexOptions.Compiled | RegexOptions.IgnoreCase),
+                ["CANADA_CENSUS_PATTERN5"] = new Regex(CANADA_CENSUS_PATTERN5, RegexOptions.Compiled | RegexOptions.IgnoreCase),
 
                 ["LC_CENSUS_PATTERN_EW"] = new Regex(LC_CENSUS_PATTERN_EW, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["LC_CENSUS_PATTERN_1911_EW"] = new Regex(LC_CENSUS_PATTERN_1911_EW, RegexOptions.Compiled | RegexOptions.IgnoreCase),
@@ -294,6 +298,7 @@ namespace FTAnalyzer
             unknownCensusRef = string.Empty;
             if (Class.Equals("SCOT"))
             {
+                URL = GetCensusURLFromReference();
                 CensusLocation = CensusLocation.SCOTLAND;
                 if (Parish.Length > 0)
                 {
@@ -412,6 +417,7 @@ namespace FTAnalyzer
                         .Replace("Enumeration District", "ED", StringComparison.OrdinalIgnoreCase)
                         .Replace("EnumerationDistrict", "ED", StringComparison.OrdinalIgnoreCase)
                         .Replace("Sub District", "SD", StringComparison.OrdinalIgnoreCase)
+                        .Replace("Sub-District", "SD", StringComparison.OrdinalIgnoreCase)
                         .Replace("Sheet number and letter", "Page", StringComparison.OrdinalIgnoreCase)
                         .Replace("Sheet", "Page", StringComparison.OrdinalIgnoreCase)
                         .Replace("Affiliate Film Number", " ", StringComparison.OrdinalIgnoreCase)
@@ -1157,8 +1163,33 @@ namespace FTAnalyzer
                 ED = matcher.Groups[3].ToString();
                 SD = matcher.Groups[4].ToString();
                 Family = matcher.Groups[5].ToString();
+                Page = matcher.Groups[7].ToString();
+                SetFlagsandCountry(false, false, Countries.CANADA, ReferenceStatus.GOOD, matcher.Value);
+                return true;
+            }
+            matcher = censusRegexs["CANADA_CENSUS_PATTERN4"].Match(text);
+            if (matcher.Success)
+            {
+                Class = $"CAN{matcher.Groups[1]}";
+                string item = matcher.Groups[2].ToString();
+                ED = matcher.Groups[3].ToString();
+                SD = matcher.Groups[4].ToString();
+                Family = matcher.Groups[5].ToString();
                 Page = matcher.Groups[6].ToString();
                 SetFlagsandCountry(false, false, Countries.CANADA, ReferenceStatus.GOOD, matcher.Value);
+                URL = $"https://www.bac-lac.gc.ca/eng/census/{matcher.Groups[1]}/Pages/item.aspx?itemid={item}";
+                return true;
+            }
+            matcher = censusRegexs["CANADA_CENSUS_PATTERN5"].Match(text);
+            if (matcher.Success)
+            {
+                Class = $"CAN{matcher.Groups[1]}";
+                string item = matcher.Groups[2].ToString();
+                ED = matcher.Groups[3].ToString();
+                SD = matcher.Groups[4].ToString();
+                Page = matcher.Groups[5].ToString();
+                SetFlagsandCountry(false, false, Countries.CANADA, ReferenceStatus.GOOD, matcher.Value);
+                URL = $"https://www.bac-lac.gc.ca/eng/census/{matcher.Groups[1]}/Pages/item.aspx?itemid={item}";
                 return true;
             }
             matcher = censusRegexs["LC_CENSUS_PATTERN_EW"].Match(text);

@@ -1169,9 +1169,9 @@ namespace FTAnalyzer
             else
             {
                 if (IsMale)
-                    description = $"Male but appears as a wife in family {family.FamilyRef} check gender setting";
+                    description = $"Male but appears as a wife in family {family.FamilyRef} check family for swapped husband and wife";
                 else
-                    description = $"Female but appears as husband in family {family.FamilyRef} check gender setting";
+                    description = $"Female but appears as husband in family {family.FamilyRef} check family for swapped husband and wife";
             }
             var gender = new Fact(family.FamilyID, Fact.GENDER, FactDate.UNKNOWN_DATE, null, description, true, true);
             gender.SetError((int)FamilyTree.Dataerror.MALE_WIFE_FEMALE_HUSBAND, Fact.FactError.ERROR, description);
