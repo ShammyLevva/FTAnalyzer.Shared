@@ -1766,6 +1766,18 @@ namespace FTAnalyzer
             }
         }
 
+        public SortableBindingList<IDisplayFamily> SingleFamilies
+        {
+            get
+            {
+                SortableBindingList<IDisplayFamily> result = new SortableBindingList<IDisplayFamily>();
+                foreach (Family fam in families)
+                    if (fam.Husband is null || fam.Wife is null)
+                        result.Add(fam);
+                return result;
+            }
+        }
+
         public SortableBindingList<IDisplayIndividual> AgedOver99
         {
             get
