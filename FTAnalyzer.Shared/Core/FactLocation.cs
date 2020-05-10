@@ -5,17 +5,18 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Web.UI.WebControls;
 using System.Xml;
-using FTAnalyzer.Mapping;
 using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
-
+#if !__MACOS__
+using System.Web.UI.WebControls;
+using FTAnalyzer.Mapping;
+#endif
 namespace FTAnalyzer
 {
     public class FactLocation : IComparable<FactLocation>, IComparable, IDisplayLocation, IDisplayGeocodedLocation
     {
-        #region Variables
+#region Variables
         // static log4net.ILog log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         public const int UNKNOWN = -1, COUNTRY = 0, REGION = 1, SUBREGION = 2, ADDRESS = 3, PLACE = 4;
         public enum Geocode
@@ -85,9 +86,9 @@ namespace FTAnalyzer
         public static FactLocation UNKNOWN_LOCATION;
         public static FactLocation BLANK_LOCATION;
         public static FactLocation TEMP = new FactLocation();
-        #endregion
+#endregion
 
-        #region Static Constructor
+#region Static Constructor
         static FactLocation()
         {
             SetupGeocodes();
@@ -97,7 +98,7 @@ namespace FTAnalyzer
         public static void LoadConversions(string startPath)
         {
             // load conversions from XML file
-            #region Fact Location Fixes
+#region Fact Location Fixes
             if (startPath is null) return;
 #if __MACOS__
             string filename = Path.Combine(startPath, @"../Resources/FactLocationFixes.xml");
@@ -214,7 +215,7 @@ namespace FTAnalyzer
             {
                 Console.WriteLine("Failed to find FactLocationFixes.xml File");
             }
-            #endregion
+#endregion
         }
 
         static void ValidateTypoFixes()
@@ -316,9 +317,9 @@ namespace FTAnalyzer
                 { Geocode.OS_50KFUZZY, "Fuzzy Match (Ord Surv)" }
             };
         }
-        #endregion
+#endregion
 
-        #region Object Constructors
+#region Object Constructors
         FactLocation()
         {
             OriginalText = string.Empty;
@@ -458,9 +459,9 @@ namespace FTAnalyzer
             }
             _Parts = new string[] { Country, Region, SubRegion, Address, Place };
         }
-        #endregion
+#endregion
 
-        #region Static Functions
+#region Static Functions
         public static FactLocation GetLocation(string place, bool addLocation = true) => GetLocation(place, string.Empty, string.Empty, Geocode.NOT_SEARCHED, addLocation);
 
         public static FactLocation GetLocation(string place, string latitude, string longitude, Geocode status, bool addLocation = true, bool updateLatLong = false)
@@ -634,9 +635,9 @@ namespace FTAnalyzer
             to.FoundResultType = from.FoundResultType;
             to.FoundLevel = from.FoundLevel;
         }
-        #endregion
+#endregion
 
-        #region Fix Location string routines
+#region Fix Location string routines
         void TrimLocations()
         {
             // remove extraneous spaces
@@ -931,8 +932,8 @@ namespace FTAnalyzer
             return toChange.Trim();
         }
 
-        #endregion
-        #region Properties
+#endregion
+#region Properties
 
         public string[] GetParts() => (string[])_Parts.Clone();
 
@@ -1141,8 +1142,9 @@ namespace FTAnalyzer
             }
         }
 
+#if __PC__
         public bool EmptyViewPort => ViewPort.NorthEast.Lat == 0 && ViewPort.NorthEast.Long == 0 && ViewPort.SouthWest.Lat == 0 && ViewPort.SouthWest.Long == 0;
-
+#endif
         //public string OSGridMapReference
         //{
         //    get
@@ -1164,7 +1166,7 @@ namespace FTAnalyzer
         //    }
         //}
 
-        #region Overrides
+#region Overrides
 
         public int CompareTo(object that) => CompareTo(that as FactLocation);
 
@@ -1249,6 +1251,6 @@ namespace FTAnalyzer
                 return ascending ? result : -result;
             });
         }
-        #endregion
+#endregion
     }
 }
