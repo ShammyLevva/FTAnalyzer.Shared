@@ -16,8 +16,8 @@ namespace FTAnalyzer
                 BIRTH_CALC = "_BIRTHCALC", BLESSING = "BLESS", BURIAL = "BURI", CASTE = "CAST", CAUSE_OF_DEATH = "CAUS",
                 CENSUS = "CENS", CENSUS_FTA = "_CENSFTA", CHANGE = "CHAN", CHILDREN1911 = "CHILDREN1911", CHRISTENING = "CHR",
                 CIRCUMCISION = "_CIRC", CONFIRMATION = "CONF", CONFIRMATION_LDS = "CONL", CREMATION = "CREM",
-                CUSTOM_EVENT = "EVEN", CUSTOM_FACT = "FACT", DEATH = "DEAT", DEGREE = "_DEG", DESTINATION = "_DEST",
-                DIVORCE = "DIV", DIVORCE_FILED = "DIVF", DNA = "_DNA", EDUCATION = "EDUC", ELECTION = "_ELEC",
+                CUSTOM_ATTRIBUTE = "_ATTR", CUSTOM_EVENT = "EVEN", CUSTOM_FACT = "FACT", DEATH = "DEAT", DEGREE = "_DEG", 
+                DESTINATION = "_DEST", DIVORCE = "DIV", DIVORCE_FILED = "DIVF", DNA = "_DNA", EDUCATION = "EDUC", ELECTION = "_ELEC",
                 EMAIL = "EMAIL", EMIGRATION = "EMIG", EMPLOYMENT = "_EMPLOY", ENDOWMENT_LDS = "ENDL", ENGAGEMENT = "ENGA",
                 EXCOMMUNICATION = "_EXCM", FIRST_COMMUNION = "FCOM", FUNERAL = "_FUN", GENDER = "SEX", GRADUATION = "GRAD",
                 HEIGHT = "_HEIG", IMMIGRATION = "IMMI", INITIATORY_LDS = "_INIT", INDI = "INDI", LEGATEE = "LEGA", MARRIAGE = "MARR",
@@ -316,6 +316,7 @@ namespace FTAnalyzer
                 case CONFIRMATION_LDS: return "Confirmation (LDS)";
                 case CONTACT: return "Contact";
                 case CREMATION: return "Cremation";
+                case CUSTOM_ATTRIBUTE: return "Custom Attribute";
                 case CUSTOM_EVENT: return "Event";
                 case CUSTOM_FACT: return "Custom Fact";
                 case DEATH: return "Death";
@@ -461,7 +462,7 @@ namespace FTAnalyzer
                         }
                     }
                     Preferred = preferred;
-                    if (FactType.Equals(CUSTOM_EVENT) || FactType.Equals(CUSTOM_FACT))
+                    if (FactType.Equals(CUSTOM_ATTRIBUTE) || FactType.Equals(CUSTOM_EVENT) || FactType.Equals(CUSTOM_FACT))
                     {
                         string tag = FamilyTree.GetText(node, "TYPE", false).ToUpper();
                         if(tag.StartsWith("CENSUS") || tag.StartsWith("1939 REGISTER"))
