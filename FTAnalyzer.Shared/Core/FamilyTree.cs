@@ -1772,7 +1772,7 @@ namespace FTAnalyzer
             {
                 SortableBindingList<IDisplayFamily> result = new SortableBindingList<IDisplayFamily>();
                 foreach (Family fam in families)
-                    if (fam.Husband is null || fam.Wife is null)
+                    if (fam.FamilyType != Family.SOLOINDIVIDUAL && (fam.Husband is null || fam.Wife is null))
                         result.Add(fam);
                 return result;
             }

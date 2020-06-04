@@ -269,6 +269,7 @@ namespace FTAnalyzer
             str = str.Replace("PRE", "BEF");
             str = str.Replace("POST", "AFT");
 
+            // Quarters
             str = str.Replace("QUARTER", "QTR");
             str = str.Replace("MAR QTR", "ABT MAR");
             str = str.Replace("MAR Q ", "ABT MAR ");
@@ -323,6 +324,7 @@ namespace FTAnalyzer
             str = str.Replace("QTR 4 ", "ABT DEC ");
             str = str.Replace("4 QTR ", "ABT DEC ");
 
+            // post processing tidy ups
             str = str.Replace("ABT ABT", "ABT"); // fix any ABT X QTR's that will have been changed to ABT ABT
             str = str.Replace("BET ABT", "ABT"); // fix any BET XXX-XXX QTR's that will have been changed to BET ABT
             str = str.Replace("ABT1", "ABT 1");
@@ -335,8 +337,11 @@ namespace FTAnalyzer
             str = str.Replace("SAT", "");
             str = str.Replace("SUN", "");
 
+            // remove common extra words
             str = str.Replace("DIED IN INFANCY", "INFANT");
+            str = str.Replace("CENSUS", "");
 
+            // process date
             if (str.IndexOf("TO", StringComparison.Ordinal) > 1)
             {  // contains TO but doesn't start with TO
                 if (!str.StartsWith("FROM", StringComparison.Ordinal))
@@ -740,6 +745,11 @@ namespace FTAnalyzer
                 }
                 else if (day.Length > 0 && month.Length > 0 && year.Length > 0)
                 {
+                    if (gDouble != null && day == "29" && month == "FEB")
+                    {
+                        int doubleYear = int.Parse(year) + 1;
+                        dateValue = $"29 FEB {doubleYear}";
+                    }
                     if (!DateTime.TryParseExact(dateValue, FULL, CULTURE, DateTimeStyles.NoCurrentDateDefault, out date))
                         DateTime.TryParseExact(dateValue, FULLEARLY, CULTURE, DateTimeStyles.NoCurrentDateDefault, out date);
                     if (date.Year == 1 && date.Year.ToString() != year)
@@ -755,8 +765,8 @@ namespace FTAnalyzer
                 {
                     dt = (highlow == HIGH) ? MAXDATE : MINDATE;
                 }
-                if (gDouble != null)
-                    dt = dt.TryAddYears(1); // use upper year for double dates
+                if (gDouble != null && !(day == "29" && month == "FEB"))
+                    dt = dt.TryAddYears(1); // use upper year for double dates as long as we haven't already done so for 29th FEB
             }
             catch (FormatException)
             {
