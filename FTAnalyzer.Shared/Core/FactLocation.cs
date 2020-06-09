@@ -1044,7 +1044,7 @@ namespace FTAnalyzer
 
         public void AddIndividual(Individual ind)
         {
-            if (ind != null && !individuals.Contains(ind))
+            if (ind != null && !individuals.ContainsIndividual(ind))
                 individuals.Add(ind);
         }
 

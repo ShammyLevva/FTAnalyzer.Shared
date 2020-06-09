@@ -48,6 +48,7 @@ namespace FTAnalyzer
         public string UnrecognisedCensusNotes { get; private set; }
         public IList<Fact> Facts { get; private set; }
         public string Alias { get; set; }
+        public IList<FactLocation> Locations { get; }
 
         #region Constructors
         Individual()
@@ -349,7 +350,6 @@ namespace FTAnalyzer
 
         public int GeoLocationCount => AllGeocodedFacts.Count;
 
-        public IList<FactLocation> Locations { get; }
 
         public string Gender
         {
@@ -1624,7 +1624,7 @@ namespace FTAnalyzer
         #region Basic Class Functions
         public override bool Equals(object obj)
         {
-            return obj is Individual && IndividualID.Equals(((Individual)obj).IndividualID);
+            return obj is Individual individual && IndividualID == individual.IndividualID;
         }
 
         public override int GetHashCode() => base.GetHashCode();

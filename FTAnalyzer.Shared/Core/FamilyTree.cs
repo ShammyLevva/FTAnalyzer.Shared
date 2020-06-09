@@ -512,7 +512,7 @@ namespace FTAnalyzer
                 outputText.Report($"\n    Show Alias In Name Displays: {GeneralSettings.Default.ShowAliasInName}");
                 outputText.Report($"\n    Files use Country First Locations: {GeneralSettings.Default.ReverseLocations}");
                 outputText.Report($"\n    Show World Events on the 'On This Day' tab: {GeneralSettings.Default.ShowWorldEvents}");
-                outputText.Report($"\n    Ignore Unknown Fact Type Warnings: {GeneralSettings.Default.IgnoreFactTypeWarnings}");
+                outputText.Report($"\n    Ignore Unknown/Custom Fact Type Warnings: {GeneralSettings.Default.IgnoreFactTypeWarnings}");
                 outputText.Report($"\n    Treat Female Surnames as Unknown: {GeneralSettings.Default.TreatFemaleSurnamesAsUnknown}");
                 outputText.Report($"\n    Show Ancestors that are muliple directs: {GeneralSettings.Default.ShowMultiAncestors}");
                 outputText.Report($"\n    Hide Ignored Duplicates: {GeneralSettings.Default.HideIgnoredDuplicates}");
@@ -544,12 +544,12 @@ namespace FTAnalyzer
         {
             if (unknownFactTypes.Count > 0 && !GeneralSettings.Default.IgnoreFactTypeWarnings)
             {
-                outputText.Report("\nThe following unknown fact types were reported.\nNB. This isn't an error if you deliberately created these fact types.\nThis is simply highlighting the types so you can check for any possible errors/duplicate types.\n");
+                outputText.Report("\nThe following unknown/custom fact types were reported.\nNB. This isn't an error if you deliberately created these fact types.\nThis is simply highlighting the types so you can check for any possible errors/duplicate types.\n");
                 foreach (string tag in unknownFactTypes)
                 {
                     int count = AllExportFacts.Count(f => f.FactType == tag);
                     if (count > 0)
-                        outputText.Report($"\nFound {count} facts of unknown fact type {tag}");
+                        outputText.Report($"\nFound {count} facts of unknown/custom fact type {tag}");
                 }
                 outputText.Report("\n");
             }
@@ -561,7 +561,7 @@ namespace FTAnalyzer
             {
                 Individual ind = GetIndividual(t.Item1);
                 Fact fact = t.Item2;
-                if (ind != null && !ind.Facts.Contains(fact))
+                if (ind != null && !ind.Facts.ContainsFact(fact))
                     ind.AddFact(fact);
             }
         }
@@ -1989,7 +1989,7 @@ namespace FTAnalyzer
                                 {
                                     errors[(int)Dataerror.UNKNOWN_FACT_TYPE].Add(
                                         new DataError((int)Dataerror.UNKNOWN_FACT_TYPE, Fact.FactError.QUESTIONABLE,
-                                            ind, $"Unknown fact type {f.FactTypeDescription} recorded"));
+                                            ind, $"Unknown/Custom fact type {f.FactTypeDescription} recorded"));
                                 }
                             }
                         }

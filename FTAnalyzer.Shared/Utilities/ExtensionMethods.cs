@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace FTAnalyzer.Utilities
@@ -61,5 +62,28 @@ namespace FTAnalyzer.Utilities
             if (string.IsNullOrEmpty(input)) return false;
             return int.TryParse(input, out _);
         }
+
+        public static bool ContainsIndividual(this List<Individual> list, Individual ind)
+        {
+            if (list != null)
+            {
+                for (int i = 0; i < list.Count; i++)
+                    if (list[i] == ind)
+                        return true;
+            }
+            return false;
+        }
+
+        public static bool ContainsFact(this List<Fact> list, Fact fact)
+        {
+            if (list != null)
+            {
+                for (int i = 0; i < list.Count; i++)
+                    if (list[i] == fact)
+                        return true;
+            }
+            return false;
+        }
+
     }
 }
