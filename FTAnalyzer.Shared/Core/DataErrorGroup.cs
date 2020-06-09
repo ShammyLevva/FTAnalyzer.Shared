@@ -27,7 +27,7 @@ namespace FTAnalyzer
                 "Residence census date warnings",
                 "Census date range too wide/Unknown",
                 "Uncategorised error",
-                "Unknown Fact Type",
+                "Unknown/Custom Fact Type",
                 "Flagged as living but has death date",
                 "Children Status Total Mismatch",
                 "Duplicate Fact",
