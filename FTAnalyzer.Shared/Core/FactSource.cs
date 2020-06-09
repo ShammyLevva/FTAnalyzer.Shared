@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FTAnalyzer.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
@@ -41,7 +42,7 @@ namespace FTAnalyzer
 
         public void AddFact(Fact f)
         {
-            if (!Facts.Contains(f))
+            if (!Facts.ContainsFact(f))
                 Facts.Add(f);
         }
 

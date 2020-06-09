@@ -63,7 +63,7 @@ namespace FTAnalyzer.Utilities
             return int.TryParse(input, out _);
         }
 
-        public static bool ContainsIndividual(this List<Individual> list, Individual ind)
+        public static bool ContainsIndividual(this IList<Individual> list, Individual ind)
         {
             if (list != null)
             {
@@ -74,6 +74,58 @@ namespace FTAnalyzer.Utilities
             return false;
         }
 
+        public static bool ContainsString(this List<string> list, string str)
+        {
+            if (list != null)
+            {
+                for (int i = 0; i < list.Count; i++)
+                    if (list[i] == str)
+                        return true;
+            }
+            return false;
+        }
+
+        public static bool ContainsString(this IList<string> list, string str)
+        {
+            if (list != null)
+            {
+                for (int i = 0; i < list.Count; i++)
+                    if (list[i] == str)
+                        return true;
+            }
+            return false;
+        }
+
+        public static bool ContainsFact(this IList<Fact> list, Fact fact)
+        {
+            if (list != null)
+            {
+                for (int i = 0; i < list.Count; i++)
+                    if (list[i] == fact)
+                        return true;
+            }
+            return false;
+        }
+        public static bool ContainsLocation(this IList<FactLocation> list, FactLocation loc)
+        {
+            if (list != null)
+            {
+                for (int i = 0; i < list.Count; i++)
+                    if (list[i] == loc)
+                        return true;
+            }
+            return false;
+        }
+        public static bool ContainsLocation(this List<IDisplayLocation> list, IDisplayLocation loc)
+        {
+            if (list != null)
+            {
+                for (int i = 0; i < list.Count; i++)
+                    if (list[i] == loc)
+                        return true;
+            }
+            return false;
+        }
         public static bool ContainsFact(this List<Fact> list, Fact fact)
         {
             if (list != null)
@@ -84,6 +136,35 @@ namespace FTAnalyzer.Utilities
             }
             return false;
         }
-
+        public static bool ContainsFact(this SortableBindingList<IDisplayFact> list, IDisplayFact fact)
+        {
+            if (list != null)
+            {
+                for (int i = 0; i < list.Count; i++)
+                    if (list[i] == fact)
+                        return true;
+            }
+            return false;
+        }
+        public static bool ContainsDuplicate(this SortableBindingList<IDisplayDuplicateIndividual> list, IDisplayDuplicateIndividual dup)
+        {
+            if (list != null)
+            {
+                for (int i = 0; i < list.Count; i++)
+                    if (list[i] == dup)
+                        return true;
+            }
+            return false;
+        }
+        public static bool ContainsDuplicate(this IList<NonDuplicate> list, NonDuplicate dup)
+        {
+            if (list != null)
+            {
+                for (int i = 0; i < list.Count; i++)
+                    if (list[i] == dup)
+                        return true;
+            }
+            return false;
+        }
     }
 }

@@ -1125,7 +1125,7 @@ namespace FTAnalyzer
         void AddLocation(Fact fact)
         {
             FactLocation loc = fact.Location;
-            if (loc != null && !Locations.Contains(loc))
+            if (loc != null && !Locations.ContainsLocation(loc))
             {
                 Locations.Add(loc);
                 loc.AddIndividual(this);

@@ -18,7 +18,7 @@ namespace FTAnalyzer
 
         public string FamilyID { get; private set; }
         public IList<Fact> Facts { get; private set; }
-        public List<Individual> Children { get; internal set; }
+        public IList<Individual> Children { get; internal set; }
         public Individual Husband { get; internal set; }
         public Individual Wife { get; internal set; }
         public int ExpectedTotal { get; internal set; }
@@ -121,7 +121,7 @@ namespace FTAnalyzer
                     if (Wife != null && Wife.IsMale)
                         Wife.QuestionGender(this, false);
                 }
-                Children.Sort(new BirthDateComparer());
+                Children.ToList().Sort(new BirthDateComparer());
             }
         }
 

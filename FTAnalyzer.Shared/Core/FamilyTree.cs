@@ -36,7 +36,7 @@ namespace FTAnalyzer
         IList<Tuple<string, Fact>> sharedFacts;
         IDictionary<string, List<Individual>> occupations;
         IDictionary<StandardisedName, StandardisedName> names;
-        ISet<string> unknownFactTypes;
+        IList<string> unknownFactTypes;
         SortableBindingList<IDisplayLocation>[] displayLocations;
         SortableBindingList<IDisplayLooseDeath> looseDeaths;
         SortableBindingList<IDisplayLooseBirth> looseBirths;
@@ -197,7 +197,7 @@ namespace FTAnalyzer
             sharedFacts = new List<Tuple<string, Fact>>();
             occupations = new Dictionary<string, List<Individual>>();
             names = new Dictionary<StandardisedName, StandardisedName>();
-            unknownFactTypes = new HashSet<string>();
+            unknownFactTypes = new List<string>();
             DataErrorTypes = new List<DataErrorGroup>();
             displayLocations = new SortableBindingList<IDisplayLocation>[5];
             rootIndividualID = string.Empty;
@@ -224,7 +224,7 @@ namespace FTAnalyzer
 
         public void CheckUnknownFactTypes(string factType)
         {
-            if (!unknownFactTypes.Contains(factType))
+            if (!unknownFactTypes.ContainsString(factType))
                 unknownFactTypes.Add(factType);
         }
         
@@ -816,7 +816,7 @@ namespace FTAnalyzer
             List<string> ids = new List<string>();
             foreach (CensusIndividual ind in lcIndividuals)
             {
-                if (!ids.Contains(ind.IndividualID))
+                if (!ids.ContainsString(ind.IndividualID))
                 {
                     output.Add(ind);
                     ids.Add(ind.IndividualID);
@@ -827,10 +827,10 @@ namespace FTAnalyzer
 
         void AddOccupations(Individual individual)
         {
-            HashSet<string> jobs = new HashSet<string>();
+            List<string> jobs = new List<string>();
             foreach (Fact f in individual.GetFacts(Fact.OCCUPATION))
             {
-                if (!jobs.Contains(f.Comment))
+                if (!jobs.ContainsString(f.Comment))
                 {
                     if (!occupations.TryGetValue(f.Comment, out List<Individual> workers))
                     {
@@ -958,15 +958,14 @@ namespace FTAnalyzer
         public List<string> GetSurnamesAtLocation(FactLocation loc) { return GetSurnamesAtLocation(loc, FactLocation.SUBREGION); }
         public List<string> GetSurnamesAtLocation(FactLocation loc, int level)
         {
-            HashSet<string> result = new HashSet<string>();
+            List<string> result = new List<string>();
             foreach (Individual i in individuals)
             {
-                if (!result.Contains(i.Surname) && i.IsAtLocation(loc, level))
+                if (!result.ContainsString(i.Surname) && i.IsAtLocation(loc, level))
                     result.Add(i.Surname);
             }
-            List<string> ls = result.ToList();
-            ls.Sort();
-            return ls;
+            result.Sort();
+            return result;
         }
 
         void FixIDs()
@@ -1629,7 +1628,7 @@ namespace FTAnalyzer
             foreach (FactLocation loc in allLocations)
             {
                 FactLocation c = loc.GetLocation(level);
-                if (!c.IsBlank && !result.Contains(c))
+                if (!c.IsBlank && !result.ContainsLocation(c))
                     result.Add(c);
             }
             result.Sort(new FactLocationComparer(level));
@@ -1689,7 +1688,7 @@ namespace FTAnalyzer
                 if (f.Individual != null)
                 {
                     DisplayFact df = new DisplayFact(f.Individual, f);
-                    if (!result.Contains(df))
+                    if (!result.ContainsFact(df))
                         result.Add(df);
                 }
                 else
@@ -1697,13 +1696,13 @@ namespace FTAnalyzer
                     if (f.Family != null && f.Family.Husband != null)
                     {
                         DisplayFact df = new DisplayFact(f.Family.Husband, f);
-                        if (!result.Contains(df))
+                        if (!result.ContainsFact(df))
                             result.Add(df);
                     }
                     if (f.Family != null && f.Family.Wife != null)
                     {
                         DisplayFact df = new DisplayFact(f.Family.Wife, f);
-                        if (!result.Contains(df))
+                        if (!result.ContainsFact(df))
                             result.Add(df);
                     }
                 }
@@ -2018,7 +2017,7 @@ namespace FTAnalyzer
                     foreach (string pd in possDuplicates)
                     {
                         var pdf = ind.AllFacts.First(x => x.PossiblyEqualHash.Equals(pd));
-                        if (pdf != null && !dupList.Contains(pdf))
+                        if (pdf != null && !dupList.ContainsFact(pdf))
                         {
                             errors[(int)Dataerror.POSSIBLE_DUPLICATE_FACT].Add(
                                             new DataError((int)Dataerror.POSSIBLE_DUPLICATE_FACT, Fact.FactError.QUESTIONABLE,
@@ -3204,7 +3203,7 @@ namespace FTAnalyzer
                 foreach (Family f in parent.FamiliesAsSpouse)
                 {
                     Individual spouse = f.Spouse(parent);
-                    if (spouse != null && !processed.Contains(spouse))
+                    if (spouse != null && !processed.ContainsIndividual(spouse))
                     {
                         queue.Enqueue(spouse);
                         results.Add(spouse);
@@ -3212,7 +3211,7 @@ namespace FTAnalyzer
                     foreach (Individual child in f.Children)
                     {
                         // we have a child and we have a parent check if natural child
-                        if (!processed.Contains(child) && child.IsNaturalChildOf(parent))
+                        if (!processed.ContainsIndividual(child) && child.IsNaturalChildOf(parent))
                         {
                             queue.Enqueue(child);
                             results.Add(child);
@@ -3324,8 +3323,8 @@ namespace FTAnalyzer
                 {
                     var dispDup = new DisplayDuplicateIndividual(dup);
                     var toCheck = new NonDuplicate(dispDup);
-                    dispDup.IgnoreNonDuplicate = NonDuplicates.Contains(toCheck);
-                    if (!select.Contains(dispDup) && !(dispDup.IgnoreNonDuplicate && GeneralSettings.Default.HideIgnoredDuplicates))
+                    dispDup.IgnoreNonDuplicate = NonDuplicates.ContainsDuplicate(toCheck);
+                    if (!select.ContainsDuplicate(dispDup) && !(dispDup.IgnoreNonDuplicate && GeneralSettings.Default.HideIgnoredDuplicates))
                         select.Add(dispDup);
                 }
             }
