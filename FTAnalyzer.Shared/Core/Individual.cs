@@ -890,6 +890,8 @@ namespace FTAnalyzer
                     if (factType != Fact.NAME || !preferredFact)
                     {  // don't add first name in file as a fact as already given by SURNAME & FORENAME tags
                         Fact f = new Fact(n, this, preferredFact, null, outputText);
+                        if (f.FactDate.SpecialDate)
+                            ProcessSpecialDate(n, f, preferredFact, outputText);
                         if (nonStandardFactType != null)
                             f.ChangeNonStandardFactType(factType);
                         f.Location.FTAnalyzerCreated = false;
@@ -909,53 +911,53 @@ namespace FTAnalyzer
                     FamilyTree ft = FamilyTree.Instance;
                     outputText.Report($"Error with Individual : {IndividualRef}\n       Invalid fact : {ex.Message}");
                 }
-                catch (TextFactDateException te)
-                {
-                    if (BirthDate.IsKnown)
-                    {
-                        int years;
-                        switch (te.Message)
-                        {
-                            case "STILLBORN":
-                                years = 0;
-                                break;
-                            case "INFANT":
-                                years = 5;
-                                break;
-                            case "CHILD":
-                                years = 14;
-                                break;
-                            case "YOUNG":
-                                years = 21;
-                                break;
-                            case "UNMARRIED":
-                            case "NEVER MARRIED":
-                            case "NOT MARRIED":
-                                years = -2;
-                                break;
-                            default:
-                                years = -1;
-                                break;
-                        }
-                        if (years >= 0 && factType == Fact.DEATH)  //only add a death fact if text is one of the death types
-                        {
-                            FactDate deathdate = BirthDate.AddEndDateYears(years);
-                            Fact f = new Fact(n, this, preferredFact, deathdate, outputText);
-                            AddFact(f);
-                        }
-                        else
-                        {
-                            Fact f = new Fact(n, this, preferredFact, FactDate.UNKNOWN_DATE, outputText); // write out death fact with unknown date
-                            AddFact(f);
-                            f = new Fact(string.Empty, Fact.UNMARRIED, FactDate.UNKNOWN_DATE, FactLocation.UNKNOWN_LOCATION, string.Empty, true, true);
-                            AddFact(f);
-                        }
-                    }
-                }
                 preferredFact = false;
             }
         }
 
+        void ProcessSpecialDate(XmlNode n, Fact addedFact, bool preferredFact, IProgress<string> outputText)
+        {
+            if (BirthDate.IsKnown)
+            {
+                int years;
+                switch (addedFact.FactDate.OriginalString.ToUpper())
+                {
+                    case "STILLBORN":
+                        years = 0;
+                        break;
+                    case "INFANT":
+                        years = 5;
+                        break;
+                    case "CHILD":
+                        years = 14;
+                        break;
+                    case "YOUNG":
+                        years = 21;
+                        break;
+                    case "UNMARRIED":
+                    case "NEVER MARRIED":
+                    case "NOT MARRIED":
+                        years = -2;
+                        break;
+                    default:
+                        years = -1;
+                        break;
+                }
+                if (years >= 0 && addedFact.FactType == Fact.DEATH)  //only add a death fact if text is one of the death types
+                {
+                    FactDate deathdate = BirthDate.AddEndDateYears(years);
+                    Fact f = new Fact(n, this, preferredFact, deathdate, outputText);
+                    AddFact(f);
+                }
+                else
+                {
+                    Fact f = new Fact(n, this, preferredFact, FactDate.UNKNOWN_DATE, outputText); // write out death fact with unknown date
+                    AddFact(f);
+                    f = new Fact(string.Empty, Fact.UNMARRIED, FactDate.UNKNOWN_DATE, FactLocation.UNKNOWN_LOCATION, string.Empty, true, true);
+                    AddFact(f);
+                }
+            }
+        }
         void AddNonStandardFacts(XmlNode node, IProgress<string> outputText)
         {
             foreach(KeyValuePair<string, string> factType in Fact.NON_STANDARD_FACTS)

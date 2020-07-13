@@ -547,13 +547,13 @@ namespace FTAnalyzer
                     if (age.Length > 0)
                         GedcomAge = new Age(age, FactDate);
                     CertificatePresent = SetCertificatePresent();
-                }
-                catch (TextFactDateException te)
-                {
-                    if (FactType == DEATH || FactType == MARRIAGE)
-                        throw;
-                    string message = (node is null) ? string.Empty : node.InnerText + ". ";
-                    throw new InvalidXMLFactException($"{message}\n            Error {te.Message} text in {FactTypeDescription} fact - a non death fact.\n");
+                    if (FactDate.SpecialDate)
+                    {
+                        //if (FactType == DEATH || FactType == MARRIAGE)
+                        //    throw;
+                        //string message = (node is null) ? string.Empty : node.InnerText + ". ";
+                        //throw new InvalidXMLFactException($"{message}\n            Error {te.Message} text in {FactTypeDescription} fact - a non death fact.\n");
+                    }
                 }
                 catch (Exception ex)
                 {

@@ -20,6 +20,7 @@ namespace FTAnalyzer
         const int HIGH = 1;
 
         public readonly static string FULL = "d MMM yyyy";
+        const string SPECIAL_DATE = "SPECIAL";
         const string YEAR = "yyyy";
         const string EARLYYEAR = "yyy";
         const string MONTHYEAR = "MMM yyyy";
@@ -86,7 +87,8 @@ namespace FTAnalyzer
         public DateTime StartDate { get; private set; }
         public DateTime EndDate { get; private set; }
         public FactDateType DateType { get; private set; }
-        readonly string OriginalString;
+        public bool SpecialDate { get; private set; }
+        public string OriginalString { get; private set; }
         string DoubleDateError;
 
         public bool DoubleDate { get; private set; } // Is a pre 1752 date bet 1 Jan and 25 Mar eg: 1735/36.
@@ -95,18 +97,23 @@ namespace FTAnalyzer
         public FactDate(string str, string factRef = "")
         {
             DoubleDate = false;
+            SpecialDate = false;
             str = str ?? "UNKNOWN";
             OriginalString = str;
             // remove any commas in date string
             yearfix = 0;
-            str = FixTextDateFormats(str.ToUpper());
-            str = FixCommonDateFormats(str);
             DateType = FactDateType.UNK;
             DateString = str.Length == 0 ? "UNKNOWN" : str.ToUpper();
             StartDate = MINDATE;
             EndDate = MAXDATE;
-            if (!DateString.Equals("UNKNOWN"))
-                ProcessDate(DateString, factRef);
+            str = FixTextDateFormats(str.ToUpper());
+            if (str != SPECIAL_DATE)
+            {
+                str = FixCommonDateFormats(str);
+                DateString = str.Length == 0 ? "UNKNOWN" : str.ToUpper();
+                if (!DateString.Equals("UNKNOWN"))
+                    ProcessDate(DateString, factRef);
+            }
         }
 
         public FactDate(DateTime startdate, DateTime enddate)
@@ -116,6 +123,8 @@ namespace FTAnalyzer
             EndDate = enddate;
             DateString = CalculateDateString();
             OriginalString = string.Empty;
+            SpecialDate = false;
+            DoubleDate = false;
         }
 
         public static string Format(string format, DateTime date) => string.Format("{0:" + format + "}", date).ToUpper();
@@ -138,7 +147,9 @@ namespace FTAnalyzer
                 case "UNMARRIED":
                 case "NEVER MARRIED":
                 case "NOT MARRIED":
-                    throw new TextFactDateException(str);
+                    str = SPECIAL_DATE;
+                    SpecialDate = true;
+                    break;
             }
             return str;
         }
@@ -157,6 +168,8 @@ namespace FTAnalyzer
             str = str.Replace(":", " ").Replace(";", " ").Replace("@", " ").Replace("=", " ").Replace("?", " ");
             str = str.Replace("~", "ABT ").Replace("<", "BEF ").Replace(">", "AFT ").Replace("#", " ");
             str = str.Replace(" / ", "/").Replace("\'", " ").Replace("\"", " ").Replace("`", " ").ClearWhiteSpace();
+
+            str = str.Replace("MONDAY", "").Replace("TUESDAY", "").Replace("WEDNESDAY", "").Replace("THURSDAY", "").Replace("FRIDAY", "").Replace("SATURDAY", "").Replace("SUNDAY", "");
 
             str = str.Replace("JANUARY", "JAN");
             str = str.Replace("FEBRUARY", "FEB");
@@ -717,25 +730,31 @@ namespace FTAnalyzer
                     if (!DateTime.TryParseExact(dateValue, MONTHYEAR, CULTURE, DateTimeStyles.NoCurrentDateDefault, out date))
                         DateTime.TryParseExact(dateValue, MONTHYEAREARLY, CULTURE, DateTimeStyles.NoCurrentDateDefault, out date);
                     dt = new DateTime(date.Year, date.Month, 1);
-                    dt = dt.AddMonths(adjustment);
-                    if (highlow == HIGH)
+                    if (dt != FactDate.MINDATE)
                     {
-                        // at 1st of month so add 1 month to first of next month
-                        dt = dt.AddMonths(1);
-                        // then subtract 1 day to be last day of correct month.
-                        dt = dt.AddDays(-1);
+                        dt = dt.AddMonths(adjustment);
+                        if (highlow == HIGH)
+                        {
+                            // at 1st of month so add 1 month to first of next month
+                            dt = dt.AddMonths(1);
+                            // then subtract 1 day to be last day of correct month.
+                            dt = dt.AddDays(-1);
+                        }
                     }
                 }
                 else if (day.Length == 0 && year.Length == 0)
                 {
                     date = DateTime.ParseExact(dateValue, MONTH, CULTURE);
                     dt = new DateTime(defaultYear, date.Month, 1);
-                    if (highlow == HIGH)
+                    if (dt != MAXDATE.AddDays(-30)) // ignore if 1st of Dec 9999
                     {
-                        // at 1st of month so add 1 month to first of next month
-                        dt = dt.AddMonths(1);
-                        // then subtract 1 day to be last day of correct month.
-                        dt = dt.AddDays(-1);
+                        if (highlow == HIGH)
+                        {
+                            // at 1st of month so add 1 month to first of next month
+                            dt = dt.AddMonths(1);
+                            // then subtract 1 day to be last day of correct month.
+                            dt = dt.AddDays(-1);
+                        }
                     }
                 }
                 else if (year.Length == 0)
