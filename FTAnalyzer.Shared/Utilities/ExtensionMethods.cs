@@ -63,17 +63,6 @@ namespace FTAnalyzer.Utilities
             return int.TryParse(input, out _);
         }
 
-        public static bool ContainsIndividual(this IList<Individual> list, Individual ind)
-        {
-            if (list != null)
-            {
-                for (int i = 0; i < list.Count; i++)
-                    if (list[i] == ind)
-                        return true;
-            }
-            return false;
-        }
-
         public static bool ContainsString(this List<string> list, string str)
         {
             if (list != null)

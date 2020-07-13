@@ -11,6 +11,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Comparators\Census\CensusAgeComparer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Comparators\Census\CensusFamilyGedComparer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Comparators\Census\CensusIndividualComparer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Comparators\Census\CensusIndividualNameComparer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Comparators\Census\CensusLocationComparer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Comparators\Census\DefaultCensusComparer.cs" />

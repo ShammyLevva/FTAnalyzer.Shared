@@ -67,7 +67,7 @@ namespace FTAnalyzer
 #if __PC__
         public GeoResponse.CResult.CGeometry.CViewPort ViewPort { get; set; }
 #endif
-        readonly List<Individual> individuals;
+        readonly Dictionary<string, Individual> individuals;
         readonly string[] _Parts;
         bool _created;
 
@@ -333,7 +333,7 @@ namespace FTAnalyzer
             Place = string.Empty;
             ParishID = null;
             FuzzyMatch = string.Empty;
-            individuals = new List<Individual>();
+            individuals = new Dictionary<string, Individual>();
             Latitude = 0;
             Longitude = 0;
             LatitudeM = 0;
@@ -1044,8 +1044,8 @@ namespace FTAnalyzer
 
         public void AddIndividual(Individual ind)
         {
-            if (ind != null && !individuals.ContainsIndividual(ind))
-                individuals.Add(ind);
+            if (ind != null && !individuals.ContainsKey(ind.IndividualID))
+                individuals.Add(ind.IndividualID, ind);
         }
 
         public IList<string> Surnames
@@ -1053,7 +1053,7 @@ namespace FTAnalyzer
             get
             {
                 HashSet<string> names = new HashSet<string>();
-                foreach (Individual i in individuals)
+                foreach (Individual i in individuals.Values)
                     names.Add(i.Surname);
                 List<string> result = names.ToList();
                 result.Sort();

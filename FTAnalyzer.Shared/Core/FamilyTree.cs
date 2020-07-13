@@ -794,35 +794,17 @@ namespace FTAnalyzer
 
             bool missingLC(CensusIndividual x) => x.MissingLostCousins(censusDate, false) && x.CensusReference!=null && x.CensusReference.IsGoodStatus;
             Predicate<CensusIndividual> missingFilter = FilterUtils.AndFilter(relationFilter, missingLC);
-            List<CensusIndividual> missingIndiv = censusFamilies.SelectMany(f => f.Members).Filter(missingFilter).ToList();
-            missingIndiv = LCRemoveDuplicateIndividuals(missingIndiv);
+            List<CensusIndividual> missingIndiv = censusFamilies.SelectMany(f => f.Members).Filter(missingFilter).Distinct(new CensusIndividualComparer()).ToList();
             bool invalidRef(CensusIndividual x) => x.MissingLostCousins(censusDate, false) && x.CensusReference != null && !x.CensusReference.IsGoodStatus;
             //bool nameFilter(CensusIndividual x) => x.LCForename.Length > 0 && x.LCSurname.Length > 0 && x.Surname != Individual.UNKNOWN_NAME && x.LCSurname !=Individual.UNKNOWN_NAME;
             //bool ageFilter(CensusIndividual x) => x.Age != Age.Unknown;
             Predicate<CensusIndividual> invalidRefFilter = FilterUtils.AndFilter(relationFilter, invalidRef);
                 //FilterUtils.AndFilter(FilterUtils.AndFilter(relationFilter, invalidRef), FilterUtils.AndFilter<CensusIndividual>(nameFilter, ageFilter));
 
-            List<CensusIndividual> invalidRefIndiv = censusFamilies.SelectMany(f => f.Members).Filter(invalidRefFilter).ToList();
-            invalidRefIndiv = LCRemoveDuplicateIndividuals(invalidRefIndiv);
-
+            List<CensusIndividual> invalidRefIndiv = censusFamilies.SelectMany(f => f.Members).Filter(invalidRefFilter).Distinct(new CensusIndividualComparer()).ToList();
             int missing = MissingLCEntries[censusDate];
             output.Append($"{censusDate}: {missingIndiv.Count} possible {missing - missingIndiv.Count} without valid Lost Cousins details\n");
             return Tuple.Create(missingIndiv, invalidRefIndiv);
-        }
-
-        List<CensusIndividual> LCRemoveDuplicateIndividuals(List<CensusIndividual> lcIndividuals)
-        {
-            List<CensusIndividual> output = new List<CensusIndividual>();
-            List<string> ids = new List<string>();
-            foreach (CensusIndividual ind in lcIndividuals)
-            {
-                if (!ids.ContainsString(ind.IndividualID))
-                {
-                    output.Add(ind);
-                    ids.Add(ind.IndividualID);
-                }
-            }
-            return output;
         }
 
         void AddOccupations(Individual individual)
@@ -3192,18 +3174,18 @@ namespace FTAnalyzer
         public static List<Individual> GetDescendants(Individual startIndividual)
         {
             List<Individual> results = new List<Individual>();
-            List<Individual> processed = new List<Individual>();
+            Dictionary<string,Individual> processed = new Dictionary<string, Individual>();
             Queue<Individual> queue = new Queue<Individual>();
             results.Add(startIndividual);
             queue.Enqueue(startIndividual);
             while (queue.Count > 0)
             {
                 Individual parent = queue.Dequeue();
-                processed.Add(parent);
+                processed.Add(parent.IndividualID, parent);
                 foreach (Family f in parent.FamiliesAsSpouse)
                 {
                     Individual spouse = f.Spouse(parent);
-                    if (spouse != null && !processed.ContainsIndividual(spouse))
+                    if (spouse != null && !processed.ContainsKey(spouse.IndividualID))
                     {
                         queue.Enqueue(spouse);
                         results.Add(spouse);
@@ -3211,7 +3193,7 @@ namespace FTAnalyzer
                     foreach (Individual child in f.Children)
                     {
                         // we have a child and we have a parent check if natural child
-                        if (!processed.ContainsIndividual(child) && child.IsNaturalChildOf(parent))
+                        if (!processed.ContainsKey(child.IndividualID) && child.IsNaturalChildOf(parent))
                         {
                             queue.Enqueue(child);
                             results.Add(child);
