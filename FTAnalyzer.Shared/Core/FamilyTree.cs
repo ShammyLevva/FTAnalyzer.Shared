@@ -42,7 +42,7 @@ namespace FTAnalyzer
         SortableBindingList<IDisplayLooseBirth> looseBirths;
         SortableBindingList<IDisplayLooseInfo> looseInfo;
         SortableBindingList<DuplicateIndividual> duplicates;
-        const int DATA_ERROR_GROUPS = 29;
+        const int DATA_ERROR_GROUPS = 31;
         static XmlNodeList noteNodes;
         BigInteger maxAhnentafel;
         Dictionary<string, Individual> individualLookup;
@@ -2087,8 +2087,10 @@ namespace FTAnalyzer
                             if (child.IsBirthKnown)
                             {
                                 double daysDiff = child.BirthDate.DaysDifference(previousBirth);
-                                if (daysDiff < 365)
-                                    Console.WriteLine("ok more interesting");
+                                if (daysDiff >= 10 && daysDiff <= 168)
+                                    errors[(int)Dataerror.SIBLING_TOO_SOON].Add(new DataError((int)Dataerror.SIBLING_TOO_SOON, Fact.FactError.ERROR, child, $"Child {child.Name} of {ind.Name} born too soon, only {daysDiff} days after sibling."));
+                                if(daysDiff>168 && daysDiff< 365)
+                                    errors[(int)Dataerror.SIBLING_PROB_TOO_SOON].Add(new DataError((int)Dataerror.SIBLING_PROB_TOO_SOON, Fact.FactError.QUESTIONABLE, ind, $"Child {child.Name} of {ind.Name} born very soon after sibling, only {daysDiff} days later."));
                             }
                         }
                     }
