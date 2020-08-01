@@ -36,7 +36,7 @@ namespace FTAnalyzer
         IList<Tuple<string, Fact>> sharedFacts;
         IDictionary<string, List<Individual>> occupations;
         IDictionary<StandardisedName, StandardisedName> names;
-        IList<string> unknownFactTypes;
+        IDictionary<string, List<Individual>> unknownFactTypes;
         SortableBindingList<IDisplayLocation>[] displayLocations;
         SortableBindingList<IDisplayLooseDeath> looseDeaths;
         SortableBindingList<IDisplayLooseBirth> looseBirths;
@@ -197,7 +197,7 @@ namespace FTAnalyzer
             sharedFacts = new List<Tuple<string, Fact>>();
             occupations = new Dictionary<string, List<Individual>>();
             names = new Dictionary<StandardisedName, StandardisedName>();
-            unknownFactTypes = new List<string>();
+            unknownFactTypes = new Dictionary<string, List<Individual>>();
             DataErrorTypes = new List<DataErrorGroup>();
             displayLocations = new SortableBindingList<IDisplayLocation>[5];
             rootIndividualID = string.Empty;
@@ -224,8 +224,10 @@ namespace FTAnalyzer
 
         public void CheckUnknownFactTypes(string factType)
         {
-            if (!unknownFactTypes.ContainsString(factType))
-                unknownFactTypes.Add(factType);
+            if (!unknownFactTypes.ContainsKey(factType))
+            {
+                unknownFactTypes.Add(factType,new List<Individual>());
+            }
         }
         
         public XmlDocument LoadTreeHeader(string filename, Stream stream, IProgress<string> outputText)
@@ -341,6 +343,7 @@ namespace FTAnalyzer
                     else
                         individualLookup.Add(individual.IndividualID, individual);
                     AddOccupations(individual);
+                    AddCustomFacts(individual);
                     progress.Report((100 * counter++) / individualMax);
                 }
             }
@@ -545,9 +548,9 @@ namespace FTAnalyzer
             if (unknownFactTypes.Count > 0 && !GeneralSettings.Default.IgnoreFactTypeWarnings)
             {
                 outputText.Report("\nThe following unknown/custom fact types were reported.\nNB. This isn't an error if you deliberately created these fact types.\nThis is simply highlighting the types so you can check for any possible errors/duplicate types.\n");
-                foreach (string tag in unknownFactTypes)
+                foreach (string tag in unknownFactTypes.Keys)
                 {
-                    int count = AllExportFacts.Count(f => f.FactType == tag);
+                    int count = unknownFactTypes[tag].Count;
                     if (count > 0)
                         outputText.Report($"\nFound {count} facts of unknown/custom fact type {tag}");
                 }
@@ -822,6 +825,14 @@ namespace FTAnalyzer
                     workers.Add(individual);
                     jobs.Add(f.Comment);
                 }
+            }
+        }
+        void AddCustomFacts(Individual individual)
+        {
+            foreach(string factType in unknownFactTypes.Keys)
+            {
+                if (individual.AllFacts.Any(x => x.FactTypeDescription == factType))
+                    unknownFactTypes[factType].Add(individual);
             }
         }
 
@@ -1696,7 +1707,7 @@ namespace FTAnalyzer
         {
             get
             {
-                SortableBindingList<IDisplaySource> result = new SortableBindingList<IDisplaySource>();
+                var result = new SortableBindingList<IDisplaySource>();
                 foreach (IDisplaySource s in sources)
                     result.Add(s);
                 return result;
@@ -1707,9 +1718,19 @@ namespace FTAnalyzer
         {
             get
             {
-                SortableBindingList<IDisplayOccupation> result = new SortableBindingList<IDisplayOccupation>();
+                var result = new SortableBindingList<IDisplayOccupation>();
                 foreach (string occ in occupations.Keys)
                     result.Add(new DisplayOccupation(occ, occupations[occ].Count));
+                return result;
+            }
+        }
+        public SortableBindingList<IDisplayCustomFact> AllCustomFacts
+        {
+            get
+            {
+                var result = new SortableBindingList<IDisplayCustomFact>();
+                foreach (string facttype in unknownFactTypes.Keys)
+                    result.Add(new DisplayCustomFact(facttype, unknownFactTypes[facttype].Count));
                 return result;
             }
         }
@@ -1733,6 +1754,9 @@ namespace FTAnalyzer
         }
 
         public SortableBindingList<Individual> AllWorkers(string job) => new SortableBindingList<Individual>(occupations[job]);
+
+        public SortableBindingList<Individual> AllCustomFactIndividuals(string factType) => 
+            new SortableBindingList<Individual>(unknownFactTypes[factType]);
 
         public SortableBindingList<IDisplayFamily> PossiblyMissingChildFamilies
         {
@@ -1964,7 +1988,7 @@ namespace FTAnalyzer
                                 new DataError((int)Dataerror.FACTS_AFTER_DEATH, ind, f.FactErrorMessage));
                         if (!GeneralSettings.Default.IgnoreFactTypeWarnings)
                         {
-                            foreach (string tag in unknownFactTypes)
+                            foreach (string tag in unknownFactTypes.Keys)
                             {
                                 if (f.FactTypeDescription == tag)
                                 {

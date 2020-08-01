@@ -41,6 +41,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\DataErrorGroup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\LostCousin.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Displays\ColourValues.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Displays\DisplayCustomFact.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Displays\DisplayDuplicateIndividual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Displays\DisplayFact.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Displays\DisplayOccupation.cs" />
@@ -61,6 +62,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Displays\IDisplayLooseDeath.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Displays\IDisplayLostCousin.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Displays\IDisplayMissingData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Displays\IDisplayCustomFact.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Displays\IDisplayOccupation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Displays\IDisplaySource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\DuplicateIndividual.cs" />

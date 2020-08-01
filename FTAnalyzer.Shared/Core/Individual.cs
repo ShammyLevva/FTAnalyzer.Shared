@@ -908,7 +908,6 @@ namespace FTAnalyzer
                 }
                 catch (InvalidXMLFactException ex)
                 {
-                    FamilyTree ft = FamilyTree.Instance;
                     outputText.Report($"Error with Individual : {IndividualRef}\n       Invalid fact : {ex.Message}");
                 }
                 preferredFact = false;
