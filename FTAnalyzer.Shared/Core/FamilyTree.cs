@@ -551,7 +551,8 @@ namespace FTAnalyzer
                 foreach (string tag in unknownFactTypes.Keys)
                 {
                     int count = unknownFactTypes[tag].Count;
-                    if (count > 0)
+                    bool ignore = DatabaseHelper.IgnoreCustomFact(tag);
+                    if (count > 0 && !ignore)
                         outputText.Report($"\nFound {count} facts of unknown/custom fact type {tag}");
                 }
                 outputText.Report("\n");
@@ -1730,7 +1731,11 @@ namespace FTAnalyzer
             {
                 var result = new SortableBindingList<IDisplayCustomFact>();
                 foreach (string facttype in unknownFactTypes.Keys)
-                    result.Add(new DisplayCustomFact(facttype, unknownFactTypes[facttype].Count));
+                {
+                    bool ignore = DatabaseHelper.IgnoreCustomFact(facttype);
+                    var customFact = new DisplayCustomFact(facttype, unknownFactTypes[facttype].Count, ignore);
+                    result.Add(customFact);
+                }
                 return result;
             }
         }

@@ -7,11 +7,13 @@ namespace FTAnalyzer
     {
         public string CustomFactName { get; }
         public int Count { get; }
+        public bool Ignore { get; set; }
 
-        public DisplayCustomFact(string occupation,int count)
+        public DisplayCustomFact(string occupation,int count, bool ignore)
         {
             CustomFactName = occupation;
             Count = count;
+            Ignore = ignore;
         }
 
         public int CompareTo(IDisplayCustomFact that) => string.Compare(CustomFactName, that.CustomFactName, System.StringComparison.Ordinal);
@@ -22,6 +24,7 @@ namespace FTAnalyzer
             { 
                 case "CustomFactName": return CompareComparableProperty<IDisplayCustomFact>(f => f.CustomFactName, ascending);
                 case "Count": return CompareComparableProperty<IDisplayCustomFact>(f => f.Count, ascending);
+                case "Ignore": return CompareComparableProperty<IDisplayCustomFact>(f => f.Ignore, ascending);
                  default: return null;
             }
         }

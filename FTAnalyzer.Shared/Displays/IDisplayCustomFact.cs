@@ -10,5 +10,8 @@ namespace FTAnalyzer
 
         [ColumnDetail("Count", 70)]
         int Count { get; }
+
+        [ColumnDetail("Ignore", 70)]
+        bool Ignore { get; set; }
     }
 }
