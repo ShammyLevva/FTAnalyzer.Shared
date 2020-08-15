@@ -761,7 +761,7 @@ namespace FTAnalyzer
                 StringBuilder sb = new StringBuilder();
                 foreach (FactSource s in Sources.OrderBy(s => s.ToString()))
                 {
-                    if (sb.Length > 0) sb.Append("\n");
+                    if (sb.Length > 0) sb.Append('\n');
                     sb.Append(s.ToString());
                 }
                 return sb.ToString();

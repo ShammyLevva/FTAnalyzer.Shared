@@ -8,7 +8,9 @@ namespace FTAnalyzer
         new string IndividualID { get; }
         new string Forenames { get; }
         new string Surname { get; }
-        string Alias { get; }
+        new string Alias { get; }
+        new string Title { get; }
+        new string Suffix { get; }
         new string Gender { get; }
         new FactDate BirthDate { get; }
         new FactLocation BirthLocation { get; }

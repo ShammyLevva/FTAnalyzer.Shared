@@ -660,10 +660,10 @@ namespace FTAnalyzer
         }
 
         Dictionary<CensusDate, int> MissingLCEntries;
-        int LCFound = 0;
-        int LCMissing = 0;
-        int LCUploadable = 0;
-        int LCInvalidRef = 0;
+        int LCFound;
+        int LCMissing;
+        int LCUploadable;
+        int LCInvalidRef;
 #if __PC__
         readonly string separator = $"————————————————————————————————————————————————————\n";
 #elif __MACOS__
@@ -871,8 +871,8 @@ namespace FTAnalyzer
 
 #region Properties
 
-        public bool Loading { get; private set; } = false;
-        public bool DataLoaded { get; private set; } = false;
+        public bool Loading { get; private set; }
+        public bool DataLoaded { get; private set; }
 
         public List<ExportFact> AllExportFacts
         {
@@ -1571,7 +1571,7 @@ namespace FTAnalyzer
             sb.Append($"Unknown relation: {relations[Individual.UNKNOWN]}\n");
             if (relations[Individual.UNSET] > 0)
                 sb.Append($"Failed to set relationship: {relations[Individual.UNSET]}\n");
-            sb.Append("\n");
+            sb.Append('\n');
             return sb.ToString();
         }
 
@@ -3262,8 +3262,8 @@ namespace FTAnalyzer
             {
                 var tasks = new List<Task>
                 {
-                    Task.Run(() => IdentifyDuplicates(progress, males, ref maleProgress, ct)),
-                    Task.Run(() => IdentifyDuplicates(progress, females, ref femaleProgress, ct))
+                    Task.Run(() => IdentifyDuplicates(progress, males, ref maleProgress, ct), ct),
+                    Task.Run(() => IdentifyDuplicates(progress, females, ref femaleProgress, ct), ct)
                 };
                 await Task.WhenAll(tasks).ConfigureAwait(true);
             }
@@ -3485,7 +3485,7 @@ namespace FTAnalyzer
             }
             foreach (DisplayFact f in todaysFacts)
                 sb.Append(f + @"\line ");
-            sb.Append("}");
+            sb.Append('}');
             outputText.Report(sb.ToString());
             progress.Report(100);
         }

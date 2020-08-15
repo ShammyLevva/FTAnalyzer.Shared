@@ -42,6 +42,8 @@ namespace FTAnalyzer
         public BigInteger Ahnentafel { get; set; }
         public string BudgieCode { get; set; }
         public string RelationToRoot { get; set; }
+        public string Title { get; private set; }
+        public string Suffix { get; private set; }
         public string FamilySearchID { get; private set; }
         public decimal RelationSort { get; set; }
         public CommonAncestor CommonAncestor { get; set; }
@@ -92,6 +94,14 @@ namespace FTAnalyzer
             Name = FamilyTree.GetText(node, "NAME", false);
             Gender = FamilyTree.GetText(node, "SEX", false);
             Alias = FamilyTree.GetText(node, "ALIA", false);
+            XmlNode nameNode = node?.SelectSingleNode("NAME");
+            if (nameNode.ChildNodes.Count > 0)
+            {
+                Title = FamilyTree.GetText(nameNode, "NPFX", false);
+                Suffix = FamilyTree.GetText(nameNode, "NSFX", false);
+                if (string.IsNullOrEmpty(Alias))
+                    Alias = FamilyTree.GetText(nameNode, "NICK", false);
+            }
             FamilySearchID = FamilyTree.GetText(node, "FSID", false);
             IsFlaggedAsLiving = node.SelectSingleNode("_FLGS/__LIVING") != null;
             forenameMetaphone = new DoubleMetaphone(Forename);

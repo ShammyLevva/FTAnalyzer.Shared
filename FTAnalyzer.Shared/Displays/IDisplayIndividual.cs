@@ -27,8 +27,14 @@ namespace FTAnalyzer
         Age LifeSpan { get; }
         [ColumnDetail("Relation", 120)]
         string Relation { get; }
-        [ColumnDetail("Relation to Root", 160)]    
+        [ColumnDetail("Relation to Root", 160)]
         string RelationToRoot { get; }
+        [ColumnDetail("Title", 75)]
+        string Title { get; }
+        [ColumnDetail("Suffix", 75)]
+        string Suffix { get; }
+        [ColumnDetail("Alias", 75)]
+        string Alias { get; }
         [ColumnDetail("FamilySearch ID", 120)]
         string FamilySearchID { get; }
         [ColumnDetail("Marriages", 60, ColumnDetail.ColumnAlignment.Right)]

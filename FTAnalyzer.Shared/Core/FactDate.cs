@@ -15,7 +15,7 @@ namespace FTAnalyzer
         public static readonly DateTime MAXDATE = new DateTime(9999, 12, 31);
         public static readonly IFormatProvider CULTURE = new CultureInfo("en-GB", true);
         public static readonly int MAXYEARS = 110;
-        public static readonly int MINYEARS = 0;
+        public static readonly int MINYEARS;
         const int LOW = 0;
         const int HIGH = 1;
 
@@ -354,8 +354,17 @@ namespace FTAnalyzer
             str = str.Replace("DIED IN INFANCY", "INFANT");
             str = str.Replace("CENSUS", "");
 
-            // process date
-            if (str.IndexOf("TO", StringComparison.Ordinal) > 1)
+            // deal with CE/AD and BCE or BC date
+            str = str.Replace("B C E", "BCE").Replace("C E", "CE").Replace("B C", "BC").Replace("A D", "AD").TrimEnd();
+            if (str.EndsWith("CE"))
+                str = str.Replace("CE", "");
+            if(str.EndsWith("AD"))
+                str = str.Replace("AD", "");
+            if (str.EndsWith("BCE") || str.EndsWith("BC"))
+                return "UNKNOWN";
+
+                // process date
+                if (str.IndexOf("TO", StringComparison.Ordinal) > 1)
             {  // contains TO but doesn't start with TO
                 if (!str.StartsWith("FROM", StringComparison.Ordinal))
                     str = "FROM " + str;

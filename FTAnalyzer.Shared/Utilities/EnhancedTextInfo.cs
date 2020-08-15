@@ -71,7 +71,7 @@ namespace FTAnalyzer.Utilities
                 else if (ch >= ' ' && ch <= 'Z')
                     sb.Append(ch);
                 else
-                    sb.Append(" ");
+                    sb.Append(' ');
             }
             return sb.ToString().ClearWhiteSpace();
         }
