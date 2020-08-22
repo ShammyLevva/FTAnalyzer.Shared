@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Web;
 using System.Xml;
 
 #if __MACOS__
@@ -46,7 +45,7 @@ namespace FTAnalyzer
             {
                 // if there is a problem with the file return with opposite line ends
                 cloned = CloneStream(stream);
-                using (var reader = new AnselInputStreamReader(FileHandling.Default.RetryFailedLines ? cloned  : CheckInvalidCR(cloned)))
+                using (var reader = new AnselInputStreamReader(FileHandling.Default.RetryFailedLines ? cloned : CheckInvalidCR(cloned)))
                 {
                     doc = Parse(reader, outputText, false);
                 }
@@ -404,6 +403,37 @@ namespace FTAnalyzer
             int i;
             i = inp.IndexOf(" ", StringComparison.Ordinal);
             return i == 0 ? Remainder(inp.Trim()) : i < 0 ? "" : inp.Substring(i + 1).Trim();
+        }
+
+        /// <summary>
+        /// Detects the byte order mark of a file and returns
+        /// an appropriate encoding for the file.
+        /// </summary>
+        /// <param name="srcFile"></param>
+        /// <returns></returns>
+        public static Encoding GetFileEncoding(FileStream file)
+        {
+            // *** Use Default of Encoding.Default (Ansi CodePage)
+            Encoding enc = Encoding.Default;
+
+            // *** Detect byte order mark if any - otherwise assume default
+            byte[] buffer = new byte[5];
+            file.Read(buffer, 0, 5);
+            file.Seek(0, SeekOrigin.Begin);
+
+            if (buffer[0] == 0xef && buffer[1] == 0xbb && buffer[2] == 0xbf)
+                enc = Encoding.UTF8;
+            else if (buffer[0] == 0xfe && buffer[1] == 0xff)
+                enc = Encoding.BigEndianUnicode;
+            else if (buffer[0] == 0 && buffer[1] == 0 && buffer[2] == 0xfe && buffer[3] == 0xff)
+                enc = Encoding.UTF32;
+            else if (buffer[0] == 0x2b && buffer[1] == 0x2f && buffer[2] == 0x76)
+                enc = Encoding.UTF7;
+            else if (buffer[0] == 0xff && buffer[1] == 0xfe && buffer[2] == 0 && buffer[3] == 0) // UTF32 little endian
+                enc = Encoding.UTF32;
+            else if (buffer[0] == 0xff && buffer[1] == 0xfe) // UTF16 little endian
+                enc = Encoding.Unicode;
+            return enc;
         }
     }
 }

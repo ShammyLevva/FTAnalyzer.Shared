@@ -13,7 +13,7 @@ namespace FTAnalyzer
     {
         public const string ADOPTION = "ADOP", ADULT_CHRISTENING = "CHRA", AFN = "AFN", ALIAS = "ALIA", ANNULMENT = "ANUL",
                 BAPTISM = "BAPM", BAPTISM_LDS = "BAPL", BAR_MITZVAH = "BARM", BAS_MITZVAH = "BASM", BIRTH = "BIRT",
-                BIRTH_CALC = "_BIRTHCALC", BLESSING = "BLESS", BURIAL = "BURI", CASTE = "CAST", CAUSE_OF_DEATH = "CAUS",
+                BIRTH_CALC = "_BIRTHCALC", BLESSING = "BLES", BURIAL = "BURI", CASTE = "CAST", CAUSE_OF_DEATH = "CAUS",
                 CENSUS = "CENS", CENSUS_FTA = "_CENSFTA", CHANGE = "CHAN", CHILDREN1911 = "CHILDREN1911", CHRISTENING = "CHR",
                 CIRCUMCISION = "_CIRC", CONFIRMATION = "CONF", CONFIRMATION_LDS = "CONL", CREMATION = "CREM",
                 CUSTOM_ATTRIBUTE = "_ATTR", CUSTOM_EVENT = "EVEN", CUSTOM_FACT = "FACT", DEATH = "DEAT", DEGREE = "_DEG", 
@@ -769,6 +769,8 @@ namespace FTAnalyzer
         }
 
         public IList<FactSource> Sources { get; private set; }
+
+        public int SourcesCount => Sources.Count;
 
         public List<string> SourcePages { get; private set; }
 

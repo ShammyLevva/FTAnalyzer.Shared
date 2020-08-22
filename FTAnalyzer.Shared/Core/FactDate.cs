@@ -265,7 +265,6 @@ namespace FTAnalyzer
             str = str.Replace("BTW", "BET");
             str = str.Replace("UNTIL", "TO");
             str = str.Replace("CIRCA", "ABT");
-            str = str.Replace("CA", "ABT");
             str = str.Replace("AROUND", "ABT");
             str = str.Replace("APPROX", "ABT");
 
@@ -281,6 +280,7 @@ namespace FTAnalyzer
             str = str.Replace("CIR", "ABT");
             str = str.Replace("PRE", "BEF");
             str = str.Replace("POST", "AFT");
+            str = str.Replace("CA", "ABT");
 
             // Quarters
             str = str.Replace("QUARTER", "QTR");

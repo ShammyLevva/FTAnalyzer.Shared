@@ -37,6 +37,7 @@ namespace FTAnalyzer
         public string Comment => Fact.Comment;
         public string IndividualID => Ind is null ? string.Empty : Ind.IndividualID;
         public Age AgeAtFact => Ind?.GetAge(Fact.FactDate, Fact.FactType);
+        public int SourcesCount => Fact.SourcesCount;
         public string SourceList => Fact.SourceList;
         public CensusReference CensusReference => Fact.CensusReference;
         public string CensusRefYear => Fact.CensusReference.CensusYear.IsKnown ? Fact.CensusReference.CensusYear.ToString() : string.Empty;

@@ -35,5 +35,7 @@ namespace FTAnalyzer
         string FamilyIDsAsChild { get; }
         new int ChildrenCount { get; }
         new int MarriageCount { get; }
+        new int FactsCount { get; }
+        new int SourcesCount { get; }
     }
 }

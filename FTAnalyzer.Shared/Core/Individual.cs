@@ -1605,6 +1605,10 @@ namespace FTAnalyzer
 
         public int CensusFactCount => Facts.Count(f => f.IsCensusFact);
 
+        public int FactsCount => Facts.Count;
+
+        public int SourcesCount => Facts.SelectMany(f => f.Sources).Distinct().Count();
+
         public int CensusDateFactCount(CensusDate censusDate) => Facts.Count(f => f.IsValidCensus(censusDate));
 
         public bool IsLivingError => IsFlaggedAsLiving && DeathDate.IsKnown;

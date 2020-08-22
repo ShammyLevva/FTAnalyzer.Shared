@@ -48,6 +48,8 @@ namespace FTAnalyzer
         string CensusRefYear { get; }
         [ColumnDetail("Comments", 250)]
         string Comment { get; }
+        [ColumnDetail("Num Sources", 75, ColumnDetail.ColumnAlignment.Right)]
+        int SourcesCount { get; }
         [ColumnDetail("Sources", 300)]
         string SourceList { get; }
         [ColumnDetail("Lat", 60)]

@@ -12,7 +12,6 @@ namespace FTAnalyzer
             Ind = ind;
             F = f;
         }
-
         public string ID { get { return Ind.IndividualID; } }
         public string Forenames { get { return Ind.Forenames; } }
         public string Surname { get { return Ind.Surname; } }
@@ -25,5 +24,6 @@ namespace FTAnalyzer
         public DateTime StartDate { get { return F.FactDate.StartDate; } }
         public DateTime EndDate { get { return F.FactDate.EndDate; } }
         public int RelationType { get { return Ind.RelationType; } }
+        public int SourcesCount { get { return F.SourcesCount; } }
     }
 }

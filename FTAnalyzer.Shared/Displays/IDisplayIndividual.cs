@@ -52,5 +52,9 @@ namespace FTAnalyzer
         [ColumnDetail("Has Notes", 60, ColumnDetail.ColumnAlignment.Center)]
         string HasNotesMac { get; }
 #endif
+        [ColumnDetail("Num Facts", 60, ColumnDetail.ColumnAlignment.Right)]
+        int FactsCount { get; }
+        [ColumnDetail("Num Sources", 60, ColumnDetail.ColumnAlignment.Right)]
+        int SourcesCount { get; }
     }
 }

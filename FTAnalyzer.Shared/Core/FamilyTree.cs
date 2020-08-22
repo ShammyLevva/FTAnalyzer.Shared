@@ -230,13 +230,14 @@ namespace FTAnalyzer
             }
         }
         
-        public XmlDocument LoadTreeHeader(string filename, Stream stream, IProgress<string> outputText)
+        public XmlDocument LoadTreeHeader(string filename, FileStream stream, IProgress<string> outputText)
         {
             Loading = true;
             ResetData();
             rootIndividualID = string.Empty;
             outputText.Report($"Loading file {filename}\n");
-            XmlDocument doc = GedcomToXml.LoadFile(stream, Encoding.GetEncoding(1252), outputText, true);
+            Encoding encoding = GedcomToXml.GetFileEncoding(stream);
+            XmlDocument doc = GedcomToXml.LoadFile(stream, encoding, outputText, true);
             if (doc is null)
             {
                 Loading = false;
@@ -259,27 +260,32 @@ namespace FTAnalyzer
                 Task.Run(() => Analytics.TrackActionAsync(Analytics.GEDCOMAction, Analytics.SoftwareVersion, softwareVersion));
             }
             XmlNode charset = doc.SelectSingleNode("GED/HEAD/CHAR");
+            string fileCharset = charset.InnerText;
+            XmlDocument tempDoc = null;
             if (charset != null)
             {
-                switch (charset.InnerText)
+                switch (fileCharset)
                 {
                     case "ANSEL":
-                        doc = GedcomToXml.LoadAnselFile(stream, outputText, false);
+                        tempDoc = GedcomToXml.LoadAnselFile(stream, outputText, false);
                         break;
                     case "UNICODE":
-                      doc = GedcomToXml.LoadFile(stream, Encoding.Unicode, outputText, false);
+                        tempDoc = GedcomToXml.LoadFile(stream, Encoding.Unicode, outputText, false);
                         break;
                     case "ASCII":
-                        doc = GedcomToXml.LoadFile(stream, Encoding.ASCII, outputText, false);
+                        tempDoc = GedcomToXml.LoadFile(stream, Encoding.ASCII, outputText, false);
                         break;
                     case "UTF-8":
-                        doc = GedcomToXml.LoadFile(stream, Encoding.UTF8, outputText, false);
+                        tempDoc = GedcomToXml.LoadFile(stream, Encoding.UTF8, outputText, false);
                         break;
                 }
             }
-            if (doc is null || doc.SelectNodes("GED/INDI").Count == 0)
+            if (tempDoc != null && tempDoc.SelectNodes("GED/INDI").Count > 0)
+                doc = tempDoc;
+            if(doc.SelectNodes("GED/INDI").Count ==0)
             {
                 Loading = false;
+                outputText.Report("Failed to load file no individuals found.");
                 return null;
             }
             ReportOptions(outputText);
