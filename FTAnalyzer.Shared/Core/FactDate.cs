@@ -128,10 +128,10 @@ namespace FTAnalyzer
         }
 
         public static string Format(string format, DateTime date) => string.Format("{0:" + format + "}", date).ToUpper();
-        
+
         string FixTextDateFormats(string str)
         {
-            switch(str)
+            switch (str)
             {
                 case "SUBMITTED":
                 case "PRIVATE":
@@ -157,7 +157,7 @@ namespace FTAnalyzer
         string FixCommonDateFormats(string str)
         {
             str = EnhancedTextInfo.RemoveSupriousDateCharacters(str.Trim().ToUpper());
-            if(!Properties.NonGedcomDate.Default.UseNonGedcomDates || Properties.NonGedcomDate.Default.Separator != ".")
+            if (!Properties.NonGedcomDate.Default.UseNonGedcomDates || Properties.NonGedcomDate.Default.Separator != ".")
                 str = str.Replace(".", " ");
             // remove date qualifiers first
             str = str.Replace("@#DGREGORIAN@", "").Replace("@#DJULIAN@", ""); //.Replace("@#DFRENCH R@", ""); // .Replace("@#DHEBREW@", "");
@@ -243,7 +243,7 @@ namespace FTAnalyzer
             str = str.Replace("FEBRUAR", "FEB");
             str = str.Replace("OKTOBER", "OCT");
             str = str.Replace("DEZEMBER", "DEC");
-            
+
             str = str.Replace("SEPT", "SEP"); // avoids confusing french translation by removing T before checking for french
             str = str.Replace("M01", "JAN");
             str = str.Replace("M02", "FEB");
@@ -358,13 +358,13 @@ namespace FTAnalyzer
             str = str.Replace("B C E", "BCE").Replace("C E", "CE").Replace("B C", "BC").Replace("A D", "AD").TrimEnd();
             if (str.EndsWith("CE"))
                 str = str.Replace("CE", "");
-            if(str.EndsWith("AD"))
+            if (str.EndsWith("AD"))
                 str = str.Replace("AD", "");
             if (str.EndsWith("BCE") || str.EndsWith("BC"))
                 return "UNKNOWN";
 
-                // process date
-                if (str.IndexOf("TO", StringComparison.Ordinal) > 1)
+            // process date
+            if (str.IndexOf("TO", StringComparison.Ordinal) > 1)
             {  // contains TO but doesn't start with TO
                 if (!str.StartsWith("FROM", StringComparison.Ordinal))
                     str = "FROM " + str;
@@ -469,7 +469,7 @@ namespace FTAnalyzer
             if (matcher.Success)
                 return new Tuple<bool, string>(true, $"BET {matcher.Groups[1]}{matcher.Groups[2]} {matcher.Groups[5]} AND {matcher.Groups[3]}{matcher.Groups[4]} {matcher.Groups[5]}");
             return new Tuple<bool, string>(false, string.Empty);
-       }
+        }
 
         #region Process Dates
 
@@ -887,7 +887,7 @@ namespace FTAnalyzer
         }
 
         #endregion
-        
+
         #region Logical operations
         /*
          * @return whether that FactDate is before this FactDate
@@ -908,6 +908,13 @@ namespace FTAnalyzer
             if (!DoubleDate && that != null && that.DoubleDate)
                 return StartDate < that.StartDate || StartDate < that.StartDate.TryAddYears(-1);
             return that is null || StartDate < that.StartDate;
+        }
+
+        public bool StartsOnOrBefore(FactDate that)
+        { 
+            if (!DoubleDate && that != null && that.DoubleDate)
+                return StartDate < that.StartDate || StartDate < that.StartDate.TryAddYears(-1);
+            return that is null || StartDate <= that.StartDate;
         }
 
         /*

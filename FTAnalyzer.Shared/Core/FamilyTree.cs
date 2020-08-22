@@ -42,7 +42,7 @@ namespace FTAnalyzer
         SortableBindingList<IDisplayLooseBirth> looseBirths;
         SortableBindingList<IDisplayLooseInfo> looseInfo;
         SortableBindingList<DuplicateIndividual> duplicates;
-        const int DATA_ERROR_GROUPS = 31;
+        const int DATA_ERROR_GROUPS = 32;
         static XmlNodeList noteNodes;
         BigInteger maxAhnentafel;
         Dictionary<string, Individual> individualLookup;
@@ -1981,10 +1981,14 @@ namespace FTAnalyzer
                         if (!added)
                             errors[(int)Dataerror.FACT_ERROR].Add(new DataError((int)Dataerror.FACT_ERROR, f.FactErrorLevel, ind, f.FactErrorMessage));
                     }
-#endregion
-        #region All Facts
+                    #endregion
+                    #region All Facts
+                    FactDate now = new FactDate(DateTime.Now.ToString("dd MMM yyyy"));
                     foreach (Fact f in ind.AllFacts)
                     {
+                        if (f.FactDate.IsAfter(now))
+                            errors[(int)Dataerror.FACT_IN_FUTURE].Add(
+                                new DataError((int)Dataerror.FACT_IN_FUTURE, ind, $"{f} is in the future."));
                         if (FactBeforeBirth(ind, f))
                             errors[(int)Dataerror.FACTS_BEFORE_BIRTH].Add(
                                 new DataError((int)Dataerror.FACTS_BEFORE_BIRTH, ind, f.FactErrorMessage));
@@ -2193,7 +2197,6 @@ namespace FTAnalyzer
         }
 
         public static bool FactAfterDeath(Individual ind, Fact f) => Fact.LOOSE_DEATH_FACTS.Contains(f.FactType) && f.FactDate.IsAfter(ind.DeathDate);
-
         public enum Dataerror
         {
             BIRTH_AFTER_BAPTISM = 0, BIRTH_AFTER_DEATH = 1, BIRTH_AFTER_FATHER_90 = 2, BIRTH_AFTER_MOTHER_60 = 3, BIRTH_AFTER_MOTHER_DEATH = 4,
@@ -2203,12 +2206,12 @@ namespace FTAnalyzer
             LOST_COUSINS_NOT_SUPPORTED_YEAR = 17, RESIDENCE_CENSUS_DATE = 18, CENSUS_COVERAGE = 19, FACT_ERROR = 20,
             UNKNOWN_FACT_TYPE = 21, LIVING_WITH_DEATH_DATE = 22, CHILDRENSTATUS_TOTAL_MISMATCH = 23, DUPLICATE_FACT = 24,
             POSSIBLE_DUPLICATE_FACT = 25, NATREG1939_INEXACT_BIRTHDATE = 26, MALE_WIFE_FEMALE_HUSBAND = 27,
-            SAME_SURNAME_COUPLE = 28, SIBLING_TOO_SOON = 29, SIBLING_PROB_TOO_SOON = 30
+            SAME_SURNAME_COUPLE = 28, SIBLING_TOO_SOON = 29, SIBLING_PROB_TOO_SOON = 30, FACT_IN_FUTURE = 31
         };
 
-#endregion
+        #endregion
 
-#region Census Searching
+        #region Census Searching
 
         public static string ProviderName(int censusProvider)
         {

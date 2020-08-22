@@ -67,6 +67,8 @@ namespace FTAnalyzer
             IsFlaggedAsLiving = false;
             Gender = "U";
             Alias = string.Empty;
+            Title = string.Empty;
+            Suffix = string.Empty;
             Ahnentafel = 0;
             BudgieCode = string.Empty;
             _relationType = UNSET;
@@ -95,13 +97,10 @@ namespace FTAnalyzer
             Gender = FamilyTree.GetText(node, "SEX", false);
             Alias = FamilyTree.GetText(node, "ALIA", false);
             XmlNode nameNode = node?.SelectSingleNode("NAME");
-            if (nameNode.ChildNodes.Count > 0)
-            {
-                Title = FamilyTree.GetText(nameNode, "NPFX", false);
-                Suffix = FamilyTree.GetText(nameNode, "NSFX", false);
-                if (string.IsNullOrEmpty(Alias))
-                    Alias = FamilyTree.GetText(nameNode, "NICK", false);
-            }
+            Title = FamilyTree.GetText(nameNode, "NPFX", false);
+            Suffix = FamilyTree.GetText(nameNode, "NSFX", false);
+            if (string.IsNullOrEmpty(Alias))
+                Alias = FamilyTree.GetText(nameNode, "NICK", false);
             FamilySearchID = FamilyTree.GetText(node, "FSID", false);
             IsFlaggedAsLiving = node.SelectSingleNode("_FLGS/__LIVING") != null;
             forenameMetaphone = new DoubleMetaphone(Forename);
@@ -822,7 +821,7 @@ namespace FTAnalyzer
 
         public bool IsAlive(FactDate when) => IsBorn(when) && !IsDeceased(when);
 
-        public bool IsBorn(FactDate when) => !BirthDate.IsKnown || BirthDate.StartsBefore(when); // assume born if birthdate is unknown
+        public bool IsBorn(FactDate when) => !BirthDate.IsKnown || BirthDate.StartsOnOrBefore(when); // assume born if birthdate is unknown
 
         public bool IsDeceased(FactDate when) => DeathDate.IsKnown && DeathDate.IsBefore(when);
 
@@ -831,6 +830,16 @@ namespace FTAnalyzer
         public bool IsBirthKnown => BirthDate.IsKnown && BirthDate.IsExact;
 
         public bool IsDeathKnown => DeathDate.IsKnown && DeathDate.IsExact;
+
+        public bool IsPossiblyAlive(FactDate when)
+        {
+            if (when is null) return true;
+            if (IsAlive(when)) return true;
+            if (BirthDate.IsBefore(when) && DeathDate.IsAfter(when)) return true;
+            if (BirthDate.StartsBefore(when) && DeathDate.EndsAfter(when)) return true;
+            if (BirthDate.StartDate <= when.EndDate && DeathDate.EndDate >= when.EndDate) return true;
+            return false;
+        }
 
         #endregion
 

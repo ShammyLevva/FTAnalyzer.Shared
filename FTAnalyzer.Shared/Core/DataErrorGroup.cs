@@ -36,7 +36,8 @@ namespace FTAnalyzer
                 "Male Wifes and Female Husbands",
                 "Couples with same surnames",
                 "Child born too soon after sibling",
-                "Child likely born too soon after sibling"
+                "Child likely born too soon after sibling",
+                "Date is in the future"
             };
 
         //"Later marriage before previous spouse died"
