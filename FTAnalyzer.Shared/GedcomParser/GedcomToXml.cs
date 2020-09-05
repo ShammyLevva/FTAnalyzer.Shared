@@ -128,6 +128,7 @@ namespace FTAnalyzer
             XmlDocument document = new XmlDocument() { XmlResolver = null };
             XmlNode node = document.CreateElement("GED");
             document.AppendChild(node);
+            string currentName = string.Empty;
             try
             {
                 line = reader.ReadLine();
@@ -171,11 +172,12 @@ namespace FTAnalyzer
                             line = Remainder(line);
                             token1 = FirstWord(line);
                             line = Remainder(line);
-
+                            if (thislevel == 1 && token1 == "NAME")
+                                currentName = line;
                             if (token1.StartsWith("@", StringComparison.Ordinal))
                             {
                                 if (token1.Length == 1 || !token1.EndsWith("@", StringComparison.Ordinal))
-                                    throw new InvalidGEDCOMException("Bad xref_id invalid @ character in line.", line, lineNr);
+                                    throw new InvalidGEDCOMException($"Bad xref_id invalid @ character in line", line, lineNr);
 
                                 iden = token1.Substring(1, token1.Length - 2);
                                 tag = FirstWord(line);
@@ -194,7 +196,7 @@ namespace FTAnalyzer
                                 {
                                     token2 = FirstWord(line);
                                     if (token2.Length == 1 || (!token2.EndsWith("@", StringComparison.Ordinal) && !token2.EndsWith("@,", StringComparison.Ordinal)))
-                                        throw new InvalidGEDCOMException("Bad pointer value", line, lineNr);
+                                        throw new InvalidGEDCOMException($"Bad pointer value", line, lineNr);
                                     xref = token2.EndsWith("@,", StringComparison.Ordinal)
                                         ? token2.Substring(1, token2.Length - 3)
                                         : token2.Substring(1, token2.Length - 2);
@@ -263,14 +265,14 @@ namespace FTAnalyzer
                         catch (InvalidGEDCOMException ige)
                         {
                             if (reportBadLines)
-                                outputText.Report($"Invalid GEDCOM, Line: {lineNr}: '{line}'. Error was: {ige.Message}\n");
+                                outputText.Report($"Invalid GEDCOM, Line: {lineNr}: '{line}'. Last Name Seen: {currentName}. Error was: {ige.Message}\n");
                             lineErrors.Add(lineNr, new Tuple<string, string>(line, ige.Message));
                             badLineCount++;
                         }
                         catch (Exception e)
                         {
                             if (reportBadLines)
-                                outputText.Report($"Unhandled Exception, bad line {lineNr}: '{line}'. Error was: {e.Message}\n");
+                                outputText.Report($"Unhandled Exception, bad line {lineNr}: '{line}'. Last Name Seen: {currentName}. Error was: {e.Message}\n");
                             lineErrors.Add(lineNr, new Tuple<string, string>(line, e.Message));
                             badLineCount++;
                         }
