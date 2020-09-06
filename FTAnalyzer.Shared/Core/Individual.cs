@@ -791,6 +791,8 @@ namespace FTAnalyzer
                     {
                         if (when.Country.Equals(Countries.SCOTLAND) && Countries.IsEnglandWales(censusFact.Country))
                             return false;
+                        if (censusFact.Country.Equals(Countries.SCOTLAND) && Countries.IsEnglandWales(when.Country))
+                            return false;
                         if (Countries.IsUnitedKingdom(when.Country) && (Countries.IsUnitedKingdom(censusFact.Country) || censusFact.IsOverseasUKCensus(censusFact.Country)))
                             return true;
                     }

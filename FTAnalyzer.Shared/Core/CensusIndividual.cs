@@ -60,7 +60,7 @@ namespace FTAnalyzer
         {
             get
             {
-                if (CensusStatus == WIFE)
+                if (CensusStatus == WIFE && Age.MinAge >= Properties.GeneralSettings.Default.MinParentalAge)
                 {
                     string surname = Surname.Length > 0 ? $" ({Surname})" : string.Empty;
                     return $"{Forenames} {MarriedName} {surname}";
