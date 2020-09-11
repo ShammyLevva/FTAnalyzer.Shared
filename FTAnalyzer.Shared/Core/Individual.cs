@@ -526,7 +526,7 @@ namespace FTAnalyzer
             }
         }
 
-        int MaxAgeAtDeath => GetAge(DeathDate).MaxAge;
+        int MaxAgeAtDeath => DeathDate == FactDate.UNKNOWN_DATE ? GetAge(DateTime.Now).MaxAge : GetAge(DeathDate).MaxAge;
 
         public Age LifeSpan => GetAge(FactDate.TODAY);
 
@@ -776,7 +776,7 @@ namespace FTAnalyzer
 
         public bool IsTaggedMissingCensus(CensusDate when) => when is object && Facts.Any(x => x.FactType == Fact.MISSING && x.FactDate.Overlaps(when));
 
-        public bool IsLostCousinsEntered(CensusDate when) => when is null ? false : IsLostCousinsEntered(when, true);
+        public bool IsLostCousinsEntered(CensusDate when) => !(when is null) && IsLostCousinsEntered(when, true);
         public bool IsLostCousinsEntered(CensusDate when, bool includeUnknownCountries)
         {
             if (when is null) return false;
@@ -1337,7 +1337,7 @@ namespace FTAnalyzer
                   ((Countries.IsUnitedKingdom(census.Country) && !location.IsUnitedKingdom) ||
                   (!Countries.IsUnitedKingdom(census.Country) && census.Country != location.Country));
 
-        public bool OutOfCountry(CensusDate census) => census is null ? false : CheckOutOfCountry(census.PropertyName);
+        public bool OutOfCountry(CensusDate census) => !(census is null) && CheckOutOfCountry(census.PropertyName);
 
         bool CheckOutOfCountry(string prefix)
         {
@@ -1481,7 +1481,7 @@ namespace FTAnalyzer
                 Family fam = Marriages(0);
                 if (fam is null)
                 {
-                    if (MaxAgeAtDeath > 13 && GetPreferredFact(Fact.UNMARRIED) is null)
+                    if (MaxAgeAtDeath > 16 && GetPreferredFact(Fact.UNMARRIED) is null)
                         return BMDColours.NO_SPOUSE; // of marrying age but hasn't a partner or unmarried
                     return BMDColours.EMPTY;
                 }
