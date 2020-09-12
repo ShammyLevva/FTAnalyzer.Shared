@@ -47,7 +47,6 @@ namespace FTAnalyzer
         BigInteger maxAhnentafel;
         Dictionary<string, Individual> individualLookup;
         string rootIndividualID = string.Empty;
-
         int SoloFamilies { get; set; }
         int PreMarriageFamilies { get; set; }
         public bool Geocoding { get; set; }
