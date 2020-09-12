@@ -289,7 +289,6 @@ namespace FTAnalyzer
                 return null;
             }
             ReportOptions(outputText);
-            outputText.Report("File Loaded.\n");
             SetRootIndividual(doc);
             // doc.Save(new FileStream(@"c:\temp\tim.xml", FileMode.Create));
             return doc;
