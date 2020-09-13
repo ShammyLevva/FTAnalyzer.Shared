@@ -1468,7 +1468,11 @@ namespace FTAnalyzer
             // individual is a member of a family as parent so check family status
             if ((IndividualID == fam.HusbandID && fam.Wife is null) ||
                 (IndividualID == fam.WifeID && fam.Husband is null))
-                return BMDColours.NO_PARTNER; // no partner but has children
+            {
+                return fam.Children.Count > 0 ?
+                      BMDColours.NO_PARTNER // no partner but has children
+                    : BMDColours.EMPTY; // solo individual so no marriage
+            }
             if (fam.GetPreferredFact(Fact.MARRIAGE) is null)
                 return BMDColours.NO_MARRIAGE; // has a partner but no marriage fact
             return fam.MarriageDate.DateStatus(false); // has a partner and a marriage so return date status
