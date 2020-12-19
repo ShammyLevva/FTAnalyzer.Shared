@@ -362,6 +362,7 @@ namespace FTAnalyzer
             bool dataCheck;
             bool childCheck;
             bool footnoteCheck;
+            bool sourcetextCheck;
             string text = FamilyTree.GetText(n, "PAGE", true);
             pageCheck = GetCensusReference(text, true);
             if (pageCheck && Status == ReferenceStatus.GOOD)
@@ -377,6 +378,10 @@ namespace FTAnalyzer
             text = FamilyTree.GetText(n, true);
             childCheck = GetCensusReference(text, false);
             if (childCheck && Status == ReferenceStatus.GOOD)
+                return true;
+            text = FamilyTree.GetText(n, "SOUR", true);
+            sourcetextCheck = GetCensusReference(text, false);
+            if (sourcetextCheck && Status == ReferenceStatus.GOOD)
                 return true;
             text = FamilyTree.GetNotes(n);
             return pageCheck || dataCheck || GetCensusReference(text, false); // if any of the checks worked but were incomplete return true

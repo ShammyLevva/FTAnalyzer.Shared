@@ -152,7 +152,7 @@ namespace FTAnalyzer
                     {
                         try
                         {
-                            line = line.Replace('–', '-').Replace('—', '-').Replace("***Data is already there***", ""); // "data is already there" is some Ancestry anomaly
+                            line = line.Replace('–', '-').Replace('—', '-').Replace("&nbsp;"," ").Replace(" * **Data is already there***", ""); // "data is already there" is some Ancestry anomaly
                             cpos1 = line.IndexOf(" ", StringComparison.Ordinal);
                             if (cpos1 < 0) throw new InvalidGEDCOMException($"No space found in line: '{line}'", line, lineNr);
 

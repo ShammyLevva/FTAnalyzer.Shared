@@ -72,7 +72,7 @@ namespace FTAnalyzer
         {
             if (node is null)
                 return string.Empty;
-            if (node.Name.Equals("PAGE") || node.Name.Equals("TITL") || node.Name.Equals("NOTE"))
+            if (node.Name.Equals("PAGE") || node.Name.Equals("TITL") || node.Name.Equals("NOTE") || node.Name.Equals("SOUR"))
                 return node.InnerText.Trim();
             XmlNode text = node.SelectSingleNode(".//TEXT");
             if (text != null && lookForText && text.ChildNodes.Count > 0)
