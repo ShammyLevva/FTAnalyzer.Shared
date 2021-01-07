@@ -2360,8 +2360,7 @@ namespace FTAnalyzer
             else if (censusCountry.Equals(Countries.UNITED_STATES))
             {
                 CensusDate cd = CensusDate.US_FEDERAL_CENSUS.First(x => x.BestYear == censusYear);
-                uri.Path = "search/collections/";
-                query.Append($"{cd.AncestryCatalog}/");
+                uri.Path = $"search/collections/{cd.AncestryCatalog}/";
             }
             else if (censusCountry.Equals(Countries.CANADA))
             {
@@ -2370,56 +2369,109 @@ namespace FTAnalyzer
                 else
                     query.Append($"db={censusYear}canada&");
             }
-            query.Append("rank=1&");
-            query.Append("new=1&");
-            query.Append("so=3&");
-            query.Append("MSAV=1&");
-            query.Append("msT=1&");
-            if (person.Forenames != "?" && person.Forenames.ToUpper() != Individual.UNKNOWN_NAME)
-                query.Append($"gsfn={HttpUtility.UrlEncode(person.Forenames)}&");
-            string surname = string.Empty;
-            if (person.Surname != "?" && person.Surname.ToUpper() != Individual.UNKNOWN_NAME)
-                surname = person.Surname;
-            if (person.MarriedName != "?" && person.MarriedName.ToUpper() != Individual.UNKNOWN_NAME && person.MarriedName != person.Surname)
-                surname += $" {person.MarriedName}";
-            surname = surname.Trim();
-            query.Append($"gsln={HttpUtility.UrlEncode(surname)}&");
-            if (person.BirthDate.IsKnown)
+            if (censusCountry.Equals(Countries.UNITED_STATES))
             {
-                int startYear = person.BirthDate.StartDate.Year;
-                int endYear = person.BirthDate.EndDate.Year;
-                int year, range;
-                if (startYear == FactDate.MINDATE.Year)
+                query.Append("name=");
+                if (person.Forenames != "?" && person.Forenames.ToUpper() != Individual.UNKNOWN_NAME)
+                    query.Append($"{HttpUtility.UrlEncode(person.Forenames)}_");
+                string surname = string.Empty;
+                if (person.Surname != "?" && person.Surname.ToUpper() != Individual.UNKNOWN_NAME)
+                    surname = person.Surname;
+                if (person.MarriedName != "?" && person.MarriedName.ToUpper() != Individual.UNKNOWN_NAME && person.MarriedName != person.Surname)
+                    surname += $" {person.MarriedName}";
+                surname = surname.Trim();
+                query.Append($"{HttpUtility.UrlEncode(surname)}&");
+                if (person.BirthDate.IsKnown)
                 {
-                    year = endYear - 9;
-                    range = 10;
-                }
-                else if (endYear == FactDate.MAXDATE.Year)
-                {
-                    year = startYear + 9;
-                    range = 10;
-                }
-                else
-                {
-                    year = (endYear + startYear + 1) / 2;
-                    range = (endYear - startYear + 1) / 2;
-                    if (2 < range && range < 5) range = 5;
-                    if (range > 5)
+                    int startYear = person.BirthDate.StartDate.Year;
+                    int endYear = person.BirthDate.EndDate.Year;
+                    int year, range;
+                    if (startYear == FactDate.MINDATE.Year)
                     {
-                        year = startYear + 5;
+                        year = endYear - 9;
                         range = 10;
                     }
-                    if (year > censusYear) year = censusYear;
+                    else if (endYear == FactDate.MAXDATE.Year)
+                    {
+                        year = startYear + 9;
+                        range = 10;
+                    }
+                    else
+                    {
+                        year = (endYear + startYear + 1) / 2;
+                        range = (endYear - startYear + 1) / 2;
+                        if (range < 2) range = 2;
+                        if (2 < range && range < 5) range = 5;
+                        if (range > 5)
+                        {
+                            year = startYear + 5;
+                            range = 10;
+                        }
+                        if (year > censusYear) year = censusYear;
+                    }
+                    query.Append($"&birth={year}");
+                    if (person.BirthLocation.IsKnown)
+                    {
+                        string location = person.BirthLocation.GetLocation(FactLocation.SUBREGION).ToString();
+                        query.Append($"_{HttpUtility.UrlEncode(location)}");
+                    }
+                    query.Append($"&birth_x={range}-0-0");
                 }
-                query.Append($"msbdy={year}&");
-                query.Append($"msbdp={range}&");
+
             }
-            if (person.BirthLocation.IsKnown)
+            else
             {
-                string location = person.BirthLocation.GetLocation(FactLocation.SUBREGION).ToString();
-                query.Append($"msbpn__ftp={HttpUtility.UrlEncode(location)}&");
+                query.Append("rank=1&");
+                query.Append("new=1&");
+                query.Append("so=3&");
+                query.Append("MSAV=1&");
+                query.Append("msT=1&");
+                if (person.Forenames != "?" && person.Forenames.ToUpper() != Individual.UNKNOWN_NAME)
+                    query.Append($"gsfn={HttpUtility.UrlEncode(person.Forenames)}&");
+                string surname = string.Empty;
+                if (person.Surname != "?" && person.Surname.ToUpper() != Individual.UNKNOWN_NAME)
+                    surname = person.Surname;
+                if (person.MarriedName != "?" && person.MarriedName.ToUpper() != Individual.UNKNOWN_NAME && person.MarriedName != person.Surname)
+                    surname += $" {person.MarriedName}";
+                surname = surname.Trim();
+                query.Append($"gsln={HttpUtility.UrlEncode(surname)}&");
+                if (person.BirthDate.IsKnown)
+                {
+                    int startYear = person.BirthDate.StartDate.Year;
+                    int endYear = person.BirthDate.EndDate.Year;
+                    int year, range;
+                    if (startYear == FactDate.MINDATE.Year)
+                    {
+                        year = endYear - 9;
+                        range = 10;
+                    }
+                    else if (endYear == FactDate.MAXDATE.Year)
+                    {
+                        year = startYear + 9;
+                        range = 10;
+                    }
+                    else
+                    {
+                        year = (endYear + startYear + 1) / 2;
+                        range = (endYear - startYear + 1) / 2;
+                        if (2 < range && range < 5) range = 5;
+                        if (range > 5)
+                        {
+                            year = startYear + 5;
+                            range = 10;
+                        }
+                        if (year > censusYear) year = censusYear;
+                    }
+                    query.Append($"msbdy={year}&");
+                    query.Append($"msbdp={range}&");
+                }
+                if (person.BirthLocation.IsKnown)
+                {
+                    string location = person.BirthLocation.GetLocation(FactLocation.SUBREGION).ToString();
+                    query.Append($"msbpn__ftp={HttpUtility.UrlEncode(location)}&");
+                }
+                query.Append("uidh=2t2");
             }
-            query.Append("uidh=2t2");
             uri.Query = query.ToString();
             return uri.ToString();
         }
