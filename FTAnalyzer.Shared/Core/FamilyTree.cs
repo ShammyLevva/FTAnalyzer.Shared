@@ -2359,8 +2359,9 @@ namespace FTAnalyzer
             }
             else if (censusCountry.Equals(Countries.UNITED_STATES))
             {
-                query.Append($"db={censusYear} usfedcen&");
-                query.Append("gss=ms_db&");
+                CensusDate cd = CensusDate.US_FEDERAL_CENSUS.First(x => x.BestYear == censusYear);
+                uri.Path = "search/collections/";
+                query.Append($"{cd.AncestryCatalog}/");
             }
             else if (censusCountry.Equals(Countries.CANADA))
             {

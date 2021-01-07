@@ -9,6 +9,7 @@ namespace FTAnalyzer
 
         public string Country { get; private set; }
         public string PropertyName { get; private set; }
+        public string AncestryCatalog { get; private set; }
 
         public static CensusDate ANYCENSUS = new CensusDate("BET 1790 AND 1940", "Any Census", Countries.UNKNOWN_COUNTRY, "");
 
@@ -31,13 +32,14 @@ namespace FTAnalyzer
         public static CensusDate UKCENSUS1991 = new CensusDate("21 APR 1991", "UK Census 1991", Countries.UNITED_KINGDOM, "C1991");
         public static CensusDate UKCENSUS2001 = new CensusDate("29 APR 2001", "UK Census 2001", Countries.UNITED_KINGDOM, "C2001");
         public static CensusDate UKCENSUS2011 = new CensusDate("27 MAR 2011", "UK Census 2011", Countries.UNITED_KINGDOM, "C2011");
-//        public static CensusDate UKCENSUS2021 = new CensusDate("02 APR 2021", "UK Census 2021", Countries.UNITED_KINGDOM, "C2021");
+        //public static CensusDate UKCENSUS2021 = new CensusDate("02 APR 2021", "UK Census 2021", Countries.UNITED_KINGDOM, "C2021");
 
         public static CensusDate EWCENSUS1841 = new CensusDate("06 JUN 1841", "England & Wales Census 1841", Countries.ENG_WALES, "C1841");
         public static CensusDate EWCENSUS1881 = new CensusDate("03 APR 1881", "England & Wales Census 1881", Countries.ENG_WALES, "C1881");
         public static CensusDate EWCENSUS1911 = new CensusDate("02 APR 1911", "England & Wales Census 1911", Countries.ENG_WALES, "C1911");
         public static CensusDate SCOTCENSUS1881 = new CensusDate("03 APR 1881", "Scotland Census 1881", Countries.SCOTLAND, "C1881");
 
+        public static CensusDate SCOTVALUATION1855 = new CensusDate("BET JUL 1854 AND MAY 1855", "Scottish Valuation Roll 1855", Countries.SCOTLAND, "V1855");
         public static CensusDate SCOTVALUATION1865 = new CensusDate("BET JUL 1864 AND MAY 1865", "Scottish Valuation Roll 1865", Countries.SCOTLAND, "V1865");
         public static CensusDate SCOTVALUATION1875 = new CensusDate("BET JUL 1874 AND MAY 1875", "Scottish Valuation Roll 1875", Countries.SCOTLAND, "V1875");
         public static CensusDate SCOTVALUATION1885 = new CensusDate("BET JUL 1884 AND MAY 1885", "Scottish Valuation Roll 1885", Countries.SCOTLAND, "V1885");
@@ -46,26 +48,29 @@ namespace FTAnalyzer
         public static CensusDate SCOTVALUATION1915 = new CensusDate("BET JUL 1914 AND MAY 1915", "Scottish Valuation Roll 1915", Countries.SCOTLAND, "V1915");
         public static CensusDate SCOTVALUATION1920 = new CensusDate("BET JUL 1919 AND MAY 1920", "Scottish Valuation Roll 1920", Countries.SCOTLAND, "V1920");
         public static CensusDate SCOTVALUATION1925 = new CensusDate("BET JUL 1924 AND MAY 1925", "Scottish Valuation Roll 1925", Countries.SCOTLAND, "V1925");
+        public static CensusDate SCOTVALUATION1930 = new CensusDate("BET JUL 1929 AND MAY 1930", "Scottish Valuation Roll 1930", Countries.SCOTLAND, "V1930");
+        public static CensusDate SCOTVALUATION1935 = new CensusDate("BET JUL 1934 AND MAY 1935", "Scottish Valuation Roll 1935", Countries.SCOTLAND, "V1935");
+        public static CensusDate SCOTVALUATION1940 = new CensusDate("BET JUL 1939 AND MAY 1940", "Scottish Valuation Roll 1940", Countries.SCOTLAND, "V1940");
 
         public static CensusDate IRELANDCENSUS1901 = new CensusDate("31 MAR 1901", "Ireland Census 1901", Countries.IRELAND, "Ire1901");
         public static CensusDate IRELANDCENSUS1911 = new CensusDate("02 APR 1911", "Ireland Census 1911", Countries.IRELAND, "Ire1911");
 
-        public static CensusDate USCENSUS1790 = new CensusDate("BET 2 AUG 1790 AND 1791", "US Federal Census 1790", Countries.UNITED_STATES, "US1790");
-        public static CensusDate USCENSUS1800 = new CensusDate("BET 4 AUG 1800 AND MAY 1801", "US Federal Census 1800", Countries.UNITED_STATES, "US1800");
-        public static CensusDate USCENSUS1810 = new CensusDate("BET 6 AUG 1810 AND JUN 1811", "US Federal Census 1810", Countries.UNITED_STATES, "US1810");
-        public static CensusDate USCENSUS1820 = new CensusDate("BET 7 AUG 1820 AND SEP 1821", "US Federal Census 1820", Countries.UNITED_STATES, "US1820");
-        public static CensusDate USCENSUS1830 = new CensusDate("BET 1 JUN 1830 AND JUN 1831", "US Federal Census 1830", Countries.UNITED_STATES, "US1830");
-        public static CensusDate USCENSUS1840 = new CensusDate("BET 1 JUN 1840 AND DEC 1841", "US Federal Census 1840", Countries.UNITED_STATES, "US1840");
-        public static CensusDate USCENSUS1850 = new CensusDate("BET 1 JUN 1850 AND MAR 1851", "US Federal Census 1850", Countries.UNITED_STATES, "US1850");
-        public static CensusDate USCENSUS1860 = new CensusDate("BET 1 JUN 1860 AND MAR 1861", "US Federal Census 1860", Countries.UNITED_STATES, "US1860");
-        public static CensusDate USCENSUS1870 = new CensusDate("BET 1 JUN 1870 AND MAR 1871", "US Federal Census 1870", Countries.UNITED_STATES, "US1870");
-        public static CensusDate USCENSUS1880 = new CensusDate("BET 1 JUN 1880 AND 30 JUN 1880", "US Federal Census 1880", Countries.UNITED_STATES, "US1880");
-        public static CensusDate USCENSUS1890 = new CensusDate("BET 2 JUN 1890 AND 30 JUN 1890", "US Federal Census 1890", Countries.UNITED_STATES, "US1890");
-        public static CensusDate USCENSUS1900 = new CensusDate("BET 1 JUN 1900 AND 30 JUN 1900", "US Federal Census 1900", Countries.UNITED_STATES, "US1900");
-        public static CensusDate USCENSUS1910 = new CensusDate("BET 15 APR 1910 AND 31 DEC 1910", "US Federal Census 1910", Countries.UNITED_STATES, "US1910");
-        public static CensusDate USCENSUS1920 = new CensusDate("BET 1 JAN 1920 AND 31 DEC 1920", "US Federal Census 1920", Countries.UNITED_STATES, "US1920");
-        public static CensusDate USCENSUS1930 = new CensusDate("BET 1 OCT 1929 AND 31 DEC 1930", "US Federal Census 1930", Countries.UNITED_STATES, "US1930");
-        public static CensusDate USCENSUS1940 = new CensusDate("BET 1 APR 1940 AND 31 MAY 1940", "US Federal Census 1940", Countries.UNITED_STATES, "US1940");
+        public static CensusDate USCENSUS1790 = new CensusDate("BET 2 AUG 1790 AND 1791", "US Federal Census 1790", Countries.UNITED_STATES, "US1790", "5058");
+        public static CensusDate USCENSUS1800 = new CensusDate("BET 4 AUG 1800 AND MAY 1801", "US Federal Census 1800", Countries.UNITED_STATES, "US1800", "7590");
+        public static CensusDate USCENSUS1810 = new CensusDate("BET 6 AUG 1810 AND JUN 1811", "US Federal Census 1810", Countries.UNITED_STATES, "US1810", "7613");
+        public static CensusDate USCENSUS1820 = new CensusDate("BET 7 AUG 1820 AND SEP 1821", "US Federal Census 1820", Countries.UNITED_STATES, "US1820", "7734");
+        public static CensusDate USCENSUS1830 = new CensusDate("BET 1 JUN 1830 AND JUN 1831", "US Federal Census 1830", Countries.UNITED_STATES, "US1830", "8058");
+        public static CensusDate USCENSUS1840 = new CensusDate("BET 1 JUN 1840 AND DEC 1841", "US Federal Census 1840", Countries.UNITED_STATES, "US1840", "8057");
+        public static CensusDate USCENSUS1850 = new CensusDate("BET 1 JUN 1850 AND MAR 1851", "US Federal Census 1850", Countries.UNITED_STATES, "US1850", "8054");
+        public static CensusDate USCENSUS1860 = new CensusDate("BET 1 JUN 1860 AND MAR 1861", "US Federal Census 1860", Countries.UNITED_STATES, "US1860", "7667");
+        public static CensusDate USCENSUS1870 = new CensusDate("BET 1 JUN 1870 AND MAR 1871", "US Federal Census 1870", Countries.UNITED_STATES, "US1870", "7163");
+        public static CensusDate USCENSUS1880 = new CensusDate("BET 1 JUN 1880 AND 30 JUN 1880", "US Federal Census 1880", Countries.UNITED_STATES, "US1880", "7642");
+        public static CensusDate USCENSUS1890 = new CensusDate("BET 2 JUN 1890 AND 30 JUN 1890", "US Federal Census 1890", Countries.UNITED_STATES, "US1890", "5445");
+        public static CensusDate USCENSUS1900 = new CensusDate("BET 1 JUN 1900 AND 30 JUN 1900", "US Federal Census 1900", Countries.UNITED_STATES, "US1900", "7602");
+        public static CensusDate USCENSUS1910 = new CensusDate("BET 15 APR 1910 AND 31 DEC 1910", "US Federal Census 1910", Countries.UNITED_STATES, "US1910", "7884");
+        public static CensusDate USCENSUS1920 = new CensusDate("BET 1 JAN 1920 AND 31 DEC 1920", "US Federal Census 1920", Countries.UNITED_STATES, "US1920", "6061");
+        public static CensusDate USCENSUS1930 = new CensusDate("BET 1 OCT 1929 AND 31 DEC 1930", "US Federal Census 1930", Countries.UNITED_STATES, "US1930", "6224");
+        public static CensusDate USCENSUS1940 = new CensusDate("BET 1 APR 1940 AND 31 MAY 1940", "US Federal Census 1940", Countries.UNITED_STATES, "US1940", "2442");
         public static CensusDate USCENSUS1950 = new CensusDate("BET 1 APR 1950 AND 31 MAY 1950", "US Federal Census 1950", Countries.UNITED_STATES, "US1950");
         public static CensusDate USCENSUS1960 = new CensusDate("BET 1 APR 1950 AND 31 MAY 1960", "US Federal Census 1960", Countries.UNITED_STATES, "US1960");
         public static CensusDate USCENSUS1970 = new CensusDate("BET 1 APR 1950 AND 31 MAY 1970", "US Federal Census 1970", Countries.UNITED_STATES, "US1970");
@@ -101,8 +106,8 @@ namespace FTAnalyzer
         public static CensusDate CANADACENSUS2016 = new CensusDate("2016", "Canadian Census 2016", Countries.CANADA, "Can2016");
 
         public static readonly ISet<CensusDate> UK_CENSUS = new HashSet<CensusDate>(new CensusDate[] {
-            UKCENSUS1841, UKCENSUS1851, UKCENSUS1861, UKCENSUS1871, UKCENSUS1881, UKCENSUS1891, UKCENSUS1901, UKCENSUS1911, UKCENSUS1939,
-            UKCENSUS1921, UKCENSUS1931, UKCENSUS1951, UKCENSUS1961, UKCENSUS1966, UKCENSUS1971, UKCENSUS1981, UKCENSUS1991, UKCENSUS2001,
+            UKCENSUS1841, UKCENSUS1851, UKCENSUS1861, UKCENSUS1871, UKCENSUS1881, UKCENSUS1891, UKCENSUS1901, UKCENSUS1911, UKCENSUS1921,
+            UKCENSUS1939, UKCENSUS1931, UKCENSUS1951, UKCENSUS1961, UKCENSUS1966, UKCENSUS1971, UKCENSUS1981, UKCENSUS1991, UKCENSUS2001,
             UKCENSUS2011
         });
 
@@ -120,8 +125,8 @@ namespace FTAnalyzer
         });
 
         public static ISet<CensusDate> SUPPORTED_CENSUS = new HashSet<CensusDate>(new CensusDate[] {
-            UKCENSUS1841, UKCENSUS1851, UKCENSUS1861, UKCENSUS1871, UKCENSUS1881, UKCENSUS1891, UKCENSUS1901, UKCENSUS1911, UKCENSUS1939,
-            UKCENSUS1921, UKCENSUS1931, UKCENSUS1951, UKCENSUS1961, UKCENSUS1966, UKCENSUS1971, UKCENSUS1981, UKCENSUS1991, UKCENSUS2001,
+            UKCENSUS1841, UKCENSUS1851, UKCENSUS1861, UKCENSUS1871, UKCENSUS1881, UKCENSUS1891, UKCENSUS1901, UKCENSUS1911, UKCENSUS1921,
+            UKCENSUS1939, UKCENSUS1931, UKCENSUS1951, UKCENSUS1961, UKCENSUS1966, UKCENSUS1971, UKCENSUS1981, UKCENSUS1991, UKCENSUS2001,
             UKCENSUS2011, 
             USCENSUS1790, USCENSUS1800, USCENSUS1810, USCENSUS1820, USCENSUS1830, USCENSUS1840, USCENSUS1850, USCENSUS1860, USCENSUS1870,
             USCENSUS1880, USCENSUS1890, USCENSUS1900, USCENSUS1910, USCENSUS1920, USCENSUS1930, USCENSUS1940, USCENSUS1950, USCENSUS1960,
@@ -138,15 +143,17 @@ namespace FTAnalyzer
         });
 
         public static ISet<CensusDate> VALUATIONROLLS = new HashSet<CensusDate>(new CensusDate[] {
-             SCOTVALUATION1865, SCOTVALUATION1875, SCOTVALUATION1885, SCOTVALUATION1895, SCOTVALUATION1905, SCOTVALUATION1915, SCOTVALUATION1920, SCOTVALUATION1925
+            SCOTVALUATION1855, SCOTVALUATION1865, SCOTVALUATION1875, SCOTVALUATION1885, SCOTVALUATION1895, SCOTVALUATION1905, 
+            SCOTVALUATION1915, SCOTVALUATION1920, SCOTVALUATION1925, SCOTVALUATION1930, SCOTVALUATION1935, SCOTVALUATION1940
         });
 
-        CensusDate(string str, string displayName, string country, string propertyName)
+        CensusDate(string str, string displayName, string country, string propertyName, string ancestryCatalog = "")
             : base(str)
         {
             _displayName = displayName;
             Country = country;
             PropertyName = propertyName;
+            AncestryCatalog = ancestryCatalog;
         }
 
         public CensusDate EquivalentUSCensus
