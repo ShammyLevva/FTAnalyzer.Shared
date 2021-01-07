@@ -911,6 +911,8 @@ namespace FTAnalyzer
                     if (factType != Fact.NAME || !preferredFact)
                     {  // don't add first name in file as a fact as already given by SURNAME & FORENAME tags
                         Fact f = new Fact(n, this, preferredFact, null, outputText);
+                        if (f.FactType == Fact.NAME && String.IsNullOrEmpty(Alias))
+                            Alias = f.Comment;
                         if (f.FactDate.SpecialDate)
                             ProcessSpecialDate(n, f, preferredFact, outputText);
                         if (nonStandardFactType != null)
