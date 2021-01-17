@@ -1310,7 +1310,7 @@ namespace FTAnalyzer
         public bool AliveOnAnyCensus(string country)
         {
             if (country is null) return false;
-            int ukCensus = (int)C1841 + (int)C1851 + (int)C1861 + (int)C1871 + (int)C1881 + (int)C1891 + (int)C1901 + (int)C1911 + (int)C1939;
+            int ukCensus = (int)C1841 + (int)C1851 + (int)C1861 + (int)C1871 + (int)C1881 + (int)C1891 + (int)C1901 + (int)C1911 + (int)C1921 + (int)C1939;
             if (country.Equals(Countries.UNITED_STATES))
                 return ((int)US1790 + (int)US1800 + (int)US1810 + (int)US1810 + (int)US1820 + (int)US1830 + (int)US1840 + (int)US1850 + (int)US1860 + (int)US1870 + (int)US1880 + (int)US1890 + (int)US1900 + (int)US1910 + (int)US1920 + (int)US1930 + (int)US1940) > 0;
             if (country.Equals(Countries.CANADA))
@@ -1318,7 +1318,7 @@ namespace FTAnalyzer
             if (country.Equals(Countries.IRELAND))
                 return ((int)Ire1901 + (int)Ire1911) > 0;
             if (country.Equals(Countries.SCOTLAND))
-                return (ukCensus + (int)V1865 + (int)V1875 + (int)V1885 + (int)V1895 + (int)V1905 + (int)V1915 + (int)V1920 + (int)V1925) > 0;
+                return (ukCensus + (int)V1855 + (int)V1865 + (int)V1875 + (int)V1885 + (int)V1895 + (int)V1905 + (int)V1915 + (int)V1920 + (int)V1925 + (int)V1930 + (int)V1935 + (int)V1940) > 0;
             return ukCensus > 0;
         }
 
@@ -1372,6 +1372,8 @@ namespace FTAnalyzer
         public CensusColours C1901 => ColourCensusReport(CensusDate.UKCENSUS1901);
 
         public CensusColours C1911 => ColourCensusReport(CensusDate.UKCENSUS1911);
+
+        public CensusColours C1921 => ColourCensusReport(CensusDate.UKCENSUS1921);
 
         public CensusColours C1939 => ColourCensusReport(CensusDate.UKCENSUS1939);
 
@@ -1431,6 +1433,7 @@ namespace FTAnalyzer
 
         public CensusColours Can1921 => ColourCensusReport(CensusDate.CANADACENSUS1921);
 
+        public CensusColours V1855 => ColourCensusReport(CensusDate.SCOTVALUATION1865);
         public CensusColours V1865 => ColourCensusReport(CensusDate.SCOTVALUATION1865);
 
         public CensusColours V1875 => ColourCensusReport(CensusDate.SCOTVALUATION1875);
@@ -1443,6 +1446,9 @@ namespace FTAnalyzer
         public CensusColours V1915 => ColourCensusReport(CensusDate.SCOTVALUATION1915);
         public CensusColours V1920 => ColourCensusReport(CensusDate.SCOTVALUATION1920);
         public CensusColours V1925 => ColourCensusReport(CensusDate.SCOTVALUATION1925);
+        public CensusColours V1930 => ColourCensusReport(CensusDate.SCOTVALUATION1925);
+        public CensusColours V1935 => ColourCensusReport(CensusDate.SCOTVALUATION1925);
+        public CensusColours V1940 => ColourCensusReport(CensusDate.SCOTVALUATION1925);
         #endregion
 
         #region Colour BMD Values
@@ -1757,6 +1763,7 @@ namespace FTAnalyzer
                 case "C1891": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.C1891, ascending);
                 case "C1901": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.C1901, ascending);
                 case "C1911": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.C1911, ascending);
+                case "C1921": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.C1921, ascending);
                 case "C1939": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.C1939, ascending);
                 case "US1790": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1790, ascending);
                 case "US1800": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1800, ascending);

@@ -64,7 +64,7 @@ namespace FTAnalyzer
         public static CensusDate USCENSUS1850 = new CensusDate("BET 1 JUN 1850 AND MAR 1851", "US Federal Census 1850", Countries.UNITED_STATES, "US1850", "8054");
         public static CensusDate USCENSUS1860 = new CensusDate("BET 1 JUN 1860 AND MAR 1861", "US Federal Census 1860", Countries.UNITED_STATES, "US1860", "7667");
         public static CensusDate USCENSUS1870 = new CensusDate("BET 1 JUN 1870 AND MAR 1871", "US Federal Census 1870", Countries.UNITED_STATES, "US1870", "7163");
-        public static CensusDate USCENSUS1880 = new CensusDate("BET 1 JUN 1880 AND 30 JUN 1880", "US Federal Census 1880", Countries.UNITED_STATES, "US1880", "7642");
+        public static CensusDate USCENSUS1880 = new CensusDate("BET 1 JUN 1880 AND 30 JUN 1880", "US Federal Census 1880", Countries.UNITED_STATES, "US1880", "6742");
         public static CensusDate USCENSUS1890 = new CensusDate("BET 2 JUN 1890 AND 30 JUN 1890", "US Federal Census 1890", Countries.UNITED_STATES, "US1890", "5445");
         public static CensusDate USCENSUS1900 = new CensusDate("BET 1 JUN 1900 AND 30 JUN 1900", "US Federal Census 1900", Countries.UNITED_STATES, "US1900", "7602");
         public static CensusDate USCENSUS1910 = new CensusDate("BET 15 APR 1910 AND 31 DEC 1910", "US Federal Census 1910", Countries.UNITED_STATES, "US1910", "7884");

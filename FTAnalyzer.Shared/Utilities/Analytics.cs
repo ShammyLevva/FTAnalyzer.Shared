@@ -58,7 +58,7 @@ namespace FTAnalyzer.Utilities
                             ReadLostCousins = "Read Lost Cousins Records", UpdateLostCousins = "Update Records on Lost Cousins", PreviewLostCousins = "Preview records for update",
                             SoftwareProvider = "Software Provider", SoftwareVersion = "Software Version", LostCousinsStats = "Lost Cousins Statistics",
                             PossiblyMissingChildren = "Possibly Missing Children Viewed", AgedOver99Report = "Aged Over 99 Viewed", AliveAtDate = "Alive at Date",
-                            CustomFactTabEvent = "Custom Fact Tab Viewed";
+                            CustomFactTabEvent = "Custom Fact Tab Viewed", ExportSurnamesEvent = "Surnames Exported";
 
         public const string FactsIndividualsEvent = "Individual Facts Viewed", FactsFamiliesEvent = "Family Facts Viewed", LooseInfoEvent = "Loose Info Tab Viewed",
                             FactsGroupIndividualsEvent = "Various Individuals Facts Viewed", FactsDuplicatesEvent = "Duplicate Facts Viewed", 
@@ -183,6 +183,7 @@ namespace FTAnalyzer.Utilities
             if (version.StartsWith("10.0.18362")) return "Windows 10 (1903)";
             if (version.StartsWith("10.0.18363")) return "Windows 10 (1909)";
             if (version.StartsWith("10.0.19041")) return "Windows 10 (2004)";
+            if (version.StartsWith("10.0.19042")) return "Windows 10 (20H2)";
             version += Environment.Is64BitOperatingSystem ? " (x64)" : " (x86)";
             return version;
         }

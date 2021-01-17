@@ -63,6 +63,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Displays\IDisplayLostCousin.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Displays\IDisplayMissingData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Displays\IDisplayCustomFact.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Displays\IDisplaySurnames.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Displays\IDisplayOccupation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Displays\IDisplaySource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\DuplicateIndividual.cs" />

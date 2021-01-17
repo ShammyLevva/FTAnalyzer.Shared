@@ -33,6 +33,8 @@ namespace FTAnalyzer
         CensusColours C1901 { get; }
         [ColumnDetail("1911", 40)]
         CensusColours C1911 { get; }
+        [ColumnDetail("1921", 40)]
+        CensusColours C1921 { get; }
         [ColumnDetail("1939", 40)]
         CensusColours C1939 { get; }
 
