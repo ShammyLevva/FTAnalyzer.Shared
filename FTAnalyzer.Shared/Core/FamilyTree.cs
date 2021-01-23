@@ -1801,7 +1801,7 @@ namespace FTAnalyzer
                 {
                     int age = ind.GetMaxAge(FactDate.TODAY);
                     Console.WriteLine($"\nName: {ind.Name}: b.{ind.BirthDate} d.{ind.DeathDate} max age={age}");
-                    if (!ind.DeathDate.IsKnown && age >= 99)
+                    if (ind.DeathDate.IsUnknown && age >= 99)
                         result.Add(ind);
                 }
                 return result;
@@ -1822,23 +1822,23 @@ namespace FTAnalyzer
                 }
                 Predicate<Individual> dateFilter;
                 if (country.Equals(Countries.UNITED_STATES))
-                    dateFilter = i => (i.BirthDate.StartsBefore(CensusDate.USCENSUS1940) || !i.BirthDate.IsKnown) &&
-                                      (i.DeathDate.EndsAfter(CensusDate.USCENSUS1790) || !i.DeathDate.IsKnown) &&
+                    dateFilter = i => (i.BirthDate.StartsBefore(CensusDate.USCENSUS1940) || i.BirthDate.IsUnknown) &&
+                                      (i.DeathDate.EndsAfter(CensusDate.USCENSUS1790) || i.DeathDate.IsUnknown) &&
                                       (i.BirthDate.IsKnown || !IgnoreMissingBirthDates) &&
                                       (i.DeathDate.IsKnown || !IgnoreMissingDeathDates);
                 else if (country.Equals(Countries.CANADA))
-                    dateFilter = i => (i.BirthDate.StartsBefore(CensusDate.CANADACENSUS1921) || !i.BirthDate.IsKnown) &&
-                                      (i.DeathDate.EndsAfter(CensusDate.CANADACENSUS1851) || !i.DeathDate.IsKnown) &&
+                    dateFilter = i => (i.BirthDate.StartsBefore(CensusDate.CANADACENSUS1921) || i.BirthDate.IsUnknown) &&
+                                      (i.DeathDate.EndsAfter(CensusDate.CANADACENSUS1851) || i.DeathDate.IsUnknown) &&
                                       (i.BirthDate.IsKnown || !IgnoreMissingBirthDates) &&
                                       (i.DeathDate.IsKnown || !IgnoreMissingDeathDates);
                 else if (country.Equals(Countries.IRELAND))
-                    dateFilter = i => (i.BirthDate.StartsBefore(CensusDate.IRELANDCENSUS1911) || !i.BirthDate.IsKnown) &&
-                                      (i.DeathDate.EndsAfter(CensusDate.IRELANDCENSUS1901) || !i.DeathDate.IsKnown) &&
+                    dateFilter = i => (i.BirthDate.StartsBefore(CensusDate.IRELANDCENSUS1911) || i.BirthDate.IsUnknown) &&
+                                      (i.DeathDate.EndsAfter(CensusDate.IRELANDCENSUS1901) || i.DeathDate.IsUnknown) &&
                                       (i.BirthDate.IsKnown || !IgnoreMissingBirthDates) &&
                                       (i.DeathDate.IsKnown || !IgnoreMissingDeathDates);
                 else
-                    dateFilter = i => (i.BirthDate.StartsBefore(CensusDate.UKCENSUS1939) || !i.BirthDate.IsKnown) &&
-                                      (i.DeathDate.EndsAfter(CensusDate.UKCENSUS1841) || !i.DeathDate.IsKnown) &&
+                    dateFilter = i => (i.BirthDate.StartsBefore(CensusDate.UKCENSUS1939) || i.BirthDate.IsUnknown) &&
+                                      (i.DeathDate.EndsAfter(CensusDate.UKCENSUS1841) || i.DeathDate.IsUnknown) &&
                                       (i.BirthDate.IsKnown || !IgnoreMissingBirthDates) &&
                                       (i.DeathDate.IsKnown || !IgnoreMissingDeathDates);
                 filter = FilterUtils.AndFilter(filter, dateFilter);
@@ -1959,7 +1959,7 @@ namespace FTAnalyzer
                         else if (f.IsCensusFact)
                         {
                             string comment = f.FactType == Fact.CENSUS ? "Census date " : "Residence date ";
-                            if (!f.FactDate.IsKnown)
+                            if (f.FactDate.IsUnknown)
                             {
                                 errors[(int)Dataerror.CENSUS_COVERAGE].Add(
                                         new DataError((int)Dataerror.CENSUS_COVERAGE, ind, $"{comment} is blank."));
@@ -2830,7 +2830,7 @@ namespace FTAnalyzer
         public void SearchBMD(SearchType st, Individual individual, FactDate factdate, int searchProvider, string bmdRegion, Individual spouse)
         {
             string uri = null;
-            if (!factdate.IsKnown || factdate.DateType.Equals(FactDate.FactDateType.AFT) || factdate.DateType.Equals(FactDate.FactDateType.BEF))
+            if (factdate.IsUnknown || factdate.DateType.Equals(FactDate.FactDateType.AFT) || factdate.DateType.Equals(FactDate.FactDateType.BEF))
             {
                 if (st.Equals(SearchType.BIRTH))
                 {

@@ -835,14 +835,12 @@ namespace FTAnalyzer
 
         public bool IsPossiblyAlive(FactDate when)
         {
-            if (when is null) return true;
-            if (!when.IsKnown) return true;
-            if (IsAlive(when)) return true;
-            if (!BirthDate.IsKnown && !DeathDate.IsKnown) return true;
-            if (BirthDate.IsKnown && BirthDate.IsBefore(when) && DeathDate.IsKnown && DeathDate.IsAfter(when)) return true;
-            if (BirthDate.IsKnown && BirthDate.StartsBefore(when) && DeathDate.IsKnown && DeathDate.EndsAfter(when)) return true;
-            if ((BirthDate.IsKnown && BirthDate.Overlaps(when)) || (DeathDate.IsKnown && DeathDate.Overlaps(when))) return true;
-            if (BirthDate.IsKnown && BirthDate.StartDate <= when.EndDate && DeathDate.IsKnown && DeathDate.EndDate >= when.EndDate) return true;
+            if (when is null || when.IsUnknown) return true;
+            if (BirthDate.StartDate <= when.EndDate && DeathDate.EndDate >= when.StartDate) return true;
+            //if (!BirthDate.IsKnown && !DeathDate.IsKnown) return true;
+            //if (BirthDate.IsKnown && BirthDate.IsBefore(when) && DeathDate.IsKnown && DeathDate.IsAfter(when)) return true;
+            //if (BirthDate.IsKnown && BirthDate.StartsBefore(when) && DeathDate.IsKnown && DeathDate.EndsAfter(when)) return true;
+            //if ((BirthDate.IsKnown && BirthDate.Overlaps(when)) || (DeathDate.IsKnown && DeathDate.Overlaps(when))) return true;
             return false;
         }
 
@@ -1588,7 +1586,7 @@ namespace FTAnalyzer
             {
                 if (IsFlaggedAsLiving)
                     return BMDColours.ISLIVING;
-                if (!DeathDate.IsKnown && GetMaxAge(FactDate.TODAY) < FactDate.MAXYEARS)
+                if (DeathDate.IsUnknown && GetMaxAge(FactDate.TODAY) < FactDate.MAXYEARS)
                     return GetMaxAge(FactDate.TODAY) < 90 ? BMDColours.EMPTY : BMDColours.OVER90;
                 return DeathDate.DateStatus(false);
             }

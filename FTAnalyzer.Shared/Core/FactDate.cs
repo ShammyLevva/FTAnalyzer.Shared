@@ -971,12 +971,13 @@ namespace FTAnalyzer
         public bool IsExact => StartDate.Equals(EndDate);
 
         public bool IsKnown => !Equals(UNKNOWN_DATE);
+        public bool IsUnknown => Equals(UNKNOWN_DATE);
 
         public int BestYear
         {
             get
             {
-                if (!IsKnown)
+                if (IsUnknown)
                     return 0;
                 if (StartDate == MINDATE)
                     return EndDate.Year;

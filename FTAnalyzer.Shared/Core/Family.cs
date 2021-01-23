@@ -317,7 +317,7 @@ namespace FTAnalyzer
         {
             get
             {
-                if (Husband is null || Wife is null || !MarriageDate.IsKnown)
+                if (Husband is null || Wife is null || MarriageDate.IsUnknown)
                     return IS_SINGLE;
                 foreach (Fact f in Facts)
                     if (f.IsMarriageFact)
