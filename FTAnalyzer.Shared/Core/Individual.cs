@@ -837,10 +837,12 @@ namespace FTAnalyzer
         {
             if (when is null || when.IsUnknown) return true;
             if (BirthDate.StartDate <= when.EndDate && DeathDate.EndDate >= when.StartDate) return true;
-            //if (!BirthDate.IsKnown && !DeathDate.IsKnown) return true;
-            //if (BirthDate.IsKnown && BirthDate.IsBefore(when) && DeathDate.IsKnown && DeathDate.IsAfter(when)) return true;
-            //if (BirthDate.IsKnown && BirthDate.StartsBefore(when) && DeathDate.IsKnown && DeathDate.EndsAfter(when)) return true;
-            //if ((BirthDate.IsKnown && BirthDate.Overlaps(when)) || (DeathDate.IsKnown && DeathDate.Overlaps(when))) return true;
+            if(DeathDate.IsUnknown)
+            {
+                // if unknown death add 110 years to Enddate
+                var death = BirthDate.AddEndDateYears(110);
+                if (BirthDate.StartDate <= when.EndDate && death.EndDate >= when.StartDate) return true;
+            }
             return false;
         }
 
