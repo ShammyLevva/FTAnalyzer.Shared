@@ -87,7 +87,9 @@ namespace FTAnalyzer
         const string US_CENSUS_1940_PATTERN = @"District *(\d{1,5}[AB]?-?\d{0,4}[AB]?).*?P(age)? *(\d{1,3}[ABCD]?).*?T627 ?,? *(\d{1,5}-?[AB]?)";
         const string US_CENSUS_1940_PATTERN2 = @"ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?).*? *P(age)? *(\d{1,3}[ABCD]?).*?T627.*?roll ?(\d{1,5}-?[AB]?)";
         const string US_CENSUS_1940_PATTERN3 = @"1940 *(.*?)(Roll)? *M*?-*?_*?T0*?627_(.*?) *P(age)? *(\d{1,4}[ABCD]?) *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?)";
-        const string US_CENSUS_1940_PATTERN4 = @"( *M?[-_]?T0?627[-_]?)?Roll( *M?[-_]?T0?627[-_]?)? *(\d{0,5})(.*?) *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?) *P(age)? *(\d{1,4}[ABCD]?)";
+        const string US_CENSUS_1940_PATTERN4 = @"Roll( *M?[-_]?T0?627[-_]?(\d{0,5})) ? *(\d{0,5})(.*?) *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?) *P(age)? *(\d{1,4}[ABCD]?)";
+        const string US_CENSUS_T62X_PATTERN1 = @"( *M?[-_]?T0?(62\d)) Roll ?(\d{0,5}) ? *(\d{0,5})(.*?) *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?) *P(age)? *(\d{1,4}[ABCD]?)";
+        const string US_CENSUS_TX_PATTERN1 = @"( *M?[-_]?(T\d)) Roll ?(\d{0,5}) ? *(\d{0,5})(.*?) *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?) *P(age)? *(\d{1,4}[ABCD]?)";
 
         const string CANADA_CENSUS_PATTERN = @"Year *(\d{4}) *Census *(.*?) *Roll *(.*?) *P(age)? *(\d{1,4}[ABCD]?) *Family *(\d{1,4})";
         const string CANADA_CENSUS_PATTERN2 = @"(\d{4}).*?Census[ -]*District *(\d{1,5})[\/-] ?(\d{0,4}[A-Z]{0,4}) *P(age)? *(\d{1,4}[ABCD]?) *Family *(\d{1,4})";
@@ -188,6 +190,8 @@ namespace FTAnalyzer
                 ["US_CENSUS_1940_PATTERN2"] = new Regex(US_CENSUS_1940_PATTERN2, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["US_CENSUS_1940_PATTERN3"] = new Regex(US_CENSUS_1940_PATTERN3, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["US_CENSUS_1940_PATTERN4"] = new Regex(US_CENSUS_1940_PATTERN4, RegexOptions.Compiled | RegexOptions.IgnoreCase),
+                ["US_CENSUS_T62X_PATTERN1"] = new Regex(US_CENSUS_T62X_PATTERN1, RegexOptions.Compiled | RegexOptions.IgnoreCase),
+                ["US_CENSUS_TX_PATTERN1"] = new Regex(US_CENSUS_TX_PATTERN1, RegexOptions.Compiled | RegexOptions.IgnoreCase),
 
                 ["CANADA_CENSUS_PATTERN"] = new Regex(CANADA_CENSUS_PATTERN, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["CANADA_CENSUS_PATTERN2"] = new Regex(CANADA_CENSUS_PATTERN2, RegexOptions.Compiled | RegexOptions.IgnoreCase),
@@ -552,6 +556,8 @@ namespace FTAnalyzer
             WriteTimer("US_CENSUS_1940_PATTERN2", text, output);
             WriteTimer("US_CENSUS_1940_PATTERN3", text, output);
             WriteTimer("US_CENSUS_1940_PATTERN4", text, output);
+            WriteTimer("US_CENSUS_T62X_PATTERN1", text, output);
+            WriteTimer("US_CENSUS_TX_PATTERN1", text, output);
             WriteTimer("CANADA_CENSUS_PATTERN", text, output);
             WriteTimer("CANADA_CENSUS_PATTERN2", text, output);
             WriteTimer("CANADA_CENSUS_PATTERN3", text, output);
@@ -1297,9 +1303,59 @@ namespace FTAnalyzer
             if (matcher.Success)
             {
                 Class = "US1940";
-                Roll = matcher.Groups[3].ToString();
+                Roll = matcher.Groups[2].ToString();
                 ED = matcher.Groups[5].ToString();
                 Page = matcher.Groups[7].ToString();
+                SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.GOOD, matcher.Value);
+                return true;
+            }
+            matcher = censusRegexs["US_CENSUS_T62X_PATTERN1"].Match(text);
+            if (matcher.Success)
+            {
+                var tCode = matcher.Groups[2].ToString();
+                switch(tCode)
+                {
+                    case "623": 
+                        Class = "US1900";
+                        break;
+                    case "624":
+                        Class = "US1910";
+                        break;
+                    case "625":
+                        Class = "US1920";
+                        break;
+                    case "626":
+                        Class = "US1930";
+                        break;
+                    case "627":
+                        Class = "US1940";
+                        break;
+                    case "628":
+                        Class = "US1950";
+                        break;
+                    default:
+                        Class = string.Empty;
+                        break;
+                }
+                if (!string.IsNullOrEmpty(Class))
+                {
+                    Roll = matcher.Groups[3].ToString();
+                    ED = matcher.Groups[6].ToString();
+                    Page = matcher.Groups[8].ToString();
+                    SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.GOOD, matcher.Value);
+                    return true;
+                }
+            }
+            matcher = censusRegexs["US_CENSUS_TX_PATTERN1"].Match(text);
+            if (matcher.Success)
+            {
+                string tCode = matcher.Groups[2].ToString();
+                int code = int.Parse(tCode.Right(1));
+                code = 10 * (code - 1) + 1800;
+                Class = $"US{code}";
+                Roll = matcher.Groups[3].ToString();
+                ED = matcher.Groups[6].ToString();
+                Page = matcher.Groups[8].ToString();
                 SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
