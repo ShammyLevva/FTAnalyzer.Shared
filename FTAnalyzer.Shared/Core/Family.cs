@@ -402,6 +402,7 @@ namespace FTAnalyzer
         {
             get
             {
+                if (MarriageDate.IsKnown && MarriageDate.IsAfter(CensusDate.UKCENSUS1911)) return false;
                 if (Husband != null && Husband.IsCensusDone(CensusDate.UKCENSUS1911)) return true;
                 if (Wife != null && Wife.IsCensusDone(CensusDate.UKCENSUS1911)) return true;
                 return false;
