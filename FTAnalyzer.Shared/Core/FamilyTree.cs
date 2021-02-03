@@ -3645,7 +3645,8 @@ namespace FTAnalyzer
                         result = reader.ReadToEnd();
                         if (!result.Contains("No events found for this query"))
                         {
-                            using (XmlReader xmlReader = XmlReader.Create(result, new XmlReaderSettings() { XmlResolver = null }))
+                            //XmlReader xmlReader = XmlReader.Create(result, new XmlReaderSettings() { XmlResolver = null })
+                            using (XmlTextReader xmlReader = new XmlTextReader(new StringReader(result)))
                                 doc.Load(xmlReader);
                         }
                     }
