@@ -482,6 +482,12 @@ namespace FTAnalyzer
                             Tag = string.IsNullOrEmpty(tag) ? "** Custom Fact with no Fact Type ERROR **" : tag;
                         }
                     }
+                    if(FactType.Equals(NAME))
+                    {
+                        string tag = FamilyTree.GetText(node, "TYPE", false).ToUpper();
+                        if (tag.Equals("AKA"))
+                            FactType = ALIAS;
+                    }
                     var nodeText = FamilyTree.GetText(node, false);
                     var placeText = FamilyTree.GetText(node, "PLAC", false);
                     var xmlLat = FamilyTree.GetText(node, "PLAC/MAP/LATI", false);
