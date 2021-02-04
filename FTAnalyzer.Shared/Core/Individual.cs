@@ -911,7 +911,7 @@ namespace FTAnalyzer
             {
                 try
                 {
-                    if (factType != Fact.NAME || !preferredFact)
+                    if (!preferredFact || GeneralSettings.Default.IncludeAlternateFacts)
                     {  // don't add first name in file as a fact as already given by SURNAME & FORENAME tags
                         Fact f = new Fact(n, this, preferredFact, null, outputText);
                         if (f.FactType == Fact.NAME && string.IsNullOrEmpty(Alias))
