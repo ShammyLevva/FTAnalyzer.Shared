@@ -176,8 +176,10 @@ namespace FTAnalyzer
                                 currentName = line;
                             if (token1.StartsWith("@", StringComparison.Ordinal))
                             {
+                                if (token1.EndsWith("@@?"))
+                                    token1.Replace("@@?", "@@");
                                 if (token1.Length == 1 || !token1.EndsWith("@", StringComparison.Ordinal))
-                                    throw new InvalidGEDCOMException($"Bad xref_id invalid @ character in line", line, lineNr);
+                                    throw new InvalidGEDCOMException($"Bad xref_id invalid @ character in line. Check notes for use of @", line, lineNr);
 
                                 iden = token1.Substring(1, token1.Length - 2);
                                 tag = FirstWord(line);
