@@ -177,9 +177,9 @@ namespace FTAnalyzer
                             if (token1.StartsWith("@", StringComparison.Ordinal))
                             {
                                 if (token1.EndsWith("@@?"))
-                                    token1.Replace("@@?", "@@");
+                                    token1 = token1.TrimEnd('?');
                                 if (token1.Length == 1 || !token1.EndsWith("@", StringComparison.Ordinal))
-                                    throw new InvalidGEDCOMException($"Bad xref_id invalid @ character in line. Check notes for use of @", line, lineNr);
+                                    throw new InvalidGEDCOMException($"Bad xref_id invalid @ character in line. Check notes for use of @ symbol", line, lineNr);
 
                                 iden = token1.Substring(1, token1.Length - 2);
                                 tag = FirstWord(line);
@@ -197,8 +197,10 @@ namespace FTAnalyzer
                                 if (!token1.Equals("CONT", StringComparison.Ordinal) && !token1.Equals("CONC", StringComparison.Ordinal))
                                 {
                                     token2 = FirstWord(line);
+                                    if (token2.EndsWith("@@?"))
+                                        token2 = token2.TrimEnd('?');
                                     if (token2.Length == 1 || (!token2.EndsWith("@", StringComparison.Ordinal) && !token2.EndsWith("@,", StringComparison.Ordinal)))
-                                        throw new InvalidGEDCOMException($"Bad pointer value", line, lineNr);
+                                        throw new InvalidGEDCOMException($"Bad pointer value. Check notes for use of @ symbol", line, lineNr);
                                     xref = token2.EndsWith("@,", StringComparison.Ordinal)
                                         ? token2.Substring(1, token2.Length - 3)
                                         : token2.Substring(1, token2.Length - 2);

@@ -911,24 +911,28 @@ namespace FTAnalyzer
             {
                 try
                 {
-                    if (!preferredFact || GeneralSettings.Default.IncludeAlternateFacts)
-                    {  // don't add first name in file as a fact as already given by SURNAME & FORENAME tags
-                        Fact f = new Fact(n, this, preferredFact, null, outputText);
-                        if (f.FactType == Fact.NAME && string.IsNullOrEmpty(Alias))
-                            Alias = f.Comment;
-                        if (f.FactDate.SpecialDate)
-                            ProcessSpecialDate(n, f, preferredFact, outputText);
-                        if (nonStandardFactType != null)
-                            f.ChangeNonStandardFactType(factType);
-                        f.Location.FTAnalyzerCreated = false;
-                        if (!f.Location.IsValidLatLong)
-                            outputText.Report($"Found problem with Lat/Long for Location '{f.Location}' in facts for {IndividualID}: {Name}");
-                        AddFact(f);
-                        if (f.GedcomAge != null && f.GedcomAge.CalculatedBirthDate != FactDate.UNKNOWN_DATE)
-                        {
-                            string reason = $"Calculated from {f} with Age: {f.GedcomAge.GEDCOM_Age}";
-                            Fact calculatedBirth = new Fact(IndividualID, Fact.BIRTH_CALC, f.GedcomAge.CalculatedBirthDate, FactLocation.UNKNOWN_LOCATION, reason, false, true);
-                            AddFact(calculatedBirth);
+                    if (preferredFact || GeneralSettings.Default.IncludeAlternateFacts ||
+                        factType == Fact.CENSUS || (factType == Fact.RESIDENCE && GeneralSettings.Default.ConvertResidenceFacts))
+                    {  // add only preferred facts or all census facts
+                        if (!preferredFact || factType != Fact.NAME)
+                        { // skip first name face as already added
+                            Fact f = new Fact(n, this, preferredFact, null, outputText);
+                            if (f.FactType == Fact.NAME && string.IsNullOrEmpty(Alias))
+                                Alias = f.Comment;
+                            if (f.FactDate.SpecialDate)
+                                ProcessSpecialDate(n, f, preferredFact, outputText);
+                            if (nonStandardFactType != null)
+                                f.ChangeNonStandardFactType(factType);
+                            f.Location.FTAnalyzerCreated = false;
+                            if (!f.Location.IsValidLatLong)
+                                outputText.Report($"Found problem with Lat/Long for Location '{f.Location}' in facts for {IndividualID}: {Name}");
+                            AddFact(f);
+                            if (f.GedcomAge != null && f.GedcomAge.CalculatedBirthDate != FactDate.UNKNOWN_DATE)
+                            {
+                                string reason = $"Calculated from {f} with Age: {f.GedcomAge.GEDCOM_Age}";
+                                Fact calculatedBirth = new Fact(IndividualID, Fact.BIRTH_CALC, f.GedcomAge.CalculatedBirthDate, FactLocation.UNKNOWN_LOCATION, reason, false, true);
+                                AddFact(calculatedBirth);
+                            }
                         }
                     }
                 }
