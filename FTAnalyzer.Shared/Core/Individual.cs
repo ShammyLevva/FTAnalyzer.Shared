@@ -911,8 +911,7 @@ namespace FTAnalyzer
             {
                 try
                 {
-                    if (preferredFact || GeneralSettings.Default.IncludeAlternateFacts ||
-                        factType == Fact.CENSUS || (factType == Fact.RESIDENCE && GeneralSettings.Default.ConvertResidenceFacts))
+                    if (preferredFact || GeneralSettings.Default.IncludeAlternateFacts || Fact.IsAlwaysLoadFact(factType))
                     {  // add only preferred facts or all census facts
                         if (!preferredFact || factType != Fact.NAME)
                         { // skip first name face as already added

@@ -755,6 +755,14 @@ namespace FTAnalyzer
             }
         }
 
+        public static bool IsAlwaysLoadFact(string factType)
+        {
+            if (factType == CENSUS || factType == CENSUS_FTA) return true;
+            if (factType == RESIDENCE && GeneralSettings.Default.UseResidenceAsCensus) return true;
+            if (factType == LOSTCOUSINS || factType == LC_FTA || factType == CUSTOM_EVENT || factType == CUSTOM_FACT) return true;
+            return false;
+        }
+
         public string DateString
         {
             get { return FactDate is null ? string.Empty : FactDate.DateString; }
