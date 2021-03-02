@@ -1318,7 +1318,7 @@ namespace FTAnalyzer
             if (country is null) return false;
             int ukCensus = (int)C1841 + (int)C1851 + (int)C1861 + (int)C1871 + (int)C1881 + (int)C1891 + (int)C1901 + (int)C1911 + (int)C1921 + (int)C1939;
             if (country.Equals(Countries.UNITED_STATES))
-                return ((int)US1790 + (int)US1800 + (int)US1810 + (int)US1810 + (int)US1820 + (int)US1830 + (int)US1840 + (int)US1850 + (int)US1860 + (int)US1870 + (int)US1880 + (int)US1890 + (int)US1900 + (int)US1910 + (int)US1920 + (int)US1930 + (int)US1940) > 0;
+                return ((int)US1790 + (int)US1800 + (int)US1810 + (int)US1810 + (int)US1820 + (int)US1830 + (int)US1840 + (int)US1850 + (int)US1860 + (int)US1870 + (int)US1880 + (int)US1890 + (int)US1900 + (int)US1910 + (int)US1920 + (int)US1930 + (int)US1940 + (int)US1950) > 0;
             if (country.Equals(Countries.CANADA))
                 return ((int)Can1851 + (int)Can1861 + (int)Can1871 + (int)Can1881 + (int)Can1891 + (int)Can1901 + (int)Can1906 + (int)Can1911 + (int)Can1916 + (int)Can1921) > 0;
             if (country.Equals(Countries.IRELAND))
@@ -1418,6 +1418,8 @@ namespace FTAnalyzer
         public CensusColours US1930 => ColourCensusReport(CensusDate.USCENSUS1930);
 
         public CensusColours US1940 => ColourCensusReport(CensusDate.USCENSUS1940);
+
+        public CensusColours US1950 => ColourCensusReport(CensusDate.USCENSUS1950);
 
         public CensusColours Can1851 => ColourCensusReport(CensusDate.CANADACENSUS1851);
 
@@ -1787,6 +1789,7 @@ namespace FTAnalyzer
                 case "US1920": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1920, ascending);
                 case "US1930": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1930, ascending);
                 case "US1940": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1940, ascending);
+                case "US1950": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1950, ascending);
                 case "Ire1901": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.Ire1901, ascending);
                 case "Ire1911": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.Ire1911, ascending);
                 case "Can1851": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.Can1851, ascending);

@@ -2011,7 +2011,7 @@ namespace FTAnalyzer
                                 }
                             }
                         }
-                        if (f.IsCensusFact && f.FactDate.FactYearMatches(CensusDate.UKCENSUS1939) && !ind.BirthDate.IsExact & f.FactType != Fact.RESIDENCE)
+                        if (f.IsCensusFact && f.FactDate.FactYearMatches(CensusDate.UKCENSUS1939) && !ind.BirthDate.IsExact && f.FactType != Fact.RESIDENCE && !f.Created)
                         {  //only warn if not a residence fact assumed to be a census fact
                             errors[(int)Dataerror.NATREG1939_INEXACT_BIRTHDATE].Add(
                                         new DataError((int)Dataerror.NATREG1939_INEXACT_BIRTHDATE, Fact.FactError.QUESTIONABLE,

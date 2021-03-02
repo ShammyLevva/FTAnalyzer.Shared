@@ -142,6 +142,7 @@ namespace FTAnalyzer
             CUSTOM_TAGS.Add("UK 1891 CENSUS", CENSUS);
             CUSTOM_TAGS.Add("UK 1901 CENSUS", CENSUS);
             CUSTOM_TAGS.Add("UK 1911 CENSUS", CENSUS);
+            CUSTOM_TAGS.Add("UK 1921 CENSUS", CENSUS);
             CUSTOM_TAGS.Add("UK 1939 CENSUS", CENSUS);
             CUSTOM_TAGS.Add("1841 UK CENSUS", CENSUS);
             CUSTOM_TAGS.Add("1851 UK CENSUS", CENSUS);
@@ -151,6 +152,7 @@ namespace FTAnalyzer
             CUSTOM_TAGS.Add("1891 UK CENSUS", CENSUS);
             CUSTOM_TAGS.Add("1901 UK CENSUS", CENSUS);
             CUSTOM_TAGS.Add("1911 UK CENSUS", CENSUS);
+            CUSTOM_TAGS.Add("1921 UK CENSUS", CENSUS);
             CUSTOM_TAGS.Add("1939 UK CENSUS", CENSUS);
             CUSTOM_TAGS.Add("1939 UK REGISTER", CENSUS);
             CUSTOM_TAGS.Add("REGISTER UK 1939", CENSUS);
@@ -170,6 +172,7 @@ namespace FTAnalyzer
             CUSTOM_TAGS.Add("CENSUS 1920", CENSUS);
             CUSTOM_TAGS.Add("CENSUS 1930", CENSUS);
             CUSTOM_TAGS.Add("CENSUS 1940", CENSUS);
+            CUSTOM_TAGS.Add("CENSUS 1950", CENSUS);
             CUSTOM_TAGS.Add("CENSUS - US", CENSUS);
             CUSTOM_TAGS.Add("CENSUS - STATE", CENSUS);
             CUSTOM_TAGS.Add("CENSUS- US", CENSUS);
@@ -863,6 +866,7 @@ namespace FTAnalyzer
                 (tag == "Census 1891" && !FactDate.Overlaps(CensusDate.UKCENSUS1891)) ||
                 (tag == "Census 1901" && !FactDate.Overlaps(CensusDate.UKCENSUS1901)) ||
                 (tag == "Census 1911" && !FactDate.Overlaps(CensusDate.UKCENSUS1911)) ||
+                (tag == "Census 1921" && !FactDate.Overlaps(CensusDate.UKCENSUS1921)) ||
                 (tag == "Census 1939" && !FactDate.Overlaps(CensusDate.UKCENSUS1939)) ||
                 (tag == "Census" && !CensusDate.IsUKCensusYear(FactDate, false)) ||
                 ((tag == "Lost Cousins" || tag == "LostCousins") && !CensusDate.IsLostCousinsCensusYear(FactDate, false))
