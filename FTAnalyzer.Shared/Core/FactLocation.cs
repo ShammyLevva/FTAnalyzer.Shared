@@ -358,7 +358,7 @@ namespace FTAnalyzer
             Longitude = double.TryParse(longitude, out temp) ? temp : 0;
 #if __PC__
             NetTopologySuite.Geometries.Coordinate point = new NetTopologySuite.Geometries.Coordinate(Longitude, Latitude);
-            NetTopologySuite.Geometries.Coordinate mpoint = Mapping.MapTransforms.TransformCoordinate(point);
+            NetTopologySuite.Geometries.Coordinate mpoint = MapTransforms.TransformCoordinate(point);
 
             LongitudeM = mpoint.X;
             LatitudeM = mpoint.Y;
@@ -449,6 +449,7 @@ namespace FTAnalyzer
                     ShiftCountryToRegion();
                     Region = FixRegionTypos(Region);
                     ShiftRegionToParish();
+                    FixDoubleLocations();
                 }
                 SetFixedLocation();
                 SetSortableLocation();
@@ -801,6 +802,23 @@ namespace FTAnalyzer
                 SubRegion = Region;
                 Region = result;
                 if (Level < PLACE) Level++; // we have moved up a level
+            }
+        }
+
+        void FixDoubleLocations()
+        {
+            if(Country.Equals(Region))
+            {
+                Region = SubRegion;
+                SubRegion = Address;
+                Address = Place;
+                Place = string.Empty;
+            }
+            if(Region.Equals(SubRegion))
+            {
+                SubRegion = Address;
+                Address = Place;
+                Place = string.Empty;
             }
         }
 

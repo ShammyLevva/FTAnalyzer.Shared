@@ -70,6 +70,8 @@ namespace FTAnalyzer
         CensusColours US1930 { get; }
         [ColumnDetail("1940", 40)]
         CensusColours US1940 { get; }
+        [ColumnDetail("1950", 40)]
+        CensusColours US1950 { get; }
 
         [ColumnDetail("1901", 40)]
         CensusColours Ire1901 { get; }

@@ -11,7 +11,7 @@ namespace FTAnalyzer
         public string PropertyName { get; private set; }
         public string AncestryCatalog { get; private set; }
 
-        public static CensusDate ANYCENSUS = new CensusDate("BET 1790 AND 1940", "Any Census", Countries.UNKNOWN_COUNTRY, "");
+        public static CensusDate ANYCENSUS = new CensusDate("BET 1790 AND 1950", "Any Census", Countries.UNKNOWN_COUNTRY, "");
 
         public static CensusDate UKCENSUS1841 = new CensusDate("06 JUN 1841", "UK Census 1841", Countries.UNITED_KINGDOM, "C1841");
         public static CensusDate UKCENSUS1851 = new CensusDate("30 MAR 1851", "UK Census 1851", Countries.UNITED_KINGDOM, "C1851");

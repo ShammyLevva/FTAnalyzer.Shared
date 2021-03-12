@@ -953,6 +953,8 @@ namespace FTAnalyzer
 
         public IEnumerable<Family> GetFamiliesAtLocation(FactLocation loc, int level) => families.Filter(f => f.IsAtLocation(loc, level));
 
+        public int CountPeopleAtLocation(FactLocation loc, int level) => individuals.Filter(i => i.IsAtLocation(loc, level)).Count() + families.Filter(f => f.IsAtLocation(loc, level)).Count();
+
         public List<string> GetSurnamesAtLocation(FactLocation loc) { return GetSurnamesAtLocation(loc, FactLocation.SUBREGION); }
         public List<string> GetSurnamesAtLocation(FactLocation loc, int level)
         {
@@ -1822,7 +1824,7 @@ namespace FTAnalyzer
                 }
                 Predicate<Individual> dateFilter;
                 if (country.Equals(Countries.UNITED_STATES))
-                    dateFilter = i => (i.BirthDate.StartsBefore(CensusDate.USCENSUS1940) || i.BirthDate.IsUnknown) &&
+                    dateFilter = i => (i.BirthDate.StartsBefore(CensusDate.USCENSUS1950) || i.BirthDate.IsUnknown) &&
                                       (i.DeathDate.EndsAfter(CensusDate.USCENSUS1790) || i.DeathDate.IsUnknown) &&
                                       (i.BirthDate.IsKnown || !IgnoreMissingBirthDates) &&
                                       (i.DeathDate.IsKnown || !IgnoreMissingDeathDates);
@@ -2240,6 +2242,16 @@ namespace FTAnalyzer
         {
             string uri = null;
             string provider = ProviderName(censusProvider);
+            if (censusYear == 1950 && censusCountry.Equals(Countries.UNITED_STATES))
+            {
+                UIHelpers.ShowMessage("Automated Searching for 1950 US Census not yet implemented");
+                return;
+            }
+            if (censusYear == 1921 && Countries.IsUnitedKingdom(censusCountry))
+            {
+                UIHelpers.ShowMessage("Automated Searching for 1921 census not yet implemented");
+                return;
+            }
             switch (censusProvider)
             {
                 case 0:
