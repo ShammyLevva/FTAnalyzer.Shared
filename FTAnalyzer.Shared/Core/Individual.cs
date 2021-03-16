@@ -1150,7 +1150,7 @@ namespace FTAnalyzer
                 censusFact.SetCensusReferenceDetails(cr, CensusLocation.UNKNOWN, string.Empty);
         }
 
-        bool OKtoAddReference(CensusReference cr, bool includeCreated) => cr.IsKnownStatus && !CensusFactExists(cr.Fact.FactDate, includeCreated);
+        bool OKtoAddReference(CensusReference cr, bool includeCreated) => cr.IsKnownStatus && !CensusFactExists(cr.Fact.FactDate, includeCreated) && IsPossiblyAlive(cr.Fact.FactDate);
 
         void AddLocation(Fact fact)
         {
