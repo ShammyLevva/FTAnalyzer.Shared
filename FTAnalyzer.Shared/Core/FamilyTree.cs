@@ -68,6 +68,8 @@ namespace FTAnalyzer
             }
         }
 
+        public bool DocumentLoaded { get; set; }
+
         public static string GetText(XmlNode node, bool lookForText)
         {
             if (node is null)
@@ -116,8 +118,10 @@ namespace FTAnalyzer
             return result.ToString().Trim();
         }
 
-        public static string GetNoteRef(XmlAttribute reference)
+        static string GetNoteRef(XmlAttribute reference)
         {
+            if (!instance.DocumentLoaded)
+                Console.WriteLine("Looking up XML without document loaded");
             if (noteNodes is null || reference is null)
                 return string.Empty;
             var result = new StringBuilder();
@@ -393,6 +397,8 @@ namespace FTAnalyzer
             DataLoaded = true;
             Loading = false;
         }
+
+        public void CleanUpXML() => noteNodes = null;
 
         void LoadGEDCOM_PLAC_Locations(XmlNodeList list, int startval, IProgress<int> progress, IProgress<string> outputText)
         {
