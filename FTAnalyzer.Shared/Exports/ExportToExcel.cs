@@ -82,7 +82,7 @@ namespace FTAnalyzer.Utilities
                         var cell = row[col];
                         if (cell.ToString() != "System.Drawing.Bitmap")
                         {
-                            output.Write(q + row[col].ToString().Replace("\"", "").Replace("\n", "\\n") + q);
+                            output.Write(q + row[col].ToString().Replace("\"", "").Replace("\n", " :: ") + q);
                             if (col < columnscount - 1)
                                 output.Write(",");
                         }
