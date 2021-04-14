@@ -3352,6 +3352,10 @@ namespace FTAnalyzer
                 duplicates = null;
                 return null;
             }
+            catch (Exception e)
+            {
+                UIHelpers.ShowMessage($"Duplicate report encountered a problem. Message was: {e.Message}");
+            }
             maximum.Report(MaxDuplicateScore());
             DeserializeNonDuplicates();
             return BuildDuplicateList(value);
@@ -3362,7 +3366,7 @@ namespace FTAnalyzer
             int score = 0;
             foreach (DuplicateIndividual dup in duplicates)
             {
-                if (dup.Score > score)
+                if (dup != null && dup.Score > score)
                     score = dup.Score;
             }
             return score;
