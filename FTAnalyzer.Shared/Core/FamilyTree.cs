@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Xml;
 using System.Numerics;
+using System.Collections.Concurrent;
 
 #if __PC__
 using FTAnalyzer.Controls;
@@ -42,6 +43,7 @@ namespace FTAnalyzer
         SortableBindingList<IDisplayLooseBirth> looseBirths;
         SortableBindingList<IDisplayLooseInfo> looseInfo;
         SortableBindingList<DuplicateIndividual> duplicates;
+        ConcurrentBag<DuplicateIndividual> buildDuplicates;
         const int DATA_ERROR_GROUPS = 32;
         static XmlNodeList noteNodes;
         BigInteger maxAhnentafel;
@@ -208,6 +210,7 @@ namespace FTAnalyzer
             PreMarriageFamilies = 0;
             ResetLooseFacts();
             duplicates = null;
+            buildDuplicates = null;
             ClearLocations();
 #if __PC__
             TreeViewHandler.Instance.ResetData();
@@ -3321,7 +3324,7 @@ namespace FTAnalyzer
         decimal femaleProgress;
         decimal progressMaximum;
 
-        public async Task<SortableBindingList<IDisplayDuplicateIndividual>> GenerateDuplicatesList(int value, IProgress<int> progress, IProgress<int> maximum, CancellationToken ct)
+        public async Task<SortableBindingList<IDisplayDuplicateIndividual>> GenerateDuplicatesList(int value, bool ignoreUnknown, IProgress<int> progress, IProgress<int> maximum, CancellationToken ct)
         {
             //log.Debug("FamilyTree.GenerateDuplicatesList");
             if (duplicates != null)
@@ -3329,7 +3332,6 @@ namespace FTAnalyzer
                 maximum.Report(MaxDuplicateScore());
                 return BuildDuplicateList(value); // we have already processed the duplicates since the file was loaded
             }
-            duplicates = new SortableBindingList<DuplicateIndividual>();
             IEnumerable<Individual> males = individuals.Filter(x => (x.Gender == "M" || x.Gender == "U"));
             IEnumerable<Individual> females = individuals.Filter(x => (x.Gender == "F" || x.Gender == "U"));
             decimal nummales = (ulong)males.Count();
@@ -3340,16 +3342,18 @@ namespace FTAnalyzer
             {
                 var tasks = new List<Task>
                 {
-                    Task.Run(() => IdentifyDuplicates(progress, males, ref maleProgress, ct), ct),
-                    Task.Run(() => IdentifyDuplicates(progress, females, ref femaleProgress, ct), ct)
+                    Task.Run(() => IdentifyDuplicates(ignoreUnknown, progress, males, ref maleProgress, ct), ct),
+                    Task.Run(() => IdentifyDuplicates(ignoreUnknown, progress, females, ref femaleProgress, ct), ct)
                 };
                 await Task.WhenAll(tasks).ConfigureAwait(true);
+                duplicates = new SortableBindingList<DuplicateIndividual>(buildDuplicates.ToList());
             }
             catch (OperationCanceledException)
             {
                 progress.Report(0);
                 maximum.Report(10);
                 duplicates = null;
+                buildDuplicates = null;
                 return null;
             }
             catch (Exception e)
@@ -3364,7 +3368,7 @@ namespace FTAnalyzer
         int MaxDuplicateScore()
         {
             int score = 0;
-            foreach (DuplicateIndividual dup in duplicates)
+            foreach (DuplicateIndividual dup in buildDuplicates)
             {
                 if (dup != null && dup.Score > score)
                     score = dup.Score;
@@ -3372,7 +3376,7 @@ namespace FTAnalyzer
             return score;
         }
 
-        void IdentifyDuplicates(IProgress<int> progress, IEnumerable<Individual> enumerable, ref decimal threadProgress, CancellationToken ct)
+        void IdentifyDuplicates(bool ignoreUnknown, IProgress<int> progress, IEnumerable<Individual> enumerable, ref decimal threadProgress, CancellationToken ct)
         {
             //log.Debug("FamilyTree.IdentifyDuplicates");
             var index = 0;
@@ -3383,13 +3387,20 @@ namespace FTAnalyzer
                 {
                     if (indA.GenderMatches(indB) && indA.Name != Individual.UNKNOWN_NAME && indB.Name != Individual.UNKNOWN_NAME)
                     {
+                        //if(ignoreUnknown)
+                        //{
+                        //    if (indA.Forename == Individual.UNKNOWN_NAME && 
+                        //        indB.Forename == Individual.UNKNOWN_NAME &&
+                        //        indA.BirthDate.Equals(indB.BirthDate))
+                        //        break;
+                        //}
                         if (indA.SurnameMetaphone.Equals(indB.SurnameMetaphone) &&
                             (indA.ForenameMetaphone.Equals(indB.ForenameMetaphone) || indA.StandardisedName.Equals(indB.StandardisedName)) &&
                             indA.BirthDate.Distance(indB.BirthDate) < 5)
                         {
                             var test = new DuplicateIndividual(indA, indB);
                             if (test.Score > 0)
-                                duplicates.Add(test);
+                                buildDuplicates.Add(test);
                         }
                     }
                     ct.ThrowIfCancellationRequested();

@@ -159,6 +159,8 @@ namespace FTAnalyzer
             str = EnhancedTextInfo.RemoveSupriousDateCharacters(str.Trim().ToUpper());
             if (!Properties.NonGedcomDate.Default.UseNonGedcomDates || Properties.NonGedcomDate.Default.Separator != ".")
                 str = str.Replace(".", " ");
+            if (str.StartsWith("<") && str.EndsWith(">"))
+                str = str.Replace("<", "").Replace(">", "");                   
             // remove date qualifiers first
             str = str.Replace("@#DGREGORIAN@", "").Replace("@#DJULIAN@", ""); //.Replace("@#DFRENCH R@", ""); // .Replace("@#DHEBREW@", "");
             str = str.Replace(". ", " "); // even if Non GEDCOM date separator is a dot, dot space is invalid.
