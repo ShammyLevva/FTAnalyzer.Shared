@@ -28,7 +28,7 @@ namespace FTAnalyzer
 {
     public class FamilyTree
     {
-#region Variables
+        #region Variables
         static FamilyTree instance;
 
         IList<FactSource> sources;
@@ -56,7 +56,7 @@ namespace FTAnalyzer
         public string Version { get; set; }
         #endregion
 
-#region Static Functions
+        #region Static Functions
 
         FamilyTree() => ResetData();
 
@@ -192,7 +192,7 @@ namespace FTAnalyzer
         }
         #endregion
 
-#region Load Gedcom XML
+        #region Load Gedcom XML
         public void ResetData()
         {
             DataLoaded = false;
@@ -232,10 +232,10 @@ namespace FTAnalyzer
         {
             if (!unknownFactTypes.ContainsKey(factType))
             {
-                unknownFactTypes.Add(factType,new List<Individual>());
+                unknownFactTypes.Add(factType, new List<Individual>());
             }
         }
-        
+
         public XmlDocument LoadTreeHeader(string filename, FileStream stream, IProgress<string> outputText)
         {
             Loading = true;
@@ -258,7 +258,7 @@ namespace FTAnalyzer
                 return null;
             }
             XmlNode treeSoftware = doc.SelectSingleNode("GED/HEAD/SOUR");
-            if(treeSoftware != null)
+            if (treeSoftware != null)
             {
                 var softwareName = treeSoftware.SelectSingleNode("NAME")?.InnerText;
                 var softwareVersion = treeSoftware.SelectSingleNode("VERS")?.InnerText;
@@ -288,7 +288,7 @@ namespace FTAnalyzer
             }
             if (tempDoc != null && tempDoc.SelectNodes("GED/INDI").Count > 0)
                 doc = tempDoc;
-            if(doc.SelectNodes("GED/INDI").Count ==0)
+            if (doc.SelectNodes("GED/INDI").Count == 0)
             {
                 Loading = false;
                 outputText.Report("Failed to load file no individuals found.");
@@ -383,7 +383,7 @@ namespace FTAnalyzer
 
         public void LoadTreeRelationships(XmlDocument doc, IProgress<int> progress, IProgress<string> outputText)
         {
-            if (string.IsNullOrEmpty(rootIndividualID)) 
+            if (string.IsNullOrEmpty(rootIndividualID))
                 rootIndividualID = individuals[0].IndividualID;
             UpdateRootIndividual(rootIndividualID, progress, outputText); //, true);
             CreateSharedFacts();
@@ -809,14 +809,14 @@ namespace FTAnalyzer
         {
             IEnumerable<CensusFamily> censusFamilies = GetAllCensusFamilies(censusDate, true, false);
 
-            bool missingLC(CensusIndividual x) => x.MissingLostCousins(censusDate, false) && x.CensusReference!=null && x.CensusReference.IsGoodStatus;
+            bool missingLC(CensusIndividual x) => x.MissingLostCousins(censusDate, false) && x.CensusReference != null && x.CensusReference.IsGoodStatus;
             Predicate<CensusIndividual> missingFilter = FilterUtils.AndFilter(relationFilter, missingLC);
             List<CensusIndividual> missingIndiv = censusFamilies.SelectMany(f => f.Members).Filter(missingFilter).Distinct(new CensusIndividualComparer()).ToList();
             bool invalidRef(CensusIndividual x) => x.MissingLostCousins(censusDate, false) && x.CensusReference != null && !x.CensusReference.IsGoodStatus;
             //bool nameFilter(CensusIndividual x) => x.LCForename.Length > 0 && x.LCSurname.Length > 0 && x.Surname != Individual.UNKNOWN_NAME && x.LCSurname !=Individual.UNKNOWN_NAME;
             //bool ageFilter(CensusIndividual x) => x.Age != Age.Unknown;
             Predicate<CensusIndividual> invalidRefFilter = FilterUtils.AndFilter(relationFilter, invalidRef);
-                //FilterUtils.AndFilter(FilterUtils.AndFilter(relationFilter, invalidRef), FilterUtils.AndFilter<CensusIndividual>(nameFilter, ageFilter));
+            //FilterUtils.AndFilter(FilterUtils.AndFilter(relationFilter, invalidRef), FilterUtils.AndFilter<CensusIndividual>(nameFilter, ageFilter));
 
             List<CensusIndividual> invalidRefIndiv = censusFamilies.SelectMany(f => f.Members).Filter(invalidRefFilter).Distinct(new CensusIndividualComparer()).ToList();
             int missing = MissingLCEntries[censusDate];
@@ -843,7 +843,7 @@ namespace FTAnalyzer
         }
         void AddCustomFacts(Individual individual)
         {
-            foreach(string factType in unknownFactTypes.Keys)
+            foreach (string factType in unknownFactTypes.Keys)
             {
                 if (individual.AllFacts.Any(x => x.FactTypeDescription == factType))
                     unknownFactTypes[factType].Add(individual);
@@ -880,9 +880,9 @@ namespace FTAnalyzer
             if (SoloFamilies > 0)
                 outputText.Report($"Added {SoloFamilies} lone individuals as single families.\n");
         }
-#endregion
+        #endregion
 
-#region Properties
+        #region Properties
 
         public bool Loading { get; private set; }
         public bool DataLoaded { get; private set; }
@@ -919,9 +919,9 @@ namespace FTAnalyzer
         public string NextSoloFamily { get { return $"SF{++SoloFamilies}"; } }
 
         public string NextPreMarriageFamily { get { return $"PM{++PreMarriageFamilies}"; } }
-#endregion
+        #endregion
 
-#region Property Functions
+        #region Property Functions
 
         public IEnumerable<Individual> GetAllRelationsOfType(int relationType) => individuals.Filter(ind => ind.RelationType == relationType);
 
@@ -1002,7 +1002,7 @@ namespace FTAnalyzer
         }
         #endregion
 
-#region Loose Info
+        #region Loose Info
         public SortableBindingList<IDisplayLooseInfo> LooseInfo()
         {
             if (looseInfo != null)
@@ -1028,7 +1028,7 @@ namespace FTAnalyzer
         }
         #endregion
 
-#region Loose Births
+        #region Loose Births
 
         public SortableBindingList<IDisplayLooseBirth> LooseBirths()
         {
@@ -1199,9 +1199,9 @@ namespace FTAnalyzer
             return FactDate.UNKNOWN_DATE;
         }
 
-#endregion
+        #endregion
 
-#region Loose Deaths
+        #region Loose Deaths
 
         public SortableBindingList<IDisplayLooseDeath> LooseDeaths()
         {
@@ -1338,9 +1338,9 @@ namespace FTAnalyzer
 
         //}
 
-#endregion
+        #endregion
 
-#region Relationship Functions
+        #region Relationship Functions
         void ClearRelations()
         {
             foreach (Individual i in individuals)
@@ -1381,7 +1381,7 @@ namespace FTAnalyzer
 
                 if (family.Wife != null && parents.IsNaturalMother && indiv.RelationType == Individual.DIRECT)
                 {
-                    BigInteger newAhnentafel = indiv.Ahnentafel * 2 +1;
+                    BigInteger newAhnentafel = indiv.Ahnentafel * 2 + 1;
                     if (family.Wife.RelationType != Individual.UNKNOWN && family.Wife.Ahnentafel != newAhnentafel)
                         AlreadyDirect(family.Wife, newAhnentafel, outputText);
                     else
@@ -1453,7 +1453,7 @@ namespace FTAnalyzer
         {
             ClearRelations();
             RootPerson = GetIndividual(startID);
-            if(RootPerson is null)
+            if (RootPerson is null)
             {
                 startID = individuals[0].IndividualID;
                 RootPerson = GetIndividual(startID);
@@ -1531,7 +1531,7 @@ namespace FTAnalyzer
             bool keepLooping = true;
             while (keepLooping)
             {
-                keepLooping = false; 
+                keepLooping = false;
                 IEnumerable<Family> families = AllFamilies.Where(f => f.HasUnknownRelations && f.HasLinkedRelations);
                 foreach (Family f in families)
                 {
@@ -1592,9 +1592,9 @@ namespace FTAnalyzer
 
         public IEnumerable<Individual> DirectLineIndividuals => AllIndividuals.Filter(i => i.RelationType == Individual.DIRECT || i.RelationType == Individual.DESCENDANT);
 
-#endregion
+        #endregion
 
-#region Displays
+        #region Displays
         public IEnumerable<CensusFamily> GetAllCensusFamilies(CensusDate censusDate, bool censusDone, bool checkCensus)
         {
             if (censusDate != null)
@@ -1775,7 +1775,7 @@ namespace FTAnalyzer
 
         public SortableBindingList<Individual> AllWorkers(string job) => new SortableBindingList<Individual>(occupations[job]);
 
-        public SortableBindingList<Individual> AllCustomFactIndividuals(string factType) => 
+        public SortableBindingList<Individual> AllCustomFactIndividuals(string factType) =>
             new SortableBindingList<Individual>(unknownFactTypes[factType]);
 
         public SortableBindingList<IDisplayFamily> PossiblyMissingChildFamilies
@@ -1784,7 +1784,7 @@ namespace FTAnalyzer
             {
                 SortableBindingList<IDisplayFamily> result = new SortableBindingList<IDisplayFamily>();
                 foreach (Family fam in families)
-                    if(fam.EldestChild !=null && fam.MarriageDate.IsKnown && fam.EldestChild.BirthDate.IsKnown && 
+                    if (fam.EldestChild != null && fam.MarriageDate.IsKnown && fam.EldestChild.BirthDate.IsKnown &&
                       !fam.EldestChild.BirthDate.IsLongYearSpan && fam.EldestChild.BirthDate.BestYear > fam.MarriageDate.BestYear + 3)
                         result.Add(fam);
                 return result;
@@ -1819,7 +1819,7 @@ namespace FTAnalyzer
             }
         }
 
-        public List<IDisplayColourCensus> ColourCensus(string country, RelationTypes relType, string surname, 
+        public List<IDisplayColourCensus> ColourCensus(string country, RelationTypes relType, string surname,
                                                        ComboBoxFamily family, bool IgnoreMissingBirthDates, bool IgnoreMissingDeathDates)
         {
             Predicate<Individual> filter;
@@ -1873,7 +1873,7 @@ namespace FTAnalyzer
                 }
             }
             else
-                filter = x=> family.Members.Contains(x);
+                filter = x => family.Members.Contains(x);
             return individuals.Filter(filter).ToList<IDisplayColourBMD>();
         }
 
@@ -1893,9 +1893,9 @@ namespace FTAnalyzer
                 filter = x => family.Members.Contains(x);
             return individuals.Filter(filter).ToList<IDisplayMissingData>();
         }
-#endregion
+        #endregion
 
-#region Data Errors
+        #region Data Errors
 
         void SetDataErrorTypes(IProgress<int> progress)
         {
@@ -1907,7 +1907,7 @@ namespace FTAnalyzer
             for (int i = 0; i < DATA_ERROR_GROUPS; i++)
                 errors[i] = new List<DataError>();
             // calculate error lists
-    #region Individual Fact Errors
+            #region Individual Fact Errors
             foreach (Individual ind in AllIndividuals)
             {
                 progress.Report(20 + (record++ / totalRecords));
@@ -1926,7 +1926,7 @@ namespace FTAnalyzer
                             }
                         }
                     }
-        #region Death facts
+                    #region Death facts
                     if (ind.DeathDate.IsKnown)
                     {
                         if (ind.BirthDate.IsAfter(ind.DeathDate))
@@ -1941,8 +1941,8 @@ namespace FTAnalyzer
                         if (ind.IsFlaggedAsLiving)
                             errors[(int)Dataerror.LIVING_WITH_DEATH_DATE].Add(new DataError((int)Dataerror.LIVING_WITH_DEATH_DATE, ind, $"Flagged as living but has death date of {ind.DeathDate}"));
                     }
-#endregion
-        #region Error facts
+                    #endregion
+                    #region Error facts
                     foreach (Fact f in ind.ErrorFacts)
                     {
                         bool added = false;
@@ -2029,7 +2029,7 @@ namespace FTAnalyzer
                                             ind, "On the 1939 National Register but birth date is not exact"));
                         }
                     }
-#region Duplicate Fact Check
+                    #region Duplicate Fact Check
                     var dup = ind.AllFileFacts.GroupBy(x => x.EqualHash).Where(g => g.Count() > 1).Select(y => y.Key).ToList();
                     var dupList = new List<Fact>();
                     foreach (string dfs in dup)
@@ -2054,9 +2054,9 @@ namespace FTAnalyzer
                                                 ind, $"Possibly duplicated {pdf.FactTypeDescription} fact recorded"));
                         }
                     }
-#endregion
-#endregion
-        #region Parents Facts
+                    #endregion
+                    #endregion
+                    #region Parents Facts
                     foreach (ParentalRelationship parents in ind.FamiliesAsChild)
                     {
                         Family asChild = parents.Family;
@@ -2109,7 +2109,7 @@ namespace FTAnalyzer
                             {
                                 Individual wifesFather = ind.IsMale ? spouse.NaturalFather : ind.NaturalFather;
                                 Individual husband = ind.IsMale ? ind : spouse;
-                                if(husband.Surname != wifesFather?.Surname) // if couple have same surname and wife is different from her natural father then likely error
+                                if (husband.Surname != wifesFather?.Surname) // if couple have same surname and wife is different from her natural father then likely error
                                     errors[(int)Dataerror.SAME_SURNAME_COUPLE].Add(new DataError((int)Dataerror.SAME_SURNAME_COUPLE, ind, $"Spouse {spouse.Name} has same surname. Usually due to wife incorrectly recorded with married instead of maiden name."));
                             }
                             //if (ind.FirstMarriage != null && ind.FirstMarriage.MarriageDate != null)
@@ -2120,7 +2120,7 @@ namespace FTAnalyzer
                             //    }
                             //}
                         }
-                        if(!ind.IsMale) // for females as parent in family check children
+                        if (!ind.IsMale) // for females as parent in family check children
                         {
                             womansChildren.AddRange(asParent.Children.Where(c => c.IsNaturalChildOf(ind)));
                         }
@@ -2137,12 +2137,12 @@ namespace FTAnalyzer
                                 double daysDiff = child.BirthDate.DaysDifference(previousBirth);
                                 if (daysDiff >= 10 && daysDiff <= 168)
                                     errors[(int)Dataerror.SIBLING_TOO_SOON].Add(new DataError((int)Dataerror.SIBLING_TOO_SOON, Fact.FactError.ERROR, child, $"Child {child.Name} of {ind.Name} born too soon, only {daysDiff} days after sibling."));
-                                if(daysDiff>168 && daysDiff< 365)
+                                if (daysDiff > 168 && daysDiff < 365)
                                     errors[(int)Dataerror.SIBLING_PROB_TOO_SOON].Add(new DataError((int)Dataerror.SIBLING_PROB_TOO_SOON, Fact.FactError.QUESTIONABLE, ind, $"Child {child.Name} of {ind.Name} born very soon after sibling, only {daysDiff} days later."));
                             }
                         }
                     }
-#endregion
+                    #endregion
                 }
 #if __MACOS__ || __IOS__
                 catch (Exception)
@@ -2160,8 +2160,8 @@ namespace FTAnalyzer
                 }
 #endif
             }
-#endregion
-    #region Family Fact Errors
+            #endregion
+            #region Family Fact Errors
             catchCount = 0;
             foreach (Family fam in AllFamilies)
             {
@@ -2184,10 +2184,10 @@ namespace FTAnalyzer
                 catch (Exception)
                 {
                     if (catchCount == 0) // prevent multiple displays of the same error - usually resource icon load failures
-                       catchCount++;
+                        catchCount++;
                 }
             }
-    #endregion
+            #endregion
 
             for (int i = 0; i < DATA_ERROR_GROUPS; i++)
                 DataErrorTypes.Add(new DataErrorGroup(i, errors[i]));
@@ -2230,7 +2230,7 @@ namespace FTAnalyzer
 
         public static string ProviderName(int censusProvider)
         {
-            switch(censusProvider)
+            switch (censusProvider)
             {
                 case 0:
                     return "Ancestry";
@@ -2276,7 +2276,7 @@ namespace FTAnalyzer
                     uri = BuildFamilySearchCensusQuery(censusCountry, censusYear, person);
                     break;
                 case 4:
-                    uri = BuildScotlandsPeopleCensusQuery(censusYear, person);    
+                    uri = BuildScotlandsPeopleCensusQuery(censusYear, person);
                     break;
             }
             if (uri != null)
@@ -2298,10 +2298,10 @@ namespace FTAnalyzer
             if (person.Forename != "?" && person.Forename.ToUpper() != Individual.UNKNOWN_NAME)
                 path.Append($"&forename={HttpUtility.UrlEncode(person.Forenames)}&forename_so=syn");
             Age age = person.GetAge(censusFactDate);
-            if(censusYear == 1841 && age.MaxAge > 15)
-                path.Append($"&age_from={age.MinAge-1}&age_to={age.MaxAge+5}");
+            if (censusYear == 1841 && age.MaxAge > 15)
+                path.Append($"&age_from={age.MinAge - 1}&age_to={age.MaxAge + 5}");
             else
-                path.Append($"&age_from={age.MinAge-1}&age_to={age.MaxAge+1}");
+                path.Append($"&age_from={age.MinAge - 1}&age_to={age.MaxAge + 1}");
             path.Append($"&record_type=census&year%5B0%5D={censusYear}");
             return path.ToString();
         }
@@ -2342,9 +2342,9 @@ namespace FTAnalyzer
                 if (collection > 0)
                     path.Append($"&collection_id={collection}");
                 else if (Countries.IsUnitedKingdom(country))
-            {
-                collection = FamilySearch.CensusCollectionID(Countries.ENGLAND, censusYear);
-                path.Append($"&collection_id={collection}");
+                {
+                    collection = FamilySearch.CensusCollectionID(Countries.ENGLAND, censusYear);
+                    path.Append($"&collection_id={collection}");
                 }
                 else if (Countries.IsKnownCountry(country))
                 { // TODO
@@ -2755,7 +2755,7 @@ namespace FTAnalyzer
                 query.Append($"yearofbirth={year} &");
                 query.Append($"yearofbirth_offset={range}&");
             }
-            if(censusYear == 1911 && Countries.IsUnitedKingdom(censusCountry))
+            if (censusYear == 1911 && Countries.IsUnitedKingdom(censusCountry))
             {
                 CensusReference reference = person.GetCensusReference(CensusDate.EWCENSUS1911);
                 if (reference?.Piece != null && reference.Schedule == "Missing")
@@ -2842,9 +2842,9 @@ namespace FTAnalyzer
             return uri.ToString();
         }
 
-#endregion
+        #endregion
 
-#region Birth/Marriage/Death Searching
+        #region Birth/Marriage/Death Searching
 
         public enum SearchType { BIRTH = 0, MARRIAGE = 1, DEATH = 2 };
 
@@ -2858,12 +2858,12 @@ namespace FTAnalyzer
                     CheckLooseBirth(individual);
                     factdate = individual.LooseBirthDate;
                 }
-                if(st.Equals(SearchType.MARRIAGE))
+                if (st.Equals(SearchType.MARRIAGE))
                 {
                     if (factdate.StartDate < individual.BirthDate.StartDate.AddYears(GeneralSettings.Default.MinParentalAge))
                         factdate = new FactDate(individual.BirthDate.StartDate.AddYears(GeneralSettings.Default.MinParentalAge), factdate.EndDate);
-                //    CheckLooseMarriage(individual);
-                //    factdate = individual.LooseMarriageDate;
+                    //    CheckLooseMarriage(individual);
+                    //    factdate = individual.LooseMarriageDate;
                 }
                 if (st.Equals(SearchType.DEATH))
                 {
@@ -2874,15 +2874,15 @@ namespace FTAnalyzer
                     factdate = FactDate.UNKNOWN_DATE; // errors in facts corrupts loose births or deaths
             }
             string provider = string.Empty;
-            Tuple<string, string> uris = new Tuple<string, string>(null,null);
+            Tuple<string, string> uris = new Tuple<string, string>(null, null);
             switch (searchProvider)
             {
                 case 0: uri = BuildAncestryQuery(st, individual, factdate, bmdRegion); provider = "Ancestry"; break;
                 case 1: uri = BuildFindMyPastQuery(st, individual, factdate, bmdRegion); provider = "FindMyPast"; break;
-//                case 2: uri = BuildFreeBMDQuery(st, individual, factdate); provider = "FreeBMD"; break;
+                //                case 2: uri = BuildFreeBMDQuery(st, individual, factdate); provider = "FreeBMD"; break;
                 case 3: uri = BuildFamilySearchQuery(st, individual, factdate); provider = "FamilySearch"; break;
                 case 4: uris = BuildScotlandsPeopleQuery(st, individual, factdate, spouse); provider = "ScotlandsPeople"; break;
-//                case 5: uri = BuildGROQuery(st, individual, factdate); provider = "GRO"; break;
+                    //                case 5: uri = BuildGROQuery(st, individual, factdate); provider = "GRO"; break;
             }
             if (!string.IsNullOrEmpty(uri))
             {
@@ -2890,8 +2890,8 @@ namespace FTAnalyzer
                 Analytics.TrackAction(Analytics.BMDSearchAction, $"Searching {provider} BMDs");
             }
             if (searchProvider == 4)
-            { 
-                if(!string.IsNullOrEmpty(uris.Item1))
+            {
+                if (!string.IsNullOrEmpty(uris.Item1))
                 {
                     SpecialMethods.VisitWebsite(uris.Item1);
                     Analytics.TrackAction(Analytics.BMDSearchAction, $"Searching {provider} OPR BMDs");
@@ -2919,7 +2919,7 @@ namespace FTAnalyzer
             {
                 StringBuilder query = new StringBuilder();
                 query.Append("search_type=people");
-                query.Append("&dl_cat=statutory"); 
+                query.Append("&dl_cat=statutory");
                 if (st == SearchType.BIRTH)
                     query.Append("&dl_rec=statutory-births");
                 else if (st == SearchType.MARRIAGE)
@@ -2934,7 +2934,7 @@ namespace FTAnalyzer
                 else if (st == SearchType.MARRIAGE)
                 {
                     query.Append("&record_type=stat_marriages");
-                    if(spouse != null)
+                    if (spouse != null)
                         query.Append($"&spsurname={HttpUtility.UrlEncode(spouse.Surname)}&spsurname_so=soundex&spforename={HttpUtility.UrlEncode(spouse.Forename)}&spforename_so=syn");
                 }
                 else if (st == SearchType.DEATH)
@@ -2943,7 +2943,7 @@ namespace FTAnalyzer
                 int toYear = Math.Min(factdate.EndDate.Year + 1, FactDate.TODAY.StartDate.Year); // +1 to add a years tolerance either side
                 query.Append($"&from_year={fromYear}&to_year={toYear}");
                 uri.Query = query.ToString();
-                oprResult= uri.ToString();
+                oprResult = uri.ToString();
             }
             if (oprrecords)
             {
@@ -2958,15 +2958,15 @@ namespace FTAnalyzer
                 query.Append($"&surname={HttpUtility.UrlEncode(individual.Surname)}&surname_so=soundex");
                 if (individual.Forename != "?" && individual.Forename.ToUpper() != Individual.UNKNOWN_NAME)
                     query.Append($"&forename={HttpUtility.UrlEncode(individual.Forename)}&forename_so=syn");
-                if(st == SearchType.MARRIAGE && spouse != null)
+                if (st == SearchType.MARRIAGE && spouse != null)
                     query.Append($"&spouse_name={HttpUtility.UrlEncode(spouse.Surname)}&spouse_name_so=fuzzy");
-                int fromYear = Math.Max(factdate.StartDate.Year -1, 1553);
+                int fromYear = Math.Max(factdate.StartDate.Year - 1, 1553);
                 int toYear = Math.Min(factdate.EndDate.Year + 1, 1854);
                 query.Append($"&from_year={fromYear}&to_year={toYear}");
                 uri.Query = query.ToString();
                 statutoryResult = uri.ToString();
             }
-            return new Tuple<string, string>(oprResult,statutoryResult);
+            return new Tuple<string, string>(oprResult, statutoryResult);
         }
 
         string BuildFamilySearchQuery(SearchType st, Individual individual, FactDate factdate)
@@ -3131,9 +3131,9 @@ namespace FTAnalyzer
         //        Host = "www.gro.gov.uk",
         //        Path = "gro/content/certificates/indexes_search.asp"
         //    };
-            
 
-            
+
+
         //    if (st.Equals(SearchType.BIRTH))
         //        query.Append("gl=BMD_BIRTH&");
         //    if (st.Equals(SearchType.DEATH))
@@ -3160,7 +3160,7 @@ namespace FTAnalyzer
         //        AppendYearandRange(factdate, query, "msgdy=", "msgdp=", false);
         //        query.Append("&msgdy_x=1");
         //    }
-            
+
         //    return uri.ToString();
         //}
 
@@ -3199,9 +3199,9 @@ namespace FTAnalyzer
             }
         }
 
-#endregion
+        #endregion
 
-#region Geocoding
+        #region Geocoding
 
         public static void WriteGeocodeStatstoRTB(string title, IProgress<string> outputText)
         {
@@ -3235,9 +3235,9 @@ namespace FTAnalyzer
             }
         }
 
-#endregion
+        #endregion
 
-#region Relationship Groups
+        #region Relationship Groups
         public static List<Individual> GetFamily(Individual startIndividiual)
         {
             List<Individual> results = new List<Individual>();
@@ -3286,7 +3286,7 @@ namespace FTAnalyzer
         public static List<Individual> GetDescendants(Individual startIndividual)
         {
             List<Individual> results = new List<Individual>();
-            Dictionary<string,Individual> processed = new Dictionary<string, Individual>();
+            Dictionary<string, Individual> processed = new Dictionary<string, Individual>();
             Queue<Individual> queue = new Queue<Individual>();
             results.Add(startIndividual);
             queue.Enqueue(startIndividual);
@@ -3319,50 +3319,59 @@ namespace FTAnalyzer
         public static List<Individual> GetAllRelations(Individual ind) => GetFamily(ind).Union(GetAncestors(ind).Union(GetDescendants(ind))).ToList();
         #endregion
 
-#region Duplicates Processing
-        decimal maleProgress;
-        decimal femaleProgress;
-        decimal progressMaximum;
+        #region Duplicates Processing
+        long totalComparisons;
+        long maxComparisons;
+        long duplicatesFound;
+        int currentPercentage;
 
-        public async Task<SortableBindingList<IDisplayDuplicateIndividual>> GenerateDuplicatesList(int value, bool ignoreUnknown, IProgress<int> progress, IProgress<int> maximum, CancellationToken ct)
+        public async Task<SortableBindingList<IDisplayDuplicateIndividual>> GenerateDuplicatesList(int value, bool ignoreUnknown, IProgress<int> progress, IProgress<string> progressText, IProgress<int> maximum, CancellationToken ct)
         {
-            //log.Debug("FamilyTree.GenerateDuplicatesList");
             if (duplicates != null)
             {
                 maximum.Report(MaxDuplicateScore());
                 return BuildDuplicateList(value); // we have already processed the duplicates since the file was loaded
             }
-            IEnumerable<Individual> males = individuals.Filter(x => (x.Gender == "M" || x.Gender == "U"));
-            IEnumerable<Individual> females = individuals.Filter(x => (x.Gender == "F" || x.Gender == "U"));
-            decimal nummales = (ulong)males.Count();
-            decimal numfemales = (ulong)males.Count();
-            progressMaximum = (nummales * nummales + numfemales * numfemales) / 2;
+            var groups = individuals.Where(x => x.Name != Individual.UNKNOWN_NAME).GroupBy(x => x.SurnameMetaphone).Select(x => x.ToList()).ToList();
+            int numgroups = groups.Count;
             progress.Report(0);
+            totalComparisons = 0;
+            maxComparisons = groups.Sum(x => x.Count * (x.Count - 1L) / 2);
+            currentPercentage = 0;
+            duplicatesFound = 0;
+            buildDuplicates = new ConcurrentBag<DuplicateIndividual>();
+            var tasks = new List<Task>();
             try
             {
-                var tasks = new List<Task>
+                foreach (var group in groups)
                 {
-                    Task.Run(() => IdentifyDuplicates(ignoreUnknown, progress, males, ref maleProgress, ct), ct),
-                    Task.Run(() => IdentifyDuplicates(ignoreUnknown, progress, females, ref femaleProgress, ct), ct)
-                };
+                    var task = Task.Run(() => IdentifyDuplicates(ignoreUnknown, group, ct), ct);
+                    tasks.Add(task);
+                }
+                var progressTask = Task.Run(() => ProgressReporter(progress, progressText, ct), ct);
+                tasks.Add(progressTask);
                 await Task.WhenAll(tasks).ConfigureAwait(true);
-                duplicates = new SortableBindingList<DuplicateIndividual>(buildDuplicates.ToList());
             }
             catch (OperationCanceledException)
             {
-                progress.Report(0);
-                maximum.Report(10);
-                duplicates = null;
-                buildDuplicates = null;
-                return null;
+                progress.Report(0); // if user cancels then simply clear progress do not throw away work done
             }
             catch (Exception e)
             {
                 UIHelpers.ShowMessage($"Duplicate report encountered a problem. Message was: {e.Message}");
             }
-            maximum.Report(MaxDuplicateScore());
-            DeserializeNonDuplicates();
-            return BuildDuplicateList(value);
+            try
+            {
+                duplicates = new SortableBindingList<DuplicateIndividual>(buildDuplicates.ToList());
+                maximum.Report(MaxDuplicateScore());
+                DeserializeNonDuplicates();
+                return BuildDuplicateList(value);
+            }
+            catch (Exception e)
+            {
+                UIHelpers.ShowMessage($"Duplicate report encountered a problem. Message was: {e.Message}");
+            }
+            return null;
         }
 
         int MaxDuplicateScore()
@@ -3376,50 +3385,52 @@ namespace FTAnalyzer
             return score;
         }
 
-        void IdentifyDuplicates(bool ignoreUnknown, IProgress<int> progress, IEnumerable<Individual> enumerable, ref decimal threadProgress, CancellationToken ct)
+        void IdentifyDuplicates(bool ignoreUnknown, IList<Individual> list, CancellationToken ct)
         {
-            //log.Debug("FamilyTree.IdentifyDuplicates");
-            var index = 0;
-            foreach (var indA in enumerable)
+            for (var i = 0; i < list.Count; i++)
             {
-                index++;
-                foreach (var indB in enumerable.Skip(index))
+                var indA = list[i];
+                for (var j = i + 1; j < list.Count; j++)
                 {
-                    if (indA.GenderMatches(indB) && indA.Name != Individual.UNKNOWN_NAME && indB.Name != Individual.UNKNOWN_NAME)
+                    var indB = list[j];
+                    if ((indA.ForenameMetaphone.Equals(indB.ForenameMetaphone) || indA.StandardisedName.Equals(indB.StandardisedName)) &&
+                       indA.BirthDate.Distance(indB.BirthDate) < 5)
                     {
-                        //if(ignoreUnknown)
-                        //{
-                        //    if (indA.Forename == Individual.UNKNOWN_NAME && 
-                        //        indB.Forename == Individual.UNKNOWN_NAME &&
-                        //        indA.BirthDate.Equals(indB.BirthDate))
-                        //        break;
-                        //}
-                        if (indA.SurnameMetaphone.Equals(indB.SurnameMetaphone) &&
-                            (indA.ForenameMetaphone.Equals(indB.ForenameMetaphone) || indA.StandardisedName.Equals(indB.StandardisedName)) &&
-                            indA.BirthDate.Distance(indB.BirthDate) < 5)
+                        var test = new DuplicateIndividual(indA, indB);
+                        if (test.Score > 0)
                         {
-                            var test = new DuplicateIndividual(indA, indB);
-                            if (test.Score > 0)
-                                buildDuplicates.Add(test);
+                            buildDuplicates.Add(test);
+                            Interlocked.Increment(ref duplicatesFound);
                         }
                     }
-                    ct.ThrowIfCancellationRequested();
-                    threadProgress++;
-                    if (threadProgress % 500 == 0)
-                    {
-                        decimal val = Math.Min(progressMaximum, 100 * (maleProgress + femaleProgress) / progressMaximum);
-                        progress.Report((int)val);
-                    }
+                    Interlocked.Increment(ref totalComparisons);
+                    if (ct.IsCancellationRequested)
+                        return;
+                }
+            }
+        }
+
+        void ProgressReporter(IProgress<int> progress, IProgress<string> progressText, CancellationToken ct)
+        {
+            while (totalComparisons < maxComparisons && currentPercentage < 100)
+            {
+                Task.Delay(1000);
+                ct.ThrowIfCancellationRequested();
+                var val = (int)(100 * totalComparisons / maxComparisons);
+                if (val > currentPercentage)
+                {
+                    currentPercentage = val;
+                    if (val < 100)
+                        progressText.Report($"Done {totalComparisons.ToString("N0")} of {maxComparisons.ToString("N0")} - {val}%\n{duplicatesFound.ToString("N0")} possible duplicates so far");
+                    else
+                        progressText.Report($"Completed {duplicatesFound.ToString("N0")} possible duplicates found. Preparing display.");
+                    progress.Report(val);
                 }
             }
         }
 
         public SortableBindingList<IDisplayDuplicateIndividual> BuildDuplicateList(int minScore)
         {
-            //log.Debug("FamilyTree.BuildDuplicateList");
-            //if (duplicates is null)
-                //log.Error("BuildDuplicateList called with null duplicates");
-
             var select = new SortableBindingList<IDisplayDuplicateIndividual>();
             if (NonDuplicates is null)
                 DeserializeNonDuplicates();
@@ -3439,7 +3450,6 @@ namespace FTAnalyzer
 
         public void SerializeNonDuplicates()
         {
-            //log.Debug("FamilyTree.SerializeNonDuplicates");
             try
             {
                 IFormatter formatter = new BinaryFormatter();
@@ -3451,13 +3461,13 @@ namespace FTAnalyzer
             }
             catch
             {
-               // log.Error($"Error {e.Message} writing NonDuplicates.xml");
+                // log.Error($"Error {e.Message} writing NonDuplicates.xml");
             }
         }
 
         public void DeserializeNonDuplicates()
         {
-           // log.Debug("FamilyTree.DeserializeNonDuplicates");
+            // log.Debug("FamilyTree.DeserializeNonDuplicates");
             try
             {
                 IFormatter formatter = new BinaryFormatter();
@@ -3474,13 +3484,13 @@ namespace FTAnalyzer
             }
             catch
             {
-              //  log.Error("Error " + e.Message + " reading NonDuplicates.xml");
+                //  log.Error("Error " + e.Message + " reading NonDuplicates.xml");
                 NonDuplicates = new List<NonDuplicate>();
             }
         }
-#endregion
+        #endregion
 
-#region Report Issues
+        #region Report Issues
         public HashSet<string> UnrecognisedCensusReferences()
         {
             var result = new HashSet<string>();
@@ -3542,7 +3552,7 @@ namespace FTAnalyzer
 
         #endregion
 
-#region Today
+        #region Today
         public void AddTodaysFacts(DateTime chosenDate, bool wholeMonth, int stepSize, IProgress<int> progress, IProgress<string> outputText)
         {
             string dateDesc;
@@ -3698,14 +3708,14 @@ namespace FTAnalyzer
         }
         #endregion
 
-#region WorldWars
+        #region WorldWars
 
         public IEnumerable<IDisplayIndividual> GetWorldWars(Predicate<Individual> filter) => individuals.Filter(ind => ind.IsMale && filter(ind));
         public IEnumerable<IExportIndividual> GetExportWorldWars(Predicate<Individual> filter) => individuals.Filter(ind => ind.IsMale && filter(ind));
 
         #endregion
 
-#region TreeTops
+        #region TreeTops
 
         public IEnumerable<IDisplayIndividual> GetTreeTops(Predicate<Individual> filter) => individuals.Filter(ind => filter(ind));
         public IEnumerable<IExportIndividual> GetExportTreeTops(Predicate<Individual> filter) => individuals.Filter(ind => filter(ind));
