@@ -3330,7 +3330,7 @@ namespace FTAnalyzer
             if (duplicates != null)
             {
                 maximum.Report(MaxDuplicateScore());
-                return BuildDuplicateList(value); // we have already processed the duplicates since the file was loaded
+                return BuildDuplicateList(value, progress, progressText); // we have already processed the duplicates since the file was loaded
             }
             var groups = individuals.Where(x => x.Name != Individual.UNKNOWN_NAME).GroupBy(x => x.SurnameMetaphone).Select(x => x.ToList()).ToList();
             int numgroups = groups.Count;
@@ -3365,7 +3365,7 @@ namespace FTAnalyzer
                 duplicates = new SortableBindingList<DuplicateIndividual>(buildDuplicates.ToList());
                 maximum.Report(MaxDuplicateScore());
                 DeserializeNonDuplicates();
-                return BuildDuplicateList(value);
+                return BuildDuplicateList(value, progress, progressText);
             }
             catch (Exception e)
             {
@@ -3421,7 +3421,7 @@ namespace FTAnalyzer
                 {
                     currentPercentage = val;
                     if (val < 100)
-                        progressText.Report($"Done {totalComparisons.ToString("N0")} of {maxComparisons.ToString("N0")} - {val}%\n{duplicatesFound.ToString("N0")} possible duplicates so far");
+                        progressText.Report($"Done {totalComparisons.ToString("N0")} of {maxComparisons.ToString("N0")} - {val}%\nFound {duplicatesFound.ToString("N0")} possible duplicates");
                     else
                         progressText.Report($"Completed {duplicatesFound.ToString("N0")} possible duplicates found. Preparing display.");
                     progress.Report(val);
@@ -3429,9 +3429,14 @@ namespace FTAnalyzer
             }
         }
 
-        public SortableBindingList<IDisplayDuplicateIndividual> BuildDuplicateList(int minScore)
+        public SortableBindingList<IDisplayDuplicateIndividual> BuildDuplicateList(int minScore, IProgress<int> progress, IProgress<string> progressText)
         {
             var select = new SortableBindingList<IDisplayDuplicateIndividual>();
+            long numDuplicates = duplicates.Count;
+            long numProcessed = 0;
+            currentPercentage = 0;
+            progress.Report(0);
+            progressText.Report("Preparing Display");
             if (NonDuplicates is null)
                 DeserializeNonDuplicates();
             foreach (DuplicateIndividual dup in duplicates)
@@ -3441,10 +3446,22 @@ namespace FTAnalyzer
                     var dispDup = new DisplayDuplicateIndividual(dup);
                     var toCheck = new NonDuplicate(dispDup);
                     dispDup.IgnoreNonDuplicate = NonDuplicates.ContainsDuplicate(toCheck);
-                    if (!select.ContainsDuplicate(dispDup) && !(dispDup.IgnoreNonDuplicate && GeneralSettings.Default.HideIgnoredDuplicates))
+                    if (!(GeneralSettings.Default.HideIgnoredDuplicates && dispDup.IgnoreNonDuplicate))
                         select.Add(dispDup);
                 }
+                numProcessed++;
+                if(numProcessed % 20 == 0)
+                {
+                    var val = (int)(100 * numProcessed / numDuplicates);
+                    if (val > currentPercentage)
+                    {
+                        currentPercentage = val;
+                        progressText.Report($"Preparing Display. {numProcessed.ToString("N0")} of {numDuplicates.ToString("N0")} - {val}%");
+                        progress.Report(val);
+                    }
+                }
             }
+            progressText.Report("Prepared records. Sorting - Please wait");
             return select;
         }
 
