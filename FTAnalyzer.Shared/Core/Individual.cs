@@ -392,11 +392,14 @@ namespace FTAnalyzer
                     Surname = UNKNOWN_NAME;
                     _forenames = name;
                 }
-                if (Surname.ToLower() == "mnu" || Surname.ToLower() == "lnu" || Surname.Length == 0 ||
+                if (Surname.ToLower() == "mnu" || Surname.ToLower() == "lnu" || Surname.Length == 0 || Surname == "[--?--]" || Surname.ToLower() == "unk" ||
                   ((Surname[0] == '.' || Surname[0] == '?' || Surname[0] == '_') && Surname.Distinct().Count() == 1)) // if all chars are same and is . ? or _
                     Surname = UNKNOWN_NAME;
                 if (GeneralSettings.Default.TreatFemaleSurnamesAsUnknown && !IsMale && Surname.StartsWith("(", StringComparison.Ordinal) && Surname.EndsWith(")", StringComparison.Ordinal))
                     Surname = UNKNOWN_NAME;
+                if(_forenames.ToLower() == "unk" || _forenames == "[--?--]" ||
+                  ((_forenames[0] == '.' || _forenames[0] == '?' || _forenames[0] == '_') && _forenames.Distinct().Count() == 1))
+                  _forenames = UNKNOWN_NAME;
                 MarriedName = Surname;
                 _fullname = SetFullName();
                 SortedName = $"{_forenames} {Surname}".Trim();
