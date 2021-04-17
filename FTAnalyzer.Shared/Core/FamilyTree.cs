@@ -19,7 +19,7 @@ using System.Numerics;
 using System.Collections.Concurrent;
 
 #if __PC__
-using FTAnalyzer.Controls;
+using FTAnalyzer.Forms.Controls;
 #elif __MACOS__ || __IOS__
 using FTAnalyzer.ViewControllers;
 #endif
@@ -3421,9 +3421,9 @@ namespace FTAnalyzer
                 {
                     currentPercentage = val;
                     if (val < 100)
-                        progressText.Report($"Done {totalComparisons.ToString("N0")} of {maxComparisons.ToString("N0")} - {val}%\nFound {duplicatesFound.ToString("N0")} possible duplicates");
+                        progressText.Report($"Done {totalComparisons:N0} of {maxComparisons:N0} - {val}%\nFound {duplicatesFound:N0} possible duplicates");
                     else
-                        progressText.Report($"Completed {duplicatesFound.ToString("N0")} possible duplicates found. Preparing display.");
+                        progressText.Report($"Completed {duplicatesFound:N0} possible duplicates found. Preparing display.");
                     progress.Report(val);
                 }
             }
@@ -3456,7 +3456,7 @@ namespace FTAnalyzer
                     if (val > currentPercentage)
                     {
                         currentPercentage = val;
-                        progressText.Report($"Preparing Display. {numProcessed.ToString("N0")} of {numDuplicates.ToString("N0")} - {val}%");
+                        progressText.Report($"Preparing Display. {numProcessed:N0} of {numDuplicates:N0} - {val}%");
                         progress.Report(val);
                     }
                 }
