@@ -35,7 +35,7 @@ namespace FTAnalyzer
         string Suffix { get; }
         [ColumnDetail("Alias", 75)]
         string Alias { get; }
-        [ColumnDetail("FamilySearch ID", 120)]
+        [ColumnDetail("FamilySearch ID", 120, ColumnDetail.ColumnAlignment.Left, ColumnDetail.ColumnType.LinkCell)]
         string FamilySearchID { get; }
         [ColumnDetail("Marriages", 60, ColumnDetail.ColumnAlignment.Right)]
         int MarriageCount { get; }
