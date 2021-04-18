@@ -5,7 +5,7 @@ namespace FTAnalyzer
     public interface IDisplayDataError : IColumnComparer<IDisplayDataError>
     {
 #if __PC__
-        [ColumnDetail("Icon", 50)]
+        [ColumnDetail("Icon", 50, ColumnDetail.ColumnAlignment.Center, ColumnDetail.ColumnType.Icon)]
         System.Drawing.Image Icon { get; }
 #endif
         [ColumnDetail("Error Type", 170)]

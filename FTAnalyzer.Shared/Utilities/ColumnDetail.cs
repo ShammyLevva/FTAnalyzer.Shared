@@ -23,6 +23,7 @@ namespace FTAnalyzer.Utilities
         {
             ColumnName = name;
             ColumnWidth = width;
+            TypeofColumn = columnType;
 #if __PC__
             switch(alignment)
             {
@@ -41,6 +42,6 @@ namespace FTAnalyzer.Utilities
         }
         public enum ColumnAlignment { Left, Right, Center };
 
-        public enum ColumnType { TextBox, LinkCell, CheckBox };
+        public enum ColumnType { TextBox, LinkCell, CheckBox, Icon };
     }
 }

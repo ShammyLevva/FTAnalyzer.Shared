@@ -4,6 +4,10 @@ namespace FTAnalyzer
 {
     public interface IDisplayDuplicateIndividual
     {
+        [ColumnDetail("Ignore", 75, ColumnDetail.ColumnAlignment.Center, ColumnDetail.ColumnType.CheckBox)]
+        bool IgnoreNonDuplicate { get; }
+        [ColumnDetail("Score", 60)]
+        int Score { get; }
         [ColumnDetail("Ref", 50)]
         string IndividualID { get;}
         [ColumnDetail("Name", 150)]
@@ -24,9 +28,5 @@ namespace FTAnalyzer
         FactDate MatchBirthDate { get; }
         [ColumnDetail("Match Birth Location", 250)]
         FactLocation MatchBirthLocation { get; }
-        [ColumnDetail("Score", 60)]
-        int Score { get; }
-        [ColumnDetail("Ignore", 75, ColumnDetail.ColumnAlignment.Center, ColumnDetail.ColumnType.CheckBox)]
-        bool IgnoreNonDuplicate { get; }
     }
 }
