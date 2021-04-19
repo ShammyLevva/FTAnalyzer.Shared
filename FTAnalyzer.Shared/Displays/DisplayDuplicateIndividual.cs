@@ -20,10 +20,11 @@
         public string Surname => IndA.Surname;
         public FactDate BirthDate => IndA.BirthDate;
         public FactLocation BirthLocation => IndA.BirthLocation;
-
+        public string Gender => IndA.Gender;
         public string MatchIndividualID => IndB.IndividualID;
         public string MatchName => IndB.Name;
         public FactDate MatchBirthDate => IndB.BirthDate;
         public FactLocation MatchBirthLocation => IndB.BirthLocation;
+        public string MatchGender => IndB.Gender;
     }
 }

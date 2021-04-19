@@ -20,6 +20,8 @@ namespace FTAnalyzer
         FactDate BirthDate { get;}
         [ColumnDetail("Birth Location", 400)]
         FactLocation BirthLocation { get;}
+        [ColumnDetail("Gender", 100)]
+        string Gender { get; }
         [ColumnDetail("Match", 125)]
         string MatchIndividualID { get; }
         [ColumnDetail("Match Name", 250)]
@@ -28,5 +30,7 @@ namespace FTAnalyzer
         FactDate MatchBirthDate { get; }
         [ColumnDetail("Match Birth Location", 400)]
         FactLocation MatchBirthLocation { get; }
+        [ColumnDetail("Match Gender", 100)]
+        string MatchGender { get; }
     }
 }
