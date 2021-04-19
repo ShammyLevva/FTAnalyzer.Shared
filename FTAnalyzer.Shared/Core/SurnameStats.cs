@@ -1,4 +1,5 @@
 ﻿using FTAnalyzer.Utilities;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -21,14 +22,29 @@ namespace FTAnalyzer
             GOONSpage = string.Empty;
         }
 
-        public int CompareTo(IDisplaySurnames other)
-        {
-            throw new System.NotImplementedException();
-        }
+        public int CompareTo(IDisplaySurnames other) => string.Compare(Surname, other.Surname, StringComparison.Ordinal);
 
         public IComparer<IDisplaySurnames> GetComparer(string columnName, bool ascending)
         {
-            throw new System.NotImplementedException();
+            switch (columnName)
+            {
+                case "Surname": return CompareComparableProperty<IDisplaySurnames>(f => f.Surname, ascending);
+                case "Individuals": return CompareComparableProperty<IDisplaySurnames>(f => f.Individuals, ascending);
+                case "Families": return CompareComparableProperty<IDisplaySurnames>(f => f.Families, ascending);
+                case "Marriages": return CompareComparableProperty<IDisplaySurnames>(f => f.Marriages, ascending);
+                default: return null;
+            }
+        }
+
+        Comparer<T> CompareComparableProperty<T>(Func<IDisplaySurnames, IComparable> accessor, bool ascending)
+        {
+            return Comparer<T>.Create((x, y) =>
+            {
+                var c1 = accessor(x as IDisplaySurnames);
+                var c2 = accessor(y as IDisplaySurnames);
+                var result = c1.CompareTo(c2);
+                return ascending ? result : -result;
+            });
         }
     }
 
