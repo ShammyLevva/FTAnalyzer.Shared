@@ -6,27 +6,27 @@ namespace FTAnalyzer
     {
         [ColumnDetail("Ignore", 75, ColumnDetail.ColumnAlignment.Center, ColumnDetail.ColumnType.CheckBox)]
         bool IgnoreNonDuplicate { get; }
-        [ColumnDetail("Score", 60)]
+        [ColumnDetail("Score", 120)]
         int Score { get; }
-        [ColumnDetail("Ref", 50)]
+        [ColumnDetail("Ref", 100)]
         string IndividualID { get;}
-        [ColumnDetail("Name", 150)]
+        [ColumnDetail("Name", 250)]
         string Name { get;}
-        [ColumnDetail("Forenames", 100)]
+        [ColumnDetail("Forenames", 200)]
         string Forenames { get; }
-        [ColumnDetail("Surname", 75)]
+        [ColumnDetail("Surname", 150)]
         string Surname { get; }
-        [ColumnDetail("Birth Date", 170)]
+        [ColumnDetail("Birth Date", 225)]
         FactDate BirthDate { get;}
-        [ColumnDetail("Birth Location", 250)]
+        [ColumnDetail("Birth Location", 400)]
         FactLocation BirthLocation { get;}
-        [ColumnDetail("Match", 50)]
+        [ColumnDetail("Match", 125)]
         string MatchIndividualID { get; }
-        [ColumnDetail("Match Name", 150)]
+        [ColumnDetail("Match Name", 250)]
         string MatchName { get; }
-        [ColumnDetail("Match Birth Date", 170)]
+        [ColumnDetail("Match Birth Date", 225)]
         FactDate MatchBirthDate { get; }
-        [ColumnDetail("Match Birth Location", 250)]
+        [ColumnDetail("Match Birth Location", 400)]
         FactLocation MatchBirthLocation { get; }
     }
 }
