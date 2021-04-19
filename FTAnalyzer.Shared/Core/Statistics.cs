@@ -86,7 +86,7 @@ namespace FTAnalyzer
 
         public void Clear() => surnames = null;
 
-        public List<SurnameStats> Surnames(Predicate<Individual> indFilter, Predicate<Family> famFilter, IProgress<int> progress, bool ignoreCase)
+        public List<IDisplaySurnames> Surnames(Predicate<Individual> indFilter, Predicate<Family> famFilter, IProgress<int> progress, bool ignoreCase)
         {
             IEnumerable<Individual> list = ft.AllIndividuals.Filter(indFilter).GroupBy(x => x.Surname).Select(group => group.First());
             surnames = list.Select(x => new SurnameStats(x.Surname)).ToList();

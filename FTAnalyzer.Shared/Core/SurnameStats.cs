@@ -1,9 +1,10 @@
-﻿using System.Collections;
+﻿using FTAnalyzer.Utilities;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace FTAnalyzer
 {
-    public class SurnameStats
+    public class SurnameStats : IDisplaySurnames
     {
         public string Surname { get; private set; }
         public int Individuals { get; set; }
@@ -19,11 +20,21 @@ namespace FTAnalyzer
             Marriages = 0;
             GOONSpage = string.Empty;
         }
+
+        public int CompareTo(IDisplaySurnames other)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IComparer<IDisplaySurnames> GetComparer(string columnName, bool ascending)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 
-    public class SurnameStatsComparer : IEqualityComparer<SurnameStats>
-    { 
-        public bool Equals(SurnameStats a, SurnameStats b)
+    public class SurnameStatsComparer : IEqualityComparer<IDisplaySurnames>
+    {
+        public bool Equals(IDisplaySurnames a, IDisplaySurnames b)
         {
             return a.Surname.ToUpper() == b.Surname.ToUpper() &&
                     a.Individuals == b.Individuals &&
@@ -31,6 +42,6 @@ namespace FTAnalyzer
                     a.Marriages == b.Marriages;
         }
 
-        public int GetHashCode(SurnameStats obj) => base.GetHashCode();
+        public int GetHashCode(IDisplaySurnames obj) => base.GetHashCode();
     }
 }

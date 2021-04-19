@@ -14,7 +14,7 @@ namespace FTAnalyzer
             Count = count;
         }
 
-        public int CompareTo(IDisplayOccupation that) => string.Compare(Occupation, that.Occupation, System.StringComparison.Ordinal);
+        public int CompareTo(IDisplayOccupation that) => string.Compare(Occupation, that.Occupation, StringComparison.Ordinal);
 
         public IComparer<IDisplayOccupation> GetComparer(string columnName, bool ascending)
         {
