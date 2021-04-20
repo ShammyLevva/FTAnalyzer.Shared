@@ -8,10 +8,10 @@ namespace FTAnalyzer
         [ColumnDetail("Custom Fact Name", 400)]
         string CustomFactName { get; }
 
-        [ColumnDetail("Count", 70)]
+        [ColumnDetail("Count", 100)]
         int Count { get; }
 
-        [ColumnDetail("Ignore", 70)]
+        [ColumnDetail("Ignore", 70, ColumnDetail.ColumnAlignment.Center, ColumnDetail.ColumnType.CheckBox)]
         bool Ignore { get; set; }
     }
 }
