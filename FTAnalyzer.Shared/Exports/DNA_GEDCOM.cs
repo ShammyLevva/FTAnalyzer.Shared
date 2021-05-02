@@ -15,7 +15,7 @@ namespace FTAnalyzer.Exports
 {
     public static class DNA_GEDCOM
     {
-        static readonly FactDate PrivacyDate = new FactDate(DateTime.Now.AddYears(-100).ToString("dd MMM yyyy", FactDate.CULTURE));
+        static readonly FactDate PrivacyDate = new FactDate(FactDate.NOW.AddYears(-100).ToString("dd MMM yyyy", FactDate.CULTURE));
         static readonly FamilyTree ft = FamilyTree.Instance;
         static bool _includeSiblings;
         static bool _includeDescendants;

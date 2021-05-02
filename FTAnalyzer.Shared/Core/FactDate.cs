@@ -50,6 +50,7 @@ namespace FTAnalyzer
         public static FactDate MARRIAGE_LESS_THAN_13;
         public static FactDate SAME_SEX_MARRIAGE;
         public static FactDate TODAY;
+        public static DateTime NOW;
 
         static readonly Dictionary<string, Regex> _datePatterns;
         static Regex _regex;
@@ -78,6 +79,7 @@ namespace FTAnalyzer
             MARRIAGE_LESS_THAN_13 = new FactDate("1600");
             SAME_SEX_MARRIAGE = new FactDate("AFT 1 APR 2001");
             TODAY = new FactDate(DateTime.Now.ToString("dd MMM yyyy", CULTURE));
+            NOW = TODAY.StartDate;
         }
 
         public enum FactDateType { BEF, AFT, BET, ABT, UNK, EXT }

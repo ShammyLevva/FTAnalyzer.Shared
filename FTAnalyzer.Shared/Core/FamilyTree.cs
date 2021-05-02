@@ -1310,7 +1310,6 @@ namespace FTAnalyzer
         DateTime GetMinDeathDate(Individual indiv)
         {
             FactDate deathDate = indiv.DeathDate;
-            DateTime now = DateTime.Now;
             FactDate.FactDateType deathDateType = deathDate.DateType;
             FactDate.FactDateType birthDateType = indiv.BirthDate.DateType;
             DateTime minDeath = FactDate.MAXDATE;
@@ -1319,7 +1318,7 @@ namespace FTAnalyzer
                 minDeath = CreateDate(indiv.BirthDate.EndDate.Year + FactDate.MAXYEARS, 12, 31);
                 if (birthDateType == FactDate.FactDateType.BEF)
                     minDeath = minDeath.TryAddYears(1);
-                if (minDeath > now) // 110 years after birth is after todays date so we set to ignore
+                if (minDeath > FactDate.NOW) // 110 years after birth is after todays date so we set to ignore
                     minDeath = FactDate.MAXDATE;
             }
             FactDate burialDate = indiv.GetPreferredFactDate(Fact.BURIAL);
@@ -1998,10 +1997,9 @@ namespace FTAnalyzer
                     }
                     #endregion
                     #region All Facts
-                    FactDate now = new FactDate(DateTime.Now.ToString("dd MMM yyyy"));
                     foreach (Fact f in ind.AllFacts)
                     {
-                        if (f.FactDate.IsAfter(now))
+                        if (f.FactDate.IsAfter(FactDate.TODAY))
                             errors[(int)Dataerror.FACT_IN_FUTURE].Add(
                                 new DataError((int)Dataerror.FACT_IN_FUTURE, ind, $"{f} is in the future."));
                         if (FactBeforeBirth(ind, f))
@@ -2940,7 +2938,7 @@ namespace FTAnalyzer
                 else if (st == SearchType.DEATH)
                     query.Append("&record_type=stat_deaths");
                 int fromYear = Math.Max(1855, factdate.StartDate.Year - 1); // -1 to add a years tolerance either side
-                int toYear = Math.Min(factdate.EndDate.Year + 1, FactDate.TODAY.StartDate.Year); // +1 to add a years tolerance either side
+                int toYear = Math.Min(factdate.EndDate.Year + 1, FactDate.NOW.Year); // +1 to add a years tolerance either side
                 query.Append($"&from_year={fromYear}&to_year={toYear}");
                 uri.Query = query.ToString();
                 oprResult = uri.ToString();

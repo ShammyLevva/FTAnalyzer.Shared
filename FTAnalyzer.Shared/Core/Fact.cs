@@ -550,7 +550,7 @@ namespace FTAnalyzer
                     {
                         Comment = FamilyTree.GetText(node, "CAUS", true);
                         if (node.FirstChild != null && node.FirstChild.Value == "Y" && FactDate.IsUnknown)
-                            FactDate = new FactDate(FactDate.MINDATE, DateTime.Now); // if death flag set as Y then death before today.
+                            FactDate = new FactDate(FactDate.MINDATE, FactDate.NOW); // if death flag set as Y then death before today.
                     }
                     string age = FamilyTree.GetText(node, "AGE", false);
                     if (age.Length > 0)

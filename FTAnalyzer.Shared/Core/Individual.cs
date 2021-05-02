@@ -529,7 +529,7 @@ namespace FTAnalyzer
             }
         }
 
-        int MaxAgeAtDeath => DeathDate.EndDate > DateTime.Now ? GetAge(DateTime.Now).MaxAge : GetAge(DeathDate).MaxAge;
+        int MaxAgeAtDeath => DeathDate.EndDate > FactDate.NOW ? GetAge(FactDate.NOW).MaxAge : GetAge(DeathDate).MaxAge;
 
         public Age LifeSpan => GetAge(FactDate.TODAY);
 
