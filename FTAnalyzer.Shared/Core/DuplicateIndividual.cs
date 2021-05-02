@@ -20,6 +20,7 @@
             ScoreDates(IndividualA.BirthDate, IndividualB.BirthDate);
             ScoreDates(IndividualA.DeathDate, IndividualB.DeathDate);
             LocationScore();
+            GenderScore();
             Score += SharedParents() + SharedChildren() + DifferentParentsPenalty();
         }
 
@@ -69,11 +70,21 @@
                 Score -= 250;
         }
 
+        void GenderScore()
+        { // values may need tweaked
+            if (IndividualA.Gender.Equals(IndividualB.Gender))
+                Score += 50; // identical genders
+            else if (IndividualA.GenderMatches(IndividualB)) 
+                Score += 20; // matches on unknown
+            else
+                Score -= 50; // mismatched genders
+        }
+
         void ScoreDates(FactDate dateA, FactDate dateB)
         {
             if (dateA.IsKnown && dateB.IsKnown)
             {
-                double distance = dateA.Distance(dateB);
+                long distance = dateA.DistanceSquared(dateB);
                 if (dateA.Equals(dateB))
                     Score += 50;
                 else if (distance <= .25)

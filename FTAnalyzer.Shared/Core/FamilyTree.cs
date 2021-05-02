@@ -1148,7 +1148,7 @@ namespace FTAnalyzer
                 if (birthDate != baseDate)
                     toAdd = baseDate;
             }
-            if (toAdd != null && toAdd != birthDate && toAdd.Distance(birthDate) > 1)
+            if (toAdd != null && toAdd != birthDate && toAdd.DistanceSquared(birthDate) > 1)
             {
                 // we have a date to change and its not the same 
                 // range as the existing death date
@@ -1253,7 +1253,7 @@ namespace FTAnalyzer
                     }
                 }
             }
-            if (toAdd != null && toAdd != deathDate && toAdd.Distance(deathDate) > 1)
+            if (toAdd != null && toAdd != deathDate && toAdd.DistanceSquared(deathDate) > 1)
             {
                 // we have a date to change and its not the same 
                 // range as the existing death date
@@ -3392,7 +3392,7 @@ namespace FTAnalyzer
                 {
                     var indB = list[j];
                     if ((indA.ForenameMetaphone.Equals(indB.ForenameMetaphone) || indA.StandardisedName.Equals(indB.StandardisedName)) &&
-                       indA.BirthDate.Distance(indB.BirthDate) < 5)
+                       indA.BirthDate.DistanceSquared(indB.BirthDate) < 5)
                     {
                         var test = new DuplicateIndividual(indA, indB);
                         if (test.Score > 0)
