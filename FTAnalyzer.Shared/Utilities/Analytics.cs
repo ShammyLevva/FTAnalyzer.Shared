@@ -184,6 +184,7 @@ namespace FTAnalyzer.Utilities
             if (version.StartsWith("10.0.18363")) return "Windows 10 (1909)";
             if (version.StartsWith("10.0.19041")) return "Windows 10 (2004)";
             if (version.StartsWith("10.0.19042")) return "Windows 10 (20H2)";
+            if (version.StartsWith("10.0.19043")) return "Windows 10 (21H1)";
             version += Environment.Is64BitOperatingSystem ? " (x64)" : " (x86)";
             return version;
         }
