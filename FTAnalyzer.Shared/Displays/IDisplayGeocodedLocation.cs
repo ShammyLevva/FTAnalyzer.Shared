@@ -1,6 +1,7 @@
 ﻿#if __PC__
 using System.Drawing;
 using FTAnalyzer.Mapping;
+using FTAnalyzer.Utilities;
 #endif
 
 namespace FTAnalyzer
@@ -11,6 +12,7 @@ namespace FTAnalyzer
         double Latitude { get; }
         double Longitude { get; }
 #if __PC__
+        [ColumnDetail("Icon", 50, ColumnDetail.ColumnAlignment.Center, ColumnDetail.ColumnType.Icon)]
         Image Icon { get; }
 #endif
         string Geocoded { get; }

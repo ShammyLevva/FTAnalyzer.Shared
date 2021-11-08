@@ -24,7 +24,7 @@ namespace FTAnalyzer
             Fact = fact;
             IgnoreFact = false;
 #if __PC__
-            Icon = FactImage.ErrorIcon(fact.FactErrorLevel).Icon;
+            Icon = GraphicsUtilities.ResizeImageToCurrentScale(FactImage.ErrorIcon(fact.FactErrorLevel).Icon);
 #endif
         }
         public FactDate DateofBirth => Ind is null ? FactDate.UNKNOWN_DATE : Ind.BirthDate;
@@ -45,7 +45,7 @@ namespace FTAnalyzer
         public string FoundResultType => Fact.Location.FoundResultType;
         public string GeocodeStatus => Fact.Location.Geocoded;
 #if __PC__
-        public System.Drawing.Image LocationIcon => FactLocationImage.ErrorIcon(Fact.Location.GeocodeStatus).Icon;
+        public System.Drawing.Image LocationIcon => GraphicsUtilities.ResizeImageToCurrentScale(FactLocationImage.ErrorIcon(Fact.Location.GeocodeStatus).Icon);
         public bool Preferred => Fact.Preferred;
         public bool IgnoredFact => IgnoreFact;
 #elif __MACOS__ || __IOS__

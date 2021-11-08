@@ -4,6 +4,10 @@ namespace FTAnalyzer
 {
     public interface IDisplayLocation : IColumnComparer<IDisplayLocation>
     {
+#if __PC__
+        [ColumnDetail("Icon", 50, ColumnDetail.ColumnAlignment.Center, ColumnDetail.ColumnType.Icon)]
+        System.Drawing.Image Icon { get; }
+#endif
         [ColumnDetail("Country", 120)]
         string Country { get; }
         [ColumnDetail("Region", 120)]
@@ -18,9 +22,6 @@ namespace FTAnalyzer
         double Latitude { get; }
         [ColumnDetail("Long", 60)]
         double Longitude { get; }
-#if __PC__
-        System.Drawing.Image Icon { get; }
-#endif
         [ColumnDetail("Geocode Status", 120)]
         string Geocoded { get; }
         [ColumnDetail("Found Location", 250)]

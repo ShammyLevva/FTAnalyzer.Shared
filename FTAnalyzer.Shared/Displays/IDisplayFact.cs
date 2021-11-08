@@ -9,6 +9,7 @@ namespace FTAnalyzer
     public interface IDisplayFact : IColumnComparer<IDisplayFact>
     {
 #if __PC__
+        [ColumnDetail("Icon", 50, ColumnDetail.ColumnAlignment.Center, ColumnDetail.ColumnType.Icon)]
         Image Icon { get; }
 #endif
         [ColumnDetail("Ref", 60)]
@@ -34,6 +35,7 @@ namespace FTAnalyzer
         [ColumnDetail("Age at Fact", 70)]
         Age AgeAtFact { get; }
 #if __PC__
+        [ColumnDetail("Location Icon", 50, ColumnDetail.ColumnAlignment.Center, ColumnDetail.ColumnType.Icon)]
         Image LocationIcon { get; }
 #endif
         [ColumnDetail("Geocode Status", 150)]
