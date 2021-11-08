@@ -168,25 +168,29 @@ namespace FTAnalyzer.Utilities
 
         static string SetWindowsVersion(string version)
         {
-            if (version.StartsWith("6.1.7600")) return "Windows 7";
-            if (version.StartsWith("6.1.7601")) return "Windows 7 SP1";
-            if (version.StartsWith("6.2.9200")) return "Windows 8";
-            if (version.StartsWith("6.3.9200")) return "Windows 8.1";
-            if (version.StartsWith("6.3.9600")) return "Windows 8.1 Update 1";
-            if (version.StartsWith("10.0.10240")) return "Windows 10";
-            if (version.StartsWith("10.0.10586")) return "Windows 10 (1511)";
-            if (version.StartsWith("10.0.14393")) return "Windows 10 (1607)";
-            if (version.StartsWith("10.0.15063")) return "Windows 10 (1703)";
-            if (version.StartsWith("10.0.16299")) return "Windows 10 (1709)";
-            if (version.StartsWith("10.0.17134")) return "Windows 10 (1803)";
-            if (version.StartsWith("10.0.17763")) return "Windows 10 (1809)";
-            if (version.StartsWith("10.0.18362")) return "Windows 10 (1903)";
-            if (version.StartsWith("10.0.18363")) return "Windows 10 (1909)";
-            if (version.StartsWith("10.0.19041")) return "Windows 10 (2004)";
-            if (version.StartsWith("10.0.19042")) return "Windows 10 (20H2)";
-            if (version.StartsWith("10.0.19043")) return "Windows 10 (21H1)";
-            version += Environment.Is64BitOperatingSystem ? " (x64)" : " (x86)";
-            return version;
+            string result = string.Empty;
+            if (version.StartsWith("6.1.7600")) result = "Windows 7";
+            if (version.StartsWith("6.1.7601")) result = "Windows 7 SP1";
+            if (version.StartsWith("6.2.9200")) result = "Windows 8";
+            if (version.StartsWith("6.3.9200")) result = "Windows 8.1";
+            if (version.StartsWith("6.3.9600")) result = "Windows 8.1 Update 1";
+            if (version.StartsWith("10.0.10240")) result = "Windows 10";
+            if (version.StartsWith("10.0.10586")) result = "Windows 10 (1511)";
+            if (version.StartsWith("10.0.14393")) result = "Windows 10 (1607)";
+            if (version.StartsWith("10.0.15063")) result = "Windows 10 (1703)";
+            if (version.StartsWith("10.0.16299")) result = "Windows 10 (1709)";
+            if (version.StartsWith("10.0.17134")) result = "Windows 10 (1803)";
+            if (version.StartsWith("10.0.17763")) result = "Windows 10 (1809)";
+            if (version.StartsWith("10.0.18362")) result = "Windows 10 (1903)";
+            if (version.StartsWith("10.0.18363")) result = "Windows 10 (1909)";
+            if (version.StartsWith("10.0.19041")) result = "Windows 10 (2004)";
+            if (version.StartsWith("10.0.19042")) result = "Windows 10 (20H2)";
+            if (version.StartsWith("10.0.19043")) result = "Windows 10 (21H1)";
+            if (version.StartsWith("10.0.22000")) return "Windows 11 (21H1)";
+            if (result.Length == 0)
+                return version;
+            result += Environment.Is64BitOperatingSystem ? " (x64)" : " (x86)";
+            return result;
         }
 #endif
     }
