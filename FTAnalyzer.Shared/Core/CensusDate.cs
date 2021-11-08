@@ -22,7 +22,6 @@ namespace FTAnalyzer
         public static CensusDate UKCENSUS1901 = new CensusDate("31 MAR 1901", "UK Census 1901", Countries.UNITED_KINGDOM, "C1901");
         public static CensusDate UKCENSUS1911 = new CensusDate("02 APR 1911", "UK Census 1911", Countries.UNITED_KINGDOM, "C1911");
         public static CensusDate UKCENSUS1921 = new CensusDate("19 JUN 1921", "UK Census 1921", Countries.UNITED_KINGDOM, "C1921");
-        public static CensusDate UKCENSUS1931 = new CensusDate("26 APR 1931", "UK Census 1931", Countries.UNITED_KINGDOM, "C1931");
         public static CensusDate UKCENSUS1939 = new CensusDate("29 SEP 1939", "UK National Register 1939", Countries.UNITED_KINGDOM, "C1939");
         public static CensusDate UKCENSUS1951 = new CensusDate("08 APR 1951", "UK Census 1951", Countries.UNITED_KINGDOM, "C1951");
         public static CensusDate UKCENSUS1961 = new CensusDate("23 APR 1961", "UK Census 1961", Countries.UNITED_KINGDOM, "C1961");
@@ -32,12 +31,14 @@ namespace FTAnalyzer
         public static CensusDate UKCENSUS1991 = new CensusDate("21 APR 1991", "UK Census 1991", Countries.UNITED_KINGDOM, "C1991");
         public static CensusDate UKCENSUS2001 = new CensusDate("29 APR 2001", "UK Census 2001", Countries.UNITED_KINGDOM, "C2001");
         public static CensusDate UKCENSUS2011 = new CensusDate("27 MAR 2011", "UK Census 2011", Countries.UNITED_KINGDOM, "C2011");
-        //public static CensusDate UKCENSUS2021 = new CensusDate("02 APR 2021", "UK Census 2021", Countries.UNITED_KINGDOM, "C2021");
 
         public static CensusDate EWCENSUS1841 = new CensusDate("06 JUN 1841", "England & Wales Census 1841", Countries.ENG_WALES, "C1841");
         public static CensusDate EWCENSUS1881 = new CensusDate("03 APR 1881", "England & Wales Census 1881", Countries.ENG_WALES, "C1881");
         public static CensusDate EWCENSUS1911 = new CensusDate("02 APR 1911", "England & Wales Census 1911", Countries.ENG_WALES, "C1911");
+        public static CensusDate EWCENSUS2021 = new CensusDate("21 MAR 2021", "England & Wales Census 2021", Countries.ENG_WALES, "C2021");
         public static CensusDate SCOTCENSUS1881 = new CensusDate("03 APR 1881", "Scotland Census 1881", Countries.SCOTLAND, "C1881");
+        public static CensusDate SCOTCENSUS1931 = new CensusDate("26 APR 1931", "Scotland Census 1931", Countries.SCOTLAND, "C1931");
+        public static CensusDate SCOTCENSUS2022 = new CensusDate("02 APR 2022", "Scotland Census 2022", Countries.SCOTLAND, "C2021");
 
         public static CensusDate SCOTVALUATION1855 = new CensusDate("BET JUL 1854 AND MAY 1855", "Scottish Valuation Roll 1855", Countries.SCOTLAND, "V1855");
         public static CensusDate SCOTVALUATION1865 = new CensusDate("BET JUL 1864 AND MAY 1865", "Scottish Valuation Roll 1865", Countries.SCOTLAND, "V1865");
@@ -107,8 +108,8 @@ namespace FTAnalyzer
 
         public static readonly ISet<CensusDate> UK_CENSUS = new HashSet<CensusDate>(new CensusDate[] {
             UKCENSUS1841, UKCENSUS1851, UKCENSUS1861, UKCENSUS1871, UKCENSUS1881, UKCENSUS1891, UKCENSUS1901, UKCENSUS1911, UKCENSUS1921,
-            UKCENSUS1939, UKCENSUS1931, UKCENSUS1951, UKCENSUS1961, UKCENSUS1966, UKCENSUS1971, UKCENSUS1981, UKCENSUS1991, UKCENSUS2001,
-            UKCENSUS2011
+            UKCENSUS1939, UKCENSUS1951, UKCENSUS1961, UKCENSUS1966, UKCENSUS1971, UKCENSUS1981, UKCENSUS1991, UKCENSUS2001,
+            UKCENSUS2011, EWCENSUS2021, SCOTCENSUS1931, SCOTCENSUS2022
         });
 
         public static readonly ISet<CensusDate> US_FEDERAL_CENSUS = new HashSet<CensusDate>(new CensusDate[] {
@@ -126,7 +127,7 @@ namespace FTAnalyzer
 
         public static ISet<CensusDate> SUPPORTED_CENSUS = new HashSet<CensusDate>(new CensusDate[] {
             UKCENSUS1841, UKCENSUS1851, UKCENSUS1861, UKCENSUS1871, UKCENSUS1881, UKCENSUS1891, UKCENSUS1901, UKCENSUS1911, UKCENSUS1921,
-            UKCENSUS1939, UKCENSUS1931, UKCENSUS1951, UKCENSUS1961, UKCENSUS1966, UKCENSUS1971, UKCENSUS1981, UKCENSUS1991, UKCENSUS2001,
+            UKCENSUS1939, UKCENSUS1951, UKCENSUS1961, UKCENSUS1966, UKCENSUS1971, UKCENSUS1981, UKCENSUS1991, UKCENSUS2001,
             UKCENSUS2011, 
             USCENSUS1790, USCENSUS1800, USCENSUS1810, USCENSUS1820, USCENSUS1830, USCENSUS1840, USCENSUS1850, USCENSUS1860, USCENSUS1870,
             USCENSUS1880, USCENSUS1890, USCENSUS1900, USCENSUS1910, USCENSUS1920, USCENSUS1930, USCENSUS1940, USCENSUS1950, USCENSUS1960,
@@ -135,7 +136,7 @@ namespace FTAnalyzer
             CANADACENSUS1911, CANADACENSUS1916, CANADACENSUS1921, CANADACENSUS1931, CANADACENSUS1941, CANADACENSUS1951, CANADACENSUS1961,
             CANADACENSUS1971, CANADACENSUS1976, CANADACENSUS1981, CANADACENSUS1986, CANADACENSUS1991, CANADACENSUS1996, CANADACENSUS2001,
             CANADACENSUS2006, CANADACENSUS2011, CANADACENSUS2016, IRELANDCENSUS1911,
-            EWCENSUS1841, EWCENSUS1881, EWCENSUS1911, SCOTCENSUS1881
+            EWCENSUS1841, EWCENSUS1881, EWCENSUS1911, EWCENSUS2021, SCOTCENSUS1881, SCOTCENSUS1931, SCOTCENSUS2022
         });
 
         public static ISet<CensusDate> LOSTCOUSINS_CENSUS = new HashSet<CensusDate>(new CensusDate[] {
@@ -180,8 +181,27 @@ namespace FTAnalyzer
                         return USCENSUS1910;
                     case 1921:
                         return USCENSUS1920;
+                    case 1931:
+                        return USCENSUS1930;
                     case 1939:
                         return USCENSUS1940;
+                    case 1951:
+                        return USCENSUS1950;
+                    case 1961:
+                        return USCENSUS1960;
+                    case 1971:
+                        return USCENSUS1970;
+                    case 1981:
+                        return USCENSUS1980;
+                    case 1991:
+                        return USCENSUS1990;
+                    case 2001:
+                        return USCENSUS2000;
+                    case 2011:
+                        return USCENSUS2010;
+                    case 2021:
+                    case 2022:
+                        return USCENSUS2020;
                     default:
                         return null;
                 }
