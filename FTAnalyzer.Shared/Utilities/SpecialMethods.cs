@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System;
+using System.Drawing;
 #if __PC__
 using System.Collections.Generic;
 using System.Linq;
@@ -34,11 +35,12 @@ namespace FTAnalyzer.Utilities
         {
             try
             {
+                Font font = new Font(Properties.FontSettings.Default.SelectedFont.Name, Properties.FontSettings.Default.SelectedFont.Size);
                 foreach (Control theControl in GetAllControls(form))
                     if (theControl.Font.Name.Equals(Properties.FontSettings.Default.SelectedFont.Name)
                         && theControl.Font.Size != Properties.FontSettings.Default.SelectedFont.Size)
                     {
-                        theControl.Font = Properties.FontSettings.Default.SelectedFont; // change font size only if matching font name and size are different
+                        theControl.Font = font; // change font size only if matching font name and size are different
                         theControl.Refresh();
                     }
             } catch (Exception e)
