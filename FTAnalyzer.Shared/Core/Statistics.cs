@@ -88,7 +88,7 @@ namespace FTAnalyzer
 
         public List<IDisplaySurnames> Surnames(Predicate<Individual> indFilter, Predicate<Family> famFilter, IProgress<int> progress, bool ignoreCase)
         {
-            IEnumerable<Individual> list = ft.AllIndividuals.Filter(indFilter).GroupBy(x => x.Surname).Select(group => group.First());
+            IEnumerable<Individual> list = ft.AllIndividuals.Where(x => x.Surname != Individual.UNKNOWN_NAME).Filter(indFilter).GroupBy(x => x.Surname).Select(group => group.First());
             surnames = list.Select(x => new SurnameStats(x.Surname)).ToList();
             int maximum = list.Count();
             int value = 0;

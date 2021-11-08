@@ -242,6 +242,8 @@ namespace FTAnalyzer
 
         #region Properties
 
+        public bool IsUnknownName => Forename == UNKNOWN_NAME && Surname == UNKNOWN_NAME;
+
         public bool HasRangedBirthDate => BirthDate.DateType == FactDate.FactDateType.BET && BirthDate.StartDate.Year != BirthDate.EndDate.Year;
 
         public bool HasLostCousinsFactAtDate(CensusDate date)

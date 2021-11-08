@@ -3323,14 +3323,14 @@ namespace FTAnalyzer
         long duplicatesFound;
         int currentPercentage;
 
-        public async Task<SortableBindingList<IDisplayDuplicateIndividual>> GenerateDuplicatesList(int value, bool ignoreUnknown, IProgress<int> progress, IProgress<string> progressText, IProgress<int> maximum, CancellationToken ct)
+        public async Task<SortableBindingList<IDisplayDuplicateIndividual>> GenerateDuplicatesList(int value, bool ignoreUnknownTwins, IProgress<int> progress, IProgress<string> progressText, IProgress<int> maximum, CancellationToken ct)
         {
             if (duplicates != null)
             {
                 maximum.Report(MaxDuplicateScore());
                 return BuildDuplicateList(value, progress, progressText); // we have already processed the duplicates since the file was loaded
             }
-            var groups = individuals.Where(x => x.Name != Individual.UNKNOWN_NAME).GroupBy(x => x.SurnameMetaphone).Select(x => x.ToList()).ToList();
+            var groups = individuals.Where(x => !x.IsUnknownName).GroupBy(x => x.SurnameMetaphone).Select(x => x.ToList()).ToList();
             int numgroups = groups.Count;
             progress.Report(0);
             totalComparisons = 0;
@@ -3343,7 +3343,7 @@ namespace FTAnalyzer
             {
                 foreach (var group in groups)
                 {
-                    var task = Task.Run(() => IdentifyDuplicates(ignoreUnknown, group, ct), ct);
+                    var task = Task.Run(() => IdentifyDuplicates(ignoreUnknownTwins, group, ct), ct);
                     tasks.Add(task);
                 }
                 var progressTask = Task.Run(() => ProgressReporter(progress, progressText, ct), ct);
@@ -3383,7 +3383,7 @@ namespace FTAnalyzer
             return score;
         }
 
-        void IdentifyDuplicates(bool ignoreUnknown, IList<Individual> list, CancellationToken ct)
+        void IdentifyDuplicates(bool ignoreUnknownTwins, IList<Individual> list, CancellationToken ct)
         {
             for (var i = 0; i < list.Count; i++)
             {
@@ -3448,7 +3448,7 @@ namespace FTAnalyzer
                         select.Add(dispDup);
                 }
                 numProcessed++;
-                if(numProcessed % 20 == 0)
+                if (numProcessed % 20 == 0)
                 {
                     var val = (int)(100 * numProcessed / numDuplicates);
                     if (val > currentPercentage)
