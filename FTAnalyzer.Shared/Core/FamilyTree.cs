@@ -266,7 +266,7 @@ namespace FTAnalyzer
                 Task.Run(() => Analytics.TrackActionAsync(Analytics.GEDCOMAction, Analytics.SoftwareVersion, softwareVersion));
             }
             XmlNode charset = doc.SelectSingleNode("GED/HEAD/CHAR");
-            string fileCharset = charset.InnerText;
+            string fileCharset = charset is null ? "ACSII" : charset.InnerText;
             XmlDocument tempDoc = null;
             if (charset != null)
             {
@@ -1293,10 +1293,10 @@ namespace FTAnalyzer
                 // set to 9 months before birth if indiv is a father 
                 // and we have changed maxdate from the MINDATE default
                 // and the date is derived from a child not a marriage
-                maxdate = maxdate.AddMonths(-9);
-                // now set to Jan 1 of that year 9 months before birth to prevent 
-                // very exact 9 months before dates
-                maxdate = CreateDate(maxdate.Year, 1, 1);
+                maxdate = maxdate.AddMonths(-10);
+                // now set to 1st of month 10 months before birth to prevent 
+                // very exact 9 months before dates to avoid being too tight
+                maxdate = CreateDate(maxdate.Year, maxdate.Month, 1);
             }
             // Check max date on all facts of facttype but don't consider long year span marriage or children facts
             foreach (Fact f in indiv.AllFacts)
@@ -2028,6 +2028,7 @@ namespace FTAnalyzer
                         }
                     }
                     #region Duplicate Fact Check
+                    var groups = ind.AllFileFacts.GroupBy(x => x.EqualHash);
                     var dup = ind.AllFileFacts.GroupBy(x => x.EqualHash).Where(g => g.Count() > 1).Select(y => y.Key).ToList();
                     var dupList = new List<Fact>();
                     foreach (string dfs in dup)
