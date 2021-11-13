@@ -84,6 +84,7 @@ namespace FTAnalyzer
         const string US_CENSUS_PATTERN6 = @"(\d{4}) U ?S ? Census,?( ?population SN ?)?(.*?) *ED *(\d{1,5}[AB]?-?\d{0,4}[ABCD]?),? *P(age)? *(\d{1,4}[AB]?)(.*?)[A-Z]6\d\d roll (\d{1,4})";
         const string US_CENSUS_PATTERN7 = @"(\d{4}) U ?S ? Census,?( ?population SN ?)?(.*?) *ED *(\d{1,5}[AB]?-?\d{0,4}[ABCD]?),? *P(age)? *(\d{1,4}[AB]?)(.*?)";
         const string US_CENSUS_PATTERN8 = @"(\d{4}) U ?S ? Census,?( ?population SN ?)?(.*?) *P(age)? *(\d{1,4}[AB]?)(.*?)[A-Z]6\d\d roll (\d{1,4})";
+        const string US_CENSUS_PATTERN9 = @"(\d{4}) ?T0?(62\d).*ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?) Roll ?(\d{0,5}) *P(age)?  *(\d{1,4}[ABCD]?)?";
         const string US_CENSUS_1940_PATTERN = @"District *(\d{1,5}[AB]?-?\d{0,4}[AB]?).*?P(age)? *(\d{1,3}[ABCD]?).*?T627 ?,? *(\d{1,5}-?[AB]?)";
         const string US_CENSUS_1940_PATTERN2 = @"ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?).*? *P(age)? *(\d{1,3}[ABCD]?).*?T627.*?roll ?(\d{1,5}-?[AB]?)";
         const string US_CENSUS_1940_PATTERN3 = @"1940 *(.*?)(Roll)? *M*?-*?_*?T0*?627_(.*?) *P(age)? *(\d{1,4}[ABCD]?) *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?)";
@@ -187,6 +188,7 @@ namespace FTAnalyzer
                 ["US_CENSUS_PATTERN6"] = new Regex(US_CENSUS_PATTERN6, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["US_CENSUS_PATTERN7"] = new Regex(US_CENSUS_PATTERN7, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["US_CENSUS_PATTERN8"] = new Regex(US_CENSUS_PATTERN8, RegexOptions.Compiled | RegexOptions.IgnoreCase),
+                ["US_CENSUS_PATTERN9"] = new Regex(US_CENSUS_PATTERN9, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["US_CENSUS_1940_PATTERN"] = new Regex(US_CENSUS_1940_PATTERN, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["US_CENSUS_1940_PATTERN2"] = new Regex(US_CENSUS_1940_PATTERN2, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["US_CENSUS_1940_PATTERN3"] = new Regex(US_CENSUS_1940_PATTERN3, RegexOptions.Compiled | RegexOptions.IgnoreCase),
@@ -554,6 +556,10 @@ namespace FTAnalyzer
             WriteTimer("US_CENSUS_PATTERN3", text, output);
             WriteTimer("US_CENSUS_PATTERN4", text, output);
             WriteTimer("US_CENSUS_PATTERN5", text, output);
+            WriteTimer("US_CENSUS_PATTERN6", text, output);
+            WriteTimer("US_CENSUS_PATTERN7", text, output);
+            WriteTimer("US_CENSUS_PATTERN8", text, output);
+            WriteTimer("US_CENSUS_PATTERN9", text, output);
             WriteTimer("US_CENSUS_1940_PATTERN", text, output);
             WriteTimer("US_CENSUS_1940_PATTERN2", text, output);
             WriteTimer("US_CENSUS_1940_PATTERN3", text, output);
@@ -1268,6 +1274,16 @@ namespace FTAnalyzer
                 Place = GetOriginalPlace(matcher.Groups[3].ToString(), originalText, "ED");
                 Page = matcher.Groups[5].ToString();
                 Roll = matcher.Groups[7].ToString();
+                SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.INCOMPLETE, matcher.Value);
+                return true;
+            }
+            matcher = censusRegexs["US_CENSUS_PATTERN9"].Match(text);
+            if (matcher.Success)
+            {
+                Class = $"US{matcher.Groups[1]}";
+                ED = matcher.Groups[3].ToString();
+                Roll = matcher.Groups[4].ToString();
+                Page = matcher.Groups[6].ToString();
                 SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.INCOMPLETE, matcher.Value);
                 return true;
             }

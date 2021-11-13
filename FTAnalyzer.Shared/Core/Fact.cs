@@ -111,6 +111,7 @@ namespace FTAnalyzer
             CUSTOM_TAGS.Add("CENSUS 1891", CENSUS);
             CUSTOM_TAGS.Add("CENSUS 1901", CENSUS);
             CUSTOM_TAGS.Add("CENSUS 1911", CENSUS);
+            CUSTOM_TAGS.Add("CENSUS 1921", CENSUS);
             CUSTOM_TAGS.Add("CENSUS 1939", CENSUS);
             CUSTOM_TAGS.Add("1841 CENSUS", CENSUS);
             CUSTOM_TAGS.Add("1851 CENSUS", CENSUS);
@@ -120,6 +121,7 @@ namespace FTAnalyzer
             CUSTOM_TAGS.Add("1891 CENSUS", CENSUS);
             CUSTOM_TAGS.Add("1901 CENSUS", CENSUS);
             CUSTOM_TAGS.Add("1911 CENSUS", CENSUS);
+            CUSTOM_TAGS.Add("1921 CENSUS", CENSUS);
             CUSTOM_TAGS.Add("1939 CENSUS", CENSUS);
             CUSTOM_TAGS.Add("NAT REG 1939", CENSUS);
             CUSTOM_TAGS.Add("REGISTER 1939", CENSUS);
@@ -133,6 +135,7 @@ namespace FTAnalyzer
             CUSTOM_TAGS.Add("CENSUS UK 1891", CENSUS);
             CUSTOM_TAGS.Add("CENSUS UK 1901", CENSUS);
             CUSTOM_TAGS.Add("CENSUS UK 1911", CENSUS);
+            CUSTOM_TAGS.Add("CENSUS UK 1921", CENSUS);
             CUSTOM_TAGS.Add("CENSUS UK 1939", CENSUS);
             CUSTOM_TAGS.Add("UK 1841 CENSUS", CENSUS);
             CUSTOM_TAGS.Add("UK 1851 CENSUS", CENSUS);
@@ -531,7 +534,7 @@ namespace FTAnalyzer
                             else
                                 outputText.Report($"Source {srcref} not found.\n");
                             if (IsCensusFact)
-                                CensusReference = new CensusReference(this, n);
+                                CensusReference = new CensusReference(this, n, CensusReference); //pass in existing reference so as to not lose any unknown references
                         }
                     }
                     // if we have checked the sources and no census ref see if its been added as a comment to this fact
