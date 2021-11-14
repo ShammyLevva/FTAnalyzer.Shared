@@ -533,15 +533,21 @@ namespace FTAnalyzer
                             }
                             else
                                 outputText.Report($"Source {srcref} not found.\n");
-                            if (IsCensusFact)
-                                CensusReference = new CensusReference(this, n, CensusReference); //pass in existing reference so as to not lose any unknown references
+                            if (IsCensusFact) 
+                            {
+                                CensusReference cr = new CensusReference(this, n, CensusReference); //pass in existing reference so as to not lose any unknown references
+                                // only update census reference if new one is better
+                                if (cr.IsKnownStatus && !CensusReference.IsKnownStatus)
+                                    CensusReference = cr;
+                                else if (cr.IsGoodStatus && !CensusReference.IsGoodStatus)
+                                    CensusReference = cr;
+                            }
                         }
                     }
                     // if we have checked the sources and no census ref see if its been added as a comment to this fact
                     if (IsCensusFact)
                     {
                         CheckForSharedFacts(node);
-
                         if (!CensusReference.IsKnownStatus)
                             CensusReference = new CensusReference(this, node, CensusReference); //pass in existing reference so as to not lose any unknown references
                         else if (!CensusReference.IsGoodStatus)
