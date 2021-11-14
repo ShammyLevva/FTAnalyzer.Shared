@@ -6,13 +6,15 @@ namespace FTAnalyzer
     public class DisplayCustomFact : IDisplayCustomFact
     {
         public string CustomFactName { get; }
-        public int Count { get; }
+        public int IndividualCount { get; }
+        public int FamilyCount { get; }
         public bool Ignore { get; set; }
 
-        public DisplayCustomFact(string occupation,int count, bool ignore)
+        public DisplayCustomFact(string factname,int indcount, int famcount, bool ignore)
         {
-            CustomFactName = occupation;
-            Count = count;
+            CustomFactName = factname;
+            IndividualCount = indcount;
+            FamilyCount = famcount;
             Ignore = ignore;
         }
 
@@ -23,7 +25,8 @@ namespace FTAnalyzer
             switch(columnName)
             { 
                 case "CustomFactName": return CompareComparableProperty<IDisplayCustomFact>(f => f.CustomFactName, ascending);
-                case "Count": return CompareComparableProperty<IDisplayCustomFact>(f => f.Count, ascending);
+                case "IndividualCount": return CompareComparableProperty<IDisplayCustomFact>(f => f.IndividualCount, ascending);
+                case "FamilyCount": return CompareComparableProperty<IDisplayCustomFact>(f => f.FamilyCount, ascending);
                 case "Ignore": return CompareComparableProperty<IDisplayCustomFact>(f => f.Ignore, ascending);
                  default: return null;
             }
