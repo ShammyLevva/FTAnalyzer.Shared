@@ -77,6 +77,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Exports\ExportToExcel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exports\ExportToLostCousins.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exports\IExportIndividual.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Exports\ExportFactsAtLocation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exports\IExportReferrals.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exports\IJsonFamily.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exports\IJsonIndividual.cs" />

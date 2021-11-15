@@ -571,7 +571,7 @@ namespace FTAnalyzer
                     if (count > 0 && !ignore)
                         outputText.Report($"\nFound {count} Individual facts of unknown/custom fact type {tag}");
                 }
-                if(unknownFamilyFactTypes.Count > 0)
+                if (unknownFamilyFactTypes.Count > 0)
                 {
                     foreach (string tag in unknownFamilyFactTypes.Keys)
                     {
@@ -864,7 +864,7 @@ namespace FTAnalyzer
         }
 
         void AddCustomFacts(Family family)
-        { 
+        {
             foreach (string factType in unknownFamilyFactTypes.Keys)
             {
                 if (family.Facts.Any(x => x.FactTypeDescription == factType))
@@ -1686,6 +1686,46 @@ namespace FTAnalyzer
                         result.Add(loc);
                 return result;
             }
+        }
+
+        public List<ExportFactsAtLocation> AllExportableGeocodedLocations(IProgress<int> progress)
+        {
+            List<ExportFactsAtLocation> result = new List<ExportFactsAtLocation>();
+            int loopcount = 0;
+            int maxval = FactLocation.AllLocations.Count();
+            foreach (FactLocation loc in FactLocation.AllLocations)
+            {
+                ExportFactsAtLocation toadd = new ExportFactsAtLocation();
+                if (loc.IsGeoCoded(false))
+                {
+                    toadd.SortableLocation = loc.SortableLocation;
+                    toadd.LocationName = loc.FixedLocation;
+                    toadd.Latitude = loc.Latitude;
+                    toadd.Longitude = loc.Longitude;
+                    var individuals = GetIndividualsAtLocation(loc, loc.Level);
+                    List<string> factsAtLocation = new List<string>();
+                    foreach (Individual ind in individuals)
+                    {
+                        var facts = ind.AllFacts.Where(x => x.Location == loc && !x.Created);
+                        foreach (Fact fact in facts)
+                            factsAtLocation.Add($"{ind.Name} {fact.FactDateLocation}");
+                    }
+                    var families = GetFamiliesAtLocation(loc, loc.Level);
+                    foreach (Family fam in families)
+                    {
+                        var facts = fam.Facts.Where(x => x.Location == loc);
+                        foreach (Fact fact in facts)
+                            factsAtLocation.Add($"  {fam.FamilyName} {fact.FactDateLocation}");
+                    }
+                    factsAtLocation.Sort();
+                    toadd.FactsAtLocation = factsAtLocation;
+                    result.Add(toadd);
+                }
+                loopcount++;
+                progress.Report(100 * loopcount / maxval);
+            }
+            result.Sort(new FactsAtLocationComparer());
+            return result;
         }
 
         public SortableBindingList<IDisplayIndividual> AllDisplayIndividuals

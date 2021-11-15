@@ -16,7 +16,7 @@ namespace FTAnalyzer
                 BIRTH_CALC = "_BIRTHCALC", BLESSING = "BLES", BURIAL = "BURI", CASTE = "CAST", CAUSE_OF_DEATH = "CAUS",
                 CENSUS = "CENS", CENSUS_FTA = "_CENSFTA", CHANGE = "CHAN", CHILDREN1911 = "CHILDREN1911", CHRISTENING = "CHR",
                 CIRCUMCISION = "_CIRC", CONFIRMATION = "CONF", CONFIRMATION_LDS = "CONL", CREMATION = "CREM",
-                CUSTOM_ATTRIBUTE = "_ATTR", CUSTOM_EVENT = "EVEN", CUSTOM_FACT = "FACT", DEATH = "DEAT", DEGREE = "_DEG", 
+                CUSTOM_ATTRIBUTE = "_ATTR", CUSTOM_EVENT = "EVEN", CUSTOM_FACT = "FACT", DEATH = "DEAT", DEGREE = "_DEG",
                 DESTINATION = "_DEST", DIVORCE = "DIV", DIVORCE_FILED = "DIVF", DNA = "_DNA", EDUCATION = "EDUC", ELECTION = "_ELEC",
                 EMAIL = "EMAIL", EMIGRATION = "EMIG", EMPLOYMENT = "_EMPLOY", ENDOWMENT_LDS = "ENDL", ENGAGEMENT = "ENGA",
                 EXCOMMUNICATION = "_EXCM", FIRST_COMMUNION = "FCOM", FUNERAL = "_FUN", GENDER = "SEX", GRADUATION = "GRAD",
@@ -38,10 +38,10 @@ namespace FTAnalyzer
         public const string ANCESTRY_DEATH_CAUSE = "_DCAUSE";
 
         public static ISet<string> LOOSE_BIRTH_FACTS = new HashSet<string>(new string[] {
-            CHRISTENING, BAPTISM, RESIDENCE, WITNESS, EMIGRATION, IMMIGRATION, ARRIVAL, DEPARTURE, 
-            EDUCATION, DEGREE, ADOPTION, BAR_MITZVAH, BAS_MITZVAH, ADULT_CHRISTENING, CONFIRMATION, 
-            FIRST_COMMUNION, ORDINATION, NATURALIZATION, GRADUATION, RETIREMENT, LOSTCOUSINS, 
-            LC_FTA, MARR_CONTRACT, MARR_LICENSE, MARR_SETTLEMENT, MARRIAGE, MARRIAGE_BANN, DEATH, 
+            CHRISTENING, BAPTISM, RESIDENCE, WITNESS, EMIGRATION, IMMIGRATION, ARRIVAL, DEPARTURE,
+            EDUCATION, DEGREE, ADOPTION, BAR_MITZVAH, BAS_MITZVAH, ADULT_CHRISTENING, CONFIRMATION,
+            FIRST_COMMUNION, ORDINATION, NATURALIZATION, GRADUATION, RETIREMENT, LOSTCOUSINS,
+            LC_FTA, MARR_CONTRACT, MARR_LICENSE, MARR_SETTLEMENT, MARRIAGE, MARRIAGE_BANN, DEATH,
             CREMATION, BURIAL, CENSUS, BIRTH_CALC, CENSUS_SUMMARY
                     });
 
@@ -63,7 +63,7 @@ namespace FTAnalyzer
             CENSUS_FTA, CHILDREN, PARENT, BIRTH_CALC, LC_FTA
                     });
 
-        public static readonly Dictionary<string, string> NON_STANDARD_FACTS = new Dictionary<string,string>();
+        public static readonly Dictionary<string, string> NON_STANDARD_FACTS = new Dictionary<string, string>();
         static readonly Dictionary<string, string> CUSTOM_TAGS = new Dictionary<string, string>();
         static readonly HashSet<string> COMMENT_FACTS = new HashSet<string>();
 
@@ -234,7 +234,7 @@ namespace FTAnalyzer
             CUSTOM_TAGS.Add("LTOG: LIVED TOGETHER (UNMARRIED)", UNMARRIED);
             CUSTOM_TAGS.Add("ILLNESS", MEDICAL_CONDITION);
             CUSTOM_TAGS.Add("CENSUS SUMMARY", CENSUS_SUMMARY);
-            
+
             // Legacy 8 default fact types
             CUSTOM_TAGS.Add("ALT. BIRTH", BIRTH);
             CUSTOM_TAGS.Add("ALT. CHRISTENING", CHRISTENING);
@@ -471,7 +471,7 @@ namespace FTAnalyzer
                     if (FactType.Equals(CUSTOM_ATTRIBUTE) || FactType.Equals(CUSTOM_EVENT) || FactType.Equals(CUSTOM_FACT))
                     {
                         string tag = FamilyTree.GetText(node, "TYPE", false).ToUpper();
-                        if(tag.StartsWith("CENSUS") || tag.StartsWith("1939 REGISTER"))
+                        if (tag.StartsWith("CENSUS") || tag.StartsWith("1939 REGISTER"))
                         {
                             FactType = CENSUS;
                             CheckCensusDate(tag, Location);
@@ -488,7 +488,7 @@ namespace FTAnalyzer
                             Tag = string.IsNullOrEmpty(tag) ? "** Custom Fact with no Fact Type ERROR **" : tag;
                         }
                     }
-                    if(FactType.Equals(NAME))
+                    if (FactType.Equals(NAME))
                     {
                         string tag = FamilyTree.GetText(node, "TYPE", false).ToUpper();
                         if (tag.Equals("AKA"))
@@ -502,7 +502,7 @@ namespace FTAnalyzer
                     SetCommentAndLocation(FactType, nodeText, placeText, addrTagText, xmlLat, xmlLong);
                     if (!string.IsNullOrEmpty(xmlLat) && !string.IsNullOrEmpty(xmlLong))
                         Location.GEDCOMLatLong = true;
-                    
+
                     // only check UK census dates for errors as those are used for colour census
                     if (FactType.Equals(CENSUS))
                         CheckCensusDate("Census", Location);
@@ -528,12 +528,12 @@ namespace FTAnalyzer
                             {
                                 Sources.Add(source);
                                 source.AddFact(this);
-                                if(!SourcePages.Contains(pageText))
+                                if (!SourcePages.Contains(pageText))
                                     SourcePages.Add(pageText);
                             }
                             else
                                 outputText.Report($"Source {srcref} not found.\n");
-                            if (IsCensusFact) 
+                            if (IsCensusFact)
                             {
                                 CensusReference cr = new CensusReference(this, n, CensusReference); //pass in existing reference so as to not lose any unknown references
                                 // only update census reference if new one is better
@@ -553,8 +553,8 @@ namespace FTAnalyzer
                         else if (!CensusReference.IsGoodStatus)
                             CensusReference.CheckFullUnknownReference(CensusReference.Status);
                     }
-                    if(GeneralSettings.Default.ConvertResidenceFacts && FactType.Equals(RESIDENCE) && CensusReference.IsKnownStatus)
-                            FactType = CENSUS; // change fact type if option set and residence has a valid census reference
+                    if (GeneralSettings.Default.ConvertResidenceFacts && FactType.Equals(RESIDENCE) && CensusReference.IsKnownStatus)
+                        FactType = CENSUS; // change fact type if option set and residence has a valid census reference
                     if (FactType == DEATH)
                     {
                         Comment = FamilyTree.GetText(node, "CAUS", true);
@@ -724,8 +724,8 @@ namespace FTAnalyzer
         public Family Family { get; private set; }
         public string FactTypeDescription => (FactType == UNKNOWN && Tag.Length > 0) ? Tag : GetFactTypeDescription(FactType);
 
-        public bool IsMarriageFact =>  
-            FactType == MARR_CONTRACT || FactType == MARR_LICENSE || 
+        public bool IsMarriageFact =>
+            FactType == MARR_CONTRACT || FactType == MARR_LICENSE ||
             FactType == MARR_SETTLEMENT || FactType == MARRIAGE || FactType == MARRIAGE_BANN;
 
         public bool IsCensusFact
@@ -854,7 +854,7 @@ namespace FTAnalyzer
                 // residence isn't a normal census year but it is a census year if tolerate is on
                 if (CensusDate.IsCensusCountry(FactDate, Location) || !Location.IsKnownCountry)
                 {
-                    FactErrorNumber = (int) FamilyTree.Dataerror.RESIDENCE_CENSUS_DATE;
+                    FactErrorNumber = (int)FamilyTree.Dataerror.RESIDENCE_CENSUS_DATE;
                     FactErrorLevel = FactError.WARNINGALLOW;
                     if (!Countries.IsKnownCountry(Country))
                         FactErrorMessage = $"Warning : Residence date {FactDate} in unknown country {Country}. Is in one of the census years but doesn't overlap a census date.";
@@ -1030,7 +1030,7 @@ namespace FTAnalyzer
                 latitude = "0.0";
             if (string.IsNullOrEmpty(longitude))
                 longitude = "0.0";
-            FactLocation.Geocode geocode = 
+            FactLocation.Geocode geocode =
                 (latitude.Equals("0.0") && longitude.Equals("0.0")) ? FactLocation.Geocode.NOT_SEARCHED : FactLocation.Geocode.GEDCOM_USER;
             if (addrTagText.Length > 0)
             {    //we have an address decide to add it to place or not
@@ -1062,8 +1062,8 @@ namespace FTAnalyzer
         string UnknownFactHash => FactType == UNKNOWN ? Tag : string.Empty;
 
         string FamilyFactHash => Family is null ? string.Empty : Family.FamilyID;
-        
-        public string PossiblyEqualHash => FactType + UnknownFactHash + FamilyFactHash +  FactDate + IsMarriageFact;
+
+        public string PossiblyEqualHash => FactType + UnknownFactHash + FamilyFactHash + FactDate + IsMarriageFact;
 
         public string EqualHash => FactType + UnknownFactHash + FamilyFactHash + FactDate + Location + Comment + IsMarriageFact;
 
@@ -1071,14 +1071,15 @@ namespace FTAnalyzer
 
         public bool IsValidCensus(CensusDate censusDate) => FactDate.IsKnown && IsCensusFact && FactDate.CensusYearMatches(censusDate) && FactDate.IsNotBEForeOrAFTer && FactErrorLevel == FactError.GOOD;
 
-        public bool IsValidLostCousins(CensusDate censusDate) => 
+        public bool IsValidLostCousins(CensusDate censusDate) =>
             FactDate.IsKnown && (FactType == LOSTCOUSINS || FactType == LC_FTA) &&
             FactDate.CensusYearMatches(censusDate) && FactDate.IsNotBEForeOrAFTer && FactErrorLevel == FactError.GOOD;
 
         public bool IsOverseasUKCensus(string country) =>
             country.Equals(Countries.OVERSEAS_UK) || (!Countries.IsUnitedKingdom(country) && CensusReference != null && CensusReference.IsUKCensus);
 
-        public override string ToString() => 
+        public override string ToString() =>
             FactTypeDescription + ": " + FactDate + (Location.ToString().Length > 0 ? " at " + Location : string.Empty) + (Comment.Length > 0 ? "  (" + Comment + ")" : string.Empty);
+        public string FactDateLocation => $"{FactTypeDescription}: {FactDate}";
     }
 }
