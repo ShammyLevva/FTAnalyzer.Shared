@@ -1715,7 +1715,7 @@ namespace FTAnalyzer
                     {
                         var facts = fam.Facts.Where(x => x.Location == loc);
                         foreach (Fact fact in facts)
-                            factsAtLocation.Add($"  {fam.FamilyName} {fact.FactDateLocation}");
+                            factsAtLocation.Add($"{fam.FamilyName} {fact.FactDateLocation}");
                     }
                     factsAtLocation.Sort();
                     toadd.FactsAtLocation = factsAtLocation;
