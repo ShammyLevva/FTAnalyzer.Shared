@@ -2385,7 +2385,7 @@ namespace FTAnalyzer
         {
             FactDate censusFactDate = new FactDate(censusYear.ToString());
 
-            //updated https://www.familysearch.org/search/record/results?givenname=bisset&surname=william&record_type=3&offset=0&count=20
+            // https://www.familysearch.org/search/record/results?f.collectionId=2000219&q.anyDate.from=1897&q.anyDate.to=1899&q.anyPlace=United%20States&q.givenName=George%20Thurman&q.surname=Walker
             StringBuilder path = new StringBuilder();
             path.Append("https://www.familysearch.org/search/record/results?");
             if (person.Forename != "?" && person.Forename.ToUpper() != Individual.UNKNOWN_NAME)
@@ -2393,12 +2393,11 @@ namespace FTAnalyzer
             string surname = person.SurnameAtDate(censusFactDate);
             if (surname != "?" && surname.ToUpper() != Individual.UNKNOWN_NAME)
                 path.Append($"&{FamilySearch.SURNAME}={HttpUtility.UrlEncode(surname)}");
-            path.Append($"&{FamilySearch.RECORD_TYPE}=3");
             if (person.BirthDate.IsKnown)
             {
                 int startYear = person.BirthDate.StartDate.Year - 1;
                 int endYear = person.BirthDate.EndDate.Year + 1;
-                path.Append($"&{FamilySearch.BIRTH_YEAR}={startYear}-{endYear}");
+                path.Append($"&{FamilySearch.BIRTH_YEAR}.from={startYear}&{FamilySearch.BIRTH_YEAR}.to={endYear}");
             }
             string location = Countries.UNKNOWN_COUNTRY;
             if (person.BirthLocation.IsKnown)
@@ -2410,16 +2409,16 @@ namespace FTAnalyzer
             }
             int collection = FamilySearch.CensusCollectionID(country, censusYear);
             if (collection > 0)
-                path.Append($"&collection_id={collection}");
+                path.Append($"&{FamilySearch.COLLECTION_ID}={collection}");
             else
             {
                 collection = FamilySearch.CensusCollectionID(location, censusYear);
                 if (collection > 0)
-                    path.Append($"&collection_id={collection}");
+                    path.Append($"&{FamilySearch.COLLECTION_ID}={collection}");
                 else if (Countries.IsUnitedKingdom(country))
                 {
                     collection = FamilySearch.CensusCollectionID(Countries.ENGLAND, censusYear);
-                    path.Append($"&collection_id={collection}");
+                    path.Append($"&{FamilySearch.COLLECTION_ID}={collection}");
                 }
                 else if (Countries.IsKnownCountry(country))
                 { // TODO
@@ -2923,7 +2922,7 @@ namespace FTAnalyzer
 
         public enum SearchType { BIRTH = 0, MARRIAGE = 1, DEATH = 2 };
 
-        public void SearchBMD(SearchType st, Individual individual, FactDate factdate, int searchProvider, string bmdRegion, Individual spouse)
+        public void SearchBMD(SearchType st, Individual individual, FactDate factdate, FactLocation factLocation, int searchProvider, string bmdRegion, Individual spouse)
         {
             string uri = null;
             if (factdate.IsUnknown || factdate.DateType.Equals(FactDate.FactDateType.AFT) || factdate.DateType.Equals(FactDate.FactDateType.BEF))
@@ -2955,7 +2954,7 @@ namespace FTAnalyzer
                 case 0: uri = BuildAncestryQuery(st, individual, factdate, bmdRegion); provider = "Ancestry"; break;
                 case 1: uri = BuildFindMyPastQuery(st, individual, factdate, bmdRegion); provider = "FindMyPast"; break;
                 //                case 2: uri = BuildFreeBMDQuery(st, individual, factdate); provider = "FreeBMD"; break;
-                case 3: uri = BuildFamilySearchQuery(st, individual, factdate); provider = "FamilySearch"; break;
+                case 3: uri = BuildFamilySearchQuery(st, individual, factdate, factLocation); provider = "FamilySearch"; break;
                 case 4: uris = BuildScotlandsPeopleQuery(st, individual, factdate, spouse); provider = "ScotlandsPeople"; break;
                     //                case 5: uri = BuildGROQuery(st, individual, factdate); provider = "GRO"; break;
             }
@@ -3044,9 +3043,9 @@ namespace FTAnalyzer
             return new Tuple<string, string>(oprResult, statutoryResult);
         }
 
-        string BuildFamilySearchQuery(SearchType st, Individual individual, FactDate factdate)
+        string BuildFamilySearchQuery(SearchType st, Individual individual, FactDate factdate, FactLocation factlocation)
         {
-            // https://familysearch.org/search/record/results?count=20&query=%2Bgivenname%3AElizabeth~%20%2Bsurname%3AAckers~%20%2Bbirth_place%3A%22walton%20le%20dale%2C%20lancashire%2C%20england%22~%20%2Bbirth_year%3A1879-1881~%20%2Brecord_country%3AEngland
+        // https://familysearch.org/search/record/results?count=20&q.anyPlace=England&q.birthLikeDate.from=1879&q.birthLikeDate.to=1881&q.birthLikePlace=Walton%20le%20dale%2C%20Lancashire%2C%20England&q.givenName=Elizabeth&q.surname=Ackers&query=%2Bgivenname%3AElizabeth~%20%2Bsurname%3AAckers~%20%2Bbirth_place%3A%22walton%20le%20dale%2C%20lancashire%2C%20england%22~%20%2Bbirth_year%3A1879-1881~%20%2Brecord_country%3AEngland
             UriBuilder uri = new UriBuilder
             {
                 Host = "familysearch.org",
@@ -3056,9 +3055,9 @@ namespace FTAnalyzer
             query.Append("count=20&query=");
 
             if (individual.Forename != "?" && individual.Forename.ToUpper() != Individual.UNKNOWN_NAME)
-                query.Append($"%2Bgivenname%3A{HttpUtility.UrlEncode(individual.Forename)}~%20");
+                query.Append($"&{FamilySearch.GIVENNAME}={HttpUtility.UrlEncode(individual.Forename)}");
             string surname = GetSurname(st, individual, false);
-            query.Append($"%2Bsurname%3A{HttpUtility.UrlEncode(surname)} ~%20");
+            query.Append($"&{FamilySearch.SURNAME}={HttpUtility.UrlEncode(surname)}");
             if (individual.BirthDate.IsKnown)
             {
                 int startYear = individual.BirthDate.StartDate.Year;
@@ -3067,16 +3066,47 @@ namespace FTAnalyzer
                     startYear = endYear - 9;
                 else if (endYear == FactDate.MAXDATE.Year)
                     endYear = startYear + 9;
-                query.Append($"%2Bbirth_year%3A{startYear}-{endYear}~%20");
+                query.Append($"&{FamilySearch.BIRTH_YEAR}.from={startYear}&{FamilySearch.BIRTH_YEAR}.to={endYear}");
             }
-            if (st.Equals(SearchType.BIRTH) && individual.BirthLocation.IsKnown)
-            {  // add birth place if searching for a birth
-                string location = individual.BirthLocation.GetLocation(FactLocation.SUBREGION).ToString();
-                query.Append($"%2Bbirth_place%3A%22{HttpUtility.UrlEncode(location)}%22~%20");
+            if (st == SearchType.MARRIAGE && factdate.IsKnown)
+            {
+                int startYear = factdate.StartDate.Year;
+                int endYear = factdate.EndDate.Year;
+                if (startYear == FactDate.MINDATE.Year)
+                    startYear = endYear - 9;
+                else if (endYear == FactDate.MAXDATE.Year)
+                    endYear = startYear + 9;
+                query.Append($"&{FamilySearch.MARRIAGE_YEAR}.from={startYear}&{FamilySearch.MARRIAGE_YEAR}.to={endYear}");
+            }
+            if (st == SearchType.DEATH && factdate.IsKnown)
+            {
+                int startYear = factdate.StartDate.Year;
+                int endYear = factdate.EndDate.Year;
+                if (startYear == FactDate.MINDATE.Year)
+                    startYear = endYear - 9;
+                else if (endYear == FactDate.MAXDATE.Year)
+                    endYear = startYear + 9;
+                query.Append($"&{FamilySearch.DEATH_YEAR}.from={startYear}&{FamilySearch.DEATH_YEAR}.to={endYear}");
+            }
+            if (factlocation.IsKnown)
+            {
+                string location = factlocation.GetLocation(FactLocation.SUBREGION).ToString();
+                switch (st)
+                {
+                    case SearchType.BIRTH:
+                        query.Append($"&{FamilySearch.BIRTH_LOCATION}={HttpUtility.UrlEncode(location)}");
+                        break;
+                    case SearchType.MARRIAGE:
+                        query.Append($"&{FamilySearch.MARRIAGE_LOCATION}={HttpUtility.UrlEncode(location)}");
+                        break;
+                    case SearchType.DEATH:
+                        query.Append($"&{FamilySearch.DEATH_LOCATION}={HttpUtility.UrlEncode(location)}");
+                        break;
+                }
             }
             string record_country = RecordCountry(st, individual, factdate);
             if (Countries.IsKnownCountry(record_country))
-                query.Append($"%2Brecord_country%3A{HttpUtility.UrlEncode(record_country)}");
+                query.Append($"&{FamilySearch.COUNTRY}={HttpUtility.UrlEncode(record_country)}");
             uri.Query = query.ToString();
             return uri.ToString();
         }

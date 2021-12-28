@@ -1565,6 +1565,33 @@ namespace FTAnalyzer
             }
         }
 
+        public FactLocation FirstMarriageLocation
+        {
+            get
+            {
+                Family fam = Marriages(0);
+                return fam is null ? FactLocation.UNKNOWN_LOCATION : Marriages(0).Location;
+            }
+        }
+
+        public FactLocation SecondMarriageLocation
+        {
+            get
+            {
+                Family fam = Marriages(1);
+                return fam is null ? FactLocation.UNKNOWN_LOCATION : Marriages(1).Location;
+            }
+        }
+
+        public FactLocation ThirdMarriageLocation
+        {
+            get
+            {
+                Family fam = Marriages(2);
+                return fam is null ? FactLocation.UNKNOWN_LOCATION : Marriages(2).Location;
+            }
+        }
+
         public Individual FirstSpouse
         {
             get

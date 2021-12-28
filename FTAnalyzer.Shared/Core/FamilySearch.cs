@@ -5,8 +5,6 @@
         public static string
             FATHER_GIVENNAME = "father_givenname",
             FATHER_SURNAME = "father_surname",
-            GIVENNAME = "givenname",
-            SURNAME = "surname",
             MOTHER_GIVENNAME = "mother_givenname",
             MOTHER_SURNAME = "mother_surname",
             SPOUSE_GIVENNAME = "spouse_givenname",
@@ -14,9 +12,16 @@
             BATCH_NUMBER = "batch_number",
             FILM_NUMBER = "film_number",
             RECORD_TYPE = "record_type",
-            COLLECTION_ID = "collection_id",
-            BIRTH_YEAR = "birth_year",
-            BIRTH_LOCATION = "birth_place";
+            GIVENNAME = "q.givenName",
+            SURNAME = "q.surname",
+            COLLECTION_ID = "f.collectionId",
+            BIRTH_YEAR = "q.birthLikeDate",
+            BIRTH_LOCATION = "q.birthLikePlace",
+            MARRIAGE_YEAR = "q.marriageLikeDate",
+            MARRIAGE_LOCATION = "q.marriageLikePlace",
+            DEATH_YEAR = "q.deathLikeDate",
+            DEATH_LOCATION = "q.deathLikePlace",
+            COUNTRY = "q.anyPlace";
 
         public static int CensusCollectionID(string censusCountry, int censusYear)
         {
