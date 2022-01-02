@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 
 namespace FTAnalyzer.Utilities
 {
@@ -10,12 +11,21 @@ namespace FTAnalyzer.Utilities
         bool isSorted;
         ListSortDirection listSortDirection;
         PropertyDescriptor propertyDescriptor;
+        List<T> originalData;
 
         public SortableBindingList()
-            : base(new List<T>()) => comparers = new Dictionary<Type, PropertyComparer<T>>();
+            : base(new List<T>())
+        {
+            originalData = new List<T>();
+            comparers = new Dictionary<Type, PropertyComparer<T>>();
+        }
 
         public SortableBindingList(IEnumerable<T> enumeration)
-            : base(new List<T>(enumeration)) => comparers = new Dictionary<Type, PropertyComparer<T>>();
+            : base(new List<T>(enumeration))
+        {
+            originalData = new List<T>(enumeration);
+            comparers = new Dictionary<Type, PropertyComparer<T>>();
+        }
 
         protected override bool SupportsSortingCore => true;
 
@@ -129,12 +139,18 @@ namespace FTAnalyzer.Utilities
                 inputList[j] = tempList[i];
             }
         }
+
         #region EventHandler
         public event EventHandler SortStarted;
         public void OnSortStarted() => SortStarted?.Invoke(null, EventArgs.Empty);
 
         public event EventHandler SortFinished;
         public void OnSortFinished() => SortFinished?.Invoke(null, EventArgs.Empty);
+
+        public static implicit operator List<T>(SortableBindingList<T> v)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
 
     }

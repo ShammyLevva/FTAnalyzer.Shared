@@ -32,6 +32,15 @@ namespace FTAnalyzer.Utilities
             return sValue;
         }
 
+        public static string Between(this string value, char startChar, char endChar)
+        {
+            int pos1 = value.IndexOf(startChar) + 1;
+            int pos2 = value.IndexOf(endChar);
+            if (pos1 == -1 || pos2 == -1 || pos1 >= pos2)
+                return string.Empty;
+            return value.Substring(pos1, pos2 - pos1);
+        }
+
         public static DateTime TryAddYears(this DateTime date, int years)
         {
             // Make sure adding/subtracting years won't put date 
