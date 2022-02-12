@@ -80,7 +80,7 @@ namespace FTAnalyzer
             MARRIAGE_LESS_THAN_13 = new FactDate("1600");
             SAME_SEX_MARRIAGE = new FactDate("AFT 1 APR 2001");
             TODAY = new FactDate(DateTime.Now.ToString("dd MMM yyyy", CULTURE));
-            YEAR1935 = new FactDate("1935");
+            YEAR1935 = new FactDate("1935"); // allow 1940 US census reference to refer to a 1935 residence fact
             NOW = TODAY.StartDate;
         }
 
@@ -92,6 +92,8 @@ namespace FTAnalyzer
         public DateTime EndDate { get; private set; }
         public FactDateType DateType { get; private set; }
         public bool SpecialDate { get; private set; }
+        public string SpecialDateText { get; private set; }
+
         public string OriginalString { get; private set; }
         string DoubleDateError;
 
@@ -102,6 +104,7 @@ namespace FTAnalyzer
         {
             DoubleDate = false;
             SpecialDate = false;
+            SpecialDateText = string.Empty;
             str = str ?? "UNKNOWN";
             OriginalString = str;
             // remove any commas in date string
@@ -110,13 +113,16 @@ namespace FTAnalyzer
             DateString = str.Length == 0 ? "UNKNOWN" : str.ToUpper();
             StartDate = MINDATE;
             EndDate = MAXDATE;
-            str = FixTextDateFormats(str.ToUpper());
-            if (str != SPECIAL_DATE)
-            {
-                str = FixCommonDateFormats(str);
-                DateString = str.Length == 0 ? "UNKNOWN" : str.ToUpper();
-                if (!DateString.Equals("UNKNOWN"))
-                    ProcessDate(DateString, factRef);
+            if (!string.IsNullOrEmpty(str))
+            {   // don't bother doing all the checks if the date string is empty
+                str = FixTextDateFormats(str.ToUpper());
+                if (str != SPECIAL_DATE)
+                {
+                    str = FixCommonDateFormats(str);
+                    DateString = str.Length == 0 ? "UNKNOWN" : str.ToUpper();
+                    if (!DateString.Equals("UNKNOWN"))
+                        ProcessDate(DateString, factRef);
+                }
             }
         }
 
@@ -128,6 +134,7 @@ namespace FTAnalyzer
             DateString = CalculateDateString();
             OriginalString = string.Empty;
             SpecialDate = false;
+            SpecialDateText = string.Empty;
             DoubleDate = false;
         }
 
@@ -135,6 +142,9 @@ namespace FTAnalyzer
 
         string FixTextDateFormats(string str)
         {
+            str = ReplaceSpecialCharacters(str);
+            str = str.Replace("DIED IN INFANCY", "INFANT");
+            str = str.Replace("INFANCY", "INFANT");
             switch (str)
             {
                 case "SUBMITTED":
@@ -151,8 +161,9 @@ namespace FTAnalyzer
                 case "UNMARRIED":
                 case "NEVER MARRIED":
                 case "NOT MARRIED":
-                    str = SPECIAL_DATE;
                     SpecialDate = true;
+                    SpecialDateText = str;
+                    str = SPECIAL_DATE;
                     break;
             }
             return str;
@@ -164,16 +175,10 @@ namespace FTAnalyzer
             if (!Properties.NonGedcomDate.Default.UseNonGedcomDates || Properties.NonGedcomDate.Default.Separator != ".")
                 str = str.Replace(".", " ");
             if (str.StartsWith("<") && str.EndsWith(">"))
-                str = str.Replace("<", "").Replace(">", "");                   
+                str = str.Replace("<", "").Replace(">", "");
             // remove date qualifiers first
             str = str.Replace("@#DGREGORIAN@", "").Replace("@#DJULIAN@", ""); //.Replace("@#DFRENCH R@", ""); // .Replace("@#DHEBREW@", "");
-            str = str.Replace(". ", " "); // even if Non GEDCOM date separator is a dot, dot space is invalid.
-            str = str.Replace("&", " AND ");
-            str = str.Replace(",", " ").Replace("(", " ").Replace(")", " ").Replace("?", " ").Replace("!", " ");
-            str = str.Replace("#", " ").Replace("$", " ").Replace("%", " ").Replace("^", " ").Replace("'", " ");
-            str = str.Replace(":", " ").Replace(";", " ").Replace("@", " ").Replace("=", " ").Replace("?", " ");
-            str = str.Replace("~", "ABT ").Replace("<", "BEF ").Replace(">", "AFT ").Replace("#", " ");
-            str = str.Replace(" / ", "/").Replace("\'", " ").Replace("\"", " ").Replace("`", " ").ClearWhiteSpace();
+            str = ReplaceSpecialCharacters(str);
 
             str = str.Replace("MONDAY", "").Replace("TUESDAY", "").Replace("WEDNESDAY", "").Replace("THURSDAY", "").Replace("FRIDAY", "").Replace("SATURDAY", "").Replace("SUNDAY", "");
 
@@ -357,7 +362,6 @@ namespace FTAnalyzer
             str = str.Replace("SUN", "");
 
             // remove common extra words
-            str = str.Replace("DIED IN INFANCY", "INFANT");
             str = str.Replace("CENSUS", "");
 
             // deal with CE/AD and BCE or BC date
@@ -453,8 +457,24 @@ namespace FTAnalyzer
                 int year = int.Parse(matcher.Groups[3].ToString());
                 return new DateTime(year, month, day).ToString("dd MMMM yyyy");
             }
+            if (str == "WWI")
+                return "BET 28 JUL 1914 AND 11 NOV 1918";
+            if (str == "WWII")
+                return "BET 1 SEP 1939 AND 2 SEP 1945";
             str = str.TrimEnd('-');
             return str.Trim();
+        }
+
+        static string ReplaceSpecialCharacters(string str)
+        {
+            str = str.Replace(". ", " "); // even if Non GEDCOM date separator is a dot, dot space is invalid.
+            str = str.Replace("&", " AND ");
+            str = str.Replace(",", " ").Replace("(", " ").Replace(")", " ").Replace("?", " ").Replace("!", " ");
+            str = str.Replace("#", " ").Replace("$", " ").Replace("%", " ").Replace("^", " ").Replace("'", " ");
+            str = str.Replace(":", " ").Replace(";", " ").Replace("@", " ").Replace("=", " ").Replace("?", " ");
+            str = str.Replace("~", "ABT ").Replace("<", "BEF ").Replace(">", "AFT ").Replace("#", " ");
+            str = str.Replace(" / ", "/").Replace("\'", " ").Replace("\"", " ").Replace("`", " ").ClearWhiteSpace();
+            return str;
         }
 
         Tuple<bool, string> BetweenFixes(string str)

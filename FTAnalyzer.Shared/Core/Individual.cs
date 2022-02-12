@@ -953,7 +953,7 @@ namespace FTAnalyzer
             if (BirthDate.IsKnown)
             {
                 int years;
-                switch (addedFact.FactDate.OriginalString.ToUpper())
+                switch (addedFact.FactDate.SpecialDateText.ToUpper())
                 {
                     case "STILLBORN":
                         years = 0;

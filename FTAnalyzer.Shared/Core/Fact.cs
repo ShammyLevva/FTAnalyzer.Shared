@@ -565,7 +565,7 @@ namespace FTAnalyzer
                     if (age.Length > 0)
                         GedcomAge = new Age(age, FactDate);
                     CertificatePresent = SetCertificatePresent();
-                    if (FactDate.SpecialDate)
+                    if (FactDate.SpecialDate) //check special date is ok
                     {
                         //if (FactType == DEATH || FactType == MARRIAGE)
                         //    throw;
