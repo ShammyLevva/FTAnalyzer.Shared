@@ -642,7 +642,13 @@ namespace FTAnalyzer
             }
             catch (Exception e)
             {
-                throw new FactDateException($"Error parsing date '{OriginalString}' for {factRef}. Error message was : {e.Message}\n");
+                if(OriginalString.StartsWith("(") && OriginalString.EndsWith(")")) // do not throw error if date
+                {
+                    Console.WriteLine("we have a text date with brackets");
+                }
+                else
+                    throw new FactDateException($"Error parsing date '{OriginalString}' for {factRef}. Error message was : {e.Message}\n");
+
             }
         }
 

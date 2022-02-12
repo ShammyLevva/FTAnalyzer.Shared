@@ -470,6 +470,8 @@ namespace FTAnalyzer
         {
             if (ind is null) return;
             Individual spouse = ind.IsMale ? Wife : Husband;
+            if (spouse == ind)
+                spouse = ind.IsMale ? Husband : Wife; // revese for same sex marriages
             if (spouse != null)
                 spouse.RelationType = relationType;
         }
