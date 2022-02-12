@@ -323,7 +323,9 @@ namespace FTAnalyzer
                 {
                     _allfacts = new List<Fact>();
                     _allfacts.AddRange(PersonalFacts);
-                    _allfacts.AddRange(FamilyFacts);
+                    foreach(Fact f in FamilyFacts)
+                        if(!_allfacts.Contains(f))
+                            _allfacts.Add(f);
                     _allFileFacts = _allfacts.Where(x => !x.Created).ToList();
                     Factcount = _allfacts.Count;
                 }

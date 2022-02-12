@@ -218,9 +218,13 @@ namespace FTAnalyzer
                         string description = Fact.GetFactTypeDescription(factType);
                         f.Comment = $"{description} of {Husband.Name} and {Wife.Name}";
                     }
+                    Facts.Add(f);
                     if (f.FactType != Fact.CENSUS)
                     {
-                        Facts.Add(f);
+                        if (Husband != null)
+                            Husband.AddFact(f);
+                        if (Wife != null)
+                            Wife.AddFact(f);
                         if (!_preferredFacts.ContainsKey(f.FactType))
                             _preferredFacts.Add(f.FactType, f);
                     }
@@ -424,7 +428,7 @@ namespace FTAnalyzer
         public void SetBudgieCode(Individual ind, int lenAhnentafel)
         {
             if (ind is null) return;
-            Individual spouse = ind.IsMale ? Wife : Husband;
+            Individual spouse = Spouse(ind);
             if (spouse != null && string.IsNullOrEmpty(spouse.BudgieCode))
                 spouse.BudgieCode = ind.BudgieCode + "*s";
             int directChild = 0;
@@ -469,9 +473,7 @@ namespace FTAnalyzer
         public void SetSpouseRelation(Individual ind, int relationType)
         {
             if (ind is null) return;
-            Individual spouse = ind.IsMale ? Wife : Husband;
-            if (spouse == ind)
-                spouse = ind.IsMale ? Husband : Wife; // revese for same sex marriages
+            Individual spouse = Spouse(ind); 
             if (spouse != null)
                 spouse.RelationType = relationType;
         }
