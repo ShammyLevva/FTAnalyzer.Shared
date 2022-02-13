@@ -2074,13 +2074,13 @@ namespace FTAnalyzer
                     #region All Facts
                     foreach (Fact f in ind.AllFacts)
                     {
-                        if (f.FactDate.IsAfter(FactDate.TODAY))
+                        if (f.FactDate.IsAfter(FactDate.TODAY) && f.FactErrorNumber != (int)Dataerror.FACT_IN_FUTURE)
                             errors[(int)Dataerror.FACT_IN_FUTURE].Add(
                                 new DataError((int)Dataerror.FACT_IN_FUTURE, ind, $"{f} is in the future."));
-                        if (FactBeforeBirth(ind, f))
+                        if (FactBeforeBirth(ind, f) && f.FactErrorNumber != (int)Dataerror.FACTS_BEFORE_BIRTH)
                             errors[(int)Dataerror.FACTS_BEFORE_BIRTH].Add(
                                 new DataError((int)Dataerror.FACTS_BEFORE_BIRTH, ind, f.FactErrorMessage));
-                        if (FactAfterDeath(ind, f))
+                        if (FactAfterDeath(ind, f) && f.FactErrorNumber != (int)Dataerror.FACTS_AFTER_DEATH)
                             errors[(int)Dataerror.FACTS_AFTER_DEATH].Add(
                                 new DataError((int)Dataerror.FACTS_AFTER_DEATH, ind, f.FactErrorMessage));
                         if (!GeneralSettings.Default.IgnoreFactTypeWarnings)
@@ -2250,9 +2250,9 @@ namespace FTAnalyzer
                             if (f.FactType == Fact.CHILDREN1911)
                                 errors[(int)Dataerror.CHILDRENSTATUS_TOTAL_MISMATCH].Add(
                                     new DataError((int)Dataerror.CHILDRENSTATUS_TOTAL_MISMATCH, fam, f.FactErrorMessage));
-                            else
-                                errors[(int)Dataerror.FACT_ERROR].Add(
-                                    new DataError((int)Dataerror.FACT_ERROR, fam, f.FactErrorMessage));
+                            //else
+                            //    errors[(int)Dataerror.FACT_ERROR].Add(
+                            //        new DataError((int)Dataerror.FACT_ERROR, fam, f.FactErrorMessage));
                         }
                     }
                 }
