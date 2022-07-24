@@ -35,6 +35,7 @@ namespace FTAnalyzer
         IList<Individual> individuals;
         IList<Family> families;
         IList<Tuple<string, Fact>> sharedFacts;
+        IList<AncestryTreeTag> ancestryTreeTags;
         IDictionary<string, List<Individual>> occupations;
         IDictionary<StandardisedName, StandardisedName> names;
         IDictionary<string, List<Individual>> unknownIndividualFactTypes;
@@ -201,6 +202,7 @@ namespace FTAnalyzer
             individuals = new List<Individual>();
             families = new List<Family>();
             sharedFacts = new List<Tuple<string, Fact>>();
+            ancestryTreeTags = new List<AncestryTreeTag>();
             occupations = new Dictionary<string, List<Individual>>();
             names = new Dictionary<StandardisedName, StandardisedName>();
             unknownIndividualFactTypes = new Dictionary<string, List<Individual>>();
@@ -402,6 +404,23 @@ namespace FTAnalyzer
             progress.Report(100);
             DataLoaded = true;
             Loading = false;
+        }
+
+        public void LoadAncestryTreeTags(XmlDocument doc, IProgress<string> outputText)
+        {
+            XmlNodeList list = doc.SelectNodes("GED/_MTTAG");
+            
+            int counter = 0;
+            foreach (XmlNode n in list)
+            {
+                string id = n.Attributes.Count > 0 ? n.Attributes[0].Value : string.Empty;
+                XmlNode xmlNode = n.SelectSingleNode("NAME");
+                string name = xmlNode is null ? string.Empty : xmlNode.InnerText;
+                xmlNode = n.SelectSingleNode("RIN");
+                string rin = xmlNode is null ? string.Empty : xmlNode.InnerText;
+                AncestryTreeTag tag = new AncestryTreeTag(id, name, rin);
+            }
+            outputText.Report($"Loaded {counter} Ancestry Tree Tags.\n");
         }
 
         public void CleanUpXML() => noteNodes = null;

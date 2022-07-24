@@ -29,6 +29,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Comparators\Individual\NameComparer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Comparators\Location\FactLocationComparer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Age.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\AncestryTreeTag.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\CensusDate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\CensusFamily.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\CensusIndividual.cs" />
