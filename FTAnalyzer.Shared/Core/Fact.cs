@@ -587,8 +587,8 @@ namespace FTAnalyzer
             foreach (XmlNode n in list)
             {
                 string indref = n.Attributes["REF"]?.Value;
-                string role = FamilyTree.GetText(n, "ROLE", false);
-                if (indref != null && role == "Household Member")
+                //string role = FamilyTree.GetText(n, "ROLE", false);
+                if (indref != null)
                     FamilyTree.Instance.AddSharedFact(indref, this);
             }
         }
