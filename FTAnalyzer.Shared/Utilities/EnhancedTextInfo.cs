@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Globalization;
+using FTAnalyzer.Windows.Properties;
 
 namespace FTAnalyzer.Utilities
 {
@@ -79,7 +80,7 @@ namespace FTAnalyzer.Utilities
         public static string RemoveDiacritics(string text)
         {
             if (text is null) return string.Empty;
-            if (!Properties.FileHandling.Default.ConvertDiacritics)
+            if (!FileHandling.Default.ConvertDiacritics)
                 return text; // only process if user wants to remove diacrits
             string formD = text.Normalize(NormalizationForm.FormD);
             StringBuilder sb = new StringBuilder();

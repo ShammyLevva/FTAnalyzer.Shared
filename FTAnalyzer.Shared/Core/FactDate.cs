@@ -13,7 +13,7 @@ namespace FTAnalyzer
     {
         public static readonly DateTime MINDATE = new DateTime(1, 1, 1);
         public static readonly DateTime MAXDATE = new DateTime(9999, 12, 31);
-        public static readonly IFormatProvider CULTURE = new CultureInfo("en-GB", true);
+        public static readonly IFormatProvider CULTURE = CultureInfo.InvariantCulture;
         public static readonly int MAXYEARS = 110;
         public static readonly int MINYEARS;
         const int LOW = 0;

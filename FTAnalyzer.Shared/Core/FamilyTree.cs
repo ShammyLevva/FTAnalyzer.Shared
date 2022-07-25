@@ -1,5 +1,5 @@
 ﻿using FTAnalyzer.Filters;
-using FTAnalyzer.Properties;
+using FTAnalyzer.Windows.Properties;
 using FTAnalyzer.Utilities;
 using System;
 using System.Collections.Generic;
@@ -17,6 +17,7 @@ using System.Web;
 using System.Xml;
 using System.Numerics;
 using System.Collections.Concurrent;
+using FTAnalyzer.Properties;
 
 #if __PC__
 using FTAnalyzer.Forms.Controls;
@@ -131,7 +132,7 @@ namespace FTAnalyzer
             var result = new StringBuilder();
             foreach (XmlNode node in noteNodes)
             {
-                if (node.Attributes["ID"] != null && node.Attributes["ID"].Value == reference.Value)
+                if (node.Attributes?["ID"]?.Value == reference.Value)
                 {
                     result.AppendLine(GetContinuationText(node.ChildNodes));
                     return result.ToString().Trim();

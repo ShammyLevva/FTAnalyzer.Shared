@@ -1,5 +1,5 @@
-using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
+using FTAnalyzer.Windows.Properties;
 using System;
 using System.Collections.Generic;
 using System.IO;

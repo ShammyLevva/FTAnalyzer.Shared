@@ -191,7 +191,7 @@ namespace FTAnalyzer.Exports
             {
                 using (CookieAwareWebClient wc = new CookieAwareWebClient(CookieJar))
                 {
-                    HtmlDocument doc = new HtmlDocument();
+                    HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
                     string webData = wc.DownloadString("https://www.lostcousins.com/pages/members/ancestors/");
                     doc.LoadHtml(webData);
                     HtmlNodeCollection rows = doc.DocumentNode.SelectNodes("//table[@class='data_table']/tr");

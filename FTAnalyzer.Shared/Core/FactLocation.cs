@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
-#if !__MACOS__
-using System.Web.UI.WebControls;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+#if __PC__
 using FTAnalyzer.Mapping;
 #endif
 namespace FTAnalyzer
