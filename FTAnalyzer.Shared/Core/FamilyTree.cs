@@ -1,23 +1,17 @@
 ﻿using FTAnalyzer.Filters;
 using FTAnalyzer.Windows.Properties;
 using FTAnalyzer.Utilities;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Net;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Web;
 using System.Xml;
 using System.Numerics;
 using System.Collections.Concurrent;
-using FTAnalyzer.Windows.Properties;
+using System.Diagnostics;
 
 #if __PC__
 using FTAnalyzer.Forms.Controls;
@@ -360,7 +354,7 @@ namespace FTAnalyzer
                         individualLookup.Add(individual.IndividualID, individual);
                     AddOccupations(individual);
                     AddCustomFacts(individual);
-                    progress.Report((100 * counter++) / individualMax);
+                    progress.Report(100 * counter++ / individualMax);
                 }
             }
             outputText.Report($"Loaded {counter} individuals.\n");
@@ -1913,13 +1907,13 @@ namespace FTAnalyzer
             }
         }
 
-        public List<IDisplayColourCensus> ColourCensus(string country, RelationTypes relType, string surname,
+        public List<IDisplayColourCensus> ColourCensus(string country, Predicate<Individual> relTypeFilter, string surname,
                                                        ComboBoxFamily family, bool IgnoreMissingBirthDates, bool IgnoreMissingDeathDates)
         {
             Predicate<Individual> filter;
             if (family is null)
             {
-                filter = relType.BuildFilter<Individual>(x => x.RelationType);
+                filter = relTypeFilter;
                 if (surname.Length > 0)
                 {
                     Predicate<Individual> surnameFilter = FilterUtils.StringFilter<Individual>(x => x.Surname, surname);
@@ -1954,12 +1948,12 @@ namespace FTAnalyzer
             return individuals.Filter(filter).ToList<IDisplayColourCensus>();
         }
 
-        public List<IDisplayColourBMD> ColourBMD(RelationTypes relType, string surname, ComboBoxFamily family)
+        public List<IDisplayColourBMD> ColourBMD(Predicate<Individual> relTypeFilter, string surname, ComboBoxFamily family)
         {
             Predicate<Individual> filter;
             if (family is null)
             {
-                filter = relType.BuildFilter<Individual>(x => x.RelationType);
+                filter = relTypeFilter;
                 if (surname.Length > 0)
                 {
                     Predicate<Individual> surnameFilter = FilterUtils.StringFilter<Individual>(x => x.Surname, surname);
@@ -1971,12 +1965,12 @@ namespace FTAnalyzer
             return individuals.Filter(filter).ToList<IDisplayColourBMD>();
         }
 
-        public List<IDisplayMissingData> MissingData(RelationTypes relType, string surname, ComboBoxFamily family)
+        public List<IDisplayMissingData> MissingData(Predicate<Individual> relTypeFilter, string surname, ComboBoxFamily family)
         {
             Predicate<Individual> filter;
             if (family is null)
             {
-                filter = relType.BuildFilter<Individual>(x => x.RelationType);
+                filter = relTypeFilter;
                 if (surname.Length > 0)
                 {
                     Predicate<Individual> surnameFilter = FilterUtils.StringFilter<Individual>(x => x.Surname, surname);
