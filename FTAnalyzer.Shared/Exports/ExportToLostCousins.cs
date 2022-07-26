@@ -1,4 +1,4 @@
-﻿using FTAnalyzer.Properties;
+﻿using FTAnalyzer.Windows.Properties;
 using FTAnalyzer.Utilities;
 using HtmlAgilityPack;
 using System;

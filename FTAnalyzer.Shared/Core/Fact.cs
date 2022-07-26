@@ -1,4 +1,4 @@
-﻿using FTAnalyzer.Properties;
+﻿using FTAnalyzer.Windows.Properties;
 using FTAnalyzer.Utilities;
 using System;
 using System.Collections.Generic;

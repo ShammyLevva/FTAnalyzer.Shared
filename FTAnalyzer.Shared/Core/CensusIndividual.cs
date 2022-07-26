@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FTAnalyzer.Windows.Properties;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -60,7 +61,7 @@ namespace FTAnalyzer
         {
             get
             {
-                if (CensusStatus == WIFE && Age.MinAge >= Properties.GeneralSettings.Default.MinParentalAge)
+                if (CensusStatus == WIFE && Age.MinAge >= GeneralSettings.Default.MinParentalAge)
                 {
                     string surname = Surname.Length > 0 ? $" ({Surname})" : string.Empty;
                     return $"{Forenames} {MarriedName} {surname}";

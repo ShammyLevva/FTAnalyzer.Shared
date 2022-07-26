@@ -17,7 +17,7 @@ using System.Web;
 using System.Xml;
 using System.Numerics;
 using System.Collections.Concurrent;
-using FTAnalyzer.Properties;
+using FTAnalyzer.Windows.Properties;
 
 #if __PC__
 using FTAnalyzer.Forms.Controls;

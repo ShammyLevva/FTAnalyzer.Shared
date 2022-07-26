@@ -1,5 +1,6 @@
 ﻿using FTAnalyzer.Exports;
 using FTAnalyzer.Utilities;
+using FTAnalyzer.Windows.Properties;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -11,8 +12,8 @@ namespace FTAnalyzer
 {
     public class FactDate : IComparable<FactDate>, IComparable
     {
-        public static readonly DateTime MINDATE = new DateTime(1, 1, 1);
-        public static readonly DateTime MAXDATE = new DateTime(9999, 12, 31);
+        public static readonly DateTime MINDATE = new(1, 1, 1);
+        public static readonly DateTime MAXDATE = new(9999, 12, 31);
         public static readonly IFormatProvider CULTURE = CultureInfo.InvariantCulture;
         public static readonly int MAXYEARS = 110;
         public static readonly int MINYEARS;
@@ -105,7 +106,7 @@ namespace FTAnalyzer
             DoubleDate = false;
             SpecialDate = false;
             SpecialDateText = string.Empty;
-            str = str ?? "UNKNOWN";
+            str ??= "UNKNOWN";
             OriginalString = str;
             // remove any commas in date string
             yearfix = 0;
@@ -172,7 +173,7 @@ namespace FTAnalyzer
         string FixCommonDateFormats(string str)
         {
             str = EnhancedTextInfo.RemoveSupriousDateCharacters(str.Trim().ToUpper());
-            if (!Properties.NonGedcomDate.Default.UseNonGedcomDates || Properties.NonGedcomDate.Default.Separator != ".")
+            if (!NonGedcomDate.Default.UseNonGedcomDates || NonGedcomDate.Default.Separator != ".")
                 str = str.Replace(".", " ");
             if (str.StartsWith("<") && str.EndsWith(">"))
                 str = str.Replace("<", "").Replace(">", "");
@@ -402,7 +403,7 @@ namespace FTAnalyzer
                 str = str.Replace("~", "ABT ");
             if (str.StartsWith("C1", StringComparison.Ordinal) || str.StartsWith("C2", StringComparison.Ordinal) ||
                 str.StartsWith("C 1", StringComparison.Ordinal) || str.StartsWith("C 2", StringComparison.Ordinal))
-                str = "ABT " + str.Substring(1);
+                str = "ABT " + str[1..];
             str = str.Replace("  ", " "); // fix issue if > or < or Cxxx has already got a space
             Match matcher;
             if (str.StartsWith("INT", StringComparison.Ordinal)) // Interpreted date but we can discard <<Date_Phrase>>
@@ -420,7 +421,7 @@ namespace FTAnalyzer
                 string result = $"{matcher.Groups[1]}{matcher.Groups[2]}";
                 return result.Trim();
             }
-            if (Properties.NonGedcomDate.Default.UseNonGedcomDates)
+            if (NonGedcomDate.Default.UseNonGedcomDates)
             {
                 matcher = NonGEDCOMDateFormatRegex.Match(str);
                 if (!matcher.Success) // match string is not a non gedcom format with dashes so proceed with between fixes
@@ -477,7 +478,7 @@ namespace FTAnalyzer
             return str;
         }
 
-        Tuple<bool, string> BetweenFixes(string str)
+        static Tuple<bool, string> BetweenFixes(string str)
         {
             Match matcher = _datePatterns["BETWEENFIX"].Match(str);
             if (matcher.Success)
@@ -501,8 +502,8 @@ namespace FTAnalyzer
 
         public FactDate SubtractMonths(int months)
         {
-            DateTime start = new DateTime(StartDate.Year, StartDate.Month, StartDate.Day);
-            DateTime end = new DateTime(EndDate.Year, EndDate.Month, EndDate.Day);
+            DateTime start = new(StartDate.Year, StartDate.Month, StartDate.Day);
+            DateTime end = new(EndDate.Year, EndDate.Month, EndDate.Day);
             start = StartDate < MINDATE.AddMonths(months) ? MINDATE : start.AddMonths(-months);
             end = EndDate < MINDATE.AddMonths(months) ? MINDATE : end.AddMonths(-months);
             return new FactDate(start, end);
@@ -510,8 +511,8 @@ namespace FTAnalyzer
 
         public FactDate AddEndDateYears(int years)
         {
-            DateTime start = new DateTime(StartDate.Year, StartDate.Month, StartDate.Day);
-            DateTime end = new DateTime(EndDate.Year, EndDate.Month, EndDate.Day);
+            DateTime start = new(StartDate.Year, StartDate.Month, StartDate.Day);
+            DateTime end = new(EndDate.Year, EndDate.Month, EndDate.Day);
             end = end >= MAXDATE.AddYears(-years) ? MAXDATE : end.AddYears(years);
             return new FactDate(start, end);
         }
@@ -519,7 +520,7 @@ namespace FTAnalyzer
         string CalculateDateString()
         {
             string check;
-            StringBuilder output = new StringBuilder();
+            StringBuilder output = new();
             if (StartDate == MINDATE)
             {
                 if (EndDate == MAXDATE)
@@ -574,7 +575,7 @@ namespace FTAnalyzer
             // dates are "YYYY" or "MMM YYYY" or "DD MMM YYYY"
             try
             {
-                string dateValue = processDate.Length >= 4 ? processDate.Substring(4) : processDate;
+                string dateValue = processDate.Length >= 4 ? processDate[4..] : processDate;
                 if (processDate.StartsWith("BEF", StringComparison.Ordinal))
                 {
                     DateType = FactDateType.BEF;
@@ -612,23 +613,23 @@ namespace FTAnalyzer
                         byte[] asciiBytes = Encoding.ASCII.GetBytes(processDate);
                         if (pos == -1)
                             throw new FactDateException("Invalid BETween date no AND found");
-                        fromdate = processDate.Substring(4, pos - 4);
-                        todate = processDate.Substring(pos + 1);
+                        fromdate = processDate[4..pos];
+                        todate = processDate[(pos + 1)..];
                         pos -= 4; // from to code in next block expects to jump 5 chars not 1.
                     }
                     else
                     {
-                        fromdate = processDate.Substring(4, pos - 4);
-                        todate = processDate.Substring(pos + 5);
+                        fromdate = processDate[4..pos];
+                        todate = processDate[(pos + 5)..];
                     }
                     if (fromdate.Length < 3)
-                        fromdate = fromdate + " " + processDate.Substring(pos + 7);
+                        fromdate = fromdate + " " + processDate[(pos + 7)..];
                     else if (fromdate.Length == 3 && !fromdate.StartsWithNumeric())
-                        fromdate = "01 " + fromdate + processDate.Substring(pos + 8);
+                        fromdate = "01 " + fromdate + processDate[(pos + 8)..];
                     else if (fromdate.Length == 4)
                         fromdate = "01 JAN " + fromdate;
                     else if (fromdate.Length < 7 && fromdate.IndexOf(" ", StringComparison.Ordinal) > 0)
-                        fromdate = fromdate + " " + processDate.Substring(pos + 11);
+                        fromdate = fromdate + " " + processDate[(pos + 11)..];
                     StartDate = ParseDate(fromdate.Replace("  ", " "), LOW, 0, EndDate.Year);
                     EndDate = ParseDate(todate, HIGH, 0);
                 }
@@ -693,7 +694,7 @@ namespace FTAnalyzer
                         gYear = matcher.Groups[3];
                         gDouble = matcher.Groups[4];
                         if (dateValue.IndexOf("/", StringComparison.Ordinal) > 0)
-                            dateValue = dateValue.Substring(0, dateValue.IndexOf("/", StringComparison.Ordinal)); // remove the trailing / and 1 or 2 digits
+                            dateValue = dateValue[..dateValue.IndexOf("/", StringComparison.Ordinal)]; // remove the trailing / and 1 or 2 digits
                     }
                     else if (matcher2.Success)
                     {
@@ -702,7 +703,7 @@ namespace FTAnalyzer
                         gYear = matcher2.Groups[3];
                         gDouble = matcher2.Groups[4];
                         if (dateValue.Length > 5)
-                            dateValue = dateValue.Substring(0, dateValue.Length - 5); // remove the trailing / and 4 digits
+                            dateValue = dateValue[..^5]; // remove the trailing / and 4 digits
                     }
                     else if (matcher3.Success)
                     {
@@ -711,14 +712,14 @@ namespace FTAnalyzer
                         gYear = matcher3.Groups[3];
                         gDouble = matcher3.Groups[4];
                         if (dateValue.IndexOf("/", StringComparison.Ordinal) > 0)
-                            dateValue = dateValue.Substring(0, dateValue.IndexOf("/", StringComparison.Ordinal)); // remove the trailing / and 1 or 2 digits
+                            dateValue = dateValue[..dateValue.IndexOf("/", StringComparison.Ordinal)]; // remove the trailing / and 1 or 2 digits
                     }
-                    else if (Properties.NonGedcomDate.Default.UseNonGedcomDates)
+                    else if (NonGedcomDate.Default.UseNonGedcomDates)
                     {
                         matcher2 = NonGEDCOMDateFormatRegex.Match(dateValue);
                         if (matcher2.Success)
                         {
-                            switch ((NonGEDCOMFormatSelected)Properties.NonGedcomDate.Default.FormatSelected)
+                            switch ((NonGEDCOMFormatSelected)NonGedcomDate.Default.FormatSelected)
                             {
                                 case NonGEDCOMFormatSelected.DD_MM_YYYY:
                                     gDay = matcher2.Groups[1];
@@ -747,7 +748,7 @@ namespace FTAnalyzer
                             }
                             string standardFormat = new DateTime(int.Parse(gYear.Value), int.Parse(gMonth.Value), int.Parse(gDay.Value)).ToString("dd MMM yyyy").ToUpper();
                             dateValue = dateValue.Length > matcher2.Length
-                                ? dateValue.Substring(0, matcher2.Index) + standardFormat + dateValue.Substring(matcher2.Index + matcher2.Length, dateValue.Length)
+                                ? string.Concat(dateValue[..matcher2.Index], standardFormat, dateValue.AsSpan(matcher2.Index + matcher2.Length, dateValue.Length))
                                 : standardFormat;
                         }
                     }
@@ -834,7 +835,7 @@ namespace FTAnalyzer
             }
             catch (Exception e)
             {
-                dt = (highlow == HIGH) ? MAXDATE : MINDATE;
+                //dt = (highlow == HIGH) ? MAXDATE : MINDATE;
                 throw new FactDateException($"Problem with date format for: {dateValue} system said: {e.Message}");
             }
             return dt;
@@ -849,11 +850,11 @@ namespace FTAnalyzer
             // check if valid double date if so set double date to true
             string doubleyear = gDouble.ToString().Trim();
             if (doubleyear.Length == 4)
-                doubleyear = doubleyear.Substring(2);
+                doubleyear = doubleyear[2..];
             if (doubleyear.Length == 3)
                 doubleyear = doubleyear.Substring(1, 2);
             if (doubleyear.Length == 1 && year.Length >= 2)
-                doubleyear = year.Substring(year.Length - 2, 1) + doubleyear;
+                doubleyear = string.Concat(year.AsSpan(year.Length - 2, 1), doubleyear);
             if (doubleyear is null || doubleyear.Length < 2 || doubleyear.Length > 4 || year.Length < 3)
             {
                 DoubleDateError = "Year part of double date is an invalid length.";
@@ -879,14 +880,14 @@ namespace FTAnalyzer
             if (year.Length == 3)
             {
                 iDoubleYear = doubleyear == "00" ?
-                Convert.ToInt32((Convert.ToInt32(year.Substring(0, 1)) + 1).ToString() + doubleyear) :
-                Convert.ToInt32(year.Substring(0, 1) + doubleyear);
+                Convert.ToInt32((Convert.ToInt32(year[..1]) + 1).ToString() + doubleyear) :
+                Convert.ToInt32(year[..1] + doubleyear);
             }
             else
             {
                 iDoubleYear = doubleyear == "00" ?
-                Convert.ToInt32((Convert.ToInt32(year.Substring(0, 2)) + 1).ToString() + doubleyear) :
-                Convert.ToInt32(year.Substring(0, 2) + doubleyear);
+                Convert.ToInt32((Convert.ToInt32(year[..2]) + 1).ToString() + doubleyear) :
+                Convert.ToInt32(year[..2] + doubleyear);
             }
             if (iDoubleYear - iYear != 1)
             {
@@ -1080,7 +1081,7 @@ namespace FTAnalyzer
         #region Overrides
         public override bool Equals(object obj)
         {
-            if (obj is null || !(obj is FactDate))
+            if (obj is null || obj is not FactDate)
                 return false;
             FactDate f = (FactDate)obj;
             // two FactDates are equal if same datestring or same start and- enddates
@@ -1099,11 +1100,11 @@ namespace FTAnalyzer
             return a.Equals(b);
         }
 
-        public static bool operator <(FactDate left, FactDate right) => left is null ? right is object : left.CompareTo(right) < 0;
+        public static bool operator <(FactDate left, FactDate right) => left is null ? right is not null : left.CompareTo(right) < 0;
 
         public static bool operator <=(FactDate left, FactDate right) => left is null || left.CompareTo(right) <= 0;
 
-        public static bool operator >(FactDate left, FactDate right) => left is object && left.CompareTo(right) > 0;
+        public static bool operator >(FactDate left, FactDate right) => left is not null && left.CompareTo(right) > 0;
 
         public static bool operator >=(FactDate left, FactDate right) => left is null ? right is null : left.CompareTo(right) >= 0;
 
@@ -1123,14 +1124,14 @@ namespace FTAnalyzer
         public override string ToString()
         {
             if (DateString.StartsWith("BET 1 JAN", StringComparison.Ordinal))
-                return "BET " + DateString.Substring(10);
-            return DateString.StartsWith("AFT 1 JAN", StringComparison.Ordinal) ? "AFT " + DateString.Substring(10) : DateString;
+                return "BET " + DateString[10..];
+            return DateString.StartsWith("AFT 1 JAN", StringComparison.Ordinal) ? "AFT " + DateString[10..] : DateString;
         }
         #endregion
 
         public static Regex NonGEDCOMDateFormatRegex
         {
-            get => _regex ?? new Regex(Properties.NonGedcomDate.Default.Regex, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            get => _regex ?? new Regex(NonGedcomDate.Default.Regex, RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
             set => _regex = value;
         }

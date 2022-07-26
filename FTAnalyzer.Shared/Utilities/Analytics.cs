@@ -4,7 +4,7 @@ using System;
 using System.Threading.Tasks;
 
 #if __PC__
-using FTAnalyzer.Properties;
+using FTAnalyzer.Windows.Properties;
 using System.Windows.Forms;
 #elif __MACOS__
 using AppKit;

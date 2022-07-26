@@ -2,7 +2,7 @@
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
-using FTAnalyzer.Properties;
+using FTAnalyzer.Windows.Properties;
 using FTAnalyzer.Utilities;
 using System;
 using System.Collections.Generic;
