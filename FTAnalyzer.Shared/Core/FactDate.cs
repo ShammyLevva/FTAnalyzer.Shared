@@ -143,6 +143,8 @@ namespace FTAnalyzer
 
         string FixTextDateFormats(string str)
         {
+            if(str.StartsWith("<") && str.EndsWith(">"))
+                str = str[1..^1];
             str = ReplaceSpecialCharacters(str);
             str = str.Replace("DIED IN INFANCY", "INFANT");
             str = str.Replace("INFANCY", "INFANT");
@@ -178,7 +180,6 @@ namespace FTAnalyzer
             if (str.StartsWith("<") && str.EndsWith(">"))
                 str = str.Replace("<", "").Replace(">", "");
             // remove date qualifiers first
-            str = str.Replace("@#DGREGORIAN@", "").Replace("@#DJULIAN@", ""); //.Replace("@#DFRENCH R@", ""); // .Replace("@#DHEBREW@", "");
             str = ReplaceSpecialCharacters(str);
 
             str = str.Replace("MONDAY", "").Replace("TUESDAY", "").Replace("WEDNESDAY", "").Replace("THURSDAY", "").Replace("FRIDAY", "").Replace("SATURDAY", "").Replace("SUNDAY", "");
@@ -470,6 +471,7 @@ namespace FTAnalyzer
         {
             str = str.Replace(". ", " "); // even if Non GEDCOM date separator is a dot, dot space is invalid.
             str = str.Replace("&", " AND ");
+            str = str.Replace("@#DGREGORIAN@", "").Replace("@#DJULIAN@", ""); //.Replace("@#DFRENCH R@", ""); // .Replace("@#DHEBREW@", "")
             str = str.Replace(",", " ").Replace("(", " ").Replace(")", " ").Replace("?", " ").Replace("!", " ");
             str = str.Replace("#", " ").Replace("$", " ").Replace("%", " ").Replace("^", " ").Replace("'", " ");
             str = str.Replace(":", " ").Replace(";", " ").Replace("@", " ").Replace("=", " ").Replace("?", " ");

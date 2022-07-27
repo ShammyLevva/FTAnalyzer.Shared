@@ -2,7 +2,6 @@
 <Data>
   <Fixes>
     <CountryTypos>
-      <CountryTypo from="Can"     to="Canada" />
       <CountryTypo from="US"      to="United States" />
       <CountryTypo from="U S "    to="United States" />
       <CountryTypo from="U S A"   to="United States" />
