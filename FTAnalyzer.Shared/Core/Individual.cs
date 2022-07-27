@@ -599,7 +599,7 @@ namespace FTAnalyzer
                         else
                             amendedDeath = new DateTime(BirthDate.StartDate.Year, DeathDate.StartDate.Month, DeathDate.StartDate.Day); // set death date to be same year as birth
                         var diff = Math.Abs((amendedDeath - BirthDate.StartDate).Days);
-                        Console.WriteLine($"Processed Individual: {IndividualID}: {Name}, Diff:{diff}, Birth: {BirthDate.StartDate.ToShortDateString()} Death: {DeathDate.StartDate.ToShortDateString()}");
+                        Debug.WriteLine($"Processed Individual: {IndividualID}: {Name}, Diff:{diff}, Birth: {BirthDate.StartDate.ToShortDateString()} Death: {DeathDate.StartDate.ToShortDateString()}");
                         if(diff>180)
                         {
                             if (BirthDate.StartDate.Month < 7)
@@ -612,7 +612,7 @@ namespace FTAnalyzer
                     }
                     catch(ArgumentOutOfRangeException)
                     {
-                        Console.WriteLine($"PROBLEM Individual: {IndividualID}: {Name}");
+                        Debug.WriteLine($"PROBLEM Individual: {IndividualID}: {Name}");
                         return false;
                     }
                 }
@@ -1109,10 +1109,10 @@ namespace FTAnalyzer
                 bool checkNotes = true;
                 string notes = CensusReference.ClearCommonPhrases(Notes);
                 notes = notes.ClearWhiteSpace();
-                while (checkNotes)
+                while (checkNotes && notes.Length<50000)
                 {
                     checkNotes = false;
-                    Debug.WriteLine($"Reached Individual {ToString()} Notes: {notes.Length}");
+                    //Debug.WriteLine($"Reached Individual {ToString()} Notes: {notes.Length}");
                     CensusReference cr = new(IndividualID, notes, false);
                     if (OKtoAddReference(cr, false))
                     {   // add census fact even if other created census facts exist for that year

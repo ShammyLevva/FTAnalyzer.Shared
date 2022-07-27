@@ -46,7 +46,7 @@ namespace FTAnalyzer.Utilities
                     }
             } catch (Exception e)
             {
-                Console.WriteLine($"Error processing font: {e.Message}");
+                Debug.WriteLine($"Error processing font: {e.Message}");
             }
         }
 #endif

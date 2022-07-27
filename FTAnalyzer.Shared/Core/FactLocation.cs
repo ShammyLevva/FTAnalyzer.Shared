@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Diagnostics;
 #if __PC__
 using FTAnalyzer.Mapping;
 #endif
@@ -108,7 +109,7 @@ namespace FTAnalyzer
 #else
             string filename = Path.Combine(startPath, @"Resources\FactLocationFixes.xml");
 #endif
-            Console.WriteLine($"Loading factlocation fixes from: {filename}");
+            Debug.WriteLine($"Loading factlocation fixes from: {filename}");
             if (File.Exists(filename) && !GeneralSettings.Default.SkipFixingLocations) // don't load file if skipping fixing locations
             {
                 XmlDocument xmlDoc = new XmlDocument() { XmlResolver = null };
@@ -121,7 +122,7 @@ namespace FTAnalyzer
                     string from = n.Attributes["from"].Value;
                     string to = n.Attributes["to"].Value;
                     if (COUNTRY_TYPOS.ContainsKey(from))
-                        Console.WriteLine(string.Format("Error duplicate country typos :{0}", from));
+                        Debug.WriteLine(string.Format("Error duplicate country typos :{0}", from));
                     else if (!string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to))
                         COUNTRY_TYPOS.Add(from, to);
                 }
@@ -130,7 +131,7 @@ namespace FTAnalyzer
                     string from = n.Attributes["from"].Value;
                     string to = n.Attributes["to"].Value;
                     if (REGION_TYPOS.ContainsKey(from))
-                        Console.WriteLine(string.Format("Error duplicate region typos :{0}", from));
+                        Debug.WriteLine(string.Format("Error duplicate region typos :{0}", from));
                     else if (!string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to))
                         REGION_TYPOS.Add(from, to);
                 }
@@ -139,7 +140,7 @@ namespace FTAnalyzer
                     string chapmanCode = n.Attributes["chapmanCode"].Value;
                     string countyName = n.Attributes["countyName"].Value;
                     if (REGION_TYPOS.ContainsKey(chapmanCode))
-                        Console.WriteLine(string.Format("Error duplicate region typos adding ChapmanCode :{0}", chapmanCode));
+                        Debug.WriteLine(string.Format("Error duplicate region typos adding ChapmanCode :{0}", chapmanCode));
                     else if (!string.IsNullOrEmpty(chapmanCode) && !string.IsNullOrEmpty(countyName))
                         REGION_TYPOS.Add(chapmanCode, countyName);
                 }
@@ -150,7 +151,7 @@ namespace FTAnalyzer
                     if (!string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to))
                     {
                         if (COUNTRY_SHIFTS.ContainsKey(from))
-                            Console.WriteLine(string.Format("Error duplicate country shift :{0}", from));
+                            Debug.WriteLine(string.Format("Error duplicate country shift :{0}", from));
                         else
                             COUNTRY_SHIFTS.Add(from, to);
                     }
@@ -162,11 +163,11 @@ namespace FTAnalyzer
                     if (!string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to))
                     {
                         if (CITY_ADD_COUNTRY.ContainsKey(from))
-                            Console.WriteLine(string.Format("Error duplicate city add country :{0}", from));
+                            Debug.WriteLine(string.Format("Error duplicate city add country :{0}", from));
                         else
                             CITY_ADD_COUNTRY.Add(from, to);
                         if (COUNTRY_SHIFTS.ContainsKey(from)) // also check country shifts for duplicates
-                            Console.WriteLine(string.Format("Error duplicate city in country shift :{0}", from));
+                            Debug.WriteLine(string.Format("Error duplicate city in country shift :{0}", from));
                     }
                 }
                 foreach (XmlNode n in xmlDoc.SelectNodes("Data/Fixes/DemoteRegions/RegionToParish"))
@@ -174,7 +175,7 @@ namespace FTAnalyzer
                     string from = n.Attributes["parish"].Value;
                     string to = n.Attributes["region"].Value;
                     if (REGION_SHIFTS.ContainsKey(from))
-                        Console.WriteLine(string.Format("Error duplicate region shift :{0}", from));
+                        Debug.WriteLine(string.Format("Error duplicate region shift :{0}", from));
                     else if (!string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to))
                         REGION_SHIFTS.Add(from, to);
                 }
@@ -183,7 +184,7 @@ namespace FTAnalyzer
                     string code = n.Attributes["code"].Value;
                     string county = n.Attributes["county"].Value;
                     if (FREECEN_LOOKUP.ContainsKey(county))
-                        Console.WriteLine(string.Format("Error duplicate freecen lookup :{0}", county));
+                        Debug.WriteLine(string.Format("Error duplicate freecen lookup :{0}", county));
                     else if (!string.IsNullOrEmpty(code) && !string.IsNullOrEmpty(county))
                         FREECEN_LOOKUP.Add(county, code);
                 }
@@ -193,7 +194,7 @@ namespace FTAnalyzer
                     string county = n.Attributes["county"].Value;
                     string country = n.Attributes["country"].Value;
                     if (FINDMYPAST_LOOKUP.ContainsKey(county))
-                        Console.WriteLine(string.Format("Error duplicate FindMyPast lookup :{0}", county));
+                        Debug.WriteLine(string.Format("Error duplicate FindMyPast lookup :{0}", county));
                     else if (!string.IsNullOrEmpty(code) && !string.IsNullOrEmpty(county))
                     {
                         Tuple<string, string> result = new Tuple<string, string>(country, code);
@@ -219,7 +220,7 @@ namespace FTAnalyzer
             }
             else
             {
-                Console.WriteLine("Failed to find FactLocationFixes.xml File");
+                Debug.WriteLine("Failed to find FactLocationFixes.xml File");
             }
             #endregion
         }
@@ -228,13 +229,13 @@ namespace FTAnalyzer
         {
             //foreach (string typo in COUNTRY_TYPOS.Values)
             //    if (!Countries.IsKnownCountry(typo))
-            //        Console.WriteLine("Country typo: " + typo + " is not a known country.");
+            //        Debug.WriteLine("Country typo: " + typo + " is not a known country.");
             foreach (string typo in REGION_TYPOS.Values)
                 if (!Regions.IsPreferredRegion(typo))
-                    Console.WriteLine($"Region typo: {typo} is not a preferred region.");
+                    Debug.WriteLine($"Region typo: {typo} is not a preferred region.");
             foreach (string shift in COUNTRY_SHIFTS.Keys)
                 if (!Regions.IsPreferredRegion(shift))
-                    Console.WriteLine($"Country shift: {shift} is not a preferred region.");
+                    Debug.WriteLine($"Country shift: {shift} is not a preferred region.");
         }
 
         static void ValidateCounties()
@@ -243,7 +244,7 @@ namespace FTAnalyzer
             {
                 if (region.CountyCodes.Count == 0 &&
                     (region.Country == Countries.ENGLAND || region.Country == Countries.WALES || region.Country == Countries.SCOTLAND))
-                    Console.WriteLine($"Missing Conversions for region: {region}");
+                    Debug.WriteLine($"Missing Conversions for region: {region}");
             }
         }
 

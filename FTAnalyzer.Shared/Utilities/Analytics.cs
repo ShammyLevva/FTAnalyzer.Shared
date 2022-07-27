@@ -2,6 +2,7 @@
 using GoogleAnalyticsTracker.Simple;
 using System;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 #if __PC__
 using FTAnalyzer.Windows.Properties;
@@ -138,7 +139,7 @@ namespace FTAnalyzer.Utilities
                 await tracker.TrackScreenviewAsync(FTAStartupAction).ConfigureAwait(false);
             }
             catch (Exception e)
-                { Console.WriteLine(e.Message); }
+                { Debug.WriteLine(e.Message); }
         }
 
         public static Task TrackAction(string category, string action) => TrackActionAsync(category, action, "default");
@@ -150,7 +151,7 @@ namespace FTAnalyzer.Utilities
                 await tracker.TrackScreenviewAsync(category).ConfigureAwait(false);
             }
             catch (Exception e)
-                { Console.WriteLine(e.Message); }
+                { Debug.WriteLine(e.Message); }
         }
 
 #if __PC__
@@ -162,7 +163,7 @@ namespace FTAnalyzer.Utilities
                 await SpecialMethods.TrackEventAsync(tracker, FTAShutdownAction, UsageEvent, duration.ToString("c")).ConfigureAwait(false);
             }
             catch (Exception e)
-            { Console.WriteLine(e.Message); }
+            { Debug.WriteLine(e.Message); }
         }
 
         static string SetWindowsVersion(string version)

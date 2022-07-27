@@ -120,7 +120,7 @@ namespace FTAnalyzer
         static string GetNoteRef(XmlAttribute reference)
         {
             if (!instance.DocumentLoaded)
-                Console.WriteLine("Looking up XML without document loaded");
+                Debug.WriteLine("Looking up XML without document loaded");
             if (noteNodes is null || reference is null)
                 return string.Empty;
             var result = new StringBuilder();
@@ -499,7 +499,7 @@ namespace FTAnalyzer
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Failed to load Standardised names error was : {e.Message}");
+                Debug.WriteLine($"Failed to load Standardised names error was : {e.Message}");
             }
         }
 
@@ -1899,7 +1899,7 @@ namespace FTAnalyzer
                 foreach (Individual ind in individuals)
                 {
                     int age = ind.GetMaxAge(FactDate.TODAY);
-                    Console.WriteLine($"\nName: {ind.Name}: b.{ind.BirthDate} d.{ind.DeathDate} max age={age}");
+                    Debug.WriteLine($"\nName: {ind.Name}: b.{ind.BirthDate} d.{ind.DeathDate} max age={age}");
                     if (ind.DeathDate.IsUnknown && age >= 99)
                         result.Add(ind);
                 }
@@ -3837,7 +3837,7 @@ namespace FTAnalyzer
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Debug.WriteLine(e.Message);
                 //log.Error($"Error trying to load data from {URL}\n\n{e.Message}");
             }
             return doc;
