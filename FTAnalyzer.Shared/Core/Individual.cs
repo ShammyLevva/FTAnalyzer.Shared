@@ -14,6 +14,7 @@ using System.Reflection;
 using System.Text;
 using System.Xml;
 using static FTAnalyzer.ColourValues;
+using System.Diagnostics;
 
 namespace FTAnalyzer
 {
@@ -111,7 +112,7 @@ namespace FTAnalyzer
             surnameMetaphone = new DoubleMetaphone(Surname);
             Notes = FamilyTree.GetNotes(node);
             StandardisedName = FamilyTree.Instance.GetStandardisedName(IsMale, Forename);
-            Fact nameFact = new Fact(IndividualID, Fact.INDI, FactDate.UNKNOWN_DATE, FactLocation.BLANK_LOCATION,Name, true, true, this);
+            Fact nameFact = new(IndividualID, Fact.INDI, FactDate.UNKNOWN_DATE, FactLocation.BLANK_LOCATION,Name, true, true, this);
             AddFact(nameFact);
             // Individual attributes
             AddFacts(node, Fact.NAME, outputText);
@@ -289,16 +290,16 @@ namespace FTAnalyzer
         {
             get
             {
-                switch (_relationType)
+                return _relationType switch
                 {
-                    case DIRECT: return Ahnentafel == 1 ? "Root Person" : "Direct Ancestor";
-                    case BLOOD: return "Blood Relation";
-                    case MARRIAGE: return "By Marriage";
-                    case MARRIEDTODB: return "Marr to Direct/Blood";
-                    case DESCENDANT: return "Descendant";
-                    case LINKED: return "Linked by Marriages";
-                    default: return "Unknown";
-                }
+                    DIRECT => Ahnentafel == 1 ? "Root Person" : "Direct Ancestor",
+                    BLOOD => "Blood Relation",
+                    MARRIAGE => "By Marriage",
+                    MARRIEDTODB => "Marr to Direct/Blood",
+                    DESCENDANT => "Descendant",
+                    LINKED => "Linked by Marriages",
+                    _ => "Unknown",
+                };
             }
         }
 
@@ -343,7 +344,7 @@ namespace FTAnalyzer
         {
             get
             {
-                List<IDisplayFact> allGeocodedFacts = new List<IDisplayFact>();
+                List<IDisplayFact> allGeocodedFacts = new();
                 foreach (Fact f in AllFacts)
                     if (f.Location.IsGeoCoded(false) && f.Location.GeocodeStatus != FactLocation.Geocode.UNKNOWN)
                         allGeocodedFacts.Add(new DisplayFact(this, f));
@@ -356,7 +357,7 @@ namespace FTAnalyzer
         {
             get
             {
-                List<IDisplayFact> allLifeLineFacts = new List<IDisplayFact>();
+                List<IDisplayFact> allLifeLineFacts = new();
                 foreach (Fact f in AllFacts)
                     if (f.Location.IsGeoCoded(false) && f.Location.GeocodeStatus != FactLocation.Geocode.UNKNOWN && f.FactType != Fact.LC_FTA && f.FactType != Fact.LOSTCOUSINS)
                         allLifeLineFacts.Add(new DisplayFact(this, f));
@@ -393,7 +394,7 @@ namespace FTAnalyzer
                 if (startPos >= 0 && endPos > startPos)
                 {
                     Surname = name.Substring(startPos + 1, endPos - startPos - 1);
-                    _forenames = startPos == 0 ? UNKNOWN_NAME : name.Substring(0, startPos).Trim();
+                    _forenames = startPos == 0 ? UNKNOWN_NAME : name[..startPos].Trim();
                 }
                 else
                 {
@@ -428,7 +429,7 @@ namespace FTAnalyzer
                 if (_forenames is null)
                     return string.Empty;
                 int pos = _forenames.IndexOf(" ", StringComparison.Ordinal);
-                return pos > 0 ? _forenames.Substring(0, pos) : _forenames;
+                return pos > 0 ? _forenames[..pos] : _forenames;
             }
         }
 
@@ -439,7 +440,7 @@ namespace FTAnalyzer
                 if (_forenames is null)
                     return string.Empty;
                 int pos = _forenames.IndexOf(" ", StringComparison.Ordinal);
-                return pos > 0 ? _forenames.Substring(pos).Trim() : string.Empty;
+                return pos > 0 ? _forenames[pos..].Trim() : string.Empty;
             }
         }
 
@@ -635,7 +636,7 @@ namespace FTAnalyzer
                 string result = string.Empty;
                 foreach(Family f in FamiliesAsSpouse)
                     result += f.FamilyID + ",";
-                return result.Length == 0 ? result : result.Substring(0, result.Length - 1);
+                return result.Length == 0 ? result : result[..^1];
             }
         }
 
@@ -646,7 +647,7 @@ namespace FTAnalyzer
                 string result = string.Empty;
                 foreach(ParentalRelationship pr in FamiliesAsChild)
                     result += pr.Family.FamilyID + ",";
-                return result.Length == 0 ? result : result.Substring(0, result.Length - 1);
+                return result.Length == 0 ? result : result[..^1];
             }
         }
 
@@ -689,7 +690,7 @@ namespace FTAnalyzer
                 foreach (Family f in FamiliesAsSpouse)
                     if (!string.IsNullOrEmpty(f.MarriageDate?.ToString()))
                         output += $"{f.MarriageDate}; ";
-                return output.Length > 0 ? output.Substring(0, output.Length - 2) : output; // remove trailing ;
+                return output.Length > 0 ? output[..^2] : output; // remove trailing ;
             }
         }
 
@@ -701,7 +702,7 @@ namespace FTAnalyzer
                 foreach (Family f in FamiliesAsSpouse)
                     if (!string.IsNullOrEmpty(f.MarriageLocation))
                         output += $"{f.MarriageLocation}; ";
-                return output.Length > 0 ? output.Substring(0, output.Length - 2) : output; // remove trailing ;
+                return output.Length > 0 ? output[..^2] : output; // remove trailing ;
             }
         }
 
@@ -785,9 +786,9 @@ namespace FTAnalyzer
             return false;
         }
 
-        public bool IsTaggedMissingCensus(CensusDate when) => when is object && Facts.Any(x => x.FactType == Fact.MISSING && x.FactDate.Overlaps(when));
+        public bool IsTaggedMissingCensus(CensusDate when) => when is not null && Facts.Any(x => x.FactType == Fact.MISSING && x.FactDate.Overlaps(when));
 
-        public bool IsLostCousinsEntered(CensusDate when) => !(when is null) && IsLostCousinsEntered(when, true);
+        public bool IsLostCousinsEntered(CensusDate when) => when is not null && IsLostCousinsEntered(when, true);
         public bool IsLostCousinsEntered(CensusDate when, bool includeUnknownCountries)
         {
             if (when is null) return false;
@@ -861,7 +862,7 @@ namespace FTAnalyzer
 
         #region Age Functions
 
-        public Age GetAge(FactDate when) => new Age(this, when);
+        public Age GetAge(FactDate when) => new(this, when);
 
         public Age GetAge(FactDate when, string factType) => (factType == Fact.BIRTH || factType == Fact.PARENT) ? Age.BIRTH : new Age(this, when);
 
@@ -926,7 +927,7 @@ namespace FTAnalyzer
                     {  // add only preferred facts or all census facts
                         if (!preferredFact || factType != Fact.NAME)
                         { // skip first name face as already added
-                            Fact f = new Fact(n, this, preferredFact, null, outputText);
+                            Fact f = new(n, this, preferredFact, null, outputText);
                             if (f.FactType == Fact.NAME && string.IsNullOrEmpty(Alias))
                                 Alias = f.Comment;
                             if (f.FactDate.SpecialDate)
@@ -940,7 +941,7 @@ namespace FTAnalyzer
                             if (f.GedcomAge != null && f.GedcomAge.CalculatedBirthDate != FactDate.UNKNOWN_DATE)
                             {
                                 string reason = $"Calculated from {f} with Age: {f.GedcomAge.GEDCOM_Age}";
-                                Fact calculatedBirth = new Fact(IndividualID, Fact.BIRTH_CALC, f.GedcomAge.CalculatedBirthDate, FactLocation.UNKNOWN_LOCATION, reason, false, true);
+                                Fact calculatedBirth = new(IndividualID, Fact.BIRTH_CALC, f.GedcomAge.CalculatedBirthDate, FactLocation.UNKNOWN_LOCATION, reason, false, true);
                                 AddFact(calculatedBirth);
                             }
                         }
@@ -958,39 +959,24 @@ namespace FTAnalyzer
         {
             if (BirthDate.IsKnown)
             {
-                int years;
-                switch (addedFact.FactDate.SpecialDateText.ToUpper())
+                var years = addedFact.FactDate.SpecialDateText.ToUpper() switch
                 {
-                    case "STILLBORN":
-                        years = 0;
-                        break;
-                    case "INFANT":
-                        years = 5;
-                        break;
-                    case "CHILD":
-                        years = 14;
-                        break;
-                    case "YOUNG":
-                        years = 21;
-                        break;
-                    case "UNMARRIED":
-                    case "NEVER MARRIED":
-                    case "NOT MARRIED":
-                        years = -2;
-                        break;
-                    default:
-                        years = -1;
-                        break;
-                }
+                    "STILLBORN" => 0,
+                    "INFANT" => 5,
+                    "CHILD" => 14,
+                    "YOUNG" => 21,
+                    "UNMARRIED" or "NEVER MARRIED" or "NOT MARRIED" => -2,
+                    _ => -1,
+                };
                 if (years >= 0 && addedFact.FactType == Fact.DEATH)  //only add a death fact if text is one of the death types
                 {
                     FactDate deathdate = BirthDate.AddEndDateYears(years);
-                    Fact f = new Fact(n, this, preferredFact, deathdate, outputText);
+                    Fact f = new(n, this, preferredFact, deathdate, outputText);
                     AddFact(f);
                 }
                 else
                 {
-                    Fact f = new Fact(n, this, preferredFact, FactDate.UNKNOWN_DATE, outputText); // write out death fact with unknown date
+                    Fact f = new(n, this, preferredFact, FactDate.UNKNOWN_DATE, outputText); // write out death fact with unknown date
                     AddFact(f);
                     f = new Fact(string.Empty, Fact.UNMARRIED, FactDate.UNKNOWN_DATE, FactLocation.UNKNOWN_LOCATION, string.Empty, true, true);
                     AddFact(f);
@@ -1045,14 +1031,14 @@ namespace FTAnalyzer
         /// </summary>
         void AddCensusSourceFacts()
         {
-            List<Fact> toAdd = new List<Fact>(); // we can't vary the facts collection whilst looping
+            List<Fact> toAdd = new(); // we can't vary the facts collection whilst looping
             foreach (Fact f in Facts)
             {
                 if (!f.IsCensusFact && !CensusFactExists(f.FactDate, true))
                 {
                     foreach (FactSource s in f.Sources)
                     {
-                        CensusReference cr = new CensusReference(IndividualID, $"{s.SourceTitle} {s.SourceText}", true);
+                        CensusReference cr = new(IndividualID, $"{s.SourceTitle} {s.SourceText}", true);
                         if (OKtoAddReference(cr, true))
                         {
                             cr.Fact.Sources.Add(s);
@@ -1073,7 +1059,7 @@ namespace FTAnalyzer
         {
             if (!IsLostCousinsEntered((CensusDate)cr.Fact.FactDate))
             {
-                Fact lcFact = new Fact("LostCousins", Fact.LC_FTA, cr.Fact.FactDate, cr.Fact.Location, "Lost Cousins fact created by FTAnalyzer by recognising census ref " + cr.Reference, false, true);
+                Fact lcFact = new("LostCousins", Fact.LC_FTA, cr.Fact.FactDate, cr.Fact.Location, "Lost Cousins fact created by FTAnalyzer by recognising census ref " + cr.Reference, false, true);
                 if (toAdd is null)
                     AddFact(lcFact);
                 else
@@ -1088,7 +1074,7 @@ namespace FTAnalyzer
 
         string ValidLostCousinsString(string input, bool allowspace)
         {
-            StringBuilder output = new StringBuilder();
+            StringBuilder output = new();
             input = RemoveQuoted(input);
             foreach (char c in input)
             {
@@ -1110,7 +1096,7 @@ namespace FTAnalyzer
             {
                 int endptr = input.IndexOf('\'', startptr);
                 if (endptr == -1) endptr = input.IndexOf('\"', startptr);
-                output = (startptr < input.Length ? input.Substring(0, startptr) : string.Empty) + (endptr < input.Length ? input.Substring(endptr) : string.Empty);
+                output = (startptr < input.Length ? input[..startptr] : string.Empty) + (endptr < input.Length ? input[endptr..] : string.Empty);
             }
             output = output.Replace("--","").Replace('\'', ' ').Replace('\"', ' ').Replace("  ", " ").Replace("  ", " ");
             return output.TrimEnd('-').Trim();
@@ -1130,7 +1116,8 @@ namespace FTAnalyzer
                 while (checkNotes)
                 {
                     checkNotes = false;
-                    CensusReference cr = new CensusReference(IndividualID, notes, false);
+                    Debug.WriteLine($"Reached Individual {ToString()} Notes: {notes.Length}");
+                    CensusReference cr = new(IndividualID, notes, false);
                     if (OKtoAddReference(cr, false))
                     {   // add census fact even if other created census facts exist for that year
                         AddFact(cr.Fact);
@@ -1235,9 +1222,11 @@ namespace FTAnalyzer
             }
             return false;
         }
+
+        private static readonly FactComparer factComparer1 = new();
         #endregion
 
-        readonly FactComparer factComparer = new FactComparer();
+        readonly FactComparer factComparer = factComparer1;
 
         public int DuplicateLCFacts
         {
@@ -1274,7 +1263,7 @@ namespace FTAnalyzer
         {
             try
             {
-                IndividualID = IndividualID.Substring(0, 1) + IndividualID.Substring(1).PadLeft(length, '0');
+                IndividualID = IndividualID[..1] + IndividualID[1..].PadLeft(length, '0');
             }
             catch (ArgumentOutOfRangeException)
             {  // don't error if Individual isn't of type Ixxxx
@@ -1354,11 +1343,11 @@ namespace FTAnalyzer
         }
 
         public static bool OutOfCountryCheck(CensusDate census, FactLocation location) => 
-                    census is object && location is object && // checks census & location are not null
+                    census is not null && location is not null && // checks census & location are not null
                   ((Countries.IsUnitedKingdom(census.Country) && !location.IsUnitedKingdom) ||
                   (!Countries.IsUnitedKingdom(census.Country) && census.Country != location.Country));
 
-        public bool OutOfCountry(CensusDate census) => !(census is null) && CheckOutOfCountry(census.PropertyName);
+        public bool OutOfCountry(CensusDate census) => census is not null && CheckOutOfCountry(census.PropertyName);
 
         bool CheckOutOfCountry(string prefix)
         {
