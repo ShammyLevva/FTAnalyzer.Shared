@@ -1685,7 +1685,7 @@ namespace FTAnalyzer
                 if (defaultRegion is null)
                     defaultRegion = ".co.uk";
                 if (year.Equals("1911") && Countries.IsEnglandWales(Country) && Piece.Length > 0 && Schedule.Length > 0)
-                    return @"http://search.findmypast" + defaultRegion + "/search-world-records/1911-census-for-england-and-wales?pieceno=" + Piece + @"&schedule=" + Schedule;
+                    return @"https://search.findmypast" + defaultRegion + "/search-world-records/1911-census-for-england-and-wales?pieceno=" + Piece + @"&schedule=" + Schedule;
                 if (year.Equals("1939") && Countries.IsEnglandWales(Country) && Piece.Length > 0 && !ED.Equals("UNKNOWN"))
                 {
                     string dir = Piece.Length > 1 ? Piece.Substring(0, Piece.Length - 1) : Piece; //strip last letter from piece
@@ -1708,12 +1708,12 @@ namespace FTAnalyzer
                             querystring = querystring + @"&page=" + Page;
                     }
                     if (year.Equals("1841") && Book.Length > 0 && !Book.Equals(MISSING))
-                        return @"http://search.findmypast" + defaultRegion + "/search-world-records/1841-england-wales-and-scotland-census?" + querystring + @"&book=" + Book;
+                        return @"https://search.findmypast" + defaultRegion + "/search-world-records/1841-england-wales-and-scotland-census?" + querystring + @"&book=" + Book;
                     if (querystring.Length > 0)
                     {
                         
                         return year=="1911" ? @"https ://search.findmypast.co.uk/search-world-Records/1911-census-for-england-and-wales" + querystring :
-                            @"http://search.findmypast" + defaultRegion + "/search-world-records/" + year + "-england-wales-and-scotland-census?" + querystring;
+                            @"https://search.findmypast" + defaultRegion + "/search-world-records/" + year + "-england-wales-and-scotland-census?" + querystring;
                     }
                 }
             }

@@ -8,7 +8,7 @@ namespace FTAnalyzer
 {
     public static class Regions
     {
-        // ISO Region codes at http://en.wikipedia.org/wiki/ISO_3166-2
+        // ISO Region codes at https://en.wikipedia.org/wiki/ISO_3166-2
 
         public static ISet<Region> SCOTTISH_REGIONS;
         public static ISet<Region> ENGLISH_REGIONS;
@@ -937,7 +937,7 @@ namespace FTAnalyzer
         }
 
         static void AddWelshRegionAlternates()
-        { // http://www.gazetteer.org.uk/contents.php
+        { // https://www.gazetteer.org.uk/contents.php
             ANGLESEY.AddAlternateName("Sir Fon");
             ANGLESEY.AddAlternateName("Isle of Anglesey");
             BRECON.AddAlternateName("Sir Frycheiniog");
