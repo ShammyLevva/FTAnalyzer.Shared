@@ -112,7 +112,7 @@ namespace FTAnalyzer
             {
                 using (WebClient client = new WebClient())
                 {
-                    string website = "http://one-name.org/Results";
+                    string website = "https://one-name.org/Results";
                     NameValueCollection reqparm = new NameValueCollection
                     {
                         { "surname", surname },

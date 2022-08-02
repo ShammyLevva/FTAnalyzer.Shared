@@ -2779,7 +2779,7 @@ namespace FTAnalyzer
 
         string BuildFindMyPastCensusQuery(string censusCountry, int censusYear, Individual person, string censusRegion = ".com")
         {
-            // new http://search.findmypast.co.uk/results/united-kingdom-records-in-census-land-and-surveys?firstname=peter&firstname_variants=true&lastname=moir&lastname_variants=true&eventyear=1881&eventyear_offset=2&yearofbirth=1825&yearofbirth_offset=2
+            // new https://search.findmypast.co.uk/results/united-kingdom-records-in-census-land-and-surveys?firstname=peter&firstname_variants=true&lastname=moir&lastname_variants=true&eventyear=1881&eventyear_offset=2&yearofbirth=1825&yearofbirth_offset=2
             FactDate censusFactDate = new FactDate(censusYear.ToString());
             UriBuilder uri = new UriBuilder
             {
@@ -2873,7 +2873,7 @@ namespace FTAnalyzer
 
         string BuildFindMyPast1939Query(Individual person, string censusRegion)
         {
-            // new http://search.findmypast.co.uk/results/world-records/1939-register?firstname=frederick&firstname_variants=true&lastname=deakin&lastname_variants=true&yearofbirth=1879
+            // new https://search.findmypast.co.uk/results/world-records/1939-register?firstname=frederick&firstname_variants=true&lastname=deakin&lastname_variants=true&yearofbirth=1879
             FactDate censusFactDate = CensusDate.UKCENSUS1939;
             UriBuilder uri = new UriBuilder
             {
@@ -3744,9 +3744,9 @@ namespace FTAnalyzer
                 if (diff % stepSize == 0)
                 {
                     URL = wholeMonth ?
-                            @"http://www.vizgr.org/historical-events/search.php?links=true&format=xml&begin_date=" + year.ToString() + chosenDate.ToString("MM", CultureInfo.InvariantCulture) + "00" +
+                            @"https://www.vizgr.org/historical-events/search.php?links=true&format=xml&begin_date=" + year.ToString() + chosenDate.ToString("MM", CultureInfo.InvariantCulture) + "00" +
                              "&end_date=" + year.ToString() + chosenDate.ToString("MM", CultureInfo.InvariantCulture) + "31" :
-                            @"http://www.vizgr.org/historical-events/search.php?links=true&format=xml&begin_date=" + year.ToString() + chosenDate.ToString("MMdd", CultureInfo.InvariantCulture) +
+                            @"https://www.vizgr.org/historical-events/search.php?links=true&format=xml&begin_date=" + year.ToString() + chosenDate.ToString("MMdd", CultureInfo.InvariantCulture) +
                             "&end_date=" + year.ToString() + chosenDate.ToString("MMdd", CultureInfo.InvariantCulture);
                     XmlDocument doc = GetWikipediaData(URL);
                     eventDate = wholeMonth ? new FactDate(CreateDate(year, chosenDate.Month, 1), CreateDate(year, chosenDate.Month + 1, 1).AddDays(-1)) :
