@@ -12,6 +12,7 @@ using System.Xml;
 using System.Numerics;
 using System.Collections.Concurrent;
 using System.Diagnostics;
+using FTAnalyzer.Windows;
 
 #if __PC__
 using FTAnalyzer.Forms.Controls;
@@ -2229,6 +2230,7 @@ namespace FTAnalyzer
                                 if (daysDiff > 168 && daysDiff < 365)
                                     errors[(int)Dataerror.SIBLING_PROB_TOO_SOON].Add(new DataError((int)Dataerror.SIBLING_PROB_TOO_SOON, Fact.FactError.QUESTIONABLE, ind, $"Child {child.Name} of {ind.Name} born very soon after sibling, only {daysDiff} days later."));
                             }
+                            previousBirth = child.BirthDate;
                         }
                     }
                     #endregion
@@ -3748,7 +3750,7 @@ namespace FTAnalyzer
                              "&end_date=" + year.ToString() + chosenDate.ToString("MM", CultureInfo.InvariantCulture) + "31" :
                             @"https://www.vizgr.org/historical-events/search.php?links=true&format=xml&begin_date=" + year.ToString() + chosenDate.ToString("MMdd", CultureInfo.InvariantCulture) +
                             "&end_date=" + year.ToString() + chosenDate.ToString("MMdd", CultureInfo.InvariantCulture);
-                    XmlDocument doc = GetWikipediaData(URL);
+                    XmlDocument doc = GetWikipediaData(URL).Result;
                     eventDate = wholeMonth ? new FactDate(CreateDate(year, chosenDate.Month, 1), CreateDate(year, chosenDate.Month + 1, 1).AddDays(-1)) :
                                              new FactDate(CreateDate(year, chosenDate.Month, chosenDate.Day), CreateDate(year, chosenDate.Month, chosenDate.Day));
                     if (doc.InnerText.Length > 0)
@@ -3806,27 +3808,26 @@ namespace FTAnalyzer
             return fd;
         }
 
-        XmlDocument GetWikipediaData(string URL)
+        static async Task<XmlDocument> GetWikipediaData(string URL)
         {
             string result = string.Empty;
             var doc = new XmlDocument() { XmlResolver = null };
             try
             {
-                //doc.Load(URL); // using doc.load throws XmlException slowing down loading of data
-                HttpWebRequest request = WebRequest.Create(new Uri(URL)) as HttpWebRequest;
-                request.ContentType = "application/xml";
-                request.Accept = "application/xml";
+                //HttpWebRequest request = WebRequest.Create(new Uri(URL)) as HttpWebRequest;
+                //request.ContentType = "application/xml";
+                //request.Accept = "application/xml";
                 Encoding encode = Encoding.GetEncoding("utf-8");
-                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                using (var response = await Program.Client.GetStreamAsync(new Uri(URL)))
                 {
-                    using (var reader = new StreamReader(response.GetResponseStream(), encode))
+                    using (var reader = new StreamReader(response, encode))
                     {
                         result = reader.ReadToEnd();
                         if (!result.Contains("No events found for this query"))
                         {
                             //XmlReader xmlReader = XmlReader.Create(result, new XmlReaderSettings() { XmlResolver = null })
-                            using (XmlTextReader xmlReader = new XmlTextReader(new StringReader(result)))
-                                doc.Load(xmlReader);
+                            using XmlTextReader xmlReader = new(new StringReader(result));
+                            doc.Load(xmlReader);
                         }
                     }
                 }
