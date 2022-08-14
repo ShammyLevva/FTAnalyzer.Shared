@@ -2229,8 +2229,8 @@ namespace FTAnalyzer
                                     errors[(int)Dataerror.SIBLING_TOO_SOON].Add(new DataError((int)Dataerror.SIBLING_TOO_SOON, Fact.FactError.ERROR, child, $"Child {child.Name} of {ind.Name} born too soon, only {daysDiff} days after sibling."));
                                 if (daysDiff > 168 && daysDiff < 365)
                                     errors[(int)Dataerror.SIBLING_PROB_TOO_SOON].Add(new DataError((int)Dataerror.SIBLING_PROB_TOO_SOON, Fact.FactError.QUESTIONABLE, ind, $"Child {child.Name} of {ind.Name} born very soon after sibling, only {daysDiff} days later."));
+                                previousBirth = child.BirthDate;
                             }
-                            previousBirth = child.BirthDate;
                         }
                     }
                     #endregion
