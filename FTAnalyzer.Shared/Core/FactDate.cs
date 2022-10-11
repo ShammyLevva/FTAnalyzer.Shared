@@ -1,8 +1,5 @@
-﻿using FTAnalyzer.Exports;
-using FTAnalyzer.Utilities;
-using FTAnalyzer.Windows.Properties;
-using System;
-using System.Collections.Generic;
+﻿using FTAnalyzer.Utilities;
+using FTAnalyzer.Properties;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text;

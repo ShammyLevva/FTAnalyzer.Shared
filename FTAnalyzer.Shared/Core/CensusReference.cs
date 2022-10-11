@@ -1,6 +1,4 @@
-﻿using FTAnalyzer.Windows.Properties;
-using System;
-using System.Collections.Generic;
+﻿using FTAnalyzer.Properties;
 using System.Text.RegularExpressions;
 using System.Xml;
 using FTAnalyzer.Utilities;

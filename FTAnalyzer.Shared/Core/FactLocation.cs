@@ -2,12 +2,8 @@
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
-using FTAnalyzer.Windows.Properties;
+using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Diagnostics;
 #if __PC__
 using FTAnalyzer.Mapping;

@@ -1,10 +1,7 @@
 using FTAnalyzer.Exports;
-using FTAnalyzer.Windows.Properties;
+using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Numerics;
 using System.Reflection;
 using System.Text;

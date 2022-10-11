@@ -1,7 +1,4 @@
-﻿using FTAnalyzer.Windows.Properties;
-using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using FTAnalyzer.Properties;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml;

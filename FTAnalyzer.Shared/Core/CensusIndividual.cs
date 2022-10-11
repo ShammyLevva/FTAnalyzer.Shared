@@ -1,7 +1,4 @@
-﻿using FTAnalyzer.Windows.Properties;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using FTAnalyzer.Properties;
 
 namespace FTAnalyzer
 {

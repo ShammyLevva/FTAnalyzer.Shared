@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Globalization;
-using FTAnalyzer.Windows.Properties;
+using FTAnalyzer.Properties;
 
 namespace FTAnalyzer.Utilities
 {
