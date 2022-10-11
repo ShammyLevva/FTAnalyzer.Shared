@@ -25,14 +25,14 @@ namespace FTAnalyzer
             int position = 1;
 
             if (f.Wife != null)
-                Wife = new CensusIndividual(position++, f.Wife, this, CensusIndividual.WIFE);
+                Wife = new(position++, f.Wife, this, CensusIndividual.WIFE);
 
             if (f.Husband != null)
-                Husband = new CensusIndividual(position++, f.Husband, this, CensusIndividual.HUSBAND);
+                Husband = new(position++, f.Husband, this, CensusIndividual.HUSBAND);
             Children = new List<CensusIndividual>();
             foreach (Individual child in f.Children)
             {
-                CensusIndividual toAdd = new CensusIndividual(position++, child, this, CensusIndividual.CHILD);
+                CensusIndividual toAdd = new(position++, child, this, CensusIndividual.CHILD);
                 Children.Add(toAdd);
             }
             FamilyChildren = new List<CensusIndividual>(Children); // Family children is all children alive or dead at census date
@@ -108,7 +108,7 @@ namespace FTAnalyzer
 
             DateTime birth = indiv.BirthDate.StartDate;
             DateTime death = indiv.DeathDate.EndDate;
-            FactLocation bestLocation = indiv.BestLocation(CensusDate);
+            //FactLocation bestLocation = indiv.BestLocation(CensusDate);
 
             if (birth <= CensusDate.StartDate && death >= CensusDate.StartDate)
             {
@@ -150,7 +150,6 @@ namespace FTAnalyzer
 
         public int ChildrenDead => FamilyChildren.Count(x => !x.IsAlive(CensusDate) && x.BirthDate.IsBefore(CensusDate));
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Debug.WriteLine(System.String)")]
         public int ChildrenTotal
         {
             get

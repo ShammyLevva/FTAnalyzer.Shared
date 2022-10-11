@@ -13,7 +13,7 @@ namespace FTAnalyzer
         public FactDate CalculatedBirthDate { get; private set; }
         public string GEDCOM_Age { get; private set; }
         readonly string _age;
-        public static Age BIRTH = new Age();
+        public static readonly Age BIRTH = new();
 
         Age()
         {
@@ -47,7 +47,7 @@ namespace FTAnalyzer
         }
 
         const string pattern = @"^(?<year>\d{1,3}y)? ?(?<month>\d{1,2}m)? ?(?<day>\d{1,2}d)?$";
-        static readonly Regex ydm = new Regex(pattern, RegexOptions.Compiled);
+        static readonly Regex ydm = new(pattern, RegexOptions.Compiled);
 
         public Age(string gedcomAge, FactDate when)
             : this()
@@ -86,7 +86,7 @@ namespace FTAnalyzer
             }
         }
 
-        int GetAge(DateTime birthDate, DateTime laterDate)
+        static int GetAge(DateTime birthDate, DateTime laterDate)
         {
             int age = laterDate.Year - birthDate.Year;
             if (laterDate.DayOfYear < birthDate.DayOfYear)
