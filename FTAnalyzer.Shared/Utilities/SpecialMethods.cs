@@ -21,7 +21,7 @@ namespace FTAnalyzer.Utilities
 #if __PC__
         public static IEnumerable<Control> GetAllControls(Control aControl)
         {
-            Stack<Control> stack = new Stack<Control>();
+            Stack<Control> stack = new();
             stack.Push(aControl);
             while (stack.Any())
             {
@@ -36,7 +36,7 @@ namespace FTAnalyzer.Utilities
         {
             try
             {
-                Font font = new Font(FontSettings.Default.SelectedFont.Name, FontSettings.Default.SelectedFont.Size);
+                Font font = new(FontSettings.Default.SelectedFont.Name, FontSettings.Default.SelectedFont.Size);
                 foreach (Control theControl in GetAllControls(form))
                     if (theControl.Font.Name.Equals(FontSettings.Default.SelectedFont.Name)
                         && theControl.Font.Size != FontSettings.Default.SelectedFont.Size)
