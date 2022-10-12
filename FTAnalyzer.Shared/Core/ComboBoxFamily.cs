@@ -10,7 +10,7 @@ namespace FTAnalyzer
 
         public override string ToString()
         {
-            StringBuilder result = new StringBuilder();
+            StringBuilder result = new();
             if (Husband != null)
                 result.Append(Husband.Name);
             if(Wife != null)

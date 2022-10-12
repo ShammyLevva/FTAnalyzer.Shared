@@ -93,7 +93,7 @@ namespace FTAnalyzer
 
 #if __PC__
         static readonly Dictionary<string, Envelope> BOUNDING_BOXES;
-        static readonly Envelope WHOLE_WORLD = new Envelope(-180, 180, -90, 90);
+        static readonly Envelope WHOLE_WORLD = new(-180, 180, -90, 90);
 #endif
 
         static Countries()

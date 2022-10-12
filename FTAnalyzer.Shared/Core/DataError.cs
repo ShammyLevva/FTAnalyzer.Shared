@@ -50,20 +50,20 @@ namespace FTAnalyzer
 #endif
         public IComparer<IDisplayDataError> GetComparer(string columnName, bool ascending)
         {
-            switch (columnName)
+            return columnName switch
             {
-                case "ErrorType": return CompareComparableProperty<IDisplayDataError>(f => f.ErrorType, ascending);
-                case "Reference": return CompareComparableProperty<IDisplayDataError>(f => f.Reference, ascending);
-                case "Name": return CompareComparableProperty<IDisplayDataError>(f => f.Name, ascending);
-                case "Description": return CompareComparableProperty<IDisplayDataError>(f => f.Description, ascending);
-                case "Born": return CompareComparableProperty<IDisplayDataError>(f => f.Born, ascending);
-                case "Died": return CompareComparableProperty<IDisplayDataError>(f => f.Died, ascending);
+                "ErrorType" => CompareComparableProperty<IDisplayDataError>(f => f.ErrorType, ascending),
+                "Reference" => CompareComparableProperty<IDisplayDataError>(f => f.Reference, ascending),
+                "Name" => CompareComparableProperty<IDisplayDataError>(f => f.Name, ascending),
+                "Description" => CompareComparableProperty<IDisplayDataError>(f => f.Description, ascending),
+                "Born" => CompareComparableProperty<IDisplayDataError>(f => f.Born, ascending),
+                "Died" => CompareComparableProperty<IDisplayDataError>(f => f.Died, ascending),
                 //case "IsFamily": return CompareComparableProperty<IDisplayDataError>(f => f.IsFamily, ascending);
-                default: return null;
-            }
+                _ => null,
+            };
         }
 
-        Comparer<T> CompareComparableProperty<T>(Func<IDisplayDataError, IComparable> accessor, bool ascending)
+        static Comparer<T> CompareComparableProperty<T>(Func<IDisplayDataError, IComparable> accessor, bool ascending)
         {
             return Comparer<T>.Create((x, y) =>
             {

@@ -34,7 +34,7 @@ namespace FTAnalyzer
 
         public const string ANCESTRY_DEATH_CAUSE = "_DCAUSE";
 
-        public static ISet<string> LOOSE_BIRTH_FACTS = new HashSet<string>(new string[] {
+        public static readonly ISet<string> LOOSE_BIRTH_FACTS = new HashSet<string>(new string[] {
             CHRISTENING, BAPTISM, RESIDENCE, WITNESS, EMIGRATION, IMMIGRATION, ARRIVAL, DEPARTURE,
             EDUCATION, DEGREE, ADOPTION, BAR_MITZVAH, BAS_MITZVAH, ADULT_CHRISTENING, CONFIRMATION,
             FIRST_COMMUNION, ORDINATION, NATURALIZATION, GRADUATION, RETIREMENT, LOSTCOUSINS,
@@ -42,27 +42,27 @@ namespace FTAnalyzer
             CREMATION, BURIAL, CENSUS, BIRTH_CALC, CENSUS_SUMMARY
                     });
 
-        public static ISet<string> LOOSE_DEATH_FACTS = new HashSet<string>(new string[] {
+        public static readonly ISet<string> LOOSE_DEATH_FACTS = new HashSet<string>(new string[] {
             CENSUS, RESIDENCE, WITNESS, EMIGRATION, IMMIGRATION, ARRIVAL, DEPARTURE, EDUCATION,
             DEGREE, ADOPTION, BAR_MITZVAH, BAS_MITZVAH, ADULT_CHRISTENING, CONFIRMATION, FIRST_COMMUNION,
             ORDINATION, NATURALIZATION, GRADUATION, RETIREMENT, LOSTCOUSINS, LC_FTA, CENSUS_SUMMARY
                     });
 
-        public static ISet<string> RANGED_DATE_FACTS = new HashSet<string>(new string[] {
+        public static readonly ISet<string> RANGED_DATE_FACTS = new HashSet<string>(new string[] {
             EDUCATION, OCCUPATION, RESIDENCE, RETIREMENT, MILITARY, ELECTION, DEGREE, EMPLOYMENT, MEDICAL_CONDITION
                     });
 
-        public static ISet<string> IGNORE_LONG_RANGE = new HashSet<string>(new string[] {
+        public static readonly ISet<string> IGNORE_LONG_RANGE = new HashSet<string>(new string[] {
             MARRIAGE, CHILDREN
                     });
 
-        public static ISet<string> CREATED_FACTS = new HashSet<string>(new string[] {
+        public static readonly ISet<string> CREATED_FACTS = new HashSet<string>(new string[] {
             CENSUS_FTA, CHILDREN, PARENT, BIRTH_CALC, LC_FTA
                     });
 
-        public static readonly Dictionary<string, string> NON_STANDARD_FACTS = new Dictionary<string, string>();
-        static readonly Dictionary<string, string> CUSTOM_TAGS = new Dictionary<string, string>();
-        static readonly HashSet<string> COMMENT_FACTS = new HashSet<string>();
+        public static readonly Dictionary<string, string> NON_STANDARD_FACTS = new();
+        static readonly Dictionary<string, string> CUSTOM_TAGS = new();
+        static readonly HashSet<string> COMMENT_FACTS = new();
 
         static Fact()
         {
@@ -288,117 +288,117 @@ namespace FTAnalyzer
 
         internal static string GetFactTypeDescription(string factType)
         {
-            switch (factType)
+            return factType switch
             {
-                case ADOPTION: return "Adoption";
-                case ADULT_CHRISTENING: return "Adult christening";
-                case AFN: return "Ancestral File Number";
-                case ALIAS: return "Also known as";
-                case ANNULMENT: return "Annulment";
-                case ARRIVAL: return "Arrival";
-                case BAPTISM: return "Baptism";
-                case BAPTISM_LDS: return "Baptism (LDS)";
-                case BAR_MITZVAH: return "Bar mitzvah";
-                case BAS_MITZVAH: return "Bas mitzvah";
-                case BIRTH: return "Birth";
-                case BIRTH_CALC: return "Birth (Calc from Age)";
-                case BLESSING: return "Blessing";
-                case BURIAL: return "Burial";
-                case CASTE: return "Caste";
-                case CAUSE_OF_DEATH: return "Cause of Death";
-                case CENSUS: return "Census";
-                case CENSUS_FTA: return "Census (FTAnalyzer)";
-                case CENSUS_SUMMARY: return "Census Summary";
-                case CHANGE: return "Record change";
-                case CHILDLESS: return "Childless";
-                case CHILDREN1911: return "Children Status";
-                case CHILDREN: return "Child Born";
-                case CHRISTENING: return "Christening";
-                case CIRCUMCISION: return "Circumcision";
-                case CONFIRMATION: return "Confirmation";
-                case CONFIRMATION_LDS: return "Confirmation (LDS)";
-                case CONTACT: return "Contact";
-                case CREMATION: return "Cremation";
-                case CUSTOM_ATTRIBUTE: return "Custom Attribute";
-                case CUSTOM_EVENT: return "Event";
-                case CUSTOM_FACT: return "Custom Fact";
-                case DEATH: return "Death";
-                case DEGREE: return "Degree";
-                case DEPARTURE: return "Departure";
-                case DESTINATION: return "Destination";
-                case DIVORCE: return "Divorce";
-                case DIVORCE_FILED: return "Divorce filed";
-                case DNA: return "DNA Markers";
-                case EDUCATION: return "Education";
-                case ELECTION: return "Election";
-                case EMAIL: return "Email Address";
-                case EMIGRATION: return "Emigration";
-                case EMPLOYMENT: return "Employment";
-                case ENDOWMENT_LDS: return "Endowment (LDS)";
-                case ENGAGEMENT: return "Engagement";
-                case EXCOMMUNICATION: return "Excommunication";
-                case FAMILYSEARCH: return "FamilySearch";
-                case FAMILYSEARCH_ID: return "FamilySearch ID";
-                case FIRST_COMMUNION: return "First communion";
-                case FUNERAL: return "Funeral";
-                case GENDER: return "Gender";
-                case GRADUATION: return "Graduation";
-                case HASHTAG: return "Hashtag";
-                case HEIGHT: return "Height";
-                case IMMIGRATION: return "Immigration";
-                case INDI: return "Name";
-                case INITIATORY_LDS: return "Initiatory (LDS)";
-                case LC_FTA: return "Lost Cousins (FTAnalyzer)";
-                case LEGATEE: return "Legatee";
-                case LOOSEBIRTH: return "Loose birth";
-                case LOOSEDEATH: return "Loose death";
-                case LOSTCOUSINS: return "Lost Cousins";
-                case MARRIAGE: return "Marriage";
-                case MARRIAGE_BANN: return "Marriage banns";
-                case MARR_CONTRACT: return "Marriage contract";
-                case MARR_LICENSE: return "Marriage license";
-                case MARR_SETTLEMENT: return "Marriage settlement";
-                case MEDICAL_CONDITION: return "Medical condition";
-                case MILITARY: return "Military service";
-                case MISSING: return "Missing";
-                case MISSION_LDS: return "Mission (LDS)";
-                case NAME: return "Alternate Name";
-                case NAMESAKE: return "Namesake";
-                case NATIONALITY: return "Nationality";
-                case NATURALIZATION: return "Naturalization";
-                case NAT_ID_NO: return "National identity no.";
-                case NUM_CHILDREN: return "Number of children";
-                case NUM_MARRIAGE: return "Number of marriages";
-                case OBITUARY: return "Obituary";
-                case OCCUPATION: return "Occupation";
-                case ORDINATION: return "Ordination";
-                case ORDINANCE: return "Ordinance";
-                case PARENT: return "Parental Info";
-                case PHONE: return "Phone";
-                case PHYSICAL_DESC: return "Physical description";
-                case PROBATE: return "Probate";
-                case PROPERTY: return "Property";
-                case RACE: return "Race";
-                case REFERENCE: return "Reference ID";
-                case RELIGION: return "Religion";
-                case REPORT: return "Fact Report";
-                case RESIDENCE: return "Residence";
-                case RETIREMENT: return "Retirement";
-                case SEALED_TO_PARENTS: return "Sealed to Parents (LDS)";
-                case SEALED_TO_SPOUSE: return "Sealed to Spouse (LDS)";
-                case SEPARATION: return "Separation";
-                case SERVICE_NUMBER: return "Military service number";
-                case SOCIAL_SECURITY: return "Social Security number";
-                case TITLE: return "Title";
-                case UNKNOWN: return "UNKNOWN";
-                case UNMARRIED: return "Unmarried";
-                case WEIGHT: return "Weight";
-                case WILL: return "Will";
-                case WITNESS: return "Witness";
-                case WORLD_EVENT: return "World Event";
-                case "": return "UNKNOWN";
-                default: return EnhancedTextInfo.ToTitleCase(factType);
-            }
+                ADOPTION => "Adoption",
+                ADULT_CHRISTENING => "Adult christening",
+                AFN => "Ancestral File Number",
+                ALIAS => "Also known as",
+                ANNULMENT => "Annulment",
+                ARRIVAL => "Arrival",
+                BAPTISM => "Baptism",
+                BAPTISM_LDS => "Baptism (LDS)",
+                BAR_MITZVAH => "Bar mitzvah",
+                BAS_MITZVAH => "Bas mitzvah",
+                BIRTH => "Birth",
+                BIRTH_CALC => "Birth (Calc from Age)",
+                BLESSING => "Blessing",
+                BURIAL => "Burial",
+                CASTE => "Caste",
+                CAUSE_OF_DEATH => "Cause of Death",
+                CENSUS => "Census",
+                CENSUS_FTA => "Census (FTAnalyzer)",
+                CENSUS_SUMMARY => "Census Summary",
+                CHANGE => "Record change",
+                CHILDLESS => "Childless",
+                CHILDREN1911 => "Children Status",
+                CHILDREN => "Child Born",
+                CHRISTENING => "Christening",
+                CIRCUMCISION => "Circumcision",
+                CONFIRMATION => "Confirmation",
+                CONFIRMATION_LDS => "Confirmation (LDS)",
+                CONTACT => "Contact",
+                CREMATION => "Cremation",
+                CUSTOM_ATTRIBUTE => "Custom Attribute",
+                CUSTOM_EVENT => "Event",
+                CUSTOM_FACT => "Custom Fact",
+                DEATH => "Death",
+                DEGREE => "Degree",
+                DEPARTURE => "Departure",
+                DESTINATION => "Destination",
+                DIVORCE => "Divorce",
+                DIVORCE_FILED => "Divorce filed",
+                DNA => "DNA Markers",
+                EDUCATION => "Education",
+                ELECTION => "Election",
+                EMAIL => "Email Address",
+                EMIGRATION => "Emigration",
+                EMPLOYMENT => "Employment",
+                ENDOWMENT_LDS => "Endowment (LDS)",
+                ENGAGEMENT => "Engagement",
+                EXCOMMUNICATION => "Excommunication",
+                FAMILYSEARCH => "FamilySearch",
+                FAMILYSEARCH_ID => "FamilySearch ID",
+                FIRST_COMMUNION => "First communion",
+                FUNERAL => "Funeral",
+                GENDER => "Gender",
+                GRADUATION => "Graduation",
+                HASHTAG => "Hashtag",
+                HEIGHT => "Height",
+                IMMIGRATION => "Immigration",
+                INDI => "Name",
+                INITIATORY_LDS => "Initiatory (LDS)",
+                LC_FTA => "Lost Cousins (FTAnalyzer)",
+                LEGATEE => "Legatee",
+                LOOSEBIRTH => "Loose birth",
+                LOOSEDEATH => "Loose death",
+                LOSTCOUSINS => "Lost Cousins",
+                MARRIAGE => "Marriage",
+                MARRIAGE_BANN => "Marriage banns",
+                MARR_CONTRACT => "Marriage contract",
+                MARR_LICENSE => "Marriage license",
+                MARR_SETTLEMENT => "Marriage settlement",
+                MEDICAL_CONDITION => "Medical condition",
+                MILITARY => "Military service",
+                MISSING => "Missing",
+                MISSION_LDS => "Mission (LDS)",
+                NAME => "Alternate Name",
+                NAMESAKE => "Namesake",
+                NATIONALITY => "Nationality",
+                NATURALIZATION => "Naturalization",
+                NAT_ID_NO => "National identity no.",
+                NUM_CHILDREN => "Number of children",
+                NUM_MARRIAGE => "Number of marriages",
+                OBITUARY => "Obituary",
+                OCCUPATION => "Occupation",
+                ORDINATION => "Ordination",
+                ORDINANCE => "Ordinance",
+                PARENT => "Parental Info",
+                PHONE => "Phone",
+                PHYSICAL_DESC => "Physical description",
+                PROBATE => "Probate",
+                PROPERTY => "Property",
+                RACE => "Race",
+                REFERENCE => "Reference ID",
+                RELIGION => "Religion",
+                REPORT => "Fact Report",
+                RESIDENCE => "Residence",
+                RETIREMENT => "Retirement",
+                SEALED_TO_PARENTS => "Sealed to Parents (LDS)",
+                SEALED_TO_SPOUSE => "Sealed to Spouse (LDS)",
+                SEPARATION => "Separation",
+                SERVICE_NUMBER => "Military service number",
+                SOCIAL_SECURITY => "Social Security number",
+                TITLE => "Title",
+                UNKNOWN => "UNKNOWN",
+                UNMARRIED => "Unmarried",
+                WEIGHT => "Weight",
+                WILL => "Will",
+                WITNESS => "Witness",
+                WORLD_EVENT => "World Event",
+                "" => "UNKNOWN",
+                _ => EnhancedTextInfo.ToTitleCase(factType),
+            };
         }
 
         public enum FactError { GOOD = 0, WARNINGALLOW = 1, WARNINGIGNORE = 2, ERROR = 3, QUESTIONABLE = 4, IGNORE = 5 };
@@ -532,7 +532,7 @@ namespace FTAnalyzer
                                 outputText.Report($"Source {srcref} not found.\n");
                             if (IsCensusFact)
                             {
-                                CensusReference cr = new CensusReference(this, n, CensusReference); //pass in existing reference so as to not lose any unknown references
+                                CensusReference cr = new(this, n, CensusReference); //pass in existing reference so as to not lose any unknown references
                                 // only update census reference if new one is better
                                 if (cr.IsKnownStatus && !CensusReference.IsKnownStatus)
                                     CensusReference = cr;
@@ -546,7 +546,7 @@ namespace FTAnalyzer
                     {
                         CheckForSharedFacts(node);
                         if (!CensusReference.IsKnownStatus)
-                            CensusReference = new CensusReference(this, node, CensusReference); //pass in existing reference so as to not lose any unknown references
+                            CensusReference = new(this, node, CensusReference); //pass in existing reference so as to not lose any unknown references
                         else if (!CensusReference.IsGoodStatus)
                             CensusReference.CheckFullUnknownReference(CensusReference.Status);
                     }
@@ -592,14 +592,14 @@ namespace FTAnalyzer
 
         const string CHILDREN_STATUS_PATTERN1 = @"(\d{1,2}) Total ?,? ?(\d{1,2}) (Alive|Living) ?,? ?(\d{1,2}) Dead";
         const string CHILDREN_STATUS_PATTERN2 = @"Total:? (\d{1,2}) ?,? ?(Alive|Living):? (\d{1,2}) ?,? ?Dead:? (\d{1,2})";
-        public readonly static Regex regexChildren1 = new Regex(CHILDREN_STATUS_PATTERN1, RegexOptions.Compiled);
-        public readonly static Regex regexChildren2 = new Regex(CHILDREN_STATUS_PATTERN2, RegexOptions.Compiled);
+        public readonly static Regex regexChildren1 = new(CHILDREN_STATUS_PATTERN1, RegexOptions.Compiled);
+        public readonly static Regex regexChildren2 = new(CHILDREN_STATUS_PATTERN2, RegexOptions.Compiled);
 
         void CheckValidChildrenStatus(XmlNode node)
         {
             if (Comment.Length == 0)
                 Comment = FamilyTree.GetNotes(node);
-            if (Comment.IndexOf("ignore", StringComparison.OrdinalIgnoreCase) >= 0)
+            if (Comment.Contains("ignore", StringComparison.OrdinalIgnoreCase))
             {
                 FactErrorLevel = FactError.IGNORE;
                 return;
@@ -611,9 +611,9 @@ namespace FTAnalyzer
             if (matcher.Success)
             {
                 success = true;
-                int.TryParse(matcher.Groups[1].ToString(), out total);
-                int.TryParse(matcher.Groups[2].ToString(), out alive);
-                int.TryParse(matcher.Groups[4].ToString(), out dead);
+                _ = int.TryParse(matcher.Groups[1].ToString(), out total);
+                _ = int.TryParse(matcher.Groups[2].ToString(), out alive);
+                _ = int.TryParse(matcher.Groups[4].ToString(), out dead);
             }
             else
             {
@@ -621,9 +621,9 @@ namespace FTAnalyzer
                 if (matcher.Success)
                 {
                     success = true;
-                    int.TryParse(matcher.Groups[1].ToString(), out total);
-                    int.TryParse(matcher.Groups[3].ToString(), out alive);
-                    int.TryParse(matcher.Groups[4].ToString(), out dead);
+                    _ = int.TryParse(matcher.Groups[1].ToString(), out total);
+                    _ = int.TryParse(matcher.Groups[3].ToString(), out alive);
+                    _ = int.TryParse(matcher.Groups[4].ToString(), out dead);
                 }
             }
             if (success)
@@ -638,7 +638,7 @@ namespace FTAnalyzer
             FactErrorLevel = FactError.ERROR;
         }
 
-        string GetAddress(string factType, XmlNode node)
+        static string GetAddress(string factType, XmlNode node)
         {
             XmlNode addr = node.SelectSingleNode("ADDR");
             if (addr is null)
@@ -781,7 +781,7 @@ namespace FTAnalyzer
         {
             get
             {
-                StringBuilder sb = new StringBuilder();
+                StringBuilder sb = new();
                 foreach (FactSource s in Sources.OrderBy(s => s.ToString()))
                 {
                     if (sb.Length > 0) sb.Append('\n');
@@ -814,9 +814,9 @@ namespace FTAnalyzer
             FactErrorMessage = message;
         }
 
-        string FixFactTypes(string tag)
+        static string FixFactTypes(string tag)
         {
-            string initialChars = tag.ToUpper().Substring(0, Math.Min(tag.Length, 4));
+            string initialChars = tag.ToUpper()[..Math.Min(tag.Length, 4)];
             if (initialChars == "BIRT" || initialChars == "MARR" || initialChars == "DEAT")
                 return initialChars;
             return tag;
@@ -831,7 +831,7 @@ namespace FTAnalyzer
         public void SetCensusReferenceDetails(CensusReference cr, CensusLocation cl, string comment)
         {
             if (cr is null || cl is null) return;
-            comment = comment ?? string.Empty;
+            comment ??= string.Empty;
             if ((cr.IsKnownStatus && !CensusReference.IsKnownStatus) || (cr.IsGoodStatus && !CensusReference.IsGoodStatus))
                 CensusReference = cr;
             if (Location.IsBlank || !Location.IsKnown)
@@ -893,7 +893,7 @@ namespace FTAnalyzer
                     && FactDate.DateString.Length >= 4)
                 {
                     // if not a census overlay then set date to year and try that instead
-                    string year = FactDate.DateString.Substring(FactDate.DateString.Length - 4);
+                    string year = FactDate.DateString[^4..];
                     if (int.TryParse(year, out _))
                     {
                         yearAdjusted = new FactDate(year);
@@ -990,7 +990,7 @@ namespace FTAnalyzer
             {
                 if (factPlace.EndsWith("/", StringComparison.Ordinal))
                 {
-                    Comment = factPlace.Substring(0, factPlace.Length - 1);
+                    Comment = factPlace[..^1];
                     Place = string.Empty;
                 }
                 else
@@ -998,9 +998,9 @@ namespace FTAnalyzer
                     int slash = factPlace.IndexOf("/", StringComparison.Ordinal);
                     if (slash >= 0)
                     {
-                        Comment = factPlace.Substring(0, slash).Trim();
+                        Comment = factPlace[..slash].Trim();
                         // If slash occurs at end of string, location is empty.
-                        Place = (slash == factPlace.Length - 1) ? string.Empty : factPlace.Substring(slash + 1).Trim();
+                        Place = (slash == factPlace.Length - 1) ? string.Empty : factPlace[(slash + 1)..].Trim();
                     }
                     else if (COMMENT_FACTS.Contains(factType))
                     {
