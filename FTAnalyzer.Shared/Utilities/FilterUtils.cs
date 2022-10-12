@@ -43,15 +43,15 @@ namespace FTAnalyzer.Filters
                 if (fd is null || !fd.IsExact)
                     return true;
                 FactLocation l = filterLocation(fd, t);
-                switch (level)
+                return level switch
                 {
-                    case FactLocation.COUNTRY: return (l.Country.Length == 0);
-                    case FactLocation.REGION: return (l.Region.Length == 0);
-                    case FactLocation.SUBREGION: return (l.SubRegion.Length == 0);
-                    case FactLocation.ADDRESS: return (l.Address.Length == 0);
-                    case FactLocation.PLACE: return (l.Place.Length == 0);
-                    default: return true;
-                }
+                    FactLocation.COUNTRY => (l.Country.Length == 0),
+                    FactLocation.REGION => (l.Region.Length == 0),
+                    FactLocation.SUBREGION => (l.SubRegion.Length == 0),
+                    FactLocation.ADDRESS => (l.Address.Length == 0),
+                    FactLocation.PLACE => (l.Place.Length == 0),
+                    _ => true,
+                };
             };
         }
 

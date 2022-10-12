@@ -100,7 +100,7 @@ namespace FTAnalyzer
         ///     word has no alternate key by double metaphone</param>
         public static void GetDoubleMetaphone(string word, ref string primaryKey, ref string alternateKey)
         {
-            DoubleMetaphone mp = new DoubleMetaphone(word);
+            DoubleMetaphone mp = new(word);
 
             primaryKey = mp.PrimaryKey;
             alternateKey = mp.AlternateKey;
@@ -113,7 +113,7 @@ namespace FTAnalyzer
         ///     and computes new keys for this word</param>
         public void ComputeKeys(string word)
         {
-            word = word ?? string.Empty;
+            word ??= string.Empty;
             m_primaryKey.Length = 0;
             m_alternateKey.Length = 0;
 

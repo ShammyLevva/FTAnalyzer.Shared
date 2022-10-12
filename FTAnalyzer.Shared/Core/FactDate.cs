@@ -45,12 +45,12 @@ namespace FTAnalyzer
         const string SPACEFIX = "^(\\d{1,2}) *([A-Z]{3}) *(\\d{0,4})$";
         const string QUAKERFIX = "^(\\d{1,2})D (\\d{1,2})M (\\d{0,4})$";
 
-        public static FactDate UNKNOWN_DATE;
-        public static FactDate MARRIAGE_LESS_THAN_13;
-        public static FactDate SAME_SEX_MARRIAGE;
-        public static FactDate TODAY;
-        public static FactDate YEAR1935;
-        public static DateTime NOW;
+        public readonly static FactDate UNKNOWN_DATE;
+        public readonly static FactDate MARRIAGE_LESS_THAN_13;
+        public readonly static FactDate SAME_SEX_MARRIAGE;
+        public readonly static FactDate TODAY;
+        public readonly static FactDate YEAR1935;
+        public readonly static DateTime NOW;
 
         static readonly Dictionary<string, Regex> _datePatterns;
         static Regex _regex;
@@ -659,10 +659,10 @@ namespace FTAnalyzer
         {
             DateTime date;
             Group gDay = null, gMonth = null, gYear = null, gDouble = null;
-            DateTime dt = MINDATE;
             dateValue = dateValue.Trim();
             if (dateValue.Length == 0)
                 return highlow == HIGH ? MAXDATE : MINDATE;
+            DateTime dt;
             try
             {
                 // Match the regular expression pattern against a text string.

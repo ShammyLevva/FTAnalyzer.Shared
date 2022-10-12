@@ -11,7 +11,7 @@ namespace FTAnalyzer.Utilities
         bool isSorted;
         ListSortDirection listSortDirection;
         PropertyDescriptor propertyDescriptor;
-        List<T> originalData;
+        readonly List<T> originalData;
 
         public SortableBindingList()
             : base(new List<T>())
@@ -103,16 +103,16 @@ namespace FTAnalyzer.Utilities
                 int mid = (left + right) / 2;
                 InternalMergeSort(inputList, comparer, left, mid);
                 InternalMergeSort(inputList, comparer, (mid + 1), right);
-                MergeSortedList(inputList, comparer, left, mid, right);
+                SortableBindingList<T>.MergeSortedList(inputList, comparer, left, mid, right);
             }
         }
 
-        void MergeSortedList(List<T> inputList, PropertyComparer<T> comparer, int left, int mid, int right)
+        static void MergeSortedList(List<T> inputList, PropertyComparer<T> comparer, int left, int mid, int right)
         {
             int total_elements = right - left + 1; //BODMAS rule
             int right_start = mid + 1;
             int temp_location = left;
-            List<T> tempList = new List<T>();
+            List<T> tempList = new();
 
             while ((left <= mid) && right_start <= right)
             {

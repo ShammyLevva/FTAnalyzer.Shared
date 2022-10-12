@@ -24,7 +24,7 @@
             Score += SharedParents() + SharedChildren() + DifferentParentsPenalty();
         }
 
-        int NameScore(Individual indA, Individual indB)
+        static int NameScore(Individual indA, Individual indB)
         {
             int score = 0;
             if (indA != null && indB != null)
@@ -160,9 +160,9 @@
 
         public override bool Equals(object obj)
         {
-            if (obj is DuplicateIndividual)
-                return (IndividualA.Equals(((DuplicateIndividual)obj).IndividualA) && IndividualB.Equals(((DuplicateIndividual)obj).IndividualB))
-                    || (IndividualA.Equals(((DuplicateIndividual)obj).IndividualB) && IndividualB.Equals(((DuplicateIndividual)obj).IndividualA));
+            if (obj is DuplicateIndividual individual)
+                return (IndividualA.Equals(individual.IndividualA) && IndividualB.Equals(individual.IndividualB))
+                    || (IndividualA.Equals(individual.IndividualB) && IndividualB.Equals(individual.IndividualA));
             return false;
         }
 

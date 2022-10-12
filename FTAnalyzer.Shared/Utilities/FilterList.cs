@@ -22,7 +22,7 @@ namespace FTAnalyzer.Utilities
 {
     public class FilterList<T> : SortableBindingList<T>
     {
-        readonly List<T> allItems = new List<T>();
+        readonly List<T> allItems = new();
 
         public FilterList()
         {

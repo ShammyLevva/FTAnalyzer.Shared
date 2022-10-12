@@ -29,10 +29,8 @@ namespace FTAnalyzer.Exports
                 int recordsPresent = 0;
                 int sessionDuplicates = 0;
                 int count = 0;
-                if (Website is null)
-                    Website = LoadWebsiteAncestors(outputText);
-                if (SessionList is null)
-                    SessionList = new List<LostCousin>();
+                Website ??= LoadWebsiteAncestors(outputText);
+                SessionList ??= new List<LostCousin>();
                 bool alias = GeneralSettings.Default.ShowAliasInName;
                 GeneralSettings.Default.ShowAliasInName = false; // turn off adding alias in name when exporting
                 foreach (CensusIndividual ind in ToProcess)
@@ -49,7 +47,7 @@ namespace FTAnalyzer.Exports
                     }
                     else if (ind.CensusReference != null && ind.CensusReference.IsValidLostCousinsReference())
                     {
-                        LostCousin lc = new LostCousin($"{ind.SurnameAtDate(ind.CensusDate)}, {ind.Forenames}", ind.BirthDate.BestYear, GetCensusSpecificFields(ind), ind.CensusDate.BestYear, ind.CensusCountry, true);
+                        LostCousin lc = new($"{ind.SurnameAtDate(ind.CensusDate)}, {ind.Forenames}", ind.BirthDate.BestYear, GetCensusSpecificFields(ind), ind.CensusDate.BestYear, ind.CensusCountry, true);
                         if (Website.Contains(lc))
                         {
                             outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - Already Present {ind.CensusString}, {ind.CensusReference}.\n");
@@ -111,7 +109,7 @@ namespace FTAnalyzer.Exports
         static void AddLostCousinsFact(CensusIndividual ind)
         {
             FactLocation location = FactLocation.GetLocation(ind.CensusCountry);
-            Fact f = new Fact(ind.CensusRef, Fact.LC_FTA, ind.CensusDate, location, string.Empty, true, true);
+            Fact f = new(ind.CensusRef, Fact.LC_FTA, ind.CensusDate, location, string.Empty, true, true);
             Individual person = FamilyTree.Instance.GetIndividual(ind.IndividualID); // get the individual not the census indvidual
             if(person != null && !person.HasLostCousinsFactAtDate(ind.CensusDate))
                 person.AddFact(f);
@@ -125,7 +123,7 @@ namespace FTAnalyzer.Exports
                 if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
                     return false;
                 if (password.Length > 15)
-                    password = password.Substring(0, 15);
+                    password = password[..15];
                 string formParams = $"stage=submit&email={HttpUtility.UrlEncode(email)}&password={password}{Suffix()}";
                 HttpWebRequest req = WebRequest.Create(new Uri("https://www.lostcousins.com/pages/login/")) as HttpWebRequest;
                 req.Referer = "https://www.lostcousins.com/pages/login/";
@@ -159,9 +157,8 @@ namespace FTAnalyzer.Exports
 
         public static SortableBindingList<IDisplayLostCousin> VerifyAncestors(IProgress<string> outputText)
         {
-            SortableBindingList<IDisplayLostCousin> result = new SortableBindingList<IDisplayLostCousin>();
-            if (Website is null)
-                Website = LoadWebsiteAncestors(outputText);
+            SortableBindingList<IDisplayLostCousin> result = new();
+            Website ??= LoadWebsiteAncestors(outputText);
             WebLinks = new List<Uri>();
             foreach(LostCousin lostCousin in Website)
             {
@@ -182,46 +179,44 @@ namespace FTAnalyzer.Exports
 
         static List<LostCousin> LoadWebsiteAncestors(IProgress<string> outputText)
         {
-            List<LostCousin> websiteList = new List<LostCousin>();
+            List<LostCousin> websiteList = new();
             try
             {
-                using (CookieAwareWebClient wc = new CookieAwareWebClient(CookieJar))
+                using CookieAwareWebClient wc = new(CookieJar);
+                HtmlAgilityPack.HtmlDocument doc = new();
+                string webData = wc.DownloadString("https://www.lostcousins.com/pages/members/ancestors/");
+                doc.LoadHtml(webData);
+                HtmlNodeCollection rows = doc.DocumentNode.SelectNodes("//table[@class='data_table']/tr");
+                if (rows != null)
                 {
-                    HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
-                    string webData = wc.DownloadString("https://www.lostcousins.com/pages/members/ancestors/");
-                    doc.LoadHtml(webData);
-                    HtmlNodeCollection rows = doc.DocumentNode.SelectNodes("//table[@class='data_table']/tr");
-                    if (rows != null)
+                    foreach (HtmlNode node in rows)
                     {
-                        foreach (HtmlNode node in rows)
+                        HtmlNodeCollection columns = node.SelectNodes("td");
+                        if (columns != null && columns.Count == 8 && columns[0].InnerText != "Name") // ignore header row
                         {
-                            HtmlNodeCollection columns = node.SelectNodes("td");
-                            if (columns != null && columns.Count == 8 && columns[0].InnerText != "Name") // ignore header row
+                            string name = columns[0].InnerText.ClearWhiteSpace();
+                            bool ftanalyzer = false;
+                            string weblink = string.Empty;
+                            if (columns[0].ChildNodes.Count == 5)
                             {
-                                string name = columns[0].InnerText.ClearWhiteSpace();
-                                bool ftanalyzer = false;
-                                string weblink = string.Empty;
-                                if (columns[0].ChildNodes.Count == 5)
-                                {
-                                    HtmlAttribute notesNode = columns[0].ChildNodes[3].Attributes["title"];
-                                    ftanalyzer = notesNode != null && notesNode.Value.Contains("Added_By_FTAnalyzer");
-                                }
-                                string birthYear = columns[2].InnerText.ClearWhiteSpace();
-                                if (columns[4].ChildNodes.Count > 4)
-                                {
-                                    string weblinkText = columns[4].ChildNodes[3].OuterHtml;
-                                    if (weblinkText.Length > 10)
-                                    {
-                                        int pos = weblinkText.IndexOf('"', 10);
-                                        if (pos > -1)
-                                            weblink = weblinkText.Substring(9, pos - 9).Trim();
-                                    }
-                                }
-                                string reference = columns[4].InnerText.ClearWhiteSpace();
-                                string census = columns[5].InnerText.ClearWhiteSpace();
-                                LostCousin lc = new LostCousin(name, birthYear, reference, census, weblink, ftanalyzer);
-                                websiteList.Add(lc);
+                                HtmlAttribute notesNode = columns[0].ChildNodes[3].Attributes["title"];
+                                ftanalyzer = notesNode != null && notesNode.Value.Contains("Added_By_FTAnalyzer");
                             }
+                            string birthYear = columns[2].InnerText.ClearWhiteSpace();
+                            if (columns[4].ChildNodes.Count > 4)
+                            {
+                                string weblinkText = columns[4].ChildNodes[3].OuterHtml;
+                                if (weblinkText.Length > 10)
+                                {
+                                    int pos = weblinkText.IndexOf('"', 10);
+                                    if (pos > -1)
+                                        weblink = weblinkText[9..pos].Trim();
+                                }
+                            }
+                            string reference = columns[4].InnerText.ClearWhiteSpace();
+                            string census = columns[5].InnerText.ClearWhiteSpace();
+                            LostCousin lc = new(name, birthYear, reference, census, weblink, ftanalyzer);
+                            websiteList.Add(lc);
                         }
                     }
                 }
@@ -274,7 +269,7 @@ namespace FTAnalyzer.Exports
 
         static string BuildParameterString(CensusIndividual ind)
         {
-            StringBuilder output = new StringBuilder("stage=submit");
+            StringBuilder output = new("stage=submit");
             string newRef = GetCensusSpecificFields(ind);
             if (newRef == _previousRef)
                 output.Append("&similar=1");
@@ -303,7 +298,7 @@ namespace FTAnalyzer.Exports
 
         static string Suffix()
         {
-            Random random = new Random();
+            Random random = new();
             int x = random.Next(1,99);
             int y = random.Next(1, 9);
             return $"&x={x}&y={y}";
@@ -333,29 +328,20 @@ namespace FTAnalyzer.Exports
 
         static string GetLCDescendantStatus(CensusIndividual ind)
         {
-            switch(ind.RelationType)
+            return ind.RelationType switch
             {
-                case Individual.DIRECT:
-                    return $"Direct+ancestor&descent={ind.Ahnentafel}";
-                case Individual.BLOOD: 
-                case Individual.DESCENDANT:
-                    return "Blood+relative&descent=";
-                case Individual.MARRIAGE:
-                case Individual.MARRIEDTODB:
-                    return "Marriage&descent=";
-                case Individual.UNKNOWN:
-                case Individual.UNSET:
-                case Individual.LINKED:
-                    return "Unknown&descent=";
-                default:
-                    return "Unknown&descent=";
-            }
+                Individual.DIRECT => $"Direct+ancestor&descent={ind.Ahnentafel}",
+                Individual.BLOOD or Individual.DESCENDANT => "Blood+relative&descent=",
+                Individual.MARRIAGE or Individual.MARRIEDTODB => "Marriage&descent=",
+                Individual.UNKNOWN or Individual.UNSET or Individual.LINKED => "Unknown&descent=",
+                _ => "Unknown&descent=",
+            };
         }
     }
 
     class CookieAwareWebClient : WebClient
     {
-        readonly CookieContainer _cookieJar = new CookieContainer();
+        readonly CookieContainer _cookieJar = new();
 
         internal CookieAwareWebClient(CookieCollection cookies)
         {

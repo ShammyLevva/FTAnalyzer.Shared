@@ -22,17 +22,17 @@ namespace FTAnalyzer
 
         public IComparer<IDisplayCustomFact> GetComparer(string columnName, bool ascending)
         {
-            switch(columnName)
-            { 
-                case "CustomFactName": return CompareComparableProperty<IDisplayCustomFact>(f => f.CustomFactName, ascending);
-                case "IndividualCount": return CompareComparableProperty<IDisplayCustomFact>(f => f.IndividualCount, ascending);
-                case "FamilyCount": return CompareComparableProperty<IDisplayCustomFact>(f => f.FamilyCount, ascending);
-                case "Ignore": return CompareComparableProperty<IDisplayCustomFact>(f => f.Ignore, ascending);
-                 default: return null;
-            }
+            return columnName switch
+            {
+                "CustomFactName" => CompareComparableProperty<IDisplayCustomFact>(f => f.CustomFactName, ascending),
+                "IndividualCount" => CompareComparableProperty<IDisplayCustomFact>(f => f.IndividualCount, ascending),
+                "FamilyCount" => CompareComparableProperty<IDisplayCustomFact>(f => f.FamilyCount, ascending),
+                "Ignore" => CompareComparableProperty<IDisplayCustomFact>(f => f.Ignore, ascending),
+                _ => null,
+            };
         }
 
-        Comparer<T> CompareComparableProperty<T>(Func<IDisplayCustomFact, IComparable> accessor, bool ascending)
+        static Comparer<T> CompareComparableProperty<T>(Func<IDisplayCustomFact, IComparable> accessor, bool ascending)
         {
             return Comparer<T>.Create((x, y) =>
             {

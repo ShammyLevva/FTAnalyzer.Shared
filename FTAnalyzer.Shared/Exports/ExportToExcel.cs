@@ -18,20 +18,18 @@ namespace FTAnalyzer.Utilities
         {
             try
             {
-                using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+                using SaveFileDialog saveFileDialog = new();
+                string initialDir = (string)Application.UserAppDataRegistry.GetValue("Excel Export Individual Path");
+                saveFileDialog.InitialDirectory = initialDir ?? Environment.SpecialFolder.MyDocuments.ToString();
+                saveFileDialog.Filter = "Comma Separated Value (*.csv)|*.csv";
+                saveFileDialog.FilterIndex = 1;
+                DialogResult dr = saveFileDialog.ShowDialog();
+                if (dr == DialogResult.OK)
                 {
-                    string initialDir = (string)Application.UserAppDataRegistry.GetValue("Excel Export Individual Path");
-                    saveFileDialog.InitialDirectory = initialDir ?? Environment.SpecialFolder.MyDocuments.ToString();
-                    saveFileDialog.Filter = "Comma Separated Value (*.csv)|*.csv";
-                    saveFileDialog.FilterIndex = 1;
-                    DialogResult dr = saveFileDialog.ShowDialog();
-                    if (dr == DialogResult.OK)
-                    {
-                        string path = Path.GetDirectoryName(saveFileDialog.FileName);
-                        Application.UserAppDataRegistry.SetValue("Excel Export Individual Path", path);
-                        WriteFile(dt, saveFileDialog.FileName);
-                        UIHelpers.ShowMessage($"File written to {saveFileDialog.FileName}", "FTAnalyzer");
-                    }
+                    string path = Path.GetDirectoryName(saveFileDialog.FileName);
+                    Application.UserAppDataRegistry.SetValue("Excel Export Individual Path", path);
+                    WriteFile(dt, saveFileDialog.FileName);
+                    UIHelpers.ShowMessage($"File written to {saveFileDialog.FileName}", "FTAnalyzer");
                 }
             }
             catch (Exception ex)
@@ -58,37 +56,35 @@ namespace FTAnalyzer.Utilities
         static void WriteFile(DataTable table, string filename)
         {
             string q = "\"";
-            using (StreamWriter output = new StreamWriter(new FileStream(filename, FileMode.Create, FileAccess.Write), Encoding.UTF8))
-            {
-                //am getting my grid's column headers
-                int columnscount = table.Columns.Count;
+            using StreamWriter output = new(new FileStream(filename, FileMode.Create, FileAccess.Write), Encoding.UTF8);
+            //am getting my grid's column headers
+            int columnscount = table.Columns.Count;
 
-                for (int j = 0; j < columnscount; j++)
-                {   //Get column headers  and make it as bold in excel columns
-                    var column = table.Rows[0][j];
-                    if (column.ToString() != "System.Drawing.Bitmap")
+            for (int j = 0; j < columnscount; j++)
+            {   //Get column headers  and make it as bold in excel columns
+                var column = table.Rows[0][j];
+                if (column.ToString() != "System.Drawing.Bitmap")
+                {
+                    output.Write(q + table.Columns[j].ColumnName + q);
+                    if (j < columnscount - 1)
+                        output.Write(",");
+                }
+            }
+            output.WriteLine();
+            foreach (DataRow row in table.Rows)
+            {
+                //write in new row
+                for (int col = 0; col < columnscount; col++)
+                {
+                    var cell = row[col];
+                    if (cell.ToString() != "System.Drawing.Bitmap")
                     {
-                        output.Write(q + table.Columns[j].ColumnName + q);
-                        if (j < columnscount - 1)
+                        output.Write(q + row[col].ToString().Replace("\"", "").Replace("\n", " :: ") + q);
+                        if (col < columnscount - 1)
                             output.Write(",");
                     }
                 }
                 output.WriteLine();
-                foreach (DataRow row in table.Rows)
-                {
-                    //write in new row
-                    for (int col = 0; col < columnscount; col++)
-                    {
-                        var cell = row[col];
-                        if (cell.ToString() != "System.Drawing.Bitmap")
-                        {
-                            output.Write(q + row[col].ToString().Replace("\"", "").Replace("\n", " :: ") + q);
-                            if (col < columnscount - 1)
-                                output.Write(",");
-                        }
-                    }
-                    output.WriteLine();
-                }
             }
         }
     }

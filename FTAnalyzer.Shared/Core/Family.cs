@@ -149,7 +149,7 @@ namespace FTAnalyzer
                 ExpectedDead += resultD;
         }
 
-        void AddParentAndChildrenFacts(Individual child, Individual parent, ParentalRelationship.ParentalRelationshipType prType)
+        static void AddParentAndChildrenFacts(Individual child, Individual parent, ParentalRelationship.ParentalRelationshipType prType)
         {
             if (parent != null)
             {
@@ -167,10 +167,10 @@ namespace FTAnalyzer
                     childrenComment = $"{titlecase} parent of {child.IndividualID}: {child.Name}";
                 }
 
-                Fact parentFact = new Fact(parent.IndividualID, Fact.PARENT, child.BirthDate, child.BirthLocation, parentComment, true, true);
+                Fact parentFact = new(parent.IndividualID, Fact.PARENT, child.BirthDate, child.BirthLocation, parentComment, true, true);
                 child.AddFact(parentFact);
 
-                Fact childrenFact = new Fact(child.IndividualID, Fact.CHILDREN, child.BirthDate, child.BirthLocation, childrenComment, true, true);
+                Fact childrenFact = new(child.IndividualID, Fact.CHILDREN, child.BirthDate, child.BirthLocation, childrenComment, true, true);
                 parent.AddFact(childrenFact);
             }
         }
@@ -206,7 +206,7 @@ namespace FTAnalyzer
             {
                 try
                 {
-                    Fact f = new Fact(n, this, preferredFact, outputText);
+                    Fact f = new(n, this, preferredFact, outputText);
                     f.Location.FTAnalyzerCreated = false;
                     if (!f.Location.IsValidLatLong)
                         outputText.Report($"Found problem with Lat/Long for Location '{f.Location}' in facts for {FamilyID}: {FamilyName}");
@@ -251,7 +251,7 @@ namespace FTAnalyzer
                 {
                     if (te.Message == "UNMARRIED" || te.Message == "NEVER MARRIED" || te.Message == "NOT MARRIED")
                     {
-                        Fact f = new Fact(string.Empty, Fact.UNMARRIED, FactDate.UNKNOWN_DATE, FactLocation.UNKNOWN_LOCATION, string.Empty, true, true);
+                        Fact f = new(string.Empty, Fact.UNMARRIED, FactDate.UNKNOWN_DATE, FactLocation.UNKNOWN_LOCATION, string.Empty, true, true);
                         Husband?.AddFact(f);
                         Wife?.AddFact(f);
                         Facts.Add(f);
@@ -273,8 +273,8 @@ namespace FTAnalyzer
                 int prefixLength = FamilyType == SOLOINDIVIDUAL || FamilyType == PRE_MARRIAGE ? 2 : 1;
                 if (FamilyID.Length >= prefixLength)
                 {
-                    string prefix = FamilyID.Substring(0, prefixLength);
-                    string suffix = FamilyID.Substring(prefixLength);
+                    string prefix = FamilyID[..prefixLength];
+                    string suffix = FamilyID[prefixLength..];
                     FamilyID = prefix + suffix.PadLeft(length, '0');
                 }
             }
@@ -663,22 +663,22 @@ namespace FTAnalyzer
 
         public IComparer<IDisplayFamily> GetComparer(string columnName, bool ascending)
         {
-            switch (columnName)
+            return columnName switch
             {
-                case "FamilyID": return CompareComparableProperty<IDisplayFamily>(f => f.FamilyID, ascending);
-                case "HusbandID": return CompareComparableProperty<IDisplayFamily>(f => f.HusbandID, ascending);
-                case "Husband": return CompareComparableProperty<IDisplayFamily>(f => f.Husband, ascending);
-                case "WifeID": return CompareComparableProperty<IDisplayFamily>(f => f.WifeID, ascending);
-                case "Wife": return CompareComparableProperty<IDisplayFamily>(f => f.Wife, ascending);
-                case "Marriage": return CompareComparableProperty<IDisplayFamily>(f => f.Marriage, ascending);
-                case "Location": return CompareComparableProperty<IDisplayFamily>(f => f.Location, ascending);
-                case "Children": return CompareComparableProperty<IDisplayFamily>(f => f.Children, ascending);
-                case "FamilySize": return CompareComparableProperty<IDisplayFamily>(f => f.FamilySize, ascending);
-                default: return null;
-            }
+                "FamilyID" => CompareComparableProperty<IDisplayFamily>(f => f.FamilyID, ascending),
+                "HusbandID" => CompareComparableProperty<IDisplayFamily>(f => f.HusbandID, ascending),
+                "Husband" => CompareComparableProperty<IDisplayFamily>(f => f.Husband, ascending),
+                "WifeID" => CompareComparableProperty<IDisplayFamily>(f => f.WifeID, ascending),
+                "Wife" => CompareComparableProperty<IDisplayFamily>(f => f.Wife, ascending),
+                "Marriage" => CompareComparableProperty<IDisplayFamily>(f => f.Marriage, ascending),
+                "Location" => CompareComparableProperty<IDisplayFamily>(f => f.Location, ascending),
+                "Children" => CompareComparableProperty<IDisplayFamily>(f => f.Children, ascending),
+                "FamilySize" => CompareComparableProperty<IDisplayFamily>(f => f.FamilySize, ascending),
+                _ => null,
+            };
         }
 
-        Comparer<T> CompareComparableProperty<T>(Func<IDisplayFamily, IComparable> accessor, bool ascending)
+        static Comparer<T> CompareComparableProperty<T>(Func<IDisplayFamily, IComparable> accessor, bool ascending)
         {
             return Comparer<T>.Create((x, y) =>
             {
