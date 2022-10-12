@@ -62,8 +62,7 @@ namespace FTAnalyzer
         {
             get
             {
-                if (instance is null)
-                    instance = new FamilyTree();
+                instance ??= new FamilyTree();
                 return instance;
             }
         }
@@ -165,7 +164,7 @@ namespace FTAnalyzer
 
         public static string ValidFilename(string filename)
         {
-            filename = filename ?? string.Empty;
+            filename ??= string.Empty;
             int pos = filename.IndexOfAny(Path.GetInvalidFileNameChars());
             if (pos == -1)
                 return filename;
@@ -173,7 +172,7 @@ namespace FTAnalyzer
             string remainder = filename;
             while (pos != -1)
             {
-                result.Append(remainder.Substring(0, pos));
+                result.Append(remainder[..pos]);
                 if (pos == remainder.Length)
                 {
                     remainder = string.Empty;
@@ -181,7 +180,7 @@ namespace FTAnalyzer
                 }
                 else
                 {
-                    remainder = remainder.Substring(pos + 1);
+                    remainder = remainder[(pos + 1)..];
                     pos = remainder.IndexOfAny(Path.GetInvalidFileNameChars());
                 }
             }
@@ -371,7 +370,7 @@ namespace FTAnalyzer
             int counter = 0;
             foreach (XmlNode n in list)
             {
-                Family family = new Family(n, outputText);
+                Family family = new(n, outputText);
                 families.Add(family);
                 AddCustomFacts(family);
                 progress.Report((100 * counter++) / familyMax);
@@ -402,7 +401,7 @@ namespace FTAnalyzer
             Loading = false;
         }
 
-        public void LoadAncestryTreeTags(XmlDocument doc, IProgress<string> outputText)
+        public static void LoadAncestryTreeTags(XmlDocument doc, IProgress<string> outputText)
         {
             XmlNodeList list = doc.SelectNodes("GED/_MTTAG");
             
@@ -414,14 +413,14 @@ namespace FTAnalyzer
                 string name = xmlNode is null ? string.Empty : xmlNode.InnerText;
                 xmlNode = n.SelectSingleNode("RIN");
                 string rin = xmlNode is null ? string.Empty : xmlNode.InnerText;
-                AncestryTreeTag tag = new AncestryTreeTag(id, name, rin);
+                AncestryTreeTag tag = new(id, name, rin);
             }
             outputText.Report($"Loaded {counter} Ancestry Tree Tags.\n");
         }
 
-        public void CleanUpXML() => noteNodes = null;
+        public static void CleanUpXML() => noteNodes = null;
 
-        void LoadGEDCOM_PLAC_Locations(XmlNodeList list, int startval, IProgress<int> progress, IProgress<string> outputText)
+        static void LoadGEDCOM_PLAC_Locations(XmlNodeList list, int startval, IProgress<int> progress, IProgress<string> outputText)
         {
             int max = list.Count;
             int counter = 0;
@@ -446,7 +445,8 @@ namespace FTAnalyzer
                 progress.Report(value);
             }
         }
-        void CreateLostCousinsFacts(IProgress<string> outputText)
+
+        static void CreateLostCousinsFacts(IProgress<string> outputText)
         {
             try
             {
@@ -506,30 +506,28 @@ namespace FTAnalyzer
 
         void ReadStandardisedNameFile(string filename)
         {
-            using (StreamReader reader = new StreamReader(filename))
+            using StreamReader reader = new(filename);
+            while (!reader.EndOfStream)
             {
-                while (!reader.EndOfStream)
+                string line = reader.ReadLine();
+                string[] values = line.Split(',');
+                if (line.IndexOf(",", StringComparison.Ordinal) > 0 && (values[0] == "1" || values[0] == "2"))
                 {
-                    string line = reader.ReadLine();
-                    string[] values = line.Split(',');
-                    if (line.IndexOf(",", StringComparison.Ordinal) > 0 && (values[0] == "1" || values[0] == "2"))
-                    {
-                        StandardisedName original = new StandardisedName(values[0] == "2", values[2]);
-                        StandardisedName standardised = new StandardisedName(values[1] == "2", values[3]);
-                        names.Add(original, standardised);
-                    }
+                    StandardisedName original = new(values[0] == "2", values[2]);
+                    StandardisedName standardised = new(values[1] == "2", values[3]);
+                    names.Add(original, standardised);
                 }
             }
         }
 
         public string GetStandardisedName(bool IsMale, string name)
         {
-            StandardisedName gIn = new StandardisedName(IsMale, name);
+            StandardisedName gIn = new(IsMale, name);
             names.TryGetValue(gIn, out StandardisedName gOut);
             return gOut is null ? name : gOut.Name;
         }
 
-        void ReportOptions(IProgress<string> outputText)
+        static void ReportOptions(IProgress<string> outputText)
         {
             if (GeneralSettings.Default.ReportOptions)
             {
@@ -713,7 +711,7 @@ namespace FTAnalyzer
 
         public string UpdateLostCousinsReport(Predicate<Individual> relationFilter)
         {
-            StringBuilder output = new StringBuilder();
+            StringBuilder output = new();
             output.Append("Lost Cousins facts recorded:\n\n");
 
             IEnumerable<Individual> listToCheck = AllIndividuals.Filter(relationFilter).ToList();
@@ -795,7 +793,7 @@ namespace FTAnalyzer
         public string LCOutput(List<CensusIndividual> LCUpdates, List<CensusIndividual> LCInvalidReferences, Predicate<CensusIndividual> relationFilter)
         {
             LCInvalidRef = 0;
-            StringBuilder output = new StringBuilder();
+            StringBuilder output = new();
             Tuple<List<CensusIndividual>, List<CensusIndividual>> result;
             result = GetMissingLCIndividuals(CensusDate.EWCENSUS1881, relationFilter, output);
             LCUpdates.AddRange(result.Item1);
@@ -854,7 +852,7 @@ namespace FTAnalyzer
 
         void AddOccupations(Individual individual)
         {
-            List<string> jobs = new List<string>();
+            List<string> jobs = new();
             foreach (Fact f in individual.GetFacts(Fact.OCCUPATION))
             {
                 if (!jobs.ContainsString(f.Comment))
@@ -928,7 +926,7 @@ namespace FTAnalyzer
         {
             get
             {
-                List<ExportFact> result = new List<ExportFact>();
+                List<ExportFact> result = new();
                 foreach (Individual ind in individuals)
                 {
                     foreach (Fact f in ind.PersonalFacts)
@@ -985,7 +983,7 @@ namespace FTAnalyzer
             individualLookup.TryGetValue(individualID, out Individual person);
             while (individualID.StartsWith("I0", StringComparison.Ordinal) && person is null)
             {
-                if (individualID.Length >= 2) individualID = $"I{individualID.Substring(2)}";
+                if (individualID.Length >= 2) individualID = $"I{individualID[2..]}";
                 individualLookup.TryGetValue(individualID, out person);
             }
             return person;
@@ -1004,7 +1002,7 @@ namespace FTAnalyzer
         public List<string> GetSurnamesAtLocation(FactLocation loc) { return GetSurnamesAtLocation(loc, FactLocation.SUBREGION); }
         public List<string> GetSurnamesAtLocation(FactLocation loc, int level)
         {
-            List<string> result = new List<string>();
+            List<string> result = new();
             foreach (Individual i in individuals)
             {
                 if (!result.ContainsString(i.Surname) && i.IsAtLocation(loc, level))
@@ -1048,13 +1046,13 @@ namespace FTAnalyzer
                 LooseBirths();
             if (looseDeaths is null)
                 LooseDeaths();
-            SortableBindingList<IDisplayLooseInfo> result = new SortableBindingList<IDisplayLooseInfo>();
+            SortableBindingList<IDisplayLooseInfo> result = new();
             try
             {
-                foreach (Individual ind in looseBirths)
-                    result.Add(ind as IDisplayLooseInfo);
-                foreach (Individual ind in looseDeaths)
-                    result.Add(ind as IDisplayLooseInfo);
+                foreach (Individual ind in looseBirths.Cast<Individual>())
+                    result.Add(ind);
+                foreach (Individual ind in looseDeaths.Cast<Individual>())
+                    result.Add(ind);
             }
             catch (Exception ex)
             {
@@ -1071,7 +1069,7 @@ namespace FTAnalyzer
         {
             if (looseBirths != null)
                 return looseBirths;
-            SortableBindingList<IDisplayLooseBirth> result = new SortableBindingList<IDisplayLooseBirth>();
+            SortableBindingList<IDisplayLooseBirth> result = new();
             try
             {
                 foreach (Individual ind in individuals)
@@ -1085,7 +1083,7 @@ namespace FTAnalyzer
             return result;
         }
 
-        void CheckLooseBirth(Individual indiv, SortableBindingList<IDisplayLooseBirth> result = null)
+        static void CheckLooseBirth(Individual indiv, SortableBindingList<IDisplayLooseBirth> result = null)
         {
             FactDate birthDate = indiv.BirthDate;
             FactDate toAdd = null;
@@ -1189,14 +1187,14 @@ namespace FTAnalyzer
             {
                 // we have a date to change and its not the same 
                 // range as the existing death date
-                Fact looseBirth = new Fact(indiv.IndividualID, Fact.LOOSEBIRTH, toAdd, FactLocation.UNKNOWN_LOCATION);
+                Fact looseBirth = new(indiv.IndividualID, Fact.LOOSEBIRTH, toAdd, FactLocation.UNKNOWN_LOCATION);
                 indiv.AddFact(looseBirth);
                 if (result != null)
                     result.Add(indiv);
             }
         }
 
-        DateTime CreateDate(int year, int month, int day)
+        static DateTime CreateDate(int year, int month, int day)
         {
             if (year > DateTime.MaxValue.Year)
                 year = DateTime.MaxValue.Year;
@@ -1211,7 +1209,7 @@ namespace FTAnalyzer
             return new DateTime(year, month, day);
         }
 
-        FactDate BaseLivingDate(Individual indiv)
+        static FactDate BaseLivingDate(Individual indiv)
         {
             DateTime mindate = FactDate.MAXDATE;
             DateTime maxdate = GetMaxLivingDate(indiv, Fact.LOOSE_BIRTH_FACTS);
@@ -1244,7 +1242,7 @@ namespace FTAnalyzer
         {
             if (looseDeaths != null)
                 return looseDeaths;
-            SortableBindingList<IDisplayLooseDeath> result = new SortableBindingList<IDisplayLooseDeath>();
+            SortableBindingList<IDisplayLooseDeath> result = new();
             try
             {
                 foreach (Individual ind in individuals)
@@ -1258,7 +1256,7 @@ namespace FTAnalyzer
             return result;
         }
 
-        void CheckLooseDeath(Individual indiv, SortableBindingList<IDisplayLooseDeath> result = null)
+        static void CheckLooseDeath(Individual indiv, SortableBindingList<IDisplayLooseDeath> result = null)
         {
             FactDate deathDate = indiv.DeathDate;
             FactDate toAdd = null;
@@ -1294,14 +1292,14 @@ namespace FTAnalyzer
             {
                 // we have a date to change and its not the same 
                 // range as the existing death date
-                Fact looseDeath = new Fact(indiv.IndividualID, Fact.LOOSEDEATH, toAdd, FactLocation.UNKNOWN_LOCATION);
+                Fact looseDeath = new(indiv.IndividualID, Fact.LOOSEDEATH, toAdd, FactLocation.UNKNOWN_LOCATION);
                 indiv.AddFact(looseDeath);
                 if (result != null)
                     result.Add(indiv);
             }
         }
 
-        DateTime GetMaxLivingDate(Individual indiv, ISet<string> factTypes)
+        static DateTime GetMaxLivingDate(Individual indiv, ISet<string> factTypes)
         {
             DateTime maxdate = FactDate.MINDATE;
             // having got the families the individual is a parent of
@@ -1344,7 +1342,7 @@ namespace FTAnalyzer
             return maxdate;
         }
 
-        DateTime GetMinDeathDate(Individual indiv)
+        static DateTime GetMinDeathDate(Individual indiv)
         {
             FactDate deathDate = indiv.DeathDate;
             FactDate.FactDateType deathDateType = deathDate.DateType;
@@ -1389,7 +1387,7 @@ namespace FTAnalyzer
             }
         }
 
-        void AddToQueue(Queue<Individual> queue, IEnumerable<Individual> list)
+        static void AddToQueue(Queue<Individual> queue, IEnumerable<Individual> list)
         {
             foreach (Individual i in list)
                 queue.Enqueue(i);
@@ -1431,7 +1429,7 @@ namespace FTAnalyzer
             }
         }
 
-        void AlreadyDirect(Individual parent, BigInteger newAhnentafel, IProgress<string> outputText)
+        static void AlreadyDirect(Individual parent, BigInteger newAhnentafel, IProgress<string> outputText)
         {
             if (GeneralSettings.Default.ShowMultiAncestors)
             {
@@ -1450,7 +1448,7 @@ namespace FTAnalyzer
             }
         }
 
-        void AddParentsToQueue(Individual indiv, Queue<Individual> queue)
+        static void AddParentsToQueue(Individual indiv, Queue<Individual> queue)
         {
             foreach (ParentalRelationship parents in indiv.FamiliesAsChild)
             {
@@ -1609,7 +1607,7 @@ namespace FTAnalyzer
 
         public string PrintRelationCount()
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             int[] relations = new int[Individual.UNSET + 1];
             foreach (Individual i in individuals)
                 relations[i.RelationType]++;
@@ -1635,10 +1633,10 @@ namespace FTAnalyzer
         {
             if (censusDate != null)
             {
-                HashSet<string> individualIDs = new HashSet<string>();
+                HashSet<string> individualIDs = new();
                 foreach (Family f in families)
                 {
-                    CensusFamily cf = new CensusFamily(f, censusDate);
+                    CensusFamily cf = new(f, censusDate);
                     if (cf.Process(censusDate, censusDone, checkCensus))
                     {
                         individualIDs.UnionWith(cf.Members.Select(x => x.IndividualID));
@@ -1648,7 +1646,7 @@ namespace FTAnalyzer
                 // also add all individuals that don't ever appear as a child as they may have census facts for when they are children
                 foreach (Individual ind in individuals.Filter(x => x.FamiliesAsChild.Count == 0))
                 {
-                    CensusFamily cf = new CensusFamily(new Family(ind, Instance.NextPreMarriageFamily), censusDate);
+                    CensusFamily cf = new(new Family(ind, Instance.NextPreMarriageFamily), censusDate);
                     if (!individualIDs.Contains(ind.IndividualID) && cf.Process(censusDate, censusDone, checkCensus))
                     {
                         individualIDs.Add(ind.IndividualID);
@@ -1666,7 +1664,7 @@ namespace FTAnalyzer
 
         SortableBindingList<IDisplayLocation> GetDisplayLocations(int level)
         {
-            List<IDisplayLocation> result = new List<IDisplayLocation>();
+            List<IDisplayLocation> result = new();
             //copy to list so that any GetLocation(level) that creates a new location 
             //won't cause an error due to collection changing
             List<FactLocation> allLocations = FactLocation.AllLocations.ToList();
@@ -1691,11 +1689,11 @@ namespace FTAnalyzer
 
         public SortableBindingList<IDisplayLocation> AllDisplayPlaces => displayLocations[FactLocation.PLACE] ?? GetDisplayLocations(FactLocation.PLACE);
 
-        public List<IDisplayGeocodedLocation> AllGeocodingLocations
+        public static List<IDisplayGeocodedLocation> AllGeocodingLocations
         {
             get
             {
-                List<IDisplayGeocodedLocation> result = new List<IDisplayGeocodedLocation>();
+                List<IDisplayGeocodedLocation> result = new();
                 foreach (IDisplayGeocodedLocation loc in FactLocation.AllLocations)
                     if ((loc as FactLocation).IsKnown)
                         result.Add(loc);
@@ -1705,12 +1703,12 @@ namespace FTAnalyzer
 
         public List<ExportFactsAtLocation> AllExportableGeocodedLocations(IProgress<int> progress)
         {
-            List<ExportFactsAtLocation> result = new List<ExportFactsAtLocation>();
+            List<ExportFactsAtLocation> result = new();
             int loopcount = 0;
             int maxval = FactLocation.AllLocations.Count();
             foreach (FactLocation loc in FactLocation.AllLocations)
             {
-                ExportFactsAtLocation toadd = new ExportFactsAtLocation();
+                ExportFactsAtLocation toadd = new();
                 if (loc.IsGeoCoded(false))
                 {
                     toadd.SortableLocation = loc.SortableLocation;
@@ -1718,7 +1716,7 @@ namespace FTAnalyzer
                     toadd.Latitude = loc.Latitude;
                     toadd.Longitude = loc.Longitude;
                     var individuals = GetIndividualsAtLocation(loc, loc.Level);
-                    List<string> factsAtLocation = new List<string>();
+                    List<string> factsAtLocation = new();
                     foreach (Individual ind in individuals)
                     {
                         var facts = ind.AllFacts.Where(x => x.Location == loc && !x.Created);
@@ -1747,7 +1745,7 @@ namespace FTAnalyzer
         {
             get
             {
-                SortableBindingList<IDisplayIndividual> result = new SortableBindingList<IDisplayIndividual>();
+                SortableBindingList<IDisplayIndividual> result = new();
                 foreach (IDisplayIndividual i in individuals)
                     result.Add(i);
                 return result;
@@ -1758,7 +1756,7 @@ namespace FTAnalyzer
         {
             get
             {
-                SortableBindingList<IDisplayFamily> result = new SortableBindingList<IDisplayFamily>();
+                SortableBindingList<IDisplayFamily> result = new();
                 foreach (IDisplayFamily f in families)
                     result.Add(f);
                 return result;
@@ -1767,12 +1765,12 @@ namespace FTAnalyzer
 
         public static SortableBindingList<IDisplayFact> GetSourceDisplayFacts(FactSource source)
         {
-            SortableBindingList<IDisplayFact> result = new SortableBindingList<IDisplayFact>();
+            SortableBindingList<IDisplayFact> result = new();
             foreach (Fact f in source.Facts)
             {
                 if (f.Individual != null)
                 {
-                    DisplayFact df = new DisplayFact(f.Individual, f);
+                    DisplayFact df = new(f.Individual, f);
                     if (!result.ContainsFact(df))
                         result.Add(df);
                 }
@@ -1780,13 +1778,13 @@ namespace FTAnalyzer
                 {
                     if (f.Family != null && f.Family.Husband != null)
                     {
-                        DisplayFact df = new DisplayFact(f.Family.Husband, f);
+                        DisplayFact df = new(f.Family.Husband, f);
                         if (!result.ContainsFact(df))
                             result.Add(df);
                     }
                     if (f.Family != null && f.Family.Wife != null)
                     {
-                        DisplayFact df = new DisplayFact(f.Family.Wife, f);
+                        DisplayFact df = new(f.Family.Wife, f);
                         if (!result.ContainsFact(df))
                             result.Add(df);
                     }
@@ -1799,7 +1797,7 @@ namespace FTAnalyzer
         {
             get
             {
-                var result = new SortableBindingList<IDisplaySource>();
+                SortableBindingList<IDisplaySource> result = new();
                 foreach (IDisplaySource s in sources)
                     result.Add(s);
                 return result;
@@ -1845,7 +1843,7 @@ namespace FTAnalyzer
         {
             get
             {
-                SortableBindingList<IDisplayFact> result = new SortableBindingList<IDisplayFact>();
+                SortableBindingList<IDisplayFact> result = new();
 
                 foreach (Individual ind in individuals)
                 {
@@ -1859,19 +1857,17 @@ namespace FTAnalyzer
             }
         }
 
-        public SortableBindingList<Individual> AllWorkers(string job) => new SortableBindingList<Individual>(occupations[job]);
+        public SortableBindingList<Individual> AllWorkers(string job) => new(occupations[job]);
 
-        public SortableBindingList<Individual> AllCustomFactIndividuals(string factType) =>
-            new SortableBindingList<Individual>(unknownIndividualFactTypes[factType]);
+        public SortableBindingList<Individual> AllCustomFactIndividuals(string factType) => new(unknownIndividualFactTypes[factType]);
 
-        public SortableBindingList<Family> AllCustomFactFamilies(string factType) =>
-            new SortableBindingList<Family>(unknownFamilyFactTypes[factType]);
+        public SortableBindingList<Family> AllCustomFactFamilies(string factType) => new(unknownFamilyFactTypes[factType]);
 
         public SortableBindingList<IDisplayFamily> PossiblyMissingChildFamilies
         {
             get
             {
-                SortableBindingList<IDisplayFamily> result = new SortableBindingList<IDisplayFamily>();
+                SortableBindingList<IDisplayFamily> result = new();
                 foreach (Family fam in families)
                     if (fam.EldestChild != null && fam.MarriageDate.IsKnown && fam.EldestChild.BirthDate.IsKnown &&
                       !fam.EldestChild.BirthDate.IsLongYearSpan && fam.EldestChild.BirthDate.BestYear > fam.MarriageDate.BestYear + 3)
@@ -1884,7 +1880,7 @@ namespace FTAnalyzer
         {
             get
             {
-                SortableBindingList<IDisplayFamily> result = new SortableBindingList<IDisplayFamily>();
+                SortableBindingList<IDisplayFamily> result = new();
                 foreach (Family fam in families)
                     if (fam.FamilyType != Family.SOLOINDIVIDUAL && (fam.Husband is null || fam.Wife is null))
                         result.Add(fam);
@@ -1896,7 +1892,7 @@ namespace FTAnalyzer
         {
             get
             {
-                SortableBindingList<IDisplayIndividual> result = new SortableBindingList<IDisplayIndividual>();
+                SortableBindingList<IDisplayIndividual> result = new();
                 foreach (Individual ind in individuals)
                 {
                     int age = ind.GetMaxAge(FactDate.TODAY);
@@ -2002,7 +1998,7 @@ namespace FTAnalyzer
                 progress.Report(20 + (record++ / totalRecords));
                 try
                 {
-                    if (ind.BaptismDate is object && ind.BaptismDate.IsKnown)
+                    if (ind.BaptismDate is not null && ind.BaptismDate.IsKnown)
                     {
                         if (ind.BirthDate.IsAfter(ind.BaptismDate))
                         {   // if birthdate after baptism and not an approx date
@@ -2179,7 +2175,7 @@ namespace FTAnalyzer
                                 errors[(int)Dataerror.BIRTH_AFTER_MOTHER_DEATH].Add(new DataError((int)Dataerror.BIRTH_AFTER_MOTHER_DEATH, ind, $"Mother {mother.Name} died {mother.DeathDate} which is before individual was born"));
                         }
                     }
-                    List<Individual> womansChildren = new List<Individual>();
+                    List<Individual> womansChildren = new();
                     foreach (Family asParent in ind.FamiliesAsSpouse)
                     {
                         Individual spouse = asParent.Spouse(ind);
@@ -2321,24 +2317,18 @@ namespace FTAnalyzer
 
         public static string ProviderName(int censusProvider)
         {
-            switch (censusProvider)
+            return censusProvider switch
             {
-                case 0:
-                    return "Ancestry";
-                case 1:
-                    return "FindMyPast";
-                case 2:
-                    return "FreeCen";
-                case 3:
-                    return "FamilySearch";
-                case 4:
-                    return "ScotlandsPeople";
-                default:
-                    return "FamilySearch";
-            }
+                0 => "Ancestry",
+                1 => "FindMyPast",
+                2 => "FreeCen",
+                3 => "FamilySearch",
+                4 => "ScotlandsPeople",
+                _ => "FamilySearch",
+            };
         }
 
-        public void SearchCensus(string censusCountry, int censusYear, Individual person, int censusProvider, string censusRegion)
+        public static void SearchCensus(string censusCountry, int censusYear, Individual person, int censusProvider, string censusRegion)
         {
             string uri = null;
             string provider = ProviderName(censusProvider);
@@ -2377,11 +2367,11 @@ namespace FTAnalyzer
             }
         }
 
-        string BuildScotlandsPeopleCensusQuery(int censusYear, Individual person)
+        static string BuildScotlandsPeopleCensusQuery(int censusYear, Individual person)
         {
             // &surname=Bisset&surname_so=fuzzy&forename=Alexander&forename_so=syn&second_person_forename_so=exact&age_from=10&age_to=16&record_type=census&year%5B0%5D=1841
-            FactDate censusFactDate = new FactDate(censusYear.ToString());
-            StringBuilder path = new StringBuilder();
+            FactDate censusFactDate = new(censusYear.ToString());
+            StringBuilder path = new();
             path.Append("https://www.scotlandspeople.gov.uk/record-results?search_type=people&dl_cat=census");
             string surname = person.SurnameAtDate(censusFactDate);
             if (surname != "?" && surname.ToUpper() != Individual.UNKNOWN_NAME)
@@ -2397,12 +2387,12 @@ namespace FTAnalyzer
             return path.ToString();
         }
 
-        string BuildFamilySearchCensusQuery(string country, int censusYear, Individual person)
+        static string BuildFamilySearchCensusQuery(string country, int censusYear, Individual person)
         {
-            FactDate censusFactDate = new FactDate(censusYear.ToString());
+            FactDate censusFactDate = new(censusYear.ToString());
 
             // https://www.familysearch.org/search/record/results?f.collectionId=2000219&q.anyDate.from=1897&q.anyDate.to=1899&q.anyPlace=United%20States&q.givenName=George%20Thurman&q.surname=Walker
-            StringBuilder path = new StringBuilder();
+            StringBuilder path = new();
             path.Append("https://www.familysearch.org/search/record/results?");
             if (person.Forename != "?" && person.Forename.ToUpper() != Individual.UNKNOWN_NAME)
                 path.Append($"{FamilySearch.GIVENNAME}={HttpUtility.UrlEncode(person.Forenames)}");
@@ -2444,18 +2434,18 @@ namespace FTAnalyzer
             return path.Replace("+", "%20").ToString();
         }
 
-        string BuildAncestryCensusQuery(string censusCountry, int censusYear, Individual person, string censusRegion = ".com")
+        static string BuildAncestryCensusQuery(string censusCountry, int censusYear, Individual person, string censusRegion = ".com")
         {
             if (censusYear == 1939 && censusCountry.Equals(Countries.UNITED_KINGDOM))
                 return BuildAncestry1939Query(person, censusRegion);
             if (censusYear == 1940 && censusCountry.Equals(Countries.UNITED_STATES))
                 return BuildAncestry1940Query(person, censusRegion);
-            UriBuilder uri = new UriBuilder
+            UriBuilder uri = new()
             {
                 Host = $"search.ancestry{censusRegion}",
                 Path = "cgi-bin/sse.dll"
             };
-            StringBuilder query = new StringBuilder();
+            StringBuilder query = new();
             if (censusCountry.Equals(Countries.UNITED_KINGDOM))
             {
                 query.Append($"gl={censusYear}uki&");
@@ -2586,14 +2576,15 @@ namespace FTAnalyzer
             uri.Query = query.ToString();
             return uri.ToString();
         }
-        string BuildAncestry1939Query(Individual person, string censusRegion = ".co.uk")
+
+        static string BuildAncestry1939Query(Individual person, string censusRegion = ".co.uk")
         {
-            UriBuilder uri = new UriBuilder
+            UriBuilder uri = new()
             {
                 Host = $"search.ancestry{censusRegion}",
                 Path = "search/collections/1939ukregister/"
             };
-            StringBuilder query = new StringBuilder();
+            StringBuilder query = new();
             string forename = string.Empty;
             string surname = string.Empty;
             if (person.Forenames != "?" && person.Forenames.ToUpper() != Individual.UNKNOWN_NAME)
@@ -2644,15 +2635,15 @@ namespace FTAnalyzer
             return uri.ToString();
         }
 
-        string BuildAncestry1940Query(Individual person, string censusRegion = ".com")
+        static string BuildAncestry1940Query(Individual person, string censusRegion = ".com")
         {
             // ?name=Sylvia+Esther_Buck+Sweitzer&birth=1932_ohio-usa_38&birth_x=1-0-0&name_x=ps_ps
-            UriBuilder uri = new UriBuilder
+            UriBuilder uri = new()
             {
                 Host = $"search.ancestry{censusRegion}",
                 Path = "search/collections/1940usfedcen/"
             };
-            StringBuilder query = new StringBuilder();
+            StringBuilder query = new();
             string forename = string.Empty;
             string surname = string.Empty;
             if (person.Forenames != "?" && person.Forenames.ToUpper() != Individual.UNKNOWN_NAME)
@@ -2703,28 +2694,28 @@ namespace FTAnalyzer
             return uri.ToString();
         }
 
-        string BuildFreeCenCensusQuery(string censusCountry, int censusYear, Individual person)
+        static string BuildFreeCenCensusQuery(string censusCountry, int censusYear, Individual person)
         {
             if (!censusCountry.Equals(Countries.UNITED_KINGDOM) && !censusCountry.Equals("Unknown"))
             {
                 throw new CensusSearchException("Sorry only UK searches can be done on FreeCEN.");
             }
-            FactDate censusFactDate = new FactDate(censusYear.ToString());
-            UriBuilder uri = new UriBuilder
+            FactDate censusFactDate = new(censusYear.ToString());
+            UriBuilder uri = new()
             {
                 //Host = "www.freecen.org.uk",
                 Scheme = Uri.UriSchemeHttps,
                 Host = "freecen1.freecen.org.uk",
                 Path = "/cgi/search.pl"
             };
-            StringBuilder query = new StringBuilder();
+            StringBuilder query = new();
             query.Append($"y={censusYear}&");
             if (person.Forenames != "?" && person.Forenames.ToUpper() != Individual.UNKNOWN_NAME)
             {
                 int pos = person.Forenames.IndexOf(" ", StringComparison.Ordinal);
                 string forename = person.Forenames;
                 if (pos > 0)
-                    forename = person.Forenames.Substring(0, pos); //strip out any middle names as FreeCen searches better without then
+                    forename = person.Forenames[..pos]; //strip out any middle names as FreeCen searches better without then
                 query.Append($"g={HttpUtility.UrlEncode(forename)}&");
             }
             string surname = person.SurnameAtDate(censusFactDate);
@@ -2779,11 +2770,11 @@ namespace FTAnalyzer
             return uri.ToString();
         }
 
-        string BuildFindMyPastCensusQuery(string censusCountry, int censusYear, Individual person, string censusRegion = ".com")
+        static string BuildFindMyPastCensusQuery(string censusCountry, int censusYear, Individual person, string censusRegion = ".com")
         {
             // new https://search.findmypast.co.uk/results/united-kingdom-records-in-census-land-and-surveys?firstname=peter&firstname_variants=true&lastname=moir&lastname_variants=true&eventyear=1881&eventyear_offset=2&yearofbirth=1825&yearofbirth_offset=2
-            FactDate censusFactDate = new FactDate(censusYear.ToString());
-            UriBuilder uri = new UriBuilder
+            FactDate censusFactDate = new(censusYear.ToString());
+            UriBuilder uri = new()
             {
                 Host = $"search.findmypast{censusRegion}"
             };
@@ -2798,7 +2789,7 @@ namespace FTAnalyzer
                 uri.Path = "/results/ireland-records-in-census-land-and-surveys";
             else
                 uri.Path = "/results/world-records-in-census-land-and-surveys";
-            StringBuilder query = new StringBuilder();
+            StringBuilder query = new();
             query.Append($"eventyear={censusYear}&eventyear_offset=0&");
 
             if (person.Forenames != "?" && person.Forenames.ToUpper() != Individual.UNKNOWN_NAME)
@@ -2806,7 +2797,7 @@ namespace FTAnalyzer
                 int pos = person.Forenames.IndexOf(" ", StringComparison.Ordinal);
                 string forenames = person.Forenames;
                 if (pos > 0)
-                    forenames = person.Forenames.Substring(0, pos); //strip out any middle names as searches better without then
+                    forenames = person.Forenames[..pos]; //strip out any middle names as searches better without then
                 query.Append($"firstname={HttpUtility.UrlEncode(forenames)}&");
                 query.Append("firstname_variants=true&");
             }
@@ -2873,23 +2864,23 @@ namespace FTAnalyzer
             return uri.ToString();
         }
 
-        string BuildFindMyPast1939Query(Individual person, string censusRegion)
+        static string BuildFindMyPast1939Query(Individual person, string censusRegion)
         {
             // new https://search.findmypast.co.uk/results/world-records/1939-register?firstname=frederick&firstname_variants=true&lastname=deakin&lastname_variants=true&yearofbirth=1879
             FactDate censusFactDate = CensusDate.UKCENSUS1939;
-            UriBuilder uri = new UriBuilder
+            UriBuilder uri = new()
             {
                 Host = $"search.findmypast{censusRegion}",
                 Path = "/results/world-records/1939-register"
             };
-            StringBuilder query = new StringBuilder();
+            StringBuilder query = new();
 
             if (person.Forenames != "?" && person.Forenames.ToUpper() != Individual.UNKNOWN_NAME)
             {
                 int pos = person.Forenames.IndexOf(" ", StringComparison.Ordinal);
                 string forenames = person.Forenames;
                 if (pos > 0)
-                    forenames = person.Forenames.Substring(0, pos); //strip out any middle names as searches better without then
+                    forenames = person.Forenames[..pos]; //strip out any middle names as searches better without then
                 query.Append($"firstname={HttpUtility.UrlEncode(forenames)}&");
                 query.Append("firstname_variants=true&");
             }
@@ -2938,7 +2929,7 @@ namespace FTAnalyzer
 
         public enum SearchType { BIRTH = 0, MARRIAGE = 1, DEATH = 2 };
 
-        public void SearchBMD(SearchType st, Individual individual, FactDate factdate, FactLocation factLocation, int searchProvider, string bmdRegion, Individual spouse)
+        public static void SearchBMD(SearchType st, Individual individual, FactDate factdate, FactLocation factLocation, int searchProvider, string bmdRegion, Individual spouse)
         {
             string uri = null;
             if (factdate.IsUnknown || factdate.DateType.Equals(FactDate.FactDateType.AFT) || factdate.DateType.Equals(FactDate.FactDateType.BEF))
@@ -2964,7 +2955,7 @@ namespace FTAnalyzer
                     factdate = FactDate.UNKNOWN_DATE; // errors in facts corrupts loose births or deaths
             }
             string provider = string.Empty;
-            Tuple<string, string> uris = new Tuple<string, string>(null, null);
+            Tuple<string, string> uris = new(null, null);
             switch (searchProvider)
             {
                 case 0: uri = BuildAncestryQuery(st, individual, factdate, bmdRegion); provider = "Ancestry"; break;
@@ -2994,20 +2985,20 @@ namespace FTAnalyzer
             }
         }
 
-        Tuple<string, string> BuildScotlandsPeopleQuery(SearchType st, Individual individual, FactDate factdate, Individual spouse)
+        static Tuple<string, string> BuildScotlandsPeopleQuery(SearchType st, Individual individual, FactDate factdate, Individual spouse)
         {
             string oprResult = string.Empty;
             string statutoryResult = string.Empty;
             bool oprrecords = factdate.EndDate.Year >= 1553 && factdate.StartDate.Year < 1855;
             bool statutory = factdate.StartDate.Year >= 1855 || factdate.EndDate.Year >= 1855;
-            UriBuilder uri = new UriBuilder
+            UriBuilder uri = new()
             {
                 Host = "www.scotlandspeople.gov.uk",
                 Path = "record-results"
             };
             if (statutory)
             {
-                StringBuilder query = new StringBuilder();
+                StringBuilder query = new();
                 query.Append("search_type=people");
                 query.Append("&dl_cat=statutory");
                 if (st == SearchType.BIRTH)
@@ -3037,7 +3028,7 @@ namespace FTAnalyzer
             }
             if (oprrecords)
             {
-                StringBuilder query = new StringBuilder();
+                StringBuilder query = new();
                 query.Append("search_type=people");
                 if (st == SearchType.BIRTH)
                     query.Append("event=%28B%20OR%20C%20OR%20S%29&record_type%5B0%5D=opr_births&church_type=Old%20Parish%20Registers&dl_cat=church&dl_rec=church-births-baptisms");
@@ -3059,15 +3050,15 @@ namespace FTAnalyzer
             return new Tuple<string, string>(oprResult, statutoryResult);
         }
 
-        string BuildFamilySearchQuery(SearchType st, Individual individual, FactDate factdate, FactLocation factlocation)
+        static string BuildFamilySearchQuery(SearchType st, Individual individual, FactDate factdate, FactLocation factlocation)
         {
         // https://familysearch.org/search/record/results?count=20&q.anyPlace=England&q.birthLikeDate.from=1879&q.birthLikeDate.to=1881&q.birthLikePlace=Walton%20le%20dale%2C%20Lancashire%2C%20England&q.givenName=Elizabeth&q.surname=Ackers&query=%2Bgivenname%3AElizabeth~%20%2Bsurname%3AAckers~%20%2Bbirth_place%3A%22walton%20le%20dale%2C%20lancashire%2C%20england%22~%20%2Bbirth_year%3A1879-1881~%20%2Brecord_country%3AEngland
-            UriBuilder uri = new UriBuilder
+            UriBuilder uri = new()
             {
                 Host = "familysearch.org",
                 Path = "search/record/results"
             };
-            StringBuilder query = new StringBuilder();
+            StringBuilder query = new();
             query.Append("count=20&query=");
 
             if (individual.Forename != "?" && individual.Forename.ToUpper() != Individual.UNKNOWN_NAME)
@@ -3146,9 +3137,9 @@ namespace FTAnalyzer
         //    throw new CensusSearchException("Not Yet"); // TODO: Add FreeBMD searching
         //}
 
-        string BuildFindMyPastQuery(SearchType st, Individual individual, FactDate factdate, string bmdRegion)
+        static string BuildFindMyPastQuery(SearchType st, Individual individual, FactDate factdate, string bmdRegion)
         {
-            UriBuilder uri = new UriBuilder
+            UriBuilder uri = new()
             {
                 Host = $"search.findmypast{bmdRegion}"
             };
@@ -3169,7 +3160,7 @@ namespace FTAnalyzer
                 uri.Path += "/church-registers~marriages-and-divorces";
             if (st.Equals(SearchType.DEATH))
                 uri.Path += "/church-registers~wills-and-probate~deaths-and-burials";
-            StringBuilder query = new StringBuilder();
+            StringBuilder query = new();
             if (individual.Forenames != "?" && individual.Forenames.ToUpper() != Individual.UNKNOWN_NAME)
                 query.Append($"firstname={HttpUtility.UrlEncode(individual.Forenames)}&firstname_variants=true&");
             string surname = GetSurname(st, individual, false);
@@ -3195,15 +3186,15 @@ namespace FTAnalyzer
             return surname;
         }
 
-        string BuildAncestryQuery(SearchType st, Individual individual, FactDate factdate, string bmdRegion)
+        static string BuildAncestryQuery(SearchType st, Individual individual, FactDate factdate, string bmdRegion)
         {
-            UriBuilder uri = new UriBuilder
+            UriBuilder uri = new()
             {
                 Host = $"search.ancestry{bmdRegion}",
                 Path = "cgi-bin/sse.dll"
             };
             //gsln_x=NP&
-            StringBuilder query = new StringBuilder();
+            StringBuilder query = new();
             if (st.Equals(SearchType.BIRTH))
                 query.Append("gl=BMD_BIRTH&");
             if (st.Equals(SearchType.MARRIAGE))
@@ -3361,8 +3352,8 @@ namespace FTAnalyzer
         #region Relationship Groups
         public static List<Individual> GetFamily(Individual startIndividiual)
         {
-            List<Individual> results = new List<Individual>();
-            if (startIndividiual is object) // checks not null
+            List<Individual> results = new();
+            if (startIndividiual is not null) 
             {
                 foreach (Family f in startIndividiual.FamiliesAsSpouse)
                 {
@@ -3380,8 +3371,8 @@ namespace FTAnalyzer
 
         public static List<Individual> GetAncestors(Individual startIndividual)
         {
-            List<Individual> results = new List<Individual>();
-            Queue<Individual> queue = new Queue<Individual>();
+            List<Individual> results = new();
+            Queue<Individual> queue = new();
             results.Add(startIndividual);
             queue.Enqueue(startIndividual);
             while (queue.Count > 0)
@@ -3406,9 +3397,9 @@ namespace FTAnalyzer
 
         public static List<Individual> GetDescendants(Individual startIndividual)
         {
-            List<Individual> results = new List<Individual>();
-            Dictionary<string, Individual> processed = new Dictionary<string, Individual>();
-            Queue<Individual> queue = new Queue<Individual>();
+            List<Individual> results = new();
+            Dictionary<string, Individual> processed = new();
+            Queue<Individual> queue = new();
             results.Add(startIndividual);
             queue.Enqueue(startIndividual);
             while (queue.Count > 0)
@@ -3535,7 +3526,7 @@ namespace FTAnalyzer
         {
             while (totalComparisons < maxComparisons && currentPercentage < 100)
             {
-                Task.Delay(1000);
+                Task.Delay(1000,ct);
                 ct.ThrowIfCancellationRequested();
                 var val = (int)(100 * totalComparisons / maxComparisons);
                 if (val > currentPercentage)
@@ -3667,33 +3658,31 @@ namespace FTAnalyzer
 
         public static void WriteUnrecognisedReferencesFile(IEnumerable<string> unrecognisedResults, IEnumerable<string> missingResults, IEnumerable<string> notesResults, string filename)
         {
-            using (StreamWriter output = new StreamWriter(new FileStream(filename, FileMode.Create, FileAccess.Write), Encoding.UTF8))
+            using StreamWriter output = new(new FileStream(filename, FileMode.Create, FileAccess.Write), Encoding.UTF8);
+            int count = 0;
+            output.WriteLine("Note the counts on the loading page may not match the counts in the file as duplicates not written out each time\n");
+            if (unrecognisedResults.Any())
             {
-                int count = 0;
-                output.WriteLine("Note the counts on the loading page may not match the counts in the file as duplicates not written out each time\n");
-                if (unrecognisedResults.Any())
-                {
-                    output.WriteLine("Census fact details where a Census reference was expected but went unrecognised");
-                    unrecognisedResults = unrecognisedResults.OrderBy(x => x.ToString());
-                    foreach (string line in unrecognisedResults)
-                        output.WriteLine($"{++count}: {line}");
-                }
-                if (missingResults.Any())
-                {
-                    count = 0;
-                    output.WriteLine("\n\nCensus fact details where a Census Reference was missing or not detected");
-                    missingResults = missingResults.OrderBy(x => x.ToString());
-                    foreach (string line in missingResults)
-                        output.WriteLine($"{++count}: {line}");
-                }
-                if (notesResults.Any())
-                {
-                    count = 0;
-                    output.WriteLine("\n\nNotes with no census recognised references\nThese are usually NOT census references and are included in case there are some that got missed");
-                    notesResults = notesResults.OrderBy(x => x.ToString());
-                    foreach (string line in notesResults)
-                        output.WriteLine($"{++count}: {line}");
-                }
+                output.WriteLine("Census fact details where a Census reference was expected but went unrecognised");
+                unrecognisedResults = unrecognisedResults.OrderBy(x => x.ToString());
+                foreach (string line in unrecognisedResults)
+                    output.WriteLine($"{++count}: {line}");
+            }
+            if (missingResults.Any())
+            {
+                count = 0;
+                output.WriteLine("\n\nCensus fact details where a Census Reference was missing or not detected");
+                missingResults = missingResults.OrderBy(x => x.ToString());
+                foreach (string line in missingResults)
+                    output.WriteLine($"{++count}: {line}");
+            }
+            if (notesResults.Any())
+            {
+                count = 0;
+                output.WriteLine("\n\nNotes with no census recognised references\nThese are usually NOT census references and are included in case there are some that got missed");
+                notesResults = notesResults.OrderBy(x => x.ToString());
+                foreach (string line in notesResults)
+                    output.WriteLine($"{++count}: {line}");
             }
         }
 
@@ -3740,7 +3729,7 @@ namespace FTAnalyzer
             progress.Report(100);
         }
 
-        public List<DisplayFact> AddWorldEvents(int earliestYear, DateTime chosenDate, bool wholeMonth, int stepSize, IProgress<int> progress)
+        public static List<DisplayFact> AddWorldEvents(int earliestYear, DateTime chosenDate, bool wholeMonth, int stepSize, IProgress<int> progress)
         {
             // use Wikipedia API at vizgr.org/historical-events/ to find what happened on that date in the past
             var events = new List<DisplayFact>();
@@ -3783,11 +3772,11 @@ namespace FTAnalyzer
             return events;
         }
 
-        static readonly Regex brackets = new Regex("{{.*}}", RegexOptions.Compiled);
-        static readonly Regex links = new Regex("<a href=.*</a>", RegexOptions.Compiled);
-        static readonly Regex quotes = new Regex("(.*)quot(.*)quot(.*)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        static readonly Regex brackets = new("{{.*}}", RegexOptions.Compiled);
+        static readonly Regex links = new("<a href=.*</a>", RegexOptions.Compiled);
+        static readonly Regex quotes = new("(.*)quot(.*)quot(.*)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
-        string FixWikiFormatting(string input)
+        static string FixWikiFormatting(string input)
         {
             string result = input.Replace("ampampnbsp", " ").Replace("ampnbsp", " ").Replace("ampampndash", "-").Replace("ampndash", "-");
             //strip out {{cite xxxxx }} citation text with its urls
@@ -3827,18 +3816,14 @@ namespace FTAnalyzer
                 //request.ContentType = "application/xml";
                 //request.Accept = "application/xml";
                 Encoding encode = Encoding.GetEncoding("utf-8");
-                using (var response = await Program.Client.GetStreamAsync(new Uri(URL)))
+                using var response = await Program.Client.GetStreamAsync(new Uri(URL));
+                using var reader = new StreamReader(response, encode);
+                result = reader.ReadToEnd();
+                if (!result.Contains("No events found for this query"))
                 {
-                    using (var reader = new StreamReader(response, encode))
-                    {
-                        result = reader.ReadToEnd();
-                        if (!result.Contains("No events found for this query"))
-                        {
-                            //XmlReader xmlReader = XmlReader.Create(result, new XmlReaderSettings() { XmlResolver = null })
-                            using XmlTextReader xmlReader = new(new StringReader(result));
-                            doc.Load(xmlReader);
-                        }
-                    }
+                    //XmlReader xmlReader = XmlReader.Create(result, new XmlReaderSettings() { XmlResolver = null })
+                    using XmlTextReader xmlReader = new(new StringReader(result));
+                    doc.Load(xmlReader);
                 }
             }
             catch (XmlException)

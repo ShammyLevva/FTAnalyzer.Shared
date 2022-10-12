@@ -23,7 +23,7 @@ namespace FTAnalyzer
             }
         }
 
-        public int[,,] ChildrenBirthProfiles()
+        public static int[,,] ChildrenBirthProfiles()
         {
             int[,,] stats = new int[2, 20, 3];
             foreach (Family f in ft.AllFamilies)
