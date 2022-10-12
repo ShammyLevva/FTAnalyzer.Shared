@@ -37,7 +37,7 @@ namespace FTAnalyzer.Exports
         public void WriteRow(CsvRow row)
         {
             if (row is null) return;
-            StringBuilder builder = new StringBuilder();
+            StringBuilder builder = new();
             bool firstColumn = true;
             foreach (string value in row)
             {
@@ -124,7 +124,7 @@ namespace FTAnalyzer.Exports
                     int start = pos;
                     while (pos < row.LineText.Length && row.LineText[pos] != Separator)
                         pos++;
-                    value = row.LineText.Substring(start, pos - start);
+                    value = row.LineText[start..pos];
                 }
 
                 // Add field to list
