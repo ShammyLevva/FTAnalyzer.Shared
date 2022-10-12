@@ -77,6 +77,8 @@ namespace FTAnalyzer
         const string US_CENSUS_PATTERN1A = @"Year *(\d{4}) *Census *(.*?),? *Roll *(.*?),? *P(age)? *(\d{1,4}[ABCD]?),? *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?)";
         const string US_CENSUS_PATTERN2 = @"Census,? *(\d{4}) *(.*?) *Roll *(.*?),? *P(age)? *(\d{1,4}[ABCD]?),? *ED *(\d{1,5}[AB]?-?\d{0,4}[AB]?)";
         const string US_CENSUS_PATTERN3 = @"Census,? *(\d{4}) *(.*?) *Ward *(.*?),? *ED *(\d{1,5}[ABCD]?-?\d{0,4}[AB]?),? *P(age)? *(\d{1,4}[AB]?)";
+        const string US_CENSUS_PATTERN3A = @"Census,? *(\d{4}) *(.*?) *Ward *(.*?),? *P(age)? *(\d{1,4}[AB]?) *ED *(\d{1,5}[ABCD]?-?\d{0,4}[AB]?),?";
+        const string US_CENSUS_PATTERN3B = @"Year *(\d{4}) *Census *(.*?),? *Ward *(.*?),? *P(age)? *(\d{1,4}[AB]?) *ED *(\d{1,5}[ABCD]?-?\d{0,4}[AB]?),?";
         const string US_CENSUS_PATTERN4 = @"Census,? *(\d{4}) *(.*?) *ED *(\d{1,5}[AB]?-?\d{0,4}[ABCD]?),? *P(age)? *(\d{1,4}[AB]?)(.*?)roll *(\d{1,4})";
         const string US_CENSUS_PATTERN5 = @"Census,? *(\d{4}) *(.*?) *ED *(\d{1,5}[AB]?-?\d{0,4}[ABCD]?),? *P(age)? *(\d{1,4}[AB]?)";
         const string US_CENSUS_PATTERN6 = @"(\d{4}) U ?S ? Census,?( ?population SN ?)?(.*?) *ED *(\d{1,5}[AB]?-?\d{0,4}[ABCD]?),? *P(age)? *(\d{1,4}[AB]?)(.*?)[A-Z]6\d\d roll (\d{1,4})";
@@ -181,6 +183,8 @@ namespace FTAnalyzer
                 ["US_CENSUS_PATTERN1A"] = new Regex(US_CENSUS_PATTERN1A, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["US_CENSUS_PATTERN2"] = new Regex(US_CENSUS_PATTERN2, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["US_CENSUS_PATTERN3"] = new Regex(US_CENSUS_PATTERN3, RegexOptions.Compiled | RegexOptions.IgnoreCase),
+                ["US_CENSUS_PATTERN3A"] = new Regex(US_CENSUS_PATTERN3A, RegexOptions.Compiled | RegexOptions.IgnoreCase),
+                ["US_CENSUS_PATTERN3B"] = new Regex(US_CENSUS_PATTERN3B, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["US_CENSUS_PATTERN4"] = new Regex(US_CENSUS_PATTERN4, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["US_CENSUS_PATTERN5"] = new Regex(US_CENSUS_PATTERN5, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["US_CENSUS_PATTERN6"] = new Regex(US_CENSUS_PATTERN6, RegexOptions.Compiled | RegexOptions.IgnoreCase),
@@ -215,7 +219,7 @@ namespace FTAnalyzer
         }
 
         public enum ReferenceStatus { BLANK = 0, UNRECOGNISED = 1, INCOMPLETE = 2, GOOD = 3 };
-        public static CensusReference UNKNOWN = new CensusReference();
+        public static readonly CensusReference UNKNOWN = new();
         const string MISSING = "Missing";
 
         string unknownCensusRef;
@@ -440,7 +444,7 @@ namespace FTAnalyzer
 
         public void CheckFullUnknownReference(ReferenceStatus status) => GetCensusReference(UnknownRef, false, false, status);
 
-        string UnknownRef => unknownCensusRef.Length > 20 ? unknownCensusRef.Substring(20) : string.Empty;
+        string UnknownRef => unknownCensusRef.Length > 20 ? unknownCensusRef[20..] : string.Empty;
 
         public static string ClearCommonPhrases(string input)
         {
@@ -484,7 +488,7 @@ namespace FTAnalyzer
                         .ClearWhiteSpace();
         }
 
-        void WriteTimer(string patternName, string text, IProgress<string> output)
+        static void WriteTimer(string patternName, string text, IProgress<string> output)
         {
             if (output is null)
                 return;
@@ -495,9 +499,9 @@ namespace FTAnalyzer
             output.Report($"Took {timer.Elapsed}s to process {patternName} resulting in {success}.\n");
         }
 
-        void CheckPatterns(string originalText, IProgress<string> output)
+        static void CheckPatterns(string originalText, IProgress<string> output)
         {
-            string text = ClearCommonPhrases(originalText); 
+            string text = ClearCommonPhrases(originalText);
             WriteTimer("EW_CENSUS_PATTERN", text, output);
             WriteTimer("EW_CENSUS_PATTERN1", text, output);
             WriteTimer("EW_CENSUS_PATTERN2", text, output);
@@ -1202,7 +1206,7 @@ namespace FTAnalyzer
                 Page = matcher.Groups[5].ToString();
                 ED = matcher.Groups[6].ToString();
                 SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.GOOD, matcher.Value);
-                if (Roll.StartsWith("T627", StringComparison.Ordinal)) Roll = Roll.Substring(5);
+                if (Roll.StartsWith("T627", StringComparison.Ordinal)) Roll = Roll[5..];
                 return true;
             }
             matcher = censusRegexs["US_CENSUS_PATTERN2"].Match(text);
@@ -1225,6 +1229,28 @@ namespace FTAnalyzer
                 Page = matcher.Groups[6].ToString();
                 ED = matcher.Groups[4].ToString();
                 SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.GOOD, matcher.Value);
+                return true;
+            }
+            matcher = censusRegexs["US_CENSUS_PATTERN3A"].Match(text);
+            if (matcher.Success)
+            {
+                Class = $"US{matcher.Groups[1]}";
+                Place = GetOriginalPlace(matcher.Groups[2].ToString(), originalText, "WARD");
+                Roll = string.Empty;
+                Page = matcher.Groups[5].ToString();
+                ED = matcher.Groups[6].ToString();
+                SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.INCOMPLETE, matcher.Value);
+                return true;
+            }
+            matcher = censusRegexs["US_CENSUS_PATTERN3B"].Match(text);
+            if (matcher.Success)
+            {
+                Class = $"US{matcher.Groups[1]}";
+                Place = GetOriginalPlace(matcher.Groups[2].ToString(), originalText, "WARD");
+                Roll = string.Empty;
+                Page = matcher.Groups[5].ToString();
+                ED = matcher.Groups[6].ToString();
+                SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.INCOMPLETE, matcher.Value);
                 return true;
             }
             matcher = censusRegexs["US_CENSUS_PATTERN4"].Match(text);
@@ -1333,30 +1359,16 @@ namespace FTAnalyzer
             if (matcher.Success)
             {
                 var tCode = matcher.Groups[2].ToString();
-                switch(tCode)
+                Class = tCode switch
                 {
-                    case "623": 
-                        Class = "US1900";
-                        break;
-                    case "624":
-                        Class = "US1910";
-                        break;
-                    case "625":
-                        Class = "US1920";
-                        break;
-                    case "626":
-                        Class = "US1930";
-                        break;
-                    case "627":
-                        Class = "US1940";
-                        break;
-                    case "628":
-                        Class = "US1950";
-                        break;
-                    default:
-                        Class = string.Empty;
-                        break;
-                }
+                    "623" => "US1900",
+                    "624" => "US1910",
+                    "625" => "US1920",
+                    "626" => "US1930",
+                    "627" => "US1940",
+                    "628" => "US1950",
+                    _ => string.Empty,
+                };
                 if (!string.IsNullOrEmpty(Class))
                 {
                     Roll = matcher.Groups[3].ToString();
@@ -1380,42 +1392,20 @@ namespace FTAnalyzer
             if (matcher.Success)
             {
                 var tCode = matcher.Groups[1].ToString();
-                switch (tCode)
+                Class = tCode switch
                 {
-                    case "M407":
-                        Class = "US1890";
-                        break;
-                    case "M593":
-                        Class = "US1870";
-                        break;
-                    case "M653":
-                        Class = "US1860";
-                        break;
-                    case "M432":
-                        Class = "US1850";
-                        break;
-                    case "M704":
-                        Class = "US1840";
-                        break;
-                    case "M19":
-                        Class = "US1830";
-                        break;
-                    case "M33":
-                        Class = "US1820";
-                        break;
-                    case "M252":
-                        Class = "US1810";
-                        break;
-                    case "M32":
-                        Class = "US1800";
-                        break;
-                    case "M637":
-                        Class = "US1790";
-                        break;
-                    default:
-                        Class = string.Empty;
-                        break;
-                }
+                    "M407" => "US1890",
+                    "M593" => "US1870",
+                    "M653" => "US1860",
+                    "M432" => "US1850",
+                    "M704" => "US1840",
+                    "M19" => "US1830",
+                    "M33" => "US1820",
+                    "M252" => "US1810",
+                    "M32" => "US1800",
+                    "M637" => "US1790",
+                    _ => string.Empty,
+                };
                 if (!string.IsNullOrEmpty(Class))
                 {
                     Roll = matcher.Groups[2].ToString();
@@ -1588,7 +1578,7 @@ namespace FTAnalyzer
             return false;
         }
 
-        string CheckLetterCode(string letterCode)
+        static string CheckLetterCode(string letterCode)
         {
             if (letterCode.Equals("CODE"))
                 return "UNKNOWN";
@@ -1606,20 +1596,20 @@ namespace FTAnalyzer
             if (country == Countries.UNITED_STATES) FixUS1940Prefix();
         }
 
-        string GetOriginalPlace(string match, string originalText, string stopText)
+        static string GetOriginalPlace(string match, string originalText, string stopText)
         {
             int spacePos = match.IndexOf(" ", StringComparison.Ordinal);
             if (spacePos == -1)
                 return match.ClearWhiteSpace();
-            string startPlace = match.Substring(0, spacePos);
+            string startPlace = match[..spacePos];
             int matchPos = originalText.ToUpper().IndexOf(startPlace.ToUpper(), StringComparison.Ordinal);
             int stopPos = originalText.ToUpper().IndexOf(stopText, StringComparison.Ordinal);
             if (matchPos > -1 && stopPos > -1 && stopPos - matchPos > 0)
-                return originalText.Substring(matchPos, stopPos - matchPos).ClearWhiteSpace();
+                return originalText[matchPos..stopPos].ClearWhiteSpace();
             return match.ClearWhiteSpace();
         }
 
-        string GetUKCensusClass(string year)
+        static string GetUKCensusClass(string year)
         {
             if (year.Equals("1841") || year.Equals("1851"))
                 return "HO107";
@@ -1676,13 +1666,12 @@ namespace FTAnalyzer
             {
                 string year = CensusYear.StartDate.Year.ToString();
                 string defaultRegion = Settings.Default.defaultURLRegion;
-                if (defaultRegion is null)
-                    defaultRegion = ".co.uk";
+                defaultRegion ??= ".co.uk";
                 if (year.Equals("1911") && Countries.IsEnglandWales(Country) && Piece.Length > 0 && Schedule.Length > 0)
                     return @"https://search.findmypast" + defaultRegion + "/search-world-records/1911-census-for-england-and-wales?pieceno=" + Piece + @"&schedule=" + Schedule;
                 if (year.Equals("1939") && Countries.IsEnglandWales(Country) && Piece.Length > 0 && !ED.Equals("UNKNOWN"))
                 {
-                    string dir = Piece.Length > 1 ? Piece.Substring(0, Piece.Length - 1) : Piece; //strip last letter from piece
+                    string dir = Piece.Length > 1 ? Piece[..^1] : Piece; //strip last letter from piece
                     return @"https://search.findmypast" + defaultRegion + "/record?id=tna%2fr39%2f" + dir + "%2f" + Piece.ToLower() + "%2f" + Page + "%2f" + Schedule;
                 }
                 if (Countries.IsUnitedKingdom(Country))
@@ -1694,7 +1683,7 @@ namespace FTAnalyzer
                             querystring = @"pieceno=" + Piece;
                         if (Folio.Length > 0 && !Folio.Equals(MISSING))
                         {
-                            string lastChar = Folio.Substring(Folio.Length).ToUpper();
+                            string lastChar = Folio[Folio.Length..].ToUpper();
                             if (!lastChar.Equals("F") && !lastChar.Equals("R") && !lastChar.Equals("O"))
                                 querystring = querystring + @"&folio=" + Folio;
                         }
@@ -1714,7 +1703,7 @@ namespace FTAnalyzer
             return string.Empty;
         }
 
-        string GetCensusReferenceCountry(string censusClass, string censusPiece)
+        static string GetCensusReferenceCountry(string censusClass, string censusPiece)
         {
             bool success = int.TryParse(censusPiece, out int piece);
             if (success && censusClass.Length > 0 && censusPiece.Length > 0 && piece > 0)
@@ -1909,13 +1898,13 @@ namespace FTAnalyzer
         void FixUS1940Prefix()
         {
             Roll = Roll.ToUpper().Replace('-', '_');
-            if (Roll.StartsWith("T627_", StringComparison.Ordinal)) Roll = Roll.Substring(5);
-            else if (Roll.StartsWith("T0627_", StringComparison.Ordinal)) Roll = Roll.Substring(6);
-            else if (Roll.StartsWith("M_T627_", StringComparison.Ordinal)) Roll = Roll.Substring(7);
-            else if (Roll.StartsWith("M_T0627_", StringComparison.Ordinal)) Roll = Roll.Substring(8);
+            if (Roll.StartsWith("T627_", StringComparison.Ordinal)) Roll = Roll[5..];
+            else if (Roll.StartsWith("T0627_", StringComparison.Ordinal)) Roll = Roll[6..];
+            else if (Roll.StartsWith("M_T627_", StringComparison.Ordinal)) Roll = Roll[7..];
+            else if (Roll.StartsWith("M_T0627_", StringComparison.Ordinal)) Roll = Roll[8..];
         }
 
-        static readonly Regex LCEDregex = new Regex(@"\d{1,3}[A-Z]?", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        static readonly Regex LCEDregex = new(@"\d{1,3}[A-Z]?", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         public bool IsValidLostCousinsReference()
         {
@@ -1925,7 +1914,7 @@ namespace FTAnalyzer
             if (CensusYear.Overlaps(CensusDate.EWCENSUS1841) && Countries.IsEnglandWales(Country))
             {
                 if (Piece.StartsWith("HO107", StringComparison.Ordinal))
-                    Piece = Piece.Substring(5);
+                    Piece = Piece[5..];
                 Piece = Piece.TrimStart('0');
                 Book = Book.TrimStart('0');
                 Folio = Folio.TrimStart('0').ToUpper().TrimEnd('A');
@@ -1936,7 +1925,7 @@ namespace FTAnalyzer
                 if (Piece.StartsWith("RG78", StringComparison.Ordinal))
                     return false;
                 if (Piece.StartsWith("RG11", StringComparison.Ordinal))
-                    Piece = Piece.Substring(4);
+                    Piece = Piece[4..];
                 Piece = Piece.TrimStart('0');
                 Folio = Folio.TrimStart('0').ToUpper().TrimEnd('A');
                 if (!Piece.IsNumeric() || !Folio.IsNumeric() || !Page.IsNumeric()) return false;
@@ -1975,7 +1964,7 @@ namespace FTAnalyzer
             else if (CensusYear.Overlaps(CensusDate.CANADACENSUS1881) && Country == Countries.CANADA)
             {
                 if (Roll.ToUpper().StartsWith("C_", StringComparison.Ordinal))
-                    Roll = Roll.Substring(2);
+                    Roll = Roll[2..];
 
 
             }
@@ -1985,9 +1974,9 @@ namespace FTAnalyzer
             else if (CensusYear.Overlaps(CensusDate.EWCENSUS1911) && Countries.IsEnglandWales(Country))
             {
                 if (Piece.StartsWith("RG14", StringComparison.Ordinal))
-                    Piece = Piece.Substring(4);
+                    Piece = Piece[4..];
                 if (Piece.StartsWith("PN", StringComparison.Ordinal))
-                    Piece = Piece.Substring(2);
+                    Piece = Piece[2..];
                 Piece = Piece.TrimStart('0');
                 Schedule = Schedule.TrimStart('0');
                 if (Schedule.Length == 0 && Page.Length > 0)
@@ -1997,7 +1986,7 @@ namespace FTAnalyzer
             else if (CensusYear.Overlaps(CensusDate.USCENSUS1880) && Country == Countries.UNITED_STATES)
             {
                 if (Roll.ToUpper().StartsWith("T9", StringComparison.Ordinal))
-                    Roll = Roll.Substring(2);
+                    Roll = Roll[2..];
                 Roll = Roll.TrimStart('-').TrimStart('_').TrimStart('0');
                 Page = NumericToAlpha(Page.TrimStart('0'));
                 if (!Roll.IsNumeric()) return false;
@@ -2015,7 +2004,7 @@ namespace FTAnalyzer
         {
             if (page.Length > 3)
             {
-                string prefix = page.Substring(0, page.Length - 2);
+                string prefix = page[..^2];
                 if (Page.EndsWith(".1", StringComparison.Ordinal)) return prefix + "A";
                 if (Page.EndsWith(".2", StringComparison.Ordinal)) return prefix + "B";
                 if (Page.EndsWith(".3", StringComparison.Ordinal)) return prefix + "C";
