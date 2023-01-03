@@ -363,6 +363,8 @@ namespace FTAnalyzer
             str = str.Replace("FRI", "");
             str = str.Replace("SAT", "");
             str = str.Replace("SUN", "");
+            str = str.Replace("BET AFT", "BET");
+            str = str.Replace("AND BEF", "AND");
 
             // remove common extra words
             str = str.Replace("CENSUS", "");
