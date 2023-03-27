@@ -1200,8 +1200,7 @@ namespace FTAnalyzer
                 // range as the existing death date
                 Fact looseBirth = new(indiv.IndividualID, Fact.LOOSEBIRTH, toAdd, FactLocation.UNKNOWN_LOCATION);
                 indiv.AddFact(looseBirth);
-                if (result != null)
-                    result.Add(indiv);
+                result?.Add(indiv);
             }
         }
 
@@ -1305,8 +1304,7 @@ namespace FTAnalyzer
                 // range as the existing death date
                 Fact looseDeath = new(indiv.IndividualID, Fact.LOOSEDEATH, toAdd, FactLocation.UNKNOWN_LOCATION);
                 indiv.AddFact(looseDeath);
-                if (result != null)
-                    result.Add(indiv);
+                result?.Add(indiv);
             }
         }
 
