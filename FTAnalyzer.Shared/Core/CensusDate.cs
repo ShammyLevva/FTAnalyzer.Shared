@@ -11,7 +11,7 @@ namespace FTAnalyzer
         public string PropertyName { get; private set; }
         public string AncestryCatalog { get; private set; }
 
-        public static readonly CensusDate ANYCENSUS = new("BET 1790 AND 1950", "Any Census", Countries.UNKNOWN_COUNTRY, "");
+        public static readonly CensusDate ANYCENSUS = new("BET 1790 AND 2022", "Any Census", Countries.UNKNOWN_COUNTRY, "");
 
         public static readonly CensusDate UKCENSUS1841 = new("06 JUN 1841", "UK Census 1841", Countries.UNITED_KINGDOM, "C1841");
         public static readonly CensusDate UKCENSUS1851 = new("30 MAR 1851", "UK Census 1851", Countries.UNITED_KINGDOM, "C1851");
@@ -73,13 +73,13 @@ namespace FTAnalyzer
         public static readonly CensusDate USCENSUS1930 = new("BET 1 OCT 1929 AND 31 DEC 1930", "US Federal Census 1930", Countries.UNITED_STATES, "US1930", "6224");
         public static readonly CensusDate USCENSUS1940 = new("BET 1 APR 1940 AND 31 MAY 1940", "US Federal Census 1940", Countries.UNITED_STATES, "US1940", "2442");
         public static readonly CensusDate USCENSUS1950 = new("BET 1 APR 1950 AND 31 MAY 1950", "US Federal Census 1950", Countries.UNITED_STATES, "US1950");
-        public static readonly CensusDate USCENSUS1960 = new("BET 1 APR 1950 AND 31 MAY 1960", "US Federal Census 1960", Countries.UNITED_STATES, "US1960");
-        public static readonly CensusDate USCENSUS1970 = new("BET 1 APR 1950 AND 31 MAY 1970", "US Federal Census 1970", Countries.UNITED_STATES, "US1970");
-        public static readonly CensusDate USCENSUS1980 = new("BET 1 APR 1950 AND 31 MAY 1980", "US Federal Census 1980", Countries.UNITED_STATES, "US1980");
-        public static readonly CensusDate USCENSUS1990 = new("BET 1 APR 1950 AND 31 MAY 1990", "US Federal Census 1990", Countries.UNITED_STATES, "US1990");
-        public static readonly CensusDate USCENSUS2000 = new("BET 1 APR 1950 AND 31 MAY 2000", "US Federal Census 2000", Countries.UNITED_STATES, "US2000");
-        public static readonly CensusDate USCENSUS2010 = new("BET 1 APR 1950 AND 31 MAY 2010", "US Federal Census 2010", Countries.UNITED_STATES, "US2010");
-        public static readonly CensusDate USCENSUS2020 = new("BET 1 APR 1950 AND 31 MAY 2020", "US Federal Census 2020", Countries.UNITED_STATES, "US2020");
+        public static readonly CensusDate USCENSUS1960 = new("BET 1 APR 1960 AND 31 MAY 1960", "US Federal Census 1960", Countries.UNITED_STATES, "US1960");
+        public static readonly CensusDate USCENSUS1970 = new("BET 1 APR 1970 AND 31 MAY 1970", "US Federal Census 1970", Countries.UNITED_STATES, "US1970");
+        public static readonly CensusDate USCENSUS1980 = new("BET 1 APR 1980 AND 31 MAY 1980", "US Federal Census 1980", Countries.UNITED_STATES, "US1980");
+        public static readonly CensusDate USCENSUS1990 = new("BET 1 APR 1990 AND 31 MAY 1990", "US Federal Census 1990", Countries.UNITED_STATES, "US1990");
+        public static readonly CensusDate USCENSUS2000 = new("BET 1 APR 2000 AND 31 MAY 2000", "US Federal Census 2000", Countries.UNITED_STATES, "US2000");
+        public static readonly CensusDate USCENSUS2010 = new("BET 1 APR 2010 AND 31 MAY 2010", "US Federal Census 2010", Countries.UNITED_STATES, "US2010");
+        public static readonly CensusDate USCENSUS2020 = new("BET 1 APR 2020 AND 31 MAY 2020", "US Federal Census 2020", Countries.UNITED_STATES, "US2020");
                       
         public static readonly CensusDate CANADACENSUS1851 = new("BET 1851 AND 1852", "Canadian Census 1851/2", Countries.CANADA, "Can1851");
         public static readonly CensusDate CANADACENSUS1861 = new("1861", "Canadian Census 1861", Countries.CANADA, "Can1861");
