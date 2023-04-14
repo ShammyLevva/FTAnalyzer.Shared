@@ -750,7 +750,7 @@ namespace FTAnalyzer
                             }
                             string standardFormat = new DateTime(int.Parse(gYear.Value), int.Parse(gMonth.Value), int.Parse(gDay.Value)).ToString("dd MMM yyyy").ToUpper();
                             dateValue = dateValue.Length > matcher2.Length
-                                ? string.Concat(dateValue[..matcher2.Index], standardFormat, dateValue.AsSpan(matcher2.Index + matcher2.Length, dateValue.Length))
+                                ? string.Concat(dateValue.AsSpan()[..matcher2.Index], standardFormat, dateValue.AsSpan(matcher2.Index + matcher2.Length, dateValue.Length))
                                 : standardFormat;
                         }
                     }
