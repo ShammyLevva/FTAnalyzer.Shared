@@ -6,7 +6,7 @@ namespace FTAnalyzer
     {
 #if __PC__
         [ColumnDetail("Icon", 50, ColumnDetail.ColumnAlignment.Center, ColumnDetail.ColumnType.Icon)]
-        System.Drawing.Image Icon { get; }
+        Image Icon { get; }
 #endif
         [ColumnDetail("Error Type", 170)]
         string ErrorType { get; }
