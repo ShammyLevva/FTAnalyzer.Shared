@@ -503,7 +503,7 @@ namespace FTAnalyzer
                         Location.GEDCOMLatLong = true;
 
                     // only check UK census dates for errors as those are used for colour census
-                    if (FactType.Equals(CENSUS))
+                    if (FactType.Equals(CENSUS) && !nodeText.ToUpper().Contains("STATE CENSUS"))
                         CheckCensusDate("Census", Location);
 
                     // need to check residence after setting location
