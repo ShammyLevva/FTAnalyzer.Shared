@@ -363,9 +363,27 @@ namespace FTAnalyzer
             str = str.Replace("FRI", "");
             str = str.Replace("SAT", "");
             str = str.Replace("SUN", "");
+            str = str.Replace("BEF BEF", "BEF");
+            str = str.Replace("BEF AFT", "BEF");
+            str = str.Replace("AFT BEF", "AFT");
+            str = str.Replace("AFT AFT", "AFT");
+            str = str.Replace("FROM BEF", "FROM");
+            str = str.Replace("FROM AFT", "FROM");
+            if (str.StartsWith("TO"))
+            {
+                str = str.Replace("TO BEF", "BEF");
+                str = str.Replace("TO AFT", "AFT");
+            }
+            else
+            {
+                str = str.Replace("TO BEF", "TO");
+                str = str.Replace("TO AFT", "TO");
+            }
+            str = str.Replace("BET AFT", "BET"); 
             str = str.Replace("BET AFT", "BET");
             str = str.Replace("AND BEF", "AND");
-
+            str = str.Replace("AND AFT", "AND");
+            
             // remove common extra words
             str = str.Replace("CENSUS", "");
 
