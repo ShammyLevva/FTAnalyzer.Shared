@@ -2193,7 +2193,7 @@ namespace FTAnalyzer
                             {
                                 Individual wifesFather = ind.IsMale ? spouse.NaturalFather : ind.NaturalFather;
                                 Individual husband = ind.IsMale ? ind : spouse;
-                                if (husband.Surname != wifesFather?.Surname) // if couple have same surname and wife is different from her natural father then likely error
+                                if (husband.Surname != wifesFather?.Surname && husband.Surname != Individual.UNKNOWN_NAME) // if couple have same surname and wife is different from her natural father then likely error
                                     errors[(int)Dataerror.SAME_SURNAME_COUPLE].Add(new DataError((int)Dataerror.SAME_SURNAME_COUPLE, ind, $"Spouse {spouse.Name} has same surname. Usually due to wife incorrectly recorded with married instead of maiden name."));
                             }
                             //if (ind.FirstMarriage != null && ind.FirstMarriage.MarriageDate != null)
