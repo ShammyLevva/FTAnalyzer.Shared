@@ -133,7 +133,7 @@ namespace FTAnalyzer.Exports
             output.Add("forename", ind.LCForename);
             output.Add("other_names", ind.LCOtherNames);
             output.Add("age", ind.LCAge);
-            output.Add("relation_type", GetLCDescendantStatus(ind));
+            AddLCDescendantStatus(output, ind);
             if (!ind.IsMale && ind.LCSurname != ind.LCSurnameAtDate(ind.CensusDate))
                 output.Add("maiden_name", ind.LCSurname);
             else
@@ -255,15 +255,34 @@ namespace FTAnalyzer.Exports
             SetupHttpClient();
         }
 
-        static string GetLCDescendantStatus(CensusIndividual ind)
+        static void AddLCDescendantStatus(Dictionary<string, string> output, CensusIndividual ind)
         {
-            return ind.RelationType switch
+            switch (ind.RelationType)
             {
-                Individual.DIRECT => $"Direct+ancestor&descent={ind.Ahnentafel}",
-                Individual.BLOOD or Individual.DESCENDANT => "Blood+relative&descent=",
-                Individual.MARRIAGE or Individual.MARRIEDTODB => "Marriage&descent=",
-                Individual.UNKNOWN or Individual.UNSET or Individual.LINKED => "Unknown&descent=",
-                _ => "Unknown&descent=",
+                case Individual.DIRECT:
+                    output.Add("relation_type", "Direct+ancestor");
+                    output.Add("descent", ind.Ahnentafel.ToString());
+                    break;
+                case Individual.BLOOD:
+                case Individual.DESCENDANT:
+                    output.Add("relation_type", "Blood+relative");
+                    output.Add("descent", string.Empty);
+                    break;
+                case Individual.MARRIAGE:
+                case Individual.MARRIEDTODB:
+                    output.Add("relation_type", "Marriage");
+                    output.Add("descent", string.Empty);
+                    break;
+                case Individual.UNKNOWN:
+                case Individual.UNSET:
+                case Individual.LINKED:
+                    output.Add("relation_type", "Unknown");
+                    output.Add("descent", string.Empty);
+                    break;
+                default:
+                    output.Add("relation_type", "Unknown");
+                    output.Add("descent", string.Empty);
+                    break;
             };
         }
     }
