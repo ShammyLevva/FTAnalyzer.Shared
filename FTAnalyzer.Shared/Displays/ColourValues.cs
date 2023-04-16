@@ -17,7 +17,7 @@
         };
 
         public static Color[] CensusColourValues = 
-            { Color.DarkGray, Color.Red , Color.Yellow, Color.LawnGreen, Color.LawnGreen, Color.DarkOrange, Color.DarkSlateGray,
-              Color.DarkSlateGray, Color.MediumSeaGreen, Color.PeachPuff };
+            { Color.DarkGray, Color.Red , Color.Yellow, Color.LawnGreen, Color.LawnGreen, Color.DarkOrange,
+              Color.DarkSlateGray, Color.DarkSlateGray, Color.MediumSeaGreen, Color.PeachPuff };
     }
 }
