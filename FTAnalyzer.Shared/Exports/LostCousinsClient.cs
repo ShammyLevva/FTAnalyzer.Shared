@@ -65,9 +65,18 @@ namespace FTAnalyzer.Exports
             return LoggedIn;
         }
 
-        public string GetAncestors()
+        public async Task<string> GetAncestors()
         {
-            Uri uri = new("https://www.lostcousins.com/pages/members/ancestors/");
+            if (LoggedIn)
+            {
+                Uri uri = new("https://www.lostcousins.com/pages/members/ancestors/");
+                HttpResponseMessage response = await Client.GetAsync(uri);
+                if (response?.StatusCode == HttpStatusCode.OK)
+                {
+                    string result = await response.Content.ReadAsStringAsync();
+                    return result;
+                }
+            }
             return string.Empty;
         }
 

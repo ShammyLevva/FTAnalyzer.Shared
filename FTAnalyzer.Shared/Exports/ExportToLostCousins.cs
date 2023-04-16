@@ -15,7 +15,7 @@ namespace FTAnalyzer.Exports
         static List<Uri> WebLinks { get; set; }
         static string _previousRef;
 
-        public static int ProcessList(List<CensusIndividual> individuals, IProgress<string> outputText)
+        public static async Task<int> ProcessListAsync(List<CensusIndividual> individuals, IProgress<string> outputText)
         {
             if (individuals is null) return 0;
             int recordsAdded = 0;
@@ -27,7 +27,7 @@ namespace FTAnalyzer.Exports
                 int recordsPresent = 0;
                 int sessionDuplicates = 0;
                 int count = 0;
-                Website ??= LoadWebsiteAncestors(outputText);
+                Website ??= await LoadWebsiteAncestorsAsync(outputText);
                 SessionList ??= new List<LostCousin>();
                 bool alias = GeneralSettings.Default.ShowAliasInName;
                 GeneralSettings.Default.ShowAliasInName = false; // turn off adding alias in name when exporting
@@ -113,10 +113,10 @@ namespace FTAnalyzer.Exports
                 person.AddFact(f);
         }
 
-        public static SortableBindingList<IDisplayLostCousin> VerifyAncestors(IProgress<string> outputText)
+        public static async Task<SortableBindingList<IDisplayLostCousin>> VerifyAncestorsAsync(IProgress<string> outputText)
         {
             SortableBindingList<IDisplayLostCousin> result = new();
-            Website ??= LoadWebsiteAncestors(outputText);
+            Website ??= await LoadWebsiteAncestorsAsync(outputText);
             WebLinks = new List<Uri>();
             foreach(LostCousin lostCousin in Website)
             {
@@ -127,13 +127,13 @@ namespace FTAnalyzer.Exports
             return result;
         }
 
-        static List<LostCousin> LoadWebsiteAncestors(IProgress<string> outputText)
+        static async Task<List<LostCousin>> LoadWebsiteAncestorsAsync(IProgress<string> outputText)
         {
             List<LostCousin> websiteList = new();
             try
             {
                 HtmlAgilityPack.HtmlDocument doc = new();
-                string webData = Program.LCClient.GetAncestors();
+                string webData = await Program.LCClient.GetAncestors();
                 doc.LoadHtml(webData);
                 HtmlNodeCollection rows = doc.DocumentNode.SelectNodes("//table[@class='data_table']/tr");
                 if (rows != null)
