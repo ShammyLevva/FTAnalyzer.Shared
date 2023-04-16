@@ -31,6 +31,7 @@ namespace FTAnalyzer
         const string EW_CENSUS_PATTERN13 = @"(RG *\d{1,2})-(\d{1,5})-(\d{1,4}[a-z]?)-(\d{1,3})";
         const string EW_CENSUS_PATTERN14 = @"Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3}).*?(RG *\d{1,2})\/(\d{1,5})";
         const string EW_CENSUS_PATTERN15 = @"(RG *\d{1,2})\/(\d{1,5})\/(\d{1,4}[a-z]?)\/(\d{1,3})";
+        const string EW_CENSUS_PATTERN16 = @"(RG *\d{1,2}) *(\d{1,5}) *(\d{1,4}[a-z]?) *(\d{1,3})";
 
         const string EW_CENSUS_PATTERN_FH = @"RG *(\d{1,2})\/(\d{1,5}) F(olio)? ?(\d{1,4}[a-z]?) P(age)? ?(\d{1,3})";
         const string EW_CENSUS_PATTERN_FH2 = @"RG *(\d{1,2})\/(\d{1,5}) ED *(\d{1,4}[a-z]?) F(olio)? ?(\d{1,4}[a-z]?) P(age)? ?(\d{1,3})";
@@ -140,6 +141,7 @@ namespace FTAnalyzer
                 ["EW_CENSUS_PATTERN13"] = new Regex(EW_CENSUS_PATTERN13, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["EW_CENSUS_PATTERN14"] = new Regex(EW_CENSUS_PATTERN14, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["EW_CENSUS_PATTERN15"] = new Regex(EW_CENSUS_PATTERN15, RegexOptions.Compiled | RegexOptions.IgnoreCase),
+                ["EW_CENSUS_PATTERN16"] = new Regex(EW_CENSUS_PATTERN16, RegexOptions.Compiled | RegexOptions.IgnoreCase),
 
                 ["EW_CENSUS_PATTERN_FH"] = new Regex(EW_CENSUS_PATTERN_FH, RegexOptions.Compiled | RegexOptions.IgnoreCase),
                 ["EW_CENSUS_PATTERN_FH2"] = new Regex(EW_CENSUS_PATTERN_FH2, RegexOptions.Compiled | RegexOptions.IgnoreCase),
@@ -1042,6 +1044,16 @@ namespace FTAnalyzer
                 return true;
             }
             matcher = censusRegexs["EW_CENSUS_PATTERN15"].Match(text);
+            if (matcher.Success)
+            {
+                Class = matcher.Groups[1].ToString();
+                Piece = matcher.Groups[2].ToString();
+                Folio = matcher.Groups[3].ToString();
+                Page = matcher.Groups[4].ToString();
+                SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
+                return true;
+            }
+            matcher = censusRegexs["EW_CENSUS_PATTERN16"].Match(text);
             if (matcher.Success)
             {
                 Class = matcher.Groups[1].ToString();
