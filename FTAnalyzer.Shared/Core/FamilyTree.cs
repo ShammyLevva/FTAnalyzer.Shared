@@ -2088,7 +2088,7 @@ namespace FTAnalyzer
                                 new DataError((int)Dataerror.FACT_IN_FUTURE, ind, $"{f} is in the future."));
                         if (FactBeforeBirth(ind, f) && f.FactErrorNumber != (int)Dataerror.FACTS_BEFORE_BIRTH)
                             errors[(int)Dataerror.FACTS_BEFORE_BIRTH].Add(
-                                new DataError((int)Dataerror.FACTS_BEFORE_BIRTH, ind, f.FactErrorMessage));
+                                new DataError((int)Dataerror.FACTS_BEFORE_BIRTH, ind, $"{f} is before individual was born."));
                         if (FactAfterDeath(ind, f) && f.FactErrorNumber != (int)Dataerror.FACTS_AFTER_DEATH)
                             errors[(int)Dataerror.FACTS_AFTER_DEATH].Add(
                                 new DataError((int)Dataerror.FACTS_AFTER_DEATH, ind, f.FactErrorMessage));
