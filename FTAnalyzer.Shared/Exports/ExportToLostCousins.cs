@@ -3,18 +3,13 @@ using FTAnalyzer.Utilities;
 using FTAnalyzer.Windows;
 using HtmlAgilityPack;
 using System.Net;
-using System.Security.Policy;
 using System.Text;
-using System.Web;
-using Windows.Media.SpeechRecognition;
 
 namespace FTAnalyzer.Exports
 {
     public static class ExportToLostCousins
     {
         static List<CensusIndividual> ToProcess { get; set; }
-        static NetworkCredential Credentials { get; set; }
-        static CookieCollection CookieJar { get; set; }
         static List<LostCousin> Website { get; set; }
         static List<LostCousin> SessionList { get; set; }
         static List<Uri> WebLinks { get; set; }
@@ -118,45 +113,6 @@ namespace FTAnalyzer.Exports
                 person.AddFact(f);
         }
 
-        public static async Task<bool> CheckLostCousinsLoginAsync(string email, string password)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
-                    return false;
-                if (password.Length > 15)
-                    password = password[..15];
-                Random random = new();
-                Dictionary<string, string> parameters = new()
-                {
-                    { "stage", "submit" },
-                    { "email", email },
-                    { "password", password },
-                    { "x", random.Next(1,99).ToString() },
-                    { "y", random.Next(1,9).ToString() }
-                };
-                Uri uri = new Uri(@"https://www.lostcousins.com/pages/login/");
-                HttpRequestMessage req = new(HttpMethod.Post, uri)
-                {
-                    Content = new FormUrlEncodedContent(parameters)
-                };
-                req.Content.Headers.Clear();
-                req.Content.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
-                var response = await Program.Client.SendAsync(req);
-                if (response.StatusCode == HttpStatusCode.OK)
-                {
-                    IEnumerable<Cookie> cookies = Program.Cookies.GetCookies(uri).Cast<Cookie>();
-                    return cookies.Count() == 2 && (cookies.Any(x => x.Name == "lostcousins_user_login" || x.Name == "lostcousins_user_login"));
-                }
-                return false;                
-            }
-            catch (Exception e)
-            {
-                UIHelpers.ShowMessage($"Problem accessing Lost Cousins Website. Check you are connected to internet. Error message is: {e.Message}");
-                return false;
-            }
-        }
-
         public static SortableBindingList<IDisplayLostCousin> VerifyAncestors(IProgress<string> outputText)
         {
             SortableBindingList<IDisplayLostCousin> result = new();
@@ -164,29 +120,20 @@ namespace FTAnalyzer.Exports
             WebLinks = new List<Uri>();
             foreach(LostCousin lostCousin in Website)
             {
-                result.Add(lostCousin as IDisplayLostCousin);
+                result.Add(lostCousin);
                 if (!WebLinks.Contains(lostCousin.WebLink))
                     WebLinks.Add(lostCousin.WebLink);
             }
             return result;
         }
 
-        //static bool OnPreRequest(HttpWebRequest request)
-        //{
-        //    request.AllowAutoRedirect = true;
-        //    return true;
-        //}
-
-        public static void EmptyCookieJar() => CookieJar = null;
-
         static List<LostCousin> LoadWebsiteAncestors(IProgress<string> outputText)
         {
             List<LostCousin> websiteList = new();
             try
             {
-                using CookieAwareWebClient wc = new(CookieJar);
                 HtmlAgilityPack.HtmlDocument doc = new();
-                string webData = wc.DownloadString("https://www.lostcousins.com/pages/members/ancestors/");
+                string webData = Program.LCClient.GetAncestors();
                 doc.LoadHtml(webData);
                 HtmlNodeCollection rows = doc.DocumentNode.SelectNodes("//table[@class='data_table']/tr");
                 if (rows != null)
@@ -234,39 +181,40 @@ namespace FTAnalyzer.Exports
 
         static bool AddIndividualToWebsite(CensusIndividual ind, IProgress<string> outputText)
         {
-            if (ind is null) return false;
-            HttpWebResponse resp = null;
-            try
-            {
-                string formParams = BuildParameterString(ind);
-                HttpWebRequest req = WebRequest.Create(new Uri("https://www.lostcousins.com/pages/members/ancestors/add_ancestor.mhtml")) as HttpWebRequest;
-                req.Referer = "https://www.lostcousins.com/pages/members/ancestors/add_ancestor.mhtml";
-                req.ContentType = "application/x-www-form-urlencoded";
-                req.Method = "POST";
-                req.Credentials = Credentials;
-                req.CookieContainer = new CookieContainer();
-                req.CookieContainer.Add(CookieJar);
-                byte[] bytes = Encoding.ASCII.GetBytes(formParams);
-                req.ContentLength = bytes.Length;
-                req.Timeout = 10000;
-                using (Stream os = req.GetRequestStream())
-                {
-                    os.Write(bytes, 0, bytes.Length);
-                }
-                resp = req.GetResponse() as HttpWebResponse;
-                return resp.ResponseUri.Query.Length > 0;
-            }
-            catch (Exception e)
-            {
-                if (e.Message.Contains("UNIQUE constraint failed:")) // already written so silently ignore adding to database.
-                    return true;
-                outputText.Report($"Problem accessing Lost Cousins Website to send record below. Error message is: {e.Message}\n");
-                return false;
-            }
-            finally
-            {
-                resp?.Close();
-            }
+            return true;
+        //    if (ind is null) return false;
+        //    HttpWebResponse resp = null;
+        //    try
+        //    {
+        //        string formParams = BuildParameterString(ind);
+        //        HttpWebRequest req = WebRequest.Create(new Uri("https://www.lostcousins.com/pages/members/ancestors/add_ancestor.mhtml")) as HttpWebRequest;
+        //        req.Referer = "https://www.lostcousins.com/pages/members/ancestors/add_ancestor.mhtml";
+        //        req.ContentType = "application/x-www-form-urlencoded";
+        //        req.Method = "POST";
+        //        req.Credentials = Credentials;
+        //        req.CookieContainer = new CookieContainer();
+        //        req.CookieContainer.Add(CookieJar);
+        //        byte[] bytes = Encoding.ASCII.GetBytes(formParams);
+        //        req.ContentLength = bytes.Length;
+        //        req.Timeout = 10000;
+        //        using (Stream os = req.GetRequestStream())
+        //        {
+        //            os.Write(bytes, 0, bytes.Length);
+        //        }
+        //        resp = req.GetResponse() as HttpWebResponse;
+        //        return resp.ResponseUri.Query.Length > 0;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        if (e.Message.Contains("UNIQUE constraint failed:")) // already written so silently ignore adding to database.
+        //            return true;
+        //        outputText.Report($"Problem accessing Lost Cousins Website to send record below. Error message is: {e.Message}\n");
+        //        return false;
+        //    }
+        //    finally
+        //    {
+        //        resp?.Close();
+        //    }
         }
 
         static string BuildParameterString(CensusIndividual ind)
@@ -338,24 +286,6 @@ namespace FTAnalyzer.Exports
                 Individual.UNKNOWN or Individual.UNSET or Individual.LINKED => "Unknown&descent=",
                 _ => "Unknown&descent=",
             };
-        }
-    }
-
-    class CookieAwareWebClient : WebClient
-    {
-        readonly CookieContainer _cookieJar = new();
-
-        internal CookieAwareWebClient(CookieCollection cookies)
-        {
-            _cookieJar.Add(cookies);
-        }
-
-        protected override WebRequest GetWebRequest(Uri address)
-        {
-            WebRequest request = base.GetWebRequest(address);
-            if (request is HttpWebRequest webRequest)
-                webRequest.CookieContainer = _cookieJar;
-            return request;
         }
     }
 }
