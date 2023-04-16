@@ -688,7 +688,7 @@ namespace FTAnalyzer
             outputText.Report($"{lostCousinsFacts + lostCousinsWarnAllow} usable facts loaded)");
             if (censusFacts == 0 && resiCensus == 0 && censusWarnAllow == 0 && censusFTAFacts == 0)
             {
-                outputText.Report("\nFound no census or suitable residence facts in GEDCOM File and no recognisable\n");
+                outputText.Report("\n\n\nFound no census or suitable residence facts in GEDCOM File and no recognisable\n");
                 outputText.Report("census references in notes or in source records stored against an individual.\n\n");
                 outputText.Report("The most likely reason is that you have recorded census facts as notes and have\n");
                 outputText.Report("not recorded any census references. This will mean that the census report will\n");
