@@ -2,8 +2,6 @@
 using FTAnalyzer.Utilities;
 using FTAnalyzer.Windows;
 using HtmlAgilityPack;
-using System.Net;
-using System.Text;
 
 namespace FTAnalyzer.Exports
 {
@@ -13,7 +11,6 @@ namespace FTAnalyzer.Exports
         static List<LostCousin> Website { get; set; }
         static List<LostCousin> SessionList { get; set; }
         static List<Uri> WebLinks { get; set; }
-        static string _previousRef;
 
         public static async Task<int> ProcessListAsync(List<CensusIndividual> individuals, IProgress<string> outputText)
         {
@@ -22,11 +19,11 @@ namespace FTAnalyzer.Exports
             try
             {
                 ToProcess = individuals;
-                _previousRef = string.Empty;
                 int recordsFailed = 0;
                 int recordsPresent = 0;
                 int sessionDuplicates = 0;
                 int count = 0;
+                Dictionary<string, string> dummy = new();
                 Website ??= await LoadWebsiteAncestorsAsync(outputText);
                 SessionList ??= new List<LostCousin>();
                 bool alias = GeneralSettings.Default.ShowAliasInName;
@@ -45,7 +42,8 @@ namespace FTAnalyzer.Exports
                     }
                     else if (ind.CensusReference != null && ind.CensusReference.IsValidLostCousinsReference())
                     {
-                        LostCousin lc = new($"{ind.SurnameAtDate(ind.CensusDate)}, {ind.Forenames}", ind.BirthDate.BestYear, GetCensusSpecificFields(ind), ind.CensusDate.BestYear, ind.CensusCountry, true);
+                        string reference = Program.LCClient.GetCensusSpecificFields(dummy, ind);
+                        LostCousin lc = new($"{ind.SurnameAtDate(ind.CensusDate)}, {ind.Forenames}", ind.BirthDate.BestYear, reference, ind.CensusDate.BestYear, ind.CensusCountry, true);
                         if (Website.Contains(lc))
                         {
                             outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - Already Present {ind.CensusString}, {ind.CensusReference}.\n");
@@ -63,7 +61,7 @@ namespace FTAnalyzer.Exports
                             }
                             else
                             {
-                                if (AddIndividualToWebsite(ind, outputText))
+                                if (await Program.LCClient.AddIndividualToWebsiteAsync(ind, outputText))
                                 {
                                     outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - {ind.CensusString}, {ind.CensusReference} added.\n");
                                     recordsAdded++;
@@ -95,7 +93,7 @@ namespace FTAnalyzer.Exports
                 outputText.Report("\n\nNote if you fail to check your entries you will fail to match with your Lost Cousins.");
                 int ftanalyzerfacts = Website.FindAll(lc => lc.FTAnalyzerFact).Count;
                 int manualfacts = Website.FindAll(lc => !lc.FTAnalyzerFact).Count;
-                Task.Run(() => Analytics.TrackActionAsync(Analytics.LostCousinsAction, Analytics.ReadLostCousins, $"{DateTime.Now.ToUniversalTime():yyyy-MM-dd HH:mm}: {manualfacts} manual & {ftanalyzerfacts} -> {ftanalyzerfacts + recordsAdded} FTAnalyzer entries"));
+                await Analytics.TrackActionAsync(Analytics.LostCousinsAction, Analytics.ReadLostCousins, $"{DateTime.Now.ToUniversalTime():yyyy-MM-dd HH:mm}: {manualfacts} manual & {ftanalyzerfacts} -> {ftanalyzerfacts + recordsAdded} FTAnalyzer entries");
             }
             catch(Exception e)
             {
@@ -177,115 +175,6 @@ namespace FTAnalyzer.Exports
                 return null;
             }
             return websiteList;
-        }
-
-        static bool AddIndividualToWebsite(CensusIndividual ind, IProgress<string> outputText)
-        {
-            return true;
-        //    if (ind is null) return false;
-        //    HttpWebResponse resp = null;
-        //    try
-        //    {
-        //        string formParams = BuildParameterString(ind);
-        //        HttpWebRequest req = WebRequest.Create(new Uri("https://www.lostcousins.com/pages/members/ancestors/add_ancestor.mhtml")) as HttpWebRequest;
-        //        req.Referer = "https://www.lostcousins.com/pages/members/ancestors/add_ancestor.mhtml";
-        //        req.ContentType = "application/x-www-form-urlencoded";
-        //        req.Method = "POST";
-        //        req.Credentials = Credentials;
-        //        req.CookieContainer = new CookieContainer();
-        //        req.CookieContainer.Add(CookieJar);
-        //        byte[] bytes = Encoding.ASCII.GetBytes(formParams);
-        //        req.ContentLength = bytes.Length;
-        //        req.Timeout = 10000;
-        //        using (Stream os = req.GetRequestStream())
-        //        {
-        //            os.Write(bytes, 0, bytes.Length);
-        //        }
-        //        resp = req.GetResponse() as HttpWebResponse;
-        //        return resp.ResponseUri.Query.Length > 0;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        if (e.Message.Contains("UNIQUE constraint failed:")) // already written so silently ignore adding to database.
-        //            return true;
-        //        outputText.Report($"Problem accessing Lost Cousins Website to send record below. Error message is: {e.Message}\n");
-        //        return false;
-        //    }
-        //    finally
-        //    {
-        //        resp?.Close();
-        //    }
-        }
-
-        static string BuildParameterString(CensusIndividual ind)
-        {
-            StringBuilder output = new("stage=submit");
-            string newRef = GetCensusSpecificFields(ind);
-            if (newRef == _previousRef)
-                output.Append("&similar=1");
-            else
-                output.Append("&similar=");
-            _previousRef = newRef;
-            output.Append(newRef);
-            output.Append($"&surname={ind.LCSurnameAtDate(ind.CensusDate)}");
-            output.Append($"&forename={ind.LCForename}");
-            output.Append($"&other_names={ind.LCOtherNames}");
-            output.Append($"&age={ind.LCAge}");
-            output.Append($"&relation_type={GetLCDescendantStatus(ind)}");
-            if (!ind.IsMale && ind.LCSurname != ind.LCSurnameAtDate(ind.CensusDate))
-                output.Append($"&maiden_name={ind.LCSurname}");
-            else
-                output.Append("&maiden_name=");
-            output.Append($"&corrected_surname={ind.LCSurnameAtDate(ind.CensusDate)}&corrected_forename={ind.LCForename}&corrected_other_names={ind.LCOtherNames}");
-            if (ind.BirthDate.IsExact)
-                output.Append($"&corrected_birth_day={ind.BirthDate.StartDate.Day}&corrected_birth_month={ind.BirthDate.StartDate.Month}&corrected_birth_year={ind.BirthDate.StartDate.Year}");
-            else
-                output.Append($"&corrected_birth_day=&corrected_birth_month=&corrected_birth_year=");
-            output.Append("&baptism_day=&baptism_month=&baptism_year=");
-            output.Append($"&piece_number=&notes=Added_By_FTAnalyzer-{FamilyTree.Instance.Version}{Suffix()}");
-            return output.ToString();
-        }
-
-        static string Suffix()
-        {
-            Random random = new();
-            int x = random.Next(1,99);
-            int y = random.Next(1, 9);
-            return $"&x={x}&y={y}";
-        }
-
-        static string GetCensusSpecificFields(CensusIndividual ind)
-        {
-            CensusReference censusRef = ind.CensusReference;
-            if (ind.CensusDate.Overlaps(CensusDate.EWCENSUS1841) && Countries.IsEnglandWales(ind.CensusCountry))
-                return $"&census_code=1841&ref1={censusRef.Piece}&ref2={censusRef.Book}&ref3={censusRef.Folio}&ref4={censusRef.Page}&ref5=";
-            if (ind.CensusDate.Overlaps(CensusDate.EWCENSUS1881) && Countries.IsEnglandWales(ind.CensusCountry))
-                return $"&census_code=RG11&ref1={censusRef.Piece}&ref2={censusRef.Folio}&ref3={censusRef.Page}&ref4=&ref5=";
-            if (ind.CensusDate.Overlaps(CensusDate.SCOTCENSUS1881) && ind.CensusCountry == Countries.SCOTLAND)
-                return $"&census_code=SCT1&ref1={censusRef.RD}&ref2={censusRef.ED}&ref3={censusRef.Page}&ref4=&ref5=";
-            if (ind.CensusDate.Overlaps(CensusDate.CANADACENSUS1881) && ind.CensusCountry == Countries.CANADA)
-                return $"&census_code=CAN1&ref1={censusRef.ED}&ref2={censusRef.SD}&ref3=&ref4={censusRef.Page}&ref5={censusRef.Family}";
-            //if (ind.CensusDate.Overlaps(CensusDate.IRELANDCENSUS1911) && ind.CensusCountry == Countries.IRELAND)
-            //    return $"&census_code=0IRL&ref1=&ref2=&ref3=&ref4=&ref5=";
-            if (ind.CensusDate.Overlaps(CensusDate.EWCENSUS1911) && Countries.IsEnglandWales(ind.CensusCountry))
-                return $"&census_code=0ENG&ref1={censusRef.Piece}&ref2={censusRef.Schedule}&ref3=&ref4=&ref5=";
-            if (ind.CensusDate.Overlaps(CensusDate.USCENSUS1880) && ind.CensusCountry == Countries.UNITED_STATES)
-                return $"&census_code=USA1&ref1={censusRef.Roll}&ref2={censusRef.Page}&ref3=&ref4=&ref5=";
-            if (ind.CensusDate.Overlaps(CensusDate.USCENSUS1940) && ind.CensusCountry == Countries.UNITED_STATES)
-                return $"&census_code=USA4&ref1={censusRef.Roll}&ref2={censusRef.ED}&ref3={censusRef.Page}&ref4=&ref5=";
-            return string.Empty;
-        }
-
-        static string GetLCDescendantStatus(CensusIndividual ind)
-        {
-            return ind.RelationType switch
-            {
-                Individual.DIRECT => $"Direct+ancestor&descent={ind.Ahnentafel}",
-                Individual.BLOOD or Individual.DESCENDANT => "Blood+relative&descent=",
-                Individual.MARRIAGE or Individual.MARRIEDTODB => "Marriage&descent=",
-                Individual.UNKNOWN or Individual.UNSET or Individual.LINKED => "Unknown&descent=",
-                _ => "Unknown&descent=",
-            };
         }
     }
 }
