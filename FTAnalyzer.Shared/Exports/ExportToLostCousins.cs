@@ -1,9 +1,12 @@
 ﻿using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
+using FTAnalyzer.Windows;
 using HtmlAgilityPack;
 using System.Net;
+using System.Security.Policy;
 using System.Text;
 using System.Web;
+using Windows.Media.SpeechRecognition;
 
 namespace FTAnalyzer.Exports
 {
@@ -115,43 +118,42 @@ namespace FTAnalyzer.Exports
                 person.AddFact(f);
         }
 
-        public static bool CheckLostCousinsLogin(string email, string password)
+        public static async Task<bool> CheckLostCousinsLoginAsync(string email, string password)
         {
-            HttpWebResponse resp = null;
             try
             {
                 if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
                     return false;
                 if (password.Length > 15)
                     password = password[..15];
-                string formParams = $"stage=submit&email={HttpUtility.UrlEncode(email)}&password={password}{Suffix()}";
-                HttpWebRequest req = WebRequest.Create(new Uri("https://www.lostcousins.com/pages/login/")) as HttpWebRequest;
-                req.Referer = "https://www.lostcousins.com/pages/login/";
-                req.ContentType = "application/x-www-form-urlencoded";
-                req.Method = "POST";
-                Credentials = new NetworkCredential(email, password);
-                req.Credentials = Credentials;
-                req.CookieContainer = new CookieContainer();
-                req.AllowAutoRedirect = false;
-                byte[] bytes = Encoding.ASCII.GetBytes(formParams);
-                req.ContentLength = bytes.Length;
-                req.Timeout = 10000;
-                using (Stream os = req.GetRequestStream())
+                Random random = new();
+                Dictionary<string, string> parameters = new()
                 {
-                    os.Write(bytes, 0, bytes.Length);
+                    { "stage", "submit" },
+                    { "email", email },
+                    { "password", password },
+                    { "x", random.Next(1,99).ToString() },
+                    { "y", random.Next(1,9).ToString() }
+                };
+                Uri uri = new Uri(@"https://www.lostcousins.com/pages/login/");
+                HttpRequestMessage req = new(HttpMethod.Post, uri)
+                {
+                    Content = new FormUrlEncodedContent(parameters)
+                };
+                req.Content.Headers.Clear();
+                req.Content.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
+                var response = await Program.Client.SendAsync(req);
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    IEnumerable<Cookie> cookies = Program.Cookies.GetCookies(uri).Cast<Cookie>();
+                    return cookies.Count() == 2 && (cookies.Any(x => x.Name == "lostcousins_user_login" || x.Name == "lostcousins_user_login"));
                 }
-                resp = req.GetResponse() as HttpWebResponse;
-                CookieJar = resp.Cookies;
-                return CookieJar.Count == 2 && (CookieJar[0].Name == "lostcousins_user_login" || CookieJar[1].Name == "lostcousins_user_login");
+                return false;                
             }
             catch (Exception e)
             {
                 UIHelpers.ShowMessage($"Problem accessing Lost Cousins Website. Check you are connected to internet. Error message is: {e.Message}");
                 return false;
-            }
-            finally
-            {
-                resp?.Close();
             }
         }
 
