@@ -97,12 +97,7 @@ namespace FTAnalyzer.Exports
                 req.Content.Headers.Clear();
                 req.Content.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
                 HttpResponseMessage response = await Client.SendAsync(req);
-                if (response?.StatusCode == HttpStatusCode.OK)
-                {
-                    // TODO check response
-                    return true;
-                }
-                return false;
+                return response?.StatusCode == HttpStatusCode.OK;
             }
             catch (Exception e)
             {
