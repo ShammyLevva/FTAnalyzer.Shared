@@ -23,7 +23,7 @@ namespace FTAnalyzer.Exports
                 int recordsPresent = 0;
                 int sessionDuplicates = 0;
                 int count = 0;
-                Dictionary<string, string> dummy = new();
+                Dictionary<string, string> dummy;
                 Website ??= await LoadWebsiteAncestorsAsync(outputText);
                 SessionList ??= new List<LostCousin>();
                 bool alias = GeneralSettings.Default.ShowAliasInName;
@@ -42,6 +42,7 @@ namespace FTAnalyzer.Exports
                     }
                     else if (ind.CensusReference != null && ind.CensusReference.IsValidLostCousinsReference())
                     {
+                        dummy = new();
                         string reference = Program.LCClient.GetCensusSpecificFields(dummy, ind);
                         LostCousin lc = new($"{ind.SurnameAtDate(ind.CensusDate)}, {ind.Forenames}", ind.BirthDate.BestYear, reference, ind.CensusDate.BestYear, ind.CensusCountry, true);
                         if (Website.Contains(lc))
