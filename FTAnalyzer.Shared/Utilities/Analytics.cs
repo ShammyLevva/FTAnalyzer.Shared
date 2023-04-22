@@ -187,9 +187,11 @@ namespace FTAnalyzer.Utilities
             if (version.StartsWith("10.0.19042")) result = "Windows 10 (20H2)";
             if (version.StartsWith("10.0.19043")) result = "Windows 10 (21H1)";
             if (version.StartsWith("10.0.19044")) result = "Windows 10 (21H2)";
-            if (version.StartsWith("10.0.19045")) result = "Windows 10 (22H2)"; 
+            if (version.StartsWith("10.0.19045")) result = "Windows 10 (22H2)";
+            if (version.StartsWith("10.0.19046")) result = "Windows 10 (23H1)";
             if (version.StartsWith("10.0.22000")) return "Windows 11 (21H2)";
             if (version.StartsWith("10.0.22621")) return "Windows 11 (22H2)";
+            if (version.StartsWith("10.0.22622")) return "Windows 11 (23H1)";
             if (result.Length == 0)
                 return version;
             result += Environment.Is64BitOperatingSystem ? " (x64)" : " (x86)";
