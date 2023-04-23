@@ -59,10 +59,8 @@ namespace FTAnalyzer
                 Wife = ft.GetIndividual(wifeID);
                 if (Husband != null && Wife != null)
                     Wife.MarriedName = Husband.Surname;
-                if (Husband != null)
-                    Husband.FamiliesAsSpouse.Add(this);
-                if (Wife != null)
-                    Wife.FamiliesAsSpouse.Add(this);
+                Husband?.FamiliesAsSpouse.Add(this);
+                Wife?.FamiliesAsSpouse.Add(this);
 
                 // now iterate through child elements of eChildren
                 // finding all individuals
@@ -218,10 +216,8 @@ namespace FTAnalyzer
                     Facts.Add(f);
                     if (f.FactType != Fact.CENSUS)
                     {
-                        if (Husband != null)
-                            Husband.AddFact(f);
-                        if (Wife != null)
-                            Wife.AddFact(f);
+                        Husband?.AddFact(f);
+                        Wife?.AddFact(f);
                         if (!_preferredFacts.ContainsKey(f.FactType))
                             _preferredFacts.Add(f.FactType, f);
                     }
