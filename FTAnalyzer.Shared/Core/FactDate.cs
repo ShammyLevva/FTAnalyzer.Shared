@@ -678,7 +678,7 @@ namespace FTAnalyzer
         DateTime ParseDate(string dateValue, int highlow, int adjustment, int defaultYear)
         {
             DateTime date;
-            Group gDay = null, gMonth = null, gYear = null, gDouble = null;
+            Group? gDay = null, gMonth = null, gYear = null, gDouble = null;
             dateValue = dateValue.Trim();
             if (dateValue.Length == 0)
                 return highlow == HIGH ? MAXDATE : MINDATE;

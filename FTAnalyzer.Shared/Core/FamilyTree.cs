@@ -75,7 +75,7 @@ namespace FTAnalyzer
                 return string.Empty;
             if (node.Name.Equals("PAGE") || node.Name.Equals("TITL") || node.Name.Equals("NOTE") || node.Name.Equals("SOUR"))
                 return node.InnerText.Trim();
-            XmlNode text = node.SelectSingleNode(".//TEXT");
+            XmlNode? text = node.SelectSingleNode(".//TEXT");
             if (text is not null && lookForText && text.ChildNodes.Count > 0)
                 return GetContinuationText(text.ChildNodes);
             if (node.FirstChild is null || node.FirstChild.Value is null)
@@ -92,10 +92,10 @@ namespace FTAnalyzer
         public static string GetNotes(XmlNode node)
         {
             if (node is null) return string.Empty;
-            XmlNodeList notes = node.SelectNodes("NOTE");
-            if (notes.Count == 0)
+            XmlNodeList? notes = node.SelectNodes("NOTE");
+            if (notes?.Count == 0)
                 notes = node.SelectNodes("DATA/TEXT");
-            if (notes.Count == 0) return string.Empty;
+            if (notes?.Count == 0) return string.Empty;
             var result = new StringBuilder();
             try
             {
@@ -106,8 +106,8 @@ namespace FTAnalyzer
                         result.AppendLine(GetContinuationText(note.ChildNodes));
                         result.AppendLine();
                     }
-                    XmlAttribute ID = note.Attributes["REF"];
-                    result.AppendLine(GetNoteRef(ID));
+                    XmlAttribute? ID = note.Attributes["REF"];
+                    if(ID is not null) result.AppendLine(GetNoteRef(ID));
                     result.AppendLine();
                     result.AppendLine();
                 }
@@ -249,14 +249,14 @@ namespace FTAnalyzer
                 return null;
             }
             // First check if file has a valid header record ie: it is actually a GEDCOM file
-            XmlNode header = doc.SelectSingleNode("GED/HEAD");
+            XmlNode? header = doc.SelectSingleNode("GED/HEAD");
             if (header is null)
             {
                 outputText.Report(string.Format($"\n\nUnable to find GEDCOM 'HEAD' record in first line of file aborting load.\nIs {filename} really a GEDCOM file"));
                 Loading = false;
                 return null;
             }
-            XmlNode treeSoftware = doc.SelectSingleNode("GED/HEAD/SOUR");
+            XmlNode? treeSoftware = doc.SelectSingleNode("GED/HEAD/SOUR");
             if (treeSoftware is not null)
             {
                 var softwareName = treeSoftware.SelectSingleNode("NAME")?.InnerText;
@@ -264,9 +264,9 @@ namespace FTAnalyzer
                 Task.Run(() => Analytics.TrackActionAsync(Analytics.GEDCOMAction, Analytics.SoftwareProvider, softwareName));
                 Task.Run(() => Analytics.TrackActionAsync(Analytics.GEDCOMAction, Analytics.SoftwareVersion, softwareVersion));
             }
-            XmlNode charset = doc.SelectSingleNode("GED/HEAD/CHAR");
+            XmlNode? charset = doc.SelectSingleNode("GED/HEAD/CHAR");
             string fileCharset = charset is null ? "ACSII" : charset.InnerText;
-            XmlDocument tempDoc = null;
+            XmlDocument? tempDoc = null;
             if (charset is not null)
             {
                 switch (fileCharset)
@@ -301,7 +301,7 @@ namespace FTAnalyzer
 
         void SetRootIndividual(XmlDocument doc)
         {
-            XmlNode root = doc.SelectSingleNode("GED/HEAD/_ROOT");
+            XmlNode? root = doc.SelectSingleNode("GED/HEAD/_ROOT");
             if (root is not null)
             {
                 // file has a root individual
@@ -317,7 +317,7 @@ namespace FTAnalyzer
         public void LoadTreeSources(XmlDocument doc, IProgress<int> progress, IProgress<string> outputText)
         {
             // First iterate through attributes of root finding all sources
-            XmlNodeList list = doc.SelectNodes("GED/SOUR");
+            XmlNodeList? list = doc.SelectNodes("GED/SOUR");
             int sourceMax = list.Count == 0 ? 1 : list.Count;
             int counter = 0;
             foreach (XmlNode n in list)
@@ -336,7 +336,7 @@ namespace FTAnalyzer
         {
             // now iterate through child elements of root
             // finding all individuals
-            XmlNodeList list = doc.SelectNodes("GED/INDI");
+            XmlNodeList? list = doc.SelectNodes("GED/INDI");
             int individualMax = list.Count;
             int counter = 0;
             foreach (XmlNode n in list)
@@ -365,7 +365,7 @@ namespace FTAnalyzer
         {
             // now iterate through child elements of root
             // finding all families
-            XmlNodeList list = doc.SelectNodes("GED/FAM");
+            XmlNodeList? list = doc.SelectNodes("GED/FAM");
             int familyMax = list.Count == 0 ? 1 : list.Count;
             int counter = 0;
             foreach (XmlNode n in list)
@@ -403,13 +403,13 @@ namespace FTAnalyzer
 
         public static void LoadAncestryTreeTags(XmlDocument doc, IProgress<string> outputText)
         {
-            XmlNodeList list = doc.SelectNodes("GED/_MTTAG");
+            XmlNodeList? list = doc.SelectNodes("GED/_MTTAG");
             
             int counter = 0;
             foreach (XmlNode n in list)
             {
                 string id = n.Attributes.Count > 0 ? n.Attributes[0].Value : string.Empty;
-                XmlNode xmlNode = n.SelectSingleNode("NAME");
+                XmlNode? xmlNode = n.SelectSingleNode("NAME");
                 string name = xmlNode is null ? string.Empty : xmlNode.InnerText;
                 xmlNode = n.SelectSingleNode("RIN");
                 string rin = xmlNode is null ? string.Empty : xmlNode.InnerText;
@@ -428,8 +428,8 @@ namespace FTAnalyzer
             foreach (XmlNode node in list)
             {
                 string place = GetText(node, false);
-                XmlNode lat_node = node.SelectSingleNode("MAP/LATI");
-                XmlNode long_node = node.SelectSingleNode("MAP/LONG");
+                XmlNode? lat_node = node.SelectSingleNode("MAP/LATI");
+                XmlNode? long_node = node.SelectSingleNode("MAP/LONG");
                 if (place.Length > 0 && lat_node is not null && long_node is not null)
                 {
                     string lat = lat_node.InnerText;
@@ -509,7 +509,7 @@ namespace FTAnalyzer
             using StreamReader reader = new(filename);
             while (!reader.EndOfStream)
             {
-                string line = reader.ReadLine();
+                string line = reader.ReadLine() ?? string.Empty;
                 string[] values = line.Split(',');
                 if (line.IndexOf(",", StringComparison.Ordinal) > 0 && (values[0] == "1" || values[0] == "2"))
                 {
@@ -523,7 +523,7 @@ namespace FTAnalyzer
         public string GetStandardisedName(bool IsMale, string name)
         {
             StandardisedName gIn = new(IsMale, name);
-            names.TryGetValue(gIn, out StandardisedName gOut);
+            names.TryGetValue(gIn, out StandardisedName? gOut);
             return gOut is null ? name : gOut.Name;
         }
 
@@ -857,7 +857,7 @@ namespace FTAnalyzer
             {
                 if (!jobs.ContainsString(f.Comment))
                 {
-                    if (!occupations.TryGetValue(f.Comment, out List<Individual> workers))
+                    if (!occupations.TryGetValue(f.Comment, out List<Individual>? workers))
                     {
                         workers = new List<Individual>();
                         occupations.Add(f.Comment, workers);
@@ -980,7 +980,7 @@ namespace FTAnalyzer
             //            return individuals.FirstOrDefault(i => i.IndividualID == individualID);
             if (string.IsNullOrEmpty(individualID))
                 return null;
-            individualLookup.TryGetValue(individualID, out Individual person);
+            individualLookup.TryGetValue(individualID, out Individual? person);
             while (individualID.StartsWith("I0", StringComparison.Ordinal) && person is null)
             {
                 if (individualID.Length >= 2) individualID = $"I{individualID[2..]}";
@@ -1086,7 +1086,7 @@ namespace FTAnalyzer
         static void CheckLooseBirth(Individual indiv, SortableBindingList<IDisplayLooseBirth> result = null)
         {
             FactDate birthDate = indiv.BirthDate;
-            FactDate toAdd = null;
+            FactDate? toAdd = null;
             if (birthDate.EndDate.Year - birthDate.StartDate.Year > 1)
             {
                 FactDate baseDate = BaseLivingDate(indiv);
@@ -1258,7 +1258,7 @@ namespace FTAnalyzer
         static void CheckLooseDeath(Individual indiv, SortableBindingList<IDisplayLooseDeath> result = null)
         {
             FactDate deathDate = indiv.DeathDate;
-            FactDate toAdd = null;
+            FactDate? toAdd = null;
             if (deathDate.EndDate.Year - deathDate.StartDate.Year > 1)
             {
                 DateTime maxLiving = GetMaxLivingDate(indiv, Fact.LOOSE_DEATH_FACTS);
@@ -2328,7 +2328,7 @@ namespace FTAnalyzer
 
         public static void SearchCensus(string censusCountry, int censusYear, Individual person, int censusProvider, string censusRegion)
         {
-            string uri = null;
+            string? uri = null;
             string provider = ProviderName(censusProvider);
             if (censusYear == 1950 && censusCountry.Equals(Countries.UNITED_STATES))
             {
@@ -2929,7 +2929,7 @@ namespace FTAnalyzer
 
         public static void SearchBMD(SearchType st, Individual individual, FactDate factdate, FactLocation factLocation, int searchProvider, string bmdRegion, Individual spouse)
         {
-            string uri = null;
+            string? uri = null;
             if (factdate.IsUnknown || factdate.DateType.Equals(FactDate.FactDateType.AFT) || factdate.DateType.Equals(FactDate.FactDateType.BEF))
             {
                 if (st.Equals(SearchType.BIRTH))
@@ -3747,12 +3747,12 @@ namespace FTAnalyzer
                     if (doc.InnerText.Length > 0)
                     {
                         FactDate fd;
-                        XmlNodeList nodes = doc.SelectNodes("/result/event");
+                        XmlNodeList? nodes = doc.SelectNodes("/result/event");
                         foreach (XmlNode worldEvent in nodes)
                         {
-                            XmlNode descNode = worldEvent.SelectSingleNode("description");
+                            XmlNode? descNode = worldEvent.SelectSingleNode("description");
                             string desc = FixWikiFormatting(descNode.InnerText);
-                            XmlNode dateNode = worldEvent.SelectSingleNode("date");
+                            XmlNode? dateNode = worldEvent.SelectSingleNode("date");
                             fd = GetWikiDate(dateNode, eventDate);
                             var f = new Fact("Wikipedia", Fact.WORLD_EVENT, fd, FactLocation.UNKNOWN_LOCATION, desc, true, true);
                             var df = new DisplayFact(null, string.Empty, string.Empty, f);

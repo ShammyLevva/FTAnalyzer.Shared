@@ -43,7 +43,7 @@ namespace FTAnalyzer.Utilities
             List<T> itemsList = (List<T>)Items;
 
             Type propertyType = prop.PropertyType;
-            if (!comparers.TryGetValue(propertyType, out PropertyComparer<T> comparer))
+            if (!comparers.TryGetValue(propertyType, out PropertyComparer<T>? comparer))
             {
                 comparer = new PropertyComparer<T>(prop, direction);
                 comparers.Add(propertyType, comparer);

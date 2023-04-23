@@ -113,7 +113,8 @@ namespace FTAnalyzer
             long lineNr = 0;
             int badLineCount = 0;
             int badLineMax = 30;
-            string line, nextline, token1, token2;
+            string? line, nextline;
+            string token1, token2;
             string level;
             int thislevel;
             int prevlevel = -1;
@@ -122,8 +123,8 @@ namespace FTAnalyzer
             Dictionary<long, Tuple<string, string>> lineErrors = new();
             Stack<string> stack = new();
             stack.Push("GED");
-            XmlDocument document = new() { XmlResolver = null };
-            XmlNode node = document.CreateElement("GED");
+            XmlDocument? document = new() { XmlResolver = null };
+            XmlNode? node = document.CreateElement("GED");
             document.AppendChild(node);
             string currentName = string.Empty;
             try
@@ -345,7 +346,7 @@ namespace FTAnalyzer
                             foreach (KeyValuePair<long, Tuple<string, string>> kvp in lineErrors)
                                 writer.WriteLine($"<tr><td><a href='#{kvp.Key}'>{kvp.Key}</a></td><td>{kvp.Value.Item1}</td><td>{kvp.Value.Item2}</td></tr>");
                             writer.WriteLine("</table><h4>GEDCOM Contents</h4><table border='1'><tr><th>Line Number</th><th>Line Contents</th></tr>");
-                            string line = reader.ReadLine();
+                            string? line = reader.ReadLine();
                             long lineNr = 1;
                             while (line is not null)
                             {

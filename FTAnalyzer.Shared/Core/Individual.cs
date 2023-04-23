@@ -94,7 +94,7 @@ namespace FTAnalyzer
             Name = FamilyTree.GetText(node, "NAME", false);
             Gender = FamilyTree.GetText(node, "SEX", false);
             Alias = FamilyTree.GetText(node, "ALIA", false);
-            XmlNode nameNode = node?.SelectSingleNode("NAME");
+            XmlNode? nameNode = node?.SelectSingleNode("NAME");
             Title = FamilyTree.GetText(nameNode, "NPFX", false);
             Suffix = FamilyTree.GetText(nameNode, "NSFX", false);
             if (string.IsNullOrEmpty(Alias))
@@ -886,7 +886,7 @@ namespace FTAnalyzer
         {
             Fact nameFact = GetFacts(Fact.INDI).First();
             // now iterate through source elements of the fact finding all sources
-            XmlNodeList list = node.SelectNodes("SOUR");
+            XmlNodeList? list = node.SelectNodes("SOUR");
             foreach (XmlNode n in list)
             {
                 if (n.Attributes["REF"] is not null)
@@ -906,9 +906,9 @@ namespace FTAnalyzer
 
         void AddFacts(XmlNode node, string factType, IProgress<string> outputText) => AddFacts(node, factType, outputText, null);
         
-        void AddFacts(XmlNode node, string factType, IProgress<string> outputText, string nonStandardFactType)
+        void AddFacts(XmlNode node, string factType, IProgress<string> outputText, string? nonStandardFactType)
         {
-            XmlNodeList list = nonStandardFactType is not null ? node.SelectNodes(nonStandardFactType) : node.SelectNodes(factType);
+            XmlNodeList? list = nonStandardFactType is not null ? node.SelectNodes(nonStandardFactType) : node.SelectNodes(factType);
             bool preferredFact = true;
             foreach (XmlNode n in list)
             {

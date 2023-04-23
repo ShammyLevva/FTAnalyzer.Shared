@@ -876,7 +876,7 @@ namespace FTAnalyzer
         public static Region GetRegion(string region)
         {
             region = EnhancedTextInfo.RemoveDiacritics(region); // remove any special characters for Known Region processing
-            if (VALID_REGIONS.TryGetValue(region, out Region result))
+            if (VALID_REGIONS.TryGetValue(region, out Region? result))
                 return result;
             return null;
         }
