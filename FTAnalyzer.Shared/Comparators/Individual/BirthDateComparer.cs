@@ -15,12 +15,15 @@ namespace FTAnalyzer
 
         public override int Compare(IDisplayIndividual? x, IDisplayIndividual? y)
         {
-            IDisplayIndividual a = x, b=y;
+            if (x is null && y is null) return 1;
+            IDisplayIndividual? a = x, b=y;
             if(Direction == DESCENDING)
             {
                 a = y;
                 b = x;
             }
+            if (a is null) return -1;
+            if (b is null) return 1;
             return a.BirthDate.Equals(b.BirthDate)
                 ? a.Surname.Equals(b.Surname)
                     ? string.Compare(a.Forenames, b.Forenames, System.StringComparison.Ordinal)
