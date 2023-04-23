@@ -100,7 +100,7 @@ namespace FTAnalyzer
             if (string.IsNullOrEmpty(Alias))
                 Alias = FamilyTree.GetText(nameNode, "NICK", false);
             FamilySearchID = FamilyTree.GetText(node, "FSID", false);
-            IsFlaggedAsLiving = node.SelectSingleNode("_FLGS/__LIVING") != null;
+            IsFlaggedAsLiving = node.SelectSingleNode("_FLGS/__LIVING") is not null;
             forenameMetaphone = new DoubleMetaphone(Forename);
             surnameMetaphone = new DoubleMetaphone(Surname);
             Notes = FamilyTree.GetNotes(node);
@@ -203,7 +203,7 @@ namespace FTAnalyzer
 
         internal Individual(Individual i)
         {
-            if (i != null)
+            if (i is not null)
             {
                 IndividualID = i.IndividualID;
                 _forenames = i._forenames;
@@ -452,15 +452,15 @@ namespace FTAnalyzer
             get
             {
                 Fact f = GetPreferredFact(Fact.BIRTH);
-                if (f != null)
+                if (f is not null)
                     return f;
                 f = GetPreferredFact(Fact.BIRTH_CALC);
                 if (GeneralSettings.Default.UseBaptismDates)
                 {
-                    if (f != null)
+                    if (f is not null)
                         return f;
                     f = GetPreferredFact(Fact.BAPTISM);
-                    if (f != null)
+                    if (f is not null)
                         return f;
                     f = GetPreferredFact(Fact.CHRISTENING);
                 }
@@ -482,10 +482,10 @@ namespace FTAnalyzer
                 Fact f = GetPreferredFact(Fact.DEATH);
                 if (GeneralSettings.Default.UseBurialDates)
                 {
-                    if (f != null)
+                    if (f is not null)
                         return f;
                     f = GetPreferredFact(Fact.BURIAL);
-                    if (f != null)
+                    if (f is not null)
                         return f;
                     f = GetPreferredFact(Fact.CREMATION);
                 }
@@ -647,7 +647,7 @@ namespace FTAnalyzer
             if (parent is null) return false;
             foreach (ParentalRelationship pr in FamiliesAsChild)
             {
-                if (pr.Family != null)
+                if (pr.Family is not null)
                     return (pr.IsNaturalFather && parent.IsMale && parent.Equals(pr.Father)) ||
                            (pr.IsNaturalMother && !parent.IsMale && parent.Equals(pr.Mother));
             }
@@ -660,7 +660,7 @@ namespace FTAnalyzer
             {
                 foreach (ParentalRelationship pr in FamiliesAsChild)
                 {
-                    if (pr.Family != null && pr.Father != null && pr.IsNaturalFather)
+                    if (pr.Family is not null && pr.Father is not null && pr.IsNaturalFather)
                         return pr.Father;
                 }
                 return null;
@@ -716,7 +716,7 @@ namespace FTAnalyzer
             return FamiliesAsSpouse.Any(f =>
             {
                 FactDate marriage = f.GetPreferredFactDate(Fact.MARRIAGE);
-                return (marriage != null && marriage.IsBefore(fd));
+                return (marriage is not null && marriage.IsBefore(fd));
             });
         }
 
@@ -790,7 +790,7 @@ namespace FTAnalyzer
                     if (f.Location.CensusCountryMatches(when.Country, includeUnknownCountries) || BestLocation(when).CensusCountryMatches(when.Country, includeUnknownCountries))
                         return true;
                     Fact censusFact = GetCensusFact(f);
-                    if (censusFact != null)
+                    if (censusFact is not null)
                     {
                         if (when.Country.Equals(Countries.SCOTLAND) && Countries.IsEnglandWales(censusFact.Country))
                             return false;
@@ -830,7 +830,7 @@ namespace FTAnalyzer
 
         public bool IsDeceased(FactDate when) => DeathDate.IsKnown && DeathDate.IsBefore(when);
 
-        public bool IsSingleAtDeath => GetPreferredFact(Fact.UNMARRIED) != null || MaxAgeAtDeath < 16 || LifeSpan.MaxAge < 16;
+        public bool IsSingleAtDeath => GetPreferredFact(Fact.UNMARRIED) is not null || MaxAgeAtDeath < 16 || LifeSpan.MaxAge < 16;
 
         public bool IsBirthKnown => BirthDate.IsKnown && BirthDate.IsExact;
 
@@ -889,11 +889,11 @@ namespace FTAnalyzer
             XmlNodeList list = node.SelectNodes("SOUR");
             foreach (XmlNode n in list)
             {
-                if (n.Attributes["REF"] != null)
+                if (n.Attributes["REF"] is not null)
                 {   // only process sources with a reference
                     string srcref = n.Attributes["REF"].Value;
                     FactSource source = FamilyTree.Instance.GetSource(srcref);
-                    if (source != null)
+                    if (source is not null)
                     {
                         nameFact.Sources.Add(source);
                         source.AddFact(nameFact);
@@ -908,7 +908,7 @@ namespace FTAnalyzer
         
         void AddFacts(XmlNode node, string factType, IProgress<string> outputText, string nonStandardFactType)
         {
-            XmlNodeList list = nonStandardFactType != null ? node.SelectNodes(nonStandardFactType) : node.SelectNodes(factType);
+            XmlNodeList list = nonStandardFactType is not null ? node.SelectNodes(nonStandardFactType) : node.SelectNodes(factType);
             bool preferredFact = true;
             foreach (XmlNode n in list)
             {
@@ -923,13 +923,13 @@ namespace FTAnalyzer
                                 Alias = f.Comment;
                             if (f.FactDate.SpecialDate)
                                 ProcessSpecialDate(n, f, preferredFact, outputText);
-                            if (nonStandardFactType != null)
+                            if (nonStandardFactType is not null)
                                 f.ChangeNonStandardFactType(factType);
                             f.Location.FTAnalyzerCreated = false;
                             if (!f.Location.IsValidLatLong)
                                 outputText.Report($"Found problem with Lat/Long for Location '{f.Location}' in facts for {IndividualID}: {Name}");
                             AddFact(f);
-                            if (f.GedcomAge != null && f.GedcomAge.CalculatedBirthDate != FactDate.UNKNOWN_DATE)
+                            if (f.GedcomAge is not null && f.GedcomAge.CalculatedBirthDate != FactDate.UNKNOWN_DATE)
                             {
                                 string reason = $"Calculated from {f} with Age: {f.GedcomAge.GEDCOM_Age}";
                                 Fact calculatedBirth = new(IndividualID, Fact.BIRTH_CALC, f.GedcomAge.CalculatedBirthDate, FactLocation.UNKNOWN_LOCATION, reason, false, true);
@@ -1135,7 +1135,7 @@ namespace FTAnalyzer
         void UpdateCensusFactReference(CensusReference cr)
         {
             Fact censusFact = GetCensusFact(cr.Fact, false);
-            if (censusFact != null && !censusFact.CensusReference.IsKnownStatus && cr.IsKnownStatus)
+            if (censusFact is not null && !censusFact.CensusReference.IsKnownStatus && cr.IsKnownStatus)
                 censusFact.SetCensusReferenceDetails(cr, CensusLocation.UNKNOWN, string.Empty);
         }
 
@@ -1144,7 +1144,7 @@ namespace FTAnalyzer
         void AddLocation(Fact fact)
         {
             FactLocation loc = fact.Location;
-            if (loc != null && !Locations.ContainsLocation(loc))
+            if (loc is not null && !Locations.ContainsLocation(loc))
             {
                 Locations.Add(loc);
                 loc.AddIndividual(this);
@@ -1169,7 +1169,7 @@ namespace FTAnalyzer
             {
                 foreach (Family marriage in FamiliesAsSpouse.OrderBy(f => f.MarriageDate))
                 {
-                    if ((marriage.MarriageDate.Equals(date) || marriage.MarriageDate.IsBefore(date)) && marriage.Husband != null && marriage.Husband.Surname != "UNKNOWN")
+                    if ((marriage.MarriageDate.Equals(date) || marriage.MarriageDate.IsBefore(date)) && marriage.Husband is not null && marriage.Husband.Surname != "UNKNOWN")
                         name = marriage.Husband.Surname;
                 }
             }
@@ -1656,7 +1656,7 @@ namespace FTAnalyzer
         public bool IsLivingError => IsFlaggedAsLiving && DeathDate.IsKnown;
 
         public int CensusReferenceCount(CensusReference.ReferenceStatus referenceStatus) 
-            => AllFacts.Count(f => f.IsCensusFact && f.CensusReference != null && f.CensusReference.Status.Equals(referenceStatus));
+            => AllFacts.Count(f => f.IsCensusFact && f.CensusReference is not null && f.CensusReference.Status.Equals(referenceStatus));
 
         Family Marriages(int number)
         {
@@ -1673,9 +1673,9 @@ namespace FTAnalyzer
             Family marriage = Marriages(number);
             if (marriage is null)
                 return string.Empty;
-            if (IndividualID == marriage.HusbandID && marriage.Wife != null)
+            if (IndividualID == marriage.HusbandID && marriage.Wife is not null)
                 return $"To {marriage.Wife.Name}: {marriage}";
-            if (IndividualID == marriage.WifeID && marriage.Husband != null)
+            if (IndividualID == marriage.WifeID && marriage.Husband is not null)
                 return $"To {marriage.Husband.Name}: {marriage}";
             return $"Married: {marriage}";
         }

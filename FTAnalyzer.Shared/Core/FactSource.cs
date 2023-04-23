@@ -50,9 +50,9 @@ namespace FTAnalyzer
         {
             get
             {
-                int count = Facts.Count(x => x.Individual != null);
-                count += Facts.Count(x => x.Family != null && x.Family.Husband != null);
-                count += Facts.Count(x => x.Family != null && x.Family.Wife != null);
+                int count = Facts.Count(x => x.Individual is not null);
+                count += Facts.Count(x => x.Family is not null && x.Family.Husband is not null);
+                count += Facts.Count(x => x.Family is not null && x.Family.Wife is not null);
                 return count;
             }
         }

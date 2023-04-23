@@ -74,7 +74,7 @@ namespace FTAnalyzer.Utilities
 
         public static bool ContainsString(this List<string> list, string str)
         {
-            if (list != null)
+            if (list is not null)
             {
                 for (int i = 0; i < list.Count; i++)
                     if (list[i] == str)
@@ -85,7 +85,7 @@ namespace FTAnalyzer.Utilities
 
         public static bool ContainsString(this IList<string> list, string str)
         {
-            if (list != null)
+            if (list is not null)
             {
                 for (int i = 0; i < list.Count; i++)
                     if (list[i] == str)
@@ -96,7 +96,7 @@ namespace FTAnalyzer.Utilities
 
         public static bool ContainsFact(this IList<Fact> list, Fact fact)
         {
-            if (list != null)
+            if (list is not null)
             {
                 for (int i = 0; i < list.Count; i++)
                     if (list[i] == fact)
@@ -106,7 +106,7 @@ namespace FTAnalyzer.Utilities
         }
         public static bool ContainsLocation(this IList<FactLocation> list, FactLocation loc)
         {
-            if (list != null)
+            if (list is not null)
             {
                 for (int i = 0; i < list.Count; i++)
                     if (list[i] == loc)
@@ -116,7 +116,7 @@ namespace FTAnalyzer.Utilities
         }
         public static bool ContainsLocation(this List<IDisplayLocation> list, IDisplayLocation loc)
         {
-            if (list != null)
+            if (list is not null)
             {
                 for (int i = 0; i < list.Count; i++)
                     if (list[i] == loc)
@@ -126,7 +126,7 @@ namespace FTAnalyzer.Utilities
         }
         public static bool ContainsFact(this List<Fact> list, Fact fact)
         {
-            if (list != null)
+            if (list is not null)
             {
                 for (int i = 0; i < list.Count; i++)
                     if (list[i] == fact)
@@ -136,7 +136,7 @@ namespace FTAnalyzer.Utilities
         }
         public static bool ContainsFact(this SortableBindingList<IDisplayFact> list, IDisplayFact fact)
         {
-            if (list != null)
+            if (list is not null)
             {
                 for (int i = 0; i < list.Count; i++)
                     if (list[i] == fact)
@@ -146,7 +146,7 @@ namespace FTAnalyzer.Utilities
         }
         public static bool ContainsDuplicate(this SortableBindingList<IDisplayDuplicateIndividual> list, IDisplayDuplicateIndividual dup)
         {
-            if (list != null)
+            if (list is not null)
             {
                 for (int i = 0; i < list.Count; i++)
                     if (list[i] == dup)
@@ -156,7 +156,7 @@ namespace FTAnalyzer.Utilities
         }
         public static bool ContainsDuplicate(this IList<NonDuplicate> list, NonDuplicate dup)
         {
-            if (list != null)
+            if (list is not null)
             {
                 for (int i = 0; i < list.Count; i++)
                     if (list[i] == dup)

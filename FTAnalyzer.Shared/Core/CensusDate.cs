@@ -203,7 +203,7 @@ namespace FTAnalyzer
             );
 
         public static bool IsLostCousinsCensusYear(FactDate fd, bool exactYear) =>
-            GetLostCousinsCensusYear(fd, exactYear) != null;
+            GetLostCousinsCensusYear(fd, exactYear) is not null;
 
         public static bool IsCensusCountry(FactDate fd, FactLocation location) =>
             SUPPORTED_CENSUS.Any(cd => cd.Country == location.CensusCountry && fd.CensusYearMatches(cd));

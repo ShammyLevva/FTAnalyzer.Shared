@@ -24,7 +24,7 @@ namespace FTAnalyzer
         public CensusDate CensusDate => Family.CensusDate;
         public Age Age => GetAge(CensusDate);
         public string CensusSurname => Family.Surname;
-        public bool IsKnownCensusReference => CensusReference != null && CensusReference.IsKnownStatus;
+        public bool IsKnownCensusReference => CensusReference is not null && CensusReference.IsKnownStatus;
         public string CensusCountry => CensusReference is null ? string.Empty : CensusReference.Country;
         public string Census => CensusDate.ToString();
         public string CensusString => $"{IndividualID}: {Forename} {SurnameAtDate(CensusDate)} b.{BirthDate}";
@@ -72,7 +72,7 @@ namespace FTAnalyzer
             get
             {
                 foreach (Fact f in AllFacts)
-                    if (f.FactDate.Overlaps(CensusDate) && f.IsValidCensus(CensusDate) && f.CensusReference != null)
+                    if (f.FactDate.Overlaps(CensusDate) && f.IsValidCensus(CensusDate) && f.CensusReference is not null)
                         return f.CensusReference;
                 return null;
             }

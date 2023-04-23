@@ -40,7 +40,7 @@ namespace FTAnalyzer.Exports
                         outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - Cannot process person with unknown forename or surname {ind.CensusString}.\n");
                         recordsFailed++;
                     }
-                    else if (ind.CensusReference != null && ind.CensusReference.IsValidLostCousinsReference())
+                    else if (ind.CensusReference is not null && ind.CensusReference.IsValidLostCousinsReference())
                     {
                         dummy = new();
                         string reference = Program.LCClient.GetCensusSpecificFields(dummy, ind);
@@ -108,7 +108,7 @@ namespace FTAnalyzer.Exports
             FactLocation location = FactLocation.GetLocation(ind.CensusCountry);
             Fact f = new(ind.CensusRef, Fact.LC_FTA, ind.CensusDate, location, string.Empty, true, true);
             Individual person = FamilyTree.Instance.GetIndividual(ind.IndividualID); // get the individual not the census indvidual
-            if(person != null && !person.HasLostCousinsFactAtDate(ind.CensusDate))
+            if(person is not null && !person.HasLostCousinsFactAtDate(ind.CensusDate))
                 person.AddFact(f);
         }
 
@@ -135,12 +135,12 @@ namespace FTAnalyzer.Exports
                 string webData = await Program.LCClient.GetAncestors();
                 doc.LoadHtml(webData);
                 HtmlNodeCollection rows = doc.DocumentNode.SelectNodes("//table[@class='data_table']/tr");
-                if (rows != null)
+                if (rows is not null)
                 {
                     foreach (HtmlNode node in rows)
                     {
                         HtmlNodeCollection columns = node.SelectNodes("td");
-                        if (columns != null && columns.Count == 8 && columns[0].InnerText != "Name") // ignore header row
+                        if (columns is not null && columns.Count == 8 && columns[0].InnerText != "Name") // ignore header row
                         {
                             string name = columns[0].InnerText.ClearWhiteSpace();
                             bool ftanalyzer = false;
@@ -148,7 +148,7 @@ namespace FTAnalyzer.Exports
                             if (columns[0].ChildNodes.Count == 5)
                             {
                                 HtmlAttribute notesNode = columns[0].ChildNodes[3].Attributes["title"];
-                                ftanalyzer = notesNode != null && notesNode.Value.Contains("Added_By_FTAnalyzer");
+                                ftanalyzer = notesNode is not null && notesNode.Value.Contains("Added_By_FTAnalyzer");
                             }
                             string birthYear = columns[2].InnerText.ClearWhiteSpace();
                             if (columns[4].ChildNodes.Count > 4)

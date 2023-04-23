@@ -129,7 +129,7 @@ namespace FTAnalyzer
             try
             {
                 line = reader.ReadLine();
-                while (line != null)
+                while (line is not null)
                 {
                     lineNr++;
                     nextline = reader.ReadLine();
@@ -207,7 +207,7 @@ namespace FTAnalyzer
                             if (token1.Equals("CONT", StringComparison.Ordinal) || token1.Equals("CONC", StringComparison.Ordinal))
                             {
                                 // check if nextline does not start with a number ie: could be a wrapped line, if so then concatenate
-                                while (nextline != null && !nextline.Trim().StartsWithNumeric())
+                                while (nextline is not null && !nextline.Trim().StartsWithNumeric())
                                 {
                                     line = line + "\n" + nextline.Trim();
                                     nextline = reader.ReadLine();
@@ -347,7 +347,7 @@ namespace FTAnalyzer
                             writer.WriteLine("</table><h4>GEDCOM Contents</h4><table border='1'><tr><th>Line Number</th><th>Line Contents</th></tr>");
                             string line = reader.ReadLine();
                             long lineNr = 1;
-                            while (line != null)
+                            while (line is not null)
                             {
                                 if (lineErrors.ContainsKey(lineNr))
                                     writer.WriteLine($"<tr id='{lineNr}'><td>{lineNr++}</td><td>{line}</td></tr>");

@@ -296,7 +296,7 @@ namespace FTAnalyzer
             string fromstr = n.Attributes["from"].Value;
             string to = n.Attributes["to"].Value;
             Tuple<int, string> from = new(level, fromstr.ToUpperInvariant());
-            if (from != null && fromstr.Length > 0 && to != null)
+            if (from is not null && fromstr.Length > 0 && to is not null)
             {
                 if (!dictionary.ContainsKey(from))
                     dictionary.Add(from, to);
@@ -1006,7 +1006,7 @@ namespace FTAnalyzer
             {
                 float zoom = (Level + 3.75f) * 2.2f;  // default use level 
 #if __PC__
-                if (ViewPort != null)
+                if (ViewPort is not null)
                 {
                     double pixelWidth = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;  // tweak to get best results as required 
                     double GLOBE_WIDTH = 512; // a constant in Google's map projection
@@ -1053,7 +1053,7 @@ namespace FTAnalyzer
 
         public void AddIndividual(Individual ind)
         {
-            if (ind != null && !individuals.ContainsKey(ind.IndividualID))
+            if (ind is not null && !individuals.ContainsKey(ind.IndividualID))
                 individuals.Add(ind.IndividualID, ind);
         }
 
@@ -1136,7 +1136,7 @@ namespace FTAnalyzer
             {
                 string result = string.Empty;
 #if __PC__
-                if (ViewPort != null)
+                if (ViewPort is not null)
                 {
                     if (EmptyViewPort)
                         DatabaseHelper.GetLocationDetails(this);

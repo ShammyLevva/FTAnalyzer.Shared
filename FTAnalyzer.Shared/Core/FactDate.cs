@@ -826,7 +826,7 @@ namespace FTAnalyzer
                 }
                 else if (day.Length > 0 && month.Length > 0 && year.Length > 0)
                 {
-                    if (gDouble != null && day == "29" && month == "FEB")
+                    if (gDouble is not null && day == "29" && month == "FEB")
                     {
                         int doubleYear = int.Parse(year) + 1;
                         dateValue = $"29 FEB {doubleYear}";
@@ -846,7 +846,7 @@ namespace FTAnalyzer
                 {
                     dt = (highlow == HIGH) ? MAXDATE : MINDATE;
                 }
-                if (gDouble != null && !(day == "29" && month == "FEB"))
+                if (gDouble is not null && !(day == "29" && month == "FEB"))
                     dt = dt.TryAddYears(1); // use upper year for double dates as long as we haven't already done so for 29th FEB
             }
             catch (FormatException)
@@ -947,7 +947,7 @@ namespace FTAnalyzer
          */
         public bool IsBefore(FactDate that)
         {
-            if (!DoubleDate && that != null && that.DoubleDate)
+            if (!DoubleDate && that is not null && that.DoubleDate)
                 return EndDate < that.StartDate || EndDate < that.StartDate.TryAddYears(-1);
             // easy case is extremes whole of date before other
             return that is null || EndDate < that.StartDate;
@@ -958,14 +958,14 @@ namespace FTAnalyzer
          */
         public bool StartsBefore(FactDate that)
         {
-            if (!DoubleDate && that != null && that.DoubleDate)
+            if (!DoubleDate && that is not null && that.DoubleDate)
                 return StartDate < that.StartDate || StartDate < that.StartDate.TryAddYears(-1);
             return that is null || StartDate < that.StartDate;
         }
 
         public bool StartsOnOrBefore(FactDate that)
         { 
-            if (!DoubleDate && that != null && that.DoubleDate)
+            if (!DoubleDate && that is not null && that.DoubleDate)
                 return StartDate < that.StartDate || StartDate < that.StartDate.TryAddYears(-1);
             return that is null || StartDate <= that.StartDate;
         }
@@ -975,7 +975,7 @@ namespace FTAnalyzer
          */
         public bool IsAfter(FactDate that)
         {
-            if (DoubleDate && that != null && !that.DoubleDate)
+            if (DoubleDate && that is not null && !that.DoubleDate)
                 return StartDate > that.EndDate || StartDate.TryAddYears(-1) > that.EndDate;
             // easy case is extremes whole of date after other
             return that is null || StartDate > that.EndDate;
@@ -986,7 +986,7 @@ namespace FTAnalyzer
          */
         public bool EndsAfter(FactDate that)
         {
-            if (DoubleDate && that != null && !that.DoubleDate)
+            if (DoubleDate && that is not null && !that.DoubleDate)
                 return EndDate > that.EndDate || EndDate.TryAddYears(-1) > that.EndDate;
             return that is null || EndDate > that.EndDate;
         }

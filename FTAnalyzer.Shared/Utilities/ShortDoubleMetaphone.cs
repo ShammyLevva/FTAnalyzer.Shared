@@ -81,7 +81,7 @@ namespace FTAnalyzer
         public ShortDoubleMetaphone(String word) : base(word)
 		{
 			m_primaryShortKey = ShortDoubleMetaphone.MetaphoneKeyToShort(this.PrimaryKey);
-			if (this.AlternateKey != null) {
+			if (this.AlternateKey is not null) {
 				m_alternateShortKey = ShortDoubleMetaphone.MetaphoneKeyToShort(this.AlternateKey);
 			} else {
 				m_alternateShortKey = METAPHONE_INVALID_KEY;
@@ -104,7 +104,7 @@ namespace FTAnalyzer
 			base.ComputeKeys(word);
 			
 			m_primaryShortKey = ShortDoubleMetaphone.MetaphoneKeyToShort(this.PrimaryKey);
-			if (this.AlternateKey != null) {
+			if (this.AlternateKey is not null) {
 				m_alternateShortKey = ShortDoubleMetaphone.MetaphoneKeyToShort(this.AlternateKey);
 			} else {
 				m_alternateShortKey = METAPHONE_INVALID_KEY;

@@ -32,7 +32,7 @@ namespace FTAnalyzer
         {
             get
             {
-                return Mother != null && 
+                return Mother is not null && 
                         (MotherRelationship == ParentalRelationshipType.NATURAL || 
                          MotherRelationship == ParentalRelationshipType.UNKNOWN ||
                          MotherRelationship == ParentalRelationshipType.PRIVATE);

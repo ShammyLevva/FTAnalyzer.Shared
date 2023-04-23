@@ -59,7 +59,7 @@
         public int CompareTo(object? obj)
         {
             DisplayFact that = (DisplayFact)obj;
-            return FactDate == that.FactDate && Ind != null ? Ind.CompareTo(that.Ind) : FactDate.CompareTo(that.FactDate);
+            return FactDate == that.FactDate && Ind is not null ? Ind.CompareTo(that.Ind) : FactDate.CompareTo(that.FactDate);
         }
 
         public override bool Equals(object? obj)

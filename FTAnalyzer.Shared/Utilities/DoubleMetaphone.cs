@@ -964,7 +964,7 @@ namespace FTAnalyzer
             }
 
             //Is the alternate character valid?
-            if (alternateCharacter != null)
+            if (alternateCharacter is not null)
             {
                 //Alternate character was provided.  If it is not zero-length, append it, else
                 //append the primary string as long as it wasn't zero length and isn't a space character

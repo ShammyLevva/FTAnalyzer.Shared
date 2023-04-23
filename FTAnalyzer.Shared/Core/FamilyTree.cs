@@ -76,11 +76,11 @@ namespace FTAnalyzer
             if (node.Name.Equals("PAGE") || node.Name.Equals("TITL") || node.Name.Equals("NOTE") || node.Name.Equals("SOUR"))
                 return node.InnerText.Trim();
             XmlNode text = node.SelectSingleNode(".//TEXT");
-            if (text != null && lookForText && text.ChildNodes.Count > 0)
+            if (text is not null && lookForText && text.ChildNodes.Count > 0)
                 return GetContinuationText(text.ChildNodes);
             if (node.FirstChild is null || node.FirstChild.Value is null)
                 return string.Empty;
-            if (node.FirstChild.NextSibling != null)
+            if (node.FirstChild.NextSibling is not null)
                 return GetSiblingText(node.FirstChild, node.ChildNodes);
             return node.FirstChild.Value.Trim();
         }
@@ -257,7 +257,7 @@ namespace FTAnalyzer
                 return null;
             }
             XmlNode treeSoftware = doc.SelectSingleNode("GED/HEAD/SOUR");
-            if (treeSoftware != null)
+            if (treeSoftware is not null)
             {
                 var softwareName = treeSoftware.SelectSingleNode("NAME")?.InnerText;
                 var softwareVersion = treeSoftware.SelectSingleNode("VERS")?.InnerText;
@@ -267,7 +267,7 @@ namespace FTAnalyzer
             XmlNode charset = doc.SelectSingleNode("GED/HEAD/CHAR");
             string fileCharset = charset is null ? "ACSII" : charset.InnerText;
             XmlDocument tempDoc = null;
-            if (charset != null)
+            if (charset is not null)
             {
                 switch (fileCharset)
                 {
@@ -285,7 +285,7 @@ namespace FTAnalyzer
                         break;
                 }
             }
-            if (tempDoc != null && tempDoc.SelectNodes("GED/INDI").Count > 0)
+            if (tempDoc is not null && tempDoc.SelectNodes("GED/INDI").Count > 0)
                 doc = tempDoc;
             if (doc.SelectNodes("GED/INDI").Count == 0)
             {
@@ -302,7 +302,7 @@ namespace FTAnalyzer
         void SetRootIndividual(XmlDocument doc)
         {
             XmlNode root = doc.SelectSingleNode("GED/HEAD/_ROOT");
-            if (root != null)
+            if (root is not null)
             {
                 // file has a root individual
                 try
@@ -430,7 +430,7 @@ namespace FTAnalyzer
                 string place = GetText(node, false);
                 XmlNode lat_node = node.SelectSingleNode("MAP/LATI");
                 XmlNode long_node = node.SelectSingleNode("MAP/LONG");
-                if (place.Length > 0 && lat_node != null && long_node != null)
+                if (place.Length > 0 && lat_node is not null && long_node is not null)
                 {
                     string lat = lat_node.InnerText;
                     string lng = long_node.InnerText;
@@ -604,7 +604,7 @@ namespace FTAnalyzer
             {
                 Individual ind = GetIndividual(t.Item1);
                 Fact fact = t.Item2;
-                if (ind != null && !ind.Facts.ContainsFact(fact))
+                if (ind is not null && !ind.Facts.ContainsFact(fact))
                     ind.AddFact(fact);
             }
         }
@@ -835,10 +835,10 @@ namespace FTAnalyzer
         {
             IEnumerable<CensusFamily> censusFamilies = GetAllCensusFamilies(censusDate, true, false);
 
-            bool missingLC(CensusIndividual x) => x.MissingLostCousins(censusDate, false) && x.CensusReference != null && x.CensusReference.IsGoodStatus;
+            bool missingLC(CensusIndividual x) => x.MissingLostCousins(censusDate, false) && x.CensusReference is not null && x.CensusReference.IsGoodStatus;
             Predicate<CensusIndividual> missingFilter = FilterUtils.AndFilter(relationFilter, missingLC);
             List<CensusIndividual> missingIndiv = censusFamilies.SelectMany(f => f.Members).Filter(missingFilter).Distinct(new CensusIndividualComparer()).ToList();
-            bool invalidRef(CensusIndividual x) => x.MissingLostCousins(censusDate, false) && x.CensusReference != null && !x.CensusReference.IsGoodStatus;
+            bool invalidRef(CensusIndividual x) => x.MissingLostCousins(censusDate, false) && x.CensusReference is not null && !x.CensusReference.IsGoodStatus;
             //bool nameFilter(CensusIndividual x) => x.LCForename.Length > 0 && x.LCSurname.Length > 0 && x.Surname != Individual.UNKNOWN_NAME && x.LCSurname !=Individual.UNKNOWN_NAME;
             //bool ageFilter(CensusIndividual x) => x.Age != Age.Unknown;
             Predicate<CensusIndividual> invalidRefFilter = FilterUtils.AndFilter(relationFilter, invalidRef);
@@ -889,12 +889,12 @@ namespace FTAnalyzer
         {
             foreach (Family f in families)
             {
-                if (f.Husband != null)
+                if (f.Husband is not null)
                 {
                     f.Husband.Infamily = true;
                     f.Husband.ReferralFamilyID = f.FamilyID;
                 }
-                if (f.Wife != null)
+                if (f.Wife is not null)
                 {
                     f.Wife.Infamily = true;
                     f.Wife.ReferralFamilyID = f.FamilyID;
@@ -903,8 +903,8 @@ namespace FTAnalyzer
                 {
                     c.Infamily = true;
                     c.ReferralFamilyID = f.FamilyID;
-                    c.HasParents = f.Husband != null || f.Wife != null;
-                    c.HasOnlyOneParent = (f.Husband != null && f.Wife is null) || (f.Husband is null && f.Wife != null);
+                    c.HasParents = f.Husband is not null || f.Wife is not null;
+                    c.HasOnlyOneParent = (f.Husband is not null && f.Wife is null) || (f.Husband is null && f.Wife is not null);
                 }
             }
             foreach (Individual ind in individuals)
@@ -967,7 +967,7 @@ namespace FTAnalyzer
                 if (ind.RelationType == relationType)
                 {
                     Fact f = ind.GetPreferredFact(factType);
-                    return (f != null && !f.CertificatePresent);
+                    return (f is not null && !f.CertificatePresent);
                 }
                 return false;
             });
@@ -1040,7 +1040,7 @@ namespace FTAnalyzer
         #region Loose Info
         public SortableBindingList<IDisplayLooseInfo> LooseInfo()
         {
-            if (looseInfo != null)
+            if (looseInfo is not null)
                 return looseInfo;
             if (looseBirths is null)
                 LooseBirths();
@@ -1067,7 +1067,7 @@ namespace FTAnalyzer
 
         public SortableBindingList<IDisplayLooseBirth> LooseBirths()
         {
-            if (looseBirths != null)
+            if (looseBirths is not null)
                 return looseBirths;
             SortableBindingList<IDisplayLooseBirth> result = new();
             try
@@ -1134,7 +1134,7 @@ namespace FTAnalyzer
                         }
                     }
                     Individual spouse = fam.Spouse(indiv);
-                    if (spouse != null && spouse.DeathDate.IsKnown)
+                    if (spouse is not null && spouse.DeathDate.IsKnown)
                     {
                         DateTime maxMarried = CreateDate(spouse.DeathEnd.Year - GeneralSettings.Default.MinParentalAge, 12, 31);
                         if (maxMarried < minEnd && maxMarried >= minStart)
@@ -1144,7 +1144,7 @@ namespace FTAnalyzer
                 foreach (ParentalRelationship parents in indiv.FamiliesAsChild)
                 {  // check min date at least X years after parent born and no later than parent dies
                     Family fam = parents.Family;
-                    if (fam.Husband != null)
+                    if (fam.Husband is not null)
                     {
                         if (fam.Husband.BirthDate.IsKnown && fam.Husband.BirthDate.StartDate != FactDate.MINDATE)
                             if (fam.Husband.BirthDate.StartDate.TryAddYears(GeneralSettings.Default.MinParentalAge) > minStart)
@@ -1153,7 +1153,7 @@ namespace FTAnalyzer
                             if (fam.Husband.DeathDate.EndDate.Year != FactDate.MAXDATE.Year && fam.Husband.DeathDate.EndDate.AddMonths(9) < minEnd)
                                 minEnd = CreateDate(fam.Husband.DeathDate.EndDate.AddMonths(9).Year, 1, 1);
                     }
-                    if (fam.Wife != null)
+                    if (fam.Wife is not null)
                     {
                         if (fam.Wife.BirthDate.IsKnown && fam.Wife.BirthDate.StartDate != FactDate.MINDATE)
                             if (fam.Wife.BirthDate.StartDate.TryAddYears(GeneralSettings.Default.MinParentalAge) > minStart)
@@ -1183,7 +1183,7 @@ namespace FTAnalyzer
                 if (birthDate != baseDate)
                     toAdd = baseDate;
             }
-            if (toAdd != null && toAdd != birthDate && toAdd.DistanceSquared(birthDate) > 1)
+            if (toAdd is not null && toAdd != birthDate && toAdd.DistanceSquared(birthDate) > 1)
             {
                 // we have a date to change and its not the same 
                 // range as the existing death date
@@ -1239,7 +1239,7 @@ namespace FTAnalyzer
 
         public SortableBindingList<IDisplayLooseDeath> LooseDeaths()
         {
-            if (looseDeaths != null)
+            if (looseDeaths is not null)
                 return looseDeaths;
             SortableBindingList<IDisplayLooseDeath> result = new();
             try
@@ -1287,7 +1287,7 @@ namespace FTAnalyzer
                     }
                 }
             }
-            if (toAdd != null && toAdd != deathDate && toAdd.DistanceSquared(deathDate) > 1)
+            if (toAdd is not null && toAdd != deathDate && toAdd.DistanceSquared(deathDate) > 1)
             {
                 // we have a date to change and its not the same 
                 // range as the existing death date
@@ -1397,7 +1397,7 @@ namespace FTAnalyzer
             {
                 Family family = parents.Family;
                 // add parents to queue
-                if (family.Husband != null && parents.IsNaturalFather && indiv.RelationType == Individual.DIRECT)
+                if (family.Husband is not null && parents.IsNaturalFather && indiv.RelationType == Individual.DIRECT)
                 {
                     BigInteger newAhnentafel = indiv.Ahnentafel * 2;
                     if (family.Husband.RelationType != Individual.UNKNOWN && family.Husband.Ahnentafel != newAhnentafel)
@@ -1411,7 +1411,7 @@ namespace FTAnalyzer
                     }
                 }
 
-                if (family.Wife != null && parents.IsNaturalMother && indiv.RelationType == Individual.DIRECT)
+                if (family.Wife is not null && parents.IsNaturalMother && indiv.RelationType == Individual.DIRECT)
                 {
                     BigInteger newAhnentafel = indiv.Ahnentafel * 2 + 1;
                     if (family.Wife.RelationType != Individual.UNKNOWN && family.Wife.Ahnentafel != newAhnentafel)
@@ -1437,7 +1437,7 @@ namespace FTAnalyzer
                 string newLine = Relationship.AhnentafelToString(newAhnentafel);
                 if (parent.Ahnentafel > newAhnentafel)
                     parent.Ahnentafel = newAhnentafel; // set to lower line if new direct
-                if (outputText != null)
+                if (outputText is not null)
                 {
                     outputText.Report($"{parent.Name} detected as a direct ancestor more than once as:\n");
                     outputText.Report($"{currentLine} and as:\n");
@@ -1593,7 +1593,7 @@ namespace FTAnalyzer
             {
                 foreach (Family f in i.FamiliesAsSpouse)
                 {
-                    if (i.RelationToRoot is null && f.Spouse(i) != null && f.Spouse(i).IsBloodDirect)
+                    if (i.RelationToRoot is null && f.Spouse(i) is not null && f.Spouse(i).IsBloodDirect)
                     {
                         string relation = f.MaritalStatus != Family.MARRIED ? "partner" : i.IsMale ? "husband" : "wife";
                         i.RelationToRoot = $"{relation} of {f.Spouse(i).RelationToRoot}";
@@ -1629,7 +1629,7 @@ namespace FTAnalyzer
         #region Displays
         public IEnumerable<CensusFamily> GetAllCensusFamilies(CensusDate censusDate, bool censusDone, bool checkCensus)
         {
-            if (censusDate != null)
+            if (censusDate is not null)
             {
                 HashSet<string> individualIDs = new();
                 foreach (Family f in families)
@@ -1766,7 +1766,7 @@ namespace FTAnalyzer
             SortableBindingList<IDisplayFact> result = new();
             foreach (Fact f in source.Facts)
             {
-                if (f.Individual != null)
+                if (f.Individual is not null)
                 {
                     DisplayFact df = new(f.Individual, f);
                     if (!result.ContainsFact(df))
@@ -1774,13 +1774,13 @@ namespace FTAnalyzer
                 }
                 else
                 {
-                    if (f.Family != null && f.Family.Husband != null)
+                    if (f.Family is not null && f.Family.Husband is not null)
                     {
                         DisplayFact df = new(f.Family.Husband, f);
                         if (!result.ContainsFact(df))
                             result.Add(df);
                     }
-                    if (f.Family != null && f.Family.Wife != null)
+                    if (f.Family is not null && f.Family.Wife is not null)
                     {
                         DisplayFact df = new(f.Family.Wife, f);
                         if (!result.ContainsFact(df))
@@ -1867,7 +1867,7 @@ namespace FTAnalyzer
             {
                 SortableBindingList<IDisplayFamily> result = new();
                 foreach (Family fam in families)
-                    if (fam.EldestChild != null && fam.MarriageDate.IsKnown && fam.EldestChild.BirthDate.IsKnown &&
+                    if (fam.EldestChild is not null && fam.MarriageDate.IsKnown && fam.EldestChild.BirthDate.IsKnown &&
                       !fam.EldestChild.BirthDate.IsLongYearSpan && fam.EldestChild.BirthDate.BestYear > fam.MarriageDate.BestYear + 3)
                         result.Add(fam);
                 return result;
@@ -2014,9 +2014,9 @@ namespace FTAnalyzer
                     {
                         if (ind.BirthDate.IsAfter(ind.DeathDate))
                             errors[(int)Dataerror.BIRTH_AFTER_DEATH].Add(new DataError((int)Dataerror.BIRTH_AFTER_DEATH, ind, $"Died {ind.DeathDate} before born {ind.BirthDate}"));
-                        if (ind.BurialDate != null && ind.BirthDate.IsAfter(ind.BurialDate))
+                        if (ind.BurialDate is not null && ind.BirthDate.IsAfter(ind.BurialDate))
                             errors[(int)Dataerror.BIRTH_AFTER_DEATH].Add(new DataError((int)Dataerror.BIRTH_AFTER_DEATH, ind, $"Buried {ind.BurialDate} before born {ind.BirthDate}"));
-                        if (ind.BurialDate != null && ind.BurialDate.IsBefore(ind.DeathDate) && !ind.BurialDate.Overlaps(ind.DeathDate))
+                        if (ind.BurialDate is not null && ind.BurialDate.IsBefore(ind.DeathDate) && !ind.BurialDate.Overlaps(ind.DeathDate))
                             errors[(int)Dataerror.BURIAL_BEFORE_DEATH].Add(new DataError((int)Dataerror.BURIAL_BEFORE_DEATH, ind, $"Buried {ind.BurialDate} before died {ind.DeathDate}"));
                         int minAge = ind.GetMinAge(ind.DeathDate);
                         if (minAge > FactDate.MAXYEARS)
@@ -2119,7 +2119,7 @@ namespace FTAnalyzer
                     foreach (string dfs in dup)
                     {
                         var df = ind.AllFacts.First(x => x.EqualHash.Equals(dfs));
-                        if (df != null)
+                        if (df is not null)
                         {
                             dupList.Add(df);
                             errors[(int)Dataerror.DUPLICATE_FACT].Add(
@@ -2131,7 +2131,7 @@ namespace FTAnalyzer
                     foreach (string pd in possDuplicates)
                     {
                         var pdf = ind.AllFacts.First(x => x.PossiblyEqualHash.Equals(pd));
-                        if (pdf != null && !dupList.ContainsFact(pdf))
+                        if (pdf is not null && !dupList.ContainsFact(pdf))
                         {
                             errors[(int)Dataerror.POSSIBLE_DUPLICATE_FACT].Add(
                                             new DataError((int)Dataerror.POSSIBLE_DUPLICATE_FACT, Fact.FactError.QUESTIONABLE,
@@ -2145,7 +2145,7 @@ namespace FTAnalyzer
                     {
                         Family asChild = parents.Family;
                         Individual father = asChild.Husband;
-                        if (father != null && ind.BirthDate.StartDate.Year != 1 && parents.IsNaturalFather)
+                        if (father is not null && ind.BirthDate.StartDate.Year != 1 && parents.IsNaturalFather)
                         {
                             int minAge = father.GetMinAge(ind.BirthDate);
                             int maxAge = father.GetMaxAge(ind.BirthDate);
@@ -2161,7 +2161,7 @@ namespace FTAnalyzer
                             }
                         }
                         Individual mother = asChild.Wife;
-                        if (mother != null && ind.BirthDate.StartDate.Year != 1 && parents.IsNaturalMother)
+                        if (mother is not null && ind.BirthDate.StartDate.Year != 1 && parents.IsNaturalMother)
                         {
                             int minAge = mother.GetMinAge(ind.BirthDate);
                             int maxAge = mother.GetMaxAge(ind.BirthDate);
@@ -2177,11 +2177,11 @@ namespace FTAnalyzer
                     foreach (Family asParent in ind.FamiliesAsSpouse)
                     {
                         Individual spouse = asParent.Spouse(ind);
-                        if (asParent.MarriageDate != null && spouse != null)
+                        if (asParent.MarriageDate is not null && spouse is not null)
                         {
-                            if (ind.DeathDate != null && asParent.MarriageDate.IsAfter(ind.DeathDate))
+                            if (ind.DeathDate is not null && asParent.MarriageDate.IsAfter(ind.DeathDate))
                                 errors[(int)Dataerror.MARRIAGE_AFTER_DEATH].Add(new DataError((int)Dataerror.MARRIAGE_AFTER_DEATH, ind, $"Marriage to {spouse.Name} in {asParent.MarriageDate} is after individual died on {ind.DeathDate}"));
-                            if (spouse.DeathDate != null && asParent.MarriageDate.IsAfter(spouse.DeathDate))
+                            if (spouse.DeathDate is not null && asParent.MarriageDate.IsAfter(spouse.DeathDate))
                                 errors[(int)Dataerror.MARRIAGE_AFTER_SPOUSE_DEAD].Add(new DataError((int)Dataerror.MARRIAGE_AFTER_SPOUSE_DEAD, ind, $"Marriage to {spouse.Name} in {asParent.MarriageDate} is after spouse died {spouse.DeathDate}"));
                             int maxAge = ind.GetMaxAge(asParent.MarriageDate);
                             if (maxAge < 13 && ind.BirthDate.IsAfter(FactDate.MARRIAGE_LESS_THAN_13))
@@ -2196,7 +2196,7 @@ namespace FTAnalyzer
                                 if (husband.Surname != wifesFather?.Surname && husband.Surname != Individual.UNKNOWN_NAME) // if couple have same surname and wife is different from her natural father then likely error
                                     errors[(int)Dataerror.SAME_SURNAME_COUPLE].Add(new DataError((int)Dataerror.SAME_SURNAME_COUPLE, ind, $"Spouse {spouse.Name} has same surname. Usually due to wife incorrectly recorded with married instead of maiden name."));
                             }
-                            //if (ind.FirstMarriage != null && ind.FirstMarriage.MarriageDate != null)
+                            //if (ind.FirstMarriage is not null && ind.FirstMarriage.MarriageDate is not null)
                             //{
                             //    if (asParent.MarriageDate.isAfter(ind.FirstMarriage.MarriageDate))
                             //    {  // we have a later marriage now see if first marriage spouse is still alive
@@ -2358,7 +2358,7 @@ namespace FTAnalyzer
                     uri = BuildScotlandsPeopleCensusQuery(censusYear, person);
                     break;
             }
-            if (uri != null)
+            if (uri is not null)
             {
                 SpecialMethods.VisitWebsite(uri);
                 Analytics.TrackAction(Analytics.CensusSearchAction, $"Searching {provider} {censusYear}");
@@ -2837,14 +2837,14 @@ namespace FTAnalyzer
             if (censusYear == 1911 && Countries.IsUnitedKingdom(censusCountry))
             {
                 CensusReference reference = person.GetCensusReference(CensusDate.EWCENSUS1911);
-                if (reference?.Piece != null && reference.Schedule == "Missing")
+                if (reference?.Piece is not null && reference.Schedule == "Missing")
                     query.Append($"pieceno={reference.Piece}");
             }
             //if (person.BirthLocation != FactLocation.UNKNOWN_LOCATION)
             //{
             //    query.Append("birthPlace=" + HttpUtility.UrlEncode(person.BirthLocation.SubRegion) + "&");
             //    Tuple<string, string> area = person.BirthLocation.FindMyPastCountyCode;
-            //    if (area != null)
+            //    if (area is not null)
             //    {
             //        query.Append("country=" + HttpUtility.UrlEncode(area.Item1) + "&");
             //        query.Append("coIdList=" + HttpUtility.UrlEncode(area.Item2));
@@ -3013,7 +3013,7 @@ namespace FTAnalyzer
                 else if (st == SearchType.MARRIAGE)
                 {
                     query.Append("&record_type=stat_marriages");
-                    if (spouse != null)
+                    if (spouse is not null)
                         query.Append($"&spsurname={HttpUtility.UrlEncode(spouse.Surname)}&spsurname_so=soundex&spforename={HttpUtility.UrlEncode(spouse.Forename)}&spforename_so=syn");
                 }
                 else if (st == SearchType.DEATH)
@@ -3037,7 +3037,7 @@ namespace FTAnalyzer
                 query.Append($"&surname={HttpUtility.UrlEncode(individual.Surname)}&surname_so=soundex");
                 if (individual.Forename != "?" && individual.Forename.ToUpper() != Individual.UNKNOWN_NAME)
                     query.Append($"&forename={HttpUtility.UrlEncode(individual.Forename)}&forename_so=syn");
-                if (st == SearchType.MARRIAGE && spouse != null)
+                if (st == SearchType.MARRIAGE && spouse is not null)
                     query.Append($"&spouse_name={HttpUtility.UrlEncode(spouse.Surname)}&spouse_name_so=fuzzy");
                 int fromYear = Math.Max(factdate.StartDate.Year - 1, 1553);
                 int toYear = Math.Min(factdate.EndDate.Year + 1, 1854);
@@ -3407,7 +3407,7 @@ namespace FTAnalyzer
                 foreach (Family f in parent.FamiliesAsSpouse)
                 {
                     Individual spouse = f.Spouse(parent);
-                    if (spouse != null && !processed.ContainsKey(spouse.IndividualID))
+                    if (spouse is not null && !processed.ContainsKey(spouse.IndividualID))
                     {
                         queue.Enqueue(spouse);
                         results.Add(spouse);
@@ -3437,7 +3437,7 @@ namespace FTAnalyzer
 
         public async Task<SortableBindingList<IDisplayDuplicateIndividual>> GenerateDuplicatesList(int value, bool ignoreUnknownTwins, IProgress<int> progress, IProgress<string> progressText, IProgress<int> maximum, CancellationToken ct)
         {
-            if (duplicates != null)
+            if (duplicates is not null)
             {
                 maximum.Report(MaxDuplicateScore());
                 return BuildDuplicateList(value, progress, progressText); // we have already processed the duplicates since the file was loaded
@@ -3489,7 +3489,7 @@ namespace FTAnalyzer
             int score = 0;
             foreach (DuplicateIndividual dup in buildDuplicates)
             {
-                if (dup != null && dup.Score > score)
+                if (dup is not null && dup.Score > score)
                     score = dup.Score;
             }
             return score;
@@ -3625,7 +3625,7 @@ namespace FTAnalyzer
         public HashSet<string> UnrecognisedCensusReferences()
         {
             var result = new HashSet<string>();
-            IEnumerable<Fact> unrecognised = AllIndividuals.SelectMany(x => x.PersonalFacts.Filter(f => f.IsCensusFact && f.CensusReference != null && f.CensusReference.Status.Equals(CensusReference.ReferenceStatus.UNRECOGNISED)));
+            IEnumerable<Fact> unrecognised = AllIndividuals.SelectMany(x => x.PersonalFacts.Filter(f => f.IsCensusFact && f.CensusReference is not null && f.CensusReference.Status.Equals(CensusReference.ReferenceStatus.UNRECOGNISED)));
             foreach (Fact f in unrecognised)
                 result.Add(CensusReference.ClearCommonPhrases(f.CensusReference.Reference));
             return result;
@@ -3634,7 +3634,7 @@ namespace FTAnalyzer
         public HashSet<string> MissingCensusReferences()
         {
             var result = new HashSet<string>();
-            IEnumerable<Fact> missing = AllIndividuals.SelectMany(x => x.PersonalFacts.Filter(f => f.IsCensusFact && f.CensusReference != null && f.CensusReference.Status.Equals(CensusReference.ReferenceStatus.BLANK)));
+            IEnumerable<Fact> missing = AllIndividuals.SelectMany(x => x.PersonalFacts.Filter(f => f.IsCensusFact && f.CensusReference is not null && f.CensusReference.Status.Equals(CensusReference.ReferenceStatus.BLANK)));
             foreach (Fact f in missing)
                 result.Add(CensusReference.ClearCommonPhrases(f.SourceList)); // for missing census references show sources for census fact
             return result;
