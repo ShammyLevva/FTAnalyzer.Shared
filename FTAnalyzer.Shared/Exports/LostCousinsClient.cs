@@ -158,7 +158,7 @@ namespace FTAnalyzer.Exports
 
         public string GetCensusSpecificFields(Dictionary<string, string> output, CensusIndividual ind)
         {
-            CensusReference censusRef = ind.CensusReference;
+            CensusReference? censusRef = ind.CensusReference;
             if (ind.CensusDate.Overlaps(CensusDate.EWCENSUS1841) && Countries.IsEnglandWales(ind.CensusCountry))
             {
                 output.Add("census_code", "1841");
