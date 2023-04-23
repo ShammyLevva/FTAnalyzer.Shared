@@ -757,9 +757,9 @@ namespace FTAnalyzer
             return false;
         }
 
-        public bool IsCensusDone(CensusDate when) => IsCensusDone(when, true, true);
-        public bool IsCensusDone(CensusDate when, bool includeUnknownCountries) => IsCensusDone(when, includeUnknownCountries, true);
-        public bool IsCensusDone(CensusDate when, bool includeUnknownCountries, bool checkCountry)
+        public bool IsCensusDone(CensusDate? when) => IsCensusDone(when, true, true);
+        public bool IsCensusDone(CensusDate? when, bool includeUnknownCountries) => IsCensusDone(when, includeUnknownCountries, true);
+        public bool IsCensusDone(CensusDate? when, bool includeUnknownCountries, bool checkCountry)
         {
             if (when is null) return false;
             foreach (Fact f in Facts)
@@ -777,10 +777,10 @@ namespace FTAnalyzer
             return false;
         }
 
-        public bool IsTaggedMissingCensus(CensusDate when) => when is not null && Facts.Any(x => x.FactType == Fact.MISSING && x.FactDate.Overlaps(when));
+        public bool IsTaggedMissingCensus(CensusDate? when) => when is not null && Facts.Any(x => x.FactType == Fact.MISSING && x.FactDate.Overlaps(when));
 
-        public bool IsLostCousinsEntered(CensusDate when) => when is not null && IsLostCousinsEntered(when, true);
-        public bool IsLostCousinsEntered(CensusDate when, bool includeUnknownCountries)
+        public bool IsLostCousinsEntered(CensusDate? when) => when is not null && IsLostCousinsEntered(when, true);
+        public bool IsLostCousinsEntered(CensusDate? when, bool includeUnknownCountries)
         {
             if (when is null) return false;
             foreach (Fact f in Facts)
