@@ -1144,7 +1144,7 @@ namespace FTAnalyzer
                                 minStart = maxChild;
                         }
                     }
-                    Individual spouse = fam.Spouse(indiv);
+                    Individual? spouse = fam.Spouse(indiv);
                     if (spouse is not null && spouse.DeathDate.IsKnown)
                     {
                         DateTime maxMarried = CreateDate(spouse.DeathEnd.Year - GeneralSettings.Default.MinParentalAge, 12, 31);
@@ -2187,7 +2187,7 @@ namespace FTAnalyzer
                     List<Individual> womansChildren = new();
                     foreach (Family asParent in ind.FamiliesAsSpouse)
                     {
-                        Individual spouse = asParent.Spouse(ind);
+                        Individual? spouse = asParent.Spouse(ind);
                         if (asParent.MarriageDate is not null && spouse is not null)
                         {
                             if (ind.DeathDate is not null && asParent.MarriageDate.IsAfter(ind.DeathDate))
@@ -3417,7 +3417,7 @@ namespace FTAnalyzer
                 processed.Add(parent.IndividualID, parent);
                 foreach (Family f in parent.FamiliesAsSpouse)
                 {
-                    Individual spouse = f.Spouse(parent);
+                    Individual? spouse = f.Spouse(parent);
                     if (spouse is not null && !processed.ContainsKey(spouse.IndividualID))
                     {
                         queue.Enqueue(spouse);
