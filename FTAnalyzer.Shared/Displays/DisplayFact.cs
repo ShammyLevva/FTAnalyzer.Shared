@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace FTAnalyzer
+﻿namespace FTAnalyzer
 {
     public class DisplayFact : IDisplayFact, IComparable
     {
@@ -12,8 +9,8 @@ namespace FTAnalyzer
         public bool IgnoreFact { get; set; }
 
 #if __PC__
-        public System.Drawing.Image Icon { get; private set; }
-        public System.Drawing.Color BackColour { get; set; }
+        public Image Icon { get; private set; }
+        public Color BackColour { get; set; }
 #endif
         public DisplayFact(Individual ind, Fact fact) : this(ind, ind.Surname, ind.Forenames, fact) { }
         public DisplayFact(Individual ind, string surname, string forenames, Fact fact)
@@ -45,7 +42,7 @@ namespace FTAnalyzer
         public string FoundResultType => Fact.Location.FoundResultType;
         public string GeocodeStatus => Fact.Location.Geocoded;
 #if __PC__
-        public System.Drawing.Image LocationIcon => GraphicsUtilities.ResizeImageToCurrentScale(FactLocationImage.ErrorIcon(Fact.Location.GeocodeStatus).Icon);
+        public Image LocationIcon => GraphicsUtilities.ResizeImageToCurrentScale(FactLocationImage.ErrorIcon(Fact.Location.GeocodeStatus).Icon);
         public bool Preferred => Fact.Preferred;
         public bool IgnoredFact => IgnoreFact;
 #elif __MACOS__ || __IOS__
@@ -59,7 +56,7 @@ namespace FTAnalyzer
                                               Ind.IndividualID + Fact.Preferred + Fact.FactTypeDescription + Fact.DateString + Fact.Location.OriginalText;
         public string ErrorComment => Fact.FactErrorMessage;
 
-        public int CompareTo(object obj)
+        public int CompareTo(object? obj)
         {
             DisplayFact that = (DisplayFact)obj;
             return FactDate == that.FactDate && Ind != null ? Ind.CompareTo(that.Ind) : FactDate.CompareTo(that.FactDate);

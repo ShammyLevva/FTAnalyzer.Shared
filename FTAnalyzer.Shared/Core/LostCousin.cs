@@ -101,7 +101,7 @@ namespace FTAnalyzer
 
         public override string ToString() => $"{Name} b.{BirthYear}, ref: {Reference} {CensusDate}";
 
-        public bool Equals(LostCousin other)
+        public bool Equals(LostCousin? other)
         {
             if (other is null) return false;
             if(CensusDate != other.CensusDate || Reference != other.Reference || Math.Abs(BirthYear - other.BirthYear) >= 5)

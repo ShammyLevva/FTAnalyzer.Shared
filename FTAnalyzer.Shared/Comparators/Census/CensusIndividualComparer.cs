@@ -6,7 +6,7 @@ namespace FTAnalyzer
 {
     class CensusIndividualComparer : IEqualityComparer<CensusIndividual>
     {
-        public bool Equals(CensusIndividual x, CensusIndividual y)
+        public bool Equals(CensusIndividual? x, CensusIndividual? y)
         {
             return x.IndividualID.Equals(y.IndividualID);
         }

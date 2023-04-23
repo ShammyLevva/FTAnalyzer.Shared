@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 
@@ -22,7 +20,7 @@ namespace FTAnalyzer.Utilities
 
         #region IComparer<T> Members
 
-        public int Compare(T x, T y)
+        public int Compare(T? x, T? y)
         {
             var xValue = propertyDescriptor.GetValue(x);
             var yValue = propertyDescriptor.GetValue(y);

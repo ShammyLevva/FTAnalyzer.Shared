@@ -2058,6 +2058,6 @@ namespace FTAnalyzer
 
         public override string ToString() => Reference.Trim();
 
-        public int CompareTo(CensusReference that) => string.Compare(Reference, that.Reference, StringComparison.Ordinal);
+        public int CompareTo(CensusReference? that) => string.Compare(Reference, that.Reference, StringComparison.Ordinal);
     }
 }

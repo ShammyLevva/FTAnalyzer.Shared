@@ -1132,9 +1132,9 @@ namespace FTAnalyzer
 
         public override int GetHashCode() => base.GetHashCode();
 
-        public int CompareTo(object that) => CompareTo(that as FactDate);
+        public int CompareTo(object? that) => CompareTo(that as FactDate);
 
-        public int CompareTo(FactDate that)
+        public int CompareTo(FactDate? that)
         {
             if (Equals(that))
                 return 0;

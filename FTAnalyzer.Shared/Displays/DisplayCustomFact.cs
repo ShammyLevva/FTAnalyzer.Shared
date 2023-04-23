@@ -18,7 +18,7 @@ namespace FTAnalyzer
             Ignore = ignore;
         }
 
-        public int CompareTo(IDisplayCustomFact that) => string.Compare(CustomFactName, that.CustomFactName, System.StringComparison.Ordinal);
+        public int CompareTo(IDisplayCustomFact? that) => string.Compare(CustomFactName, that.CustomFactName, System.StringComparison.Ordinal);
 
         public IComparer<IDisplayCustomFact> GetComparer(string columnName, bool ascending)
         {
