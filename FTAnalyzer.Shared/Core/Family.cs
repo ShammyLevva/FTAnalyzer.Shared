@@ -421,7 +421,7 @@ namespace FTAnalyzer
         public void SetBudgieCode(Individual ind, int lenAhnentafel)
         {
             if (ind is null) return;
-            Individual spouse = Spouse(ind);
+            Individual? spouse = Spouse(ind);
             if (spouse is not null && string.IsNullOrEmpty(spouse.BudgieCode))
                 spouse.BudgieCode = ind.BudgieCode + "*s";
             int directChild = 0;
