@@ -19,14 +19,14 @@ namespace FTAnalyzer.Utilities
             try
             {
                 using SaveFileDialog saveFileDialog = new();
-                string initialDir = (string)Application.UserAppDataRegistry.GetValue("Excel Export Individual Path");
+                string initialDir = Application.UserAppDataRegistry.GetValue("Excel Export Individual Path").ToString() ?? string.Empty;
                 saveFileDialog.InitialDirectory = initialDir ?? Environment.SpecialFolder.MyDocuments.ToString();
                 saveFileDialog.Filter = "Comma Separated Value (*.csv)|*.csv";
                 saveFileDialog.FilterIndex = 1;
                 DialogResult dr = saveFileDialog.ShowDialog();
                 if (dr == DialogResult.OK)
                 {
-                    string path = Path.GetDirectoryName(saveFileDialog.FileName);
+                    string path = Path.GetDirectoryName(saveFileDialog.FileName) ?? string.Empty;
                     Application.UserAppDataRegistry.SetValue("Excel Export Individual Path", path);
                     WriteFile(dt, saveFileDialog.FileName);
                     UIHelpers.ShowMessage($"File written to {saveFileDialog.FileName}", "FTAnalyzer");
