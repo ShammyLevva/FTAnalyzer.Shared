@@ -1,8 +1,5 @@
-using FTAnalyzer;
 using FTAnalyzer.Utilities;
-using FTAnalyzer.Windows;
 using System.Net;
-using System.Text;
 
 namespace FTAnalyzer.Exports
 {
