@@ -69,7 +69,7 @@ namespace FTAnalyzer
                 {
                     if (n.Attributes["REF"] is not null)
                     {
-                        Individual child = ft.GetIndividual(n.Attributes["REF"].Value);
+                        Individual? child = ft.GetIndividual(n.Attributes["REF"].Value);
                         if (child is not null)
                         {
                             XmlNode? fatherNode = n.SelectSingleNode("_FREL");
@@ -279,7 +279,7 @@ namespace FTAnalyzer
         /**
          * @return Returns the first fact of the given type.
          */
-        public Fact GetPreferredFact(string factType) => _preferredFacts.ContainsKey(factType) ? _preferredFacts[factType] : null;
+        public Fact? GetPreferredFact(string factType) => _preferredFacts.ContainsKey(factType) ? _preferredFacts[factType] : null;
 
         /**
          * @return Returns the first fact of the given type.
@@ -381,7 +381,7 @@ namespace FTAnalyzer
             }
         }
 
-        public Individual Spouse(Individual ind)
+        public Individual? Spouse(Individual ind)
         {
             if (ind is null) return null;
             if (ind.Equals(Husband))
@@ -414,7 +414,7 @@ namespace FTAnalyzer
 
         public bool HasAnyChildrenStatus => Facts.Any(f => f.FactType == Fact.CHILDREN1911);
 
-        public Individual EldestChild => Children.Count == 0 ? null : Children[0];
+        public Individual? EldestChild => Children.Count == 0 ? null : Children[0];
 
         #endregion
 
@@ -466,7 +466,7 @@ namespace FTAnalyzer
         public void SetSpouseRelation(Individual ind, int relationType)
         {
             if (ind is null) return;
-            Individual spouse = Spouse(ind); 
+            Individual? spouse = Spouse(ind); 
             if (spouse is not null)
                 spouse.RelationType = relationType;
         }
@@ -670,7 +670,7 @@ namespace FTAnalyzer
                 "Location" => CompareComparableProperty<IDisplayFamily>(f => f.Location, ascending),
                 "Children" => CompareComparableProperty<IDisplayFamily>(f => f.Children, ascending),
                 "FamilySize" => CompareComparableProperty<IDisplayFamily>(f => f.FamilySize, ascending),
-                _ => null,
+                _ => CompareComparableProperty<IDisplayFamily>(f => f.FamilyID, ascending),
             };
         }
 

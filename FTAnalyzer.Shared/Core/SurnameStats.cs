@@ -32,7 +32,7 @@ namespace FTAnalyzer
                 "Individuals" => CompareComparableProperty<IDisplaySurnames>(f => f.Individuals, ascending),
                 "Families" => CompareComparableProperty<IDisplaySurnames>(f => f.Families, ascending),
                 "Marriages" => CompareComparableProperty<IDisplaySurnames>(f => f.Marriages, ascending),
-                _ => null,
+                _ => CompareComparableProperty<IDisplaySurnames>(f => f.Surname, ascending),
             };
         }
 

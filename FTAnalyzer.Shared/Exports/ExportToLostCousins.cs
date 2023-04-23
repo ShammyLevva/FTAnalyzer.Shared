@@ -107,7 +107,7 @@ namespace FTAnalyzer.Exports
         {
             FactLocation location = FactLocation.GetLocation(ind.CensusCountry);
             Fact f = new(ind.CensusRef, Fact.LC_FTA, ind.CensusDate, location, string.Empty, true, true);
-            Individual person = FamilyTree.Instance.GetIndividual(ind.IndividualID); // get the individual not the census indvidual
+            Individual? person = FamilyTree.Instance.GetIndividual(ind.IndividualID); // get the individual not the census indvidual
             if(person is not null && !person.HasLostCousinsFactAtDate(ind.CensusDate))
                 person.AddFact(f);
         }
@@ -173,7 +173,7 @@ namespace FTAnalyzer.Exports
             catch (Exception e)
             {
                 outputText.Report($"\nProblem accessing Lost Cousins Website to read current ancestor list. Error message is: {e.Message}\n");
-                return null;
+                return new List<LostCousin>();
             }
             return websiteList;
         }

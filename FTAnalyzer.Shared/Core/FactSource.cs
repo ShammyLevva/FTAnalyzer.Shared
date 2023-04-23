@@ -94,7 +94,7 @@ namespace FTAnalyzer
                 "SourceText" => CompareComparableProperty<IDisplaySource>(f => f.SourceText, ascending),
                 "SourceMedium" => CompareComparableProperty<IDisplaySource>(f => f.SourceMedium, ascending),
                 "FactCount" => CompareComparableProperty<IDisplaySource>(f => f.FactCount, ascending),
-                _ => null,
+                _ => CompareComparableProperty<IDisplaySource>(f => f.SourceID, ascending),
             };
         }
 

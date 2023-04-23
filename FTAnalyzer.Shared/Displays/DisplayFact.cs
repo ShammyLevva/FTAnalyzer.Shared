@@ -33,7 +33,7 @@
         public double Longitude => Fact.Location.Longitude;
         public string Comment => Fact.Comment;
         public string IndividualID => Ind is null ? string.Empty : Ind.IndividualID;
-        public Age AgeAtFact => Ind?.GetAge(Fact.FactDate, Fact.FactType);
+        public Age AgeAtFact => Ind?.GetAge(Fact.FactDate, Fact.FactType) ?? Age.BIRTH;
         public int SourcesCount => Fact.SourcesCount;
         public string SourceList => Fact.SourceList;
         public CensusReference CensusReference => Fact.CensusReference;
@@ -101,7 +101,7 @@
                 "Longitude" => CompareComparableProperty<IDisplayFact>(f => f.Longitude, ascending),
                 "Preferred" => CompareComparableProperty<IDisplayFact>(f => f.Preferred, ascending),
                 "IgnoredFact" => CompareComparableProperty<IDisplayFact>(f => f.IgnoredFact, ascending),
-                _ => null,
+                _ => CompareComparableProperty<IDisplayFact>(f => f.IndividualID, ascending),
             };
         }
 

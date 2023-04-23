@@ -69,7 +69,7 @@ namespace FTAnalyzer
         public static CensusLocation GetCensusLocation(string year, string piece)
         {
             Tuple<string, string> key = new(year, piece);
-            CENSUSLOCATIONS.TryGetValue(key, out CensusLocation result);
+            CENSUSLOCATIONS.TryGetValue(key, out CensusLocation? result);
             return result ?? UNKNOWN;
         }
 

@@ -19,7 +19,7 @@
             {
                 "Occupation" => CompareComparableProperty<IDisplayOccupation>(f => f.Occupation, ascending),
                 "Count" => CompareComparableProperty<IDisplayOccupation>(f => f.Count, ascending),
-                _ => null,
+                _ => CompareComparableProperty<IDisplayOccupation>(f => f.Occupation, ascending),
             };
         }
 

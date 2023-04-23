@@ -67,7 +67,7 @@ namespace FTAnalyzer
             }
         }
 
-        public CensusReference CensusReference
+        public CensusReference? CensusReference
         {
             get
             {

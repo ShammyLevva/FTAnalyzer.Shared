@@ -847,7 +847,7 @@ namespace FTAnalyzer
             return new List<ModernCounty>();
         }
 
-        public static ModernCounty OS_GetCounty(string code)
+        public static ModernCounty? OS_GetCounty(string code)
         {
             return MODERN_COUNTIES.FirstOrDefault(c => c.CountyCode.Equals(code));
         }
@@ -873,7 +873,7 @@ namespace FTAnalyzer
             return PREFERRED_REGIONS.Any(x => x.PreferredName.Equals(region));
         }
 
-        public static Region GetRegion(string region)
+        public static Region? GetRegion(string region)
         {
             region = EnhancedTextInfo.RemoveDiacritics(region); // remove any special characters for Known Region processing
             if (VALID_REGIONS.TryGetValue(region, out Region? result))

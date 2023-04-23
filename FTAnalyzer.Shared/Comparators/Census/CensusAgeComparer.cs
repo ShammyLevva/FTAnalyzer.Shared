@@ -28,8 +28,8 @@ namespace FTAnalyzer
 
         static int SortBirthdate(Individual i1, Individual i2)
         {
-            Fact b1 = i1.BirthFact;
-            Fact b2 = i2.BirthFact;
+            Fact? b1 = i1?.BirthFact;
+            Fact? b2 = i2?.BirthFact;
             FactDate d1 = (b1 is null) ? FactDate.UNKNOWN_DATE : b1.FactDate;
             FactDate d2 = (b2 is null) ? FactDate.UNKNOWN_DATE : b2.FactDate;
             return d1.CompareTo(d2);
