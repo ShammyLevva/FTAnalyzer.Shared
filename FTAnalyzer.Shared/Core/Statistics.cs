@@ -3,6 +3,7 @@ using System.Net;
 using FTAnalyzer.Filters;
 using System.Collections.Specialized;
 using System.Diagnostics;
+using FTAnalyzer.Windows;
 
 namespace FTAnalyzer
 {
@@ -101,24 +102,36 @@ namespace FTAnalyzer
             return surnames.Distinct(new SurnameStatsComparer()).ToList();
         }
 
-        public static void DisplayGOONSpage(string surname)
+        public static async void DisplayGOONSpage(string surname)
         {
             try
             {
-                using WebClient client = new();
-                string website = "https://one-name.org/Results";
-                NameValueCollection reqparm = new()
+                Dictionary<string, string> parameters = new()
                     {
                         { "surname", surname },
                         { "_wpnonce", "4cc97f97c8" },
                         { "_wp_http_referer", "/Results" },
                         { "submit", "Search" }
                     };
-                byte[] responsebytes = client.UploadValues(website, "POST", reqparm);
-                string responsebody = Encoding.UTF8.GetString(responsebytes);
+                HttpRequestMessage req = new(HttpMethod.Post, "https://one-name.org/Results")
+                {
+                    Content = new FormUrlEncodedContent(parameters)
+                };
+                req.Content.Headers.Clear();
+                req.Content.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
+                HttpResponseMessage response = await Program.Client.SendAsync(req);
+                response.EnsureSuccessStatusCode();
+                string responsebody = await response.Content.ReadAsStringAsync();
                 string filename = Path.Combine(Path.GetTempPath(), "FTA-GOONS.html");
                 File.WriteAllText(filename, responsebody);
-                Process.Start(filename);
+                Process p = new()
+                {
+                    StartInfo = new ProcessStartInfo(filename)
+                    {
+                        UseShellExecute = true
+                    }
+                };
+                p.Start();
             }
             catch (Exception)
             { // silently fail
