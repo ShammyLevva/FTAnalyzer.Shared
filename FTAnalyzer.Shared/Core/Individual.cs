@@ -892,7 +892,7 @@ namespace FTAnalyzer
                 if (n.Attributes["REF"] is not null)
                 {   // only process sources with a reference
                     string srcref = n.Attributes["REF"].Value;
-                    FactSource source = FamilyTree.Instance.GetSource(srcref);
+                    FactSource? source = FamilyTree.Instance.GetSource(srcref);
                     if (source is not null)
                     {
                         nameFact.Sources.Add(source);

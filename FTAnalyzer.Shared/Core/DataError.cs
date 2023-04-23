@@ -59,7 +59,7 @@ namespace FTAnalyzer
                 "Born" => CompareComparableProperty<IDisplayDataError>(f => f.Born, ascending),
                 "Died" => CompareComparableProperty<IDisplayDataError>(f => f.Died, ascending),
                 //case "IsFamily": return CompareComparableProperty<IDisplayDataError>(f => f.IsFamily, ascending);
-                _ => null,
+                _ => CompareComparableProperty<IDisplayDataError>(f => f.ErrorType, ascending),
             };
         }
 
