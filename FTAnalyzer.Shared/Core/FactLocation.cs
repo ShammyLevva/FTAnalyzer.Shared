@@ -1207,7 +1207,7 @@ namespace FTAnalyzer
 
         public override string ToString() => GeneralSettings.Default.SkipFixingLocations ? OriginalText : FixedLocation; //return location;
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return obj is FactLocation location && CompareTo(location) == 0;
         }

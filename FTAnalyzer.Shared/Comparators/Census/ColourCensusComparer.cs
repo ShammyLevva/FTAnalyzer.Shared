@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace FTAnalyzer
+﻿namespace FTAnalyzer
 {
     public class ColourCensusComparer : Comparer<IDisplayColourCensus>
     {
-        public override int Compare(IDisplayColourCensus x, IDisplayColourCensus y)
+        public override int Compare(IDisplayColourCensus? x, IDisplayColourCensus? y)
         {
             return x.Surname == y.Surname
                 ? x.Forenames == y.Forenames

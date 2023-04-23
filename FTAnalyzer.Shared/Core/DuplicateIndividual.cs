@@ -158,7 +158,7 @@
             return score;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is DuplicateIndividual individual)
                 return (IndividualA.Equals(individual.IndividualA) && IndividualB.Equals(individual.IndividualB))

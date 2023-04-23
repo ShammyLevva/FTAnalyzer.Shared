@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace FTAnalyzer
+﻿namespace FTAnalyzer
 {
     public class FamilySizeComparer : Comparer<IDisplayFamily>
     {
@@ -8,14 +6,14 @@ namespace FTAnalyzer
 
         public FamilySizeComparer(bool countSortLow) => CountSortLow = countSortLow;
 
-        public override int Compare(IDisplayFamily x, IDisplayFamily y)
+        public override int Compare(IDisplayFamily? x, IDisplayFamily? y)
         {
             return CountSortLow
                 ? x.FamilySize == y.FamilySize
-                    ? string.Compare(x.FamilyID, y.FamilyID, System.StringComparison.Ordinal)
+                    ? string.Compare(x.FamilyID, y.FamilyID, StringComparison.Ordinal)
                     : x.FamilySize.CompareTo(y.FamilySize)
                 : x.FamilySize == y.FamilySize
-                    ? string.Compare(y.FamilyID, x.FamilyID, System.StringComparison.Ordinal)
+                    ? string.Compare(y.FamilyID, x.FamilyID, StringComparison.Ordinal)
                     : y.FamilySize.CompareTo(x.FamilySize);
         }
     }

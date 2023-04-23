@@ -5,12 +5,12 @@ namespace FTAnalyzer.Exports
 {
     public class JsonFactDateConverter : JsonConverter<FactDate>
     {
-        public override FactDate ReadJson(JsonReader reader, Type objectType, FactDate existingValue, bool hasExistingValue, JsonSerializer serializer)
+        public override FactDate ReadJson(JsonReader reader, Type objectType, FactDate? existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
             throw new NotImplementedException();
         }
 
-        public override void WriteJson(JsonWriter writer, FactDate value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, FactDate? value, JsonSerializer serializer)
         {
             if (writer is null || value is null || serializer is null) return;
             writer.WriteStartObject();

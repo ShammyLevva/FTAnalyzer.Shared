@@ -1099,7 +1099,7 @@ namespace FTAnalyzer
         #endregion
 
         #region Overrides
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is null || obj is not FactDate)
                 return false;

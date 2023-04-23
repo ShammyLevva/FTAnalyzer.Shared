@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FTAnalyzer
+﻿namespace FTAnalyzer
 {
     public class ExportFactsAtLocation
     {
@@ -17,7 +13,7 @@ namespace FTAnalyzer
     {
         public FactsAtLocationComparer() { }
 
-        public override int Compare(ExportFactsAtLocation x, ExportFactsAtLocation y)
+        public override int Compare(ExportFactsAtLocation? x, ExportFactsAtLocation? y)
         {
             return x.SortableLocation.CompareTo(y.SortableLocation);
         }

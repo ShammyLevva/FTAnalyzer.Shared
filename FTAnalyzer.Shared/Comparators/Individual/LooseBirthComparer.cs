@@ -4,7 +4,7 @@ namespace FTAnalyzer
 {
     public class LooseBirthComparer : Comparer<IDisplayLooseBirth>
     {
-        public override int Compare(IDisplayLooseBirth x, IDisplayLooseBirth y)
+        public override int Compare(IDisplayLooseBirth? x, IDisplayLooseBirth? y)
         {
             return x.Surname.Equals(y.Surname)
                 ? x.Forenames.Equals(y.Forenames)

@@ -1688,7 +1688,7 @@ namespace FTAnalyzer
         }
 
         #region Basic Class Functions
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return obj is Individual individual && IndividualID == individual.IndividualID;
         }

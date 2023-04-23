@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace FTAnalyzer
+﻿namespace FTAnalyzer
 {
     public class LostCousinsReferralComparer : Comparer<ExportReferrals>
     {
-        public override int Compare(ExportReferrals x, ExportReferrals y)
+        public override int Compare(ExportReferrals? x, ExportReferrals? y)
         {
             if (x.ShortCode.Equals(y.ShortCode))
             {

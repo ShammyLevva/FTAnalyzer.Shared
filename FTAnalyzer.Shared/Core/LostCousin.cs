@@ -113,7 +113,7 @@ namespace FTAnalyzer
             return false;
         }
 
-        public override bool Equals(object obj) => Equals(obj as LostCousin);
+        public override bool Equals(object? obj) => Equals(obj as LostCousin);
 
         public override int GetHashCode()
         {
