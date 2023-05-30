@@ -69,7 +69,7 @@ namespace FTAnalyzer
 
         public bool DocumentLoaded { get; set; }
 
-        public static string GetText(XmlNode node, bool lookForText)
+        public static string GetText(XmlNode? node, bool lookForText)
         {
             if (node is null)
                 return string.Empty;
@@ -85,7 +85,7 @@ namespace FTAnalyzer
             return node.FirstChild.Value.Trim();
         }
 
-        public static string GetText(XmlNode node, string tag, bool lookForText) => GetText(GetChildNode(node, tag), lookForText);
+        public static string GetText(XmlNode? node, string tag, bool lookForText) => GetText(GetChildNode(node, tag), lookForText);
 
         public static XmlNode? GetChildNode(XmlNode node, string tag) => node?.SelectSingleNode(tag);
 
@@ -259,8 +259,8 @@ namespace FTAnalyzer
             XmlNode? treeSoftware = doc.SelectSingleNode("GED/HEAD/SOUR");
             if (treeSoftware is not null)
             {
-                var softwareName = treeSoftware.SelectSingleNode("NAME")?.InnerText;
-                var softwareVersion = treeSoftware.SelectSingleNode("VERS")?.InnerText;
+                var softwareName = treeSoftware.SelectSingleNode("NAME")?.InnerText ?? "No Software Name Detected";
+                var softwareVersion = treeSoftware.SelectSingleNode("VERS")?.InnerText ?? "No Software Version Detected";
                 Task.Run(() => Analytics.TrackActionAsync(Analytics.GEDCOMAction, Analytics.SoftwareProvider, softwareName));
                 Task.Run(() => Analytics.TrackActionAsync(Analytics.GEDCOMAction, Analytics.SoftwareVersion, softwareVersion));
             }
@@ -420,7 +420,7 @@ namespace FTAnalyzer
 
         public static void CleanUpXML() => noteNodes = null;
 
-        static void LoadGEDCOM_PLAC_Locations(XmlNodeList list, int startval, IProgress<int> progress, IProgress<string> outputText)
+        static void LoadGEDCOM_PLAC_Locations(XmlNodeList? list, int startval, IProgress<int> progress, IProgress<string> outputText)
         {
             int max = list.Count;
             int counter = 0;
@@ -3547,8 +3547,7 @@ namespace FTAnalyzer
             currentPercentage = 0;
             progress.Report(0);
             progressText.Report("Preparing Display");
-            if (NonDuplicates is null)
-                DeserializeNonDuplicates();
+            NonDuplicates ??= DeserializeNonDuplicates();
             foreach (DuplicateIndividual dup in duplicates)
             {
                 if (dup.Score >= minScore)
@@ -3589,14 +3588,14 @@ namespace FTAnalyzer
             }
         }
 
-        public void DeserializeNonDuplicates()
+        public List<NonDuplicate> DeserializeNonDuplicates()
         {
             try
             {
                 string xmlFile = Path.Combine(GeneralSettings.Default.SavePath, "NonDuplicates.xml");
                 string jsonFile = Path.Combine(GeneralSettings.Default.SavePath, "NonDuplicates.json");
                 if (File.Exists(xmlFile))
-                    ConvertNonDuplicatesXMLToJson(xmlFile);
+                    NonDuplicates = ConvertNonDuplicatesXMLToJson(xmlFile);
                 else if (File.Exists(jsonFile))
                     NonDuplicates = JsonSerializer.Deserialize<List<NonDuplicate>>(File.ReadAllText(jsonFile));
                 else
@@ -3607,9 +3606,10 @@ namespace FTAnalyzer
                 Debug.Print($"Error {e.Message} reading NonDuplicates file");
                 NonDuplicates = new List<NonDuplicate>();
             }
+            return NonDuplicates ?? new List<NonDuplicate>();
         }
 
-        void ConvertNonDuplicatesXMLToJson(string xmlFile)
+        List<NonDuplicate> ConvertNonDuplicatesXMLToJson(string xmlFile)
         {
             IFormatter formatter = new BinaryFormatter();
             using Stream stream = new FileStream(xmlFile, FileMode.Open, FileAccess.Read, FileShare.Read);
@@ -3618,6 +3618,7 @@ namespace FTAnalyzer
             string nonDuplicates = JsonSerializer.Serialize(NonDuplicates);
             File.WriteAllText(jsonFile, nonDuplicates);
             File.Delete(xmlFile);
+            return NonDuplicates ?? new List<NonDuplicate>();
         }
         #endregion
 

@@ -47,7 +47,7 @@ namespace FTAnalyzer
         public CommonAncestor CommonAncestor { get; set; }
         public string UnrecognisedCensusNotes { get; private set; }
         public IList<Fact> Facts { get; private set; }
-        public string Alias { get; set; }
+        public string Alias { get; private set; }
         public IList<FactLocation> Locations { get; }
 
         #region Constructors
@@ -95,8 +95,10 @@ namespace FTAnalyzer
             Gender = FamilyTree.GetText(node, "SEX", false);
             Alias = FamilyTree.GetText(node, "ALIA", false);
             XmlNode? nameNode = node?.SelectSingleNode("NAME");
-            Title = FamilyTree.GetText(nameNode, "NPFX", false);
+            Title = FamilyTree.GetText(nameNode, "TITL", false);
             Suffix = FamilyTree.GetText(nameNode, "NSFX", false);
+            if (string.IsNullOrEmpty(Title))
+                Title = FamilyTree.GetText(nameNode, "NPFX", false);
             if (string.IsNullOrEmpty(Alias))
                 Alias = FamilyTree.GetText(nameNode, "NICK", false);
             FamilySearchID = FamilyTree.GetText(node, "FSID", false);
