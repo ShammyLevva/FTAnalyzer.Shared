@@ -28,7 +28,7 @@ namespace FTAnalyzer
                 "IndividualCount" => CompareComparableProperty<IDisplayCustomFact>(f => f.IndividualCount, ascending),
                 "FamilyCount" => CompareComparableProperty<IDisplayCustomFact>(f => f.FamilyCount, ascending),
                 "Ignore" => CompareComparableProperty<IDisplayCustomFact>(f => f.Ignore, ascending),
-                _ => null,
+                _ => CompareComparableProperty<IDisplayCustomFact>(f => f.CustomFactName, ascending),
             };
         }
 

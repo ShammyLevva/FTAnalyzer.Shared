@@ -113,7 +113,7 @@ namespace FTAnalyzer
                 "Relation" => CompareComparableProperty<IDisplayCensus>(f => f.Relation, ascending),
                 "RelationToRoot" => CompareComparableProperty<IDisplayCensus>(f => f.RelationToRoot, ascending),
                 "Ahnentafel" => CompareComparableProperty<IDisplayCensus>(f => f.Ahnentafel, ascending),
-                _ => null,
+                _ => CompareComparableProperty<IDisplayCensus>(f => f.FamilyID, ascending),
             };
         }
 

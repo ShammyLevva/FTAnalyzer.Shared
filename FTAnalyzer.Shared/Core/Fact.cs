@@ -524,7 +524,7 @@ namespace FTAnalyzer
                         if (n.Attributes["REF"] is not null)
                         {   // only process sources with a reference
                             string srcref = n.Attributes["REF"].Value;
-                            FactSource source = ft.GetSource(srcref);
+                            FactSource? source = ft.GetSource(srcref);
                             string pageText = FamilyTree.GetText(n, "PAGE", true); // Source page text
                             if (source is not null)
                             {
