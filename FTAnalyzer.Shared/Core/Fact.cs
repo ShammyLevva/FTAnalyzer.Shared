@@ -3,6 +3,7 @@ using FTAnalyzer.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -494,6 +495,8 @@ namespace FTAnalyzer
                             FactType = ALIAS;
                     }
                     var nodeText = FamilyTree.GetText(node, false);
+                    if (string.IsNullOrEmpty(nodeText))
+                        nodeText = FamilyTree.GetNotes(node);
                     var placeText = FamilyTree.GetText(node, "PLAC", false);
                     var xmlLat = FamilyTree.GetText(node, "PLAC/MAP/LATI", false);
                     var xmlLong = FamilyTree.GetText(node, "PLAC/MAP/LONG", false);
