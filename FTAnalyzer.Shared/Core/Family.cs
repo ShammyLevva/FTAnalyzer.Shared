@@ -5,7 +5,6 @@ using FTAnalyzer.Windows.Properties;
 using FTAnalyzer.Properties;
 #endif
 using FTAnalyzer.Utilities;
-using FTAnalyzer.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
