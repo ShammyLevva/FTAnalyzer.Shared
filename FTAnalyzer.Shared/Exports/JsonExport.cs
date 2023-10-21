@@ -20,9 +20,9 @@ namespace FTAnalyzer.Exports
         }
 
         #region Serialisable Properties
-        public string VersionNumber => "1.0.0";
+        public static string VersionNumber => "1.0.0";
         public string Filename { get; }
-        public string ExportDate => DateTime.Now.ToString("dd MMM yyyy HH:mm");
+        public static string ExportDate => DateTime.Now.ToString("dd MMM yyyy HH:mm");
         public List<IJsonIndividual> Individuals { get; }
         public List<IJsonFamily> Families { get; }
 

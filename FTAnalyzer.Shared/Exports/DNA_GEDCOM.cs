@@ -64,19 +64,17 @@ namespace FTAnalyzer.Exports
 #if __PC__
         public static void ExportGedcomFile()
         {
-            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+            using SaveFileDialog saveFileDialog = new();
+            string initialDir = (string)Application.UserAppDataRegistry.GetValue("Export DNA GEDCOM Path");
+            saveFileDialog.InitialDirectory = initialDir ?? Environment.SpecialFolder.MyDocuments.ToString();
+            saveFileDialog.Filter = "Comma Separated Value (*.ged)|*.ged";
+            saveFileDialog.FilterIndex = 1;
+            DialogResult dr = saveFileDialog.ShowDialog();
+            if (dr == DialogResult.OK)
             {
-                string initialDir = (string)Application.UserAppDataRegistry.GetValue("Export DNA GEDCOM Path");
-                saveFileDialog.InitialDirectory = initialDir ?? Environment.SpecialFolder.MyDocuments.ToString();
-                saveFileDialog.Filter = "Comma Separated Value (*.ged)|*.ged";
-                saveFileDialog.FilterIndex = 1;
-                DialogResult dr = saveFileDialog.ShowDialog();
-                if (dr == DialogResult.OK)
-                {
-                    string path = Path.GetDirectoryName(saveFileDialog.FileName);
-                    Application.UserAppDataRegistry.SetValue("Export DNA GEDCOM Path", path);
-                    WriteFile(saveFileDialog.FileName);
-                }
+                string path = Path.GetDirectoryName(saveFileDialog.FileName);
+                Application.UserAppDataRegistry.SetValue("Export DNA GEDCOM Path", path);
+                WriteFile(saveFileDialog.FileName);
             }
         }
 #elif __MACOS__
@@ -99,8 +97,8 @@ namespace FTAnalyzer.Exports
 #endif
         static void WriteFile(string filename)
         {
-            List<Family> families = new List<Family>();
-            List<Individual> spouses = new List<Individual>();
+            List<Family> families = new();
+            List<Individual> spouses = new();
             _privateID = 1;
             using (output = new StreamWriter(new FileStream(filename, FileMode.Create, FileAccess.Write), Encoding.UTF8))
             {
@@ -139,7 +137,7 @@ namespace FTAnalyzer.Exports
 
         static void WriteSiblings(List<Family> families)
         {
-            List<Individual> descendants = new List<Individual>();
+            List<Individual> descendants = new();
             foreach (Family fam in families)
             {
                 foreach (Individual child in fam.Children)
@@ -165,12 +163,12 @@ namespace FTAnalyzer.Exports
 
         static void WriteDescendants(List<Individual> descendants)
         {
-            Queue<Individual> queue = new Queue<Individual>();
+            Queue<Individual> queue = new();
             foreach (Individual i in descendants)
                 if(i.IsBloodDirect)
                     queue.Enqueue(i);
             Individual ind;
-            List<Family> descendantFamilies = new List<Family>();
+            List<Family> descendantFamilies = new();
             while(queue.Count > 0)
             {
                 ind = queue.Dequeue();
