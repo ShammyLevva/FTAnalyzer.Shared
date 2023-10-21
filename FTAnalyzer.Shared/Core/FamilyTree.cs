@@ -3602,14 +3602,12 @@ namespace FTAnalyzer
 
         public void DeserializeNonDuplicates()
         {
-            // log.Debug("FamilyTree.DeserializeNonDuplicates");
             try
             {
-                IFormatter formatter = new BinaryFormatter();
                 string xmlFile = Path.Combine(GeneralSettings.Default.SavePath, "NonDuplicates.xml");
                 string jsonFile = Path.Combine(GeneralSettings.Default.SavePath, "NonDuplicates.json");
                 if (File.Exists(xmlFile))
-                    ConvertToJson(formatter, xmlFile);
+                    ConvertNonDuplicatesXMLToJson(xmlFile);
                 else if (File.Exists(jsonFile))
                     NonDuplicates = JsonSerializer.Deserialize<List<NonDuplicate>>(File.ReadAllText(jsonFile));
                 else
@@ -3617,16 +3615,16 @@ namespace FTAnalyzer
             }
             catch (Exception e)
             {
-                Debug.Print($"Error {e.Message} reading NonDuplicates.xml");
+                Debug.Print($"Error {e.Message} reading NonDuplicates file");
                 NonDuplicates = new List<NonDuplicate>();
             }
         }
 
-        void ConvertToJson(IFormatter formatter, string xmlFile)
+        void ConvertNonDuplicatesXMLToJson(string xmlFile)
         {
-            Stream stream = new FileStream(xmlFile, FileMode.Open, FileAccess.Read, FileShare.Read);
+            IFormatter formatter = new BinaryFormatter();
+            using Stream stream = new FileStream(xmlFile, FileMode.Open, FileAccess.Read, FileShare.Read);
             NonDuplicates = formatter.Deserialize(stream) as List<NonDuplicate>;
-            stream.Close();
             string jsonFile = Path.Combine(GeneralSettings.Default.SavePath, "NonDuplicates.json");
             string nonDuplicates = JsonSerializer.Serialize(NonDuplicates);
             File.WriteAllText(jsonFile, nonDuplicates);
