@@ -52,7 +52,7 @@ namespace FTAnalyzer.Utilities
         public static string ConvertStringArrayToString(string[] array)
         {
             char[] charsToTrim = { ',', '.', ' ' };
-            StringBuilder builder = new StringBuilder();
+            StringBuilder builder = new();
             foreach (string value in array)
             {
                 builder.Append(value);
@@ -63,8 +63,8 @@ namespace FTAnalyzer.Utilities
 
         public static string RemoveSupriousDateCharacters(string text)
         {
-            StringBuilder sb = new StringBuilder();
-            text = text ?? string.Empty;
+            StringBuilder sb = new();
+            text ??= string.Empty;
             foreach(char ch in text)
             {
                 if (ch == 147 || ch == '-' || ch==8211)
@@ -83,7 +83,7 @@ namespace FTAnalyzer.Utilities
             if (!FileHandling.Default.ConvertDiacritics)
                 return text; // only process if user wants to remove diacrits
             string formD = text.Normalize(NormalizationForm.FormD);
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
 
             foreach (char ch in formD)
             {
@@ -105,20 +105,20 @@ namespace FTAnalyzer.Utilities
 
         public static string Replace(this string str, string oldValue, string newValue, StringComparison comparison)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
 
             int previousIndex = 0;
             int index = str.IndexOf(oldValue, comparison);
             while (index != -1)
             {
-                sb.Append(str.Substring(previousIndex, index - previousIndex));
+                sb.Append(str.AsSpan(previousIndex, index - previousIndex));
                 sb.Append(newValue);
                 index += oldValue.Length;
 
                 previousIndex = index;
                 index = str.IndexOf(oldValue, index, comparison);
             }
-            sb.Append(str.Substring(previousIndex));
+            sb.Append(str.AsSpan(previousIndex));
 
             return sb.ToString();
         }

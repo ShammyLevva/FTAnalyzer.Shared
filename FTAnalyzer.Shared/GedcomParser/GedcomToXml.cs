@@ -26,10 +26,8 @@ namespace FTAnalyzer
             if (doc?.SelectNodes("GED/INDI").Count == 0)
             { // if there is a problem with the file return with opposite line ends
                 cloned = CloneStream(stream);
-                using (var reader = new StreamReader(FileHandling.Default.RetryFailedLines ? cloned : CheckInvalidCR(cloned), encoding))
-                {
-                    doc = Parse(reader, outputText, false);
-                }
+                using var reader = new StreamReader(FileHandling.Default.RetryFailedLines ? cloned : CheckInvalidCR(cloned), encoding);
+                doc = Parse(reader, outputText, false);
             }
             return doc;
         }
@@ -46,17 +44,15 @@ namespace FTAnalyzer
             {
                 // if there is a problem with the file return with opposite line ends
                 cloned = CloneStream(stream);
-                using (var reader = new AnselInputStreamReader(FileHandling.Default.RetryFailedLines ? cloned : CheckInvalidCR(cloned)))
-                {
-                    doc = Parse(reader, outputText, false);
-                }
+                using var reader = new AnselInputStreamReader(FileHandling.Default.RetryFailedLines ? cloned : CheckInvalidCR(cloned));
+                doc = Parse(reader, outputText, false);
             }
             return doc;
         }
 
         static MemoryStream CloneStream(Stream stream)
         {
-            MemoryStream mstream = new MemoryStream();
+            MemoryStream mstream = new();
             stream.Position = 0;
             stream.CopyTo(mstream);
             mstream.Position = 0;
@@ -65,7 +61,7 @@ namespace FTAnalyzer
 
         static MemoryStream CheckInvalidCR(Stream infs)
         {
-            MemoryStream outfs = new MemoryStream();
+            MemoryStream outfs = new();
             long streamLength = infs.Length;
             byte b;
             while (infs.Position < streamLength)
@@ -123,10 +119,10 @@ namespace FTAnalyzer
             int prevlevel = -1;
             string iden, tag, xref, value;
             int cpos1;
-            Dictionary<long, Tuple<string, string>> lineErrors = new Dictionary<long, Tuple<string, string>>();
-            Stack<string> stack = new Stack<string>();
+            Dictionary<long, Tuple<string, string>> lineErrors = new();
+            Stack<string> stack = new();
             stack.Push("GED");
-            XmlDocument document = new XmlDocument() { XmlResolver = null };
+            XmlDocument document = new() { XmlResolver = null };
             XmlNode node = document.CreateElement("GED");
             document.AppendChild(node);
             string currentName = string.Empty;
@@ -182,7 +178,7 @@ namespace FTAnalyzer
                                 if (token1.Length == 1 || !token1.EndsWith("@", StringComparison.Ordinal))
                                     throw new InvalidGEDCOMException($"Bad xref_id invalid @ character in line. Check notes for use of @ symbol", line, lineNr);
 
-                                iden = token1.Substring(1, token1.Length - 2);
+                                iden = token1[1..^1];
                                 tag = FirstWord(line);
                                 line = Remainder(line);
                             }
@@ -203,8 +199,8 @@ namespace FTAnalyzer
                                     if (token2.Length == 1 || (!token2.EndsWith("@", StringComparison.Ordinal) && !token2.EndsWith("@,", StringComparison.Ordinal)))
                                         throw new InvalidGEDCOMException($"Bad pointer value. Check notes for use of @ symbol", line, lineNr);
                                     xref = token2.EndsWith("@,", StringComparison.Ordinal)
-                                        ? token2.Substring(1, token2.Length - 3)
-                                        : token2.Substring(1, token2.Length - 2);
+                                        ? token2[1..^2]
+                                        : token2[1..^1];
                                     line = Remainder(line);
                                 }
                             }
@@ -337,31 +333,29 @@ namespace FTAnalyzer
                     string tempFile = CreateTempFile();
                     if (!string.IsNullOrEmpty(tempFile))
                     {
-                        tempFile = tempFile.Substring(0, tempFile.Length - 3) + "html";
+                        tempFile = tempFile[..^3] + "html";
                         stream.Position = 0;
-                        FileStream fileStream = new FileStream(tempFile, FileMode.Create, FileAccess.Write);
-                        using (StreamWriter writer = new StreamWriter(fileStream))
+                        FileStream fileStream = new(tempFile, FileMode.Create, FileAccess.Write);
+                        using (StreamWriter writer = new(fileStream))
                         {
-                            using (StreamReader reader = new StreamReader(stream))
+                            using StreamReader reader = new(stream);
+                            writer.WriteLine("<html><head><Title>Gedcom File</Title></head><body>");
+                            writer.WriteLine("<h4>Line Errors</h4>");
+                            writer.WriteLine("<table border='1'><tr><th>Line Number</th><th>Line Contents</th><th>Error Description</th></tr>");
+                            foreach (KeyValuePair<long, Tuple<string, string>> kvp in lineErrors)
+                                writer.WriteLine($"<tr><td><a href='#{kvp.Key}'>{kvp.Key}</a></td><td>{kvp.Value.Item1}</td><td>{kvp.Value.Item2}</td></tr>");
+                            writer.WriteLine("</table><h4>GEDCOM Contents</h4><table border='1'><tr><th>Line Number</th><th>Line Contents</th></tr>");
+                            string line = reader.ReadLine();
+                            long lineNr = 1;
+                            while (line != null)
                             {
-                                writer.WriteLine("<html><head><Title>Gedcom File</Title></head><body>");
-                                writer.WriteLine("<h4>Line Errors</h4>");
-                                writer.WriteLine("<table border='1'><tr><th>Line Number</th><th>Line Contents</th><th>Error Description</th></tr>");
-                                foreach (KeyValuePair<long, Tuple<string, string>> kvp in lineErrors)
-                                    writer.WriteLine($"<tr><td><a href='#{kvp.Key}'>{kvp.Key}</a></td><td>{kvp.Value.Item1}</td><td>{kvp.Value.Item2}</td></tr>");
-                                writer.WriteLine("</table><h4>GEDCOM Contents</h4><table border='1'><tr><th>Line Number</th><th>Line Contents</th></tr>");
-                                string line = reader.ReadLine();
-                                long lineNr = 1;
-                                while (line != null)
-                                {
-                                    if (lineErrors.ContainsKey(lineNr))
-                                        writer.WriteLine($"<tr id='{lineNr}'><td>{lineNr++}</td><td>{line}</td></tr>");
-                                    else
-                                        writer.WriteLine($"<tr><td>{lineNr++}</td><td>{line}</td></tr>");
-                                    line = reader.ReadLine();
-                                }
-                                writer.Write("</table></body></html>");
+                                if (lineErrors.ContainsKey(lineNr))
+                                    writer.WriteLine($"<tr id='{lineNr}'><td>{lineNr++}</td><td>{line}</td></tr>");
+                                else
+                                    writer.WriteLine($"<tr><td>{lineNr++}</td><td>{line}</td></tr>");
+                                line = reader.ReadLine();
                             }
+                            writer.Write("</table></body></html>");
                         }
                         SpecialMethods.VisitWebsite(tempFile);
                     }
@@ -379,7 +373,7 @@ namespace FTAnalyzer
             try
             {
                 fileName = Path.GetTempFileName();
-                FileInfo fileInfo = new FileInfo(fileName)
+                FileInfo fileInfo = new(fileName)
                 {
                     Attributes = FileAttributes.Temporary
                 };
@@ -398,7 +392,7 @@ namespace FTAnalyzer
         {
             int i;
             i = inp.IndexOf(" ", StringComparison.Ordinal);
-            return i == 0 ? FirstWord(inp.Trim()) : i < 0 ? inp : inp.Substring(0, i).Trim();
+            return i == 0 ? FirstWord(inp.Trim()) : i < 0 ? inp : inp[..i].Trim();
         }
 
         /**
@@ -409,7 +403,7 @@ namespace FTAnalyzer
         {
             int i;
             i = inp.IndexOf(" ", StringComparison.Ordinal);
-            return i == 0 ? Remainder(inp.Trim()) : i < 0 ? "" : inp.Substring(i + 1).Trim();
+            return i == 0 ? Remainder(inp.Trim()) : i < 0 ? "" : inp[(i + 1)..].Trim();
         }
 
         /// <summary>

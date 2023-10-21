@@ -115,7 +115,7 @@ namespace FTAnalyzer.Exports
                         }
                         pos++;
                     }
-                    value = row.LineText.Substring(start, pos - start);
+                    value = row.LineText[start..pos];
                     value = value.Replace("\"\"", "\"");
                 }
                 else

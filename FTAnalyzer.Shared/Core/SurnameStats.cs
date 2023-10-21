@@ -26,17 +26,17 @@ namespace FTAnalyzer
 
         public IComparer<IDisplaySurnames> GetComparer(string columnName, bool ascending)
         {
-            switch (columnName)
+            return columnName switch
             {
-                case "Surname": return CompareComparableProperty<IDisplaySurnames>(f => f.Surname, ascending);
-                case "Individuals": return CompareComparableProperty<IDisplaySurnames>(f => f.Individuals, ascending);
-                case "Families": return CompareComparableProperty<IDisplaySurnames>(f => f.Families, ascending);
-                case "Marriages": return CompareComparableProperty<IDisplaySurnames>(f => f.Marriages, ascending);
-                default: return null;
-            }
+                "Surname" => CompareComparableProperty<IDisplaySurnames>(f => f.Surname, ascending),
+                "Individuals" => CompareComparableProperty<IDisplaySurnames>(f => f.Individuals, ascending),
+                "Families" => CompareComparableProperty<IDisplaySurnames>(f => f.Families, ascending),
+                "Marriages" => CompareComparableProperty<IDisplaySurnames>(f => f.Marriages, ascending),
+                _ => null,
+            };
         }
 
-        Comparer<T> CompareComparableProperty<T>(Func<IDisplaySurnames, IComparable> accessor, bool ascending)
+        static Comparer<T> CompareComparableProperty<T>(Func<IDisplaySurnames, IComparable> accessor, bool ascending)
         {
             return Comparer<T>.Create((x, y) =>
             {

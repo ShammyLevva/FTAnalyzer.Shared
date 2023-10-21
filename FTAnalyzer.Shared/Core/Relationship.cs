@@ -33,15 +33,12 @@ namespace FTAnalyzer
             // EQUAL DISTANCE - SIBLINGS / PERFECT COUSINS
             if (rootDistance == toFindDistance)
             {
-                switch (toFindDistance)
+                return toFindDistance switch
                 {
-                    case 1:
-                        return (commonAncestor.Step ? "half " : string.Empty) + (indToFind.IsMale ? "brother" : "sister");
-                    case 2:
-                        return "cousin";
-                    default:
-                        return $"{OrdinalSuffix(toFindDistance - 1)} cousin";
-                }
+                    1 => (commonAncestor.Step ? "half " : string.Empty) + (indToFind.IsMale ? "brother" : "sister"),
+                    2 => "cousin",
+                    _ => $"{OrdinalSuffix(toFindDistance - 1)} cousin",
+                };
             }
             // AUNT / UNCLE
             if (toFindDistance == 1)
@@ -73,17 +70,13 @@ namespace FTAnalyzer
         static string AggrandiseRelationship(string relation, long distance, int offset)
         {
             distance -= offset;
-            switch (distance)
+            return distance switch
             {
-                case 1:
-                    return relation;
-                case 2:
-                    return "grand" + relation;
-                case 3:
-                    return "great grand" + relation;
-                default:
-                    return OrdinalSuffix(distance - 2) + " great grand" + relation;
-            }
+                1 => relation,
+                2 => "grand" + relation,
+                3 => "great grand" + relation,
+                _ => OrdinalSuffix(distance - 2) + " great grand" + relation,
+            };
         }
 
         static string OrdinalSuffix(long number)
@@ -96,29 +89,21 @@ namespace FTAnalyzer
             else
             {
                 decimal last = number % 10;
-                switch (last)
+                os = last switch
                 {
-                    case 1:
-                        os = "st";
-                        break;
-                    case 2:
-                        os = "nd";
-                        break;
-                    case 3:
-                        os = "rd";
-                        break;
-                    default:
-                        os = "th";
-                        break;
-                }
+                    1 => "st",
+                    2 => "nd",
+                    3 => "rd",
+                    _ => "th",
+                };
             }
             return number + os;
         }
 
         public static string AhnentafelToString(BigInteger ahnentafel)
         {
-            StringBuilder output = new StringBuilder();
-            StringBuilder relations = new StringBuilder();
+            StringBuilder output = new();
+            StringBuilder relations = new();
             output.Append(FamilyTree.Instance.RootPerson.Name);
             if(ahnentafel !=1) output.Append("'s ");
             while (ahnentafel != 1)
@@ -135,7 +120,7 @@ namespace FTAnalyzer
             output.Append(string.Join(" ", relations.ToString().Split(' ').Reverse()));
             output.Replace("  ", " ");
             //remove last 's
-            return output.ToString().Substring(0,output.Length -2);
+            return output.ToString()[..(output.Length - 2)];
         }
     }
 }

@@ -18,15 +18,15 @@ namespace FTAnalyzer
 
         public IComparer<IDisplayOccupation> GetComparer(string columnName, bool ascending)
         {
-            switch(columnName)
-            { 
-                case "Occupation": return CompareComparableProperty<IDisplayOccupation>(f => f.Occupation, ascending);
-                case "Count": return CompareComparableProperty<IDisplayOccupation>(f => f.Count, ascending);
-                 default: return null;
-            }
+            return columnName switch
+            {
+                "Occupation" => CompareComparableProperty<IDisplayOccupation>(f => f.Occupation, ascending),
+                "Count" => CompareComparableProperty<IDisplayOccupation>(f => f.Count, ascending),
+                _ => null,
+            };
         }
 
-        Comparer<T> CompareComparableProperty<T>(Func<IDisplayOccupation, IComparable> accessor, bool ascending)
+        static Comparer<T> CompareComparableProperty<T>(Func<IDisplayOccupation, IComparable> accessor, bool ascending)
         {
             return Comparer<T>.Create((x, y) =>
             {

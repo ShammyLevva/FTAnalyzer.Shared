@@ -128,7 +128,7 @@ namespace FTAnalyzer.Utilities
             string resolution = UIScreen.MainScreen.Bounds.ToString();
 
 #endif
-            Resolution = resolution.Length > 11 ? resolution.Substring(9, resolution.Length - 10) : resolution;
+            Resolution = resolution.Length > 11 ? resolution[9..^1] : resolution;
         }
 
         public static async Task CheckProgramUsageAsync() // pre demise of Windows 7 add tracker to check how many machines still use old versions

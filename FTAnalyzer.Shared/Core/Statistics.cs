@@ -22,8 +22,7 @@ namespace FTAnalyzer
         {
             get
             {
-                if (instance is null)
-                    instance = new Statistics();
+                instance ??= new Statistics();
                 return instance;
             }
         }
@@ -53,7 +52,7 @@ namespace FTAnalyzer
             return stats;
         }
 
-        void AddAgeData(int parent, int[,,] stats, Age age, string gender)
+        static void AddAgeData(int parent, int[,,] stats, Age age, string gender)
         {
             int child = gender == "M" ? 0 : (gender == "F" ? 1 : 2);
             int fiveyear = age.MinAge / 5;
@@ -61,9 +60,9 @@ namespace FTAnalyzer
                 stats[parent, fiveyear, child]++;
         }
 
-        public string BuildOutput(int[,,] minAge)
+        public static string BuildOutput(int[,,] minAge)
         {
-            StringBuilder output = new StringBuilder();
+            StringBuilder output = new();
             output.AppendLine("Fathers Age When Child Born");
             for (int fiveyear = 3; fiveyear < 20; fiveyear++)
             {
@@ -110,22 +109,20 @@ namespace FTAnalyzer
         {
             try
             {
-                using (WebClient client = new WebClient())
-                {
-                    string website = "https://one-name.org/Results";
-                    NameValueCollection reqparm = new NameValueCollection
+                using WebClient client = new();
+                string website = "https://one-name.org/Results";
+                NameValueCollection reqparm = new()
                     {
                         { "surname", surname },
                         { "_wpnonce", "4cc97f97c8" },
                         { "_wp_http_referer", "/Results" },
                         { "submit", "Search" }
                     };
-                    byte[] responsebytes = client.UploadValues(website, "POST", reqparm);
-                    string responsebody = Encoding.UTF8.GetString(responsebytes);
-                    string filename = Path.Combine(Path.GetTempPath(), "FTA-GOONS.html");
-                    File.WriteAllText(filename, responsebody);
-                    Process.Start(filename);
-                }
+                byte[] responsebytes = client.UploadValues(website, "POST", reqparm);
+                string responsebody = Encoding.UTF8.GetString(responsebytes);
+                string filename = Path.Combine(Path.GetTempPath(), "FTA-GOONS.html");
+                File.WriteAllText(filename, responsebody);
+                Process.Start(filename);
             }
             catch (Exception)
             { // silently fail

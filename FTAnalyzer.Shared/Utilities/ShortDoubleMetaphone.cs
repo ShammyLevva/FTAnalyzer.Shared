@@ -133,58 +133,25 @@ namespace FTAnalyzer
 		
 			for (int currentCharIdx = 0; currentCharIdx < metaphoneKey.Length; currentCharIdx++) {
 				currentChar = metaphoneKey[currentCharIdx];
-                switch (currentChar)
+                charResult = currentChar switch
                 {
-                    case 'A':
-                        charResult = METAPHONE_A;
-                        break;
-                    case 'P':
-                        charResult = METAPHONE_P;
-                        break;
-                    case 'S':
-                        charResult = METAPHONE_S;
-                        break;
-                    case 'K':
-                        charResult = METAPHONE_K;
-                        break;
-                    case 'X':
-                        charResult = METAPHONE_X;
-                        break;
-                    case 'J':
-                        charResult = METAPHONE_J;
-                        break;
-                    case 'T':
-                        charResult = METAPHONE_T;
-                        break;
-                    case 'F':
-                        charResult = METAPHONE_F;
-                        break;
-                    case 'N':
-                        charResult = METAPHONE_N;
-                        break;
-                    case 'H':
-                        charResult = METAPHONE_H;
-                        break;
-                    case 'M':
-                        charResult = METAPHONE_M;
-                        break;
-                    case 'L':
-                        charResult = METAPHONE_L;
-                        break;
-                    case 'R':
-                        charResult = METAPHONE_R;
-                        break;
-                    case ' ':
-                        charResult = METAPHONE_SPACE;
-                        break;
-                    case '\0':
-                        charResult = METAPHONE_0;
-                        break;
-                    default:
-                        charResult = 0x00; //This should never happen
-                        break;
-                }
-
+                    'A' => METAPHONE_A,
+                    'P' => METAPHONE_P,
+                    'S' => METAPHONE_S,
+                    'K' => METAPHONE_K,
+                    'X' => METAPHONE_X,
+                    'J' => METAPHONE_J,
+                    'T' => METAPHONE_T,
+                    'F' => METAPHONE_F,
+                    'N' => METAPHONE_N,
+                    'H' => METAPHONE_H,
+                    'M' => METAPHONE_M,
+                    'L' => METAPHONE_L,
+                    'R' => METAPHONE_R,
+                    ' ' => METAPHONE_SPACE,
+                    '\0' => METAPHONE_0,
+                    _ => 0x00,//This should never happen
+                };
                 result <<= 4;
 				result |= charResult;
             }

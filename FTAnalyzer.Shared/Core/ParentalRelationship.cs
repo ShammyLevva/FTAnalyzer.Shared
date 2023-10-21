@@ -46,27 +46,18 @@ namespace FTAnalyzer
         {
             if (node is null)
                 return ParentalRelationshipType.UNKNOWN;
-            switch (node.InnerText.ToLower())
+            return node.InnerText.ToLower() switch
             {
-                case "natural":
-                    return ParentalRelationshipType.NATURAL;
-                case "adopted":
-                    return ParentalRelationshipType.ADOPTED;
-                case "step":
-                    return ParentalRelationshipType.STEP;
-                case "foster":
-                    return ParentalRelationshipType.FOSTER;
-                case "related":
-                    return ParentalRelationshipType.RELATED;
-                case "guardian":
-                    return ParentalRelationshipType.GUARDIAN;
-                case "sealed":
-                    return ParentalRelationshipType.SEALED;
-                case "private":
-                    return ParentalRelationshipType.PRIVATE;
-                default:
-                    return ParentalRelationshipType.UNKNOWN;
-            }
+                "natural" => ParentalRelationshipType.NATURAL,
+                "adopted" => ParentalRelationshipType.ADOPTED,
+                "step" => ParentalRelationshipType.STEP,
+                "foster" => ParentalRelationshipType.FOSTER,
+                "related" => ParentalRelationshipType.RELATED,
+                "guardian" => ParentalRelationshipType.GUARDIAN,
+                "sealed" => ParentalRelationshipType.SEALED,
+                "private" => ParentalRelationshipType.PRIVATE,
+                _ => ParentalRelationshipType.UNKNOWN,
+            };
         }
     }
 }

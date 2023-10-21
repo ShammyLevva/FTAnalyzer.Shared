@@ -62,7 +62,7 @@ namespace FTAnalyzer
             try
             {
                 if (!string.IsNullOrEmpty(SourceID))
-                    SourceID = SourceID.Substring(0, 1) + SourceID.Substring(1).PadLeft(length, '0');
+                    SourceID = SourceID[..1] + SourceID[1..].PadLeft(length, '0');
             }
             catch (Exception)
             { // don't error if SourceID is not of format Sxxxx
@@ -70,35 +70,35 @@ namespace FTAnalyzer
         }
 
         public bool IsBirthCert() => SourceMedium.Contains("Official Document") &&
-                   SourceTitle.ToUpper().IndexOf(BIRTHCERT, StringComparison.Ordinal) >= 0;
+                   SourceTitle.ToUpper().Contains(BIRTHCERT);
 
         public bool IsDeathCert() => SourceMedium.Contains("Official Document") &&
-                   SourceTitle.ToUpper().IndexOf(DEATHCERT, StringComparison.Ordinal) >= 0;
+                   SourceTitle.ToUpper().Contains(DEATHCERT);
 
         public bool IsMarriageCert() => SourceMedium.Contains("Official Document") &&
-                   SourceTitle.ToUpper().IndexOf(MARRIAGECERT, StringComparison.Ordinal) >= 0;
+                   SourceTitle.ToUpper().Contains(MARRIAGECERT);
 
         public bool IsCensusCert() => SourceMedium.Equals("Official Document") &&
-                   SourceTitle.ToUpper().IndexOf(CENSUSCERT, StringComparison.Ordinal) >= 0;
+                   SourceTitle.ToUpper().Contains(CENSUSCERT);
 
         public override string ToString() => SourceTitle;
 
         public IComparer<IDisplaySource> GetComparer(string columnName, bool ascending)
         {
-            switch (columnName)
+            return columnName switch
             {
-                case "SourceID": return CompareComparableProperty<IDisplaySource>(f => f.SourceID, ascending);
-                case "SourceTitle": return CompareComparableProperty<IDisplaySource>(f => f.SourceTitle, ascending);
-                case "Publication": return CompareComparableProperty<IDisplaySource>(f => f.Publication, ascending);
-                case "Author": return CompareComparableProperty<IDisplaySource>(f => f.Author, ascending);
-                case "SourceText": return CompareComparableProperty<IDisplaySource>(f => f.SourceText, ascending);
-                case "SourceMedium": return CompareComparableProperty<IDisplaySource>(f => f.SourceMedium, ascending);
-                case "FactCount": return CompareComparableProperty<IDisplaySource>(f => f.FactCount, ascending);
-                default: return null;
-            }
+                "SourceID" => CompareComparableProperty<IDisplaySource>(f => f.SourceID, ascending),
+                "SourceTitle" => CompareComparableProperty<IDisplaySource>(f => f.SourceTitle, ascending),
+                "Publication" => CompareComparableProperty<IDisplaySource>(f => f.Publication, ascending),
+                "Author" => CompareComparableProperty<IDisplaySource>(f => f.Author, ascending),
+                "SourceText" => CompareComparableProperty<IDisplaySource>(f => f.SourceText, ascending),
+                "SourceMedium" => CompareComparableProperty<IDisplaySource>(f => f.SourceMedium, ascending),
+                "FactCount" => CompareComparableProperty<IDisplaySource>(f => f.FactCount, ascending),
+                _ => null,
+            };
         }
 
-        Comparer<T> CompareComparableProperty<T>(Func<IDisplaySource, IComparable> accessor, bool ascending)
+        static Comparer<T> CompareComparableProperty<T>(Func<IDisplaySource, IComparable> accessor, bool ascending)
         {
             return Comparer<T>.Create((x, y) =>
             {

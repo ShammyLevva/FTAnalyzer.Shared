@@ -10,15 +10,15 @@ namespace FTAnalyzer
 {
     public class ScottishParish
     {
-        static readonly Dictionary<string, ScottishParish> SCOTTISHPARISHES = new Dictionary<string, ScottishParish>();
-        static readonly Dictionary<string, string> SCOTTISHPARISHNAMES = new Dictionary<string, string>();
-        public static ScottishParish UNKNOWN_PARISH = new ScottishParish("UNK", "Unknown", Countries.SCOTLAND);
+        static readonly Dictionary<string, ScottishParish> SCOTTISHPARISHES = new();
+        static readonly Dictionary<string, string> SCOTTISHPARISHNAMES = new();
+        public readonly static ScottishParish UNKNOWN_PARISH = new("UNK", "Unknown", Countries.SCOTLAND);
         public string RegistrationDistrict { get; private set; }
         public FactLocation Location { get; private set; }
         public string Name { get; private set; }
         public string Region { get; private set; }
 
-        static readonly Regex ParishRegex = new Regex(@"\d{1,3}-\d{1,2}?[AB]?", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        static readonly Regex ParishRegex = new(@"\d{1,3}-\d{1,2}?[AB]?", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 #if __PC__
         static ScottishParish() => LoadScottishParishes(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location));
 #elif __MACOS__
@@ -31,9 +31,9 @@ namespace FTAnalyzer
             string filename = Path.Combine(startPath, "Resources", "ScottishParishes.xml");
             if (File.Exists(filename))
             {
-                XmlDocument xmlDoc = new XmlDocument() { XmlResolver = null };
+                XmlDocument xmlDoc = new() { XmlResolver = null };
                 string xml = File.ReadAllText(filename);
-                StringReader sreader = new StringReader(xml);
+                StringReader sreader = new(xml);
                 using (XmlReader reader = XmlReader.Create(sreader, new XmlReaderSettings() { XmlResolver = null }))
                     xmlDoc.Load(reader);
                 //xmlDoc.Validate(something);
@@ -42,7 +42,7 @@ namespace FTAnalyzer
                     string region = n.Attributes["Region"].Value;
                     string name = n.Attributes["Name"].Value;
                     string RD = n.Attributes["RD"].Value;
-                    ScottishParish sp = new ScottishParish(RD, name, region);
+                    ScottishParish sp = new(RD, name, region);
                     AddParish(RD, sp);
                 }
             }

@@ -80,35 +80,35 @@ namespace FTAnalyzer
 
         public IComparer<IDisplayFact> GetComparer(string columnName, bool ascending)
         {
-            switch (columnName)
+            return columnName switch
             {
-                case "IndividualID": return CompareComparableProperty<IDisplayFact>(f => f.IndividualID, ascending);
-                case "Surname": return new NameComparer<IDisplayFact>(ascending, false);
-                case "Forenames": return new NameComparer<IDisplayFact>(ascending, true);
-                case "DateofBirth": return CompareComparableProperty<IDisplayFact>(f => f.DateofBirth, ascending);
-                case "SurnameAtDate": return CompareComparableProperty<IDisplayFact>(f => f.SurnameAtDate, ascending);
-                case "TypeOfFact": return CompareComparableProperty<IDisplayFact>(f => f.TypeOfFact, ascending);
-                case "FactDate": return CompareComparableProperty<IDisplayFact>(f => f.FactDate, ascending);
-                case "Relation": return CompareComparableProperty<IDisplayFact>(f => f.Relation, ascending);
-                case "RelationToRoot": return CompareComparableProperty<IDisplayFact>(f => f.RelationToRoot, ascending);
-                case "Location": return CompareComparableProperty<IDisplayFact>(f => f.Location, ascending);
-                case "AgeAtFact": return CompareComparableProperty<IDisplayFact>(f => f.AgeAtFact, ascending);
-                case "GeocodeStatus": return CompareComparableProperty<IDisplayFact>(f => f.GeocodeStatus, ascending);
-                case "FoundLocation": return CompareComparableProperty<IDisplayFact>(f => f.FoundLocation, ascending);
-                case "FoundResultType": return CompareComparableProperty<IDisplayFact>(f => f.FoundResultType, ascending);
-                case "CensusReference": return CompareComparableProperty<IDisplayFact>(f => f.CensusReference.ToString(), ascending);
-                case "CensusRefYear": return CompareComparableProperty<IDisplayFact>(f => f.CensusRefYear, ascending);
-                case "Comment": return CompareComparableProperty<IDisplayFact>(f => f.Comment, ascending);
-                case "SourceList": return CompareComparableProperty<IDisplayFact>(f => f.SourceList, ascending);
-                case "Latitude": return CompareComparableProperty<IDisplayFact>(f => f.Latitude, ascending);
-                case "Longitude": return CompareComparableProperty<IDisplayFact>(f => f.Longitude, ascending);
-                case "Preferred": return CompareComparableProperty<IDisplayFact>(f => f.Preferred, ascending);
-                case "IgnoredFact": return CompareComparableProperty<IDisplayFact>(f => f.IgnoredFact, ascending);
-                default: return null;
-            }
+                "IndividualID" => CompareComparableProperty<IDisplayFact>(f => f.IndividualID, ascending),
+                "Surname" => new NameComparer<IDisplayFact>(ascending, false),
+                "Forenames" => new NameComparer<IDisplayFact>(ascending, true),
+                "DateofBirth" => CompareComparableProperty<IDisplayFact>(f => f.DateofBirth, ascending),
+                "SurnameAtDate" => CompareComparableProperty<IDisplayFact>(f => f.SurnameAtDate, ascending),
+                "TypeOfFact" => CompareComparableProperty<IDisplayFact>(f => f.TypeOfFact, ascending),
+                "FactDate" => CompareComparableProperty<IDisplayFact>(f => f.FactDate, ascending),
+                "Relation" => CompareComparableProperty<IDisplayFact>(f => f.Relation, ascending),
+                "RelationToRoot" => CompareComparableProperty<IDisplayFact>(f => f.RelationToRoot, ascending),
+                "Location" => CompareComparableProperty<IDisplayFact>(f => f.Location, ascending),
+                "AgeAtFact" => CompareComparableProperty<IDisplayFact>(f => f.AgeAtFact, ascending),
+                "GeocodeStatus" => CompareComparableProperty<IDisplayFact>(f => f.GeocodeStatus, ascending),
+                "FoundLocation" => CompareComparableProperty<IDisplayFact>(f => f.FoundLocation, ascending),
+                "FoundResultType" => CompareComparableProperty<IDisplayFact>(f => f.FoundResultType, ascending),
+                "CensusReference" => CompareComparableProperty<IDisplayFact>(f => f.CensusReference.ToString(), ascending),
+                "CensusRefYear" => CompareComparableProperty<IDisplayFact>(f => f.CensusRefYear, ascending),
+                "Comment" => CompareComparableProperty<IDisplayFact>(f => f.Comment, ascending),
+                "SourceList" => CompareComparableProperty<IDisplayFact>(f => f.SourceList, ascending),
+                "Latitude" => CompareComparableProperty<IDisplayFact>(f => f.Latitude, ascending),
+                "Longitude" => CompareComparableProperty<IDisplayFact>(f => f.Longitude, ascending),
+                "Preferred" => CompareComparableProperty<IDisplayFact>(f => f.Preferred, ascending),
+                "IgnoredFact" => CompareComparableProperty<IDisplayFact>(f => f.IgnoredFact, ascending),
+                _ => null,
+            };
         }
 
-        Comparer<T> CompareComparableProperty<T>(Func<DisplayFact, IComparable> accessor, bool ascending)
+        static Comparer<T> CompareComparableProperty<T>(Func<DisplayFact, IComparable> accessor, bool ascending)
         {
             return Comparer<T>.Create((x, y) =>
             {

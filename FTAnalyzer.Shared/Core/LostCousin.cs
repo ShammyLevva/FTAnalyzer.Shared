@@ -49,9 +49,9 @@ namespace FTAnalyzer
             BirthYear = result;
             Reference = reference;
             int ptr = weblink is null ? -1 : weblink.IndexOf("&p=", StringComparison.Ordinal);
-            WebLink = ptr == -1 || weblink.Length <= ptr+3 ? null : new Uri(HttpUtility.UrlDecode(weblink.Substring(ptr + 3)));
+            WebLink = ptr == -1 || weblink.Length <= ptr+3 ? null : new Uri(HttpUtility.UrlDecode(weblink[(ptr + 3)..]));
             FTAnalyzerFact = ftanalyzer;
-            census = census ?? string.Empty;
+            census ??= string.Empty;
             if (census.StartsWith("England", StringComparison.Ordinal))
             {
                 if (census.EndsWith("1841", StringComparison.Ordinal)) CensusDate = CensusDate.EWCENSUS1841;
@@ -73,10 +73,10 @@ namespace FTAnalyzer
             int ptr = Name.IndexOf(",", StringComparison.Ordinal);
             if (ptr > 0)
             {
-                string forenames = ptr + 2 < Name.Length ? Name.Substring(ptr + 2) : string.Empty;
-                string surname = Name.Substring(0, ptr);
+                string forenames = ptr + 2 < Name.Length ? Name[(ptr + 2)..] : string.Empty;
+                string surname = Name[..ptr];
                 int pos = forenames.IndexOf(" ", StringComparison.Ordinal);
-                string forename = forenames is null ? string.Empty : (pos > 0 ? forenames.Substring(0, pos) : forenames);
+                string forename = forenames is null ? string.Empty : (pos > 0 ? forenames[..pos] : forenames);
                 ForenameMetaphone = new DoubleMetaphone(forename).PrimaryKey;
                 SurnameMetaphone = new DoubleMetaphone(surname).PrimaryKey;
             }
@@ -89,11 +89,11 @@ namespace FTAnalyzer
 
         public bool Verified => false;
 
-        string FixReference(string reference)
+        static string FixReference(string reference)
         {
             string output = reference;
             if (output.Length > 24)
-                output = output.Substring(23); // strip the leading &census_code=XXXX&ref1=
+                output = output[23..]; // strip the leading &census_code=XXXX&ref1=
             output = output.Replace("&ref2=", "/").Replace("&ref3=", "/").Replace("&ref4=", "/").Replace("&ref5=", "/");
             output = output.Replace("//", "/").Replace("//", "/").TrimEnd('/');
             return output;
@@ -112,5 +112,7 @@ namespace FTAnalyzer
                 return true;
             return false;
         }
+
+        public override bool Equals(object obj) => Equals(obj as LostCousin);
     }
 }

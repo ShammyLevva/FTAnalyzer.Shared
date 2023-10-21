@@ -508,8 +508,7 @@ namespace FTAnalyzer
             get
             {
                 Fact f = GetPreferredFact(Fact.BAPTISM);
-                if (f is null)
-                    f = GetPreferredFact(Fact.CHRISTENING);
+                f ??= GetPreferredFact(Fact.CHRISTENING);
                 return f?.FactDate;
             }
         }
@@ -519,8 +518,7 @@ namespace FTAnalyzer
             get
             {
                 Fact f = GetPreferredFact(Fact.BURIAL);
-                if (f is null)
-                    f = GetPreferredFact(Fact.CREMATION);
+                f ??= GetPreferredFact(Fact.CREMATION);
                 return f?.FactDate;
             }
         }
@@ -1068,7 +1066,7 @@ namespace FTAnalyzer
         public string LCForename => ValidLostCousinsString(Forename, false);
         public string LCOtherNames => ValidLostCousinsString(OtherNames, true);
 
-        string ValidLostCousinsString(string input, bool allowspace)
+        static string ValidLostCousinsString(string input, bool allowspace)
         {
             StringBuilder output = new();
             input = RemoveQuoted(input);
@@ -1083,7 +1081,7 @@ namespace FTAnalyzer
             return result == "-" ? UNKNOWN_NAME : result;
         }
 
-        string RemoveQuoted(string input)
+        static string RemoveQuoted(string input)
         {
             string output = input.Replace("UNKNOWN", "");
             int startptr = input.IndexOf('\'');
@@ -1724,170 +1722,170 @@ namespace FTAnalyzer
 
         IComparer<IDisplayIndividual> IColumnComparer<IDisplayIndividual>.GetComparer(string columnName, bool ascending)
         {
-            switch(columnName)
+            return columnName switch
             {
-                case "IndividualID": return CompareComparableProperty<IDisplayIndividual>(i => i.IndividualID, ascending);
-                case "Forenames": return new NameComparer<IDisplayIndividual>(ascending, true);
-                case "Surname": return new NameComparer<IDisplayIndividual>(ascending, false);
-                case "Gender": return CompareComparableProperty<IDisplayIndividual>(i => i.Gender, ascending);
-                case "BirthDate": return CompareComparableProperty<IDisplayIndividual>(i => i.BirthDate, ascending);
-                case "BirthLocation": return CompareComparableProperty<IDisplayIndividual>(i => i.BirthLocation, ascending);
-                case "DeathDate": return CompareComparableProperty<IDisplayIndividual>(i => i.DeathDate, ascending);
-                case "DeathLocation": return CompareComparableProperty<IDisplayIndividual>(i => i.DeathLocation, ascending);
-                case "Occupation": return CompareComparableProperty<IDisplayIndividual>(i => i.Occupation, ascending);
-                case "Relation": return CompareComparableProperty<IDisplayIndividual>(i => i.Relation, ascending);
-                case "RelationToRoot": return CompareComparableProperty<IDisplayIndividual>(i => i.RelationToRoot, ascending);
-                case "FamilySearchID": return CompareComparableProperty<IDisplayIndividual>(i => i.FamilySearchID, ascending);
-                case "MarriageCount": return CompareComparableProperty<IDisplayIndividual>(i => i.MarriageCount, ascending);
-                case "ChildrenCount": return CompareComparableProperty<IDisplayIndividual>(i => i.ChildrenCount, ascending);
-                case "BudgieCode": return CompareComparableProperty<IDisplayIndividual>(i => i.BudgieCode, ascending);
-                case "Ahnentafel": return CompareComparableProperty<IDisplayIndividual>(i => i.Ahnentafel, ascending);
-                case "Notes": return CompareComparableProperty<IDisplayIndividual>(i => i.Notes, ascending);
-                default: return null;
-            }
+                "IndividualID" => CompareComparableProperty<IDisplayIndividual>(i => i.IndividualID, ascending),
+                "Forenames" => new NameComparer<IDisplayIndividual>(ascending, true),
+                "Surname" => new NameComparer<IDisplayIndividual>(ascending, false),
+                "Gender" => CompareComparableProperty<IDisplayIndividual>(i => i.Gender, ascending),
+                "BirthDate" => CompareComparableProperty<IDisplayIndividual>(i => i.BirthDate, ascending),
+                "BirthLocation" => CompareComparableProperty<IDisplayIndividual>(i => i.BirthLocation, ascending),
+                "DeathDate" => CompareComparableProperty<IDisplayIndividual>(i => i.DeathDate, ascending),
+                "DeathLocation" => CompareComparableProperty<IDisplayIndividual>(i => i.DeathLocation, ascending),
+                "Occupation" => CompareComparableProperty<IDisplayIndividual>(i => i.Occupation, ascending),
+                "Relation" => CompareComparableProperty<IDisplayIndividual>(i => i.Relation, ascending),
+                "RelationToRoot" => CompareComparableProperty<IDisplayIndividual>(i => i.RelationToRoot, ascending),
+                "FamilySearchID" => CompareComparableProperty<IDisplayIndividual>(i => i.FamilySearchID, ascending),
+                "MarriageCount" => CompareComparableProperty<IDisplayIndividual>(i => i.MarriageCount, ascending),
+                "ChildrenCount" => CompareComparableProperty<IDisplayIndividual>(i => i.ChildrenCount, ascending),
+                "BudgieCode" => CompareComparableProperty<IDisplayIndividual>(i => i.BudgieCode, ascending),
+                "Ahnentafel" => CompareComparableProperty<IDisplayIndividual>(i => i.Ahnentafel, ascending),
+                "Notes" => CompareComparableProperty<IDisplayIndividual>(i => i.Notes, ascending),
+                _ => null,
+            };
         }
 
         IComparer<IDisplayColourBMD> IColumnComparer<IDisplayColourBMD>.GetComparer(string columnName, bool ascending)
         {
-            switch (columnName)
+            return columnName switch
             {
-                case "IndividualID": return CompareComparableProperty<IDisplayColourBMD>(i => i.IndividualID, ascending);
-                case "Forenames": return new NameComparer<IDisplayColourBMD>(ascending, true);
-                case "Surname": return new NameComparer<IDisplayColourBMD>(ascending, false);
-                case "Relation": return CompareComparableProperty<IDisplayColourBMD>(i => i.Relation, ascending);
-                case "RelationToRoot": return CompareComparableProperty<IDisplayColourBMD>(i => i.RelationToRoot, ascending);
-                case "Birth": return CompareComparableProperty<IDisplayColourBMD>(i => (int)i.Birth, ascending);
-                case "Baptism": return CompareComparableProperty<IDisplayColourBMD>(i => (int)i.BaptChri, ascending);
-                case "Marriage 1": return CompareComparableProperty<IDisplayColourBMD>(i => (int)i.Marriage1, ascending);
-                case "Marriage 2": return CompareComparableProperty<IDisplayColourBMD>(i => (int)i.Marriage2, ascending);
-                case "Marriage 3": return CompareComparableProperty<IDisplayColourBMD>(i => (int)i.Marriage3, ascending);
-                case "Death": return CompareComparableProperty<IDisplayColourBMD>(i => (int)i.Death, ascending);
-                case "Burial": return CompareComparableProperty<IDisplayColourBMD>(i => (int)i.CremBuri, ascending);
-                case "BirthDate": return CompareComparableProperty<IDisplayColourBMD>(i => i.BirthDate, ascending);
-                case "DeathDate": return CompareComparableProperty<IDisplayColourBMD>(i => i.DeathDate, ascending);
-                case "First Marriage": return CompareComparableProperty<IDisplayColourBMD>(i => i.FirstMarriage, ascending);
-                case "Second Marriage": return CompareComparableProperty<IDisplayColourBMD>(i => i.SecondMarriage, ascending);
-                case "Third Marriage": return CompareComparableProperty<IDisplayColourBMD>(i => i.ThirdMarriage, ascending);
-                case "BirthLocation": return CompareComparableProperty<IDisplayColourBMD>(i => i.BirthLocation, ascending);
-                case "DeathLocation": return CompareComparableProperty<IDisplayColourBMD>(i => i.DeathLocation, ascending);
-                case "Ahnentafel": return CompareComparableProperty<IDisplayColourBMD>(i => i.Ahnentafel, ascending);
-                default: return null;
-            }
+                "IndividualID" => CompareComparableProperty<IDisplayColourBMD>(i => i.IndividualID, ascending),
+                "Forenames" => new NameComparer<IDisplayColourBMD>(ascending, true),
+                "Surname" => new NameComparer<IDisplayColourBMD>(ascending, false),
+                "Relation" => CompareComparableProperty<IDisplayColourBMD>(i => i.Relation, ascending),
+                "RelationToRoot" => CompareComparableProperty<IDisplayColourBMD>(i => i.RelationToRoot, ascending),
+                "Birth" => CompareComparableProperty<IDisplayColourBMD>(i => (int)i.Birth, ascending),
+                "Baptism" => CompareComparableProperty<IDisplayColourBMD>(i => (int)i.BaptChri, ascending),
+                "Marriage 1" => CompareComparableProperty<IDisplayColourBMD>(i => (int)i.Marriage1, ascending),
+                "Marriage 2" => CompareComparableProperty<IDisplayColourBMD>(i => (int)i.Marriage2, ascending),
+                "Marriage 3" => CompareComparableProperty<IDisplayColourBMD>(i => (int)i.Marriage3, ascending),
+                "Death" => CompareComparableProperty<IDisplayColourBMD>(i => (int)i.Death, ascending),
+                "Burial" => CompareComparableProperty<IDisplayColourBMD>(i => (int)i.CremBuri, ascending),
+                "BirthDate" => CompareComparableProperty<IDisplayColourBMD>(i => i.BirthDate, ascending),
+                "DeathDate" => CompareComparableProperty<IDisplayColourBMD>(i => i.DeathDate, ascending),
+                "First Marriage" => CompareComparableProperty<IDisplayColourBMD>(i => i.FirstMarriage, ascending),
+                "Second Marriage" => CompareComparableProperty<IDisplayColourBMD>(i => i.SecondMarriage, ascending),
+                "Third Marriage" => CompareComparableProperty<IDisplayColourBMD>(i => i.ThirdMarriage, ascending),
+                "BirthLocation" => CompareComparableProperty<IDisplayColourBMD>(i => i.BirthLocation, ascending),
+                "DeathLocation" => CompareComparableProperty<IDisplayColourBMD>(i => i.DeathLocation, ascending),
+                "Ahnentafel" => CompareComparableProperty<IDisplayColourBMD>(i => i.Ahnentafel, ascending),
+                _ => null,
+            };
         }
 
         IComparer<IDisplayColourCensus> IColumnComparer<IDisplayColourCensus>.GetComparer(string columnName, bool ascending)
         {
-            switch (columnName)
+            return columnName switch
             {
-                case "IndividualID": return CompareComparableProperty<IDisplayColourCensus>(i => i.IndividualID, ascending);
-                case "Forenames": return  new NameComparer<IDisplayColourCensus>(ascending, true);
-                case "Surname": return new NameComparer<IDisplayColourCensus>(ascending, false);
-                case "Relation": return CompareComparableProperty<IDisplayColourCensus>(i => i.Relation, ascending);
-                case "RelationToRoot": return CompareComparableProperty<IDisplayColourCensus>(i => i.RelationToRoot, ascending);
-                case "BirthDate": return CompareComparableProperty<IDisplayColourCensus>(i => i.BirthDate, ascending);
-                case "BirthLocation": return CompareComparableProperty<IDisplayColourCensus>(i => i.BirthLocation, ascending);
-                case "DeathDate": return CompareComparableProperty<IDisplayColourCensus>(i => i.DeathDate, ascending);
-                case "DeathLocation": return CompareComparableProperty<IDisplayColourCensus>(i => i.DeathLocation, ascending);
-                case "C1841": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.C1841, ascending);
-                case "C1851": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.C1851, ascending);
-                case "C1861": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.C1861, ascending);
-                case "C1871": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.C1871, ascending);
-                case "C1881": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.C1881, ascending);
-                case "C1891": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.C1891, ascending);
-                case "C1901": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.C1901, ascending);
-                case "C1911": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.C1911, ascending);
-                case "C1921": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.C1921, ascending);
-                case "C1939": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.C1939, ascending);
-                case "US1790": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1790, ascending);
-                case "US1800": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1800, ascending);
-                case "US1810": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1810, ascending);
-                case "US1820": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1820, ascending);
-                case "US1830": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1830, ascending);
-                case "US1840": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1840, ascending);
-                case "US1850": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1850, ascending);
-                case "US1860": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1860, ascending);
-                case "US1870": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1870, ascending);
-                case "US1880": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1880, ascending);
-                case "US1890": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1890, ascending);
-                case "US1900": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1900, ascending);
-                case "US1910": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1910, ascending);
-                case "US1920": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1920, ascending);
-                case "US1930": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1930, ascending);
-                case "US1940": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1940, ascending);
-                case "US1950": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1950, ascending);
-                case "Ire1901": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.Ire1901, ascending);
-                case "Ire1911": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.Ire1911, ascending);
-                case "Can1851": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.Can1851, ascending);
-                case "Can1861": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.Can1861, ascending);
-                case "Can1871": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.Can1871, ascending);
-                case "Can1881": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.Can1881, ascending);
-                case "Can1891": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.Can1891, ascending);
-                case "Can1901": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.Can1901, ascending);
-                case "Can1906": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.Can1906, ascending);
-                case "Can1911": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.Can1911, ascending);
-                case "Can1916": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.Can1916, ascending);
-                case "Can1921": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.Can1921, ascending);
-                case "V1865": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.V1865, ascending);
-                case "V1875": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.V1875, ascending);
-                case "V1885": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.V1885, ascending);
-                case "V1895": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.V1895, ascending);
-                case "V1905": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.V1905, ascending);
-                case "V1915": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.V1915, ascending);
-                case "V1920": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.V1920, ascending);
-                case "V1925": return CompareComparableProperty<IDisplayColourCensus>(i => (int)i.V1925, ascending);
-                case "Ahnentafel": return CompareComparableProperty<IDisplayColourCensus>(i => i.Ahnentafel, ascending);
-                default: return null;
-            }
+                "IndividualID" => CompareComparableProperty<IDisplayColourCensus>(i => i.IndividualID, ascending),
+                "Forenames" => new NameComparer<IDisplayColourCensus>(ascending, true),
+                "Surname" => new NameComparer<IDisplayColourCensus>(ascending, false),
+                "Relation" => CompareComparableProperty<IDisplayColourCensus>(i => i.Relation, ascending),
+                "RelationToRoot" => CompareComparableProperty<IDisplayColourCensus>(i => i.RelationToRoot, ascending),
+                "BirthDate" => CompareComparableProperty<IDisplayColourCensus>(i => i.BirthDate, ascending),
+                "BirthLocation" => CompareComparableProperty<IDisplayColourCensus>(i => i.BirthLocation, ascending),
+                "DeathDate" => CompareComparableProperty<IDisplayColourCensus>(i => i.DeathDate, ascending),
+                "DeathLocation" => CompareComparableProperty<IDisplayColourCensus>(i => i.DeathLocation, ascending),
+                "C1841" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.C1841, ascending),
+                "C1851" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.C1851, ascending),
+                "C1861" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.C1861, ascending),
+                "C1871" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.C1871, ascending),
+                "C1881" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.C1881, ascending),
+                "C1891" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.C1891, ascending),
+                "C1901" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.C1901, ascending),
+                "C1911" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.C1911, ascending),
+                "C1921" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.C1921, ascending),
+                "C1939" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.C1939, ascending),
+                "US1790" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1790, ascending),
+                "US1800" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1800, ascending),
+                "US1810" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1810, ascending),
+                "US1820" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1820, ascending),
+                "US1830" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1830, ascending),
+                "US1840" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1840, ascending),
+                "US1850" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1850, ascending),
+                "US1860" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1860, ascending),
+                "US1870" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1870, ascending),
+                "US1880" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1880, ascending),
+                "US1890" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1890, ascending),
+                "US1900" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1900, ascending),
+                "US1910" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1910, ascending),
+                "US1920" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1920, ascending),
+                "US1930" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1930, ascending),
+                "US1940" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1940, ascending),
+                "US1950" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1950, ascending),
+                "Ire1901" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.Ire1901, ascending),
+                "Ire1911" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.Ire1911, ascending),
+                "Can1851" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.Can1851, ascending),
+                "Can1861" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.Can1861, ascending),
+                "Can1871" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.Can1871, ascending),
+                "Can1881" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.Can1881, ascending),
+                "Can1891" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.Can1891, ascending),
+                "Can1901" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.Can1901, ascending),
+                "Can1906" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.Can1906, ascending),
+                "Can1911" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.Can1911, ascending),
+                "Can1916" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.Can1916, ascending),
+                "Can1921" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.Can1921, ascending),
+                "V1865" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.V1865, ascending),
+                "V1875" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.V1875, ascending),
+                "V1885" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.V1885, ascending),
+                "V1895" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.V1895, ascending),
+                "V1905" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.V1905, ascending),
+                "V1915" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.V1915, ascending),
+                "V1920" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.V1920, ascending),
+                "V1925" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.V1925, ascending),
+                "Ahnentafel" => CompareComparableProperty<IDisplayColourCensus>(i => i.Ahnentafel, ascending),
+                _ => null,
+            };
         }
 
         IComparer<IDisplayLooseBirth> IColumnComparer<IDisplayLooseBirth>.GetComparer(string columnName, bool ascending)
         {
-            switch (columnName)
+            return columnName switch
             {
-                case "IndividualID": return CompareComparableProperty<IDisplayLooseBirth>(i => i.IndividualID, ascending);
-                case "Forenames": return new NameComparer<IDisplayLooseBirth>(ascending, true);
-                case "Surname": return new NameComparer<IDisplayLooseBirth>(ascending, false);
-                case "BirthDate": return CompareComparableProperty<IDisplayLooseBirth>(i => i.BirthDate, ascending);
-                case "BirthLocation": return CompareComparableProperty<IDisplayLooseBirth>(i => i.BirthLocation, ascending);
-                case "LooseBirth": return CompareComparableProperty<IDisplayLooseBirth>(i => i.LooseBirthDate, ascending);
-                default: return null;
-            }
+                "IndividualID" => CompareComparableProperty<IDisplayLooseBirth>(i => i.IndividualID, ascending),
+                "Forenames" => new NameComparer<IDisplayLooseBirth>(ascending, true),
+                "Surname" => new NameComparer<IDisplayLooseBirth>(ascending, false),
+                "BirthDate" => CompareComparableProperty<IDisplayLooseBirth>(i => i.BirthDate, ascending),
+                "BirthLocation" => CompareComparableProperty<IDisplayLooseBirth>(i => i.BirthLocation, ascending),
+                "LooseBirth" => CompareComparableProperty<IDisplayLooseBirth>(i => i.LooseBirthDate, ascending),
+                _ => null,
+            };
         }
 
         IComparer<IDisplayLooseDeath> IColumnComparer<IDisplayLooseDeath>.GetComparer(string columnName, bool ascending)
         {
-            switch (columnName)
+            return columnName switch
             {
-                case "IndividualID": return CompareComparableProperty<IDisplayLooseDeath>(i => i.IndividualID, ascending);
-                case "Forenames": return new NameComparer<IDisplayLooseDeath>(ascending, true);
-                case "Surname": return new NameComparer<IDisplayLooseDeath>(ascending, false);
-                case "BirthDate": return CompareComparableProperty<IDisplayLooseDeath>(i => i.DeathDate, ascending);
-                case "BirthLocation": return CompareComparableProperty<IDisplayLooseDeath>(i => i.DeathLocation, ascending);
-                case "DeathDate": return CompareComparableProperty<IDisplayLooseDeath>(i => i.DeathDate, ascending);
-                case "DeathLocation": return CompareComparableProperty<IDisplayLooseDeath>(i => i.DeathLocation, ascending);
-                case "LooseDeath": return CompareComparableProperty<IDisplayLooseDeath>(i => i.LooseDeathDate, ascending);
-                default: return null;
-            }
+                "IndividualID" => CompareComparableProperty<IDisplayLooseDeath>(i => i.IndividualID, ascending),
+                "Forenames" => new NameComparer<IDisplayLooseDeath>(ascending, true),
+                "Surname" => new NameComparer<IDisplayLooseDeath>(ascending, false),
+                "BirthDate" => CompareComparableProperty<IDisplayLooseDeath>(i => i.DeathDate, ascending),
+                "BirthLocation" => CompareComparableProperty<IDisplayLooseDeath>(i => i.DeathLocation, ascending),
+                "DeathDate" => CompareComparableProperty<IDisplayLooseDeath>(i => i.DeathDate, ascending),
+                "DeathLocation" => CompareComparableProperty<IDisplayLooseDeath>(i => i.DeathLocation, ascending),
+                "LooseDeath" => CompareComparableProperty<IDisplayLooseDeath>(i => i.LooseDeathDate, ascending),
+                _ => null,
+            };
         }
 
         IComparer<IDisplayLooseInfo> IColumnComparer<IDisplayLooseInfo>.GetComparer(string columnName, bool ascending)
         {
-            switch (columnName)
+            return columnName switch
             {
-                case "IndividualID": return CompareComparableProperty<IDisplayLooseInfo>(i => i.IndividualID, ascending);
-                case "Forenames": return new NameComparer<IDisplayLooseInfo>(ascending, true);
-                case "Surname": return new NameComparer<IDisplayLooseInfo>(ascending, false);
-                case "BirthDate": return CompareComparableProperty<IDisplayLooseInfo>(i => i.BirthDate, ascending);
-                case "BirthLocation": return CompareComparableProperty<IDisplayLooseInfo>(i => i.BirthLocation, ascending);
-                case "DeathDate": return CompareComparableProperty<IDisplayLooseInfo>(i => i.DeathDate, ascending);
-                case "DeathLocation": return CompareComparableProperty<IDisplayLooseInfo>(i => i.DeathLocation, ascending);
-                case "LooseBirth": return CompareComparableProperty<IDisplayLooseInfo>(i => i.LooseDeathDate, ascending);
-                case "LooseDeath": return CompareComparableProperty<IDisplayLooseInfo>(i => i.LooseDeathDate, ascending);
-                default: return null;
-            }
+                "IndividualID" => CompareComparableProperty<IDisplayLooseInfo>(i => i.IndividualID, ascending),
+                "Forenames" => new NameComparer<IDisplayLooseInfo>(ascending, true),
+                "Surname" => new NameComparer<IDisplayLooseInfo>(ascending, false),
+                "BirthDate" => CompareComparableProperty<IDisplayLooseInfo>(i => i.BirthDate, ascending),
+                "BirthLocation" => CompareComparableProperty<IDisplayLooseInfo>(i => i.BirthLocation, ascending),
+                "DeathDate" => CompareComparableProperty<IDisplayLooseInfo>(i => i.DeathDate, ascending),
+                "DeathLocation" => CompareComparableProperty<IDisplayLooseInfo>(i => i.DeathLocation, ascending),
+                "LooseBirth" => CompareComparableProperty<IDisplayLooseInfo>(i => i.LooseDeathDate, ascending),
+                "LooseDeath" => CompareComparableProperty<IDisplayLooseInfo>(i => i.LooseDeathDate, ascending),
+                _ => null,
+            };
         }
 
-        Comparer<T> CompareComparableProperty<T>(Func<Individual, IComparable> accessor, bool ascending)
+        static Comparer<T> CompareComparableProperty<T>(Func<Individual, IComparable> accessor, bool ascending)
         {
             return Comparer<T>.Create((x, y) =>
             {
