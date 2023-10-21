@@ -440,7 +440,9 @@ namespace FTAnalyzer
             else if (buffer[0] == 0 && buffer[1] == 0 && buffer[2] == 0xfe && buffer[3] == 0xff)
                 enc = Encoding.UTF32;
             else if (buffer[0] == 0x2b && buffer[1] == 0x2f && buffer[2] == 0x76)
+#pragma warning disable SYSLIB0001 // Type or member is obsolete
                 enc = Encoding.UTF7;
+#pragma warning restore SYSLIB0001 // Type or member is obsolete
             else if (buffer[0] == 0xff && buffer[1] == 0xfe && buffer[2] == 0 && buffer[3] == 0) // UTF32 little endian
                 enc = Encoding.UTF32;
             else if (buffer[0] == 0xff && buffer[1] == 0xfe) // UTF16 little endian
