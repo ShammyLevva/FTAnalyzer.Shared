@@ -9,7 +9,7 @@ namespace FTAnalyzer
 
         public CensusLocationComparer(int level) => Level = level;
 
-        public override int Compare(CensusIndividual x, CensusIndividual y)
+        public override int Compare(CensusIndividual? x, CensusIndividual? y)
         {
             FactLocation l1 = x.CensusLocation;
             FactLocation l2 = y.CensusLocation;

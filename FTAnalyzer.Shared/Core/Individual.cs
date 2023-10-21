@@ -1700,7 +1700,7 @@ namespace FTAnalyzer
 
         public override string ToString() => $"{IndividualID}: {Name} b.{BirthDate}";
 
-        public int CompareTo(Individual that)
+        public int CompareTo(Individual? that)
         {
             // Individuals are naturally ordered by surname, then forenames,
             // then date of birth.

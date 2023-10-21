@@ -1181,9 +1181,9 @@ namespace FTAnalyzer
 
         #region Overrides
 
-        public int CompareTo(object that) => CompareTo(that as FactLocation);
+        public int CompareTo(object? that) => CompareTo(that as FactLocation);
 
-        public int CompareTo(FactLocation that) => CompareTo(that, PLACE);
+        public int CompareTo(FactLocation? that) => CompareTo(that, PLACE);
 
         public int CompareTo(IDisplayLocation that, int level) => CompareTo((FactLocation)that, level);
 

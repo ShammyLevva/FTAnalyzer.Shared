@@ -14,7 +14,7 @@ namespace FTAnalyzer
             Ascending = ascending ? 1 : -1;
         }
 
-        public int Compare(T x, T y)
+        public int Compare(T? x, T? y)
         {
             var ind1 = x as Individual;
             var ind2 = y as Individual;

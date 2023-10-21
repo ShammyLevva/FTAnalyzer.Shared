@@ -4,7 +4,7 @@ namespace FTAnalyzer
 {
     public class CensusAgeComparer : IComparer<CensusIndividual>
     {
-        public int Compare(CensusIndividual i1, CensusIndividual i2)
+        public int Compare(CensusIndividual? i1, CensusIndividual? i2)
         {
             if (i1.CensusStatus == i2.CensusStatus)
                 // same status so sort by date

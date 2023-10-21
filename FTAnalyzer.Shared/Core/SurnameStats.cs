@@ -22,7 +22,7 @@ namespace FTAnalyzer
             GOONSpage = string.Empty;
         }
 
-        public int CompareTo(IDisplaySurnames other) => string.Compare(Surname, other.Surname, StringComparison.Ordinal);
+        public int CompareTo(IDisplaySurnames? other) => string.Compare(Surname, other.Surname, StringComparison.Ordinal);
 
         public IComparer<IDisplaySurnames> GetComparer(string columnName, bool ascending)
         {
@@ -50,7 +50,7 @@ namespace FTAnalyzer
 
     public class SurnameStatsComparer : IEqualityComparer<IDisplaySurnames>
     {
-        public bool Equals(IDisplaySurnames a, IDisplaySurnames b)
+        public bool Equals(IDisplaySurnames? a, IDisplaySurnames? b)
         {
             return a.Surname.ToUpper() == b.Surname.ToUpper() &&
                     a.Individuals == b.Individuals &&

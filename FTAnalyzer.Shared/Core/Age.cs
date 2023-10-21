@@ -106,10 +106,10 @@ namespace FTAnalyzer
 
         public override string ToString() => _age;
 
-        public int CompareTo(Age that) =>
+        public int CompareTo(Age? that) =>
             MinAge == that.MinAge ? MaxAge - that.MaxAge : MinAge - that.MinAge;
 
-        public int CompareTo(object that) => CompareTo(that as Age);
+        public int CompareTo(object? that) => CompareTo(that as Age);
 
         public override bool Equals(object? obj) =>
             (obj is Age that) && MaxAge == that.MaxAge && MinAge == that.MinAge;
