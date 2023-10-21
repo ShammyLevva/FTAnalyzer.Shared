@@ -1053,16 +1053,12 @@ namespace FTAnalyzer
         {
             if (looseInfo is not null)
                 return looseInfo;
-            if (looseBirths is null)
-                LooseBirths();
-            if (looseDeaths is null)
-                LooseDeaths();
             SortableBindingList<IDisplayLooseInfo> result = new();
             try
             {
-                foreach (Individual ind in looseBirths.Cast<Individual>())
+                foreach (Individual ind in LooseBirths().Cast<Individual>())
                     result.Add(ind);
-                foreach (Individual ind in looseDeaths.Cast<Individual>())
+                foreach (Individual ind in LooseDeaths().Cast<Individual>())
                     result.Add(ind);
             }
             catch (Exception ex)
@@ -1596,19 +1592,22 @@ namespace FTAnalyzer
             IEnumerable<Individual> blood = GetAllRelationsOfType(Individual.BLOOD);
             IEnumerable<Individual> married = GetAllRelationsOfType(Individual.MARRIEDTODB);
             Individual? rootPerson = GetIndividual(startID);
-            foreach (Individual i in directs)
-                i.RelationToRoot = Relationship.CalculateRelationship(rootPerson, i);
-            foreach (Individual i in blood)
-                i.RelationToRoot = Relationship.CalculateRelationship(rootPerson, i);
-            foreach (Individual i in married)
+            if (rootPerson is not null)
             {
-                foreach (Family f in i.FamiliesAsSpouse)
+                foreach (Individual i in directs)
+                    i.RelationToRoot = Relationship.CalculateRelationship(rootPerson, i);
+                foreach (Individual i in blood)
+                    i.RelationToRoot = Relationship.CalculateRelationship(rootPerson, i);
+                foreach (Individual i in married)
                 {
-                    if (i.RelationToRoot is null && f.Spouse(i) is not null && f.Spouse(i).IsBloodDirect)
+                    foreach (Family f in i.FamiliesAsSpouse)
                     {
-                        string relation = f.MaritalStatus != Family.MARRIED ? "partner" : i.IsMale ? "husband" : "wife";
-                        i.RelationToRoot = $"{relation} of {f.Spouse(i).RelationToRoot}";
-                        break;
+                        if (i.RelationToRoot is null && f.Spouse(i) is not null && f.Spouse(i).IsBloodDirect)
+                        {
+                            string relation = f.MaritalStatus != Family.MARRIED ? "partner" : i.IsMale ? "husband" : "wife";
+                            i.RelationToRoot = $"{relation} of {f.Spouse(i).RelationToRoot}";
+                            break;
+                        }
                     }
                 }
             }
@@ -2938,8 +2937,9 @@ namespace FTAnalyzer
 
         public enum SearchType { BIRTH = 0, MARRIAGE = 1, DEATH = 2 };
 
-        public void SearchBMD(SearchType st, Individual individual, FactDate factdate, FactLocation factLocation, int searchProvider, string bmdRegion, Individual spouse)
+        public void SearchBMD(SearchType st, Individual? individual, FactDate factdate, FactLocation factLocation, int searchProvider, string bmdRegion, Individual? spouse)
         {
+            if (individual is null) return;
             string? uri = null;
             if (factdate.IsUnknown || factdate.DateType.Equals(FactDate.FactDateType.AFT) || factdate.DateType.Equals(FactDate.FactDateType.BEF))
             {
@@ -2994,7 +2994,7 @@ namespace FTAnalyzer
             }
         }
 
-        static Tuple<string, string> BuildScotlandsPeopleQuery(SearchType st, Individual individual, FactDate factdate, Individual spouse)
+        static Tuple<string, string> BuildScotlandsPeopleQuery(SearchType st, Individual individual, FactDate factdate, Individual? spouse)
         {
             string oprResult = string.Empty;
             string statutoryResult = string.Empty;
@@ -3389,12 +3389,12 @@ namespace FTAnalyzer
                 Individual ind = queue.Dequeue();
                 foreach (ParentalRelationship parents in ind.FamiliesAsChild)
                 {
-                    if (parents.IsNaturalFather)
+                    if (parents.Father is not null && parents.IsNaturalFather)
                     {
                         queue.Enqueue(parents.Father);
                         results.Add(parents.Father);
                     }
-                    if (parents.IsNaturalMother)
+                    if (parents.Mother is not null && parents.IsNaturalMother)
                     {
                         queue.Enqueue(parents.Mother);
                         results.Add(parents.Mother);
