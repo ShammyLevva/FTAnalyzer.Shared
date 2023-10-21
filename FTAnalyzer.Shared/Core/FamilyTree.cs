@@ -22,11 +22,8 @@ using System.Xml;
 using System.Numerics;
 using System.Collections.Concurrent;
 using System.Diagnostics;
-#if __PC__
-using FTAnalyzer.Windows.Properties;
-#elif __MACOS__ || __IOS__
-using FTAnalyzer.Properties;
-#endif
+//using FTAnalyzer.Windows;
+using System.Text.Json;
 
 #if __PC__
 using FTAnalyzer.Forms.Controls;
@@ -3604,12 +3601,9 @@ namespace FTAnalyzer
         {
             try
             {
-                IFormatter formatter = new BinaryFormatter();
-                string file = Path.Combine(GeneralSettings.Default.SavePath, "NonDuplicates.xml");
-                using (Stream stream = new FileStream(file, FileMode.Create, FileAccess.Write, FileShare.None))
-                {
-                    formatter.Serialize(stream, NonDuplicates);
-                }
+                string jsonFile = Path.Combine(GeneralSettings.Default.SavePath, "NonDuplicates.json");
+                string nonDuplicates = JsonSerializer.Serialize(NonDuplicates);
+                File.WriteAllText(jsonFile, nonDuplicates);
             }
             catch
             {
@@ -3623,22 +3617,34 @@ namespace FTAnalyzer
             try
             {
                 IFormatter formatter = new BinaryFormatter();
-                string file = Path.Combine(GeneralSettings.Default.SavePath, "NonDuplicates.xml");
-                if (File.Exists(file))
-                {
-                    using (Stream stream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read))
-                    {
-                        NonDuplicates = (List<NonDuplicate>)formatter.Deserialize(stream);
-                    }
-                }
+                string xmlFile = Path.Combine(GeneralSettings.Default.SavePath, "NonDuplicates.xml");
+                string jsonFile = Path.Combine(GeneralSettings.Default.SavePath, "NonDuplicates.json");
+                if (File.Exists(xmlFile))
+                    ConvertToJson(formatter, xmlFile);
+                else if (File.Exists(jsonFile))
+                    NonDuplicates = JsonSerializer.Deserialize<List<NonDuplicate>>(File.ReadAllText(jsonFile));
                 else
                     NonDuplicates = new List<NonDuplicate>();
             }
-            catch
+            catch (Exception e)
             {
-                //  log.Error("Error " + e.Message + " reading NonDuplicates.xml");
+                Debug.Print($"Error {e.Message} reading NonDuplicates.xml");
                 NonDuplicates = new List<NonDuplicate>();
             }
+        }
+
+        void ConvertToJson(IFormatter formatter, string xmlFile)
+        {
+            Stream stream = new FileStream(xmlFile, FileMode.Open, FileAccess.Read, FileShare.Read);
+#pragma warning disable SYSLIB0011 // Type or member is obsolete 
+            // TODO: suppress for now whilst convert from old file to new
+            NonDuplicates = formatter.Deserialize(stream) as List<NonDuplicate>;
+#pragma warning restore SYSLIB0011 // Type or member is obsolete
+            stream.Close();
+            string jsonFile = Path.Combine(GeneralSettings.Default.SavePath, "NonDuplicates.json");
+            string nonDuplicates = JsonSerializer.Serialize(NonDuplicates);
+            File.WriteAllText(jsonFile, nonDuplicates);
+            File.Delete(xmlFile);
         }
         #endregion
 

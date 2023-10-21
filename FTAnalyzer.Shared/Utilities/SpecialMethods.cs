@@ -7,11 +7,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System;
 using System.Drawing;
-#if __PC__
-using FTAnalyzer.Windows.Properties;
-#elif __MACOS__ || __IOS__
 using FTAnalyzer.Properties;
-#endif
 #if __PC__
 using System.Collections.Generic;
 using System.Linq;

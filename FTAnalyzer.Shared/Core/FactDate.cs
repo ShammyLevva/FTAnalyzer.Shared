@@ -1,12 +1,8 @@
 ﻿using FTAnalyzer.Exports;
-using FTAnalyzer.Utilities;
-#if __PC__
-using FTAnalyzer.Windows.Properties;
-#elif __MACOS__ || __IOS__
-using FTAnalyzer.Properties;
-#endif
 using System;
 using System.Collections.Generic;
+﻿using FTAnalyzer.Utilities;
+using FTAnalyzer.Properties;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text;

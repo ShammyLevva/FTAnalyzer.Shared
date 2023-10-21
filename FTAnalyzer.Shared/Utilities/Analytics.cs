@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 
 #if __PC__
-using FTAnalyzer.Windows.Properties;
+using FTAnalyzer.Properties;
 using System.Windows.Forms;
 #elif __MACOS__
 using AppKit;

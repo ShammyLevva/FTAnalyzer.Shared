@@ -1,8 +1,4 @@
-#if __PC__
-﻿using FTAnalyzer.Windows.Properties;
-#elif __MACOS__ || __IOS__
-using FTAnalyzer.Properties;
-#endif
+﻿using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
 using HtmlAgilityPack;
 using System;
