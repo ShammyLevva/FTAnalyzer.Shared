@@ -3625,10 +3625,7 @@ namespace FTAnalyzer
         void ConvertToJson(IFormatter formatter, string xmlFile)
         {
             Stream stream = new FileStream(xmlFile, FileMode.Open, FileAccess.Read, FileShare.Read);
-#pragma warning disable SYSLIB0011 // Type or member is obsolete 
-            // TODO: suppress for now whilst convert from old file to new
             NonDuplicates = formatter.Deserialize(stream) as List<NonDuplicate>;
-#pragma warning restore SYSLIB0011 // Type or member is obsolete
             stream.Close();
             string jsonFile = Path.Combine(GeneralSettings.Default.SavePath, "NonDuplicates.json");
             string nonDuplicates = JsonSerializer.Serialize(NonDuplicates);
