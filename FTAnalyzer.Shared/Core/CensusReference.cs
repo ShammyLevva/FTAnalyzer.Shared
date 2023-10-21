@@ -1,4 +1,8 @@
+#if __PC__
 ﻿using FTAnalyzer.Windows.Properties;
+#elif __MACOS__ || __IOS__
+using FTAnalyzer.Properties;
+#endif
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;

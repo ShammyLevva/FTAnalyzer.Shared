@@ -1,5 +1,9 @@
 ﻿using FTAnalyzer.Filters;
+#if __PC__
 using FTAnalyzer.Windows.Properties;
+#elif __MACOS__ || __IOS__
+using FTAnalyzer.Properties;
+#endif
 using FTAnalyzer.Utilities;
 using System;
 using System.Collections.Generic;
@@ -17,7 +21,11 @@ using System.Web;
 using System.Xml;
 using System.Numerics;
 using System.Collections.Concurrent;
+#if __PC__
 using FTAnalyzer.Windows.Properties;
+#elif __MACOS__ || __IOS__
+using FTAnalyzer.Properties;
+#endif
 
 #if __PC__
 using FTAnalyzer.Forms.Controls;

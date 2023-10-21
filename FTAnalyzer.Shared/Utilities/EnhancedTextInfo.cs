@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Text;
 using System.Globalization;
+#if __PC__
 using FTAnalyzer.Windows.Properties;
+#elif __MACOS__ || __IOS__
+using FTAnalyzer.Properties;
+#endif
 
 namespace FTAnalyzer.Utilities
 {
