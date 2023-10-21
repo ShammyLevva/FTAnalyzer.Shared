@@ -19,7 +19,7 @@ namespace FTAnalyzer
 {
     public class FactLocation : IComparable<FactLocation>, IComparable, IDisplayLocation, IDisplayGeocodedLocation
     {
-#region Variables
+        #region Variables
         // static log4net.ILog log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         public const int UNKNOWN = -1, COUNTRY = 0, REGION = 1, SUBREGION = 2, ADDRESS = 3, PLACE = 4;
         public enum Geocode
@@ -60,8 +60,10 @@ namespace FTAnalyzer
         public string GEDCOMLoaded => FTAnalyzerCreated ? "No" : "Yes";
         public bool GEDCOMLatLong { get; set; }
         public bool FTAnalyzerCreated
-        { get => _created;
-            set {
+        {
+            get => _created;
+            set
+            {
                 _created = value;
                 if (!_created)
                     GEDCOMLocation = OriginalText;
@@ -89,9 +91,9 @@ namespace FTAnalyzer
         public static FactLocation UNKNOWN_LOCATION;
         public static FactLocation BLANK_LOCATION;
         public static FactLocation TEMP = new FactLocation();
-#endregion
+        #endregion
 
-#region Static Constructor
+        #region Static Constructor
         static FactLocation()
         {
             SetupGeocodes();
@@ -101,7 +103,7 @@ namespace FTAnalyzer
         public static void LoadConversions(string startPath)
         {
             // load conversions from XML file
-#region Fact Location Fixes
+            #region Fact Location Fixes
             if (startPath is null) return;
 #if __MACOS__
             string filename = Path.Combine(startPath, @"../Resources/FactLocationFixes.xml");
@@ -124,7 +126,7 @@ namespace FTAnalyzer
                     string to = n.Attributes["to"].Value;
                     if (COUNTRY_TYPOS.ContainsKey(from))
                         Console.WriteLine(string.Format("Error duplicate country typos :{0}", from));
-                    if (!string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to))
+                    else if (!string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to))
                         COUNTRY_TYPOS.Add(from, to);
                 }
                 foreach (XmlNode n in xmlDoc.SelectNodes("Data/Fixes/RegionTypos/RegionTypo"))
@@ -133,7 +135,7 @@ namespace FTAnalyzer
                     string to = n.Attributes["to"].Value;
                     if (REGION_TYPOS.ContainsKey(from))
                         Console.WriteLine(string.Format("Error duplicate region typos :{0}", from));
-                    if (!string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to))
+                    else if (!string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to))
                         REGION_TYPOS.Add(from, to);
                 }
                 foreach (XmlNode n in xmlDoc.SelectNodes("Data/Fixes/ChapmanCodes/ChapmanCode"))
@@ -142,7 +144,7 @@ namespace FTAnalyzer
                     string countyName = n.Attributes["countyName"].Value;
                     if (REGION_TYPOS.ContainsKey(chapmanCode))
                         Console.WriteLine(string.Format("Error duplicate region typos adding ChapmanCode :{0}", chapmanCode));
-                    if (!string.IsNullOrEmpty(chapmanCode) && !string.IsNullOrEmpty(countyName))
+                    else if (!string.IsNullOrEmpty(chapmanCode) && !string.IsNullOrEmpty(countyName))
                         REGION_TYPOS.Add(chapmanCode, countyName);
                 }
                 foreach (XmlNode n in xmlDoc.SelectNodes("Data/Fixes/DemoteCountries/CountryToRegion"))
@@ -153,7 +155,8 @@ namespace FTAnalyzer
                     {
                         if (COUNTRY_SHIFTS.ContainsKey(from))
                             Console.WriteLine(string.Format("Error duplicate country shift :{0}", from));
-                        COUNTRY_SHIFTS.Add(from, to);
+                        else
+                            COUNTRY_SHIFTS.Add(from, to);
                     }
                 }
                 foreach (XmlNode n in xmlDoc.SelectNodes("Data/Fixes/DemoteCountries/CityAddCountry"))
@@ -164,9 +167,10 @@ namespace FTAnalyzer
                     {
                         if (CITY_ADD_COUNTRY.ContainsKey(from))
                             Console.WriteLine(string.Format("Error duplicate city add country :{0}", from));
+                        else
+                            CITY_ADD_COUNTRY.Add(from, to);
                         if (COUNTRY_SHIFTS.ContainsKey(from)) // also check country shifts for duplicates
                             Console.WriteLine(string.Format("Error duplicate city in country shift :{0}", from));
-                        CITY_ADD_COUNTRY.Add(from, to);
                     }
                 }
                 foreach (XmlNode n in xmlDoc.SelectNodes("Data/Fixes/DemoteRegions/RegionToParish"))
@@ -175,10 +179,8 @@ namespace FTAnalyzer
                     string to = n.Attributes["region"].Value;
                     if (REGION_SHIFTS.ContainsKey(from))
                         Console.WriteLine(string.Format("Error duplicate region shift :{0}", from));
-                    if (!string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to))
-                    {
+                    else if (!string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to))
                         REGION_SHIFTS.Add(from, to);
-                    }
                 }
                 foreach (XmlNode n in xmlDoc.SelectNodes("Data/Lookups/FreeCen/Lookup"))
                 {
@@ -186,7 +188,7 @@ namespace FTAnalyzer
                     string county = n.Attributes["county"].Value;
                     if (FREECEN_LOOKUP.ContainsKey(county))
                         Console.WriteLine(string.Format("Error duplicate freecen lookup :{0}", county));
-                    if (!string.IsNullOrEmpty(code) && !string.IsNullOrEmpty(county))
+                    else if (!string.IsNullOrEmpty(code) && !string.IsNullOrEmpty(county))
                         FREECEN_LOOKUP.Add(county, code);
                 }
                 foreach (XmlNode n in xmlDoc.SelectNodes("Data/Lookups/FindMyPast/Lookup"))
@@ -196,7 +198,7 @@ namespace FTAnalyzer
                     string country = n.Attributes["country"].Value;
                     if (FINDMYPAST_LOOKUP.ContainsKey(county))
                         Console.WriteLine(string.Format("Error duplicate FindMyPast lookup :{0}", county));
-                    if (!string.IsNullOrEmpty(code) && !string.IsNullOrEmpty(county))
+                    else if (!string.IsNullOrEmpty(code) && !string.IsNullOrEmpty(county))
                     {
                         Tuple<string, string> result = new Tuple<string, string>(country, code);
                         FINDMYPAST_LOOKUP.Add(county, result);
@@ -212,13 +214,18 @@ namespace FTAnalyzer
                     AddGoogleFixes(GOOGLE_FIXES, n, UNKNOWN);
                 ValidateTypoFixes();
                 ValidateCounties();
-                COUNTRY_SHIFTS = COUNTRY_SHIFTS.Concat(CITY_ADD_COUNTRY).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+                foreach(KeyValuePair<string,string> kvp in CITY_ADD_COUNTRY)
+                {
+                    if(!COUNTRY_SHIFTS.ContainsKey(kvp.Key))
+                        COUNTRY_SHIFTS.Add(kvp.Key,kvp.Value);
+                }
+                //COUNTRY_SHIFTS = COUNTRY_SHIFTS.Concat(CITY_ADD_COUNTRY).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             }
             else
             {
                 Console.WriteLine("Failed to find FactLocationFixes.xml File");
             }
-#endregion
+            #endregion
         }
 
         static void ValidateTypoFixes()
@@ -320,9 +327,9 @@ namespace FTAnalyzer
                 { Geocode.OS_50KFUZZY, "Fuzzy Match (Ord Surv)" }
             };
         }
-#endregion
+        #endregion
 
-#region Object Constructors
+        #region Object Constructors
         FactLocation()
         {
             OriginalText = string.Empty;
@@ -463,9 +470,9 @@ namespace FTAnalyzer
             }
             _Parts = new string[] { Country, Region, SubRegion, Address, Place };
         }
-#endregion
+        #endregion
 
-#region Static Functions
+        #region Static Functions
         public static FactLocation GetLocation(string place, bool addLocation = true) => GetLocation(place, string.Empty, string.Empty, Geocode.NOT_SEARCHED, addLocation);
 
         public static FactLocation GetLocation(string place, string latitude, string longitude, Geocode status, bool addLocation = true, bool updateLatLong = false)
@@ -525,7 +532,7 @@ namespace FTAnalyzer
             return result; // should return object that is in list of locations 
         }
 
-        bool GecodingMatches(FactLocation temp) 
+        bool GecodingMatches(FactLocation temp)
             => Latitude == temp.Latitude && Longitude == temp.Longitude && LatitudeM == temp.LatitudeM && LongitudeM == temp.LongitudeM;
 
         public bool IsValidLatLong => Latitude >= -90 && Latitude <= 90 && Longitude >= -180 && Longitude <= 180;
@@ -639,9 +646,9 @@ namespace FTAnalyzer
             to.FoundResultType = from.FoundResultType;
             to.FoundLevel = from.FoundLevel;
         }
-#endregion
+        #endregion
 
-#region Fix Location string routines
+        #region Fix Location string routines
         void TrimLocations()
         {
             // remove extraneous spaces
@@ -730,9 +737,9 @@ namespace FTAnalyzer
 
         void FixUKGBTypos()
         {
-            if(Country == "UK" || Country == "GB")
+            if (Country == "UK" || Country == "GB")
             {
-                if(Region == "Scotland" || Region == "England" || Region == "Wales")
+                if (Region == "Scotland" || Region == "England" || Region == "Wales")
                 {
                     Country = Region;
                     Region = SubRegion;
@@ -810,14 +817,14 @@ namespace FTAnalyzer
 
         void FixDoubleLocations()
         {
-            if(Country.Equals(Region))
+            if (Country.Equals(Region))
             {
                 Region = SubRegion;
                 SubRegion = Address;
                 Address = Place;
                 Place = string.Empty;
             }
-            if(Region.Equals(SubRegion))
+            if (Region.Equals(SubRegion))
             {
                 SubRegion = Address;
                 Address = Place;
@@ -953,8 +960,8 @@ namespace FTAnalyzer
             return toChange.Trim();
         }
 
-#endregion
-#region Properties
+        #endregion
+        #region Properties
 
         public string[] GetParts() => (string[])_Parts.Clone();
 
@@ -1022,8 +1029,8 @@ namespace FTAnalyzer
                 {
                     double pixelWidth = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;  // tweak to get best results as required 
                     double GLOBE_WIDTH = 512; // a constant in Google's map projection
-                    var west = ViewPort.SouthWest.Long/100000;
-                    var east = ViewPort.NorthEast.Long/100000;
+                    var west = ViewPort.SouthWest.Long / 100000;
+                    var east = ViewPort.NorthEast.Long / 100000;
                     var angle = east - west;
                     if (angle < 0)
                         angle += 360;
@@ -1031,7 +1038,7 @@ namespace FTAnalyzer
                         return (int)Math.Abs(Math.Round(Math.Log(pixelWidth * 360f / angle / GLOBE_WIDTH) / Math.Log(2)));
                 }
 #endif
-                 return zoom;
+                return zoom;
             }
         }
 
@@ -1044,9 +1051,9 @@ namespace FTAnalyzer
         public string FixedLocation { get; set; }
         public string Address1 { get; set; }
         public string Place1 { get; set; }
-#endregion
+        #endregion
 
-#region General Functions
+        #region General Functions
         public FactLocation GetLocation(int level) => GetLocation(level, false);
         public FactLocation GetLocation(int level, bool fixNumerics)
         {
@@ -1138,7 +1145,7 @@ namespace FTAnalyzer
                 return true;
             return false;
         }
-#endregion
+        #endregion
 
         public bool IsWithinUKBounds => Longitude >= -7.974074 && Longitude <= 1.879409 && Latitude >= 49.814376 && Latitude <= 60.970872;
 
@@ -1187,7 +1194,7 @@ namespace FTAnalyzer
         //    }
         //}
 
-#region Overrides
+        #region Overrides
 
         public int CompareTo(object that) => CompareTo(that as FactLocation);
 
@@ -1272,6 +1279,6 @@ namespace FTAnalyzer
                 return ascending ? result : -result;
             });
         }
-#endregion
+        #endregion
     }
 }
