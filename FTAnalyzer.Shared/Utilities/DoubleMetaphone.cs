@@ -86,7 +86,7 @@ namespace FTAnalyzer
 
         /// <summary>The alternate metaphone key for the current word, or null if the current
         ///     word does not have an alternate key by Double Metaphone</summary>
-        public string AlternateKey => m_hasAlternate ? m_alternateKeyString : null;
+        public string? AlternateKey => m_hasAlternate ? m_alternateKeyString : null;
 
         /// <summary>OrFamilySearchnal word for which the keys were computed</summary>
         public string Word => m_orFamilySearchnalWord;

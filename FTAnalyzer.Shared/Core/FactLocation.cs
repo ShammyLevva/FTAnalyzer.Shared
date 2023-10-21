@@ -508,7 +508,7 @@ namespace FTAnalyzer
                             SaveLocationToDatabase(temp);
                         }
                     }
-                    return temp;
+                    return temp ?? UNKNOWN_LOCATION;
                 }
                 if (addLocation)
                 {
@@ -521,7 +521,7 @@ namespace FTAnalyzer
                     }
                 }
             }
-            return result; // should return object that is in list of locations 
+            return result ?? UNKNOWN_LOCATION; // should return object that is in list of locations 
         }
 
         bool GecodingMatches(FactLocation temp)
@@ -1250,7 +1250,7 @@ namespace FTAnalyzer
                 "FoundLocation" => CompareComparableProperty<IDisplayLocation>(f => f.FoundLocation, ascending),
                 "GEDCOMLocation" => CompareComparableProperty<IDisplayLocation>(f => f.GEDCOMLocation, ascending),
                 "GEDCOMLoaded" => CompareComparableProperty<IDisplayLocation>(f => f.GEDCOMLoaded, ascending),
-                _ => null,
+                _ => CompareComparableProperty<IDisplayLocation>(f => f.Country, ascending),
             };
         }
 

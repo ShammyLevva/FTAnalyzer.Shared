@@ -450,11 +450,11 @@ namespace FTAnalyzer
 
         public string MarriedName { get; set; }
 
-        public Fact BirthFact
+        public Fact? BirthFact
         {
             get
             {
-                Fact f = GetPreferredFact(Fact.BIRTH);
+                Fact? f = GetPreferredFact(Fact.BIRTH);
                 if (f is not null)
                     return f;
                 f = GetPreferredFact(Fact.BIRTH_CALC);
@@ -478,11 +478,11 @@ namespace FTAnalyzer
 
         public FactLocation BirthLocation => (BirthFact is null) ? FactLocation.BLANK_LOCATION : BirthFact.Location;
 
-        public Fact DeathFact
+        public Fact? DeathFact
         {
             get
             {
-                Fact f = GetPreferredFact(Fact.DEATH);
+                Fact? f = GetPreferredFact(Fact.DEATH);
                 if (GeneralSettings.Default.UseBurialDates)
                 {
                     if (f is not null)
@@ -503,21 +503,21 @@ namespace FTAnalyzer
 
         public FactLocation DeathLocation => DeathFact is null ? FactLocation.BLANK_LOCATION : DeathFact.Location;
 
-        public FactDate BaptismDate
+        public FactDate? BaptismDate
         {
             get
             {
-                Fact f = GetPreferredFact(Fact.BAPTISM);
+                Fact? f = GetPreferredFact(Fact.BAPTISM);
                 f ??= GetPreferredFact(Fact.CHRISTENING);
                 return f?.FactDate;
             }
         }
 
-        public FactDate BurialDate
+        public FactDate? BurialDate
         {
             get
             {
-                Fact f = GetPreferredFact(Fact.BURIAL);
+                Fact? f = GetPreferredFact(Fact.BURIAL);
                 f ??= GetPreferredFact(Fact.CREMATION);
                 return f?.FactDate;
             }
@@ -527,7 +527,7 @@ namespace FTAnalyzer
         {
             get
             {
-                Fact occupation = GetPreferredFact(Fact.OCCUPATION);
+                Fact? occupation = GetPreferredFact(Fact.OCCUPATION);
                 return occupation is null ? string.Empty : occupation.Comment;
             }
         }
@@ -540,7 +540,7 @@ namespace FTAnalyzer
         {
             get
             {
-                Fact loose = GetPreferredFact(Fact.LOOSEBIRTH);
+                Fact? loose = GetPreferredFact(Fact.LOOSEBIRTH);
                 return loose is null ? FactDate.UNKNOWN_DATE : loose.FactDate;
             }
         }
@@ -558,7 +558,7 @@ namespace FTAnalyzer
         {
             get
             {
-                Fact loose = GetPreferredFact(Fact.LOOSEDEATH);
+                Fact? loose = GetPreferredFact(Fact.LOOSEDEATH);
                 return loose is null ? FactDate.UNKNOWN_DATE : loose.FactDate;
             }
         }
@@ -578,7 +578,7 @@ namespace FTAnalyzer
         {
             get
             {
-                Fact service = GetPreferredFact(Fact.SERVICE_NUMBER);
+                Fact? service = GetPreferredFact(Fact.SERVICE_NUMBER);
                 return service is null ? string.Empty : service.Comment;
             }
         }
@@ -657,7 +657,7 @@ namespace FTAnalyzer
             return false;
         }
 
-        public Individual NaturalFather
+        public Individual? NaturalFather
         {
             get
             {
@@ -736,7 +736,7 @@ namespace FTAnalyzer
             return false;
         }
 
-        public Fact CensusFact(FactDate factDate)
+        public Fact? CensusFact(FactDate factDate)
         {
             if (factDate is null) return null;
             foreach (Fact f in Facts)
@@ -747,7 +747,7 @@ namespace FTAnalyzer
             return null;
         }
 
-        public CensusReference GetCensusReference(FactDate factDate) => CensusFact(factDate)?.CensusReference;
+        public CensusReference? GetCensusReference(FactDate factDate) => CensusFact(factDate)?.CensusReference;
 
         public bool CensusFactExists(FactDate factDate, bool includeCreated)
         {
@@ -792,7 +792,7 @@ namespace FTAnalyzer
                 {
                     if (f.Location.CensusCountryMatches(when.Country, includeUnknownCountries) || BestLocation(when).CensusCountryMatches(when.Country, includeUnknownCountries))
                         return true;
-                    Fact censusFact = GetCensusFact(f);
+                    Fact? censusFact = GetCensusFact(f);
                     if (censusFact is not null)
                     {
                         if (when.Country.Equals(Countries.SCOTLAND) && Countries.IsEnglandWales(censusFact.Country))
@@ -1137,7 +1137,7 @@ namespace FTAnalyzer
 
         void UpdateCensusFactReference(CensusReference cr)
         {
-            Fact censusFact = GetCensusFact(cr.Fact, false);
+            Fact? censusFact = GetCensusFact(cr.Fact, false);
             if (censusFact is not null && !censusFact.CensusReference.IsKnownStatus && cr.IsKnownStatus)
                 censusFact.SetCensusReferenceDetails(cr, CensusLocation.UNKNOWN, string.Empty);
         }
@@ -1154,11 +1154,11 @@ namespace FTAnalyzer
             }
         }
 
-        public Fact GetPreferredFact(string factType) => preferredFacts.ContainsKey(factType) ? preferredFacts[factType] : Facts.FirstOrDefault(f => f.FactType == factType);
+        public Fact? GetPreferredFact(string factType) => preferredFacts.ContainsKey(factType) ? preferredFacts[factType] : Facts.FirstOrDefault(f => f.FactType == factType);
 
         public FactDate GetPreferredFactDate(string factType)
         {
-            Fact f = GetPreferredFact(factType);
+            Fact? f = GetPreferredFact(factType);
             return (f is null || f.FactDate is null) ? FactDate.UNKNOWN_DATE : f.FactDate;
         }
         
@@ -1246,7 +1246,7 @@ namespace FTAnalyzer
 
         public string ReferralFamilyID { get; set; }
 
-        public Fact GetCensusFact(Fact lcFact, bool includeCreated = true)
+        public Fact? GetCensusFact(Fact lcFact, bool includeCreated = true)
         {
             return includeCreated
                 ? Facts.FirstOrDefault(x => x.IsCensusFact && x.FactDate.Overlaps(lcFact.FactDate))
@@ -1494,7 +1494,7 @@ namespace FTAnalyzer
         {
             get
             {
-                Family fam = Marriages(0);
+                Family? fam = Marriages(0);
                 if (fam is null)
                 {
                     if (MaxAgeAtDeath > 16 && GetPreferredFact(Fact.UNMARRIED) is null)
@@ -1509,7 +1509,7 @@ namespace FTAnalyzer
         {
             get
             {
-                Family fam = Marriages(1);
+                Family? fam = Marriages(1);
                 return fam is null ? BMDColours.EMPTY : CheckMarriageStatus(fam);
             }
         }
@@ -1518,7 +1518,7 @@ namespace FTAnalyzer
         {
             get
             {
-                Family fam = Marriages(2);
+                Family? fam = Marriages(2);
                 return fam is null ? 0 : CheckMarriageStatus(fam);
             }
         }
@@ -1533,7 +1533,7 @@ namespace FTAnalyzer
         {
             get
             {
-                Family fam = Marriages(0);
+                Family? fam = Marriages(0);
                 return fam is null ? FactDate.UNKNOWN_DATE : Marriages(0).MarriageDate;
             }
         }
@@ -1542,7 +1542,7 @@ namespace FTAnalyzer
         {
             get
             {
-                Family fam = Marriages(1);
+                Family? fam = Marriages(1);
                 return fam is null ? FactDate.UNKNOWN_DATE : Marriages(1).MarriageDate;
             }
         }
@@ -1551,7 +1551,7 @@ namespace FTAnalyzer
         {
             get
             {
-                Family fam = Marriages(2);
+                Family? fam = Marriages(2);
                 return fam is null ? FactDate.UNKNOWN_DATE : Marriages(2).MarriageDate;
             }
         }
@@ -1560,7 +1560,7 @@ namespace FTAnalyzer
         {
             get
             {
-                Family fam = Marriages(0);
+                Family? fam = Marriages(0);
                 return fam is null ? FactLocation.UNKNOWN_LOCATION : Marriages(0).Location;
             }
         }
@@ -1569,7 +1569,7 @@ namespace FTAnalyzer
         {
             get
             {
-                Family fam = Marriages(1);
+                Family? fam = Marriages(1);
                 return fam is null ? FactLocation.UNKNOWN_LOCATION : Marriages(1).Location;
             }
         }
@@ -1578,34 +1578,34 @@ namespace FTAnalyzer
         {
             get
             {
-                Family fam = Marriages(2);
+                Family? fam = Marriages(2);
                 return fam is null ? FactLocation.UNKNOWN_LOCATION : Marriages(2).Location;
             }
         }
 
-        public Individual FirstSpouse
+        public Individual? FirstSpouse
         {
             get
             {
-                Family fam = Marriages(0);
+                Family? fam = Marriages(0);
                 return fam?.Spouse(this);
             }
         }
 
-        public Individual SecondSpouse
+        public Individual? SecondSpouse
         {
             get
             {
-                Family fam = Marriages(1);
+                Family? fam = Marriages(1);
                 return fam?.Spouse(this);
             }
         }
 
-        public Individual ThirdSpouse
+        public Individual? ThirdSpouse
         {
             get
             {
-                Family fam = Marriages(2);
+                Family? fam = Marriages(2);
                 return fam?.Spouse(this);
             }
         }
@@ -1661,7 +1661,7 @@ namespace FTAnalyzer
         public int CensusReferenceCount(CensusReference.ReferenceStatus referenceStatus) 
             => AllFacts.Count(f => f.IsCensusFact && f.CensusReference is not null && f.CensusReference.Status.Equals(referenceStatus));
 
-        Family Marriages(int number)
+        Family? Marriages(int number)
         {
             if (number < FamiliesAsSpouse.Count)
             {
@@ -1673,7 +1673,7 @@ namespace FTAnalyzer
 
         string MarriageString(int number)
         {
-            Family marriage = Marriages(number);
+            Family? marriage = Marriages(number);
             if (marriage is null)
                 return string.Empty;
             if (IndividualID == marriage.HusbandID && marriage.Wife is not null)
@@ -1741,7 +1741,7 @@ namespace FTAnalyzer
                 "BudgieCode" => CompareComparableProperty<IDisplayIndividual>(i => i.BudgieCode, ascending),
                 "Ahnentafel" => CompareComparableProperty<IDisplayIndividual>(i => i.Ahnentafel, ascending),
                 "Notes" => CompareComparableProperty<IDisplayIndividual>(i => i.Notes, ascending),
-                _ => null,
+                _ => CompareComparableProperty<IDisplayIndividual>(i => i.IndividualID, ascending),
             };
         }
 
@@ -1769,7 +1769,7 @@ namespace FTAnalyzer
                 "BirthLocation" => CompareComparableProperty<IDisplayColourBMD>(i => i.BirthLocation, ascending),
                 "DeathLocation" => CompareComparableProperty<IDisplayColourBMD>(i => i.DeathLocation, ascending),
                 "Ahnentafel" => CompareComparableProperty<IDisplayColourBMD>(i => i.Ahnentafel, ascending),
-                _ => null,
+                _ => CompareComparableProperty<IDisplayColourBMD>(i => i.IndividualID, ascending),
             };
         }
 
@@ -1834,7 +1834,7 @@ namespace FTAnalyzer
                 "V1920" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.V1920, ascending),
                 "V1925" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.V1925, ascending),
                 "Ahnentafel" => CompareComparableProperty<IDisplayColourCensus>(i => i.Ahnentafel, ascending),
-                _ => null,
+                _ => CompareComparableProperty<IDisplayColourCensus>(i => i.IndividualID, ascending),
             };
         }
 
@@ -1848,7 +1848,7 @@ namespace FTAnalyzer
                 "BirthDate" => CompareComparableProperty<IDisplayLooseBirth>(i => i.BirthDate, ascending),
                 "BirthLocation" => CompareComparableProperty<IDisplayLooseBirth>(i => i.BirthLocation, ascending),
                 "LooseBirth" => CompareComparableProperty<IDisplayLooseBirth>(i => i.LooseBirthDate, ascending),
-                _ => null,
+                _ => CompareComparableProperty<IDisplayLooseBirth>(i => i.IndividualID, ascending),
             };
         }
 
@@ -1864,7 +1864,7 @@ namespace FTAnalyzer
                 "DeathDate" => CompareComparableProperty<IDisplayLooseDeath>(i => i.DeathDate, ascending),
                 "DeathLocation" => CompareComparableProperty<IDisplayLooseDeath>(i => i.DeathLocation, ascending),
                 "LooseDeath" => CompareComparableProperty<IDisplayLooseDeath>(i => i.LooseDeathDate, ascending),
-                _ => null,
+                _ => CompareComparableProperty<IDisplayLooseDeath>(i => i.IndividualID, ascending),
             };
         }
 
@@ -1881,7 +1881,7 @@ namespace FTAnalyzer
                 "DeathLocation" => CompareComparableProperty<IDisplayLooseInfo>(i => i.DeathLocation, ascending),
                 "LooseBirth" => CompareComparableProperty<IDisplayLooseInfo>(i => i.LooseDeathDate, ascending),
                 "LooseDeath" => CompareComparableProperty<IDisplayLooseInfo>(i => i.LooseDeathDate, ascending),
-                _ => null,
+                _ => CompareComparableProperty<IDisplayLooseInfo>(i => i.IndividualID, ascending),
             };
         }
 

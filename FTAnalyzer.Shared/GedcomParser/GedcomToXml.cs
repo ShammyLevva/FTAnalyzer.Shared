@@ -15,9 +15,9 @@ namespace FTAnalyzer
 {
     class GedcomToXml
     {
-        public static XmlDocument LoadFile(Stream stream, Encoding encoding, IProgress<string> outputText, bool reportBadLines)
+        public static XmlDocument? LoadFile(Stream stream, Encoding encoding, IProgress<string> outputText, bool reportBadLines)
         {
-            XmlDocument doc;
+            XmlDocument? doc;
             MemoryStream cloned = CloneStream(stream);
             using (var reader = new StreamReader(FileHandling.Default.RetryFailedLines ? CheckInvalidCR(cloned) : cloned, encoding))
             {
@@ -32,9 +32,9 @@ namespace FTAnalyzer
             return doc;
         }
 
-        public static XmlDocument LoadAnselFile(Stream stream, IProgress<string> outputText, bool reportBadLines)
+        public static XmlDocument? LoadAnselFile(Stream stream, IProgress<string> outputText, bool reportBadLines)
         {
-            XmlDocument doc;
+            XmlDocument? doc;
             MemoryStream cloned = CloneStream(stream);
             using (var reader = new AnselInputStreamReader(FileHandling.Default.RetryFailedLines ? CheckInvalidCR(cloned) : cloned))
             {
@@ -108,7 +108,7 @@ namespace FTAnalyzer
         //    return outfs;
         //}
 
-        static XmlDocument Parse(StreamReader reader, IProgress<string> outputText, bool reportBadLines)
+        static XmlDocument? Parse(StreamReader reader, IProgress<string> outputText, bool reportBadLines)
         {
             long lineNr = 0;
             int badLineCount = 0;

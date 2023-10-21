@@ -98,7 +98,7 @@ namespace FTAnalyzer
 
         public static string GetText(XmlNode node, string tag, bool lookForText) => GetText(GetChildNode(node, tag), lookForText);
 
-        public static XmlNode GetChildNode(XmlNode node, string tag) => node?.SelectSingleNode(tag);
+        public static XmlNode? GetChildNode(XmlNode node, string tag) => node?.SelectSingleNode(tag);
 
         public static string GetNotes(XmlNode node)
         {
@@ -246,14 +246,14 @@ namespace FTAnalyzer
                 unknownFamilyFactTypes.Add(factType, new List<Family>());
         }
 
-        public XmlDocument LoadTreeHeader(string filename, FileStream stream, IProgress<string> outputText)
+        public XmlDocument? LoadTreeHeader(string filename, FileStream stream, IProgress<string> outputText)
         {
             Loading = true;
             ResetData();
             rootIndividualID = string.Empty;
             outputText.Report($"Loading file {filename}\n");
             Encoding encoding = GedcomToXml.GetFileEncoding(stream);
-            XmlDocument doc = GedcomToXml.LoadFile(stream, encoding, outputText, true);
+            XmlDocument? doc = GedcomToXml.LoadFile(stream, encoding, outputText, true);
             if (doc is null)
             {
                 Loading = false;
@@ -613,7 +613,7 @@ namespace FTAnalyzer
         {
             foreach (Tuple<string, Fact> t in sharedFacts)
             {
-                Individual ind = GetIndividual(t.Item1);
+                Individual? ind = GetIndividual(t.Item1);
                 Fact fact = t.Item2;
                 if (ind is not null && !ind.Facts.ContainsFact(fact))
                     ind.AddFact(fact);
@@ -977,16 +977,16 @@ namespace FTAnalyzer
             {
                 if (ind.RelationType == relationType)
                 {
-                    Fact f = ind.GetPreferredFact(factType);
+                    Fact? f = ind.GetPreferredFact(factType);
                     return (f is not null && !f.CertificatePresent);
                 }
                 return false;
             });
         }
 
-        public FactSource GetSource(string sourceID) => sources.FirstOrDefault(s => s.SourceID == sourceID);
+        public FactSource? GetSource(string sourceID) => sources.FirstOrDefault(s => s.SourceID == sourceID);
 
-        public Individual GetIndividual(string individualID)
+        public Individual? GetIndividual(string individualID)
         {
             //            return individuals.FirstOrDefault(i => i.IndividualID == individualID);
             if (string.IsNullOrEmpty(individualID))
@@ -1000,7 +1000,7 @@ namespace FTAnalyzer
             return person;
         }
 
-        public Family GetFamily(string familyID) => families.FirstOrDefault(f => f.FamilyID == familyID);
+        public Family? GetFamily(string familyID) => families.FirstOrDefault(f => f.FamilyID == familyID);
 
         public void AddSharedFact(string individual, Fact fact) => sharedFacts.Add(new Tuple<string, Fact>(individual, fact));
 
@@ -1595,7 +1595,7 @@ namespace FTAnalyzer
             IEnumerable<Individual> directs = GetAllRelationsOfType(Individual.DIRECT);
             IEnumerable<Individual> blood = GetAllRelationsOfType(Individual.BLOOD);
             IEnumerable<Individual> married = GetAllRelationsOfType(Individual.MARRIEDTODB);
-            Individual rootPerson = GetIndividual(startID);
+            Individual? rootPerson = GetIndividual(startID);
             foreach (Individual i in directs)
                 i.RelationToRoot = Relationship.CalculateRelationship(rootPerson, i);
             foreach (Individual i in blood)
@@ -2202,7 +2202,7 @@ namespace FTAnalyzer
                                 errors[(int)Dataerror.MARRIAGE_BEFORE_SPOUSE_13].Add(new DataError((int)Dataerror.MARRIAGE_BEFORE_SPOUSE_13, ind, $"Marriage to {spouse.Name} in {asParent.MarriageDate} is before spouse born {spouse.BirthDate} was 13 years old"));
                             if (ind.Surname == spouse.Surname)
                             {
-                                Individual wifesFather = ind.IsMale ? spouse.NaturalFather : ind.NaturalFather;
+                                Individual? wifesFather = ind.IsMale ? spouse.NaturalFather : ind.NaturalFather;
                                 Individual husband = ind.IsMale ? ind : spouse;
                                 if (husband.Surname != wifesFather?.Surname && husband.Surname != Individual.UNKNOWN_NAME) // if couple have same surname and wife is different from her natural father then likely error
                                     errors[(int)Dataerror.SAME_SURNAME_COUPLE].Add(new DataError((int)Dataerror.SAME_SURNAME_COUPLE, ind, $"Spouse {spouse.Name} has same surname. Usually due to wife incorrectly recorded with married instead of maiden name."));
@@ -2847,8 +2847,8 @@ namespace FTAnalyzer
             }
             if (censusYear == 1911 && Countries.IsUnitedKingdom(censusCountry))
             {
-                CensusReference reference = person.GetCensusReference(CensusDate.EWCENSUS1911);
-                if (reference?.Piece is not null && reference.Schedule == "Missing")
+                CensusReference? reference = person.GetCensusReference(CensusDate.EWCENSUS1911);
+                if (reference?.Piece is not null && reference?.Schedule == "Missing")
                     query.Append($"pieceno={reference.Piece}");
             }
             //if (person.BirthLocation != FactLocation.UNKNOWN_LOCATION)
@@ -3446,7 +3446,7 @@ namespace FTAnalyzer
         long duplicatesFound;
         int currentPercentage;
 
-        public async Task<SortableBindingList<IDisplayDuplicateIndividual>> GenerateDuplicatesList(int value, bool ignoreUnknownTwins, IProgress<int> progress, IProgress<string> progressText, IProgress<int> maximum, CancellationToken ct)
+        public async Task<SortableBindingList<IDisplayDuplicateIndividual>?> GenerateDuplicatesList(int value, bool ignoreUnknownTwins, IProgress<int> progress, IProgress<string> progressText, IProgress<int> maximum, CancellationToken ct)
         {
             if (duplicates is not null)
             {

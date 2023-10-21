@@ -157,7 +157,7 @@ namespace FTAnalyzer
             AncestryCatalog = ancestryCatalog;
         }
 
-        public CensusDate EquivalentUSCensus
+        public CensusDate? EquivalentUSCensus
         {
             get
             {
@@ -208,7 +208,7 @@ namespace FTAnalyzer
         public static bool IsCensusCountry(FactDate fd, FactLocation location) =>
             SUPPORTED_CENSUS.Any(cd => cd.Country == location.CensusCountry && fd.CensusYearMatches(cd));
 
-        public static CensusDate GetLostCousinsCensusYear(FactDate fd, bool exactYear) =>
+        public static CensusDate? GetLostCousinsCensusYear(FactDate fd, bool exactYear) =>
             LOSTCOUSINS_CENSUS.FirstOrDefault(
                 cd => (exactYear && fd.CensusYearMatches(cd)) || (!exactYear && fd.Overlaps(cd))
             );
