@@ -4,8 +4,8 @@ namespace FTAnalyzer
 {
     public class BirthDateComparer : Comparer<IDisplayIndividual>
     {
-        public static bool ASCENDING = true;
-        public static bool DESCENDING;
+        public static readonly bool ASCENDING = true;
+        public static readonly bool DESCENDING;
 
         public BirthDateComparer() : this(ASCENDING) { }
 

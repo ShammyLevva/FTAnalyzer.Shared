@@ -114,5 +114,10 @@ namespace FTAnalyzer
         }
 
         public override bool Equals(object obj) => Equals(obj as LostCousin);
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

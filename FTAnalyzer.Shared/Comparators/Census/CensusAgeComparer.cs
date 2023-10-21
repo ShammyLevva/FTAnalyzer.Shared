@@ -26,7 +26,7 @@ namespace FTAnalyzer
             return 0;
         }
 
-        int SortBirthdate(Individual i1, Individual i2)
+        static int SortBirthdate(Individual i1, Individual i2)
         {
             Fact b1 = i1.BirthFact;
             Fact b2 = i2.BirthFact;
