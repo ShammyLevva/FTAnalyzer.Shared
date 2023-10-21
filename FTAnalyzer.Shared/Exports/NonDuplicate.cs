@@ -25,7 +25,7 @@ namespace FTAnalyzer
         public string IndividualB_Name { get; set; }
         public string IndividualB_BirthDate { get; set; }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             NonDuplicate that = (NonDuplicate)obj;
             bool result = (IndividualA_ID == that.IndividualA_ID &&

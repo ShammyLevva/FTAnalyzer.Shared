@@ -17,7 +17,7 @@ namespace FTAnalyzer
     {
         public FactsAtLocationComparer() { }
 
-        public override int Compare(ExportFactsAtLocation x, ExportFactsAtLocation y)
+        public override int Compare(ExportFactsAtLocation? x, ExportFactsAtLocation? y)
         {
             return x.SortableLocation.CompareTo(y.SortableLocation);
         }

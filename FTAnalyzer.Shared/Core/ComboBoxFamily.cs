@@ -20,7 +20,7 @@ namespace FTAnalyzer
             return $"{FamilyID}: {base.ToString()}";
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is null || obj.GetType() != typeof(ComboBoxFamily))
                 return false;

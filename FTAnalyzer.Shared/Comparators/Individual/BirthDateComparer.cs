@@ -13,7 +13,7 @@ namespace FTAnalyzer
 
         public bool Direction { get; set; } = ASCENDING;
 
-        public override int Compare(IDisplayIndividual x, IDisplayIndividual y)
+        public override int Compare(IDisplayIndividual? x, IDisplayIndividual? y)
         {
             IDisplayIndividual a = x, b=y;
             if(Direction == DESCENDING)

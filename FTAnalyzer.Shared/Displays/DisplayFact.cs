@@ -65,7 +65,7 @@ namespace FTAnalyzer
             return FactDate == that.FactDate && Ind != null ? Ind.CompareTo(that.Ind) : FactDate.CompareTo(that.FactDate);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is null) return false;
             DisplayFact that = (DisplayFact)obj;
