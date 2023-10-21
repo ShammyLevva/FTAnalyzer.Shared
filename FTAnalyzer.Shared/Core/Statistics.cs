@@ -36,12 +36,12 @@ namespace FTAnalyzer
                 {
                     if (child.BirthDate.IsKnown)
                     {
-                        if (f.Husband != null && f.Husband.BirthDate.IsKnown)
+                        if (f.Husband is not null && f.Husband.BirthDate.IsKnown)
                         {
                             Age age = f.Husband.GetAge(child.BirthDate);
                             AddAgeData(0, stats, age, child.Gender);
                         }
-                        if (f.Wife != null && f.Wife.BirthDate.IsKnown)
+                        if (f.Wife is not null && f.Wife.BirthDate.IsKnown)
                         {
                             Age age = f.Wife.GetAge(child.BirthDate);
                             AddAgeData(1, stats, age, child.Gender);

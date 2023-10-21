@@ -24,10 +24,10 @@ namespace FTAnalyzer
             BestLocation = null;
             int position = 1;
 
-            if (f.Wife != null)
+            if (f.Wife is not null)
                 Wife = new(position++, f.Wife, this, CensusIndividual.WIFE);
 
-            if (f.Husband != null)
+            if (f.Husband is not null)
                 Husband = new(position++, f.Husband, this, CensusIndividual.HUSBAND);
             Children = new List<CensusIndividual>();
             foreach (Individual child in f.Children)
@@ -42,9 +42,9 @@ namespace FTAnalyzer
         {
             get
             {
-                if (Husband != null) { yield return Husband; }
-                if (Wife != null) { yield return Wife; }
-                if (Children != null && Children.Count > 0)
+                if (Husband is not null) { yield return Husband; }
+                if (Wife is not null) { yield return Wife; }
+                if (Children is not null && Children.Count > 0)
                     foreach (CensusIndividual child in Children) { yield return child; }
             }
         }
@@ -77,7 +77,7 @@ namespace FTAnalyzer
                 // update bestLocation by marriage date as Husband and Wife 
                 // locations are often birth locations
                 var marriage = GetPreferredFact(Fact.MARRIAGE);
-                if (marriage != null)
+                if (marriage is not null)
                     facts.Add(marriage);
 
                 var censusChildren = new List<CensusIndividual>();
@@ -124,25 +124,25 @@ namespace FTAnalyzer
         bool IsValidFamily()
         {
             Individual eldestChild = Children.OrderBy(x => x.BirthDate).FirstOrDefault();
-            if (eldestChild != null && eldestChild.BirthDate.IsBefore(CensusDate))
+            if (eldestChild is not null && eldestChild.BirthDate.IsBefore(CensusDate))
                 return true;
 
             if (FamilyType == SOLOINDIVIDUAL || FamilyType == PRE_MARRIAGE || FamilyType == UNKNOWN)
                 return true; // allow solo individual families to be processed
 
             // valid family if both parent are 16+ or sole parent >=16
-            return (Husband != null && Husband.BirthDate.IsBefore(CensusDate)) || (Wife != null && Wife.BirthDate.IsBefore(CensusDate));
+            return (Husband is not null && Husband.BirthDate.IsBefore(CensusDate)) || (Wife is not null && Wife.BirthDate.IsBefore(CensusDate));
         }
 
         public new string Surname
         {
             get
             {
-                if (Husband != null) { return Husband.SurnameAtDate(CensusDate); }
-                if (Wife != null) { return Wife.SurnameAtDate(CensusDate); }
+                if (Husband is not null) { return Husband.SurnameAtDate(CensusDate); }
+                if (Wife is not null) { return Wife.SurnameAtDate(CensusDate); }
 
                 Individual child = Children.FirstOrDefault();
-                return child != null ? child.SurnameAtDate(CensusDate) : Individual.UNKNOWN_NAME;
+                return child is not null ? child.SurnameAtDate(CensusDate) : Individual.UNKNOWN_NAME;
             }
         }
 

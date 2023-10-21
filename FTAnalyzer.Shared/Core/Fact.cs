@@ -447,13 +447,13 @@ namespace FTAnalyzer
 
         void CreateFact(XmlNode node, string reference, bool preferred, FactDate deathdate, IProgress<string> outputText)
         {
-            if (node != null)
+            if (node is not null)
             {
                 FamilyTree ft = FamilyTree.Instance;
                 try
                 {
                     FactType = FixFactTypes(node.Name);
-                    if (deathdate != null)
+                    if (deathdate is not null)
                         FactDate = deathdate;
                     else
                     {
@@ -521,12 +521,12 @@ namespace FTAnalyzer
                     XmlNodeList list = node.SelectNodes("SOUR");
                     foreach (XmlNode n in list)
                     {
-                        if (n.Attributes["REF"] != null)
+                        if (n.Attributes["REF"] is not null)
                         {   // only process sources with a reference
                             string srcref = n.Attributes["REF"].Value;
                             FactSource source = ft.GetSource(srcref);
                             string pageText = FamilyTree.GetText(n, "PAGE", true); // Source page text
-                            if (source != null)
+                            if (source is not null)
                             {
                                 Sources.Add(source);
                                 source.AddFact(this);
@@ -560,7 +560,7 @@ namespace FTAnalyzer
                     if (FactType == DEATH)
                     {
                         Comment = FamilyTree.GetText(node, "CAUS", true);
-                        if (node.FirstChild != null && node.FirstChild.Value == "Y" && FactDate.IsUnknown)
+                        if (node.FirstChild is not null && node.FirstChild.Value == "Y" && FactDate.IsUnknown)
                             FactDate = new FactDate(FactDate.MINDATE, FactDate.NOW); // if death flag set as Y then death before today.
                     }
                     string age = FamilyTree.GetText(node, "AGE", false);
@@ -590,7 +590,7 @@ namespace FTAnalyzer
             {
                 string indref = n.Attributes["REF"]?.Value;
                 //string role = FamilyTree.GetText(n, "ROLE", false);
-                if (indref != null)
+                if (indref is not null)
                     FamilyTree.Instance.AddSharedFact(indref, this);
             }
         }
@@ -652,30 +652,30 @@ namespace FTAnalyzer
                 return string.Empty;
             string result = string.Empty; // need to do something with an ADDR tag
             XmlNode ctry = node.SelectSingleNode("ADDR/CTRY");
-            if (ctry != null)
+            if (ctry is not null)
                 result = (result.Length > 0) ? ctry.InnerText + ", " + result : ctry.InnerText;
             XmlNode stae = node.SelectSingleNode("ADDR/STAE");
-            if (stae != null)
+            if (stae is not null)
                 result = (result.Length > 0) ? stae.InnerText + ", " + result : stae.InnerText;
             XmlNode city = node.SelectSingleNode("ADDR/CITY");
-            if (city != null)
+            if (city is not null)
                 result = (result.Length > 0) ? city.InnerText + ", " + result : city.InnerText;
             XmlNode adr3 = node.SelectSingleNode("ADDR/ADR3");
-            if (adr3 != null)
+            if (adr3 is not null)
                 result = (result.Length > 0) ? adr3.InnerText + ", " + result : adr3.InnerText;
             XmlNode adr2 = node.SelectSingleNode("ADDR/ADR2");
-            if (adr2 != null)
+            if (adr2 is not null)
                 result = (result.Length > 0) ? adr2.InnerText + ", " + result : adr2.InnerText;
             XmlNode adr1 = node.SelectSingleNode("ADDR/ADR1");
-            if (adr1 != null)
+            if (adr1 is not null)
                 result = (result.Length > 0) ? adr1.InnerText + ", " + result : adr1.InnerText;
             string address = string.Empty;
-            if (addr.FirstChild != null && addr.FirstChild.Value != null)
+            if (addr.FirstChild is not null && addr.FirstChild.Value is not null)
                 address = addr.FirstChild.Value;
             XmlNodeList list = node.SelectNodes("ADDR/CONT");
             foreach (XmlNode cont in list)
             {
-                if (cont.FirstChild != null && cont.FirstChild.Value != null)
+                if (cont.FirstChild is not null && cont.FirstChild.Value is not null)
                     address += " " + cont.FirstChild.Value;
             }
             if (address.Length > 0)
@@ -829,7 +829,7 @@ namespace FTAnalyzer
 
         public void UpdateFactDate(FactDate date)
         {
-            if (FactDate.IsUnknown && date != null && date.IsKnown)
+            if (FactDate.IsUnknown && date is not null && date.IsKnown)
                 FactDate = date;
         }
 
@@ -1078,7 +1078,7 @@ namespace FTAnalyzer
             FactDate.CensusYearMatches(censusDate) && FactDate.IsNotBEForeOrAFTer && FactErrorLevel == FactError.GOOD;
 
         public bool IsOverseasUKCensus(string country) =>
-            country.Equals(Countries.OVERSEAS_UK) || (!Countries.IsUnitedKingdom(country) && CensusReference != null && CensusReference.IsUKCensus);
+            country.Equals(Countries.OVERSEAS_UK) || (!Countries.IsUnitedKingdom(country) && CensusReference is not null && CensusReference.IsUKCensus);
 
         public override string ToString() =>
             FactTypeDescription + ": " + FactDate + (Location.ToString().Length > 0 ? " at " + Location : string.Empty) + (Comment.Length > 0 ? "  (" + Comment + ")" : string.Empty);

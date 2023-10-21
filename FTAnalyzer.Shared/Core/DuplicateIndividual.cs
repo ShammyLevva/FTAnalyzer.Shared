@@ -27,7 +27,7 @@
         static int NameScore(Individual indA, Individual indB)
         {
             int score = 0;
-            if (indA != null && indB != null)
+            if (indA is not null && indB is not null)
             {
                 if (indA.Surname.Equals(indB.Surname) && indA.Surname != Individual.UNKNOWN_NAME)
                     score += 20;
@@ -129,8 +129,8 @@
             int score = 0;
             if (IndividualA.FamiliesAsChild.Count == 1 && IndividualB.FamiliesAsChild.Count == 1)
             { // both individuals have parents if none of them are shared parents apply a heavy penalty
-                if (IndividualA.FamiliesAsChild[0].Father != null && IndividualA.FamiliesAsChild[0].Mother != null &&
-                    IndividualB.FamiliesAsChild[0].Father != null && IndividualB.FamiliesAsChild[0].Mother != null &&
+                if (IndividualA.FamiliesAsChild[0].Father is not null && IndividualA.FamiliesAsChild[0].Mother is not null &&
+                    IndividualB.FamiliesAsChild[0].Father is not null && IndividualB.FamiliesAsChild[0].Mother is not null &&
                     !IndividualA.FamiliesAsChild[0].Father.Equals(IndividualB.FamiliesAsChild[0].Father) &&
                     !IndividualA.FamiliesAsChild[0].Mother.Equals(IndividualB.FamiliesAsChild[0].Mother))
                     score = -500;

@@ -176,9 +176,9 @@ namespace FTAnalyzer.Exports
                     WriteIndividual(ind);
                 foreach(Family fam in ind.FamiliesAsSpouse)
                 {
-                    if(fam.Husband != null && fam.Husband.IsBloodDirect)
+                    if(fam.Husband is not null && fam.Husband.IsBloodDirect)
                         WriteIndividual(fam.Husband);
-                    if (fam.Wife != null && fam.Wife.IsBloodDirect)
+                    if (fam.Wife is not null && fam.Wife.IsBloodDirect)
                         WriteIndividual(fam.Wife);
                     foreach (Individual child in fam.Children)
                         queue.Enqueue(child);
@@ -193,12 +193,12 @@ namespace FTAnalyzer.Exports
             foreach(Family fam in families)
             {
                 bool isPrivate = _privatise && fam.FamilyDate.IsAfter(PrivacyDate) &&
-                                ((fam.Husband != null && fam.Husband.IsAlive(FactDate.TODAY)) ||
-                                 (fam.Wife != null && fam.Wife.IsAlive(FactDate.TODAY))); // if marriage is after privacy date and either party is alive then make marriage private
+                                ((fam.Husband is not null && fam.Husband.IsAlive(FactDate.TODAY)) ||
+                                 (fam.Wife is not null && fam.Wife.IsAlive(FactDate.TODAY))); // if marriage is after privacy date and either party is alive then make marriage private
                 output.WriteLine($"0 @{fam.FamilyID}@ FAM");
-                if(fam.Husband != null)
+                if(fam.Husband is not null)
                     output.WriteLine($"1 HUSB @{fam.HusbandID}@");
-                if (fam.Wife != null)
+                if (fam.Wife is not null)
                     output.WriteLine($"1 WIFE @{fam.WifeID}@");
                 foreach(Individual child in fam.Children)
                 {

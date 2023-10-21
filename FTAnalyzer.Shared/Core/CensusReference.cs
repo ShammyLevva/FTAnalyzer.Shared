@@ -312,7 +312,7 @@ namespace FTAnalyzer
             }
             else
                 fact.UpdateFactDate(CensusYear);
-            if (pageRef != null && !pageRef.IsKnownStatus && !IsKnownStatus)
+            if (pageRef is not null && !pageRef.IsKnownStatus && !IsKnownStatus)
                 unknownCensusRef = $"{pageRef.unknownCensusRef}\n{unknownCensusRef}";
             fact.SetCensusReferenceDetails(this, CensusLocation, string.Empty);
         }
