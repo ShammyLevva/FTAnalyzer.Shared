@@ -1,9 +1,5 @@
 ﻿using FTAnalyzer.Exports;
-#if __PC__
-using FTAnalyzer.Windows.Properties;
-#elif __MACOS__ || __IOS__
 using FTAnalyzer.Properties;
-#endif
 using FTAnalyzer.Utilities;
 using System;
 using System.Collections.Generic;
