@@ -368,7 +368,7 @@ namespace FTAnalyzer
                         individualLookup.Add(individual.IndividualID, individual);
                     AddOccupations(individual);
                     AddCustomFacts(individual);
-                    progress.Report((100 * counter++) / individualMax);
+                    progress.Report(100 * counter++ / individualMax);
                 }
             }
             outputText.Report($"Loaded {counter} individuals.\n");
