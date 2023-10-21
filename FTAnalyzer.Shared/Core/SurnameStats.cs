@@ -1,6 +1,4 @@
-﻿using FTAnalyzer.Utilities;
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 
 namespace FTAnalyzer

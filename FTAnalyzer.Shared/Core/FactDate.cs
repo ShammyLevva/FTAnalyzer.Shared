@@ -1,5 +1,4 @@
-﻿using FTAnalyzer.Exports;
-using System;
+﻿using System;
 using System.Collections.Generic;
 ﻿using FTAnalyzer.Utilities;
 using FTAnalyzer.Properties;

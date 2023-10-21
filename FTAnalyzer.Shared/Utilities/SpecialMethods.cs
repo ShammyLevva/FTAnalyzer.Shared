@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System;
-using System.Drawing;
-using FTAnalyzer.Properties;
 #if __PC__
 using System.Collections.Generic;
 using System.Linq;
