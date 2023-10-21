@@ -61,7 +61,7 @@ namespace FTAnalyzer
 
         public int CompareTo(object? obj)
         {
-            DisplayFact that = (DisplayFact)obj;
+            DisplayFact? that = obj as DisplayFact;
             return FactDate == that.FactDate && Ind is not null ? Ind.CompareTo(that.Ind) : FactDate.CompareTo(that.FactDate);
         }
 

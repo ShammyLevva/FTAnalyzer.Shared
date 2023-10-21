@@ -10,8 +10,8 @@ namespace FTAnalyzer.Utilities
         public static void DoubleBuffered(this System.Windows.Forms.DataGridView dgv, bool setting)
         {
             Type dgvType = dgv.GetType();
-            PropertyInfo pi = dgvType.GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic);
-            pi.SetValue(dgv, setting, null);
+            PropertyInfo? pi = dgvType.GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic);
+            pi?.SetValue(dgv, setting, null);
         }
 #endif
         public static string Right(this string sValue, int iMaxLength)

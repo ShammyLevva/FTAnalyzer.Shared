@@ -27,7 +27,7 @@ namespace FTAnalyzer
 
         public override bool Equals(object? obj)
         {
-            NonDuplicate that = (NonDuplicate)obj;
+            if (obj is not NonDuplicate that) return false;
             bool result = (IndividualA_ID == that.IndividualA_ID &&
                    IndividualA_Name == that.IndividualA_Name &&
                    IndividualA_BirthDate == that.IndividualA_BirthDate &&

@@ -58,11 +58,11 @@ namespace FTAnalyzer
         {
             if (node is not null)
             {
-                XmlNode eHusband = node.SelectSingleNode("HUSB");
-                XmlNode eWife = node.SelectSingleNode("WIFE");
+                XmlNode? eHusband = node.SelectSingleNode("HUSB");
+                XmlNode? eWife = node.SelectSingleNode("WIFE");
                 FamilyID = node.Attributes["ID"].Value;
-                string husbandID = eHusband?.Attributes["REF"]?.Value;
-                string wifeID = eWife?.Attributes["REF"]?.Value;
+                string husbandID = eHusband?.Attributes["REF"]?.Value ?? string.Empty;
+                string wifeID = eWife?.Attributes["REF"]?.Value ?? string.Empty;
                 Husband = ft.GetIndividual(husbandID);
                 Wife = ft.GetIndividual(wifeID);
                 if (Husband is not null && Wife is not null)
@@ -72,7 +72,7 @@ namespace FTAnalyzer
 
                 // now iterate through child elements of eChildren
                 // finding all individuals
-                XmlNodeList list = node.SelectNodes("CHIL");
+                XmlNodeList? list = node.SelectNodes("CHIL");
                 foreach (XmlNode n in list)
                 {
                     if (n.Attributes["REF"] is not null)
@@ -80,8 +80,8 @@ namespace FTAnalyzer
                         Individual child = ft.GetIndividual(n.Attributes["REF"].Value);
                         if (child is not null)
                         {
-                            XmlNode fatherNode = n.SelectSingleNode("_FREL");
-                            XmlNode motherNode = n.SelectSingleNode("_MREL");
+                            XmlNode? fatherNode = n.SelectSingleNode("_FREL");
+                            XmlNode? motherNode = n.SelectSingleNode("_MREL");
                             var father = ParentalRelationship.GetRelationshipType(fatherNode);
                             var mother = ParentalRelationship.GetRelationshipType(motherNode);
                             Children.Add(child);
@@ -206,7 +206,7 @@ namespace FTAnalyzer
 
         void AddFacts(XmlNode node, string factType, IProgress<string> outputText)
         {
-            XmlNodeList list = node.SelectNodes(factType);
+            XmlNodeList? list = node.SelectNodes(factType);
             bool preferredFact = true;
             foreach (XmlNode n in list)
             {

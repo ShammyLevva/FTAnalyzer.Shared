@@ -26,8 +26,8 @@ namespace FTAnalyzer.Utilities
         {
             var xValue = propertyDescriptor.GetValue(x);
             var yValue = propertyDescriptor.GetValue(y);
-            string xString = xValue?.ToString();
-            string yString = yValue?.ToString();
+            string xString = xValue?.ToString() ?? string.Empty;
+            string yString = yValue?.ToString() ?? string.Empty;
             if (string.IsNullOrEmpty(xString) && string.IsNullOrEmpty(yString))
                 return 0;
             if (string.IsNullOrEmpty(xString))

@@ -123,7 +123,7 @@ namespace FTAnalyzer
 
         bool IsValidFamily()
         {
-            Individual eldestChild = Children.OrderBy(x => x.BirthDate).FirstOrDefault();
+            Individual? eldestChild = Children.OrderBy(x => x.BirthDate).FirstOrDefault();
             if (eldestChild is not null && eldestChild.BirthDate.IsBefore(CensusDate))
                 return true;
 
@@ -141,7 +141,7 @@ namespace FTAnalyzer
                 if (Husband is not null) { return Husband.SurnameAtDate(CensusDate); }
                 if (Wife is not null) { return Wife.SurnameAtDate(CensusDate); }
 
-                Individual child = Children.FirstOrDefault();
+                Individual? child = Children.FirstOrDefault();
                 return child is not null ? child.SurnameAtDate(CensusDate) : Individual.UNKNOWN_NAME;
             }
         }

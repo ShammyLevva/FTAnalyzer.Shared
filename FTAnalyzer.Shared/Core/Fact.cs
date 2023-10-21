@@ -476,7 +476,7 @@ namespace FTAnalyzer
                             FactType = CENSUS;
                             CheckCensusDate(tag, Location);
                         }
-                        else if (CUSTOM_TAGS.TryGetValue(tag, out string factType))
+                        else if (CUSTOM_TAGS.TryGetValue(tag, out string? factType))
                         {
                             FactType = factType;
                             CheckCensusDate(tag, Location);
@@ -518,7 +518,7 @@ namespace FTAnalyzer
                         CheckValidChildrenStatus(node);
 
                     // now iterate through source elements of the fact finding all sources
-                    XmlNodeList list = node.SelectNodes("SOUR");
+                    XmlNodeList? list = node.SelectNodes("SOUR");
                     foreach (XmlNode n in list)
                     {
                         if (n.Attributes["REF"] is not null)
@@ -585,10 +585,10 @@ namespace FTAnalyzer
 
         void CheckForSharedFacts(XmlNode node)
         {
-            XmlNodeList list = node.SelectNodes("_SHAR");
+            XmlNodeList? list = node.SelectNodes("_SHAR");
             foreach (XmlNode n in list)
             {
-                string indref = n.Attributes["REF"]?.Value;
+                string? indref = n.Attributes["REF"]?.Value;
                 //string role = FamilyTree.GetText(n, "ROLE", false);
                 if (indref is not null)
                     FamilyTree.Instance.AddSharedFact(indref, this);
@@ -645,34 +645,34 @@ namespace FTAnalyzer
 
         static string GetAddress(string factType, XmlNode node)
         {
-            XmlNode addr = node.SelectSingleNode("ADDR");
+            XmlNode? addr = node.SelectSingleNode("ADDR");
             if (addr is null)
                 return string.Empty;
             if (COMMENT_FACTS.Contains(factType)) // don't parse address records if this is a comment fact
                 return string.Empty;
             string result = string.Empty; // need to do something with an ADDR tag
-            XmlNode ctry = node.SelectSingleNode("ADDR/CTRY");
+            XmlNode? ctry = node.SelectSingleNode("ADDR/CTRY");
             if (ctry is not null)
                 result = (result.Length > 0) ? ctry.InnerText + ", " + result : ctry.InnerText;
-            XmlNode stae = node.SelectSingleNode("ADDR/STAE");
+            XmlNode? stae = node.SelectSingleNode("ADDR/STAE");
             if (stae is not null)
                 result = (result.Length > 0) ? stae.InnerText + ", " + result : stae.InnerText;
-            XmlNode city = node.SelectSingleNode("ADDR/CITY");
+            XmlNode? city = node.SelectSingleNode("ADDR/CITY");
             if (city is not null)
                 result = (result.Length > 0) ? city.InnerText + ", " + result : city.InnerText;
-            XmlNode adr3 = node.SelectSingleNode("ADDR/ADR3");
+            XmlNode? adr3 = node.SelectSingleNode("ADDR/ADR3");
             if (adr3 is not null)
                 result = (result.Length > 0) ? adr3.InnerText + ", " + result : adr3.InnerText;
-            XmlNode adr2 = node.SelectSingleNode("ADDR/ADR2");
+            XmlNode? adr2 = node.SelectSingleNode("ADDR/ADR2");
             if (adr2 is not null)
                 result = (result.Length > 0) ? adr2.InnerText + ", " + result : adr2.InnerText;
-            XmlNode adr1 = node.SelectSingleNode("ADDR/ADR1");
+            XmlNode? adr1 = node.SelectSingleNode("ADDR/ADR1");
             if (adr1 is not null)
                 result = (result.Length > 0) ? adr1.InnerText + ", " + result : adr1.InnerText;
             string address = string.Empty;
             if (addr.FirstChild is not null && addr.FirstChild.Value is not null)
                 address = addr.FirstChild.Value;
-            XmlNodeList list = node.SelectNodes("ADDR/CONT");
+            XmlNodeList? list = node.SelectNodes("ADDR/CONT");
             foreach (XmlNode cont in list)
             {
                 if (cont.FirstChild is not null && cont.FirstChild.Value is not null)

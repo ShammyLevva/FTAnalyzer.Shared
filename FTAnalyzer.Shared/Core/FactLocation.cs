@@ -469,7 +469,7 @@ namespace FTAnalyzer
 
         public static FactLocation GetLocation(string place, string latitude, string longitude, Geocode status, bool addLocation = true, bool updateLatLong = false)
         {
-            FactLocation temp;
+            FactLocation? temp;
             if (string.IsNullOrEmpty(place))
                 return BLANK_LOCATION;
             if (place.ToUpper() == "UNKNOWN")
@@ -477,9 +477,9 @@ namespace FTAnalyzer
             // GEDCOM lat/long will be prefixed with NS and EW which needs to be +/- to work.
             latitude = latitude.Replace("N", "").Replace("S", "-");
             longitude = longitude.Replace("W", "-").Replace("E", "");
-            if (LOCATIONS.TryGetValue(place, out FactLocation result))
+            if (LOCATIONS.TryGetValue(place, out FactLocation? result))
             {  // found location now check if we need to update its geocoding
-                if (updateLatLong && !result.IsGeoCoded(true))
+                if (updateLatLong && result is not null && !result.IsGeoCoded(true))
                 {  // we are updating and old value isn't geocoded 
                     temp = new FactLocation(place, latitude, longitude, status);
                     if (temp.IsGeoCoded(true))
@@ -497,7 +497,7 @@ namespace FTAnalyzer
                 result = new FactLocation(place, latitude, longitude, status);
                 if (LOCATIONS.TryGetValue(result.ToString(), out temp))
                 {
-                    if (updateLatLong)
+                    if (updateLatLong && temp is not null)
                     {
                         if ((!temp.IsGeoCoded(true) && result.IsGeoCoded(true)) || !result.GecodingMatches(temp))
                         {  // we are updating the old value isn't geocoded so we can overwrite or the new value doesn't match old database value so overwrite
@@ -552,7 +552,7 @@ namespace FTAnalyzer
 
         public static FactLocation LookupLocation(string place)
         {
-            LOCATIONS.TryGetValue(place, out FactLocation result);
+            LOCATIONS.TryGetValue(place, out FactLocation? result);
             result ??= new(place);
             return result;
         }
@@ -741,7 +741,7 @@ namespace FTAnalyzer
 
         void FixCountryTypos()
         {
-            COUNTRY_TYPOS.TryGetValue(Country, out string result);
+            COUNTRY_TYPOS.TryGetValue(Country, out string? result);
             if (!string.IsNullOrEmpty(result))
                 Country = result;
             else
@@ -757,7 +757,7 @@ namespace FTAnalyzer
         {
             if (Country == Countries.AUSTRALIA && toFix.Equals("WA"))
                 return "Western Australia"; // fix for WA = Washington
-            REGION_TYPOS.TryGetValue(toFix, out string result);
+            REGION_TYPOS.TryGetValue(toFix, out string? result);
             if (!string.IsNullOrEmpty(result))
                 return result;
             string fixCase = EnhancedTextInfo.ToTitleCase(toFix.ToLower());
@@ -767,7 +767,7 @@ namespace FTAnalyzer
 
         void ShiftCountryToRegion()
         {
-            COUNTRY_SHIFTS.TryGetValue(Country, out string result);
+            COUNTRY_SHIFTS.TryGetValue(Country, out string? result);
             if (string.IsNullOrEmpty(result))
             {
                 string fixCase = EnhancedTextInfo.ToTitleCase(Country.ToLower());
@@ -788,7 +788,7 @@ namespace FTAnalyzer
         {
             if (!Countries.IsUnitedKingdom(Country))
                 return; // don't shift regions if not UK
-            REGION_SHIFTS.TryGetValue(Region, out string result);
+            REGION_SHIFTS.TryGetValue(Region, out string? result);
             if (string.IsNullOrEmpty(result))
             {
                 string fixCase = EnhancedTextInfo.ToTitleCase(Region.ToLower());
@@ -908,19 +908,19 @@ namespace FTAnalyzer
                     return result;
 
                 // now check the individual part fixes
-                LOCAL_GOOGLE_FIXES.TryGetValue(new Tuple<int, string>(COUNTRY, Country.ToUpperInvariant()), out string countryFix);
+                LOCAL_GOOGLE_FIXES.TryGetValue(new Tuple<int, string>(COUNTRY, Country.ToUpperInvariant()), out string? countryFix);
                 if (countryFix is null)
                 {
                     GOOGLE_FIXES.TryGetValue(new Tuple<int, string>(COUNTRY, Country.ToUpperInvariant()), out countryFix);
                     countryFix ??= Country;
                 }
-                LOCAL_GOOGLE_FIXES.TryGetValue(new Tuple<int, string>(REGION, Region.ToUpperInvariant()), out string regionFix);
+                LOCAL_GOOGLE_FIXES.TryGetValue(new Tuple<int, string>(REGION, Region.ToUpperInvariant()), out string? regionFix);
                 if (regionFix is null)
                 {
                     GOOGLE_FIXES.TryGetValue(new Tuple<int, string>(REGION, Region.ToUpperInvariant()), out regionFix);
                     regionFix ??= Region;
                 }
-                LOCAL_GOOGLE_FIXES.TryGetValue(new Tuple<int, string>(SUBREGION, SubRegion.ToUpperInvariant()), out string subRegionFix);
+                LOCAL_GOOGLE_FIXES.TryGetValue(new Tuple<int, string>(SUBREGION, SubRegion.ToUpperInvariant()), out string? subRegionFix);
                 if (subRegionFix is null)
                 {
                     GOOGLE_FIXES.TryGetValue(new Tuple<int, string>(SUBREGION, SubRegion.ToUpperInvariant()), out subRegionFix);
@@ -965,7 +965,7 @@ namespace FTAnalyzer
 
         public bool IsEnglandWales => Countries.IsEnglandWales(Country);
 
-        public string Geocoded => GEOCODES.TryGetValue(GeocodeStatus, out string result) ? result : "Unknown";
+        public string Geocoded => GEOCODES.TryGetValue(GeocodeStatus, out string? result) ? result : "Unknown";
 
         public static int GeocodedLocations => AllLocations.Count(l => l.IsGeoCoded(false));
 
@@ -989,17 +989,17 @@ namespace FTAnalyzer
         {
             get
             {
-                FREECEN_LOOKUP.TryGetValue(Region, out string result);
+                FREECEN_LOOKUP.TryGetValue(Region, out string? result);
                 result ??= "all";
                 return result;
             }
         }
 
-        public Tuple<string, string> FindMyPastCountyCode
+        public Tuple<string, string>? FindMyPastCountyCode
         {
             get
             {
-                FINDMYPAST_LOOKUP.TryGetValue(Region, out Tuple<string, string> result);
+                FINDMYPAST_LOOKUP.TryGetValue(Region, out Tuple<string, string>? result);
                 return result;
             }
         }
