@@ -7,6 +7,7 @@ using FTAnalyzer.Properties;
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -373,7 +374,7 @@ namespace FTAnalyzer
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error: {e.Message}");
+                Debug.WriteLine($"Error: {e.Message}");
             }
         }
 
@@ -390,7 +391,7 @@ namespace FTAnalyzer
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Unable to create TEMP file or set its attributes: " + ex.Message);
+                Debug.WriteLine("Unable to create TEMP file or set its attributes: " + ex.Message);
             }
             return fileName;
         }

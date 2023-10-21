@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace FTAnalyzer
@@ -149,14 +150,14 @@ namespace FTAnalyzer
 
         public int ChildrenDead => FamilyChildren.Count(x => !x.IsAlive(CensusDate) && x.BirthDate.IsBefore(CensusDate));
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Console.WriteLine(System.String)")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Debug.WriteLine(System.String)")]
         public int ChildrenTotal
         {
             get
             {
                 int total = ChildrenAlive + ChildrenDead;
                 if (total == 0)
-                    Console.WriteLine("hmmm zero?");
+                    Debug.WriteLine("hmmm zero?");
                 return total;
             }
         }

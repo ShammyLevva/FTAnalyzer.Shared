@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using FTAnalyzer.Utilities;
 
@@ -2240,7 +2241,7 @@ namespace FTAnalyzer
                 CONVERSIONS.Add(region, counties);
             }
             if (counties.Contains(county))
-                Console.WriteLine($"Duplicate county: {region.PreferredName} mapped to {county.CountyName}");
+                Debug.WriteLine($"Duplicate county: {region.PreferredName} mapped to {county.CountyName}");
             else
                 counties.Add(county);
         }

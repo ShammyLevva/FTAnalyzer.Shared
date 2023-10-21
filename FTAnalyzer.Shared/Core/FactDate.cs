@@ -7,6 +7,7 @@ using FTAnalyzer.Properties;
 #endif
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -651,7 +652,7 @@ namespace FTAnalyzer
             {
                 if(OriginalString.StartsWith("(") && OriginalString.EndsWith(")")) // do not throw error if date
                 {
-                    Console.WriteLine("we have a text date with brackets");
+                    Debug.WriteLine("we have a text date with brackets");
                 }
                 else
                     throw new FactDateException($"Error parsing date '{OriginalString}' for {factRef}. Error message was : {e.Message}\n");
