@@ -8,11 +8,11 @@ namespace FTAnalyzer
 {
     public class CensusLocation
     {
-        static readonly Dictionary<Tuple<string, string>, CensusLocation> CENSUSLOCATIONS = new Dictionary<Tuple<string, string>, CensusLocation>();
-        public static CensusLocation UNKNOWN = new CensusLocation(string.Empty);
-        public static CensusLocation SCOTLAND = new CensusLocation(Countries.SCOTLAND);
-        public static CensusLocation UNITED_STATES = new CensusLocation(Countries.UNITED_STATES);
-        public static CensusLocation CANADA = new CensusLocation(Countries.CANADA);
+        static readonly Dictionary<Tuple<string, string>, CensusLocation> CENSUSLOCATIONS = new();
+        public readonly static CensusLocation UNKNOWN = new(string.Empty);
+        public readonly static CensusLocation SCOTLAND = new(Countries.SCOTLAND);
+        public readonly static CensusLocation UNITED_STATES = new(Countries.UNITED_STATES);
+        public readonly static CensusLocation CANADA = new(Countries.CANADA);
         public string Year { get; private set; }
         public string Piece { get; private set; }
         public string RegistrationDistrict { get; private set; }
@@ -33,9 +33,9 @@ namespace FTAnalyzer
             string filename = Path.Combine(startPath, "Resources", "CensusLocations.xml");
             if (File.Exists(filename))
             {
-                XmlDocument xmlDoc = new XmlDocument() { XmlResolver = null };
+                XmlDocument xmlDoc = new() { XmlResolver = null };
                 string xml = File.ReadAllText(filename);
-                StringReader sreader = new StringReader(xml);
+                StringReader sreader = new(xml);
                 using (XmlReader reader = XmlReader.Create(sreader, new XmlReaderSettings() { XmlResolver = null }))
                     xmlDoc.Load(reader);
                 //xmlDoc.Validate(something);
@@ -47,7 +47,7 @@ namespace FTAnalyzer
                     string parish = n.Attributes["Parish"].Value;
                     string county = n.Attributes["County"].Value;
                     string location = n.InnerText;
-                    CensusLocation cl = new CensusLocation(year, piece, RD, parish, county, location);
+                    CensusLocation cl = new(year, piece, RD, parish, county, location);
                     CENSUSLOCATIONS.Add(new Tuple<string, string>(year, piece), cl);
                 }
             }
@@ -68,7 +68,7 @@ namespace FTAnalyzer
 
         public static CensusLocation GetCensusLocation(string year, string piece)
         {
-            Tuple<string, string> key = new Tuple<string, string>(year, piece);
+            Tuple<string, string> key = new(year, piece);
             CENSUSLOCATIONS.TryGetValue(key, out CensusLocation result);
             return result ?? UNKNOWN;
         }

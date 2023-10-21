@@ -73,27 +73,40 @@ namespace FTAnalyzer
         readonly string[] _Parts;
         bool _created;
 
-        static Dictionary<string, string> COUNTRY_TYPOS = new Dictionary<string, string>();
-        static Dictionary<string, string> REGION_TYPOS = new Dictionary<string, string>();
-        static Dictionary<string, string> REGION_SHIFTS = new Dictionary<string, string>();
-        static Dictionary<string, string> FREECEN_LOOKUP = new Dictionary<string, string>();
-        static Dictionary<string, Tuple<string, string>> FINDMYPAST_LOOKUP = new Dictionary<string, Tuple<string, string>>();
+        static Dictionary<string, string> COUNTRY_TYPOS = new();
+        static Dictionary<string, string> REGION_TYPOS = new();
+        static Dictionary<string, string> REGION_SHIFTS = new();
+        static Dictionary<string, string> FREECEN_LOOKUP = new();
+        static Dictionary<string, Tuple<string, string>> FINDMYPAST_LOOKUP = new();
         static IDictionary<string, FactLocation> LOCATIONS;
-        static Dictionary<Tuple<int, string>, string> GOOGLE_FIXES = new Dictionary<Tuple<int, string>, string>();
+        static Dictionary<Tuple<int, string>, string> GOOGLE_FIXES = new();
         static Dictionary<Tuple<int, string>, string> LOCAL_GOOGLE_FIXES;
 
-        static Dictionary<string, string> COUNTRY_SHIFTS = new Dictionary<string, string>();
-        static Dictionary<string, string> CITY_ADD_COUNTRY = new Dictionary<string, string>();
-        public static Dictionary<Geocode, string> Geocodes;
-        public static FactLocation UNKNOWN_LOCATION;
-        public static FactLocation BLANK_LOCATION;
-        public static FactLocation TEMP = new FactLocation();
+        static Dictionary<string, string> COUNTRY_SHIFTS = new();
+        static Dictionary<string, string> CITY_ADD_COUNTRY = new();
+        public readonly static FactLocation UNKNOWN_LOCATION = new("Unknown", "0.0", "0.0", Geocode.GEDCOM_USER);
+        public readonly static FactLocation BLANK_LOCATION = new(string.Empty, "0.0", "0.0", Geocode.UNKNOWN);
+        public readonly static FactLocation TEMP = new();
+        public readonly static Dictionary<Geocode, string> GEOCODES = new()
+            {
+                { Geocode.UNKNOWN, "Unknown" },
+                { Geocode.NOT_SEARCHED, "Not Searched" },
+                { Geocode.GEDCOM_USER, "GEDCOM/User Data" },
+                { Geocode.PARTIAL_MATCH, "Partial Match (Google)" },
+                { Geocode.MATCHED, "Google Matched" },
+                { Geocode.NO_MATCH, "No Match" },
+                { Geocode.INCORRECT, "Incorrect (User Marked)" },
+                { Geocode.OUT_OF_BOUNDS, "Outside Country Area" },
+                { Geocode.LEVEL_MISMATCH, "Partial Match (Levels)" },
+                { Geocode.OS_50KMATCH, "OS Gazetteer Match" },
+                { Geocode.OS_50KPARTIAL, "Partial Match (Ord Surv)" },
+                { Geocode.OS_50KFUZZY, "Fuzzy Match (Ord Surv)" }
+            };
         #endregion
 
         #region Static Constructor
         static FactLocation()
         {
-            SetupGeocodes();
             ResetLocations();
         }
 
@@ -112,9 +125,9 @@ namespace FTAnalyzer
             Debug.WriteLine($"Loading factlocation fixes from: {filename}");
             if (File.Exists(filename) && !GeneralSettings.Default.SkipFixingLocations) // don't load file if skipping fixing locations
             {
-                XmlDocument xmlDoc = new XmlDocument() { XmlResolver = null };
+                XmlDocument xmlDoc = new() { XmlResolver = null };
                 string xml = File.ReadAllText(filename);
-                StringReader sreader = new StringReader(xml);
+                StringReader sreader = new(xml);
                 using (XmlReader reader = XmlReader.Create(sreader, new XmlReaderSettings() { XmlResolver = null }))
                     xmlDoc.Load(reader);
                 foreach (XmlNode n in xmlDoc.SelectNodes("Data/Fixes/CountryTypos/CountryTypo"))
@@ -197,7 +210,7 @@ namespace FTAnalyzer
                         Debug.WriteLine(string.Format("Error duplicate FindMyPast lookup :{0}", county));
                     else if (!string.IsNullOrEmpty(code) && !string.IsNullOrEmpty(county))
                     {
-                        Tuple<string, string> result = new Tuple<string, string>(country, code);
+                        Tuple<string, string> result = new(country, code);
                         FINDMYPAST_LOOKUP.Add(county, result);
                     }
                 }
@@ -211,10 +224,10 @@ namespace FTAnalyzer
                     AddGoogleFixes(GOOGLE_FIXES, n, UNKNOWN);
                 ValidateTypoFixes();
                 ValidateCounties();
-                foreach(KeyValuePair<string,string> kvp in CITY_ADD_COUNTRY)
+                foreach (KeyValuePair<string, string> kvp in CITY_ADD_COUNTRY)
                 {
-                    if(!COUNTRY_SHIFTS.ContainsKey(kvp.Key))
-                        COUNTRY_SHIFTS.Add(kvp.Key,kvp.Value);
+                    if (!COUNTRY_SHIFTS.ContainsKey(kvp.Key))
+                        COUNTRY_SHIFTS.Add(kvp.Key, kvp.Value);
                 }
                 //COUNTRY_SHIFTS = COUNTRY_SHIFTS.Concat(CITY_ADD_COUNTRY).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             }
@@ -258,9 +271,9 @@ namespace FTAnalyzer
                 string filename = Path.Combine(MappingSettings.Default.CustomMapPath, "GoogleFixes.xml");
                 if (File.Exists(filename))
                 {
-                    XmlDocument xmlDoc = new XmlDocument() { XmlResolver = null };
+                    XmlDocument xmlDoc = new() { XmlResolver = null };
                     string xml = File.ReadAllText(filename);
-                    StringReader sreader = new StringReader(xml);
+                    StringReader sreader = new(xml);
                     using (XmlReader reader = XmlReader.Create(sreader, new XmlReaderSettings() { XmlResolver = null }))
                         xmlDoc.Load(reader);
                     foreach (XmlNode n in xmlDoc.SelectNodes("GoogleGeocodes/CountryFixes/CountryFix"))
@@ -286,7 +299,7 @@ namespace FTAnalyzer
         {
             string fromstr = n.Attributes["from"].Value;
             string to = n.Attributes["to"].Value;
-            Tuple<int, string> from = new Tuple<int, string>(level, fromstr.ToUpperInvariant());
+            Tuple<int, string> from = new(level, fromstr.ToUpperInvariant());
             if (from != null && fromstr.Length > 0 && to != null)
             {
                 if (!dictionary.ContainsKey(from))
@@ -306,24 +319,6 @@ namespace FTAnalyzer
         //    }
         //}
 
-        static void SetupGeocodes()
-        {
-            Geocodes = new Dictionary<Geocode, string>
-            {
-                { Geocode.UNKNOWN, "Unknown" },
-                { Geocode.NOT_SEARCHED, "Not Searched" },
-                { Geocode.GEDCOM_USER, "GEDCOM/User Data" },
-                { Geocode.PARTIAL_MATCH, "Partial Match (Google)" },
-                { Geocode.MATCHED, "Google Matched" },
-                { Geocode.NO_MATCH, "No Match" },
-                { Geocode.INCORRECT, "Incorrect (User Marked)" },
-                { Geocode.OUT_OF_BOUNDS, "Outside Country Area" },
-                { Geocode.LEVEL_MISMATCH, "Partial Match (Levels)" },
-                { Geocode.OS_50KMATCH, "OS Gazetteer Match" },
-                { Geocode.OS_50KPARTIAL, "Partial Match (Ord Surv)" },
-                { Geocode.OS_50KFUZZY, "Fuzzy Match (Ord Surv)" }
-            };
-        }
         #endregion
 
         #region Object Constructors
@@ -364,7 +359,7 @@ namespace FTAnalyzer
             Latitude = double.TryParse(latitude, out double temp) ? temp : 0;
             Longitude = double.TryParse(longitude, out temp) ? temp : 0;
 #if __PC__
-            NetTopologySuite.Geometries.Coordinate point = new NetTopologySuite.Geometries.Coordinate(Longitude, Latitude);
+            NetTopologySuite.Geometries.Coordinate point = new(Longitude, Latitude);
             NetTopologySuite.Geometries.Coordinate mpoint = MapTransforms.TransformCoordinate(point);
 
             LongitudeM = mpoint.X;
@@ -385,23 +380,23 @@ namespace FTAnalyzer
                 int comma = location.LastIndexOf(",", StringComparison.Ordinal);
                 if (comma > 0)
                 {
-                    Country = location.Substring(comma + 1);
-                    location = location.Substring(0, comma);
+                    Country = location[(comma + 1)..];
+                    location = location[..comma];
                     comma = location.LastIndexOf(",", comma, StringComparison.Ordinal);
                     if (comma > 0)
                     {
-                        Region = location.Substring(comma + 1);
-                        location = location.Substring(0, comma);
+                        Region = location[(comma + 1)..];
+                        location = location[..comma];
                         comma = location.LastIndexOf(",", comma, StringComparison.Ordinal);
                         if (comma > 0)
                         {
-                            SubRegion = location.Substring(comma + 1);
-                            location = location.Substring(0, comma);
+                            SubRegion = location[(comma + 1)..];
+                            location = location[..comma];
                             comma = location.LastIndexOf(",", comma, StringComparison.Ordinal);
                             if (comma > 0)
                             {
-                                Address = location.Substring(comma + 1);
-                                Place = location.Substring(0, comma);
+                                Address = location[(comma + 1)..];
+                                Place = location[..comma];
                                 Level = PLACE;
                             }
                             else
@@ -431,15 +426,15 @@ namespace FTAnalyzer
                 if (GeneralSettings.Default.SkipFixingLocations)
                 { // we aren't fixing locations but we still need to allow for comma space as a valid separator
                     if (Country.Length > 1 && Country[0] == ' ')
-                        Country = Country.Substring(1);
+                        Country = Country[1..];
                     if (Region.Length > 1 && Region[0] == ' ')
-                        Region = Region.Substring(1);
+                        Region = Region[1..];
                     if (SubRegion.Length > 1 && SubRegion[0] == ' ')
-                        SubRegion = SubRegion.Substring(1);
+                        SubRegion = SubRegion[1..];
                     if (Address.Length > 1 && Address[0] == ' ')
-                        Address = Address.Substring(1);
+                        Address = Address[1..];
                     if (Place.Length > 1 && Place[0] == ' ')
-                        Place = Place.Substring(1);
+                        Place = Place[1..];
                 }
                 else
                 {
@@ -545,7 +540,7 @@ namespace FTAnalyzer
             loc.ViewPort = new Mapping.GeoResponse.CResult.CGeometry.CViewPort();
             if (DatabaseHelper.IsLocationInDatabase(loc.ToString()))
             {   // check whether the location in database is geocoded.
-                FactLocation inDatabase = new FactLocation(loc.ToString());
+                FactLocation inDatabase = new(loc.ToString());
                 DatabaseHelper.GetLocationDetails(inDatabase);
                 if (!inDatabase.IsGeoCoded(true) || !loc.GecodingMatches(inDatabase))
                     DatabaseHelper.UpdateGeocode(loc); // only update if existing record wasn't geocoded or doesn't match database contents
@@ -558,8 +553,7 @@ namespace FTAnalyzer
         public static FactLocation LookupLocation(string place)
         {
             LOCATIONS.TryGetValue(place, out FactLocation result);
-            if (result is null)
-                result = new FactLocation(place);
+            result ??= new(place);
             return result;
         }
 
@@ -579,8 +573,6 @@ namespace FTAnalyzer
             LOCAL_GOOGLE_FIXES = new Dictionary<Tuple<int, string>, string>();
 
             // set unknown location as unknown so it doesn't keep hassling to be searched
-            BLANK_LOCATION = new FactLocation(string.Empty, "0.0", "0.0", Geocode.UNKNOWN);
-            UNKNOWN_LOCATION = new FactLocation("Unknown", "0.0", "0.0", Geocode.GEDCOM_USER);
             LOCATIONS.Add("Unknown", UNKNOWN_LOCATION);
             if (!GeneralSettings.Default.SkipFixingLocations)
                 LoadConversions(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location));
@@ -595,7 +587,7 @@ namespace FTAnalyzer
         public static Fact BestLocationFact(IEnumerable<Fact> facts, FactDate when, int limit)
         {
             // this returns a Fact for a FactLocation a person was at for a given period
-            Fact result = new Fact("Unknown", Fact.UNKNOWN, FactDate.UNKNOWN_DATE, UNKNOWN_LOCATION);
+            Fact result = new("Unknown", Fact.UNKNOWN, FactDate.UNKNOWN_DATE, UNKNOWN_LOCATION);
             double minDistance = float.MaxValue;
             double distance;
             foreach (Fact f in facts)
@@ -698,15 +690,15 @@ namespace FTAnalyzer
         void FixCapitalisation()
         {
             if (Country.Length > 1)
-                Country = char.ToUpper(Country[0]) + Country.Substring(1);
+                Country = char.ToUpper(Country[0]) + Country[1..];
             if (Region.Length > 1)
-                Region = char.ToUpper(Region[0]) + Region.Substring(1);
+                Region = char.ToUpper(Region[0]) + Region[1..];
             if (SubRegion.Length > 1)
-                SubRegion = char.ToUpper(SubRegion[0]) + SubRegion.Substring(1);
+                SubRegion = char.ToUpper(SubRegion[0]) + SubRegion[1..];
             if (Address.Length > 1)
-                Address = char.ToUpper(Address[0]) + Address.Substring(1);
+                Address = char.ToUpper(Address[0]) + Address[1..];
             if (Place.Length > 1)
-                Place = char.ToUpper(Place[0]) + Place.Substring(1);
+                Place = char.ToUpper(Place[0]) + Place[1..];
         }
 
         void FixRegionFullStops() => Region = Region.Replace(".", " ").Trim();
@@ -859,7 +851,7 @@ namespace FTAnalyzer
 
         void SetMetaphones()
         {
-            DoubleMetaphone meta = new DoubleMetaphone(Country);
+            DoubleMetaphone meta = new(Country);
             CountryMetaphone = meta.PrimaryKey;
             meta = new DoubleMetaphone(Region);
             RegionMetaphone = meta.PrimaryKey;
@@ -875,20 +867,20 @@ namespace FTAnalyzer
 
         public static string ReplaceString(string str, string oldValue, string newValue, StringComparison comparison)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
 
             int previousIndex = 0;
             int index = str.IndexOf(oldValue, comparison);
             while (index != -1)
             {
-                sb.Append(str.Substring(previousIndex, index - previousIndex));
+                sb.Append(str[previousIndex..index]);
                 sb.Append(newValue);
                 index += oldValue.Length;
 
                 previousIndex = index;
                 index = str.IndexOf(oldValue, index, comparison);
             }
-            sb.Append(str.Substring(previousIndex));
+            sb.Append(str[previousIndex..]);
 
             return sb.ToString();
         }
@@ -920,22 +912,19 @@ namespace FTAnalyzer
                 if (countryFix is null)
                 {
                     GOOGLE_FIXES.TryGetValue(new Tuple<int, string>(COUNTRY, Country.ToUpperInvariant()), out countryFix);
-                    if (countryFix is null)
-                        countryFix = Country;
+                    countryFix ??= Country;
                 }
                 LOCAL_GOOGLE_FIXES.TryGetValue(new Tuple<int, string>(REGION, Region.ToUpperInvariant()), out string regionFix);
                 if (regionFix is null)
                 {
                     GOOGLE_FIXES.TryGetValue(new Tuple<int, string>(REGION, Region.ToUpperInvariant()), out regionFix);
-                    if (regionFix is null)
-                        regionFix = Region;
+                    regionFix ??= Region;
                 }
                 LOCAL_GOOGLE_FIXES.TryGetValue(new Tuple<int, string>(SUBREGION, SubRegion.ToUpperInvariant()), out string subRegionFix);
                 if (subRegionFix is null)
                 {
                     GOOGLE_FIXES.TryGetValue(new Tuple<int, string>(SUBREGION, SubRegion.ToUpperInvariant()), out subRegionFix);
-                    if (subRegionFix is null)
-                        subRegionFix = SubRegion;
+                    subRegionFix ??= SubRegion;
                 }
                 result = countryFix;
                 if (!string.IsNullOrEmpty(regionFix) || GeneralSettings.Default.AllowEmptyLocations)
@@ -950,10 +939,10 @@ namespace FTAnalyzer
             }
         }
 
-        string TrimLeadingCommas(string toChange)
+        static string TrimLeadingCommas(string toChange)
         {
             while (toChange.StartsWith(", ", StringComparison.Ordinal))
-                toChange = toChange.Substring(2);
+                toChange = toChange[2..];
             return toChange.Trim();
         }
 
@@ -976,7 +965,7 @@ namespace FTAnalyzer
 
         public bool IsEnglandWales => Countries.IsEnglandWales(Country);
 
-        public string Geocoded => Geocodes.TryGetValue(GeocodeStatus, out string result) ? result : "Unknown";
+        public string Geocoded => GEOCODES.TryGetValue(GeocodeStatus, out string result) ? result : "Unknown";
 
         public static int GeocodedLocations => AllLocations.Count(l => l.IsGeoCoded(false));
 
@@ -1001,8 +990,7 @@ namespace FTAnalyzer
             get
             {
                 FREECEN_LOOKUP.TryGetValue(Region, out string result);
-                if (result is null)
-                    result = "all";
+                result ??= "all";
                 return result;
             }
         }
@@ -1054,7 +1042,7 @@ namespace FTAnalyzer
         public FactLocation GetLocation(int level) => GetLocation(level, false);
         public FactLocation GetLocation(int level, bool fixNumerics)
         {
-            StringBuilder location = new StringBuilder(Country);
+            StringBuilder location = new(Country);
             if (level > COUNTRY && (Region.Length > 0 || GeneralSettings.Default.AllowEmptyLocations))
                 location.Insert(0, Region + ", ");
             if (level > REGION && (SubRegion.Length > 0 || GeneralSettings.Default.AllowEmptyLocations))
@@ -1077,7 +1065,7 @@ namespace FTAnalyzer
         {
             get
             {
-                HashSet<string> names = new HashSet<string>();
+                HashSet<string> names = new();
                 foreach (Individual i in individuals.Values)
                     names.Add(i.Surname);
                 List<string> result = names.ToList();
@@ -1105,15 +1093,15 @@ namespace FTAnalyzer
             // remaining options return false ie: Geocode.OUT_OF_BOUNDS, Geocode.NO_MATCH, Geocode.NOT_SEARCHED, Geocode.INCORRECT
         }
 
-        static readonly Regex numericFix = new Regex("\\d+[A-Za-z]?", RegexOptions.Compiled);
+        static readonly Regex numericFix = new("\\d+[A-Za-z]?", RegexOptions.Compiled);
 
-        string FixNumerics(string addressField, bool returnNumber)
+        static string FixNumerics(string addressField, bool returnNumber)
         {
             int pos = addressField.IndexOf(" ", StringComparison.Ordinal);
             if (pos > 0 & pos < addressField.Length)
             {
-                string number = addressField.Substring(0, pos);
-                string name = addressField.Substring(pos + 1);
+                string number = addressField[..pos];
+                string name = addressField[(pos + 1)..];
                 Match matcher = numericFix.Match(number);
                 if (matcher.Success)
                     return returnNumber ? name + " - " + number : name;
@@ -1225,7 +1213,7 @@ namespace FTAnalyzer
 
         public override bool Equals(object obj)
         {
-            return obj is FactLocation && CompareTo((FactLocation)obj) == 0;
+            return obj is FactLocation location && CompareTo(location) == 0;
         }
 
         public static bool operator ==(FactLocation a, FactLocation b)
@@ -1249,24 +1237,24 @@ namespace FTAnalyzer
 
         public IComparer<IDisplayLocation> GetComparer(string columnName, bool ascending)
         {
-            switch (columnName)
+            return columnName switch
             {
-                case "Country": return CompareComparableProperty<IDisplayLocation>(f => f.Country, ascending);
-                case "Region": return CompareComparableProperty<IDisplayLocation>(f => f.Region, ascending);
-                case "SubRegion": return CompareComparableProperty<IDisplayLocation>(f => f.SubRegion, ascending);
-                case "Address": return CompareComparableProperty<IDisplayLocation>(f => f.Address, ascending);
-                case "Place": return CompareComparableProperty<IDisplayLocation>(f => f.Place, ascending);
-                case "Latitude": return CompareComparableProperty<IDisplayLocation>(f => f.Latitude, ascending);
-                case "Longitude": return CompareComparableProperty<IDisplayLocation>(f => f.Longitude, ascending);
-                case "Geocoded": return CompareComparableProperty<IDisplayLocation>(f => f.Geocoded, ascending);
-                case "FoundLocation": return CompareComparableProperty<IDisplayLocation>(f => f.FoundLocation, ascending);
-                case "GEDCOMLocation": return CompareComparableProperty<IDisplayLocation>(f => f.GEDCOMLocation, ascending);
-                case "GEDCOMLoaded": return CompareComparableProperty<IDisplayLocation>(f => f.GEDCOMLoaded, ascending);
-                default: return null;
-            }
+                "Country" => CompareComparableProperty<IDisplayLocation>(f => f.Country, ascending),
+                "Region" => CompareComparableProperty<IDisplayLocation>(f => f.Region, ascending),
+                "SubRegion" => CompareComparableProperty<IDisplayLocation>(f => f.SubRegion, ascending),
+                "Address" => CompareComparableProperty<IDisplayLocation>(f => f.Address, ascending),
+                "Place" => CompareComparableProperty<IDisplayLocation>(f => f.Place, ascending),
+                "Latitude" => CompareComparableProperty<IDisplayLocation>(f => f.Latitude, ascending),
+                "Longitude" => CompareComparableProperty<IDisplayLocation>(f => f.Longitude, ascending),
+                "Geocoded" => CompareComparableProperty<IDisplayLocation>(f => f.Geocoded, ascending),
+                "FoundLocation" => CompareComparableProperty<IDisplayLocation>(f => f.FoundLocation, ascending),
+                "GEDCOMLocation" => CompareComparableProperty<IDisplayLocation>(f => f.GEDCOMLocation, ascending),
+                "GEDCOMLoaded" => CompareComparableProperty<IDisplayLocation>(f => f.GEDCOMLoaded, ascending),
+                _ => null,
+            };
         }
 
-        Comparer<T> CompareComparableProperty<T>(Func<IDisplayLocation, IComparable> accessor, bool ascending)
+        static Comparer<T> CompareComparableProperty<T>(Func<IDisplayLocation, IComparable> accessor, bool ascending)
         {
             return Comparer<T>.Create((x, y) =>
             {
