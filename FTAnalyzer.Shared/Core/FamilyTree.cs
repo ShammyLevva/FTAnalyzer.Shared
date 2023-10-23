@@ -2,7 +2,6 @@
 using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
 using System.Globalization;
-using System.Net;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
@@ -15,8 +14,10 @@ using System.Diagnostics;
 using System.Text.Json;
 
 #if __PC__
+using FTAnalyzer.Windows;
 using FTAnalyzer.Forms.Controls;
 #elif __MACOS__ || __IOS__
+using System.Net;
 using FTAnalyzer.ViewControllers;
 #endif
 
@@ -1901,13 +1902,13 @@ namespace FTAnalyzer
             }
         }
 
-        public List<IDisplayColourCensus> ColourCensus(string country, RelationTypes relType, string surname,
+        public List<IDisplayColourCensus> ColourCensus(string country, Predicate<Individual> relTypeFilter, string surname,
                                                        ComboBoxFamily family, bool IgnoreMissingBirthDates, bool IgnoreMissingDeathDates)
         {
             Predicate<Individual> filter;
             if (family is null)
             {
-                filter = relType.BuildFilter<Individual>(x => x.RelationType);
+                filter = relTypeFilter;
                 if (surname.Length > 0)
                 {
                     Predicate<Individual> surnameFilter = FilterUtils.StringFilter<Individual>(x => x.Surname, surname);
@@ -1942,12 +1943,12 @@ namespace FTAnalyzer
             return individuals.Filter(filter).ToList<IDisplayColourCensus>();
         }
 
-        public List<IDisplayColourBMD> ColourBMD(RelationTypes relType, string surname, ComboBoxFamily family)
+        public List<IDisplayColourBMD> ColourBMD(Predicate<Individual> relTypeFilter, string surname, ComboBoxFamily family)
         {
             Predicate<Individual> filter;
             if (family is null)
             {
-                filter = relType.BuildFilter<Individual>(x => x.RelationType);
+                filter = relTypeFilter;
                 if (surname.Length > 0)
                 {
                     Predicate<Individual> surnameFilter = FilterUtils.StringFilter<Individual>(x => x.Surname, surname);
@@ -1959,12 +1960,12 @@ namespace FTAnalyzer
             return individuals.Filter(filter).ToList<IDisplayColourBMD>();
         }
 
-        public List<IDisplayMissingData> MissingData(RelationTypes relType, string surname, ComboBoxFamily family)
+        public List<IDisplayMissingData> MissingData(Predicate<Individual> relTypeFilter, string surname, ComboBoxFamily family)
         {
             Predicate<Individual> filter;
             if (family is null)
             {
-                filter = relType.BuildFilter<Individual>(x => x.RelationType);
+                filter = relTypeFilter;
                 if (surname.Length > 0)
                 {
                     Predicate<Individual> surnameFilter = FilterUtils.StringFilter<Individual>(x => x.Surname, surname);
@@ -2325,7 +2326,7 @@ namespace FTAnalyzer
             };
         }
 
-        public void SearchCensus(string censusCountry, int censusYear, Individual person, int censusProvider, string censusRegion)
+        public static void SearchCensus(string censusCountry, int censusYear, Individual person, int censusProvider, string censusRegion)
         {
             string? uri = null;
             string provider = ProviderName(censusProvider);
@@ -2926,7 +2927,7 @@ namespace FTAnalyzer
 
         public enum SearchType { BIRTH = 0, MARRIAGE = 1, DEATH = 2 };
 
-        public void SearchBMD(SearchType st, Individual? individual, FactDate factdate, FactLocation factLocation, int searchProvider, string bmdRegion, Individual? spouse)
+        public static void SearchBMD(SearchType st, Individual? individual, FactDate factdate, FactLocation factLocation, int searchProvider, string bmdRegion, Individual? spouse)
         {
             if (individual is null) return;
             string? uri = null;
@@ -3742,7 +3743,7 @@ namespace FTAnalyzer
                              "&end_date=" + year.ToString() + chosenDate.ToString("MM", CultureInfo.InvariantCulture) + "31" :
                             @"https://www.vizgr.org/historical-events/search.php?links=true&format=xml&begin_date=" + year.ToString() + chosenDate.ToString("MMdd", CultureInfo.InvariantCulture) +
                             "&end_date=" + year.ToString() + chosenDate.ToString("MMdd", CultureInfo.InvariantCulture);
-                    XmlDocument doc = GetWikipediaData(URL);
+                    XmlDocument doc = GetWikipediaData(URL).Result;
                     eventDate = wholeMonth ? new FactDate(CreateDate(year, chosenDate.Month, 1), CreateDate(year, chosenDate.Month + 1, 1).AddDays(-1)) :
                                              new FactDate(CreateDate(year, chosenDate.Month, chosenDate.Day), CreateDate(year, chosenDate.Month, chosenDate.Day));
                     if (doc.InnerText.Length > 0)
@@ -3800,29 +3801,24 @@ namespace FTAnalyzer
             return fd;
         }
 
-        static XmlDocument GetWikipediaData(string URL)
+        static async Task<XmlDocument> GetWikipediaData(string URL)
         {
             string result = string.Empty;
             var doc = new XmlDocument() { XmlResolver = null };
             try
             {
-                //doc.Load(URL); // using doc.load throws XmlException slowing down loading of data
-                HttpWebRequest request = WebRequest.Create(new Uri(URL)) as HttpWebRequest;
-                request.ContentType = "application/xml";
-                request.Accept = "application/xml";
+                //HttpWebRequest request = WebRequest.Create(new Uri(URL)) as HttpWebRequest;
+                //request.ContentType = "application/xml";
+                //request.Accept = "application/xml";
                 Encoding encode = Encoding.GetEncoding("utf-8");
-                using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+                using var response = await MainClass.Client.GetStreamAsync(new Uri(URL));
+                using var reader = new StreamReader(response, encode);
+                result = reader.ReadToEnd();
+                if (!result.Contains("No events found for this query"))
                 {
-                    using (var reader = new StreamReader(response.GetResponseStream(), encode))
-                    {
-                        result = reader.ReadToEnd();
-                        if (!result.Contains("No events found for this query"))
-                        {
-                            //XmlReader xmlReader = XmlReader.Create(result, new XmlReaderSettings() { XmlResolver = null })
-                            using (XmlTextReader xmlReader = new XmlTextReader(new StringReader(result)))
-                                doc.Load(xmlReader);
-                        }
-                    }
+                    //XmlReader xmlReader = XmlReader.Create(result, new XmlReaderSettings() { XmlResolver = null })
+                    using XmlTextReader xmlReader = new(new StringReader(result));
+                    doc.Load(xmlReader);
                 }
             }
             catch (XmlException)
