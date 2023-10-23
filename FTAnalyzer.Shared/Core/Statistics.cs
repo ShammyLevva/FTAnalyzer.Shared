@@ -121,7 +121,11 @@ namespace FTAnalyzer
                 };
                 req.Content.Headers.Clear();
                 req.Content.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
+                #if __PC__
+                HttpResponseMessage response = await Program.Client.SendAsync(req);
+                #elif __MACOS__ || __IOS__
                 HttpResponseMessage response = await MainClass.Client.SendAsync(req);
+                #endif
                 response.EnsureSuccessStatusCode();
                 string responsebody = await response.Content.ReadAsStringAsync();
                 string filename = Path.Combine(Path.GetTempPath(), "FTA-GOONS.html");

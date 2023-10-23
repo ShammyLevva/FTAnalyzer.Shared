@@ -3811,7 +3811,11 @@ namespace FTAnalyzer
                 //request.ContentType = "application/xml";
                 //request.Accept = "application/xml";
                 Encoding encode = Encoding.GetEncoding("utf-8");
+                #if __PC__
+                using var response = await Program.Client.GetStreamAsync(new Uri(URL));
+                #elif __MACOS__ || __IOS__
                 using var response = await MainClass.Client.GetStreamAsync(new Uri(URL));
+                #endif
                 using var reader = new StreamReader(response, encode);
                 result = reader.ReadToEnd();
                 if (!result.Contains("No events found for this query"))
