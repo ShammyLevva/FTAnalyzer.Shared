@@ -3,7 +3,9 @@ using System.Net;
 using FTAnalyzer.Filters;
 using System.Collections.Specialized;
 using System.Diagnostics;
+#if __PC__
 using FTAnalyzer.Windows;
+#endif
 
 namespace FTAnalyzer
 {

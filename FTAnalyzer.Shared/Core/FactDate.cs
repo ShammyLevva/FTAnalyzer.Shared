@@ -768,7 +768,7 @@ namespace FTAnalyzer
                             }
                             string standardFormat = new DateTime(int.Parse(gYear.Value), int.Parse(gMonth.Value), int.Parse(gDay.Value)).ToString("dd MMM yyyy").ToUpper();
                             dateValue = dateValue.Length > matcher2.Length
-                                ? string.Concat(dateValue.AsSpan()[..matcher2.Index].ToString(), standardFormat, dateValue.AsSpan(matcher2.Index + matcher2.Length, dateValue.Length).ToString())
+                                ? string.Concat(dateValue.AsSpan()[..matcher2.Index], standardFormat, dateValue.AsSpan(matcher2.Index + matcher2.Length, dateValue.Length))
                                 : standardFormat;
                         }
                     }
@@ -874,7 +874,7 @@ namespace FTAnalyzer
             if (doubleyear.Length == 3)
                 doubleyear = doubleyear.Substring(1, 2);
             if (doubleyear.Length == 1 && year.Length >= 2)
-                doubleyear = string.Concat(year.AsSpan(year.Length - 2, 1).ToString(), doubleyear);
+                doubleyear = string.Concat(year.AsSpan(year.Length - 2, 1), doubleyear);
             if (doubleyear is null || doubleyear.Length < 2 || doubleyear.Length > 4 || year.Length < 3)
             {
                 DoubleDateError = "Year part of double date is an invalid length.";
