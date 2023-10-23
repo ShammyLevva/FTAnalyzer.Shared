@@ -1,8 +1,4 @@
 using FTAnalyzer.Properties;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace FTAnalyzer
 {
     public class CensusIndividual : Individual, IDisplayCensus

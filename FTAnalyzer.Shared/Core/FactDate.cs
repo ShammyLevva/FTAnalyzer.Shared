@@ -1,5 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
 ﻿using FTAnalyzer.Utilities;
 using FTAnalyzer.Properties;
 using System.Diagnostics;

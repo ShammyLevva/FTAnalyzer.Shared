@@ -2,15 +2,8 @@
 using GoogleAnalyticsTracker.Core.TrackerParameters;
 using GoogleAnalyticsTracker.Simple;
 using System.Globalization;
-using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System;
-#if __PC__
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Forms;
-#endif
 
 namespace FTAnalyzer.Utilities
 {

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace FTAnalyzer
+﻿namespace FTAnalyzer
 {
     public class ExportFactsAtLocation
     {

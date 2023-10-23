@@ -1,24 +1,17 @@
 ﻿using FTAnalyzer.Filters;
 using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Net;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Web;
 using System.Xml;
 using System.Numerics;
 using System.Collections.Concurrent;
 using System.Diagnostics;
-//using FTAnalyzer.Windows;
 using System.Text.Json;
 
 #if __PC__

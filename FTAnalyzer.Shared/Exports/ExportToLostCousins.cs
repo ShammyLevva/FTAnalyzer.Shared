@@ -1,12 +1,8 @@
 ﻿using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
 using HtmlAgilityPack;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 
 namespace FTAnalyzer.Exports
