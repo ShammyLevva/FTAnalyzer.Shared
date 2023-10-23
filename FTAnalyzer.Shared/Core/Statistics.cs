@@ -3,6 +3,7 @@ using System.Net;
 using FTAnalyzer.Filters;
 using System.Collections.Specialized;
 using System.Diagnostics;
+using FTAnalyzer.Windows;
 
 namespace FTAnalyzer
 {

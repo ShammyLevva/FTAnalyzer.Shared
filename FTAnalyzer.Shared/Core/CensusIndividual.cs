@@ -1,4 +1,5 @@
 using FTAnalyzer.Properties;
+
 namespace FTAnalyzer
 {
     public class CensusIndividual : Individual, IDisplayCensus

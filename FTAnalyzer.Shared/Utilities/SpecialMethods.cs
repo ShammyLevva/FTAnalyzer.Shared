@@ -4,6 +4,8 @@ using GoogleAnalyticsTracker.Simple;
 using System.Globalization;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using FTAnalyzer.Properties;
+
 
 namespace FTAnalyzer.Utilities
 {

@@ -1,7 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using FTAnalyzer.Exports;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace FTAnalyzer.Exports
 {
