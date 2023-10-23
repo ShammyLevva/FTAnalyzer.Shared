@@ -1,5 +1,7 @@
 ﻿using System;
+#if __MACOS__ || __IOS__
 using System.Diagnostics;
+#endif
 using System.Collections.Generic;
 
 namespace FTAnalyzer
