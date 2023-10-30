@@ -1,6 +1,8 @@
 ﻿using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
+#if __PC__
 using FTAnalyzer.Windows;
+#endif
 using HtmlAgilityPack;
 
 namespace FTAnalyzer.Exports
@@ -43,7 +45,11 @@ namespace FTAnalyzer.Exports
                     else if (ind.CensusReference is not null && ind.CensusReference.IsValidLostCousinsReference())
                     {
                         dummy = new();
+#if __PC__
                         string reference = Program.LCClient.GetCensusSpecificFields(dummy, ind);
+#elif __MACOS__ || __IOS__
+                        string reference = MainClass.LCClient.GetCensusSpecificFields(dummy, ind);
+#endif
                         LostCousin lc = new($"{ind.SurnameAtDate(ind.CensusDate)}, {ind.Forenames}", ind.BirthDate.BestYear, reference, ind.CensusDate.BestYear, ind.CensusCountry, true);
                         if (Website.Contains(lc))
                         {
@@ -62,7 +68,11 @@ namespace FTAnalyzer.Exports
                             }
                             else
                             {
+#if __PC__
                                 if (await Program.LCClient.AddIndividualToWebsiteAsync(ind, outputText))
+#elif __MACOS__ || __IOS__
+                                if (await MainClass.LCClient.AddIndividualToWebsiteAsync(ind, outputText))
+#endif
                                 {
                                     outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - {ind.CensusString}, {ind.CensusReference} added.\n");
                                     recordsAdded++;
@@ -132,7 +142,11 @@ namespace FTAnalyzer.Exports
             try
             {
                 HtmlAgilityPack.HtmlDocument doc = new();
+#if __PC__
                 string webData = await Program.LCClient.GetAncestors();
+#elif __MACOS__ || __IOS__
+                string webData = await MainClass.LCClient.GetAncestors();
+#endif
                 doc.LoadHtml(webData);
                 HtmlNodeCollection rows = doc.DocumentNode.SelectNodes("//table[@class='data_table']/tr");
                 if (rows is not null)

@@ -23,8 +23,8 @@ namespace FTAnalyzer.Utilities
         {
             ColumnName = name;
             ColumnWidth = width;
-            TypeofColumn = columnType;
 #if __PC__
+            TypeofColumn = columnType;
             switch(alignment)
             {
                 case ColumnAlignment.Left : Alignment = DataGridViewContentAlignment.MiddleLeft; break;

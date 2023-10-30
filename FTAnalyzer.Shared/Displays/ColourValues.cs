@@ -1,4 +1,7 @@
-﻿namespace FTAnalyzer
+﻿#if __MACOS__ || __IOS__
+using System.Drawing;
+#endif
+namespace FTAnalyzer
 {
     public static class ColourValues
     {

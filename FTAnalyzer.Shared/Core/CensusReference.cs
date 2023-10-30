@@ -1,4 +1,4 @@
-﻿using FTAnalyzer.Properties;
+using FTAnalyzer.Properties;
 using System.Text.RegularExpressions;
 using System.Xml;
 using FTAnalyzer.Utilities;
