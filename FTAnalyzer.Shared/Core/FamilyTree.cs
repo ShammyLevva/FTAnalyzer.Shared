@@ -107,7 +107,7 @@ namespace FTAnalyzer
                         result.AppendLine();
                     }
                     XmlAttribute? ID = note.Attributes["REF"];
-                    if(ID is not null) result.AppendLine(GetNoteRef(ID));
+                    if (ID is not null) result.AppendLine(GetNoteRef(ID));
                     result.AppendLine();
                     result.AppendLine();
                 }
@@ -404,7 +404,7 @@ namespace FTAnalyzer
         public static void LoadAncestryTreeTags(XmlDocument doc, IProgress<string> outputText)
         {
             XmlNodeList? list = doc.SelectNodes("GED/_MTTAG");
-            
+
             int counter = 0;
             foreach (XmlNode n in list)
             {
@@ -3050,7 +3050,7 @@ namespace FTAnalyzer
 
         static string BuildFamilySearchQuery(SearchType st, Individual individual, FactDate factdate, FactLocation factlocation)
         {
-        // https://familysearch.org/search/record/results?count=20&q.anyPlace=England&q.birthLikeDate.from=1879&q.birthLikeDate.to=1881&q.birthLikePlace=Walton%20le%20dale%2C%20Lancashire%2C%20England&q.givenName=Elizabeth&q.surname=Ackers&query=%2Bgivenname%3AElizabeth~%20%2Bsurname%3AAckers~%20%2Bbirth_place%3A%22walton%20le%20dale%2C%20lancashire%2C%20england%22~%20%2Bbirth_year%3A1879-1881~%20%2Brecord_country%3AEngland
+            // https://familysearch.org/search/record/results?count=20&q.anyPlace=England&q.birthLikeDate.from=1879&q.birthLikeDate.to=1881&q.birthLikePlace=Walton%20le%20dale%2C%20Lancashire%2C%20England&q.givenName=Elizabeth&q.surname=Ackers&query=%2Bgivenname%3AElizabeth~%20%2Bsurname%3AAckers~%20%2Bbirth_place%3A%22walton%20le%20dale%2C%20lancashire%2C%20england%22~%20%2Bbirth_year%3A1879-1881~%20%2Brecord_country%3AEngland
             UriBuilder uri = new()
             {
                 Host = "familysearch.org",
@@ -3351,7 +3351,7 @@ namespace FTAnalyzer
         public static List<Individual> GetFamily(Individual startIndividiual)
         {
             List<Individual> results = new();
-            if (startIndividiual is not null) 
+            if (startIndividiual is not null)
             {
                 foreach (Family f in startIndividiual.FamiliesAsSpouse)
                 {
@@ -3524,7 +3524,7 @@ namespace FTAnalyzer
         {
             while (totalComparisons < maxComparisons && currentPercentage < 100)
             {
-                Task.Delay(1000,ct);
+                Task.Delay(1000, ct);
                 ct.ThrowIfCancellationRequested();
                 var val = (int)(100 * totalComparisons / maxComparisons);
                 if (val > currentPercentage)
@@ -3594,9 +3594,9 @@ namespace FTAnalyzer
             {
                 string xmlFile = Path.Combine(GeneralSettings.Default.SavePath, "NonDuplicates.xml");
                 string jsonFile = Path.Combine(GeneralSettings.Default.SavePath, "NonDuplicates.json");
-                if (File.Exists(xmlFile))
-                    NonDuplicates = ConvertNonDuplicatesXMLToJson(xmlFile);
-                else if (File.Exists(jsonFile))
+                //if (File.Exists(xmlFile))
+                //    NonDuplicates = ConvertNonDuplicatesXMLToJson(xmlFile);
+                if (File.Exists(jsonFile))
                     NonDuplicates = JsonSerializer.Deserialize<List<NonDuplicate>>(File.ReadAllText(jsonFile));
                 else
                     NonDuplicates = new List<NonDuplicate>();
@@ -3609,17 +3609,17 @@ namespace FTAnalyzer
             return NonDuplicates ?? new List<NonDuplicate>();
         }
 
-        List<NonDuplicate> ConvertNonDuplicatesXMLToJson(string xmlFile)
-        {
-            IFormatter formatter = new BinaryFormatter();
-            using Stream stream = new FileStream(xmlFile, FileMode.Open, FileAccess.Read, FileShare.Read);
-            NonDuplicates = formatter.Deserialize(stream) as List<NonDuplicate>;
-            string jsonFile = Path.Combine(GeneralSettings.Default.SavePath, "NonDuplicates.json");
-            string nonDuplicates = JsonSerializer.Serialize(NonDuplicates);
-            File.WriteAllText(jsonFile, nonDuplicates);
-            File.Delete(xmlFile);
-            return NonDuplicates ?? new List<NonDuplicate>();
-        }
+        //List<NonDuplicate> ConvertNonDuplicatesXMLToJson(string xmlFile)
+        //{
+        //    IFormatter formatter = new BinaryFormatter();
+        //    using Stream stream = new FileStream(xmlFile, FileMode.Open, FileAccess.Read, FileShare.Read);
+        //    NonDuplicates = formatter.Deserialize(stream) as List<NonDuplicate>;
+        //    string jsonFile = Path.Combine(GeneralSettings.Default.SavePath, "NonDuplicates.json");
+        //    string nonDuplicates = JsonSerializer.Serialize(NonDuplicates);
+        //    File.WriteAllText(jsonFile, nonDuplicates);
+        //    File.Delete(xmlFile);
+        //    return NonDuplicates ?? new List<NonDuplicate>();
+        //}
         #endregion
 
         #region Report Issues

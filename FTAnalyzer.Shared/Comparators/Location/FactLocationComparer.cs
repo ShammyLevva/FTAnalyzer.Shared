@@ -8,6 +8,10 @@ namespace FTAnalyzer
 
         public FactLocationComparer(int level) => Level = level;
 
-        public override int Compare(IDisplayLocation? x, IDisplayLocation? y) => x.CompareTo(y, Level);
+        public override int Compare(IDisplayLocation? x, IDisplayLocation? y)
+        {
+            if (x == null || y == null) return 0;
+            return x.CompareTo(y, Level);
+        }
     }
 }
