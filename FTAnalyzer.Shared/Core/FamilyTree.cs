@@ -2,8 +2,6 @@
 using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
 using System.Globalization;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -22,7 +20,7 @@ using FTAnalyzer.ViewControllers;
 
 namespace FTAnalyzer
 {
-    public class FamilyTree
+    public partial class FamilyTree
     {
         #region Variables
         static FamilyTree instance;
@@ -87,7 +85,7 @@ namespace FTAnalyzer
 
         public static string GetText(XmlNode? node, string tag, bool lookForText) => GetText(GetChildNode(node, tag), lookForText);
 
-        public static XmlNode? GetChildNode(XmlNode node, string tag) => node?.SelectSingleNode(tag);
+        public static XmlNode? GetChildNode(XmlNode? node, string tag) => node?.SelectSingleNode(tag);
 
         public static string GetNotes(XmlNode node)
         {
@@ -373,7 +371,7 @@ namespace FTAnalyzer
                 Family family = new(n, outputText);
                 families.Add(family);
                 AddCustomFacts(family);
-                progress.Report((100 * counter++) / familyMax);
+                progress.Report(100 * counter++ / familyMax);
             }
             outputText.Report($"Loaded {counter} families.\n");
             CheckAllIndividualsAreInAFamily(outputText);
@@ -904,7 +902,7 @@ namespace FTAnalyzer
                     c.Infamily = true;
                     c.ReferralFamilyID = f.FamilyID;
                     c.HasParents = f.Husband is not null || f.Wife is not null;
-                    c.HasOnlyOneParent = (f.Husband is not null && f.Wife is null) || (f.Husband is null && f.Wife is not null);
+                    c.HasOnlyOneParent = f.Husband is not null && f.Wife is null || f.Husband is null && f.Wife is not null;
                 }
             }
             foreach (Individual ind in individuals)
@@ -967,7 +965,7 @@ namespace FTAnalyzer
                 if (ind.RelationType == relationType)
                 {
                     Fact? f = ind.GetPreferredFact(factType);
-                    return (f is not null && !f.CertificatePresent);
+                    return f is not null && !f.CertificatePresent;
                 }
                 return false;
             });
@@ -975,9 +973,8 @@ namespace FTAnalyzer
 
         public FactSource? GetSource(string sourceID) => sources.FirstOrDefault(s => s.SourceID == sourceID);
 
-        public Individual? GetIndividual(string individualID)
+        public Individual? GetIndividual(string? individualID)
         {
-            //            return individuals.FirstOrDefault(i => i.IndividualID == individualID);
             if (string.IsNullOrEmpty(individualID))
                 return null;
             individualLookup.TryGetValue(individualID, out Individual? person);
@@ -1306,7 +1303,7 @@ namespace FTAnalyzer
                 FactDate marriageDate = fam.GetPreferredFactDate(Fact.MARRIAGE);
                 if (marriageDate.StartDate > maxdate && !marriageDate.IsLongYearSpan)
                     maxdate = marriageDate.StartDate;
-                List<Individual> childrenNoLongSpan = fam.Children.Filter(child => !child.BirthDate.IsLongYearSpan).ToList<Individual>();
+                List<Individual> childrenNoLongSpan = fam.Children.Filter(child => !child.BirthDate.IsLongYearSpan).ToList();
                 if (childrenNoLongSpan.Count > 0)
                 {
                     DateTime maxChildBirthDate = childrenNoLongSpan.Max(child => child.BirthDate.StartDate);
@@ -1508,7 +1505,7 @@ namespace FTAnalyzer
             IEnumerable<Individual> directs = GetAllRelationsOfType(Individual.DIRECT);
             // add all direct ancestors budgie codes
             foreach (Individual i in directs)
-                i.BudgieCode = (i.Ahnentafel).ToString().PadLeft(lenAhnentafel, '0') + "d";
+                i.BudgieCode = i.Ahnentafel.ToString().PadLeft(lenAhnentafel, '0') + "d";
             AddToQueue(queue, directs);
             while (queue.Count > 0)
             {
@@ -1819,7 +1816,7 @@ namespace FTAnalyzer
                 foreach (string facttype in unknownIndividualFactTypes.Keys)
                 {
                     bool ignore = DatabaseHelper.IgnoreCustomFact(facttype);
-                    int famCount = unknownFamilyFactTypes.ContainsKey(facttype) ? unknownFamilyFactTypes[facttype].Count : 0;
+                    int famCount = unknownFamilyFactTypes.TryGetValue(facttype, out List<Family>? value) ? value.Count : 0;
                     var customFact = new DisplayCustomFact(facttype, unknownIndividualFactTypes[facttype].Count, famCount, ignore);
                     result.Add(customFact);
                 }
@@ -1992,7 +1989,7 @@ namespace FTAnalyzer
             #region Individual Fact Errors
             foreach (Individual ind in AllIndividuals)
             {
-                progress.Report(20 + (record++ / totalRecords));
+                progress.Report(20 + record++ / totalRecords);
                 try
                 {
                     if (ind.BaptismDate is not null && ind.BaptismDate.IsKnown)
@@ -2249,7 +2246,7 @@ namespace FTAnalyzer
             catchCount = 0;
             foreach (Family fam in AllFamilies)
             {
-                progress.Report(20 + (record++ / totalRecords));
+                progress.Report(20 + record++ / totalRecords);
                 try
                 {
                     foreach (Fact f in fam.Facts)
@@ -3706,7 +3703,7 @@ namespace FTAnalyzer
                     if (!f.Created && !f.IsCensusFact && f.FactType != Fact.OCCUPATION && f.FactDate.IsExact && f.FactDate.StartDate.Month == chosenDate.Month)
                         if (wholeMonth || f.FactDate.StartDate.Day == chosenDate.Day)
                             todaysFacts.Add(new DisplayFact(i, f));
-                progress.Report((30 * count) / indCount);
+                progress.Report(30 * count / indCount);
             }
             todaysFacts.Sort(); // need to sort facts to get correct earliest date
             if (GeneralSettings.Default.ShowWorldEvents)
@@ -3761,14 +3758,14 @@ namespace FTAnalyzer
                         }
                     }
                 }
-                progress.Report(30 + (70 * (year - barMinimum)) / barRange);
+                progress.Report(30 + 70 * (year - barMinimum) / barRange);
             }
             return events;
         }
 
-        static readonly Regex brackets = new("{{.*}}", RegexOptions.Compiled);
-        static readonly Regex links = new("<a href=.*</a>", RegexOptions.Compiled);
-        static readonly Regex quotes = new("(.*)quot(.*)quot(.*)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        static readonly Regex brackets = RegexBrackets();
+        static readonly Regex links = RegexLinks();
+        static readonly Regex quotes = RegexQuotes();
 
         static string FixWikiFormatting(string input)
         {
@@ -3782,12 +3779,14 @@ namespace FTAnalyzer
             return result;
         }
 
-        static FactDate GetWikiDate(XmlNode dateNode, FactDate defaultDate)
+        static FactDate GetWikiDate(XmlNode? dateNode, FactDate defaultDate)
         {
             FactDate fd;
+            if(dateNode is null)
+                return defaultDate;
             try
             {
-                string[] dateFields = dateNode.InnerText.Split(new Char[] { '/' });
+                string[] dateFields = dateNode.InnerText.Split(new char[] { '/' });
                 int nodeyear = int.Parse(dateFields[0]);
                 int nodemonth = int.Parse(dateFields[1]);
                 int nodeday = int.Parse(dateFields[2]);
@@ -3847,5 +3846,11 @@ namespace FTAnalyzer
 
         #endregion
 
+        [GeneratedRegex("<a href=.*</a>", RegexOptions.Compiled)]
+        private static partial Regex RegexLinks();
+        [GeneratedRegex("{{.*}}", RegexOptions.Compiled)]
+        private static partial Regex RegexBrackets();
+        [GeneratedRegex("(.*)quot(.*)quot(.*)", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-GB")]
+        private static partial Regex RegexQuotes();
     }
 }

@@ -102,8 +102,10 @@ namespace FTAnalyzer
             return surnames.Distinct(new SurnameStatsComparer()).ToList();
         }
 
-        public static async void DisplayGOONSpage(string surname)
+        public static async void DisplayGOONSpage(string? surname)
         {
+            if (string.IsNullOrEmpty(surname))
+                return;
             try
             {
                 Dictionary<string, string> parameters = new()
