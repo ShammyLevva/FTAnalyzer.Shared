@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace FTAnalyzer
+﻿namespace FTAnalyzer
 {
     public class BirthDateComparer : Comparer<IDisplayIndividual>
     {
@@ -26,8 +24,8 @@ namespace FTAnalyzer
             if (b is null) return 1;
             return a.BirthDate.Equals(b.BirthDate)
                 ? a.Surname.Equals(b.Surname)
-                    ? string.Compare(a.Forenames, b.Forenames, System.StringComparison.Ordinal)
-                    : string.Compare(a.Surname, b.Surname, System.StringComparison.Ordinal)
+                    ? string.Compare(a.Forenames, b.Forenames, StringComparison.Ordinal)
+                    : string.Compare(a.Surname, b.Surname, StringComparison.Ordinal)
                 : a.BirthDate.CompareTo(b.BirthDate);
         }
     }
