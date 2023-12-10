@@ -1283,6 +1283,8 @@ namespace FTAnalyzer
                         return CensusColours.OUT_OF_COUNTRY; // Likely out of country on census date
                     if (census.Contains(DeathDate))
                         return CensusColours.DIED_DURING_CENSUS;
+                    if (census.Contains(BirthDate))
+                        return CensusColours.BORN_DURING_CENSUS;
                     return CensusColours.NO_CENSUS; // no census - red
                 }
                 return CensusColours.NO_CENSUS; // no census - red

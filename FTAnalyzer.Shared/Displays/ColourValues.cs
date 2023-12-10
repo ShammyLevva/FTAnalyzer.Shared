@@ -19,13 +19,13 @@
         public enum CensusColours
         {
             NOT_ALIVE = 0, NO_CENSUS = 1, CENSUS_PRESENT_LC_MISSING = 2, CENSUS_PRESENT_NOT_LC_YEAR = 3, CENSUS_PRESENT_LC_PRESENT = 4,
-            LC_PRESENT_NO_CENSUS = 5, OVERSEAS_CENSUS = 6, OUT_OF_COUNTRY = 7, KNOWN_MISSING = 8, DIED_DURING_CENSUS = 9
+            LC_PRESENT_NO_CENSUS = 5, OVERSEAS_CENSUS = 6, OUT_OF_COUNTRY = 7, KNOWN_MISSING = 8, DIED_DURING_CENSUS = 9, BORN_DURING_CENSUS = 10
         };
 
         public static readonly Color[] CensusColourValues = 
         { 
             Color.DarkGray, Color.Red , Color.Yellow, Color.LawnGreen, Color.LawnGreen, Color.DarkOrange,
-            Color.DarkSlateGray, Color.DarkSlateGray, Color.MediumSeaGreen, Color.PeachPuff 
+            Color.DarkSlateGray, Color.DarkSlateGray, Color.MediumSeaGreen, Color.PeachPuff , Color.PeachPuff
         };
     }
 }

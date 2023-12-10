@@ -64,9 +64,10 @@ namespace FTAnalyzer.Exports
 #if __PC__
         public static void ExportGedcomFile()
         {
+            string myDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             using SaveFileDialog saveFileDialog = new();
-            string initialDir = Application.UserAppDataRegistry.GetValue("Export DNA GEDCOM Path").ToString() ?? string.Empty;
-            saveFileDialog.InitialDirectory = initialDir ?? Environment.SpecialFolder.MyDocuments.ToString();
+            string initialDir = Application.UserAppDataRegistry.GetValue("Export DNA GEDCOM Path", myDocuments).ToString() ?? string.Empty;
+            saveFileDialog.InitialDirectory = initialDir ?? myDocuments;
             saveFileDialog.Filter = "Comma Separated Value (*.ged)|*.ged";
             saveFileDialog.FilterIndex = 1;
             DialogResult dr = saveFileDialog.ShowDialog();
