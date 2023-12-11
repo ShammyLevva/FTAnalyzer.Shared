@@ -93,14 +93,26 @@ namespace FTAnalyzer
             IndividualID = node.Attributes["ID"].Value;
             Name = FamilyTree.GetText(node, "NAME", false);
             Gender = FamilyTree.GetText(node, "SEX", false);
-            Alias = FamilyTree.GetText(node, "ALIA", false);
             XmlNode? nameNode = node?.SelectSingleNode("NAME");
+
             Title = FamilyTree.GetText(nameNode, "TITL", false);
-            Suffix = FamilyTree.GetText(nameNode, "NSFX", false);
+            if(string.IsNullOrEmpty(Title))
+                Title = FamilyTree.GetText(node, "TITL", false);
             if (string.IsNullOrEmpty(Title))
                 Title = FamilyTree.GetText(nameNode, "NPFX", false);
+            if (string.IsNullOrEmpty(Title))
+                Title = FamilyTree.GetText(node, "NPFX", false);
+
+            Suffix = FamilyTree.GetText(nameNode, "NSFX", false);
+            if (string.IsNullOrEmpty(Suffix))
+                Suffix = FamilyTree.GetText(node, "NSFX", false);
+ 
+            Alias = FamilyTree.GetText(node, "ALIA", false);
             if (string.IsNullOrEmpty(Alias))
                 Alias = FamilyTree.GetText(nameNode, "NICK", false);
+            if (string.IsNullOrEmpty(Alias))
+                Alias = FamilyTree.GetText(node, "NICK", false);
+
             FamilySearchID = FamilyTree.GetText(node, "FSID", false);
             IsFlaggedAsLiving = node.SelectSingleNode("_FLGS/__LIVING") is not null;
             forenameMetaphone = new DoubleMetaphone(Forename);
