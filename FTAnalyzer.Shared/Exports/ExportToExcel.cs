@@ -1,10 +1,6 @@
 ﻿using System.Text;
 using System.Data;
-using System.IO;
-#if __PC__
-using System;
-using System.Windows.Forms;
-#elif __MACOS__
+#if __MACOS__
 using AppKit;
 using static FTAnalyzer.UIHelpers;
 #endif
@@ -18,20 +14,25 @@ namespace FTAnalyzer.Utilities
         {
             try
             {
-                string myDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                using SaveFileDialog saveFileDialog = new();
-                string initialDir = Application.UserAppDataRegistry.GetValue("Excel Export Individual Path", myDocuments).ToString() ?? string.Empty;
-                saveFileDialog.InitialDirectory = initialDir ?? myDocuments;
-                saveFileDialog.Filter = "Comma Separated Value (*.csv)|*.csv";
-                saveFileDialog.FilterIndex = 1;
-                DialogResult dr = saveFileDialog.ShowDialog();
-                if (dr == DialogResult.OK)
+                if (dt.Rows.Count > 0)
                 {
-                    string path = Path.GetDirectoryName(saveFileDialog.FileName) ?? string.Empty;
-                    Application.UserAppDataRegistry.SetValue("Excel Export Individual Path", path);
-                    WriteFile(dt, saveFileDialog.FileName);
-                    UIHelpers.ShowMessage($"File written to {saveFileDialog.FileName}", "FTAnalyzer");
+                    string myDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                    using SaveFileDialog saveFileDialog = new();
+                    string initialDir = Application.UserAppDataRegistry.GetValue("Excel Export Individual Path", myDocuments).ToString() ?? string.Empty;
+                    saveFileDialog.InitialDirectory = initialDir ?? myDocuments;
+                    saveFileDialog.Filter = "Comma Separated Value (*.csv)|*.csv";
+                    saveFileDialog.FilterIndex = 1;
+                    DialogResult dr = saveFileDialog.ShowDialog();
+                    if (dr == DialogResult.OK)
+                    {
+                        string path = Path.GetDirectoryName(saveFileDialog.FileName) ?? string.Empty;
+                        Application.UserAppDataRegistry.SetValue("Excel Export Individual Path", path);
+                        WriteFile(dt, saveFileDialog.FileName);
+                        UIHelpers.ShowMessage($"File written to {saveFileDialog.FileName}", "FTAnalyzer");
+                    }
                 }
+                else
+                    MessageBox.Show("No records to export from that list.");
             }
             catch (Exception ex)
             {
