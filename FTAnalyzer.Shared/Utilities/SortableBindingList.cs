@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 
 namespace FTAnalyzer.Utilities
 {
@@ -80,6 +77,16 @@ namespace FTAnalyzer.Utilities
             }
 
             return -1;
+        }
+
+        public T Find(Predicate<T> predicate)
+        {
+            if (predicate == null) throw new ArgumentNullException("predicate");
+            foreach (T item in this)
+            {
+                if (predicate(item)) return item;
+            }
+            return default;
         }
 
         public void Sort(IComparer<T> comparer)
