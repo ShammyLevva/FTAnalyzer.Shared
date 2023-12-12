@@ -1170,7 +1170,7 @@ namespace FTAnalyzer
             }
         }
 
-        public Fact? GetPreferredFact(string factType) => preferredFacts.ContainsKey(factType) ? preferredFacts[factType] : Facts.FirstOrDefault(f => f.FactType == factType);
+        public Fact? GetPreferredFact(string factType) => preferredFacts.TryGetValue(factType, out Fact? value) ? value : Facts.FirstOrDefault(f => f.FactType == factType);
 
         public FactDate GetPreferredFactDate(string factType)
         {

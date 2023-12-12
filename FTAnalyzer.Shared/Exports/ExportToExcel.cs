@@ -32,7 +32,7 @@ namespace FTAnalyzer.Utilities
                     }
                 }
                 else
-                    MessageBox.Show("No records to export from that list.");
+                    UIHelpers.ShowMessage("No records to export from that list.");
             }
             catch (Exception ex)
             {

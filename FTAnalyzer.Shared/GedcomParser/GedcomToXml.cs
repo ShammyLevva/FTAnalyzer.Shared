@@ -287,7 +287,7 @@ namespace FTAnalyzer
                         if (!FileHandling.Default.RetryFailedLines)
                             message += "\n\nNB. You may get less errors if you turn on the option to 'Retry failed lines by looking for bad line breaks' from the File Handling section of the Tools Options menu.";
                         message += "\n\nContinue Loading?";
-                        int result = UIHelpers.ShowYesNo(message);
+                        int result = UIHelpers.ShowYesNo(message, "FTAnalyzer");
                         if (result == UIHelpers.Yes)
                         {
                             badLineCount = 0;
@@ -328,7 +328,7 @@ namespace FTAnalyzer
 #endif
             try
             {
-                int result = UIHelpers.ShowYesNo("Would you like to view the line error report?");
+                int result = UIHelpers.ShowYesNo("Would you like to view the line error report?", "FTAnalyzer");
                 if (result == UIHelpers.Yes)
                 {
                     string tempFile = CreateTempFile();

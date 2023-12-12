@@ -31,15 +31,15 @@ namespace FTAnalyzer.Exports
 
         public static void Export()
         {
-            int privatise = UIHelpers.ShowYesNo("Do you want living people replaced with 'Private Person' and their details hidden");
+            int privatise = UIHelpers.ShowYesNo("Do you want living people replaced with 'Private Person' and their details hidden", "Continue Loading?");
             if (privatise != UIHelpers.Cancel)
             {
-                int siblingsResult = UIHelpers.ShowYesNo("Do you want to include SIBLINGS of direct ancestors in the export?");
+                int siblingsResult = UIHelpers.ShowYesNo("Do you want to include SIBLINGS of direct ancestors in the export?", "Continue Loading?");
                 if (siblingsResult != UIHelpers.Cancel)
                 {
                     int descendantsResult = UIHelpers.No;
                     if (siblingsResult == UIHelpers.Yes) // only ask about descendants if including siblings
-                        descendantsResult = UIHelpers.ShowYesNo("Do you want to include DESCENDANTS of siblings in the export?");
+                        descendantsResult = UIHelpers.ShowYesNo("Do you want to include DESCENDANTS of siblings in the export?", "Continue Loading?");
                     if (descendantsResult != UIHelpers.Cancel)
                     {
                         _privatise = privatise == UIHelpers.Yes;
