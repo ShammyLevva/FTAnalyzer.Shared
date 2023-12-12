@@ -933,7 +933,7 @@ namespace FTAnalyzer
                         if (!preferredFact || factType != Fact.NAME)
                         { // skip first name face as already added
                             Fact f = new(n, this, preferredFact, null, outputText);
-                            if (f.FactType == Fact.NAME && string.IsNullOrEmpty(Alias))
+                            if (string.IsNullOrEmpty(Alias) && (f.FactType == Fact.NAME || f.FactType == Fact.ALIAS))
                                 Alias = f.Comment;
                             if (f.FactDate.SpecialDate)
                                 ProcessSpecialDate(n, f, preferredFact, outputText);
