@@ -106,7 +106,12 @@ namespace FTAnalyzer
             Suffix = FamilyTree.GetText(nameNode, "NSFX", false);
             if (string.IsNullOrEmpty(Suffix))
                 Suffix = FamilyTree.GetText(node, "NSFX", false);
- 
+            if (string.IsNullOrEmpty(Suffix))
+            {
+                string nameText = nameNode.FirstChild?.Value.ToString() ?? string.Empty;
+                Suffix = nameText.Split('/').Last().Trim();
+            }
+
             Alias = FamilyTree.GetText(node, "ALIA", false);
             if (string.IsNullOrEmpty(Alias))
                 Alias = FamilyTree.GetText(nameNode, "NICK", false);
