@@ -121,7 +121,7 @@ namespace FTAnalyzer.Exports
                     {
                         output.WriteLine($"1 FAMS @{asSpouse.FamilyID}@");
                         var spouse = asSpouse.Spouse(ind);
-                        if (spouse?.RelationType != Individual.DIRECT && spouse?.RelationType != Individual.DESCENDANT)
+                        if (spouse is not null && spouse.RelationType != Individual.DIRECT && spouse.RelationType != Individual.DESCENDANT)
                             spouses.Add(spouse); // we have a spouse that isn't a direct so is a step relation add to list to write
                         if (!families.Contains(asSpouse))
                             families.Add(asSpouse);
