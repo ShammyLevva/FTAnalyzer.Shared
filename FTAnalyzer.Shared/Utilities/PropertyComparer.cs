@@ -14,7 +14,7 @@ namespace FTAnalyzer.Utilities
         {
             propertyDescriptor = property ?? throw new ArgumentNullException(nameof(property), "Property cannot be null");
             Type comparerForPropertyType = typeof(Comparer<>).MakeGenericType(property.PropertyType);
-            comparer = (IComparer)comparerForPropertyType.InvokeMember("Default", BindingFlags.Static | BindingFlags.GetProperty | BindingFlags.Public, null, null, null);
+            comparer = comparerForPropertyType.InvokeMember("Default", BindingFlags.Static | BindingFlags.GetProperty | BindingFlags.Public, null, null, null) as IComparer;
             SetListSortDirection(direction);
         }
 

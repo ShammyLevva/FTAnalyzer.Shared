@@ -5,7 +5,7 @@ using System.Xml;
 
 namespace FTAnalyzer
 {
-    public class ScottishParish
+    public partial class ScottishParish
     {
         static readonly Dictionary<string, ScottishParish> SCOTTISHPARISHES = new();
         static readonly Dictionary<string, string> SCOTTISHPARISHNAMES = new();
@@ -15,7 +15,7 @@ namespace FTAnalyzer
         public string Name { get; private set; }
         public string Region { get; private set; }
 
-        static readonly Regex ParishRegex = new(@"\d{1,3}-\d{1,2}?[AB]?", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        static readonly Regex ParishRegex = RegexParish();
 #if __PC__
         static ScottishParish() => LoadScottishParishes(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location));
 #elif __MACOS__
@@ -76,10 +76,12 @@ namespace FTAnalyzer
         }
 
         public static ScottishParish FindParishFromID(string RD) => SCOTTISHPARISHES.ContainsKey(RD.ToLower()) ? SCOTTISHPARISHES[RD.ToLower()] : UNKNOWN_PARISH;
-        public static string FindParishFromName(string parish) => SCOTTISHPARISHNAMES.ContainsKey(parish) ? SCOTTISHPARISHNAMES[parish] : UNKNOWN_PARISH.Name;
+        public static string FindParishFromName(string parish) => SCOTTISHPARISHNAMES.TryGetValue(parish, out string? value) ? value : UNKNOWN_PARISH.Name;
 
         public string Reference => GeneralSettings.Default.UseCompactCensusRef ? $"{Name}/{RegistrationDistrict}" : $"{Name}, RD: {RegistrationDistrict}";
 
         public override string ToString() => $"RD: {RegistrationDistrict} Parish: {Name} Region: {Region}";
+        [GeneratedRegex("\\d{1,3}-\\d{1,2}?[AB]?", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-GB")]
+        private static partial Regex RegexParish();
     }
 }

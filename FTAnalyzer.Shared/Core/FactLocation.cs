@@ -10,7 +10,7 @@ using FTAnalyzer.Mapping;
 #endif
 namespace FTAnalyzer
 {
-    public class FactLocation : IComparable<FactLocation>, IComparable, IDisplayLocation, IDisplayGeocodedLocation
+    public partial class FactLocation : IComparable<FactLocation>, IComparable, IDisplayLocation, IDisplayGeocodedLocation
     {
         #region Variables
         // static log4net.ILog log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -345,7 +345,7 @@ namespace FTAnalyzer
             FTAnalyzerCreated = true; // override when GEDCOM created.
             _Parts = new string[] { Country, Region, SubRegion, Address, Place };
 #if __PC__
-            ViewPort = new Mapping.GeoResponse.CResult.CGeometry.CViewPort();
+            ViewPort = new GeoResponse.CResult.CGeometry.CViewPort();
 #endif
         }
 
@@ -495,7 +495,7 @@ namespace FTAnalyzer
                 {
                     if (updateLatLong && temp is not null)
                     {
-                        if ((!temp.IsGeoCoded(true) && result.IsGeoCoded(true)) || !result.GecodingMatches(temp))
+                        if (!temp.IsGeoCoded(true) && result.IsGeoCoded(true) || !result.GecodingMatches(temp))
                         {  // we are updating the old value isn't geocoded so we can overwrite or the new value doesn't match old database value so overwrite
                             temp.Latitude = result.Latitude;
                             temp.LatitudeM = result.LatitudeM;
@@ -533,7 +533,7 @@ namespace FTAnalyzer
             loc.FoundLocation = string.Empty;
             loc.FoundLevel = -2;
 #if __PC__
-            loc.ViewPort = new Mapping.GeoResponse.CResult.CGeometry.CViewPort();
+            loc.ViewPort = new GeoResponse.CResult.CGeometry.CViewPort();
             if (DatabaseHelper.IsLocationInDatabase(loc.ToString()))
             {   // check whether the location in database is geocoded.
                 FactLocation inDatabase = new(loc.ToString());
@@ -601,7 +601,7 @@ namespace FTAnalyzer
                     {
                         if (distance < minDistance)
                         { // this is a closer date but now check to ensure we aren't overwriting a known country with an unknown one.
-                            if (f.Location.IsKnownCountry || (!f.Location.IsKnownCountry && !result.Location.IsKnownCountry))
+                            if (f.Location.IsKnownCountry || !f.Location.IsKnownCountry && !result.Location.IsKnownCountry)
                             {
                                 result = f;
                                 minDistance = distance;
@@ -948,7 +948,7 @@ namespace FTAnalyzer
         public string[] GetParts() => (string[])_Parts.Clone();
 
 #if __PC__
-        public System.Drawing.Image Icon => FactLocationImage.ErrorIcon(GeocodeStatus).Icon;
+        public Image Icon => FactLocationImage.ErrorIcon(GeocodeStatus).Icon;
 #endif
 
         public string AddressNumeric => FixNumerics(Address, true);
@@ -1008,7 +1008,7 @@ namespace FTAnalyzer
 #if __PC__
                 if (ViewPort is not null)
                 {
-                    double pixelWidth = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;  // tweak to get best results as required 
+                    double pixelWidth = Screen.PrimaryScreen.Bounds.Width;  // tweak to get best results as required 
                     double GLOBE_WIDTH = 512; // a constant in Google's map projection
                     var west = ViewPort.SouthWest.Long / 100000;
                     var east = ViewPort.NorthEast.Long / 100000;
@@ -1089,7 +1089,7 @@ namespace FTAnalyzer
             // remaining options return false ie: Geocode.OUT_OF_BOUNDS, Geocode.NO_MATCH, Geocode.NOT_SEARCHED, Geocode.INCORRECT
         }
 
-        static readonly Regex numericFix = new("\\d+[A-Za-z]?", RegexOptions.Compiled);
+        static readonly Regex numericFix = RegexNumericFix();
 
         static string FixNumerics(string addressField, bool returnNumber)
         {
@@ -1221,7 +1221,7 @@ namespace FTAnalyzer
                 return true;
             }
             // If one is null, but not both, return false.
-            if ((a is null) || (b is null))
+            if (a is null || b is null)
                 return false;
             return a.Equals(b);
         }
@@ -1265,6 +1265,9 @@ namespace FTAnalyzer
                 return ascending ? result : -result;
             });
         }
+
+        [GeneratedRegex("\\d+[A-Za-z]?", RegexOptions.Compiled)]
+        private static partial Regex RegexNumericFix();
         #endregion
     }
 }
