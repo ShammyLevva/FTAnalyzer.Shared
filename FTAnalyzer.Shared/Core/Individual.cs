@@ -1907,8 +1907,12 @@ namespace FTAnalyzer
         {
             return Comparer<T>.Create((x, y) =>
             {
-                var a = accessor(x as Individual);
-                var b = accessor(y as Individual);
+                if (x is not Individual indX)
+                    return ascending ? -1 : 1;
+                if (y is not Individual indY)
+                    return ascending ? 1 : -1;
+                var a = accessor(indX);
+                var b = accessor(indY);
                 int result = a.CompareTo(b);
                 return ascending ? result : -result;
             });
