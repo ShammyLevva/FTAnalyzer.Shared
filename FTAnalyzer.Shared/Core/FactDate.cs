@@ -8,7 +8,7 @@ using static FTAnalyzer.ColourValues;
 
 namespace FTAnalyzer
 {
-    public class FactDate : IComparable<FactDate>, IComparable
+    public partial class FactDate : IComparable<FactDate>, IComparable
     {
         public static readonly DateTime MINDATE = new(1, 1, 1);
         public static readonly DateTime MAXDATE = new(9999, 12, 31);
@@ -59,21 +59,21 @@ namespace FTAnalyzer
         {
             _datePatterns = new Dictionary<string, Regex>
             {
-                ["DATE_PATTERN"] = new Regex(DATE_PATTERN, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["INTERPRETED_DATE_PATTERN"] = new Regex(INTERPRETED_DATE_PATTERN, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EARLY_DATE_PATTERN"] = new Regex(EARLY_DATE_PATTERN, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["DOUBLE_DATE_PATTERN"] = new Regex(DOUBLE_DATE_PATTERN, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["DOUBLE_DATE_PATTERN2"] = new Regex(DOUBLE_DATE_PATTERN2, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["DOUBLE_DATE_PATTERN3"] = new Regex(DOUBLE_DATE_PATTERN3, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["POSTFIX"] = new Regex(POSTFIX, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["BETWEENFIX"] = new Regex(BETWEENFIX, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["BETWEENFIX2"] = new Regex(BETWEENFIX2, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["BETWEENFIX3"] = new Regex(BETWEENFIX3, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["BETWEENFIX4"] = new Regex(BETWEENFIX4, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["BETWEENFIX5"] = new Regex(BETWEENFIX5, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["USDATEFIX"] = new Regex(USDATEFIX, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["SPACEFIX"] = new Regex(SPACEFIX, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["QUAKERFIX"] = new Regex(QUAKERFIX, RegexOptions.Compiled | RegexOptions.IgnoreCase)
+                ["DATE_PATTERN"] = RegexDatePattern(),
+                ["INTERPRETED_DATE_PATTERN"] = RegexInterpretedDatePattern(),
+                ["EARLY_DATE_PATTERN"] = RegexEarlyDatePattern(),
+                ["DOUBLE_DATE_PATTERN"] = RegexDoubleDatePattern1(),
+                ["DOUBLE_DATE_PATTERN2"] = RegexDoubleDatePattern2(),
+                ["DOUBLE_DATE_PATTERN3"] = RegexDoubleDatePattern3(),
+                ["POSTFIX"] = RegexPostfix(),
+                ["BETWEENFIX"] = RegexBetweenFix1(),
+                ["BETWEENFIX2"] = RegexBetweenFix2(),
+                ["BETWEENFIX3"] = RegexBetweenFix3(),
+                ["BETWEENFIX4"] = RegexBetweenFix4(),
+                ["BETWEENFIX5"] = RegexBetweenFix5(),
+                ["USDATEFIX"] = RegexUSDateFix(),
+                ["SPACEFIX"] = RegexSpaceFix(),
+                ["QUAKERFIX"] = RegexQuakerFix()
             };
             UNKNOWN_DATE = new FactDate("UNKNOWN");
             MARRIAGE_LESS_THAN_13 = new FactDate("1600");
@@ -792,7 +792,7 @@ namespace FTAnalyzer
                     if (!DateTime.TryParseExact(dateValue, MONTHYEAR, CULTURE, DateTimeStyles.NoCurrentDateDefault, out date))
                         DateTime.TryParseExact(dateValue, MONTHYEAREARLY, CULTURE, DateTimeStyles.NoCurrentDateDefault, out date);
                     dt = new DateTime(date.Year, date.Month, 1);
-                    if (dt != FactDate.MINDATE)
+                    if (dt != MINDATE)
                     {
                         dt = dt.AddMonths(adjustment);
                         if (highlow == HIGH)
@@ -844,7 +844,7 @@ namespace FTAnalyzer
                 }
                 else
                 {
-                    dt = (highlow == HIGH) ? MAXDATE : MINDATE;
+                    dt = highlow == HIGH ? MAXDATE : MINDATE;
                 }
                 if (gDouble is not null && !(day == "29" && month == "FEB"))
                     dt = dt.TryAddYears(1); // use upper year for double dates as long as we haven't already done so for 29th FEB
@@ -1036,14 +1036,14 @@ namespace FTAnalyzer
                     return EndDate.Year;
                 if (EndDate == MAXDATE)
                     return StartDate.Year;
-                return StartDate.Year + ((EndDate.Year - StartDate.Year) / 2);
+                return StartDate.Year + (EndDate.Year - StartDate.Year) / 2;
             }
         }
 
         public long DistanceSquared(FactDate when)
         {
-            long startDiff = ((StartDate.Year - when.StartDate.Year) * 12) + (StartDate.Month - when.StartDate.Month);
-            long endDiff = ((EndDate.Year - when.EndDate.Year) * 12) + (EndDate.Month - when.EndDate.Month);
+            long startDiff = (StartDate.Year - when.StartDate.Year) * 12 + (StartDate.Month - when.StartDate.Month);
+            long endDiff = (EndDate.Year - when.EndDate.Year) * 12 + (EndDate.Month - when.EndDate.Month);
             long difference = startDiff * startDiff + endDiff * endDiff;
             return difference;
             //double startDiff = ((StartDate.Year - when.StartDate.Year) * 12) + (StartDate.Month - when.StartDate.Month);
@@ -1106,7 +1106,7 @@ namespace FTAnalyzer
             FactDate f = (FactDate)obj;
             // two FactDates are equal if same datestring or same start and- enddates
             return DateString.ToUpper().Equals(f.DateString.ToUpper()) ||
-                   (StartDate.Equals(f.StartDate) && EndDate.Equals(f.EndDate));
+                   StartDate.Equals(f.StartDate) && EndDate.Equals(f.EndDate);
         }
 
         public static bool operator ==(FactDate a, FactDate b)
@@ -1115,7 +1115,7 @@ namespace FTAnalyzer
             if (ReferenceEquals(a, b))
                 return true;
             // If one is null, but not both, return false.
-            if ((a is null) || (b is null))
+            if (a is null || b is null)
                 return false;
             return a.Equals(b);
         }
@@ -1155,5 +1155,36 @@ namespace FTAnalyzer
 
             set => _regex = value;
         }
+
+        [GeneratedRegex("^(\\d{0,2} )?([A-Z]{0,3}) *(\\d{0,4})$", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-GB")]
+        private static partial Regex RegexDatePattern();
+        [GeneratedRegex("^INT (\\d{0,2} )?([A-Z]{0,3}) *(\\d{0,4}) .*$", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-GB")]
+        private static partial Regex RegexInterpretedDatePattern();
+        [GeneratedRegex("^(\\d{3})$", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-GB")]
+        private static partial Regex RegexEarlyDatePattern();
+        [GeneratedRegex("^(\\d{0,2} )?([A-Z]{0,3}) *(\\d{0,4})/(\\d{0,2})$", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-GB")]
+        private static partial Regex RegexDoubleDatePattern1();
+        [GeneratedRegex("^(\\d{0,2} )?([A-Z]{0,3}) *(\\d{4})/(\\d{4})$", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-GB")]
+        private static partial Regex RegexDoubleDatePattern2();
+        [GeneratedRegex("^(\\d{0,2} )?([A-Z]{0,3}) *(\\d{3})/(\\d{2,3})$", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-GB")]
+        private static partial Regex RegexDoubleDatePattern3();
+        [GeneratedRegex("(\\d{1,2})(?:ST|ND|RD|TH)(.*)", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-GB")]
+        private static partial Regex RegexPostfix();
+        [GeneratedRegex("(\\d{4}) *- *(\\d{4})", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-GB")]
+        private static partial Regex RegexBetweenFix1();
+        [GeneratedRegex("([A-Z]{0,3}) *(\\d{4}) *- *([A-Z]{0,3}) *(\\d{4})", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-GB")]
+        private static partial Regex RegexBetweenFix2();
+        [GeneratedRegex("(\\d{0,2} )?([A-Z]{0,3}) *(\\d{4}) *- *(\\d{0,2} )?([A-Z]{0,3}) *(\\d{4})", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-GB")]
+        private static partial Regex RegexBetweenFix3();
+        [GeneratedRegex("(\\d{1,2}) *- *(\\d{1,2} )?([A-Z]{0,3}) *(\\d{4})", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-GB")]
+        private static partial Regex RegexBetweenFix4();
+        [GeneratedRegex("(\\d{1,2} )?([A-Z]{0,3}) *- *(\\d{1,2} )?([A-Z]{0,3}) *(\\d{4})", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-GB")]
+        private static partial Regex RegexBetweenFix5();
+        [GeneratedRegex("^([A-Z]{3}) *(\\d{1,2} )(\\d{4})$", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-GB")]
+        private static partial Regex RegexUSDateFix();
+        [GeneratedRegex("^(\\d{1,2}) *([A-Z]{3}) *(\\d{0,4})$", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-GB")]
+        private static partial Regex RegexSpaceFix();
+        [GeneratedRegex("^(\\d{1,2})D (\\d{1,2})M (\\d{0,4})$", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-GB")]
+        private static partial Regex RegexQuakerFix();
     }
 }
