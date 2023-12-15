@@ -24,7 +24,7 @@
             Score += SharedParents() + SharedChildren() + DifferentParentsPenalty();
         }
 
-        static int NameScore(Individual indA, Individual indB)
+        static int NameScore(Individual? indA, Individual? indB)
         {
             int score = 0;
             if (indA is not null && indB is not null)

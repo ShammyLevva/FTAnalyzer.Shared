@@ -47,7 +47,7 @@ namespace FTAnalyzer.Utilities
             }
 
             comparer.SetPropertyAndDirection(prop, direction);
-            MergeSort(itemsList, comparer);
+            SortableBindingList<T>.MergeSort(itemsList, comparer);
 
            propertyDescriptor = prop;
            listSortDirection = direction;
@@ -79,9 +79,9 @@ namespace FTAnalyzer.Utilities
             return -1;
         }
 
-        public T Find(Predicate<T> predicate)
+        public T? Find(Predicate<T> predicate)
         {
-            if (predicate == null) throw new ArgumentNullException("predicate");
+            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
             foreach (T item in this)
             {
                 if (predicate(item)) return item;
@@ -96,20 +96,20 @@ namespace FTAnalyzer.Utilities
             OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
         }
 
-        void MergeSort(List<T> inputList, PropertyComparer<T> comparer)
+        static void MergeSort(List<T> inputList, PropertyComparer<T> comparer)
         {
             int left = 0;
             int right = inputList.Count - 1;
-            InternalMergeSort(inputList, comparer, left, right);
+            SortableBindingList<T>.InternalMergeSort(inputList, comparer, left, right);
         }
 
-        void InternalMergeSort(List<T> inputList, PropertyComparer<T> comparer, int left, int right)
+        static void InternalMergeSort(List<T> inputList, PropertyComparer<T> comparer, int left, int right)
         {
             if (left < right)
             {
                 int mid = (left + right) / 2;
-                InternalMergeSort(inputList, comparer, left, mid);
-                InternalMergeSort(inputList, comparer, (mid + 1), right);
+                SortableBindingList<T>.InternalMergeSort(inputList, comparer, left, mid);
+                SortableBindingList<T>.InternalMergeSort(inputList, comparer, (mid + 1), right);
                 SortableBindingList<T>.MergeSortedList(inputList, comparer, left, mid, right);
             }
         }

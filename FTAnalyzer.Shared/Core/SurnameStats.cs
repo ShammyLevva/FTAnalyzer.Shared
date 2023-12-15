@@ -40,8 +40,12 @@ namespace FTAnalyzer
         {
             return Comparer<T>.Create((x, y) =>
             {
-                var c1 = accessor(x as IDisplaySurnames);
-                var c2 = accessor(y as IDisplaySurnames);
+                if (x is not IDisplaySurnames surX)
+                    return ascending ? 1 : -1;
+                if (x is not IDisplaySurnames surY)
+                    return ascending ? 1 : -1;
+                var c1 = accessor(surX);
+                var c2 = accessor(surY);
                 var result = c1.CompareTo(c2);
                 return ascending ? result : -result;
             });

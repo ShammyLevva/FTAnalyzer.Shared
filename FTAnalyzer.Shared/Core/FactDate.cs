@@ -861,7 +861,7 @@ namespace FTAnalyzer
             return dt;
         }
 
-        bool IsValidDoubleDate(string month, string year, Group gDouble)
+        bool IsValidDoubleDate(string month, string year, Group? gDouble)
         {
             DoubleDate = false;   // set property
             DoubleDateError = string.Empty;

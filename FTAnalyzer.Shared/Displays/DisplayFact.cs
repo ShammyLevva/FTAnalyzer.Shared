@@ -109,8 +109,12 @@
         {
             return Comparer<T>.Create((x, y) =>
             {
-                var c1 = accessor(x as DisplayFact);
-                var c2 = accessor(y as DisplayFact);
+                if(x is not DisplayFact facX)
+                    return ascending ? 1 : -1;
+                var c1 = accessor(facX);
+                if (y is not DisplayFact facY)
+                    return ascending ? 1 : -1;
+                var c2 = accessor(facY);
                 var result = c1.CompareTo(c2);
                 return ascending ? result : -result;
             });

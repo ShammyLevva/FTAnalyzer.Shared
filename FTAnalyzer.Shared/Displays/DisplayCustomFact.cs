@@ -36,8 +36,12 @@ namespace FTAnalyzer
         {
             return Comparer<T>.Create((x, y) =>
             {
-                var c1 = accessor(x as IDisplayCustomFact);
-                var c2 = accessor(y as IDisplayCustomFact);
+                if(x is not IDisplayCustomFact facX)
+                    return ascending ? 1 : -1;
+                if (y is not IDisplayCustomFact facY)
+                    return ascending ? 1 : -1;
+                var c1 = accessor(facX);
+                var c2 = accessor(facY);
                 var result = c1.CompareTo(c2);
                 return ascending ? result : -result;
             });

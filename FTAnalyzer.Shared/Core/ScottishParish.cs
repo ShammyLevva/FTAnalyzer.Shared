@@ -21,7 +21,7 @@ namespace FTAnalyzer
 #elif __MACOS__
         static ScottishParish() => LoadScottishParishes(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location), ".."));
 #endif
-        public static void LoadScottishParishes(string startPath)
+        public static void LoadScottishParishes(string? startPath)
         {
             // load Scottish Parishes from XML file
             if (startPath is null) return;

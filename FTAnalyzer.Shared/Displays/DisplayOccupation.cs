@@ -27,8 +27,12 @@
         {
             return Comparer<T>.Create((x, y) =>
             {
-                var c1 = accessor(x as IDisplayOccupation);
-                var c2 = accessor(y as IDisplayOccupation);
+                if (x is not IDisplayOccupation occX)
+                    return ascending ? 1 : -1;
+                if (x is not IDisplayOccupation occY)
+                    return ascending ? 1 : -1;
+                var c1 = accessor(occX);
+                var c2 = accessor(occY);
                 var result = c1.CompareTo(c2);
                 return ascending ? result : -result;
             });

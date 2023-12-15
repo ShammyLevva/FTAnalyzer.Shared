@@ -42,7 +42,7 @@ namespace FTAnalyzer
         public Individual? Father { get { return Family?.Husband; } }
         public Individual? Mother { get { return Family?.Wife; } }
 
-        public static ParentalRelationshipType GetRelationshipType(XmlNode node)
+        public static ParentalRelationshipType GetRelationshipType(XmlNode? node)
         {
             if (node is null)
                 return ParentalRelationshipType.UNKNOWN;

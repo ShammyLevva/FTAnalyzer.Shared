@@ -25,7 +25,7 @@ namespace FTAnalyzer
 #elif __MACOS__
         static CensusLocation() => LoadCensusLocationFile(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location), ".."));
 #endif
-        public static void LoadCensusLocationFile(string startPath)
+        public static void LoadCensusLocationFile(string? startPath)
         {
 #region Census Locations
             // load Census Locations from XML file

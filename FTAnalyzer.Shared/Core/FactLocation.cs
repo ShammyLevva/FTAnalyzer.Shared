@@ -106,7 +106,7 @@ namespace FTAnalyzer
             ResetLocations();
         }
 
-        public static void LoadConversions(string startPath)
+        public static void LoadConversions(string? startPath)
         {
             // load conversions from XML file
             #region Fact Location Fixes
@@ -703,15 +703,15 @@ namespace FTAnalyzer
 
         void FixMultipleSpacesAmpersandsCommas()
         {
-            while (Country.IndexOf("  ", StringComparison.Ordinal) != -1)
+            while (Country.Contains("  "))
                 Country = Country.Replace("  ", " ");
-            while (Region.IndexOf("  ", StringComparison.Ordinal) != -1)
+            while (Region.Contains("  "))
                 Region = Region.Replace("  ", " ");
-            while (SubRegion.IndexOf("  ", StringComparison.Ordinal) != -1)
+            while (SubRegion.Contains("  "))
                 SubRegion = SubRegion.Replace("  ", " ");
-            while (Address.IndexOf("  ", StringComparison.Ordinal) != -1)
+            while (Address.Contains("  "))
                 Address = Address.Replace("  ", " ");
-            while (Place.IndexOf("  ", StringComparison.Ordinal) != -1)
+            while (Place.Contains("  "))
                 Place = Place.Replace("  ", " ");
             Country = Country.Replace("&", "and").Replace(",", "").Trim();
             Region = Region.Replace("&", "and").Replace(",", "").Trim();
@@ -1181,10 +1181,11 @@ namespace FTAnalyzer
 
         public int CompareTo(FactLocation? that) => CompareTo(that, PLACE);
 
-        public int CompareTo(IDisplayLocation that, int level) => CompareTo((FactLocation)that, level);
+        public int CompareTo(IDisplayLocation? that, int level) => CompareTo(that as FactLocation, level);
 
-        public virtual int CompareTo(FactLocation that, int level)
+        public virtual int CompareTo(FactLocation? that, int level)
         {
+            if (that is null) return 1;
             int res = string.Compare(Country, that.Country, StringComparison.Ordinal);
             if (res == 0 && level > COUNTRY)
             {
@@ -1254,8 +1255,12 @@ namespace FTAnalyzer
         {
             return Comparer<T>.Create((x, y) =>
             {
-                var c1 = accessor(x as IDisplayLocation);
-                var c2 = accessor(y as IDisplayLocation);
+                if (x is not IDisplayLocation locX)
+                    return ascending ? 1 : -1;
+                if (y is not IDisplayLocation locY)
+                    return ascending ? 1 : -1;
+                var c1 = accessor(locX);
+                var c2 = accessor(locY);
                 var result = c1.CompareTo(c2);
                 return ascending ? result : -result;
             });

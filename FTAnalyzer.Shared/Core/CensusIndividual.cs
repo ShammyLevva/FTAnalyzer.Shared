@@ -114,8 +114,12 @@ namespace FTAnalyzer
         {
             return Comparer<T>.Create((x, y) =>
             {
-                var a = accessor(x as IDisplayCensus);
-                var b = accessor(y as IDisplayCensus);
+                if (x is not IDisplayCensus cenX)
+                    return ascending ? 1 : -1;
+                if (y is not IDisplayCensus cenY)
+                    return ascending ? 1 : -1;
+                var a = accessor(cenX);
+                var b = accessor(cenY);
                 int result = a.CompareTo(b);
                 return ascending ? result : -result;
             });

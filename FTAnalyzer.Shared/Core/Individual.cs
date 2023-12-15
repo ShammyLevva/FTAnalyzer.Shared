@@ -1908,7 +1908,7 @@ namespace FTAnalyzer
             return Comparer<T>.Create((x, y) =>
             {
                 if (x is not Individual indX)
-                    return ascending ? -1 : 1;
+                    return ascending ? 1 : -1;
                 if (y is not Individual indY)
                     return ascending ? 1 : -1;
                 var a = accessor(indX);

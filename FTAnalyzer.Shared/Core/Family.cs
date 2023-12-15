@@ -77,7 +77,7 @@ namespace FTAnalyzer
                             var father = ParentalRelationship.GetRelationshipType(fatherNode);
                             var mother = ParentalRelationship.GetRelationshipType(motherNode);
                             Children.Add(child);
-                            var parent = new ParentalRelationship(this, father, mother);
+                            ParentalRelationship parent = new (this, father, mother);
                             child.FamiliesAsChild.Add(parent);
                             AddParentAndChildrenFacts(child, Husband, father);
                             AddParentAndChildrenFacts(child, Wife, mother);
@@ -147,7 +147,7 @@ namespace FTAnalyzer
                 ExpectedDead += resultD;
         }
 
-        static void AddParentAndChildrenFacts(Individual child, Individual parent, ParentalRelationship.ParentalRelationshipType prType)
+        static void AddParentAndChildrenFacts(Individual child, Individual? parent, ParentalRelationship.ParentalRelationshipType prType)
         {
             if (parent is not null)
             {
@@ -279,7 +279,7 @@ namespace FTAnalyzer
         /**
          * @return Returns the first fact of the given type.
          */
-        public Fact? GetPreferredFact(string factType) => _preferredFacts.ContainsKey(factType) ? _preferredFacts[factType] : null;
+        public Fact? GetPreferredFact(string factType) => _preferredFacts.TryGetValue(factType, out Fact? value) ? value : null;
 
         /**
          * @return Returns the first fact of the given type.
@@ -678,8 +678,12 @@ namespace FTAnalyzer
         {
             return Comparer<T>.Create((x, y) =>
             {
-                var c1 = accessor(x as IDisplayFamily);
-                var c2 = accessor(y as IDisplayFamily);
+                if(x is not IDisplayFamily famX)
+                    return ascending ? 1 : -1;
+                if(y is not IDisplayFamily famY)
+                    return ascending ? 1 : -1;
+                var c1 = accessor(famX);
+                var c2 = accessor(famY);
                 var result = c1.CompareTo(c2);
                 return ascending ? result : -result;
             });
