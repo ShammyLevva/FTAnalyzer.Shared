@@ -9,10 +9,6 @@ namespace FTAnalyzer
             : base(message)
         { }
 
-        protected FactDateException(System.Runtime.Serialization.SerializationInfo serializationInfo, System.Runtime.Serialization.StreamingContext streamingContext)
-            : base(serializationInfo, streamingContext)
-        { }
-
         public FactDateException()
         {
         }

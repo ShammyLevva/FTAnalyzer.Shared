@@ -9,10 +9,6 @@ namespace FTAnalyzer
             : base(message)
         { }
 
-        protected InvalidDoubleDateException(System.Runtime.Serialization.SerializationInfo serializationInfo, System.Runtime.Serialization.StreamingContext streamingContext)
-            : base(serializationInfo, streamingContext)
-        { }
-
         public InvalidDoubleDateException()
         {
         }
