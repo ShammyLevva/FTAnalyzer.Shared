@@ -15,12 +15,6 @@ namespace FTAnalyzer
             LineNumber = lineNumber;
         }
 
-        public override void GetObjectData(SerializationInfo info, StreamingContext context) => base.GetObjectData(info, context);
-
-        protected InvalidGEDCOMException(SerializationInfo serializationInfo, StreamingContext streamingContext)
-             : base(serializationInfo, streamingContext)
-        { }
-
         public InvalidGEDCOMException()
         {
         }
