@@ -2,20 +2,12 @@
 
 namespace FTAnalyzer
 {
-    public class CensusIndividual : Individual, IDisplayCensus
+    public class CensusIndividual(int position, Individual individual, CensusFamily family, string censusStatus) : Individual(individual), IDisplayCensus
     {
         public static readonly string HUSBAND = "Husband", WIFE = "Wife", CHILD = "Child", UNKNOWNSTATUS = "Unknown";
-        readonly CensusFamily Family;
-        public int Position { get; private set; }
-        public string CensusStatus { get; private set; }
-
-        public CensusIndividual(int position, Individual individual, CensusFamily family, string censusStatus)
-            : base(individual)
-        {
-            Position = position;
-            Family = family;
-            CensusStatus = censusStatus;
-        }
+        readonly CensusFamily Family = family;
+        public int Position { get; private set; } = position;
+        public string CensusStatus { get; private set; } = censusStatus;
 
         public int FamilyMembersCount => Family.Members.Count();
         public string FamilyID => Family.FamilyID;
