@@ -1231,7 +1231,7 @@ namespace FTAnalyzer
         {
             if (looseDeaths is not null)
                 return looseDeaths;
-            SortableBindingList<IDisplayLooseDeath> result = new();
+            SortableBindingList<IDisplayLooseDeath> result = [];
             try
             {
                 foreach (Individual ind in individuals)
@@ -1655,7 +1655,7 @@ namespace FTAnalyzer
 
         SortableBindingList<IDisplayLocation> GetDisplayLocations(int level)
         {
-            List<IDisplayLocation> result = new();
+            List<IDisplayLocation> result = [];
             //copy to list so that any GetLocation(level) that creates a new location 
             //won't cause an error due to collection changing
             List<FactLocation> allLocations = FactLocation.AllLocations.ToList();
@@ -1684,7 +1684,7 @@ namespace FTAnalyzer
         {
             get
             {
-                List<IDisplayGeocodedLocation> result = new();
+                List<IDisplayGeocodedLocation> result = [];
                 foreach (IDisplayGeocodedLocation loc in FactLocation.AllLocations)
                     if ((loc as FactLocation).IsKnown)
                         result.Add(loc);
@@ -1694,7 +1694,7 @@ namespace FTAnalyzer
 
         public List<ExportFactsAtLocation> AllExportableGeocodedLocations(IProgress<int> progress)
         {
-            List<ExportFactsAtLocation> result = new();
+            List<ExportFactsAtLocation> result = [];
             int loopcount = 0;
             int maxval = FactLocation.AllLocations.Count();
             foreach (FactLocation loc in FactLocation.AllLocations)
@@ -1707,7 +1707,7 @@ namespace FTAnalyzer
                     toadd.Latitude = loc.Latitude;
                     toadd.Longitude = loc.Longitude;
                     var individuals = GetIndividualsAtLocation(loc, loc.Level);
-                    List<string> factsAtLocation = new();
+                    List<string> factsAtLocation = [];
                     foreach (Individual ind in individuals)
                     {
                         var facts = ind.AllFacts.Where(x => x.Location == loc && !x.Created);
@@ -1732,31 +1732,13 @@ namespace FTAnalyzer
             return result;
         }
 
-        public SortableBindingList<IDisplayIndividual> AllDisplayIndividuals
-        {
-            get
-            {
-                SortableBindingList<IDisplayIndividual> result = new();
-                foreach (IDisplayIndividual i in individuals)
-                    result.Add(i);
-                return result;
-            }
-        }
-
-        public SortableBindingList<IDisplayFamily> AllDisplayFamilies
-        {
-            get
-            {
-                SortableBindingList<IDisplayFamily> result = new();
-                foreach (IDisplayFamily f in families)
-                    result.Add(f);
-                return result;
-            }
-        }
+        public SortableBindingList<IDisplayIndividual> AllDisplayIndividuals => [.. individuals];
+        
+        public SortableBindingList<IDisplayFamily> AllDisplayFamilies => [.. families];
 
         public static SortableBindingList<IDisplayFact> GetSourceDisplayFacts(FactSource source)
         {
-            SortableBindingList<IDisplayFact> result = new();
+            SortableBindingList<IDisplayFact> result = [];
             foreach (Fact f in source.Facts)
             {
                 if (f.Individual is not null)
@@ -1784,16 +1766,7 @@ namespace FTAnalyzer
             return result;
         }
 
-        public SortableBindingList<IDisplaySource> AllDisplaySources
-        {
-            get
-            {
-                SortableBindingList<IDisplaySource> result = new();
-                foreach (IDisplaySource s in sources)
-                    result.Add(s);
-                return result;
-            }
-        }
+        public SortableBindingList<IDisplaySource> AllDisplaySources => [.. sources];
 
         public SortableBindingList<IDisplayOccupation> AllDisplayOccupations
         {
@@ -1834,7 +1807,7 @@ namespace FTAnalyzer
         {
             get
             {
-                SortableBindingList<IDisplayFact> result = new();
+                SortableBindingList<IDisplayFact> result = [];
 
                 foreach (Individual ind in individuals)
                 {
@@ -1858,7 +1831,7 @@ namespace FTAnalyzer
         {
             get
             {
-                SortableBindingList<IDisplayFamily> result = new();
+                SortableBindingList<IDisplayFamily> result = [];
                 foreach (Family fam in families)
                     if (fam.EldestChild is not null && fam.MarriageDate.IsKnown && fam.EldestChild.BirthDate.IsKnown &&
                       !fam.EldestChild.BirthDate.IsLongYearSpan && fam.EldestChild.BirthDate.BestYear > fam.MarriageDate.BestYear + 3)
@@ -1871,7 +1844,7 @@ namespace FTAnalyzer
         {
             get
             {
-                SortableBindingList<IDisplayFamily> result = new();
+                SortableBindingList<IDisplayFamily> result = [];
                 foreach (Family fam in families)
                     if (fam.FamilyType != Family.SOLOINDIVIDUAL && (fam.Husband is null || fam.Wife is null))
                         result.Add(fam);
@@ -1883,7 +1856,7 @@ namespace FTAnalyzer
         {
             get
             {
-                SortableBindingList<IDisplayIndividual> result = new();
+                SortableBindingList<IDisplayIndividual> result = [];
                 foreach (Individual ind in individuals)
                 {
                     int age = ind.GetMaxAge(FactDate.TODAY);
@@ -1981,7 +1954,7 @@ namespace FTAnalyzer
             DataErrorTypes = new List<DataErrorGroup>();
             List<DataError>[] errors = new List<DataError>[DATA_ERROR_GROUPS];
             for (int i = 0; i < DATA_ERROR_GROUPS; i++)
-                errors[i] = new List<DataError>();
+                errors[i] = [];
             // calculate error lists
             #region Individual Fact Errors
             foreach (Individual ind in AllIndividuals)
@@ -2166,7 +2139,7 @@ namespace FTAnalyzer
                                 errors[(int)Dataerror.BIRTH_AFTER_MOTHER_DEATH].Add(new DataError((int)Dataerror.BIRTH_AFTER_MOTHER_DEATH, ind, $"Mother {mother.Name} died {mother.DeathDate} which is before individual was born"));
                         }
                     }
-                    List<Individual> womansChildren = new();
+                    List<Individual> womansChildren = [];
                     foreach (Family asParent in ind.FamiliesAsSpouse)
                     {
                         Individual? spouse = asParent.Spouse(ind);
@@ -2868,7 +2841,7 @@ namespace FTAnalyzer
 
             if (person.Forenames != "?" && !person.Forenames.Equals(Individual.UNKNOWN_NAME, StringComparison.CurrentCultureIgnoreCase))
             {
-                int pos = person.Forenames.IndexOf(" ", StringComparison.Ordinal);
+                int pos = person.Forenames.IndexOf(' ', StringComparison.Ordinal);
                 string forenames = person.Forenames;
                 if (pos > 0)
                     forenames = person.Forenames[..pos]; //strip out any middle names as searches better without then
@@ -3344,7 +3317,7 @@ namespace FTAnalyzer
         #region Relationship Groups
         public static List<Individual> GetFamily(Individual startIndividiual)
         {
-            List<Individual> results = new();
+            List<Individual> results = [];
             if (startIndividiual is not null)
             {
                 foreach (Family f in startIndividiual.FamiliesAsSpouse)
@@ -3363,7 +3336,7 @@ namespace FTAnalyzer
 
         public static List<Individual> GetAncestors(Individual startIndividual)
         {
-            List<Individual> results = new();
+            List<Individual> results = [];
             Queue<Individual> queue = new();
             results.Add(startIndividual);
             queue.Enqueue(startIndividual);
@@ -3390,7 +3363,7 @@ namespace FTAnalyzer
         public static List<Individual> GetDescendants(Individual startIndividual)
         {
             List<Individual> results = [];
-            Dictionary<string, Individual> processed = new();
+            Dictionary<string, Individual> processed = [];
             Queue<Individual> queue = new();
             results.Add(startIndividual);
             queue.Enqueue(startIndividual);
@@ -3443,7 +3416,7 @@ namespace FTAnalyzer
             maxComparisons = groups.Sum(x => x.Count * (x.Count - 1L) / 2);
             currentPercentage = 0;
             duplicatesFound = 0;
-            buildDuplicates = new ConcurrentBag<DuplicateIndividual>();
+            buildDuplicates = [];
             var tasks = new List<Task>();
             try
             {
@@ -3593,14 +3566,14 @@ namespace FTAnalyzer
                 if (File.Exists(jsonFile))
                     NonDuplicates = JsonSerializer.Deserialize<List<NonDuplicate>>(File.ReadAllText(jsonFile));
                 else
-                    NonDuplicates = new List<NonDuplicate>();
+                    NonDuplicates = [];
             }
             catch (Exception e)
             {
                 Debug.Print($"Error {e.Message} reading NonDuplicates file");
-                NonDuplicates = new List<NonDuplicate>();
+                NonDuplicates = [];
             }
-            return NonDuplicates ?? new List<NonDuplicate>();
+            return NonDuplicates ?? [];
         }
 
         //List<NonDuplicate> ConvertNonDuplicatesXMLToJson(string xmlFile)
@@ -3783,7 +3756,7 @@ namespace FTAnalyzer
                 return defaultDate;
             try
             {
-                string[] dateFields = dateNode.InnerText.Split(new char[] { '/' });
+                string[] dateFields = dateNode.InnerText.Split(['/']);
                 int nodeyear = int.Parse(dateFields[0]);
                 int nodemonth = int.Parse(dateFields[1]);
                 int nodeday = int.Parse(dateFields[2]);

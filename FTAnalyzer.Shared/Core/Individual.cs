@@ -82,7 +82,7 @@ namespace FTAnalyzer
             Locations = new List<FactLocation>();
             FamiliesAsChild = new List<ParentalRelationship>();
             FamiliesAsSpouse = new List<Family>();
-            preferredFacts = new Dictionary<string, Fact>();
+            preferredFacts = [];
             _allfacts = null;
             _allFileFacts = null;
         }
@@ -338,8 +338,7 @@ namespace FTAnalyzer
                 int currentFactCount = Facts.Count + FamilyFacts.Count;
                 if (_allfacts is null || currentFactCount != Factcount)
                 {
-                    _allfacts = new List<Fact>();
-                    _allfacts.AddRange(PersonalFacts);
+                    _allfacts = [.. PersonalFacts];
                     foreach(Fact f in FamilyFacts)
                         if(!_allfacts.Contains(f))
                             _allfacts.Add(f);
@@ -356,7 +355,7 @@ namespace FTAnalyzer
         {
             get
             {
-                List<IDisplayFact> allGeocodedFacts = new();
+                List<IDisplayFact> allGeocodedFacts = [];
                 foreach (Fact f in AllFacts)
                     if (f.Location.IsGeoCoded(false) && f.Location.GeocodeStatus != FactLocation.Geocode.UNKNOWN)
                         allGeocodedFacts.Add(new DisplayFact(this, f));
@@ -369,7 +368,7 @@ namespace FTAnalyzer
         {
             get
             {
-                List<IDisplayFact> allLifeLineFacts = new();
+                List<IDisplayFact> allLifeLineFacts = [];
                 foreach (Fact f in AllFacts)
                     if (f.Location.IsGeoCoded(false) && f.Location.GeocodeStatus != FactLocation.Geocode.UNKNOWN && f.FactType != Fact.LC_FTA && f.FactType != Fact.LOSTCOUSINS)
                         allLifeLineFacts.Add(new DisplayFact(this, f));
@@ -402,7 +401,7 @@ namespace FTAnalyzer
             private set
             {
                 string name = value;
-                int startPos = name.IndexOf("/", StringComparison.Ordinal), endPos = name.LastIndexOf("/", StringComparison.Ordinal);
+                int startPos = name.IndexOf('/'), endPos = name.LastIndexOf('/');
                 if (startPos >= 0 && endPos > startPos)
                 {
                     Surname = name.Substring(startPos + 1, endPos - startPos - 1);
@@ -413,12 +412,14 @@ namespace FTAnalyzer
                     Surname = UNKNOWN_NAME;
                     _forenames = name;
                 }
-                if (string.IsNullOrEmpty(Surname) || Surname.ToLower() == "mnu" || Surname.ToLower() == "lnu" || Surname == "[--?--]" || Surname.ToLower() == "unk" ||
+                if (string.IsNullOrEmpty(Surname) || Surname.Equals("mnu", StringComparison.CurrentCultureIgnoreCase) || 
+                    Surname.Equals("lnu", StringComparison.CurrentCultureIgnoreCase) || 
+                    Surname == "[--?--]" || Surname.Equals("unk", StringComparison.CurrentCultureIgnoreCase) ||
                   ((Surname[0] == '.' || Surname[0] == '?' || Surname[0] == '_') && Surname.Distinct().Count() == 1)) // if all chars are same and is . ? or _
                     Surname = UNKNOWN_NAME;
-                if (GeneralSettings.Default.TreatFemaleSurnamesAsUnknown && !IsMale && Surname.StartsWith("(", StringComparison.Ordinal) && Surname.EndsWith(")", StringComparison.Ordinal))
+                if (!(!GeneralSettings.Default.TreatFemaleSurnamesAsUnknown || IsMale || !Surname.StartsWith('(') || !Surname.EndsWith(')')))
                     Surname = UNKNOWN_NAME;
-                if(string.IsNullOrEmpty(_forenames) || _forenames.ToLower() == "unk" || _forenames == "[--?--]" ||
+                if(string.IsNullOrEmpty(_forenames) || _forenames.Equals("unk", StringComparison.CurrentCultureIgnoreCase) || _forenames == "[--?--]" ||
                   ((_forenames[0] == '.' || _forenames[0] == '?' || _forenames[0] == '_') && _forenames.Distinct().Count() == 1))
                   _forenames = UNKNOWN_NAME;
                 MarriedName = Surname;
@@ -440,7 +441,7 @@ namespace FTAnalyzer
             {
                 if (_forenames is null)
                     return string.Empty;
-                int pos = _forenames.IndexOf(" ", StringComparison.Ordinal);
+                int pos = _forenames.IndexOf(' ', StringComparison.Ordinal);
                 return pos > 0 ? _forenames[..pos] : _forenames;
             }
         }
@@ -451,7 +452,7 @@ namespace FTAnalyzer
             {
                 if (_forenames is null)
                     return string.Empty;
-                int pos = _forenames.IndexOf(" ", StringComparison.Ordinal);
+                int pos = _forenames.IndexOf(' ');
                 return pos > 0 ? _forenames[pos..].Trim() : string.Empty;
             }
         }
@@ -1041,7 +1042,7 @@ namespace FTAnalyzer
         /// </summary>
         void AddCensusSourceFacts()
         {
-            List<Fact> toAdd = new(); // we can't vary the facts collection whilst looping
+            List<Fact> toAdd = []; // we can't vary the facts collection whilst looping
             foreach (Fact f in Facts)
             {
                 if (!f.IsCensusFact && !CensusFactExists(f.FactDate, true))
