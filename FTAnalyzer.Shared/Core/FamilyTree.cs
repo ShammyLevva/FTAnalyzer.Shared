@@ -1869,7 +1869,7 @@ namespace FTAnalyzer
         }
 
         public List<IDisplayColourCensus> ColourCensus(string country, Predicate<Individual> relTypeFilter, string surname,
-                                                       ComboBoxFamily family, bool IgnoreMissingBirthDates, bool IgnoreMissingDeathDates)
+                                                       ComboBoxFamily? family, bool IgnoreMissingBirthDates, bool IgnoreMissingDeathDates)
         {
             Predicate<Individual> filter;
             if (family is null)
@@ -1909,7 +1909,7 @@ namespace FTAnalyzer
             return individuals.Filter(filter).ToList<IDisplayColourCensus>();
         }
 
-        public List<IDisplayColourBMD> ColourBMD(Predicate<Individual> relTypeFilter, string surname, ComboBoxFamily family)
+        public List<IDisplayColourBMD> ColourBMD(Predicate<Individual> relTypeFilter, string surname, ComboBoxFamily? family)
         {
             Predicate<Individual> filter;
             if (family is null)
@@ -1926,7 +1926,7 @@ namespace FTAnalyzer
             return individuals.Filter(filter).ToList<IDisplayColourBMD>();
         }
 
-        public List<IDisplayMissingData> MissingData(Predicate<Individual> relTypeFilter, string surname, ComboBoxFamily family)
+        public List<IDisplayMissingData> MissingData(Predicate<Individual> relTypeFilter, string surname, ComboBoxFamily? family)
         {
             Predicate<Individual> filter;
             if (family is null)
@@ -2187,7 +2187,7 @@ namespace FTAnalyzer
                                 double daysDiff = child.BirthDate.DaysDifference(previousBirth);
                                 if (daysDiff >= 10 && daysDiff <= 168)
                                     errors[(int)Dataerror.SIBLING_TOO_SOON].Add(new DataError((int)Dataerror.SIBLING_TOO_SOON, Fact.FactError.ERROR, child, $"Child {child.Name} of {ind.Name} born too soon, only {daysDiff} days after sibling."));
-                                if (daysDiff > 168 && daysDiff < 365)
+                                if (daysDiff > 168 && daysDiff < 300)
                                     errors[(int)Dataerror.SIBLING_PROB_TOO_SOON].Add(new DataError((int)Dataerror.SIBLING_PROB_TOO_SOON, Fact.FactError.QUESTIONABLE, ind, $"Child {child.Name} of {ind.Name} born very soon after sibling, only {daysDiff} days later."));
                                 previousBirth = child.BirthDate;
                             }
