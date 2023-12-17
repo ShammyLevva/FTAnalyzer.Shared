@@ -215,7 +215,7 @@ namespace FTAnalyzer
             noteNodes = null;
             maxAhnentafel = 0;
             FactLocation.ResetLocations();
-            individualLookup = new Dictionary<string, Individual>();
+            individualLookup = [];
         }
 
         public void ResetLooseFacts()
@@ -228,9 +228,9 @@ namespace FTAnalyzer
         public void CheckUnknownFactTypes(string factType)
         {
             if (!unknownIndividualFactTypes.ContainsKey(factType))
-                unknownIndividualFactTypes.Add(factType, new List<Individual>());
+                unknownIndividualFactTypes.Add(factType, []);
             if (!unknownFamilyFactTypes.ContainsKey(factType))
-                unknownFamilyFactTypes.Add(factType, new List<Family>());
+                unknownFamilyFactTypes.Add(factType, []);
         }
 
         public XmlDocument? LoadTreeHeader(string filename, FileStream stream, IProgress<string> outputText)
@@ -346,10 +346,8 @@ namespace FTAnalyzer
                 {
                     // debugging of individuals - outputText.Report($"Loaded Individual: {individual.ToString()}\n");
                     individuals.Add(individual);
-                    if (individualLookup.ContainsKey(individual.IndividualID))
+                    if (!individualLookup.TryAdd(individual.IndividualID, individual))
                         outputText.Report($"More than one INDI record found with ID value {individual.IndividualID}\n");
-                    else
-                        individualLookup.Add(individual.IndividualID, individual);
                     AddOccupations(individual);
                     AddCustomFacts(individual);
                     progress.Report(100 * counter++ / individualMax);
@@ -509,7 +507,7 @@ namespace FTAnalyzer
             {
                 string line = reader.ReadLine() ?? string.Empty;
                 string[] values = line.Split(',');
-                if (line.IndexOf(",", StringComparison.Ordinal) > 0 && (values[0] == "1" || values[0] == "2"))
+                if (line.IndexOf(',', StringComparison.Ordinal) > 0 && (values[0] == "1" || values[0] == "2"))
                 {
                     StandardisedName original = new(values[0] == "2", values[2]);
                     StandardisedName standardised = new(values[1] == "2", values[3]);
@@ -713,7 +711,7 @@ namespace FTAnalyzer
             output.Append("Lost Cousins facts recorded:\n\n");
 
             IEnumerable<Individual> listToCheck = AllIndividuals.Filter(relationFilter).ToList();
-            MissingLCEntries = new Dictionary<CensusDate, int>();
+            MissingLCEntries = [];
 
             int countEW1841 = listToCheck.Count(ind => ind.IsLostCousinsEntered(CensusDate.EWCENSUS1841, false));
             int countEW1881 = listToCheck.Count(ind => ind.IsLostCousinsEntered(CensusDate.EWCENSUS1881, false));
@@ -850,14 +848,14 @@ namespace FTAnalyzer
 
         void AddOccupations(Individual individual)
         {
-            List<string> jobs = new();
+            List<string> jobs = [];
             foreach (Fact f in individual.GetFacts(Fact.OCCUPATION))
             {
                 if (!jobs.ContainsString(f.Comment))
                 {
                     if (!occupations.TryGetValue(f.Comment, out List<Individual>? workers))
                     {
-                        workers = new List<Individual>();
+                        workers = [];
                         occupations.Add(f.Comment, workers);
                     }
                     workers.Add(individual);
@@ -924,7 +922,7 @@ namespace FTAnalyzer
         {
             get
             {
-                List<ExportFact> result = new();
+                List<ExportFact> result = [];
                 foreach (Individual ind in individuals)
                 {
                     foreach (Fact f in ind.PersonalFacts)
@@ -999,7 +997,7 @@ namespace FTAnalyzer
         public List<string> GetSurnamesAtLocation(FactLocation loc) { return GetSurnamesAtLocation(loc, FactLocation.SUBREGION); }
         public List<string> GetSurnamesAtLocation(FactLocation loc, int level)
         {
-            List<string> result = new();
+            List<string> result = [];
             foreach (Individual i in individuals)
             {
                 if (!result.ContainsString(i.Surname) && i.IsAtLocation(loc, level))
@@ -1016,8 +1014,7 @@ namespace FTAnalyzer
             {
                 ind.FixIndividualID(indLen);
                 // If the individual id has been changed, the lookup needs to be updated
-                if (!individualLookup.ContainsKey(ind.IndividualID))
-                    individualLookup.Add(ind.IndividualID, ind);
+                individualLookup.TryAdd(ind.IndividualID, ind);
             }
             int famLen = families.Count.ToString().Length;
             foreach (Family f in families)
@@ -1039,7 +1036,7 @@ namespace FTAnalyzer
         {
             if (looseInfo is not null)
                 return looseInfo;
-            SortableBindingList<IDisplayLooseInfo> result = new();
+            SortableBindingList<IDisplayLooseInfo> result = [];
             try
             {
                 foreach (Individual ind in LooseBirths().Cast<Individual>())
@@ -1062,7 +1059,7 @@ namespace FTAnalyzer
         {
             if (looseBirths is not null)
                 return looseBirths;
-            SortableBindingList<IDisplayLooseBirth> result = new();
+            SortableBindingList<IDisplayLooseBirth> result = [];
             try
             {
                 foreach (Individual ind in individuals)
@@ -1627,7 +1624,7 @@ namespace FTAnalyzer
         {
             if (censusDate is not null)
             {
-                HashSet<string> individualIDs = new();
+                HashSet<string> individualIDs = [];
                 foreach (Family f in families)
                 {
                     CensusFamily cf = new(f, censusDate);
@@ -2368,9 +2365,9 @@ namespace FTAnalyzer
             StringBuilder path = new();
             path.Append("https://www.scotlandspeople.gov.uk/record-results?search_type=people&dl_cat=census");
             string surname = person.SurnameAtDate(censusFactDate);
-            if (surname != "?" && surname.ToUpper() != Individual.UNKNOWN_NAME)
+            if (surname != "?" && !surname.Equals(Individual.UNKNOWN_NAME, StringComparison.CurrentCultureIgnoreCase))
                 path.Append($"&surname={HttpUtility.UrlEncode(surname)}&surname_so=fuzzy");
-            if (person.Forename != "?" && person.Forename.ToUpper() != Individual.UNKNOWN_NAME)
+            if (!(person.Forename == "?" || person.Forename.Equals(Individual.UNKNOWN_NAME, StringComparison.CurrentCultureIgnoreCase)))
                 path.Append($"&forename={HttpUtility.UrlEncode(person.Forenames)}&forename_so=syn");
             Age age = person.GetAge(censusFactDate);
             if (censusYear == 1841 && age.MaxAge > 15)
@@ -2388,10 +2385,10 @@ namespace FTAnalyzer
             // https://www.familysearch.org/search/record/results?f.collectionId=2000219&q.anyDate.from=1897&q.anyDate.to=1899&q.anyPlace=United%20States&q.givenName=George%20Thurman&q.surname=Walker
             StringBuilder path = new();
             path.Append("https://www.familysearch.org/search/record/results?");
-            if (person.Forename != "?" && person.Forename.ToUpper() != Individual.UNKNOWN_NAME)
+            if (person.Forename != "?" && !person.Forename.Equals(Individual.UNKNOWN_NAME, StringComparison.CurrentCultureIgnoreCase))
                 path.Append($"{FamilySearch.GIVENNAME}={HttpUtility.UrlEncode(person.Forenames)}");
             string surname = person.SurnameAtDate(censusFactDate);
-            if (surname != "?" && surname.ToUpper() != Individual.UNKNOWN_NAME)
+            if (surname != "?" && !surname.Equals(Individual.UNKNOWN_NAME, StringComparison.CurrentCultureIgnoreCase))
                 path.Append($"&{FamilySearch.SURNAME}={HttpUtility.UrlEncode(surname)}");
             if (person.BirthDate.IsKnown)
             {
@@ -2467,12 +2464,12 @@ namespace FTAnalyzer
             if (censusCountry.Equals(Countries.UNITED_STATES))
             {
                 query.Append("name=");
-                if (person.Forenames != "?" && person.Forenames.ToUpper() != Individual.UNKNOWN_NAME)
+                if (person.Forenames != "?" && !person.Forenames.Equals(Individual.UNKNOWN_NAME, StringComparison.CurrentCultureIgnoreCase))
                     query.Append($"{HttpUtility.UrlEncode(person.Forenames)}_");
                 string surname = string.Empty;
-                if (person.Surname != "?" && person.Surname.ToUpper() != Individual.UNKNOWN_NAME)
+                if (person.Surname != "?" && !person.Surname.Equals(Individual.UNKNOWN_NAME, StringComparison.CurrentCultureIgnoreCase))
                     surname = person.Surname;
-                if (person.MarriedName != "?" && person.MarriedName.ToUpper() != Individual.UNKNOWN_NAME && person.MarriedName != person.Surname)
+                if (person.MarriedName != "?" && !person.MarriedName.Equals(Individual.UNKNOWN_NAME, StringComparison.CurrentCultureIgnoreCase) && person.MarriedName != person.Surname)
                     surname += $" {person.MarriedName}";
                 surname = surname.Trim();
                 query.Append($"{HttpUtility.UrlEncode(surname)}&");
@@ -2521,12 +2518,12 @@ namespace FTAnalyzer
                 query.Append("so=3&");
                 query.Append("MSAV=1&");
                 query.Append("msT=1&");
-                if (person.Forenames != "?" && person.Forenames.ToUpper() != Individual.UNKNOWN_NAME)
+                if (person.Forenames != "?" && !person.Forenames.Equals(Individual.UNKNOWN_NAME, StringComparison.CurrentCultureIgnoreCase))
                     query.Append($"gsfn={HttpUtility.UrlEncode(person.Forenames)}&");
                 string surname = string.Empty;
-                if (person.Surname != "?" && person.Surname.ToUpper() != Individual.UNKNOWN_NAME)
+                if (person.Surname != "?" && !person.Surname.Equals(Individual.UNKNOWN_NAME, StringComparison.CurrentCultureIgnoreCase))
                     surname = person.Surname;
-                if (person.MarriedName != "?" && person.MarriedName.ToUpper() != Individual.UNKNOWN_NAME && person.MarriedName != person.Surname)
+                if (person.MarriedName != "?" && !person.MarriedName.Equals(Individual.UNKNOWN_NAME, StringComparison.CurrentCultureIgnoreCase) && person.MarriedName != person.Surname)
                     surname += $" {person.MarriedName}";
                 surname = surname.Trim();
                 query.Append($"gsln={HttpUtility.UrlEncode(surname)}&");
@@ -2581,11 +2578,11 @@ namespace FTAnalyzer
             StringBuilder query = new();
             string forename = string.Empty;
             string surname = string.Empty;
-            if (person.Forenames != "?" && person.Forenames.ToUpper() != Individual.UNKNOWN_NAME)
+            if (person.Forenames != "?" && !person.Forenames.Equals(Individual.UNKNOWN_NAME, StringComparison.CurrentCultureIgnoreCase))
                 forename = HttpUtility.UrlEncode(person.Forenames);
-            if (person.Surname != "?" && person.Surname.ToUpper() != Individual.UNKNOWN_NAME)
+            if (person.Surname != "?" && !person.Surname.Equals(Individual.UNKNOWN_NAME, StringComparison.CurrentCultureIgnoreCase))
                 surname = person.Surname;
-            if (person.MarriedName != "?" && person.MarriedName.ToUpper() != Individual.UNKNOWN_NAME && person.MarriedName != person.Surname)
+            if (person.MarriedName != "?" && !person.MarriedName.Equals(Individual.UNKNOWN_NAME, StringComparison.CurrentCultureIgnoreCase) && person.MarriedName != person.Surname)
                 surname += $" {person.MarriedName}";
             surname = HttpUtility.UrlEncode(surname.Trim());
             query.Append($"name={forename}_{surname}&name_x=ps_ps&");
@@ -2640,11 +2637,11 @@ namespace FTAnalyzer
             StringBuilder query = new();
             string forename = string.Empty;
             string surname = string.Empty;
-            if (person.Forenames != "?" && person.Forenames.ToUpper() != Individual.UNKNOWN_NAME)
+            if (person.Forenames != "?" && !person.Forenames.Equals(Individual.UNKNOWN_NAME, StringComparison.CurrentCultureIgnoreCase))
                 forename = HttpUtility.UrlEncode(person.Forenames);
-            if (person.Surname != "?" && person.Surname.ToUpper() != Individual.UNKNOWN_NAME)
+            if (!(person.Surname == "?" || person.Surname.Equals(Individual.UNKNOWN_NAME, StringComparison.CurrentCultureIgnoreCase)))
                 surname = person.Surname;
-            if (person.MarriedName != "?" && person.MarriedName.ToUpper() != Individual.UNKNOWN_NAME && person.MarriedName != person.Surname)
+            if (!(person.MarriedName == "?" || person.MarriedName.Equals(Individual.UNKNOWN_NAME, StringComparison.CurrentCultureIgnoreCase) || person.MarriedName == person.Surname))
                 surname += $" {person.MarriedName}";
             surname = HttpUtility.UrlEncode(surname.Trim());
             query.Append($"name={forename}_{surname}");
@@ -2704,16 +2701,16 @@ namespace FTAnalyzer
             };
             StringBuilder query = new();
             query.Append($"y={censusYear}&");
-            if (person.Forenames != "?" && person.Forenames.ToUpper() != Individual.UNKNOWN_NAME)
+            if (person.Forenames != "?" && !person.Forenames.Equals(Individual.UNKNOWN_NAME, StringComparison.CurrentCultureIgnoreCase))
             {
-                int pos = person.Forenames.IndexOf(" ", StringComparison.Ordinal);
+                int pos = person.Forenames.IndexOf(' ', StringComparison.Ordinal);
                 string forename = person.Forenames;
                 if (pos > 0)
                     forename = person.Forenames[..pos]; //strip out any middle names as FreeCen searches better without then
                 query.Append($"g={HttpUtility.UrlEncode(forename)}&");
             }
             string surname = person.SurnameAtDate(censusFactDate);
-            if (surname != "?" && surname.ToUpper() != Individual.UNKNOWN_NAME)
+            if (surname != "?" && !surname.Equals(Individual.UNKNOWN_NAME, StringComparison.CurrentCultureIgnoreCase))
             {
                 query.Append($"s={HttpUtility.UrlEncode(surname)}&");
                 query.Append("p=on&");
@@ -2786,9 +2783,9 @@ namespace FTAnalyzer
             StringBuilder query = new();
             query.Append($"eventyear={censusYear}&eventyear_offset=0&");
 
-            if (person.Forenames != "?" && person.Forenames.ToUpper() != Individual.UNKNOWN_NAME)
+            if (person.Forenames != "?" && !person.Forenames.Equals(Individual.UNKNOWN_NAME, StringComparison.CurrentCultureIgnoreCase))
             {
-                int pos = person.Forenames.IndexOf(" ", StringComparison.Ordinal);
+                int pos = person.Forenames.IndexOf(' ', StringComparison.Ordinal);
                 string forenames = person.Forenames;
                 if (pos > 0)
                     forenames = person.Forenames[..pos]; //strip out any middle names as searches better without then
@@ -2796,7 +2793,7 @@ namespace FTAnalyzer
                 query.Append("firstname_variants=true&");
             }
             string surname = person.SurnameAtDate(censusFactDate);
-            if (surname != "?" && surname.ToUpper() != Individual.UNKNOWN_NAME)
+            if (surname != "?" && !surname.Equals(Individual.UNKNOWN_NAME, StringComparison.CurrentCultureIgnoreCase))
             {
                 query.Append($"lastName={HttpUtility.UrlEncode(surname)} &");
                 query.Append("lastname_variants=true&");
@@ -2869,7 +2866,7 @@ namespace FTAnalyzer
             };
             StringBuilder query = new();
 
-            if (person.Forenames != "?" && person.Forenames.ToUpper() != Individual.UNKNOWN_NAME)
+            if (person.Forenames != "?" && !person.Forenames.Equals(Individual.UNKNOWN_NAME, StringComparison.CurrentCultureIgnoreCase))
             {
                 int pos = person.Forenames.IndexOf(" ", StringComparison.Ordinal);
                 string forenames = person.Forenames;
@@ -2879,7 +2876,7 @@ namespace FTAnalyzer
                 query.Append("firstname_variants=true&");
             }
             string surname = person.SurnameAtDate(censusFactDate);
-            if (surname != "?" && surname.ToUpper() != Individual.UNKNOWN_NAME)
+            if (surname != "?" && !surname.Equals(Individual.UNKNOWN_NAME, StringComparison.CurrentCultureIgnoreCase))
             {
                 query.Append($"lastName={HttpUtility.UrlEncode(surname)}&");
                 query.Append("lastname_variants=true&");
@@ -3003,7 +3000,7 @@ namespace FTAnalyzer
                 else if (st == SearchType.DEATH)
                     query.Append("&dl_rec=statutory-deaths");
                 query.Append($"&surname={HttpUtility.UrlEncode(individual.Surname)}&surname_so=soundex");
-                if (individual.Forename != "?" && individual.Forename.ToUpper() != Individual.UNKNOWN_NAME)
+                if (individual.Forename != "?" && !individual.Forename.Equals(Individual.UNKNOWN_NAME, StringComparison.CurrentCultureIgnoreCase))
                     query.Append($"&forename={HttpUtility.UrlEncode(individual.Forename)}&forename_so=syn");
                 if (st == SearchType.BIRTH)
                     query.Append("&record_type=stat_births");
@@ -3032,7 +3029,7 @@ namespace FTAnalyzer
                 else if (st == SearchType.DEATH)
                     query.Append("&event=D&record_type%5B0%5D=opr_deaths&church_type=Old%20Parish%20Registers&dl_cat=church&dl_rec=church-deaths-burials");
                 query.Append($"&surname={HttpUtility.UrlEncode(individual.Surname)}&surname_so=soundex");
-                if (individual.Forename != "?" && individual.Forename.ToUpper() != Individual.UNKNOWN_NAME)
+                if (!(individual.Forename == "?" || individual.Forename.Equals(Individual.UNKNOWN_NAME, StringComparison.CurrentCultureIgnoreCase)))
                     query.Append($"&forename={HttpUtility.UrlEncode(individual.Forename)}&forename_so=syn");
                 if (st == SearchType.MARRIAGE && spouse is not null)
                     query.Append($"&spouse_name={HttpUtility.UrlEncode(spouse.Surname)}&spouse_name_so=fuzzy");
@@ -3056,7 +3053,7 @@ namespace FTAnalyzer
             StringBuilder query = new();
             query.Append("count=20&query=");
 
-            if (individual.Forename != "?" && individual.Forename.ToUpper() != Individual.UNKNOWN_NAME)
+            if (individual.Forename != "?" && !individual.Forename.Equals(Individual.UNKNOWN_NAME, StringComparison.CurrentCultureIgnoreCase))
                 query.Append($"&{FamilySearch.GIVENNAME}={HttpUtility.UrlEncode(individual.Forename)}");
             string surname = GetSurname(st, individual, false);
             query.Append($"&{FamilySearch.SURNAME}={HttpUtility.UrlEncode(surname)}");
@@ -3156,7 +3153,7 @@ namespace FTAnalyzer
             if (st.Equals(SearchType.DEATH))
                 uri.Path += "/church-registers~wills-and-probate~deaths-and-burials";
             StringBuilder query = new();
-            if (individual.Forenames != "?" && individual.Forenames.ToUpper() != Individual.UNKNOWN_NAME)
+            if (individual.Forenames != "?" && !individual.Forenames.Equals(Individual.UNKNOWN_NAME, StringComparison.CurrentCultureIgnoreCase))
                 query.Append($"firstname={HttpUtility.UrlEncode(individual.Forenames)}&firstname_variants=true&");
             string surname = GetSurname(st, individual, false);
             query.Append($"lastname={HttpUtility.UrlEncode(surname)}&lastname_variants=true&");
@@ -3173,9 +3170,9 @@ namespace FTAnalyzer
         {
             string surname = string.Empty;
             if (individual is null) return surname;
-            if (individual.Surname != "?" && individual.Surname.ToUpper() != Individual.UNKNOWN_NAME)
+            if (individual.Surname != "?" && !individual.Surname.Equals(Individual.UNKNOWN_NAME, StringComparison.CurrentCultureIgnoreCase))
                 surname = individual.Surname;
-            if (st.Equals(SearchType.DEATH) && individual.MarriedName != "?" && individual.MarriedName.ToUpper() != Individual.UNKNOWN_NAME && individual.MarriedName != individual.Surname)
+            if (st.Equals(SearchType.DEATH) && individual.MarriedName != "?" && !individual.MarriedName.Equals(Individual.UNKNOWN_NAME, StringComparison.CurrentCultureIgnoreCase) && individual.MarriedName != individual.Surname)
                 surname = ancestry ? $"{surname} {individual.MarriedName}" : individual.MarriedName; // for ancestry combine names for others sites just use marriedName if death search
             surname = surname.Trim();
             return surname;
@@ -3202,7 +3199,7 @@ namespace FTAnalyzer
             query.Append("so=3&");
             query.Append("MSAV=1&");
             query.Append("msT=1&");
-            if (individual.Forenames != "?" && individual.Forenames.ToUpper() != Individual.UNKNOWN_NAME)
+            if (individual.Forenames != "?" && !individual.Forenames.Equals(Individual.UNKNOWN_NAME, StringComparison.CurrentCultureIgnoreCase))
                 query.Append($"gsfn={HttpUtility.UrlEncode(individual.Forenames)}&");
             string surname = GetSurname(st, individual, true);
             query.Append($"gsln={HttpUtility.UrlEncode(surname)}&");
@@ -3392,7 +3389,7 @@ namespace FTAnalyzer
 
         public static List<Individual> GetDescendants(Individual startIndividual)
         {
-            List<Individual> results = new();
+            List<Individual> results = [];
             Dictionary<string, Individual> processed = new();
             Queue<Individual> queue = new();
             results.Add(startIndividual);
