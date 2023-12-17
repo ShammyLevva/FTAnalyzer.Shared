@@ -3,20 +3,12 @@ using System.Collections.Generic;
 
 namespace FTAnalyzer
 {
-    public class DisplayCustomFact : IDisplayCustomFact
+    public class DisplayCustomFact(string factname, int indcount, int famcount, bool ignore) : IDisplayCustomFact
     {
-        public string CustomFactName { get; }
-        public int IndividualCount { get; }
-        public int FamilyCount { get; }
-        public bool Ignore { get; set; }
-
-        public DisplayCustomFact(string factname,int indcount, int famcount, bool ignore)
-        {
-            CustomFactName = factname;
-            IndividualCount = indcount;
-            FamilyCount = famcount;
-            Ignore = ignore;
-        }
+        public string CustomFactName { get; } = factname;
+        public int IndividualCount { get; } = indcount;
+        public int FamilyCount { get; } = famcount;
+        public bool Ignore { get; set; } = ignore;
 
         public int CompareTo(IDisplayCustomFact? that) => string.Compare(CustomFactName, that.CustomFactName, System.StringComparison.Ordinal);
 
