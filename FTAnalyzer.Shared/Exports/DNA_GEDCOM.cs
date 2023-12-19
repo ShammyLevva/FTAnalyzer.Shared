@@ -98,13 +98,13 @@ namespace FTAnalyzer.Exports
 #endif
         static void WriteFile(string filename)
         {
-            List<Family> families = new();
-            List<Individual> spouses = new();
+            List<Family> families = [];
+            List<Individual> spouses = [];
             _privateID = 1;
             using (output = new StreamWriter(new FileStream(filename, FileMode.Create, FileAccess.Write), Encoding.UTF8))
             {
                 WriteHeader(filename);
-                processed = new List<Individual>();
+                processed = [];
                 foreach (Individual ind in ft.DirectLineIndividuals)
                 {
                     WriteIndividual(ind);
@@ -138,7 +138,7 @@ namespace FTAnalyzer.Exports
 
         static void WriteSiblings(List<Family> families)
         {
-            List<Individual> descendants = new();
+            List<Individual> descendants = [];
             foreach (Family fam in families)
             {
                 foreach (Individual child in fam.Children)
@@ -169,7 +169,7 @@ namespace FTAnalyzer.Exports
                 if(i.IsBloodDirect)
                     queue.Enqueue(i);
             Individual ind;
-            List<Family> descendantFamilies = new();
+            List<Family> descendantFamilies = [];
             while(queue.Count > 0)
             {
                 ind = queue.Dequeue();

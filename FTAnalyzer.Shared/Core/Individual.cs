@@ -379,16 +379,10 @@ namespace FTAnalyzer
 
         public int GeoLocationCount => AllGeocodedFacts.Count;
 
-
         public string Gender
         {
             get => _gender;
-            private set
-            {
-                _gender = value;
-                if (_gender.Length == 0)
-                    _gender = "U";
-            }
+            private set => _gender = value.Length == 0 ? "U" : value;
         }
 
         public bool GenderMatches(Individual that) => Gender == that.Gender || Gender == "U" || that.Gender == "U";
@@ -489,10 +483,8 @@ namespace FTAnalyzer
         }
 
         public FactDate BirthDate => BirthFact is null ? FactDate.UNKNOWN_DATE : BirthFact.FactDate;
-
         public DateTime BirthStart => BirthDate.StartDate != FactDate.MINDATE ? BirthDate.StartDate : BirthDate.EndDate;
         public DateTime BirthEnd => BirthDate.StartDate != FactDate.MAXDATE ? BirthDate.EndDate : BirthDate.StartDate;
-
         public FactLocation BirthLocation => (BirthFact is null) ? FactLocation.BLANK_LOCATION : BirthFact.Location;
 
         public Fact? DeathFact
