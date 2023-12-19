@@ -23,7 +23,7 @@ namespace FTAnalyzer
         public int ExpectedDead { get; internal set; }
         public string FamilyType { get; internal set; }
 
-        readonly IDictionary<string, Fact> _preferredFacts;
+        readonly Dictionary<string, Fact> _preferredFacts;
         readonly FamilyTree ft = FamilyTree.Instance;
 
         Family(string familyID)
@@ -32,7 +32,7 @@ namespace FTAnalyzer
             Facts = new List<Fact>();
             Children = new List<Individual>();
 
-            _preferredFacts = new Dictionary<string, Fact>();
+            _preferredFacts = [];
 
             ExpectedTotal = 0;
             ExpectedAlive = 0;
@@ -218,8 +218,7 @@ namespace FTAnalyzer
                     {
                         Husband?.AddFact(f);
                         Wife?.AddFact(f);
-                        if (!_preferredFacts.ContainsKey(f.FactType))
-                            _preferredFacts.Add(f.FactType, f);
+                        _preferredFacts.TryAdd(f.FactType, f);
                     }
                     else
                     {

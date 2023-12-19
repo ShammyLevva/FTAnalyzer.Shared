@@ -2,20 +2,13 @@
 
 namespace FTAnalyzer
 {
-    public class ParentalRelationship
+    public class ParentalRelationship(Family family, ParentalRelationship.ParentalRelationshipType fatherRel, ParentalRelationship.ParentalRelationshipType motherRel)
     {
         public enum ParentalRelationshipType { NATURAL, ADOPTED, STEP, FOSTER, RELATED, GUARDIAN, SEALED, PRIVATE, UNKNOWN };
 
-        public Family Family { get; private set; }
-        public ParentalRelationshipType FatherRelationship { get; private set; }
-        public ParentalRelationshipType MotherRelationship { get; private set; }
-
-        public ParentalRelationship(Family family, ParentalRelationshipType fatherRel, ParentalRelationshipType motherRel)
-        {
-            Family = family;
-            FatherRelationship = fatherRel;
-            MotherRelationship = motherRel;
-        }
+        public Family Family { get; private set; } = family;
+        public ParentalRelationshipType FatherRelationship { get; private set; } = fatherRel;
+        public ParentalRelationshipType MotherRelationship { get; private set; } = motherRel;
 
         public bool IsNaturalFather
         {
