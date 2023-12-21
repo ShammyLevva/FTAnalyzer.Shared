@@ -2,10 +2,10 @@
 
 namespace FTAnalyzer
 {
-    public class DataErrorGroup
+    public class DataErrorGroup(int errorNumber, IList<DataError> errors)
     {
         static readonly string[] DATAERROR = 
-            { 
+            [ 
                 "Birth after baptism/christening",
                 "Birth after death/burial",
                 "Birth after father aged 90+", 
@@ -38,20 +38,14 @@ namespace FTAnalyzer
                 "Child born too soon after sibling",
                 "Child likely born too soon after sibling",
                 "Date is in the future"
-            };
+            ];
 
         //"Later marriage before previous spouse died"
 
-        public IList<DataError> Errors { get; private set; }
-        readonly int errorNumber;
+        public IList<DataError> Errors { get; private set; } = errors;
+        readonly int errorNumber = errorNumber;
 
         public static string ErrorDescription(int errorNumber) => DATAERROR[errorNumber];
-
-        public DataErrorGroup(int errorNumber, IList<DataError> errors)
-        {
-            this.errorNumber = errorNumber;
-            Errors = errors;
-        }
 
         public override string ToString() => ErrorDescription(errorNumber);
     }

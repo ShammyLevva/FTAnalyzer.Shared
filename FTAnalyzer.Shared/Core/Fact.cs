@@ -61,9 +61,9 @@ namespace FTAnalyzer
             CENSUS_FTA, CHILDREN, PARENT, BIRTH_CALC, LC_FTA
                     });
 
-        public static readonly Dictionary<string, string> NON_STANDARD_FACTS = new();
-        static readonly Dictionary<string, string> CUSTOM_TAGS = new();
-        static readonly HashSet<string> COMMENT_FACTS = new();
+        public static readonly Dictionary<string, string> NON_STANDARD_FACTS = [];
+        static readonly Dictionary<string, string> CUSTOM_TAGS = [];
+        static readonly HashSet<string> COMMENT_FACTS = [];
 
         static Fact()
         {
@@ -424,7 +424,7 @@ namespace FTAnalyzer
             Tag = string.Empty;
             Preferred = preferred;
             Reference = reference;
-            SourcePages = new List<string>();
+            SourcePages = [];
         }
 
         public Fact(XmlNode node, Family family, bool preferred, IProgress<string> outputText)
@@ -504,7 +504,7 @@ namespace FTAnalyzer
                         Location.GEDCOMLatLong = true;
 
                     // only check UK census dates for errors as those are used for colour census
-                    if (FactType.Equals(CENSUS) && !nodeText.ToUpper().Contains("STATE CENSUS"))
+                    if (FactType.Equals(CENSUS) && !nodeText.Contains("STATE CENSUS", StringComparison.CurrentCultureIgnoreCase))
                         CheckCensusDate("Census", Location);
 
                     // need to check residence after setting location
@@ -991,14 +991,14 @@ namespace FTAnalyzer
         {
             if (factComment.Length == 0 && factPlace.Length > 0)
             {
-                if (factPlace.EndsWith("/", StringComparison.Ordinal))
+                if (factPlace.EndsWith('/'))
                 {
                     Comment = factPlace[..^1];
                     Place = string.Empty;
                 }
                 else
                 {
-                    int slash = factPlace.IndexOf("/", StringComparison.Ordinal);
+                    int slash = factPlace.IndexOf('/');
                     if (slash >= 0)
                     {
                         Comment = factPlace[..slash].Trim();
