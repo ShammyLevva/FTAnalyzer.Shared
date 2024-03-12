@@ -1,19 +1,7 @@
 ﻿using GoogleAnalyticsTracker.Core;
 using GoogleAnalyticsTracker.Simple;
-using System;
-using System.Threading.Tasks;
 using System.Diagnostics;
-
-#if __PC__
 using FTAnalyzer.Properties;
-using System.Windows.Forms;
-#elif __MACOS__
-using AppKit;
-using Foundation;
-#elif __IOS__
-using UIKit;
-using Foundation;
-#endif
 
 namespace FTAnalyzer.Utilities
 {
@@ -73,7 +61,6 @@ namespace FTAnalyzer.Utilities
 
         static Analytics()
         {
-#if __PC__
             if (Settings.Default.GUID == "00000000-0000-0000-0000-000000000000")
             {
                 Settings.Default.GUID = Guid.NewGuid().ToString();
@@ -81,62 +68,24 @@ namespace FTAnalyzer.Utilities
             }
             GUID = Settings.Default.GUID;
             OperatingSystem os = Environment.OSVersion;
-            trackerEnvironment = new SimpleTrackerEnvironment(os.Platform.ToString(), os.Version.ToString(), os.VersionString);
-            analyticsSession = new AnalyticsSession();
-            tracker = new SimpleTracker("UA-125850339-2", analyticsSession, trackerEnvironment);
+            trackerEnvironment = new(os.Platform.ToString(), os.Version.ToString(), os.VersionString);
+            analyticsSession = new();
+            tracker = new("UA-125850339-2", analyticsSession, trackerEnvironment);
             AppVersion = MainForm.VERSION;
             OSVersion = SetWindowsVersion(os.Version.ToString());
             bool windowsStoreApp = Application.ExecutablePath.Contains("WindowsApps");
             bool debugging = Application.ExecutablePath.Contains("GitRepo");
             DeploymentType = windowsStoreApp ? "Windows Store" : debugging ? "Development" : "Zip File";
             string resolution = Screen.PrimaryScreen.Bounds.ToString();
-#elif __MACOS__
-            var userDefaults = new NSUserDefaults();
-            GUID = userDefaults.StringForKey("AnalyticsKey");
-            if (string.IsNullOrEmpty(GUID))
-            {
-                GUID = Guid.NewGuid().ToString();
-                userDefaults.SetString(GUID, "AnalyticsKey");
-                userDefaults.Synchronize();
-            }
-            NSProcessInfo info = new NSProcessInfo();
-            OSVersion = $"MacOSX {info.OperatingSystemVersionString}";
-            trackerEnvironment = new SimpleTrackerEnvironment("Mac OSX", info.OperatingSystemVersion.ToString(), OSVersion);
-            analyticsSession = new AnalyticsSession();
-            tracker = new SimpleTracker("UA-125850339-2", analyticsSession, trackerEnvironment);
-            var app = (AppDelegate)NSApplication.SharedApplication.Delegate;
-            AppVersion = FamilyTree.Instance.Version;
-            DeploymentType = "Mac Website";
-            string resolution = NSScreen.MainScreen.Frame.ToString();
-#elif __IOS__
-            var userDefaults = new NSUserDefaults();
-            GUID = userDefaults.StringForKey("AnalyticsKey");
-            if (string.IsNullOrEmpty(GUID))
-            {
-                GUID = Guid.NewGuid().ToString();
-                userDefaults.SetString(GUID, "AnalyticsKey");
-                userDefaults.Synchronize();
-            }
-            NSProcessInfo info = new NSProcessInfo();
-            OSVersion = $"MacOSX {info.OperatingSystemVersionString}";
-            trackerEnvironment = new SimpleTrackerEnvironment("Mac OSX", info.OperatingSystemVersion.ToString(), OSVersion);
-            analyticsSession = new AnalyticsSession();
-            tracker = new SimpleTracker("UA-125850339-2", analyticsSession, trackerEnvironment);
-            var app = (AppDelegate)UIApplication.SharedApplication.Delegate;
-            AppVersion = FamilyTree.Instance.Version;
-            DeploymentType = "Mac Website";
-            string resolution = UIScreen.MainScreen.Bounds.ToString();
-
-#endif
             Resolution = resolution.Length > 11 ? resolution[9..^1] : resolution;
         }
 
-        public static async Task CheckProgramUsageAsync() // pre demise of Windows 7 add tracker to check how many machines still use old versions
+        public static async Task CheckProgramUsageAsync()
         {
             try
             {
-                await tracker.TrackEventAsync(FTAStartupAction, LoadProgramEvent, AppVersion).ConfigureAwait(false);
-                await tracker.TrackScreenviewAsync(FTAStartupAction).ConfigureAwait(false);
+                await tracker.TrackEventAsync(FTAStartupAction, LoadProgramEvent, AppVersion);
+                await tracker.TrackScreenviewAsync(FTAStartupAction);
             }
             catch (Exception e)
                 { Debug.WriteLine(e.Message); }
@@ -147,20 +96,19 @@ namespace FTAnalyzer.Utilities
         {
             try
             {
-                await tracker.TrackEventAsync(category, action, value).ConfigureAwait(false);
-                await tracker.TrackScreenviewAsync(category).ConfigureAwait(false);
+                await tracker.TrackEventAsync(category, action, value);
+                await tracker.TrackScreenviewAsync(category);
             }
             catch (Exception e)
                 { Debug.WriteLine(e.Message); }
         }
 
-#if __PC__
         public static async Task EndProgramAsync()
         {
             try
             {
                 TimeSpan duration = DateTime.Now - Settings.Default.StartTime;
-                await SpecialMethods.TrackEventAsync(tracker, FTAShutdownAction, UsageEvent, duration.ToString("c")).ConfigureAwait(false);
+                await SpecialMethods.TrackEventAsync(tracker, FTAShutdownAction, UsageEvent, duration.ToString("c"));
             }
             catch (Exception e)
             { Debug.WriteLine(e.Message); }
@@ -197,6 +145,5 @@ namespace FTAnalyzer.Utilities
             result += Environment.Is64BitOperatingSystem ? " (x64)" : " (x86)";
             return result;
         }
-#endif
     }
 }
