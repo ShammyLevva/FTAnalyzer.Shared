@@ -29,21 +29,6 @@ namespace FTAnalyzer
         const string FULLEARLY = "d MMM yyy";
         const string DISPLAY = "d MMM yyyy";
         const string CHECKING = "d MMM";
-        const string DATE_PATTERN = "^(\\d{0,2} )?([A-Z]{0,3}) *(\\d{0,4})$";
-        const string INTERPRETED_DATE_PATTERN = "^INT (\\d{0,2} )?([A-Z]{0,3}) *(\\d{0,4}) .*$";
-        const string EARLY_DATE_PATTERN = "^(\\d{3})$";
-        const string DOUBLE_DATE_PATTERN = "^(\\d{0,2} )?([A-Z]{0,3}) *(\\d{0,4})/(\\d{0,2})$";
-        const string DOUBLE_DATE_PATTERN2 = "^(\\d{0,2} )?([A-Z]{0,3}) *(\\d{4})/(\\d{4})$";
-        const string DOUBLE_DATE_PATTERN3 = "^(\\d{0,2} )?([A-Z]{0,3}) *(\\d{3})/(\\d{2,3})$";
-        const string POSTFIX = "(\\d{1,2})(?:ST|ND|RD|TH)(.*)";
-        const string BETWEENFIX = "(\\d{4}) *- *(\\d{4})";
-        const string BETWEENFIX2 = "([A-Z]{0,3}) *(\\d{4}) *- *([A-Z]{0,3}) *(\\d{4})";
-        const string BETWEENFIX3 = "(\\d{0,2} )?([A-Z]{0,3}) *(\\d{4}) *- *(\\d{0,2} )?([A-Z]{0,3}) *(\\d{4})";
-        const string BETWEENFIX4 = "(\\d{1,2}) *- *(\\d{1,2} )?([A-Z]{0,3}) *(\\d{4})";
-        const string BETWEENFIX5 = "(\\d{1,2} )?([A-Z]{0,3}) *- *(\\d{1,2} )?([A-Z]{0,3}) *(\\d{4})";
-        const string USDATEFIX = "^([A-Z]{3}) *(\\d{1,2} )(\\d{4})$";
-        const string SPACEFIX = "^(\\d{1,2}) *([A-Z]{3}) *(\\d{0,4})$";
-        const string QUAKERFIX = "^(\\d{1,2})D (\\d{1,2})M (\\d{0,4})$";
 
         public readonly static FactDate UNKNOWN_DATE;
         public readonly static FactDate MARRIAGE_LESS_THAN_13;
@@ -141,7 +126,7 @@ namespace FTAnalyzer
 
         string FixTextDateFormats(string str)
         {
-            if(str.StartsWith("<") && str.EndsWith(">"))
+            if(str.StartsWith('<') && str.EndsWith('>'))
                 str = str[1..^1];
             str = ReplaceSpecialCharacters(str);
             str = str.Replace("DIED IN INFANCY", "INFANT");
@@ -174,8 +159,8 @@ namespace FTAnalyzer
         {
             str = EnhancedTextInfo.RemoveSupriousDateCharacters(str.Trim().ToUpper());
             if (!NonGedcomDate.Default.UseNonGedcomDates || NonGedcomDate.Default.Separator != ".")
-                str = str.Replace(".", " ");
-            if (str.StartsWith("<") && str.EndsWith(">"))
+                str = str.Replace('.', ' ');
+            if (str.StartsWith('<') && str.EndsWith('>'))
                 str = str.Replace("<", "").Replace(">", "");
             // remove date qualifiers first
             str = ReplaceSpecialCharacters(str);
@@ -414,11 +399,11 @@ namespace FTAnalyzer
                 str = str.Replace("TO", "BEF"); // year will be one out
                 yearfix = +1;
             }
-            if (str.StartsWith(">", StringComparison.Ordinal))
+            if (str.StartsWith('>'))
                 str = str.Replace(">", "AFT ");
-            if (str.StartsWith("<", StringComparison.Ordinal))
+            if (str.StartsWith('<'))
                 str = str.Replace("<", "BEF ");
-            if (str.StartsWith("~", StringComparison.Ordinal))
+            if (str.StartsWith('~'))
                 str = str.Replace("~", "ABT ");
             if (str.StartsWith("C1", StringComparison.Ordinal) || str.StartsWith("C2", StringComparison.Ordinal) ||
                 str.StartsWith("C 1", StringComparison.Ordinal) || str.StartsWith("C 2", StringComparison.Ordinal))
@@ -629,7 +614,7 @@ namespace FTAnalyzer
                     int pos = processDate.IndexOf(" AND ", StringComparison.Ordinal);
                     if (pos == -1)
                     {
-                        pos = processDate.IndexOf("-", StringComparison.Ordinal);
+                        pos = processDate.IndexOf('-');
                         byte[] asciiBytes = Encoding.ASCII.GetBytes(processDate);
                         if (pos == -1)
                             throw new FactDateException("Invalid BETween date no AND found");
@@ -648,7 +633,7 @@ namespace FTAnalyzer
                         fromdate = "01 " + fromdate + processDate[(pos + 8)..];
                     else if (fromdate.Length == 4)
                         fromdate = "01 JAN " + fromdate;
-                    else if (fromdate.Length < 7 && fromdate.IndexOf(" ", StringComparison.Ordinal) > 0)
+                    else if (fromdate.Length < 7 && fromdate.IndexOf(' ') > 0)
                         fromdate = fromdate + " " + processDate[(pos + 11)..];
                     StartDate = ParseDate(fromdate.Replace("  ", " "), LOW, 0, EndDate.Year);
                     EndDate = ParseDate(todate, HIGH, 0);
@@ -663,7 +648,7 @@ namespace FTAnalyzer
             }
             catch (Exception e)
             {
-                if(OriginalString.StartsWith("(") && OriginalString.EndsWith(")")) // do not throw error if date
+                if(OriginalString.StartsWith('(') && OriginalString.EndsWith(')')) // do not throw error if date
                 {
                     Debug.WriteLine("we have a text date with brackets");
                 }
@@ -713,8 +698,8 @@ namespace FTAnalyzer
                         gMonth = matcher.Groups[2];
                         gYear = matcher.Groups[3];
                         gDouble = matcher.Groups[4];
-                        if (dateValue.IndexOf("/", StringComparison.Ordinal) > 0)
-                            dateValue = dateValue[..dateValue.IndexOf("/", StringComparison.Ordinal)]; // remove the trailing / and 1 or 2 digits
+                        if (dateValue.IndexOf('/') > 0)
+                            dateValue = dateValue[..dateValue.IndexOf('/')]; // remove the trailing / and 1 or 2 digits
                     }
                     else if (matcher2.Success)
                     {
@@ -731,8 +716,8 @@ namespace FTAnalyzer
                         gMonth = matcher3.Groups[2];
                         gYear = matcher3.Groups[3];
                         gDouble = matcher3.Groups[4];
-                        if (dateValue.IndexOf("/", StringComparison.Ordinal) > 0)
-                            dateValue = dateValue[..dateValue.IndexOf("/", StringComparison.Ordinal)]; // remove the trailing / and 1 or 2 digits
+                        if (dateValue.IndexOf('/') > 0)
+                            dateValue = dateValue[..dateValue.IndexOf('/')]; // remove the trailing / and 1 or 2 digits
                     }
                     else if (NonGedcomDate.Default.UseNonGedcomDates)
                     {
