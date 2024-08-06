@@ -77,11 +77,11 @@ namespace FTAnalyzer
             HasParents = false;
             HasOnlyOneParent = false;
             ReferralFamilyID = string.Empty;
-            Facts = new List<Fact>();
-            ErrorFacts = new List<Fact>();
-            Locations = new List<FactLocation>();
-            FamiliesAsChild = new List<ParentalRelationship>();
-            FamiliesAsSpouse = new List<Family>();
+            Facts = [];
+            ErrorFacts = [];
+            Locations = [];
+            FamiliesAsChild = [];
+            FamiliesAsSpouse = [];
             preferredFacts = [];
             _allfacts = null;
             _allFileFacts = null;

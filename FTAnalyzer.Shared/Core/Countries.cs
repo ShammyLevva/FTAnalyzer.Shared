@@ -37,7 +37,7 @@ namespace FTAnalyzer
             NAMIBIA = "Namibia", NIGER = "Niger", NICARAGUA = "Nicaragua", NEPAL = "Nepal", NAURU = "Nauru", OMAN = "Oman",
             PANAMA = "Panama", PERU = "Peru", PAPUA_NEW_GUINEA = "Papua New Guinea", PHILIPPINES = "Philippines", PALAU = "Palau",
             PARAGUAY = "Paraguay", QATAR = "Qatar", SERBIA = "Serbia", RWANDA = "Rwanda", SAUDI_ARABIA = "Saudi Arabia",
-            SOLOMON_ISLANDS = "Solomon Islands", SEYSCHELLES = "Seyschelles", SUDAN = "Sudan", SLOVENIA = "Slovenia",
+            SOLOMON_ISLANDS = "Solomon Islands", SEYCHELLES = "Seychelles", SUDAN = "Sudan", SLOVENIA = "Slovenia",
             SLOVAKIA = "Slovakia", CZECH_REPUBLIC = "Czech Republic", CZECHOSLOVAKIA = "Czechoslovakia", SENEGAL = "Senegal",
             SIERRA_LEONE = "Sierra Leone", SOMALIA = "Somalia", SURINAME = "Suriname", SOUTH_SUDAN = "South Sudan",
             EL_SALVADOR = "El Salvador", SYRIA = "Syria", SWAZILAND = "Swaziland", CHAD = "Chad", SOUTH_KOREA = "South Korea",
@@ -60,7 +60,7 @@ namespace FTAnalyzer
             NEW_CALEDONIA = "New Caledonia", NIEU = "Nieu", PUERTO_RICO = "Puerto Rico",
             FRENCH_POLYNESIA = "French Polynesia", SAINT_HELENA = "Saint Helena", AT_SEA = "At Sea", OVERSEAS_UK = "Vessels UK and Overseas";
 
-        static readonly ISet<string> KNOWN_COUNTRIES = new HashSet<string>(new string[] {
+        static readonly HashSet<string> KNOWN_COUNTRIES = new([
             SCOTLAND, ENGLAND, CANADA, UNITED_STATES, WALES, IRELAND, UNITED_KINGDOM, NEW_ZEALAND, AUSTRALIA, INDIA, FRANCE, GERMANY,
             ITALY, SPAIN, BELGIUM, SOUTH_AFRICA, NORTHERN_IRELAND, EGYPT, HUNGARY, MALTA, DENMARK, SWEDEN, NORWAY, FINLAND, ICELAND,
             SWITZERLAND, AUSTRIA, NETHERLANDS, CHINA, ZIMBABWE, JAPAN, RUSSIA, POLAND, ST_LUCIA, LUXEMBOURG, ISLE_OF_MAN, GREECE,
@@ -73,7 +73,7 @@ namespace FTAnalyzer
             HAITI, KYRGYZSTAN, CAMBODIA, KIRIBATI, COMOROS, KUWAIT, KAZAKHSTAN, LEBANON, LIBERIA, LESOTHO, MOROCCO, MADAGASCAR,
             MALI, MACEDONIA, MARSHALL_ISLANDS, MYANMAR, MONGOLIA, MAURITANIA, MALDIVES, MALAWI, MALAYSIA, MOZAMBIQUE, NAMIBIA, NIGER,
             NICARAGUA, NEPAL, NAURU, OMAN, PANAMA, PERU, PAPUA_NEW_GUINEA, PHILIPPINES, PALAU, PARAGUAY, QATAR, SERBIA, RWANDA,
-            SAUDI_ARABIA, SOLOMON_ISLANDS, SEYSCHELLES, SUDAN, SLOVAKIA, SLOVENIA, CZECH_REPUBLIC, CZECHOSLOVAKIA, SENEGAL, SIERRA_LEONE,
+            SAUDI_ARABIA, SOLOMON_ISLANDS, SEYCHELLES, SUDAN, SLOVAKIA, SLOVENIA, CZECH_REPUBLIC, CZECHOSLOVAKIA, SENEGAL, SIERRA_LEONE,
             SOMALIA, SURINAME, SOUTH_SUDAN, EL_SALVADOR, SYRIA, SWAZILAND, CHAD, SOUTH_KOREA, NORTH_KOREA, KOREA, IVORY_COAST, TOGO,
             THAILAND, TAJIKISTAN, TURKMENISTAN, TUNISIA, TONGA, TUVALU, TRINIDAD_TOBAGO, TANZANIA, UGANDA, URUGUAY, UZBEKISTAN, VENEZUELA,
             VIETNAM, VANUATU, SAMOA, YEMEN, ZAMBIA, BURKINA_FASO, BOSNIA, CHANNEL_ISLANDS, GIBRALTAR, HONG_KONG, ARUBA, IVORY_COAST_FR,
@@ -81,15 +81,15 @@ namespace FTAnalyzer
             LAO, LAO_FULL, PALESTINE, TIMOR_LESTE, TAIWAN, GUINEA_BISSAU, SAO_TOME_PRINCIPE, TOKELAU, SAINT_VINCENT, SAINT_VINCENT_FULL,
             ANTARTICA, CAYMAN, WESTERN_SAHARA, FALKLAND_ISLANDS, FAROES, GUADELOUPE, GREENLAND, FRENCH_GUIANA, GUAM, MACAO, MONSERRAT,
             MARTINIQUE, MAYOTTE, NEW_CALEDONIA, NIEU, PUERTO_RICO, FRENCH_POLYNESIA, SAINT_HELENA, AT_SEA, OVERSEAS_UK
-        });
+        ]);
 
-        static readonly ISet<string> UK_COUNTRIES = new HashSet<string>(new string[] {
+        static readonly HashSet<string> UK_COUNTRIES = new([
             SCOTLAND, ENGLAND, WALES, ENG_WALES, UNITED_KINGDOM, NORTHERN_IRELAND, ISLE_OF_MAN, CHANNEL_ISLANDS, OVERSEAS_UK
-        });
+        ]);
 
-        static readonly ISet<string> CENSUS_COUNTRIES = new HashSet<string>(new string[] {
+        static readonly HashSet<string> CENSUS_COUNTRIES = new([
             SCOTLAND, ENGLAND, WALES, ENG_WALES, UNITED_KINGDOM, UNITED_STATES, CANADA, ISLE_OF_MAN, IRELAND, CHANNEL_ISLANDS, OVERSEAS_UK
-        });
+        ]);
 
 #if __PC__
         static readonly Dictionary<string, Envelope> BOUNDING_BOXES;
@@ -136,8 +136,8 @@ namespace FTAnalyzer
 #if __PC__
         public static Envelope BoundingBox(string country)
         {
-            if (BOUNDING_BOXES.ContainsKey(country))
-                return BOUNDING_BOXES[country];
+            if (BOUNDING_BOXES.TryGetValue(country, out Envelope? value))
+                return value;
             else
                 return WHOLE_WORLD;
         }

@@ -29,8 +29,8 @@ namespace FTAnalyzer
         Family(string familyID)
         {
             FamilyID = familyID;
-            Facts = new List<Fact>();
-            Children = new List<Individual>();
+            Facts = [];
+            Children = [];
 
             _preferredFacts = [];
 

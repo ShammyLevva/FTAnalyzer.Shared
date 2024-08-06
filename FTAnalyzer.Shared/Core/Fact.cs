@@ -35,31 +35,31 @@ namespace FTAnalyzer
 
         public const string ANCESTRY_DEATH_CAUSE = "_DCAUSE";
 
-        public static readonly ISet<string> LOOSE_BIRTH_FACTS = new HashSet<string>(new string[] {
+        public static readonly ISet<string> LOOSE_BIRTH_FACTS = new HashSet<string>([
             CHRISTENING, BAPTISM, RESIDENCE, WITNESS, EMIGRATION, IMMIGRATION, ARRIVAL, DEPARTURE,
             EDUCATION, DEGREE, ADOPTION, BAR_MITZVAH, BAS_MITZVAH, ADULT_CHRISTENING, CONFIRMATION,
             FIRST_COMMUNION, ORDINATION, NATURALIZATION, GRADUATION, RETIREMENT, LOSTCOUSINS,
             LC_FTA, MARR_CONTRACT, MARR_LICENSE, MARR_SETTLEMENT, MARRIAGE, MARRIAGE_BANN, DEATH,
             CREMATION, BURIAL, CENSUS, BIRTH_CALC, CENSUS_SUMMARY
-                    });
+                    ]);
 
-        public static readonly ISet<string> LOOSE_DEATH_FACTS = new HashSet<string>(new string[] {
+        public static readonly ISet<string> LOOSE_DEATH_FACTS = new HashSet<string>([
             CENSUS, RESIDENCE, WITNESS, EMIGRATION, IMMIGRATION, ARRIVAL, DEPARTURE, EDUCATION,
             DEGREE, ADOPTION, BAR_MITZVAH, BAS_MITZVAH, ADULT_CHRISTENING, CONFIRMATION, FIRST_COMMUNION,
             ORDINATION, NATURALIZATION, GRADUATION, RETIREMENT, LOSTCOUSINS, LC_FTA, CENSUS_SUMMARY
-                    });
+                    ]);
 
-        public static readonly ISet<string> RANGED_DATE_FACTS = new HashSet<string>(new string[] {
+        public static readonly ISet<string> RANGED_DATE_FACTS = new HashSet<string>([
             EDUCATION, OCCUPATION, RESIDENCE, RETIREMENT, MILITARY, ELECTION, DEGREE, EMPLOYMENT, MEDICAL_CONDITION
-                    });
+                    ]);
 
-        public static readonly ISet<string> IGNORE_LONG_RANGE = new HashSet<string>(new string[] {
+        public static readonly ISet<string> IGNORE_LONG_RANGE = new HashSet<string>([
             MARRIAGE, CHILDREN
-                    });
+                    ]);
 
-        public static readonly ISet<string> CREATED_FACTS = new HashSet<string>(new string[] {
+        public static readonly ISet<string> CREATED_FACTS = new HashSet<string>([
             CENSUS_FTA, CHILDREN, PARENT, BIRTH_CALC, LC_FTA
-                    });
+                    ]);
 
         public static readonly Dictionary<string, string> NON_STANDARD_FACTS = [];
         static readonly Dictionary<string, string> CUSTOM_TAGS = [];
@@ -413,7 +413,7 @@ namespace FTAnalyzer
             Comment = string.Empty;
             Place = string.Empty;
             Location = FactLocation.BLANK_LOCATION;
-            Sources = new List<FactSource>();
+            Sources = [];
             CensusReference = CensusReference.UNKNOWN;
             CertificatePresent = false;
             FactErrorLevel = FactError.GOOD;

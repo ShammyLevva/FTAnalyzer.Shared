@@ -25,15 +25,15 @@ namespace FTAnalyzer
         #region Variables
         static FamilyTree instance;
 
-        IList<FactSource> sources;
-        IList<Individual> individuals;
-        IList<Family> families;
-        IList<Tuple<string, Fact>> sharedFacts;
-        IList<AncestryTreeTag> ancestryTreeTags;
-        IDictionary<string, List<Individual>> occupations;
-        IDictionary<StandardisedName, StandardisedName> names;
-        IDictionary<string, List<Individual>> unknownIndividualFactTypes;
-        IDictionary<string, List<Family>> unknownFamilyFactTypes;
+        List<FactSource> sources;
+        List<Individual> individuals;
+        List<Family> families;
+        List<Tuple<string, Fact>> sharedFacts;
+        List<AncestryTreeTag> ancestryTreeTags;
+        Dictionary<string, List<Individual>> occupations;
+        Dictionary<StandardisedName, StandardisedName> names;
+        Dictionary<string, List<Individual>> unknownIndividualFactTypes;
+        Dictionary<string, List<Family>> unknownFamilyFactTypes;
         SortableBindingList<IDisplayLocation>[] displayLocations;
         SortableBindingList<IDisplayLooseDeath> looseDeaths;
         SortableBindingList<IDisplayLooseBirth> looseBirths;
@@ -191,16 +191,16 @@ namespace FTAnalyzer
         public void ResetData()
         {
             DataLoaded = false;
-            sources = new List<FactSource>();
-            individuals = new List<Individual>();
-            families = new List<Family>();
-            sharedFacts = new List<Tuple<string, Fact>>();
-            ancestryTreeTags = new List<AncestryTreeTag>();
-            occupations = new Dictionary<string, List<Individual>>();
-            names = new Dictionary<StandardisedName, StandardisedName>();
-            unknownIndividualFactTypes = new Dictionary<string, List<Individual>>();
-            unknownFamilyFactTypes = new Dictionary<string, List<Family>>();
-            DataErrorTypes = new List<DataErrorGroup>();
+            sources = [];
+            individuals = [];
+            families = [];
+            sharedFacts = [];
+            ancestryTreeTags = [];
+            occupations = [];
+            names = [];
+            unknownIndividualFactTypes = [];
+            unknownFamilyFactTypes = [];
+            DataErrorTypes = [];
             displayLocations = new SortableBindingList<IDisplayLocation>[5];
             rootIndividualID = string.Empty;
             SoloFamilies = 0;
@@ -1951,7 +1951,7 @@ namespace FTAnalyzer
             int catchCount = 0;
             int totalRecords = (individuals.Count + families.Count) / 40 + 1; //only count for 40% of progressbar
             int record = 0;
-            DataErrorTypes = new List<DataErrorGroup>();
+            DataErrorTypes = [];
             List<DataError>[] errors = new List<DataError>[DATA_ERROR_GROUPS];
             for (int i = 0; i < DATA_ERROR_GROUPS; i++)
                 errors[i] = [];
@@ -3439,7 +3439,7 @@ namespace FTAnalyzer
             }
             try
             {
-                duplicates = new SortableBindingList<DuplicateIndividual>(buildDuplicates.ToList());
+                duplicates = new SortableBindingList<DuplicateIndividual>([.. buildDuplicates]);
                 maximum.Report(MaxDuplicateScore());
                 DeserializeNonDuplicates();
                 return BuildDuplicateList(value, progress, progressText);
