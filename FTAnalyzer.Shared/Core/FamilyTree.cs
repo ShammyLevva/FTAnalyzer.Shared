@@ -3462,7 +3462,7 @@ namespace FTAnalyzer
             return score;
         }
 
-        void IdentifyDuplicates(bool ignoreUnknownTwins, IList<Individual> list, CancellationToken ct)
+        void IdentifyDuplicates(bool ignoreUnknownTwins, List<Individual> list, CancellationToken ct)
         {
             for (var i = 0; i < list.Count; i++)
             {

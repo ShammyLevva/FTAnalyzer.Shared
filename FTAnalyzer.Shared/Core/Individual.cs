@@ -317,7 +317,7 @@ namespace FTAnalyzer
 
         public IList<Fact> PersonalFacts => Facts;
 
-        IList<Fact> FamilyFacts
+        List<Fact> FamilyFacts
         {
             get
             {
