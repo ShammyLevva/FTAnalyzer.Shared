@@ -1,6 +1,5 @@
 ﻿using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
-using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -593,10 +592,8 @@ namespace FTAnalyzer
             }
         }
 
-        const string CHILDREN_STATUS_PATTERN1 = @"(\d{1,2}) Total ?,? ?(\d{1,2}) (Alive|Living) ?,? ?(\d{1,2}) Dead";
-        const string CHILDREN_STATUS_PATTERN2 = @"Total:? (\d{1,2}) ?,? ?(Alive|Living):? (\d{1,2}) ?,? ?Dead:? (\d{1,2})";
-        public readonly static Regex regexChildren1 = new(CHILDREN_STATUS_PATTERN1, RegexOptions.Compiled);
-        public readonly static Regex regexChildren2 = new(CHILDREN_STATUS_PATTERN2, RegexOptions.Compiled);
+        public readonly static Regex regexChildren1 = RegexPatterns.ChildrenStatusPattern1();
+        public readonly static Regex regexChildren2 = RegexPatterns.ChildrenStatusPattern2();
 
         void CheckValidChildrenStatus(XmlNode node)
         {
@@ -1081,5 +1078,7 @@ namespace FTAnalyzer
         public override string ToString() =>
             FactTypeDescription + ": " + FactDate + (Location.ToString().Length > 0 ? " at " + Location : string.Empty) + (Comment.Length > 0 ? "  (" + Comment + ")" : string.Empty);
         public string FactDateLocation => $"{FactTypeDescription}: {FactDate}";
+
+       
     }
 }
