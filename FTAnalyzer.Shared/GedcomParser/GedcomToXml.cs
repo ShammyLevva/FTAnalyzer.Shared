@@ -120,7 +120,7 @@ namespace FTAnalyzer
             int prevlevel = -1;
             string iden, tag, xref, value;
             int cpos1;
-            Dictionary<long, Tuple<string, string>> lineErrors = new();
+            Dictionary<long, Tuple<string, string>> lineErrors = [];
             Stack<string> stack = new();
             stack.Push("GED");
             XmlDocument? document = new() { XmlResolver = null };
@@ -151,7 +151,7 @@ namespace FTAnalyzer
                         try
                         {
                             line = line.Replace('–', '-').Replace('—', '-').Replace("&nbsp;"," ").Replace(" * **Data is already there***", ""); // "data is already there" is some Ancestry anomaly
-                            cpos1 = line.IndexOf(" ", StringComparison.Ordinal);
+                            cpos1 = line.IndexOf(' ');
                             if (cpos1 < 0) throw new InvalidGEDCOMException($"No space found in line: '{line}'", line, lineNr);
 
                             level = FirstWord(line);
@@ -172,11 +172,11 @@ namespace FTAnalyzer
                             line = Remainder(line);
                             if (thislevel == 1 && token1 == "NAME")
                                 currentName = line;
-                            if (token1.StartsWith("@", StringComparison.Ordinal))
+                            if (token1.StartsWith('@'))
                             {
                                 if (token1.EndsWith("@@?"))
                                     token1 = token1.TrimEnd('?');
-                                if (token1.Length == 1 || !token1.EndsWith("@", StringComparison.Ordinal))
+                                if (token1.Length == 1 || !token1.EndsWith('@'))
                                     throw new InvalidGEDCOMException($"Bad xref_id invalid @ character in line. Check notes for use of @ symbol", line, lineNr);
 
                                 iden = token1[1..^1];
@@ -190,14 +190,14 @@ namespace FTAnalyzer
                             }
 
                             xref = "";
-                            if (line.StartsWith("@", StringComparison.Ordinal) && tag != "_HASHTAG" & tag != "NAME")
+                            if (line.StartsWith('@') && tag != "_HASHTAG" & tag != "NAME")
                             {
                                 if (!token1.Equals("CONT", StringComparison.Ordinal) && !token1.Equals("CONC", StringComparison.Ordinal))
                                 {
                                     token2 = FirstWord(line);
                                     if (token2.EndsWith("@@?"))
                                         token2 = token2.TrimEnd('?');
-                                    if (token2.Length == 1 || (!token2.EndsWith("@", StringComparison.Ordinal) && !token2.EndsWith("@,", StringComparison.Ordinal)))
+                                    if (token2.Length == 1 || (!token2.EndsWith('@') && !token2.EndsWith("@,", StringComparison.Ordinal)))
                                         throw new InvalidGEDCOMException($"Bad pointer value. Check notes for use of @ symbol", line, lineNr);
                                     xref = token2.EndsWith("@,", StringComparison.Ordinal)
                                         ? token2[1..^2]
@@ -392,7 +392,7 @@ namespace FTAnalyzer
         static string FirstWord(string inp)
         {
             int i;
-            i = inp.IndexOf(" ", StringComparison.Ordinal);
+            i = inp.IndexOf(' ');
             return i == 0 ? FirstWord(inp.Trim()) : i < 0 ? inp : inp[..i].Trim();
         }
 
@@ -403,7 +403,7 @@ namespace FTAnalyzer
         static string Remainder(string inp)
         {
             int i;
-            i = inp.IndexOf(" ", StringComparison.Ordinal);
+            i = inp.IndexOf(' ');
             return i == 0 ? Remainder(inp.Trim()) : i < 0 ? "" : inp[(i + 1)..].Trim();
         }
 
@@ -430,7 +430,9 @@ namespace FTAnalyzer
             else if (buffer[0] == 0 && buffer[1] == 0 && buffer[2] == 0xfe && buffer[3] == 0xff)
                 enc = Encoding.UTF32;
             else if (buffer[0] == 0x2b && buffer[1] == 0x2f && buffer[2] == 0x76)
+#pragma warning disable SYSLIB0001 // Type or member is obsolete
                 enc = Encoding.UTF7;
+#pragma warning restore SYSLIB0001 // Type or member is obsolete
             else if (buffer[0] == 0xff && buffer[1] == 0xfe && buffer[2] == 0 && buffer[3] == 0) // UTF32 little endian
                 enc = Encoding.UTF32;
             else if (buffer[0] == 0xff && buffer[1] == 0xfe) // UTF16 little endian
