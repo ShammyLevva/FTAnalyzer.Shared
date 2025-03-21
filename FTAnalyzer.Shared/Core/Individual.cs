@@ -247,11 +247,11 @@ namespace FTAnalyzer
                 HasOnlyOneParent = i.HasOnlyOneParent;
                 ReferralFamilyID = i.ReferralFamilyID;
                 CommonAncestor = i.CommonAncestor;
-                Facts = new List<Fact>(i.Facts);
-                ErrorFacts = new List<Fact>(i.ErrorFacts);
-                Locations = new List<FactLocation>(i.Locations);
-                FamiliesAsChild = new List<ParentalRelationship>(i.FamiliesAsChild);
-                FamiliesAsSpouse = new List<Family>(i.FamiliesAsSpouse);
+                Facts = [.. i.Facts];
+                ErrorFacts = [.. i.ErrorFacts];
+                Locations = [.. i.Locations];
+                FamiliesAsChild = [.. i.FamiliesAsChild];
+                FamiliesAsSpouse = [.. i.FamiliesAsSpouse];
                 preferredFacts = new Dictionary<string, Fact>(i.preferredFacts);
             }
         }
@@ -342,7 +342,7 @@ namespace FTAnalyzer
                     foreach(Fact f in FamilyFacts)
                         if(!_allfacts.Contains(f))
                             _allfacts.Add(f);
-                    _allFileFacts = _allfacts.Where(x => !x.Created).ToList();
+                    _allFileFacts = [.. _allfacts.Where(x => !x.Created)];
                     Factcount = _allfacts.Count;
                 }
                 return _allfacts;

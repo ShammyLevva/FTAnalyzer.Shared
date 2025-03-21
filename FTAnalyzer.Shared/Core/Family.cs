@@ -185,10 +185,10 @@ namespace FTAnalyzer
         internal Family(Family f)
         {
             FamilyID = f.FamilyID;
-            Facts = new List<Fact>(f.Facts);
+            Facts = [.. f.Facts];
             Husband = f.Husband is null ? null : new Individual(f.Husband);
             Wife = f.Wife is null ? null : new Individual(f.Wife);
-            Children = new List<Individual>(f.Children);
+            Children = [.. f.Children];
             _preferredFacts = new Dictionary<string, Fact>(f._preferredFacts);
             ExpectedTotal = f.ExpectedTotal;
             ExpectedAlive = f.ExpectedAlive;

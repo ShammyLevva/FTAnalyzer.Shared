@@ -710,7 +710,7 @@ namespace FTAnalyzer
             StringBuilder output = new();
             output.Append("Lost Cousins facts recorded:\n\n");
 
-            IEnumerable<Individual> listToCheck = AllIndividuals.Filter(relationFilter).ToList();
+            IEnumerable<Individual> listToCheck = [.. AllIndividuals.Filter(relationFilter)];
             MissingLCEntries = [];
 
             int countEW1841 = listToCheck.Count(ind => ind.IsLostCousinsEntered(CensusDate.EWCENSUS1841, false));
@@ -833,14 +833,14 @@ namespace FTAnalyzer
 
             bool missingLC(CensusIndividual x) => x.MissingLostCousins(censusDate, false) && x.CensusReference is not null && x.CensusReference.IsGoodStatus;
             Predicate<CensusIndividual> missingFilter = FilterUtils.AndFilter(relationFilter, missingLC);
-            List<CensusIndividual> missingIndiv = censusFamilies.SelectMany(f => f.Members).Filter(missingFilter).Distinct(new CensusIndividualComparer()).ToList();
+            List<CensusIndividual> missingIndiv = [.. censusFamilies.SelectMany(f => f.Members).Filter(missingFilter).Distinct(new CensusIndividualComparer())];
             bool invalidRef(CensusIndividual x) => x.MissingLostCousins(censusDate, false) && x.CensusReference is not null && !x.CensusReference.IsGoodStatus;
             //bool nameFilter(CensusIndividual x) => x.LCForename.Length > 0 && x.LCSurname.Length > 0 && x.Surname != Individual.UNKNOWN_NAME && x.LCSurname !=Individual.UNKNOWN_NAME;
             //bool ageFilter(CensusIndividual x) => x.Age != Age.Unknown;
             Predicate<CensusIndividual> invalidRefFilter = FilterUtils.AndFilter(relationFilter, invalidRef);
             //FilterUtils.AndFilter(FilterUtils.AndFilter(relationFilter, invalidRef), FilterUtils.AndFilter<CensusIndividual>(nameFilter, ageFilter));
 
-            List<CensusIndividual> invalidRefIndiv = censusFamilies.SelectMany(f => f.Members).Filter(invalidRefFilter).Distinct(new CensusIndividualComparer()).ToList();
+            List<CensusIndividual> invalidRefIndiv = [.. censusFamilies.SelectMany(f => f.Members).Filter(invalidRefFilter).Distinct(new CensusIndividualComparer())];
             int missing = MissingLCEntries[censusDate];
             output.Append($"{censusDate}: {missingIndiv.Count} possible {missing - missingIndiv.Count} without valid Lost Cousins details\n");
             return Tuple.Create(missingIndiv, invalidRefIndiv);
@@ -945,7 +945,7 @@ namespace FTAnalyzer
 
         public int IndividualCount => individuals.Count;
 
-        public List<Individual> DeadOrAlive => individuals.Filter(x => x.DeathDate.IsKnown && x.IsFlaggedAsLiving).ToList();
+        public List<Individual> DeadOrAlive => [.. individuals.Filter(x => x.DeathDate.IsKnown && x.IsFlaggedAsLiving)];
 
         public string NextSoloFamily { get { return $"SF{++SoloFamilies}"; } }
 
@@ -1101,7 +1101,7 @@ namespace FTAnalyzer
                     if (fam.Children.Count > 0)
                     {   // must be at least X years old at birth of child
                         List<Individual> childrenNoAFT =
-                            fam.Children.Filter(child => child.BirthDate.EndDate != FactDate.MAXDATE && !child.BirthDate.IsLongYearSpan).ToList();
+                            [.. fam.Children.Filter(child => child.BirthDate.EndDate != FactDate.MAXDATE && !child.BirthDate.IsLongYearSpan)];
                         if (childrenNoAFT.Count > 0)
                         {
                             int minChildYear = childrenNoAFT.Min(child => child.BirthDate.EndDate).Year;
@@ -1110,7 +1110,7 @@ namespace FTAnalyzer
                                 minEnd = minChild;
                         }
                         List<Individual> childrenNoBEF =
-                            fam.Children.Filter(child => child.BirthDate.StartDate != FactDate.MINDATE && !child.BirthDate.IsLongYearSpan).ToList();
+                            [.. fam.Children.Filter(child => child.BirthDate.StartDate != FactDate.MINDATE && !child.BirthDate.IsLongYearSpan)];
                         if (childrenNoBEF.Count > 0)
                         {
                             int maxChildYear = childrenNoBEF.Max(child => child.BirthDate.StartDate).Year;
@@ -1300,7 +1300,7 @@ namespace FTAnalyzer
                 FactDate marriageDate = fam.GetPreferredFactDate(Fact.MARRIAGE);
                 if (marriageDate.StartDate > maxdate && !marriageDate.IsLongYearSpan)
                     maxdate = marriageDate.StartDate;
-                List<Individual> childrenNoLongSpan = fam.Children.Filter(child => !child.BirthDate.IsLongYearSpan).ToList();
+                List<Individual> childrenNoLongSpan = [.. fam.Children.Filter(child => !child.BirthDate.IsLongYearSpan)];
                 if (childrenNoLongSpan.Count > 0)
                 {
                     DateTime maxChildBirthDate = childrenNoLongSpan.Max(child => child.BirthDate.StartDate);
@@ -1658,7 +1658,7 @@ namespace FTAnalyzer
             List<IDisplayLocation> result = [];
             //copy to list so that any GetLocation(level) that creates a new location 
             //won't cause an error due to collection changing
-            List<FactLocation> allLocations = FactLocation.AllLocations.ToList();
+            List<FactLocation> allLocations = [.. FactLocation.AllLocations];
             foreach (FactLocation loc in allLocations)
             {
                 FactLocation c = loc.GetLocation(level);
@@ -1666,7 +1666,7 @@ namespace FTAnalyzer
                     result.Add(c);
             }
             result.Sort(new FactLocationComparer(level));
-            displayLocations[level] = new SortableBindingList<IDisplayLocation>(result);
+            displayLocations[level] = [.. result];
             return displayLocations[level];
         }
 
@@ -1821,11 +1821,11 @@ namespace FTAnalyzer
             }
         }
 
-        public SortableBindingList<Individual> AllWorkers(string job) => new(occupations[job]);
+        public SortableBindingList<Individual> AllWorkers(string job) => [.. occupations[job]];
 
-        public SortableBindingList<Individual> AllCustomFactIndividuals(string factType) => new(unknownIndividualFactTypes[factType]);
+        public SortableBindingList<Individual> AllCustomFactIndividuals(string factType) => [.. unknownIndividualFactTypes[factType]];
 
-        public SortableBindingList<Family> AllCustomFactFamilies(string factType) => new(unknownFamilyFactTypes[factType]);
+        public SortableBindingList<Family> AllCustomFactFamilies(string factType) => [.. unknownFamilyFactTypes[factType]];
 
         public SortableBindingList<IDisplayFamily> PossiblyMissingChildFamilies
         {
@@ -1906,7 +1906,7 @@ namespace FTAnalyzer
             }
             else
                 filter = x => family.Members.Contains(x);
-            return individuals.Filter(filter).ToList<IDisplayColourCensus>();
+            return [.. individuals.Filter(filter)];
         }
 
         public List<IDisplayColourBMD> ColourBMD(Predicate<Individual> relTypeFilter, string surname, ComboBoxFamily? family)
@@ -1923,7 +1923,7 @@ namespace FTAnalyzer
             }
             else
                 filter = x => family.Members.Contains(x);
-            return individuals.Filter(filter).ToList<IDisplayColourBMD>();
+            return [.. individuals.Filter(filter)];
         }
 
         public List<IDisplayMissingData> MissingData(Predicate<Individual> relTypeFilter, string surname, ComboBoxFamily? family)
@@ -1940,7 +1940,7 @@ namespace FTAnalyzer
             }
             else
                 filter = x => family.Members.Contains(x);
-            return individuals.Filter(filter).ToList<IDisplayMissingData>();
+            return [.. individuals.Filter(filter)];
         }
         #endregion
 
@@ -2175,7 +2175,7 @@ namespace FTAnalyzer
                             womansChildren.AddRange(asParent.Children.Where(c => c.IsNaturalChildOf(ind)));
                         }
                     }
-                    womansChildren = womansChildren.Distinct().ToList(); // eliminate duplicate children
+                    womansChildren = [.. womansChildren.Distinct()]; // eliminate duplicate children
                     if (womansChildren.Count > 1) // only bother checking if we have two or more children.
                     {
                         womansChildren.Sort(new BirthDateComparer());
@@ -3393,7 +3393,7 @@ namespace FTAnalyzer
             return results;
         }
 
-        public static List<Individual> GetAllRelations(Individual ind) => GetFamily(ind).Union(GetAncestors(ind).Union(GetDescendants(ind))).ToList();
+        public static List<Individual> GetAllRelations(Individual ind) => [.. GetFamily(ind).Union(GetAncestors(ind).Union(GetDescendants(ind)))];
         #endregion
 
         #region Duplicates Processing
