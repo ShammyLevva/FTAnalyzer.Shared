@@ -108,7 +108,7 @@ namespace FTAnalyzer
                 Suffix = FamilyTree.GetText(node, "NSFX", false);
             if (string.IsNullOrEmpty(Suffix))
             {
-                string nameText = nameNode?.FirstChild?.Value.ToString() ?? string.Empty;
+                string nameText = nameNode?.FirstChild?.Value?.ToString() ?? string.Empty;
                 Suffix = nameText.Split('/').Last().Trim();
             }
 
