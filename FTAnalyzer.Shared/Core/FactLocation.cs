@@ -261,7 +261,7 @@ namespace FTAnalyzer
         {
             progress.Report("");
 #if __PC__
-            LOCAL_GOOGLE_FIXES = new Dictionary<Tuple<int, string>, string>();
+            LOCAL_GOOGLE_FIXES = [];
             try
             {
                 string filename = Path.Combine(MappingSettings.Default.CustomMapPath, "GoogleFixes.xml");
@@ -285,7 +285,7 @@ namespace FTAnalyzer
             }
             catch (Exception e)
             {
-                LOCAL_GOOGLE_FIXES = new Dictionary<Tuple<int, string>, string>();
+                LOCAL_GOOGLE_FIXES = [];
                 progress.Report(string.Format("Error processing user defined GoogleFixes.xml file. File will be ignored.\n\nError was : {0}", e.Message));
             }
 #endif
@@ -298,8 +298,7 @@ namespace FTAnalyzer
             Tuple<int, string> from = new(level, fromstr.ToUpperInvariant());
             if (from is not null && fromstr.Length > 0 && to is not null)
             {
-                if (!dictionary.ContainsKey(from))
-                    dictionary.Add(from, to);
+                dictionary.TryAdd(from, to);
             }
         }
 
@@ -331,7 +330,7 @@ namespace FTAnalyzer
             Place = string.Empty;
             ParishID = null;
             FuzzyMatch = string.Empty;
-            individuals = new Dictionary<string, Individual>();
+            individuals = [];
             Latitude = 0;
             Longitude = 0;
             LatitudeM = 0;
@@ -343,7 +342,7 @@ namespace FTAnalyzer
             FoundResultType = string.Empty;
             FoundLevel = -2;
             FTAnalyzerCreated = true; // override when GEDCOM created.
-            _Parts = new string[] { Country, Region, SubRegion, Address, Place };
+            _Parts = [Country, Region, SubRegion, Address, Place];
 #if __PC__
             ViewPort = new GeoResponse.CResult.CGeometry.CViewPort();
 #endif
@@ -378,17 +377,17 @@ namespace FTAnalyzer
                 {
                     Country = location[(comma + 1)..];
                     location = location[..comma];
-                    comma = location.LastIndexOf(",", comma, StringComparison.Ordinal);
+                    comma = location.LastIndexOf(',', comma);
                     if (comma > 0)
                     {
                         Region = location[(comma + 1)..];
                         location = location[..comma];
-                        comma = location.LastIndexOf(",", comma, StringComparison.Ordinal);
+                        comma = location.LastIndexOf(',', comma);
                         if (comma > 0)
                         {
                             SubRegion = location[(comma + 1)..];
                             location = location[..comma];
-                            comma = location.LastIndexOf(",", comma, StringComparison.Ordinal);
+                            comma = location.LastIndexOf(',', comma);
                             if (comma > 0)
                             {
                                 Address = location[(comma + 1)..];
@@ -456,7 +455,7 @@ namespace FTAnalyzer
                 if (!GeneralSettings.Default.SkipFixingLocations)
                     FixCapitalisation();
             }
-            _Parts = new string[] { Country, Region, SubRegion, Address, Place };
+            _Parts = [Country, Region, SubRegion, Address, Place];
         }
         #endregion
 
@@ -468,7 +467,7 @@ namespace FTAnalyzer
             FactLocation? temp;
             if (string.IsNullOrEmpty(place))
                 return BLANK_LOCATION;
-            if (place.ToUpper() == "UNKNOWN")
+            if (place.Equals("UNKNOWN", StringComparison.CurrentCultureIgnoreCase))
                 return UNKNOWN_LOCATION;
             // GEDCOM lat/long will be prefixed with NS and EW which needs to be +/- to work.
             latitude = latitude.Replace("N", "").Replace("S", "-");
@@ -525,7 +524,7 @@ namespace FTAnalyzer
 
         public bool IsValidLatLong => Latitude >= -90 && Latitude <= 90 && Longitude >= -180 && Longitude <= 180;
 
-        public static List<FactLocation> ExposeFactLocations => LOCATIONS.Values.ToList();
+        public static List<FactLocation> ExposeFactLocations => [.. LOCATIONS.Values];
 
         static void SaveLocationToDatabase(FactLocation loc)
         {
@@ -557,16 +556,16 @@ namespace FTAnalyzer
 
         public static void ResetLocations()
         {
-            COUNTRY_TYPOS = new Dictionary<string, string>();
-            REGION_TYPOS = new Dictionary<string, string>();
-            COUNTRY_SHIFTS = new Dictionary<string, string>();
-            REGION_SHIFTS = new Dictionary<string, string>();
-            CITY_ADD_COUNTRY = new Dictionary<string, string>();
-            FREECEN_LOOKUP = new Dictionary<string, string>();
-            FINDMYPAST_LOOKUP = new Dictionary<string, Tuple<string, string>>();
+            COUNTRY_TYPOS = [];
+            REGION_TYPOS = [];
+            COUNTRY_SHIFTS = [];
+            REGION_SHIFTS = [];
+            CITY_ADD_COUNTRY = [];
+            FREECEN_LOOKUP = [];
+            FINDMYPAST_LOOKUP = [];
             LOCATIONS = new Dictionary<string, FactLocation>();
-            GOOGLE_FIXES = new Dictionary<Tuple<int, string>, string>();
-            LOCAL_GOOGLE_FIXES = new Dictionary<Tuple<int, string>, string>();
+            GOOGLE_FIXES = [];
+            LOCAL_GOOGLE_FIXES = [];
 
             // set unknown location as unknown so it doesn't keep hassling to be searched
             LOCATIONS.Add("Unknown", UNKNOWN_LOCATION);
@@ -1061,10 +1060,10 @@ namespace FTAnalyzer
         {
             get
             {
-                HashSet<string> names = new();
+                HashSet<string> names = [];
                 foreach (Individual i in individuals.Values)
                     names.Add(i.Surname);
-                List<string> result = names.ToList();
+                List<string> result = [.. names];
                 result.Sort();
                 return result;
             }
@@ -1093,7 +1092,7 @@ namespace FTAnalyzer
 
         static string FixNumerics(string addressField, bool returnNumber)
         {
-            int pos = addressField.IndexOf(" ", StringComparison.Ordinal);
+            int pos = addressField.IndexOf(' ');
             if (pos > 0 & pos < addressField.Length)
             {
                 string number = addressField[..pos];
