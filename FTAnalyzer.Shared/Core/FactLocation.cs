@@ -69,17 +69,17 @@ namespace FTAnalyzer
         readonly string[] _Parts;
         bool _created;
 
-        static Dictionary<string, string> COUNTRY_TYPOS = new();
-        static Dictionary<string, string> REGION_TYPOS = new();
-        static Dictionary<string, string> REGION_SHIFTS = new();
-        static Dictionary<string, string> FREECEN_LOOKUP = new();
-        static Dictionary<string, Tuple<string, string>> FINDMYPAST_LOOKUP = new();
+        static Dictionary<string, string> COUNTRY_TYPOS = [];
+        static Dictionary<string, string> REGION_TYPOS = [];
+        static Dictionary<string, string> REGION_SHIFTS = [];
+        static Dictionary<string, string> FREECEN_LOOKUP = [];
+        static Dictionary<string, Tuple<string, string>> FINDMYPAST_LOOKUP = [];
         static IDictionary<string, FactLocation> LOCATIONS;
-        static Dictionary<Tuple<int, string>, string> GOOGLE_FIXES = new();
+        static Dictionary<Tuple<int, string>, string> GOOGLE_FIXES = [];
         static Dictionary<Tuple<int, string>, string> LOCAL_GOOGLE_FIXES;
 
-        static Dictionary<string, string> COUNTRY_SHIFTS = new();
-        static Dictionary<string, string> CITY_ADD_COUNTRY = new();
+        static Dictionary<string, string> COUNTRY_SHIFTS = [];
+        static Dictionary<string, string> CITY_ADD_COUNTRY = [];
         public readonly static FactLocation UNKNOWN_LOCATION = new("Unknown", "0.0", "0.0", Geocode.GEDCOM_USER);
         public readonly static FactLocation BLANK_LOCATION = new(string.Empty, "0.0", "0.0", Geocode.UNKNOWN);
         public readonly static FactLocation TEMP = new();
@@ -377,17 +377,17 @@ namespace FTAnalyzer
                 {
                     Country = location[(comma + 1)..];
                     location = location[..comma];
-                    comma = location.LastIndexOf(',', comma);
+                    comma = location.LastIndexOf(",", StringComparison.Ordinal);
                     if (comma > 0)
                     {
                         Region = location[(comma + 1)..];
                         location = location[..comma];
-                        comma = location.LastIndexOf(',', comma);
+                        comma = location.LastIndexOf(",", StringComparison.Ordinal);
                         if (comma > 0)
                         {
                             SubRegion = location[(comma + 1)..];
                             location = location[..comma];
-                            comma = location.LastIndexOf(',', comma);
+                            comma = location.LastIndexOf(",", StringComparison.Ordinal);
                             if (comma > 0)
                             {
                                 Address = location[(comma + 1)..];
