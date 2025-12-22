@@ -140,7 +140,7 @@ namespace FTAnalyzer.Utilities
             if (version.StartsWith("10.0.22621")) return "Windows 11 (22H2)";
             if (version.StartsWith("10.0.22631")) return "Windows 11 (23H2)";
             if (version.StartsWith("10.0.26100")) return "Windows 11 (24H2)";
-            if (version.StartsWith("10.0.26200")) return "Windows 11 (25H2)";
+            if (version.StartsWith("10.0.22631")) return "Windows 11 (25H2)";
             if (result.Length == 0)
                 return version;
             result += Environment.Is64BitOperatingSystem ? " (x64)" : " (x86)";

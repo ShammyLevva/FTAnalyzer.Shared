@@ -120,6 +120,27 @@ namespace FTAnalyzer
             }
         }
 
+        public Family(Individual ind, string familyID)
+            : this(familyID)
+        {
+            if (ind.IsMale)
+                Husband = ind;
+            else
+                Wife = ind;
+        }
+        internal Family(Family f)
+        {
+            FamilyID = f.FamilyID;
+            Facts = [.. f.Facts];
+            Husband = f.Husband is null ? null : new Individual(f.Husband);
+            Wife = f.Wife is null ? null : new Individual(f.Wife);
+            Children = [.. f.Children];
+            _preferredFacts = new Dictionary<string, Fact>(f._preferredFacts);
+            ExpectedTotal = f.ExpectedTotal;
+            ExpectedAlive = f.ExpectedAlive;
+            ExpectedDead = f.ExpectedDead;
+            FamilyType = UNKNOWN;
+        }
 
         void CheckChildrenStatusCounts()
         {
@@ -171,29 +192,6 @@ namespace FTAnalyzer
                 Fact childrenFact = new(child.IndividualID, Fact.CHILDREN, child.BirthDate, child.BirthLocation, childrenComment, true, true);
                 parent.AddFact(childrenFact);
             }
-        }
-
-        public Family(Individual ind, string familyID)
-            : this(familyID)
-        {
-            if (ind.IsMale)
-                Husband = ind;
-            else
-                Wife = ind;
-        }
-
-        internal Family(Family f)
-        {
-            FamilyID = f.FamilyID;
-            Facts = [.. f.Facts];
-            Husband = f.Husband is null ? null : new Individual(f.Husband);
-            Wife = f.Wife is null ? null : new Individual(f.Wife);
-            Children = [.. f.Children];
-            _preferredFacts = new Dictionary<string, Fact>(f._preferredFacts);
-            ExpectedTotal = f.ExpectedTotal;
-            ExpectedAlive = f.ExpectedAlive;
-            ExpectedDead = f.ExpectedDead;
-            FamilyType = UNKNOWN;
         }
 
         void AddFacts(XmlNode node, string factType, IProgress<string> outputText)

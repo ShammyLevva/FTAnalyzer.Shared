@@ -437,6 +437,17 @@ namespace FTAnalyzer
             Family = null;
             CreateFact(node, ind.IndividualRef, preferred, deathdate, outputText);
         }
+        public Fact(string factRef, string factType, FactDate date, FactLocation loc, string comment = "", bool preferred = true, bool createdByFTA = false, Individual ind = null)
+            : this(factRef, preferred)
+        {
+            FactType = factType;
+            FactDate = date ?? FactDate.UNKNOWN_DATE;
+            Comment = comment;
+            Created = createdByFTA;
+            Place = string.Empty;
+            Location = loc;
+            Individual = ind;
+        }
 
         void CreateFact(XmlNode node, string reference, bool preferred, FactDate deathdate, IProgress<string> outputText)
         {
@@ -681,18 +692,6 @@ namespace FTAnalyzer
             //+1 POST <ADDRESS_POSTAL_CODE> {0:1} p.41
             //+1 CTRY <ADDRESS_COUNTRY> 
             return result;
-        }
-
-        public Fact(string factRef, string factType, FactDate date, FactLocation loc, string comment = "", bool preferred = true, bool createdByFTA = false, Individual ind = null)
-            : this(factRef, preferred)
-        {
-            FactType = factType;
-            FactDate = date ?? FactDate.UNKNOWN_DATE;
-            Comment = comment;
-            Created = createdByFTA;
-            Place = string.Empty;
-            Location = loc;
-            Individual = ind;
         }
 
         #endregion

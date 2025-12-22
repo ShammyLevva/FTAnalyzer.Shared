@@ -29,7 +29,7 @@ namespace FTAnalyzer
         List<Individual> individuals;
         List<Family> families;
         List<Tuple<string, Fact>> sharedFacts;
-        List<AncestryTreeTag> ancestryTreeTags;
+        //List<AncestryTreeTag> ancestryTreeTags;
         Dictionary<string, List<Individual>> occupations;
         Dictionary<StandardisedName, StandardisedName> names;
         Dictionary<string, List<Individual>> unknownIndividualFactTypes;
@@ -195,7 +195,7 @@ namespace FTAnalyzer
             individuals = [];
             families = [];
             sharedFacts = [];
-            ancestryTreeTags = [];
+            //ancestryTreeTags = [];
             occupations = [];
             names = [];
             unknownIndividualFactTypes = [];

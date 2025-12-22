@@ -1,8 +1,8 @@
 ﻿namespace FTAnalyzer
 {
-    class FamilySearch
+    static class FamilySearch
     {
-        public static string
+        public const string
             FATHER_GIVENNAME = "father_givenname",
             FATHER_SURNAME = "father_surname",
             MOTHER_GIVENNAME = "mother_givenname",
