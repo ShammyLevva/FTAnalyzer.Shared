@@ -5,6 +5,10 @@ using System.Xml;
 using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
 using System.Diagnostics;
+using System.Collections.Immutable;
+using static FTAnalyzer.FactLocation;
+
+
 
 #if __PC__
 using FTAnalyzer.Mapping;
@@ -84,7 +88,7 @@ namespace FTAnalyzer
         public readonly static FactLocation UNKNOWN_LOCATION = new("Unknown", "0.0", "0.0", Geocode.GEDCOM_USER);
         public readonly static FactLocation BLANK_LOCATION = new(string.Empty, "0.0", "0.0", Geocode.UNKNOWN);
         public readonly static FactLocation TEMP = new();
-        public readonly static Dictionary<Geocode, string> GEOCODES = new()
+        public readonly static ImmutableDictionary<Geocode, string> GEOCODES = new Dictionary<Geocode, string>
             {
                 { Geocode.UNKNOWN, "Unknown" },
                 { Geocode.NOT_SEARCHED, "Not Searched" },
@@ -98,8 +102,9 @@ namespace FTAnalyzer
                 { Geocode.OS_50KMATCH, "OS Gazetteer Match" },
                 { Geocode.OS_50KPARTIAL, "Partial Match (Ord Surv)" },
                 { Geocode.OS_50KFUZZY, "Fuzzy Match (Ord Surv)" }
-            };
-        #endregion
+            }.ToImmutableDictionary();        
+
+#endregion
 
         #region Static Constructor
         static FactLocation()
@@ -362,7 +367,7 @@ namespace FTAnalyzer
             LatitudeM = mpoint.Y;
 #endif
             GeocodeStatus = status;
-            if (status == Geocode.NOT_SEARCHED && (!ExtensionMethods.DoubleEquals(Latitude,0) || !ExtensionMethods.DoubleEquals(Longitude,0)))
+            if (status == Geocode.NOT_SEARCHED && (!ExtensionMethods.DoubleEquals(Latitude, 0) || !ExtensionMethods.DoubleEquals(Longitude, 0)))
                 GeocodeStatus = Geocode.GEDCOM_USER;
         }
 
