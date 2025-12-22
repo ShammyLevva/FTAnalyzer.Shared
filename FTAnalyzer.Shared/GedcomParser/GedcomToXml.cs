@@ -376,7 +376,7 @@ namespace FTAnalyzer
             string fileName = string.Empty;
             try
             {
-                fileName = Path.GetTempFileName();
+                fileName = Path.GetRandomFileName();
                 FileInfo fileInfo = new(fileName)
                 {
                     Attributes = FileAttributes.Temporary
