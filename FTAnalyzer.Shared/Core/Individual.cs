@@ -605,7 +605,7 @@ namespace FTAnalyzer
                         else
                             amendedDeath = new DateTime(BirthDate.StartDate.Year, DeathDate.StartDate.Month, DeathDate.StartDate.Day, 0, 0, 0, DateTimeKind.Utc); // set death date to be same year as birth
                         var diff = Math.Abs((amendedDeath - BirthDate.StartDate).Days);
-                        Debug.WriteLine($"Processed Individual: {IndividualID}: {Name}, Diff:{diff}, Birth: {BirthDate.StartDate.ToShortDateString()} Death: {DeathDate.StartDate.ToShortDateString()}");
+                        Debug.WriteLine($"Processed Individual: {IndividualID}: {Name}, Diff:{diff}, Birth: {BirthDate.StartDate:d} Death: {DeathDate.StartDate:d}");
                         if (diff > 180)
                         {
                             if (BirthDate.StartDate.Month < 7)
@@ -877,14 +877,14 @@ namespace FTAnalyzer
 
         public int GetMaxAge(FactDate when) => GetAge(when).MaxAge;
 
-        public int GetMinAge(FactDate when) => GetAge(when).MinAge;
-
+        
         public int GetMaxAge(DateTime when)
         {
             string now = FactDate.Format(FactDate.FULL, when);
             return GetMaxAge(new FactDate(now));
         }
 
+        public int GetMinAge(FactDate when) => GetAge(when).MinAge;
         public int GetMinAge(DateTime when)
         {
             string now = FactDate.Format(FactDate.FULL, when);

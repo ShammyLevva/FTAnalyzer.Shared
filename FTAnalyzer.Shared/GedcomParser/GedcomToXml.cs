@@ -417,23 +417,26 @@ namespace FTAnalyzer
 
             // *** Detect byte order mark if any - otherwise assume default
             byte[] buffer = new byte[5];
-            file.Read(buffer, 0, 5);
-            file.Seek(0, SeekOrigin.Begin);
+            int count = file.Read(buffer, 0, 5);
+            if (count == 5)
+            {
+                file.Seek(0, SeekOrigin.Begin);
 
-            if (buffer[0] == 0xef && buffer[1] == 0xbb && buffer[2] == 0xbf)
-                enc = Encoding.UTF8;
-            else if (buffer[0] == 0xfe && buffer[1] == 0xff)
-                enc = Encoding.BigEndianUnicode;
-            else if (buffer[0] == 0 && buffer[1] == 0 && buffer[2] == 0xfe && buffer[3] == 0xff)
-                enc = Encoding.UTF32;
-            else if (buffer[0] == 0x2b && buffer[1] == 0x2f && buffer[2] == 0x76)
+                if (buffer[0] == 0xef && buffer[1] == 0xbb && buffer[2] == 0xbf)
+                    enc = Encoding.UTF8;
+                else if (buffer[0] == 0xfe && buffer[1] == 0xff)
+                    enc = Encoding.BigEndianUnicode;
+                else if (buffer[0] == 0 && buffer[1] == 0 && buffer[2] == 0xfe && buffer[3] == 0xff)
+                    enc = Encoding.UTF32;
+                else if (buffer[0] == 0x2b && buffer[1] == 0x2f && buffer[2] == 0x76)
 #pragma warning disable SYSLIB0001 // Type or member is obsolete
-                enc = Encoding.UTF7;
+                    enc = Encoding.UTF7;
 #pragma warning restore SYSLIB0001 // Type or member is obsolete
-            else if (buffer[0] == 0xff && buffer[1] == 0xfe && buffer[2] == 0 && buffer[3] == 0) // UTF32 little endian
-                enc = Encoding.UTF32;
-            else if (buffer[0] == 0xff && buffer[1] == 0xfe) // UTF16 little endian
-                enc = Encoding.Unicode;
+                else if (buffer[0] == 0xff && buffer[1] == 0xfe && buffer[2] == 0 && buffer[3] == 0) // UTF32 little endian
+                    enc = Encoding.UTF32;
+                else if (buffer[0] == 0xff && buffer[1] == 0xfe) // UTF16 little endian
+                    enc = Encoding.Unicode;
+            }
             return enc;
         }
     }

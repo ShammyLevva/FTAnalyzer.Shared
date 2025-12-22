@@ -92,17 +92,6 @@ namespace FTAnalyzer.Utilities
             return false;
         }
 
-        public static bool ContainsFact(this IList<Fact> list, Fact fact)
-        {
-            if (list is not null)
-            {
-                for (int i = 0; i < list.Count; i++)
-                    if (list[i] == fact)
-                        return true;
-            }
-            return false;
-        }
-
         public static bool ContainsLocation(this IList<FactLocation> list, FactLocation loc)
         {
             if (list is not null)
@@ -124,6 +113,17 @@ namespace FTAnalyzer.Utilities
             }
             return false;
         }
+        public static bool ContainsFact(this IList<Fact> list, Fact fact)
+        {
+            if (list is not null)
+            {
+                for (int i = 0; i < list.Count; i++)
+                    if (list[i] == fact)
+                        return true;
+            }
+            return false;
+        }
+
         public static bool ContainsFact(this List<Fact> list, Fact fact)
         {
             if (list is not null)
@@ -134,6 +134,7 @@ namespace FTAnalyzer.Utilities
             }
             return false;
         }
+
         public static bool ContainsFact(this SortableBindingList<IDisplayFact> list, IDisplayFact fact)
         {
             if (list is not null)

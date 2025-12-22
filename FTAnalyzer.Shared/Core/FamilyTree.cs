@@ -507,7 +507,7 @@ namespace FTAnalyzer
             {
                 string line = reader.ReadLine() ?? string.Empty;
                 string[] values = line.Split(',');
-                if (line.IndexOf(',', StringComparison.Ordinal) >= 0 && (values[0] == "1" || values[0] == "2"))
+                if (line.Contains(',') && (values[0] == "1" || values[0] == "2"))
                 {
                     StandardisedName original = new(values[0] == "2", values[2]);
                     StandardisedName standardised = new(values[1] == "2", values[3]);
@@ -3756,7 +3756,7 @@ namespace FTAnalyzer
                 return defaultDate;
             try
             {
-                string[] dateFields = dateNode.InnerText.Split(['/']);
+                string[] dateFields = dateNode.InnerText.Split('/');
                 int nodeyear = int.Parse(dateFields[0]);
                 int nodemonth = int.Parse(dateFields[1]);
                 int nodeday = int.Parse(dateFields[2]);

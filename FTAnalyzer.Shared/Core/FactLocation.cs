@@ -5,6 +5,7 @@ using System.Xml;
 using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
 using System.Diagnostics;
+
 #if __PC__
 using FTAnalyzer.Mapping;
 #endif
@@ -1174,6 +1175,8 @@ namespace FTAnalyzer
 
         #region Overrides
 
+        public override int GetHashCode() => base.GetHashCode();
+
         public int CompareTo(object? obj) => CompareTo(obj as FactLocation);
 
         public int CompareTo(FactLocation? that) => CompareTo(that, PLACE);
@@ -1222,6 +1225,26 @@ namespace FTAnalyzer
         }
 
         public static bool operator !=(FactLocation a, FactLocation b) => !(a == b);
+
+        public static bool operator <(FactLocation left, FactLocation right)
+        {
+            return left.CompareTo(right) < 0;
+        }
+
+        public static bool operator <=(FactLocation left, FactLocation right)
+        {
+            return left.CompareTo(right) <= 0;
+        }
+
+        public static bool operator >(FactLocation left, FactLocation right)
+        {
+            return left.CompareTo(right) > 0;
+        }
+
+        public static bool operator >=(FactLocation left, FactLocation right)
+        {
+            return left.CompareTo(right) >= 0;
+        }
 
         public IComparer<IDisplayLocation> GetComparer(string columnName, bool ascending)
         {

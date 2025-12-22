@@ -5,12 +5,10 @@ using System.Diagnostics;
 
 namespace FTAnalyzer.Utilities
 {
-    class Analytics
+    static class Analytics
     {
-        static readonly SimpleTrackerEnvironment trackerEnvironment;
         static readonly SimpleTracker tracker;
-        static readonly AnalyticsSession analyticsSession;
-
+        
         public const string MainFormAction = "Main Form Action", FactsFormAction = "Facts Form Action", CensusTabAction = "Census Tab Action",
                             ReportsAction = "Reports Action", LostCousinsAction = "Lost Cousins Action", GeocodingAction = "Geocoding Action",
                             ExportAction = "Export Action", MapsAction = "Maps Action", CensusSearchAction = "Census Search Action",
@@ -69,8 +67,8 @@ namespace FTAnalyzer.Utilities
             }
             GUID = Settings.Default.GUID;
             OperatingSystem os = Environment.OSVersion;
-            trackerEnvironment = new(os.Platform.ToString(), os.Version.ToString(), os.VersionString);
-            analyticsSession = new();
+            SimpleTrackerEnvironment trackerEnvironment = new(os.Platform.ToString(), os.Version.ToString(), os.VersionString);
+            AnalyticsSession analyticsSession = new();
             tracker = new("UA-125850339-2", analyticsSession, trackerEnvironment);
             AppVersion = MainForm.VERSION;
             OSVersion = SetWindowsVersion(os.Version.ToString());
