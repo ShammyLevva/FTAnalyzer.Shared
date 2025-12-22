@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace FTAnalyzer
 {
@@ -13,7 +12,7 @@ namespace FTAnalyzer
         public DuplicateException(string message, Exception innerException) : base(message, innerException)
         {
         }
-       public DuplicateException()
+        public DuplicateException()
         {
         }
 

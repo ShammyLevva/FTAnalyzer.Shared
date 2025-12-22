@@ -74,7 +74,7 @@
         { // values may need tweaked
             if (IndividualA.Gender.Equals(IndividualB.Gender))
                 Score += 50; // identical genders
-            else if (IndividualA.GenderMatches(IndividualB)) 
+            else if (IndividualA.GenderMatches(IndividualB))
                 Score += 20; // matches on unknown
             else
                 Score -= 50; // mismatched genders

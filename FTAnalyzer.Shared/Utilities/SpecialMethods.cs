@@ -1,10 +1,10 @@
-﻿using GoogleAnalyticsTracker.Core;
+﻿using FTAnalyzer.Properties;
+using GoogleAnalyticsTracker.Core;
 using GoogleAnalyticsTracker.Core.TrackerParameters;
 using GoogleAnalyticsTracker.Simple;
-using System.Globalization;
 using System.Diagnostics;
+using System.Globalization;
 using System.Runtime.InteropServices;
-using FTAnalyzer.Properties;
 
 
 namespace FTAnalyzer.Utilities
@@ -37,7 +37,8 @@ namespace FTAnalyzer.Utilities
                         theControl.Font = font; // change font size only if matching font name and size are different
                         theControl.Refresh();
                     }
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 Debug.WriteLine($"Error processing font: {e.Message}");
             }

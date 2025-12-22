@@ -4,12 +4,12 @@ namespace FTAnalyzer
 {
     public interface IDisplayMissingData
     {
-        string IndividualID { get; }        
-        string Forenames { get; }           
+        string IndividualID { get; }
+        string Forenames { get; }
         string Surname { get; }
         string Relation { get; }
         string RelationToRoot { get; }
-        
+
         ColourValues.BMDColours Birth { get; }
         ColourValues.BMDColours BaptChri { get; }
         ColourValues.BMDColours Marriage1 { get; }
@@ -17,7 +17,7 @@ namespace FTAnalyzer
         ColourValues.BMDColours Marriage3 { get; }
         ColourValues.BMDColours Death { get; }
         ColourValues.BMDColours CremBuri { get; }
-        
+
         FactDate BirthDate { get; }
         FactDate DeathDate { get; }
         string FirstMarriage { get; }

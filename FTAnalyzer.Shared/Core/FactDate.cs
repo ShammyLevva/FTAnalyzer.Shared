@@ -1,5 +1,5 @@
-﻿using FTAnalyzer.Utilities;
-using FTAnalyzer.Properties;
+﻿using FTAnalyzer.Properties;
+using FTAnalyzer.Utilities;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text;
@@ -17,7 +17,7 @@ namespace FTAnalyzer
         public static readonly int MINYEARS;
         const int LOW = 0;
         const int HIGH = 1;
-
+         0,0
         public readonly static string FULL = "d MMM yyyy";
         const string SPECIAL_DATE = "SPECIAL";
         const string YEAR = "yyyy";
@@ -126,7 +126,7 @@ namespace FTAnalyzer
 
         string FixTextDateFormats(string str)
         {
-            if(str.StartsWith('<') && str.EndsWith('>'))
+            if (str.StartsWith('<') && str.EndsWith('>'))
                 str = str[1..^1];
             str = ReplaceSpecialCharacters(str);
             str = str.Replace("DIED IN INFANCY", "INFANT");
@@ -361,11 +361,11 @@ namespace FTAnalyzer
                 str = str.Replace("TO BEF", "TO");
                 str = str.Replace("TO AFT", "TO");
             }
-            str = str.Replace("BET AFT", "BET"); 
+            str = str.Replace("BET AFT", "BET");
             str = str.Replace("BET AFT", "BET");
             str = str.Replace("AND BEF", "AND");
             str = str.Replace("AND AFT", "AND");
-            
+
             // remove common extra words
             str = str.Replace("CENSUS", "");
 
@@ -648,7 +648,7 @@ namespace FTAnalyzer
             }
             catch (Exception e)
             {
-                if(OriginalString.StartsWith('(') && OriginalString.EndsWith(')')) // do not throw error if date
+                if (OriginalString.StartsWith('(') && OriginalString.EndsWith(')')) // do not throw error if date
                 {
                     Debug.WriteLine("we have a text date with brackets");
                 }
@@ -949,7 +949,7 @@ namespace FTAnalyzer
         }
 
         public bool StartsOnOrBefore(FactDate that)
-        { 
+        {
             if (!DoubleDate && that is not null && that.DoubleDate)
                 return StartDate < that.StartDate || StartDate < that.StartDate.TryAddYears(-1);
             return that is null || StartDate <= that.StartDate;
@@ -1044,8 +1044,8 @@ namespace FTAnalyzer
             if (when is null) return 0;
             if (DaysSpan > 366)
                 return 12;
-            var x = EndDate.Subtract(when.StartDate).TotalDays/30;
-            var y = when.EndDate.Subtract(StartDate).TotalDays/30;
+            var x = EndDate.Subtract(when.StartDate).TotalDays / 30;
+            var y = when.EndDate.Subtract(StartDate).TotalDays / 30;
             double minGap = Math.Min(x, y);
             return (int)minGap;
         }

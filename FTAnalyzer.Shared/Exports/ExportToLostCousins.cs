@@ -96,7 +96,7 @@ namespace FTAnalyzer.Exports
                 int manualfacts = Website.FindAll(lc => !lc.FTAnalyzerFact).Count;
                 await Analytics.TrackActionAsync(Analytics.LostCousinsAction, Analytics.ReadLostCousins, $"{DateTime.Now.ToUniversalTime():yyyy-MM-dd HH:mm}: {manualfacts} manual & {ftanalyzerfacts} -> {ftanalyzerfacts + recordsAdded} FTAnalyzer entries");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 UIHelpers.ShowMessage($"Problem uploading to Lost Cousins error was : {e.Message}");
             }
@@ -108,7 +108,7 @@ namespace FTAnalyzer.Exports
             FactLocation location = FactLocation.GetLocation(ind.CensusCountry);
             Fact f = new(ind.CensusRef, Fact.LC_FTA, ind.CensusDate, location, string.Empty, true, true);
             Individual? person = FamilyTree.Instance.GetIndividual(ind.IndividualID); // get the individual not the census indvidual
-            if(person is not null && !person.HasLostCousinsFactAtDate(ind.CensusDate))
+            if (person is not null && !person.HasLostCousinsFactAtDate(ind.CensusDate))
                 person.AddFact(f);
         }
 
@@ -117,7 +117,7 @@ namespace FTAnalyzer.Exports
             SortableBindingList<IDisplayLostCousin> result = new();
             Website ??= await LoadWebsiteAncestorsAsync(outputText);
             WebLinks = new List<Uri>();
-            foreach(LostCousin lostCousin in Website)
+            foreach (LostCousin lostCousin in Website)
             {
                 result.Add(lostCousin);
                 if (!WebLinks.Contains(lostCousin.WebLink))

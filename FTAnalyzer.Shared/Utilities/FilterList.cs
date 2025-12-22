@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 // http://www.timvw.be/2009/11/06/presenting-filterlist/
 
@@ -47,7 +45,7 @@ namespace FTAnalyzer.Utilities
         protected virtual void ApplyFilter(Predicate<T> filter)
         {
             var wantedItems = this.allItems.FindAll(filter);
-            
+
             Items.Clear();
             foreach (var item in wantedItems)
             {

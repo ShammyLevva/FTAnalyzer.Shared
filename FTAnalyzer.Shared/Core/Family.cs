@@ -77,7 +77,7 @@ namespace FTAnalyzer
                             var father = ParentalRelationship.GetRelationshipType(fatherNode);
                             var mother = ParentalRelationship.GetRelationshipType(motherNode);
                             Children.Add(child);
-                            ParentalRelationship parent = new (this, father, mother);
+                            ParentalRelationship parent = new(this, father, mother);
                             child.FamiliesAsChild.Add(parent);
                             AddParentAndChildrenFacts(child, Husband, father);
                             AddParentAndChildrenFacts(child, Wife, mother);
@@ -465,7 +465,7 @@ namespace FTAnalyzer
         public void SetSpouseRelation(Individual ind, int relationType)
         {
             if (ind is null) return;
-            Individual? spouse = Spouse(ind); 
+            Individual? spouse = Spouse(ind);
             if (spouse is not null)
                 spouse.RelationType = relationType;
         }
@@ -677,9 +677,9 @@ namespace FTAnalyzer
         {
             return Comparer<T>.Create((x, y) =>
             {
-                if(x is not IDisplayFamily famX)
+                if (x is not IDisplayFamily famX)
                     return ascending ? 1 : -1;
-                if(y is not IDisplayFamily famY)
+                if (y is not IDisplayFamily famY)
                     return ascending ? 1 : -1;
                 var c1 = accessor(famX);
                 var c2 = accessor(famY);

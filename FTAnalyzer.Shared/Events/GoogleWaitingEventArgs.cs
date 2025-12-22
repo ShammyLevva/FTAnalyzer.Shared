@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace FTAnalyzer.Events
+﻿namespace FTAnalyzer.Events
 {
     public class GoogleWaitingEventArgs : EventArgs
     {

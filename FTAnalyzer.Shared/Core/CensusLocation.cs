@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Xml;
 
 namespace FTAnalyzer
@@ -27,7 +24,7 @@ namespace FTAnalyzer
 #endif
         public static void LoadCensusLocationFile(string? startPath)
         {
-#region Census Locations
+            #region Census Locations
             // load Census Locations from XML file
             if (startPath is null) return;
             string filename = Path.Combine(startPath, "Resources", "CensusLocations.xml");
@@ -51,7 +48,7 @@ namespace FTAnalyzer
                     CENSUSLOCATIONS.Add(new Tuple<string, string>(year, piece), cl);
                 }
             }
-#endregion
+            #endregion
         }
 
         public CensusLocation(string location) : this(string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, location) { }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace FTAnalyzer.Filters
+﻿namespace FTAnalyzer.Filters
 {
     public static class FilterUtils
     {

@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace FTAnalyzer
 {
     public class CensusAgeComparer : IComparer<CensusIndividual>

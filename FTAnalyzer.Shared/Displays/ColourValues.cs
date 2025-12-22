@@ -22,8 +22,8 @@
             LC_PRESENT_NO_CENSUS = 5, OVERSEAS_CENSUS = 6, OUT_OF_COUNTRY = 7, KNOWN_MISSING = 8, DIED_DURING_CENSUS = 9, BORN_DURING_CENSUS = 10
         };
 
-        public static readonly Color[] CensusColourValues = 
-        { 
+        public static readonly Color[] CensusColourValues =
+        {
             Color.DarkGray, Color.Red , Color.Yellow, Color.LawnGreen, Color.LawnGreen, Color.DarkOrange,
             Color.DarkSlateGray, Color.DarkSlateGray, Color.MediumSeaGreen, Color.PeachPuff , Color.PeachPuff
         };

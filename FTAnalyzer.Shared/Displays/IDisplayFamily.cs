@@ -4,11 +4,11 @@ namespace FTAnalyzer
 {
     public interface IDisplayFamily : IColumnComparer<IDisplayFamily>
     {
-        [ColumnDetail("Family Ref",60)]
+        [ColumnDetail("Family Ref", 60)]
         string FamilyID { get; }
-        [ColumnDetail("Husband ID",70)]
+        [ColumnDetail("Husband ID", 70)]
         string HusbandID { get; }
-        [ColumnDetail("Husband Name",250)]
+        [ColumnDetail("Husband Name", 250)]
         string Husband { get; }
         [ColumnDetail("Wife ID", 70)]
         string WifeID { get; }
@@ -16,7 +16,7 @@ namespace FTAnalyzer
         string Wife { get; }
         [ColumnDetail("Marriage Detail", 300)]
         string Marriage { get; }
-        [ColumnDetail("Location",250)]
+        [ColumnDetail("Location", 250)]
         FactLocation Location { get; }
         [ColumnDetail("Childrens Details", 350)]
         string Children { get; }

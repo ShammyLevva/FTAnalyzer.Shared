@@ -1,13 +1,13 @@
 using FTAnalyzer.Exports;
 using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
+using System.Diagnostics;
 using System.Globalization;
 using System.Numerics;
 using System.Reflection;
 using System.Text;
 using System.Xml;
 using static FTAnalyzer.ColourValues;
-using System.Diagnostics;
 
 namespace FTAnalyzer
 {
@@ -96,7 +96,7 @@ namespace FTAnalyzer
             XmlNode? nameNode = node?.SelectSingleNode("NAME");
 
             Title = FamilyTree.GetText(nameNode, "TITL", false);
-            if(string.IsNullOrEmpty(Title))
+            if (string.IsNullOrEmpty(Title))
                 Title = FamilyTree.GetText(node, "TITL", false);
             if (string.IsNullOrEmpty(Title))
                 Title = FamilyTree.GetText(nameNode, "NPFX", false);
@@ -124,7 +124,7 @@ namespace FTAnalyzer
             surnameMetaphone = new DoubleMetaphone(Surname);
             Notes = FamilyTree.GetNotes(node);
             StandardisedName = FamilyTree.Instance.GetStandardisedName(IsMale, Forename);
-            Fact nameFact = new(IndividualID, Fact.INDI, FactDate.UNKNOWN_DATE, FactLocation.BLANK_LOCATION,Name, true, true, this);
+            Fact nameFact = new(IndividualID, Fact.INDI, FactDate.UNKNOWN_DATE, FactLocation.BLANK_LOCATION, Name, true, true, this);
             AddFact(nameFact);
             // Individual attributes
             AddFacts(node, Fact.NAME, outputText);
@@ -339,8 +339,8 @@ namespace FTAnalyzer
                 if (_allfacts is null || currentFactCount != Factcount)
                 {
                     _allfacts = [.. PersonalFacts];
-                    foreach(Fact f in FamilyFacts)
-                        if(!_allfacts.Contains(f))
+                    foreach (Fact f in FamilyFacts)
+                        if (!_allfacts.Contains(f))
                             _allfacts.Add(f);
                     _allFileFacts = [.. _allfacts.Where(x => !x.Created)];
                     Factcount = _allfacts.Count;
@@ -406,16 +406,16 @@ namespace FTAnalyzer
                     Surname = UNKNOWN_NAME;
                     _forenames = name;
                 }
-                if (string.IsNullOrEmpty(Surname) || Surname.Equals("mnu", StringComparison.CurrentCultureIgnoreCase) || 
-                    Surname.Equals("lnu", StringComparison.CurrentCultureIgnoreCase) || 
+                if (string.IsNullOrEmpty(Surname) || Surname.Equals("mnu", StringComparison.CurrentCultureIgnoreCase) ||
+                    Surname.Equals("lnu", StringComparison.CurrentCultureIgnoreCase) ||
                     Surname == "[--?--]" || Surname.Equals("unk", StringComparison.CurrentCultureIgnoreCase) ||
                   ((Surname[0] == '.' || Surname[0] == '?' || Surname[0] == '_') && Surname.Distinct().Count() == 1)) // if all chars are same and is . ? or _
                     Surname = UNKNOWN_NAME;
                 if (!(!GeneralSettings.Default.TreatFemaleSurnamesAsUnknown || IsMale || !Surname.StartsWith('(') || !Surname.EndsWith(')')))
                     Surname = UNKNOWN_NAME;
-                if(string.IsNullOrEmpty(_forenames) || _forenames.Equals("unk", StringComparison.CurrentCultureIgnoreCase) || _forenames == "[--?--]" ||
+                if (string.IsNullOrEmpty(_forenames) || _forenames.Equals("unk", StringComparison.CurrentCultureIgnoreCase) || _forenames == "[--?--]" ||
                   ((_forenames[0] == '.' || _forenames[0] == '?' || _forenames[0] == '_') && _forenames.Distinct().Count() == 1))
-                  _forenames = UNKNOWN_NAME;
+                    _forenames = UNKNOWN_NAME;
                 MarriedName = Surname;
                 _fullname = SetFullName();
                 SortedName = $"{_forenames} {Surname}".Trim();
@@ -607,7 +607,7 @@ namespace FTAnalyzer
                             amendedDeath = new DateTime(BirthDate.StartDate.Year, DeathDate.StartDate.Month, DeathDate.StartDate.Day); // set death date to be same year as birth
                         var diff = Math.Abs((amendedDeath - BirthDate.StartDate).Days);
                         Debug.WriteLine($"Processed Individual: {IndividualID}: {Name}, Diff:{diff}, Birth: {BirthDate.StartDate.ToShortDateString()} Death: {DeathDate.StartDate.ToShortDateString()}");
-                        if(diff>180)
+                        if (diff > 180)
                         {
                             if (BirthDate.StartDate.Month < 7)
                                 amendedDeath = amendedDeath.AddYears(-1);
@@ -617,7 +617,7 @@ namespace FTAnalyzer
                         }
                         return diff < 16;
                     }
-                    catch(ArgumentOutOfRangeException)
+                    catch (ArgumentOutOfRangeException)
                     {
                         Debug.WriteLine($"PROBLEM Individual: {IndividualID}: {Name}");
                         return false;
@@ -633,11 +633,12 @@ namespace FTAnalyzer
 
         public IList<ParentalRelationship> FamiliesAsChild { get; }
 
-        public string FamilyIDsAsParent {
+        public string FamilyIDsAsParent
+        {
             get
             {
                 string result = string.Empty;
-                foreach(Family f in FamiliesAsSpouse)
+                foreach (Family f in FamiliesAsSpouse)
                     result += f.FamilyID + ",";
                 return result.Length == 0 ? result : result[..^1];
             }
@@ -648,7 +649,7 @@ namespace FTAnalyzer
             get
             {
                 string result = string.Empty;
-                foreach(ParentalRelationship pr in FamiliesAsChild)
+                foreach (ParentalRelationship pr in FamiliesAsChild)
                     result += pr.Family.FamilyID + ",";
                 return result.Length == 0 ? result : result[..^1];
             }
@@ -852,7 +853,7 @@ namespace FTAnalyzer
         {
             if (when is null || when.IsUnknown) return true;
             if (BirthDate.StartDate <= when.EndDate && DeathDate.EndDate >= when.StartDate) return true;
-            if(DeathDate.IsUnknown)
+            if (DeathDate.IsUnknown)
             {
                 // if unknown death add 110 years to Enddate
                 var death = BirthDate.AddEndDateYears(110);
@@ -917,7 +918,7 @@ namespace FTAnalyzer
         }
 
         void AddFacts(XmlNode node, string factType, IProgress<string> outputText) => AddFacts(node, factType, outputText, null);
-        
+
         void AddFacts(XmlNode node, string factType, IProgress<string> outputText, string? nonStandardFactType)
         {
             XmlNodeList? list = nonStandardFactType is not null ? node.SelectNodes(nonStandardFactType) : node.SelectNodes(factType);
@@ -988,7 +989,7 @@ namespace FTAnalyzer
         }
         void AddNonStandardFacts(XmlNode node, IProgress<string> outputText)
         {
-            foreach(KeyValuePair<string, string> factType in Fact.NON_STANDARD_FACTS)
+            foreach (KeyValuePair<string, string> factType in Fact.NON_STANDARD_FACTS)
             {
                 AddFacts(node, factType.Value, outputText, factType.Key);
             }
@@ -1086,7 +1087,7 @@ namespace FTAnalyzer
                 if (allowspace && c == ' ')
                     output.Append(c);
             }
-            var result = output.ToString().Replace("--","-").Replace("--", "-").Replace("--", "-");
+            var result = output.ToString().Replace("--", "-").Replace("--", "-").Replace("--", "-");
             return result == "-" ? UNKNOWN_NAME : result;
         }
 
@@ -1101,7 +1102,7 @@ namespace FTAnalyzer
                 if (endptr == -1) endptr = input.IndexOf('\"', startptr);
                 output = (startptr < input.Length ? input[..startptr] : string.Empty) + (endptr < input.Length ? input[endptr..] : string.Empty);
             }
-            output = output.Replace("--","").Replace('\'', ' ').Replace('\"', ' ').Replace("  ", " ").Replace("  ", " ");
+            output = output.Replace("--", "").Replace('\'', ' ').Replace('\"', ' ').Replace("  ", " ").Replace("  ", " ");
             return output.TrimEnd('-').Trim();
         }
 
@@ -1116,7 +1117,7 @@ namespace FTAnalyzer
                 bool checkNotes = true;
                 string notes = CensusReference.ClearCommonPhrases(Notes);
                 notes = notes.ClearWhiteSpace();
-                while (checkNotes && notes.Length<50000)
+                while (checkNotes && notes.Length < 50000)
                 {
                     checkNotes = false;
                     //Debug.WriteLine($"Reached Individual {ToString()} Notes: {notes.Length}");
@@ -1170,7 +1171,7 @@ namespace FTAnalyzer
             Fact? f = GetPreferredFact(factType);
             return (f is null || f.FactDate is null) ? FactDate.UNKNOWN_DATE : f.FactDate;
         }
-        
+
         // Returns all facts of the given type.
         public IEnumerable<Fact> GetFacts(string factType) => Facts.Where(f => f.FactType == factType);
 
@@ -1303,7 +1304,7 @@ namespace FTAnalyzer
                 return CensusColours.CENSUS_PRESENT_NOT_LC_YEAR; // census entered but not LCyear - green
             if (IsLostCousinsEntered(census))
                 return CensusColours.CENSUS_PRESENT_LC_PRESENT; // census + Lost cousins entered - green
-                // we have a census in a LC year but no LC event check if country is a LC country.
+                                                                // we have a census in a LC year but no LC event check if country is a LC country.
             int year = census.StartDate.Year;
             if (year == 1841 && IsCensusDone(CensusDate.EWCENSUS1841, false))
                 return CensusColours.CENSUS_PRESENT_LC_MISSING; // census entered LC not entered - yellow
@@ -1347,7 +1348,7 @@ namespace FTAnalyzer
             return CheckOutOfCountry("C1");
         }
 
-        public static bool OutOfCountryCheck(CensusDate census, FactLocation location) => 
+        public static bool OutOfCountryCheck(CensusDate census, FactLocation location) =>
                     census is not null && location is not null && // checks census & location are not null
                   ((Countries.IsUnitedKingdom(census.Country) && !location.IsUnitedKingdom) ||
                   (!Countries.IsUnitedKingdom(census.Country) && census.Country != location.Country));
@@ -1669,7 +1670,7 @@ namespace FTAnalyzer
 
         public bool IsLivingError => IsFlaggedAsLiving && DeathDate.IsKnown;
 
-        public int CensusReferenceCount(CensusReference.ReferenceStatus referenceStatus) 
+        public int CensusReferenceCount(CensusReference.ReferenceStatus referenceStatus)
             => AllFacts.Count(f => f.IsCensusFact && f.CensusReference is not null && f.CensusReference.Status.Equals(referenceStatus));
 
         Family? Marriages(int number)

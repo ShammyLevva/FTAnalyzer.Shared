@@ -1,7 +1,6 @@
-﻿using System;
-using System.Text;
+﻿using FTAnalyzer.Properties;
 using System.Globalization;
-using FTAnalyzer.Properties;
+using System.Text;
 
 namespace FTAnalyzer.Utilities
 {
@@ -65,9 +64,9 @@ namespace FTAnalyzer.Utilities
         {
             StringBuilder sb = new();
             text ??= string.Empty;
-            foreach(char ch in text)
+            foreach (char ch in text)
             {
-                if (ch == 147 || ch == '-' || ch==8211)
+                if (ch == 147 || ch == '-' || ch == 8211)
                     sb.Append('-');
                 else if (ch >= ' ' && ch <= 'Z')
                     sb.Append(ch);

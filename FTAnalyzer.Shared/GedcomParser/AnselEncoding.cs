@@ -33,19 +33,19 @@ namespace FTAnalyzer
                 char ch = chars[i];
                 if (ch < 0x80)
                 {
-                    bytes[j++] = (byte) ch;
+                    bytes[j++] = (byte)ch;
                 }
                 else
                 {
                     int ansel = ConvertToAnsel(ch);
                     if (ansel <= 0xFF)
                     {
-                        bytes[j++] = (byte) ansel;
+                        bytes[j++] = (byte)ansel;
                     }
                     else
                     {
-                        bytes[j++] = (byte) (ansel / 256);
-                        bytes[j++] = (byte) (ansel % 256);
+                        bytes[j++] = (byte)(ansel / 256);
+                        bytes[j++] = (byte)(ansel % 256);
                     }
                 }
             }
@@ -863,5 +863,5 @@ namespace FTAnalyzer
                 _ => 0xFFFD,// if no match, use Unicode REPLACEMENT CHARACTER
             };
         }
-    }   
+    }
 }

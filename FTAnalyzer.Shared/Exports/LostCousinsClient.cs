@@ -275,7 +275,8 @@ namespace FTAnalyzer.Exports
                     output.Add("relation_type", "Unknown");
                     output.Add("descent", string.Empty);
                     break;
-            };
+            }
+            ;
         }
     }
 }

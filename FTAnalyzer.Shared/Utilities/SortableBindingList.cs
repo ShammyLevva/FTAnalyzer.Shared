@@ -49,12 +49,12 @@ namespace FTAnalyzer.Utilities
             comparer.SetPropertyAndDirection(prop, direction);
             SortableBindingList<T>.MergeSort(itemsList, comparer);
 
-           propertyDescriptor = prop;
-           listSortDirection = direction;
-           isSorted = true;
+            propertyDescriptor = prop;
+            listSortDirection = direction;
+            isSorted = true;
 
-           OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
-           OnSortFinished();
+            OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+            OnSortFinished();
         }
 
         protected override void RemoveSortCore()

@@ -1733,7 +1733,7 @@ namespace FTAnalyzer
         }
 
         public SortableBindingList<IDisplayIndividual> AllDisplayIndividuals => [.. individuals];
-        
+
         public SortableBindingList<IDisplayFamily> AllDisplayFamilies => [.. families];
 
         public static SortableBindingList<IDisplayFact> GetSourceDisplayFacts(FactSource source)
@@ -3752,7 +3752,7 @@ namespace FTAnalyzer
         static FactDate GetWikiDate(XmlNode? dateNode, FactDate defaultDate)
         {
             FactDate fd;
-            if(dateNode is null)
+            if (dateNode is null)
                 return defaultDate;
             try
             {

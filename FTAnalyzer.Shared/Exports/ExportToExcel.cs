@@ -1,5 +1,5 @@
-﻿using System.Text;
-using System.Data;
+﻿using System.Data;
+using System.Text;
 #if __MACOS__
 using AppKit;
 using static FTAnalyzer.UIHelpers;

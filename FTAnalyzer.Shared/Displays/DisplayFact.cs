@@ -71,7 +71,7 @@
 
         public override int GetHashCode() => base.GetHashCode();
 
-        public override string ToString() => 
+        public override string ToString() =>
             Ind is null ? $"{Fact.FactTypeDescription}: {Fact.FactDate} {Fact.Comment}"
                         : $"{IndividualID}: {Forenames} {Surname}, {Fact}";
 
@@ -109,7 +109,7 @@
         {
             return Comparer<T>.Create((x, y) =>
             {
-                if(x is not DisplayFact facX)
+                if (x is not DisplayFact facX)
                     return ascending ? 1 : -1;
                 var c1 = accessor(facX);
                 if (y is not DisplayFact facY)

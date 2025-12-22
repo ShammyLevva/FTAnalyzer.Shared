@@ -1,28 +1,26 @@
-﻿using System.Collections.Generic;
-
-namespace FTAnalyzer
+﻿namespace FTAnalyzer
 {
     public class DataErrorGroup(int errorNumber, IList<DataError> errors)
     {
-        static readonly string[] DATAERROR = 
-            [ 
+        static readonly string[] DATAERROR =
+            [
                 "Birth after baptism/christening",
                 "Birth after death/burial",
-                "Birth after father aged 90+", 
-                "Birth after mother aged 60+", 
-                "Birth after mother's death", 
+                "Birth after father aged 90+",
+                "Birth after mother aged 60+",
+                "Birth after mother's death",
                 "Birth more than 9m after father's death",
-                "Birth before father aged 13", 
-                "Birth before mother aged 13", 
-                "Burial/cremation before death", 
-                $"Aged more than {FactDate.MAXYEARS} at death", 
-                "Facts dated before birth", 
-                "Facts dated after death", 
-                "Marriage after death", 
-                "Marriage after spouse's death", 
-                "Marriage before aged 13", 
-                "Marriage before spouse aged 13", 
-                "Lost Cousins tag in non Census Year", 
+                "Birth before father aged 13",
+                "Birth before mother aged 13",
+                "Burial/cremation before death",
+                $"Aged more than {FactDate.MAXYEARS} at death",
+                "Facts dated before birth",
+                "Facts dated after death",
+                "Marriage after death",
+                "Marriage after spouse's death",
+                "Marriage before aged 13",
+                "Marriage before spouse aged 13",
+                "Lost Cousins tag in non Census Year",
                 "Lost Cousins tag in non supported Year",
                 "Residence census date warnings",
                 "Census date range too wide/Unknown",

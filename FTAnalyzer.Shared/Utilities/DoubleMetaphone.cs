@@ -23,7 +23,6 @@
  * The Double Metaphone algorithm was written by Lawrence Phillips, and is 
  * Copyright (c) 1998, 1999 by Lawrence Philips.
  */
-using System;
 using System.Text;
 
 namespace FTAnalyzer

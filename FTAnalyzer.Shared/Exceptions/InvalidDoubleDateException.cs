@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace FTAnalyzer
+﻿namespace FTAnalyzer
 {
     [Serializable]
     public class InvalidDoubleDateException : Exception

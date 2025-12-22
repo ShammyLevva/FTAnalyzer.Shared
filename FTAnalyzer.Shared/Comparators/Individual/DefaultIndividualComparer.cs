@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace FTAnalyzer
+﻿namespace FTAnalyzer
 {
     public class DefaultIndividualComparer : Comparer<Individual>
     {
@@ -8,7 +6,7 @@ namespace FTAnalyzer
 
         public DefaultIndividualComparer(bool ascending) => Ascending = ascending ? 1 : -1;
 
-        public override int Compare(Individual? x, Individual? y) => 
+        public override int Compare(Individual? x, Individual? y) =>
             Ascending * string.Compare(x.IndividualID, y.IndividualID, System.StringComparison.Ordinal);
     }
 }

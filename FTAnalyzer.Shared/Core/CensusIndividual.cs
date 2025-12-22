@@ -72,7 +72,7 @@ namespace FTAnalyzer
 #if __PC__
         public System.Windows.Forms.DataGridViewCellStyle CellStyle { get; set; }
 #endif
-        public bool IsValidLocation(string location) => 
+        public bool IsValidLocation(string location) =>
             !CensusLocation.IsKnownCountry || Countries.IsUnitedKingdom(location) ? CensusLocation.IsUnitedKingdom : CensusLocation.Country.Equals(location);
 
         public override string ToString() => $"{IndividualID}: {Name} b.{BirthDate}";

@@ -1,9 +1,7 @@
-﻿using System.Text;
-using System.Net;
-using FTAnalyzer.Filters;
-using System.Collections.Specialized;
-using System.Diagnostics;
+﻿using FTAnalyzer.Filters;
 using FTAnalyzer.Windows;
+using System.Diagnostics;
+using System.Text;
 
 namespace FTAnalyzer
 {
@@ -90,7 +88,7 @@ namespace FTAnalyzer
             int value = 0;
             foreach (SurnameStats stat in surnames)
             {
-                stat.Individuals = ignoreCase ? 
+                stat.Individuals = ignoreCase ?
                         ft.AllIndividuals.Filter(indFilter).Count(x => x.Surname.Equals(stat.Surname, StringComparison.OrdinalIgnoreCase))
                       : ft.AllIndividuals.Filter(indFilter).Count(x => x.Surname.Equals(stat.Surname));
                 stat.Families = ft.AllFamilies.Filter(famFilter).Count(x => x.ContainsSurname(stat.Surname, ignoreCase));

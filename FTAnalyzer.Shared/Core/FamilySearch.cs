@@ -25,36 +25,36 @@
 
         public static int CensusCollectionID(string censusCountry, int censusYear)
         {
-            if(censusCountry == Countries.ENGLAND || censusCountry == Countries.WALES)
+            if (censusCountry == Countries.ENGLAND || censusCountry == Countries.WALES)
             {
-                switch(censusYear)
+                switch (censusYear)
                 {
-                    case 1841 : return 1493745;
-                    case 1851 : return 1850749;
-                    case 1861 : return 1493747;
-                    case 1871 : return 1538354;
-                    case 1881 : return 1321821;
-                    case 1891 : return 1865747;
-                    case 1901 : return 1888129;
-                    case 1911 : return 1921547;
-                    case 1939 : return 2836130;
+                    case 1841: return 1493745;
+                    case 1851: return 1850749;
+                    case 1861: return 1493747;
+                    case 1871: return 1538354;
+                    case 1881: return 1321821;
+                    case 1891: return 1865747;
+                    case 1901: return 1888129;
+                    case 1911: return 1921547;
+                    case 1939: return 2836130;
                 }
-            } 
-            else if(censusCountry == Countries.SCOTLAND)
+            }
+            else if (censusCountry == Countries.SCOTLAND)
             {
-                switch(censusYear)
+                switch (censusYear)
                 {
-                    case 1841 : return 2016000;
-                    case 1851 : return 2028673;
-                    case 1861 : return 2028677;
-                    case 1871 : return 2028678;
-                    case 1881 : return 2046756;
-                    case 1891 : return 2046493;
+                    case 1841: return 2016000;
+                    case 1851: return 2028673;
+                    case 1861: return 2028677;
+                    case 1871: return 2028678;
+                    case 1881: return 2046756;
+                    case 1891: return 2046493;
                 }
             }
             else if (censusCountry == Countries.CANADA)
             {
-                switch(censusYear)
+                switch (censusYear)
                 {
                     case 1851: return 1325192;
                     case 1871: return 1551612;

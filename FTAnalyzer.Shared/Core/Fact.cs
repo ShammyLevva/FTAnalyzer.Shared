@@ -1079,6 +1079,6 @@ namespace FTAnalyzer
             FactTypeDescription + ": " + FactDate + (Location.ToString().Length > 0 ? " at " + Location : string.Empty) + (Comment.Length > 0 ? "  (" + Comment + ")" : string.Empty);
         public string FactDateLocation => $"{FactTypeDescription}: {FactDate}";
 
-       
+
     }
 }

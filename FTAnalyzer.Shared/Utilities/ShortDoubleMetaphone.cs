@@ -26,8 +26,6 @@
  * The Double Metaphone algorithm was written by Lawrence Phillips, and is 
  * Copyright (c) 1998, 1999 by Lawrence Philips.
  */
-using System;
-
 namespace FTAnalyzer
 {
     /// <summary>Subclass of DoubleMetaphone, Adam Nelson's (anelson@nullpointer.net)
@@ -38,37 +36,37 @@ namespace FTAnalyzer
     ///     four-letter metaphone keys are represented as four nibbles in an
     ///     unsigned short.  This greatly improves storage and search efficiency.</summary>
 	public class ShortDoubleMetaphone : DoubleMetaphone
-	{
-		//Constants representing the characters in a metaphone key
-		public const ushort METAPHONE_A           = 0x01;
-		public const ushort METAPHONE_F           = 0x02;
-		public const ushort METAPHONE_FX          = ((METAPHONE_F << 4) | METAPHONE_X);
-		public const ushort METAPHONE_H           = 0x03;
-		public const ushort METAPHONE_J           = 0x04;
-		public const ushort METAPHONE_K           = 0x05;
-		public const ushort METAPHONE_KL          = ((METAPHONE_K << 4) | METAPHONE_L);
-		public const ushort METAPHONE_KN          = ((METAPHONE_K << 4) | METAPHONE_N);
-		public const ushort METAPHONE_KS          = ((METAPHONE_K << 4) | METAPHONE_S);
-		public const ushort METAPHONE_L           = 0x06;
-		public const ushort METAPHONE_M           = 0x07;
-		public const ushort METAPHONE_N           = 0x08;
-		public const ushort METAPHONE_P           = 0x09;
-		public const ushort METAPHONE_S           = 0x0A;
-		public const ushort METAPHONE_SK          = ((METAPHONE_S << 4) | METAPHONE_K);
-		public const ushort METAPHONE_T           = 0x0B;
-		public const ushort METAPHONE_TK          = ((METAPHONE_T << 4) | METAPHONE_K);
-		public const ushort METAPHONE_TS          = ((METAPHONE_T << 4) | METAPHONE_S);
-		public const ushort METAPHONE_R           = 0x0C;
-		public const ushort METAPHONE_X           = 0x0D;
-		public const ushort METAPHONE_0           = 0x0E;
-		public const ushort METAPHONE_SPACE       = 0x0F;
-		public const ushort METAPHONE_NULL        = 0x00;
-		
-		/// Sentinel value, used to denote an invalid key
-		public const ushort METAPHONE_INVALID_KEY = 0xffff;
-		
-		/// The ushort versions of the primary and alternate keys
-		private ushort m_primaryShortKey, m_alternateShortKey;
+    {
+        //Constants representing the characters in a metaphone key
+        public const ushort METAPHONE_A = 0x01;
+        public const ushort METAPHONE_F = 0x02;
+        public const ushort METAPHONE_FX = ((METAPHONE_F << 4) | METAPHONE_X);
+        public const ushort METAPHONE_H = 0x03;
+        public const ushort METAPHONE_J = 0x04;
+        public const ushort METAPHONE_K = 0x05;
+        public const ushort METAPHONE_KL = ((METAPHONE_K << 4) | METAPHONE_L);
+        public const ushort METAPHONE_KN = ((METAPHONE_K << 4) | METAPHONE_N);
+        public const ushort METAPHONE_KS = ((METAPHONE_K << 4) | METAPHONE_S);
+        public const ushort METAPHONE_L = 0x06;
+        public const ushort METAPHONE_M = 0x07;
+        public const ushort METAPHONE_N = 0x08;
+        public const ushort METAPHONE_P = 0x09;
+        public const ushort METAPHONE_S = 0x0A;
+        public const ushort METAPHONE_SK = ((METAPHONE_S << 4) | METAPHONE_K);
+        public const ushort METAPHONE_T = 0x0B;
+        public const ushort METAPHONE_TK = ((METAPHONE_T << 4) | METAPHONE_K);
+        public const ushort METAPHONE_TS = ((METAPHONE_T << 4) | METAPHONE_S);
+        public const ushort METAPHONE_R = 0x0C;
+        public const ushort METAPHONE_X = 0x0D;
+        public const ushort METAPHONE_0 = 0x0E;
+        public const ushort METAPHONE_SPACE = 0x0F;
+        public const ushort METAPHONE_NULL = 0x00;
+
+        /// Sentinel value, used to denote an invalid key
+        public const ushort METAPHONE_INVALID_KEY = 0xffff;
+
+        /// The ushort versions of the primary and alternate keys
+        private ushort m_primaryShortKey, m_alternateShortKey;
 
         /// <summary>Default ctor, initializes to an empty string and 0 keys</summary>
         public ShortDoubleMetaphone() => m_primaryShortKey = m_alternateShortKey = 0;
@@ -79,15 +77,18 @@ namespace FTAnalyzer
         /// 
         /// <param name="word">Word for which to compute metaphone keys</param>
         public ShortDoubleMetaphone(String word) : base(word)
-		{
-			m_primaryShortKey = ShortDoubleMetaphone.MetaphoneKeyToShort(this.PrimaryKey);
-			if (this.AlternateKey is not null) {
-				m_alternateShortKey = ShortDoubleMetaphone.MetaphoneKeyToShort(this.AlternateKey);
-			} else {
-				m_alternateShortKey = METAPHONE_INVALID_KEY;
-			}
-		}
-		
+        {
+            m_primaryShortKey = ShortDoubleMetaphone.MetaphoneKeyToShort(this.PrimaryKey);
+            if (this.AlternateKey is not null)
+            {
+                m_alternateShortKey = ShortDoubleMetaphone.MetaphoneKeyToShort(this.AlternateKey);
+            }
+            else
+            {
+                m_alternateShortKey = METAPHONE_INVALID_KEY;
+            }
+        }
+
         /// <summary>Sets a new current word, computing the string and ushort representations
         ///     of the metaphone keys of the given word.
         /// 
@@ -100,16 +101,20 @@ namespace FTAnalyzer
         ///     methods is quite valuable.</summary>
         /// 
         /// <param name="word">New current word for which to compute metaphone keys</param>
-		new public void ComputeKeys(String word) {
-			base.ComputeKeys(word);
-			
-			m_primaryShortKey = ShortDoubleMetaphone.MetaphoneKeyToShort(this.PrimaryKey);
-			if (this.AlternateKey is not null) {
-				m_alternateShortKey = ShortDoubleMetaphone.MetaphoneKeyToShort(this.AlternateKey);
-			} else {
-				m_alternateShortKey = METAPHONE_INVALID_KEY;
-			}
-		}
+        new public void ComputeKeys(String word)
+        {
+            base.ComputeKeys(word);
+
+            m_primaryShortKey = ShortDoubleMetaphone.MetaphoneKeyToShort(this.PrimaryKey);
+            if (this.AlternateKey is not null)
+            {
+                m_alternateShortKey = ShortDoubleMetaphone.MetaphoneKeyToShort(this.AlternateKey);
+            }
+            else
+            {
+                m_alternateShortKey = METAPHONE_INVALID_KEY;
+            }
+        }
 
         /// <summary>The primary metaphone key, represented as a ushort</summary>
         public ushort PrimaryShortKey => m_primaryShortKey;
@@ -125,14 +130,16 @@ namespace FTAnalyzer
         ///     tests are not performed, for performance reasons.</param>
         /// 
         /// <returns>ushort representation of the given metahphone key</returns>
-        static private ushort MetaphoneKeyToShort(String metaphoneKey) {
-			ushort result, charResult;
-			Char currentChar;
-			
-			result = 0;
-		
-			for (int currentCharIdx = 0; currentCharIdx < metaphoneKey.Length; currentCharIdx++) {
-				currentChar = metaphoneKey[currentCharIdx];
+        static private ushort MetaphoneKeyToShort(String metaphoneKey)
+        {
+            ushort result, charResult;
+            Char currentChar;
+
+            result = 0;
+
+            for (int currentCharIdx = 0; currentCharIdx < metaphoneKey.Length; currentCharIdx++)
+            {
+                currentChar = metaphoneKey[currentCharIdx];
                 charResult = currentChar switch
                 {
                     'A' => METAPHONE_A,
@@ -153,9 +160,9 @@ namespace FTAnalyzer
                     _ => 0x00,//This should never happen
                 };
                 result <<= 4;
-				result |= charResult;
+                result |= charResult;
             }
             return result;
-		}
-	}
+        }
+    }
 }

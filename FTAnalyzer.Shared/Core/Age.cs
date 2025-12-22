@@ -1,6 +1,5 @@
-﻿using System;
+﻿using FTAnalyzer.Utilities;
 using System.Text.RegularExpressions;
-using FTAnalyzer.Utilities;
 
 namespace FTAnalyzer
 {

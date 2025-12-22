@@ -1,6 +1,4 @@
-﻿using System;
-#if __PC__
-using System.Windows.Forms;
+﻿#if __PC__
 #elif __MACOS__
 using AppKit;
 #endif
@@ -25,9 +23,9 @@ namespace FTAnalyzer.Utilities
             ColumnWidth = width;
             TypeofColumn = columnType;
 #if __PC__
-            switch(alignment)
+            switch (alignment)
             {
-                case ColumnAlignment.Left : Alignment = DataGridViewContentAlignment.MiddleLeft; break;
+                case ColumnAlignment.Left: Alignment = DataGridViewContentAlignment.MiddleLeft; break;
                 case ColumnAlignment.Right: Alignment = DataGridViewContentAlignment.MiddleRight; break;
                 case ColumnAlignment.Center: Alignment = DataGridViewContentAlignment.MiddleCenter; break;
             }

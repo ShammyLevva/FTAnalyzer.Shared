@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-namespace FTAnalyzer
+﻿namespace FTAnalyzer
 {
     [Serializable]
     public class InvalidGEDCOMException : Exception

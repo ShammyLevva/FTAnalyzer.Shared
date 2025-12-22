@@ -1,9 +1,6 @@
-using FTAnalyzer.Utilities;
 using FTAnalyzer.Properties;
-using System;
-using System.Collections.Generic;
+using FTAnalyzer.Utilities;
 using System.Diagnostics;
-using System.IO;
 using System.Text;
 using System.Xml;
 
@@ -150,7 +147,7 @@ namespace FTAnalyzer
                     {
                         try
                         {
-                            line = line.Replace('–', '-').Replace('—', '-').Replace("&nbsp;"," ").Replace(" * **Data is already there***", ""); // "data is already there" is some Ancestry anomaly
+                            line = line.Replace('–', '-').Replace('—', '-').Replace("&nbsp;", " ").Replace(" * **Data is already there***", ""); // "data is already there" is some Ancestry anomaly
                             cpos1 = line.IndexOf(' ');
                             if (cpos1 < 0) throw new InvalidGEDCOMException($"No space found in line: '{line}'", line, lineNr);
 

@@ -1,9 +1,4 @@
-﻿using FTAnalyzer.Utilities;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-
-namespace FTAnalyzer
+﻿namespace FTAnalyzer
 {
     public class SurnameStats : IDisplaySurnames
     {

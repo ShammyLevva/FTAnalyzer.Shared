@@ -1,9 +1,9 @@
 ﻿using FTAnalyzer.Properties;
-using System.Text.RegularExpressions;
-using System.Xml;
 using FTAnalyzer.Utilities;
-using System.Web;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
+using System.Web;
+using System.Xml;
 
 namespace FTAnalyzer
 {
@@ -35,7 +35,7 @@ namespace FTAnalyzer
 
         const string EW_MISSINGCLASS_PATTERN = @"Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3})";
         const string EW_MISSINGCLASS_PATTERN2 = @"Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?)";
-        
+
         const string EW_CENSUS_1841_51_PATTERN = @"HO *107 *Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3})";
         const string EW_CENSUS_1841_51_PATTERN2 = @"HO *107 *Piece *(\d{1,5}) *Book *(\d{1,3}).*?Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3})";
         const string EW_CENSUS_1841_51_PATTERN2A = @"HO *107 *Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?).*?Book *(\d{1,3}) *Page *(\d{1,3})";
@@ -286,7 +286,7 @@ namespace FTAnalyzer
             Fact = fact;
             if (GetCensusReference(node))
                 SetCensusReferenceDetails();
-            if(Status != ReferenceStatus.GOOD)
+            if (Status != ReferenceStatus.GOOD)
             {
                 var tempStatus = Status;
                 if (GetCensusReference(Fact.Comment))
@@ -417,7 +417,7 @@ namespace FTAnalyzer
                     ReferenceText = text.Trim();
                     return true;
                 }
-                else if(oldstatus == ReferenceStatus.BLANK)
+                else if (oldstatus == ReferenceStatus.BLANK)
                     // no match so store text 
                     Status = ReferenceStatus.UNRECOGNISED;
                 if (updateUnknownRef)
@@ -459,7 +459,7 @@ namespace FTAnalyzer
                                 .Replace(")", " ").Replace("{", " ").Replace("}", " ")
                                 .Replace("«b»", " ").Replace("«i»", " ").Replace("«/b»", " ")
                                 .Replace("«/i»", " ").Replace(@"\i", " ").Replace(@"\i0", " ")
-                                .Replace("&nbsp"," ").Replace(";", " ")
+                                .Replace("&nbsp", " ").Replace(";", " ")
                                 .ClearWhiteSpace();
             return output.Replace("Registration District", "RD", StringComparison.OrdinalIgnoreCase)
                         .Replace("RegistrationDistrict", "RD", StringComparison.OrdinalIgnoreCase)
@@ -748,7 +748,7 @@ namespace FTAnalyzer
                 Class = "HO107";
                 Folio = matcher.Groups[1].ToString();
                 Book = matcher.Groups[3].ToString();
-                if(!string.IsNullOrEmpty(Book) && string.IsNullOrEmpty(matcher.Groups[2].ToString()))
+                if (!string.IsNullOrEmpty(Book) && string.IsNullOrEmpty(matcher.Groups[2].ToString()))
                 {
                     Book = matcher.Groups[1].ToString();
                     Folio = matcher.Groups[3].ToString();
@@ -1732,8 +1732,8 @@ namespace FTAnalyzer
                         return @"https://search.findmypast" + defaultRegion + "/search-world-records/1841-england-wales-and-scotland-census?" + querystring + @"&book=" + Book;
                     if (querystring.Length > 0)
                     {
-                        
-                        return year=="1911" ? @"https ://search.findmypast.co.uk/search-world-Records/1911-census-for-england-and-wales" + querystring :
+
+                        return year == "1911" ? @"https ://search.findmypast.co.uk/search-world-Records/1911-census-for-england-and-wales" + querystring :
                             @"https://search.findmypast" + defaultRegion + "/search-world-records/" + year + "-england-wales-and-scotland-census?" + querystring;
                     }
                 }

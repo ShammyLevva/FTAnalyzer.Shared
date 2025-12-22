@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using FTAnalyzer.Utilities;
 using System.Diagnostics;
-using System.Linq;
-using FTAnalyzer.Utilities;
 
 namespace FTAnalyzer
 {
@@ -21,10 +18,10 @@ namespace FTAnalyzer
         public static readonly ISet<Region> US_STATES;
         public static readonly ISet<Region> AUSTRALIAN_REGIONS;
         public static readonly ISet<Region> NEW_ZEALAND_REGIONS;
-                     
+
         public static readonly IList<Region> PREFERRED_REGIONS;
         public static readonly IDictionary<string, Region> VALID_REGIONS;
-                     
+
         public static readonly Dictionary<Region, List<ModernCounty>> CONVERSIONS = new();
         public static readonly List<ModernCounty> MODERN_COUNTIES;
 
@@ -274,17 +271,17 @@ namespace FTAnalyzer
         public static readonly Region SUTHERLAND = new("Sutherland", Countries.SCOTLAND, Region.Creation.HISTORIC);
         public static readonly Region WEST_LOTHIAN = new("West Lothian", Countries.SCOTLAND, Region.Creation.HISTORIC);
         public static readonly Region WIGTOWN = new("Wigtownshire", Countries.SCOTLAND, Region.Creation.HISTORIC);
-       
-        public static readonly Region BORDERS = new("Borders", Countries.SCOTLAND, Region.Creation.LG_ACT1974);              
-        public static readonly Region CENTRAL_SCOT = new("Central", Countries.SCOTLAND, Region.Creation.LG_ACT1974);              
+
+        public static readonly Region BORDERS = new("Borders", Countries.SCOTLAND, Region.Creation.LG_ACT1974);
+        public static readonly Region CENTRAL_SCOT = new("Central", Countries.SCOTLAND, Region.Creation.LG_ACT1974);
         public static readonly Region DUMFRIES_GALLOWAY = new("Dumfries and Galloway", Countries.SCOTLAND, Region.Creation.LG_ACT1974);
-        public static readonly Region GRAMPIAN = new("Grampian", Countries.SCOTLAND, Region.Creation.LG_ACT1974);             
+        public static readonly Region GRAMPIAN = new("Grampian", Countries.SCOTLAND, Region.Creation.LG_ACT1974);
         public static readonly Region HIGHLAND = new("Highland", Countries.SCOTLAND, Region.Creation.LG_ACT1974);
         public static readonly Region LOTHIAN = new("Lothian", Countries.SCOTLAND, Region.Creation.LG_ACT1974);
         public static readonly Region STRATHCLYDE = new("Strathclyde", Countries.SCOTLAND, Region.Creation.LG_ACT1974);
         public static readonly Region TAYSIDE = new("Tayside", Countries.SCOTLAND, Region.Creation.LG_ACT1974);
         public static readonly Region WESTERN_ISLES = new("Western Isles", Countries.SCOTLAND, Region.Creation.LG_ACT1974);
-        
+
         public static readonly Region ABERDEEN_CITY = new("Aberdeen City", Countries.SCOTLAND, Region.Creation.MODERN);
         public static readonly Region ARGYLL_BUTE = new("Argyll and Bute", Countries.SCOTLAND, Region.Creation.MODERN);
         public static readonly Region DUNDEE_CITY = new("Dundee City", Countries.SCOTLAND, Region.Creation.MODERN);
@@ -571,7 +568,7 @@ namespace FTAnalyzer
         public static readonly Region LEINSTER = new("Leinster", Countries.IRELAND, Region.Creation.MODERN);
         public static readonly Region MUNSTER = new("Munster", Countries.IRELAND, Region.Creation.MODERN);
         public static readonly Region CONNACHT = new("Connacht", Countries.IRELAND, Region.Creation.MODERN);
-          
+
         #endregion
 
         #region Canadian Regions
@@ -682,40 +679,40 @@ namespace FTAnalyzer
         static Regions()
         {
             #region Modern County Setup
-            MODERN_COUNTIES = new List<ModernCounty>(new ModernCounty[] { 
+            MODERN_COUNTIES = new List<ModernCounty>(new ModernCounty[] {
                 OS_ABERDEENSHIRE, OS_ANGUS, OS_ABERDEEN_CITY, OS_ARGYLL_AND_BUTE, OS_BRADFORD, OS_BLACKBURN_WITH_DARWEN,
-                OS_BRACKNELL_FOREST, OS_BARKING_AND_DAGENHAM, OS_BRIDGEND, OS_BEDFORDSHIRE, OS_BLAENAU_GWENT, 
+                OS_BRACKNELL_FOREST, OS_BARKING_AND_DAGENHAM, OS_BRIDGEND, OS_BEDFORDSHIRE, OS_BLAENAU_GWENT,
                 OS_CITY_OF_BRIGHTON_AND_HOVE, OS_BIRMINGHAM, OS_CENTRAL_BEDFORDSHIRE, OS_BARNSLEY, OS_BUCKINGHAMSHIRE,
                 OS_BARNET, OS_BOLTON, OS_BLACKPOOL, OS_BROMLEY, OS_BATH_AND_NORTH_EAST_SOMERSET, OS_BRENT, OS_BOURNEMOUTH,
                 OS_BEXLEY, OS_BURY, OS_BRISTOL, OS_CALDERDALE, OS_CAMBRIDGESHIRE, OS_CHESHIRE_WEST_AND_CHESTER, OS_CARDIFF,
-                OS_CEREDIGION, OS_CAERPHILLY, OS_CHESHIRE_EAST, OS_CLACKMANNANSHIRE, OS_CAMDEN, OS_CORNWALL, 
-                OS_CARMARTHENSHIRE, OS_CUMBRIA, OS_COVENTRY, OS_CONWY, OS_CROYDON, OS_CITY_OF_DERBY, OS_DUNDEE_CITY, 
-                OS_DENBIGHSHIRE, OS_DUMFRIES_AND_GALLOWAY, OS_DARLINGTON, OS_DEVON, OS_DONCASTER, OS_DORSET, OS_DURHAM, 
-                OS_DERBYSHIRE, OS_DUDLEY, OS_EAST_AYRSHIRE, OS_CITY_OF_EDINBURGH, OS_EAST_DUNBARTONSHIRE, OS_EALING, 
-                OS_EAST_LOTHIAN, OS_ENFIELD, OS_EAST_RENFREWSHIRE, OS_EAST_SUSSEX, OS_ESSEX, OS_EAST_RIDING_OF_YORKSHIRE, 
-                OS_FALKIRK, OS_FIFE, OS_FLINTSHIRE, OS_GATESHEAD, OS_GLASGOW_CITY, OS_GLOUCESTERSHIRE, OS_GREENWICH, 
-                OS_GWYNEDD, OS_HALTON, OS_HERTFORDSHIRE, OS_HEREFORDSHIRE, OS_HAMMERSMITH_AND_FULHAM, OS_HARINGEY, 
+                OS_CEREDIGION, OS_CAERPHILLY, OS_CHESHIRE_EAST, OS_CLACKMANNANSHIRE, OS_CAMDEN, OS_CORNWALL,
+                OS_CARMARTHENSHIRE, OS_CUMBRIA, OS_COVENTRY, OS_CONWY, OS_CROYDON, OS_CITY_OF_DERBY, OS_DUNDEE_CITY,
+                OS_DENBIGHSHIRE, OS_DUMFRIES_AND_GALLOWAY, OS_DARLINGTON, OS_DEVON, OS_DONCASTER, OS_DORSET, OS_DURHAM,
+                OS_DERBYSHIRE, OS_DUDLEY, OS_EAST_AYRSHIRE, OS_CITY_OF_EDINBURGH, OS_EAST_DUNBARTONSHIRE, OS_EALING,
+                OS_EAST_LOTHIAN, OS_ENFIELD, OS_EAST_RENFREWSHIRE, OS_EAST_SUSSEX, OS_ESSEX, OS_EAST_RIDING_OF_YORKSHIRE,
+                OS_FALKIRK, OS_FIFE, OS_FLINTSHIRE, OS_GATESHEAD, OS_GLASGOW_CITY, OS_GLOUCESTERSHIRE, OS_GREENWICH,
+                OS_GWYNEDD, OS_HALTON, OS_HERTFORDSHIRE, OS_HEREFORDSHIRE, OS_HAMMERSMITH_AND_FULHAM, OS_HARINGEY,
                 OS_HILLINGDON, OS_HIGHLAND, OS_HACKNEY, OS_HAMPSHIRE, OS_HARROW, OS_HOUNSLOW, OS_HARTLEPOOL, OS_HAVERING,
                 OS_ISLE_OF_ANGLESEY, OS_ISLINGTON, OS_ISLE_OF_MAN, OS_INVERCLYDE, OS_ISLES_OF_SCILLY, OS_CITY_OF_INVERNESS,
-                OS_ISLE_OF_WIGHT, OS_ROYAL_BOROUGH_OF_KENSINGTON_AND_CHELSEA, OS_KINGSTON_UPON_THAMES, 
-                OS_CITY_OF_KINGSTON_UPON_HULL, OS_KIRKLEES, OS_KNOWSLEY, OS_KENT, OS_LANCASHIRE, OS_LAMBETH, 
-                OS_CITY_OF_LEICESTER, OS_LEEDS, OS_LINCOLNSHIRE, OS_LUTON, OS_CITY_OF_LONDON, OS_LIVERPOOL, 
+                OS_ISLE_OF_WIGHT, OS_ROYAL_BOROUGH_OF_KENSINGTON_AND_CHELSEA, OS_KINGSTON_UPON_THAMES,
+                OS_CITY_OF_KINGSTON_UPON_HULL, OS_KIRKLEES, OS_KNOWSLEY, OS_KENT, OS_LANCASHIRE, OS_LAMBETH,
+                OS_CITY_OF_LEICESTER, OS_LEEDS, OS_LINCOLNSHIRE, OS_LUTON, OS_CITY_OF_LONDON, OS_LIVERPOOL,
                 OS_LEWISHAM, OS_LEICESTERSHIRE, OS_MANCHESTER, OS_MIDDLESBROUGH, OS_MEDWAY, OS_MIDLOTHIAN, OS_MILTON_KEYNES,
                 OS_MONMOUTHSHIRE, OS_MORAY, OS_MERTON, OS_MERTHYR_TYDFIL, OS_NORTH_AYRSHIRE, OS_NORTH_EAST_LINCOLNSHIRE,
                 OS_NORTHUMBERLAND, OS_NEWPORT, OS_CITY_OF_NOTTINGHAM, OS_NEWHAM, OS_NORTH_LINCOLNSHIRE, OS_NORFOLK,
                 OS_NORTH_LANARKSHIRE, OS_NORTHAMPTONSHIRE, OS_NEATH_PORT_TALBOT, OS_NORTH_TYNESIDE, OS_NORTH_SOMERSET,
-                OS_NOTTINGHAMSHIRE, OS_NEWCASTLE_UPON_TYNE, OS_NORTH_YORKSHIRE, OS_OLDHAM, OS_ORKNEY_ISLANDS, OS_OXFORDSHIRE, 
+                OS_NOTTINGHAMSHIRE, OS_NEWCASTLE_UPON_TYNE, OS_NORTH_YORKSHIRE, OS_OLDHAM, OS_ORKNEY_ISLANDS, OS_OXFORDSHIRE,
                 OS_PEMBROKESHIRE, OS_CITY_OF_PETERBOROUGH, OS_PERTH_AND_KINROSS, OS_POOLE, OS_CITY_OF_PORTSMOUTH, OS_POWYS,
-                OS_CITY_OF_PLYMOUTH, OS_REDBRIDGE, OS_REDCAR_AND_CLEVELAND, OS_ROCHDALE, OS_RENFREWSHIRE, OS_READING, 
-                OS_RHONDDA_CYNON_TAFF, OS_RUTLAND, OS_ROTHERHAM, OS_RICHMOND_UPON_THAMES, OS_SANDWELL, OS_SCOTTISH_BORDERS, 
-                OS_SALFORD, OS_SWINDON, OS_SEFTON, OS_STAFFORDSHIRE, OS_SOUTH_GLOUCESTERSHIRE, OS_SHROPSHIRE, OS_SHETLAND_ISLANDS, 
-                OS_CITY_OF_STOKE_ON_TRENT, OS_SUFFOLK, OS_SOUTH_LANARKSHIRE, OS_STOCKTON_ON_TEES, OS_ST_HELENS, 
-                OS_CITY_OF_SOUTHAMPTON, OS_SHEFFIELD, OS_SOLIHULL, OS_STIRLING, OS_SWANSEA, OS_SOMERSET, OS_SURREY, 
-                OS_SUNDERLAND, OS_SOUTHWARK, OS_SOUTH_AYRSHIRE, OS_SOUTH_TYNESIDE, OS_SUTTON, OS_TORBAY, OS_TORFAEN, 
+                OS_CITY_OF_PLYMOUTH, OS_REDBRIDGE, OS_REDCAR_AND_CLEVELAND, OS_ROCHDALE, OS_RENFREWSHIRE, OS_READING,
+                OS_RHONDDA_CYNON_TAFF, OS_RUTLAND, OS_ROTHERHAM, OS_RICHMOND_UPON_THAMES, OS_SANDWELL, OS_SCOTTISH_BORDERS,
+                OS_SALFORD, OS_SWINDON, OS_SEFTON, OS_STAFFORDSHIRE, OS_SOUTH_GLOUCESTERSHIRE, OS_SHROPSHIRE, OS_SHETLAND_ISLANDS,
+                OS_CITY_OF_STOKE_ON_TRENT, OS_SUFFOLK, OS_SOUTH_LANARKSHIRE, OS_STOCKTON_ON_TEES, OS_ST_HELENS,
+                OS_CITY_OF_SOUTHAMPTON, OS_SHEFFIELD, OS_SOLIHULL, OS_STIRLING, OS_SWANSEA, OS_SOMERSET, OS_SURREY,
+                OS_SUNDERLAND, OS_SOUTHWARK, OS_SOUTH_AYRSHIRE, OS_SOUTH_TYNESIDE, OS_SUTTON, OS_TORBAY, OS_TORFAEN,
                 OS_TOWER_HAMLETS, OS_TRAFFORD, OS_TAMESIDE, OS_THURROCK, OS_VALE_OF_GLAMORGAN, OS_WALSALL, OS_WEST_BERKSHIRE,
-                OS_WINDSOR_AND_MAIDENHEAD, OS_WEST_DUNBARTONSHIRE, OS_WAKEFIELD, OS_WALTHAM_FOREST, OS_WARRINGTON, 
-                OS_CITY_OF_WOLVERHAMPTON, OS_WESTERN_ISLES, OS_WOKINGHAM, OS_WARWICKSHIRE, OS_WEST_LOTHIAN, 
-                OS_CITY_OF_WESTMINSTER, OS_WIGAN, OS_WORCESTERSHIRE, OS_TELFORD_AND_WREKIN, OS_WIRRAL, OS_WEST_SUSSEX, 
+                OS_WINDSOR_AND_MAIDENHEAD, OS_WEST_DUNBARTONSHIRE, OS_WAKEFIELD, OS_WALTHAM_FOREST, OS_WARRINGTON,
+                OS_CITY_OF_WOLVERHAMPTON, OS_WESTERN_ISLES, OS_WOKINGHAM, OS_WARWICKSHIRE, OS_WEST_LOTHIAN,
+                OS_CITY_OF_WESTMINSTER, OS_WIGAN, OS_WORCESTERSHIRE, OS_TELFORD_AND_WREKIN, OS_WIRRAL, OS_WEST_SUSSEX,
                 OS_WILTSHIRE, OS_WANDSWORTH, OS_WREXHAM, OS_YORK, OS_SOUTHEND_ON_SEA, OS_SLOUGH, OS_STOCKPORT
             });
             #endregion
@@ -724,44 +721,44 @@ namespace FTAnalyzer
             // List from Scotland's People
             SCOTTISH_REGIONS = new HashSet<Region>(new Region[]{
                     ABERDEEN, ANGUS, ARGYLL, AYR, BANFF, BERWICK, BUTE, CAITHNESS, CLACKMANNAN, DUMFRIES,
-                    DUNBARTON, EAST_LOTHIAN, FIFE, INVERNESS, KINCARDINE, KINROSS, KIRKCUDBRIGHT, LANARK, 
-                    MIDLOTHIAN, MORAY, NAIRN, ORKNEY, PEEBLES, PERTH, RENFREW, ROSS_CROMARTY, ROXBURGH, 
+                    DUNBARTON, EAST_LOTHIAN, FIFE, INVERNESS, KINCARDINE, KINROSS, KIRKCUDBRIGHT, LANARK,
+                    MIDLOTHIAN, MORAY, NAIRN, ORKNEY, PEEBLES, PERTH, RENFREW, ROSS_CROMARTY, ROXBURGH,
                     SELKIRK, SHETLAND, STIRLING, SUTHERLAND, WEST_LOTHIAN, WIGTOWN, BORDERS, CENTRAL_SCOT,
                     DUMFRIES_GALLOWAY, GRAMPIAN, HIGHLAND, LOTHIAN, STRATHCLYDE, TAYSIDE, WESTERN_ISLES,
-                    ABERDEEN_CITY, ARGYLL_BUTE, DUNDEE_CITY, EAST_AYRSHIRE, EDINBURGH_CITY, 
+                    ABERDEEN_CITY, ARGYLL_BUTE, DUNDEE_CITY, EAST_AYRSHIRE, EDINBURGH_CITY,
                     EAST_DUNBARTONSHIRE, EAST_RENFREW, FALKIRK, GLASGOW_CITY, INVERCLYDE, INVERNESS_CITY
                 });
             AddScottishRegionAlternates();
 
             ENGLISH_REGIONS = new HashSet<Region>(new Region[] {
                     BEDS, BERKS, BUCKS, CAMBS, CHESHIRE, CORNWALL, CUMBERLAND, DERBY, DEVON, DORSET,
-                    DURHAM, ESSEX, GLOUCS, HANTS, HEREFORD, HERTS, HUNTS, KENT, LANCS, LEICS, LINCS, 
-                    MIDDLESEX, NORFOLK, NORTHAMPTON, NORTHUMBERLAND, NOTTS, OXFORD, RUTLAND, SHROPS, 
+                    DURHAM, ESSEX, GLOUCS, HANTS, HEREFORD, HERTS, HUNTS, KENT, LANCS, LEICS, LINCS,
+                    MIDDLESEX, NORFOLK, NORTHAMPTON, NORTHUMBERLAND, NOTTS, OXFORD, RUTLAND, SHROPS,
                     SOMERSET, STAFFS, SUFFOLK, SURREY, SUSSEX, WARWICK, WESTMORLAND, WILTS, WORCESTER,
                     YORKS, LONDON, MANCHESTER, MERSEYSIDE, SOUTH_YORKSHIRE, TYNE_WEAR, WEST_MIDLANDS,
                     WEST_YORKSHIRE, AVON, CLEVELAND, CUMBRIA, HUMBERSIDE, IOW, HEREFORD_WORCESTER,
                     NORTH_YORKSHIRE, EAST_YORKSHIRE, BRADFORD, BLACKBURN, BRACKNELL, BARKING, BRIGHTON,
                     BIRMINGHAM, BARNSLEY, BARNET, BOLTON, BLACKPOOL, BROMLEY, BATH, BRENT, BOURNEMOUTH,
                     BEXLEY, BURY, BRISTOL, CALDERDALE, CAMDEN, COVENTRY, CROYDON, DERBY_CITY,  DARLINGTON,
-                    DONCASTER, DUDLEY, EALING, ENFIELD, EAST_SUSSEX, GATESHEAD, GREENWICH, HALTON, 
+                    DONCASTER, DUDLEY, EALING, ENFIELD, EAST_SUSSEX, GATESHEAD, GREENWICH, HALTON,
                     HAMMERSMITH, HARINGEY, HILLINGDON, HACKNEY, HARROW, HOUNSLOW, HARTLEPOOL, HAVERING,
-                    ISLINGTON, ISLES_OF_SCILLY, KENSINGTON, KINGSTON_THAMES, KINGSTON_HULL, KIRKLEES, 
+                    ISLINGTON, ISLES_OF_SCILLY, KENSINGTON, KINGSTON_THAMES, KINGSTON_HULL, KIRKLEES,
                     KNOWSLEY, LAMBETH, LEICESTER_CITY, LEEDS, LUTON, LIVERPOOL, LEWISHAM, MIDDLESBROUGH,
-                    MEDWAY, MILTON_KEYNES, MERTON, NE_LINCOLNSHIRE, NEWPORT, NOTTINGHAM_CITY, NEWHAM, 
-                    NORTH_LINCOLNSHIRE, NORTH_TYNESIDE, NORTH_SOMERSET, NEWCASTLE, OLDHAM, PETERBOROUGH, 
-                    POOLE, PORTSMOUTH, PLYMOUTH, REDBRIDGE, REDCAR, ROCHDALE, READING, ROTHERHAM, 
-                    RICHMOND_THAMES, SANDWELL, SALFORD, SWINDON, SEFTON, SOUTH_GLOUCESTERSHIRE, STOKE, 
-                    STOCKTON, ST_HELENS, SOUTHAMPTON, SHEFFIELD, SOLIHULL, SUNDERLAND, SOUTHWARK, 
-                    SOUTH_TYNESIDE, SUTTON, TORBAY, TOWER_HAMLETS, TRAFFORD, TAMESIDE, THURROCK, WALSALL, 
-                    WEST_BERKSHIRE, WINDSOR, WAKEFIELD, WALTHAM_FOREST, WARRINGTON, WOLVERHAMPTON, 
-                    WOKINGHAM, WESTMINSTER, WIGAN, TELFORD, WIRRAL, WEST_SUSSEX, WANDSWORTH, WREXHAM, 
+                    MEDWAY, MILTON_KEYNES, MERTON, NE_LINCOLNSHIRE, NEWPORT, NOTTINGHAM_CITY, NEWHAM,
+                    NORTH_LINCOLNSHIRE, NORTH_TYNESIDE, NORTH_SOMERSET, NEWCASTLE, OLDHAM, PETERBOROUGH,
+                    POOLE, PORTSMOUTH, PLYMOUTH, REDBRIDGE, REDCAR, ROCHDALE, READING, ROTHERHAM,
+                    RICHMOND_THAMES, SANDWELL, SALFORD, SWINDON, SEFTON, SOUTH_GLOUCESTERSHIRE, STOKE,
+                    STOCKTON, ST_HELENS, SOUTHAMPTON, SHEFFIELD, SOLIHULL, SUNDERLAND, SOUTHWARK,
+                    SOUTH_TYNESIDE, SUTTON, TORBAY, TOWER_HAMLETS, TRAFFORD, TAMESIDE, THURROCK, WALSALL,
+                    WEST_BERKSHIRE, WINDSOR, WAKEFIELD, WALTHAM_FOREST, WARRINGTON, WOLVERHAMPTON,
+                    WOKINGHAM, WESTMINSTER, WIGAN, TELFORD, WIRRAL, WEST_SUSSEX, WANDSWORTH, WREXHAM,
                     YORK, SOUTHEND, SLOUGH, STOCKPORT
             });
             AddEnglishRegionAlternates();
 
             WELSH_REGIONS = new HashSet<Region>(new Region[] {
-                    ANGLESEY, BRECON, CAERNARFON, CEREDIGION, CARMARTHEN, DENBIGH, FLINT, GLAMORGAN, MERIONETH, 
-                    MONMOUTH, MONTGOMERY, PEMBROKE, RADNOR, CLWYD, DYFED, GWENT, GWYNEDD, MID_GLAMORGAN, 
+                    ANGLESEY, BRECON, CAERNARFON, CEREDIGION, CARMARTHEN, DENBIGH, FLINT, GLAMORGAN, MERIONETH,
+                    MONMOUTH, MONTGOMERY, PEMBROKE, RADNOR, CLWYD, DYFED, GWENT, GWYNEDD, MID_GLAMORGAN,
                     POWYS, SOUTH_GLAMORGAN, WEST_GLAMORGAN, BLAENAU_GWENT, BRIDGEND, CARDIFF, CAERPHILLY,
                     CONWY, BLAENAU_GWENT, BRIDGEND, CARDIFF, CAERPHILLY, CONWY, MERTHYL, NEATH, RHONDDA,
                     SWANSEA, TORFAEN, VALE_GLAMORGAN
@@ -783,40 +780,40 @@ namespace FTAnalyzer
             UK_REGIONS.UnionWith(WELSH_REGIONS);
             UK_REGIONS.UnionWith(NIRELAND_REGIONS);
             UK_REGIONS.UnionWith(ISLAND_REGIONS);
-            #endregion 
-            
+            #endregion
+
             #region Overseas Regions
-            IRISH_REGIONS = new HashSet<Region>(new Region[] { 
+            IRISH_REGIONS = new HashSet<Region>(new Region[] {
                 CARLOW, CAVAN, CLARE, CORK, DONEGAL, DUBLIN, GALWAY, KERRY, KILDARE, KILKENNY, LAOIS, LEITRIM,
-                LIMERICK, LONGFORD, LOUTH, MAYO, MEATH, MONAGHAN, OFFALY, ROSCOMMON, SLIGO, TIPPERARY, WATERFORD, 
+                LIMERICK, LONGFORD, LOUTH, MAYO, MEATH, MONAGHAN, OFFALY, ROSCOMMON, SLIGO, TIPPERARY, WATERFORD,
                 WESTMEATH, WEXFORD, WICKLOW, DUN_LAOGHAIRE, FINGAL, NORTH_TIPPERARY, SOUTH_DUBLIN, SOUTH_TIPPERARY,
                 LEINSTER, MUNSTER, CONNACHT
             });
             AddIrishRegionAlternates();
 
-            CANADIAN_REGIONS = new HashSet<Region>(new Region[] { 
-                ALBERTA, BRITISH_COLUMBIA, MANITOBA, NEW_BRUNSWICK, NEWFOUNDLAND, NOVA_SCOTIA, ONTARIO, 
+            CANADIAN_REGIONS = new HashSet<Region>(new Region[] {
+                ALBERTA, BRITISH_COLUMBIA, MANITOBA, NEW_BRUNSWICK, NEWFOUNDLAND, NOVA_SCOTIA, ONTARIO,
                 PRINCE_EDWARD, QUEBEC, SASKATCHEWAN, NW_TERRITORIES, NUNAVUT, YUKON
             });
             AddCanadianRegionAlternates();
 
-            US_STATES = new HashSet<Region>(new Region[] { 
+            US_STATES = new HashSet<Region>(new Region[] {
                 ALABAMA, ALASKA, ARIZONA, ARKANSAS, CALIFORNIA, COLORADO, CONNECTICUT, DELAWARE, FLORIDA,
-                GEORGIA, HAWAII, IDAHO, ILLINOIS, INDIANA, IOWA, KANSAS, KENTUCKY, LOUISIANA, MAINE, 
+                GEORGIA, HAWAII, IDAHO, ILLINOIS, INDIANA, IOWA, KANSAS, KENTUCKY, LOUISIANA, MAINE,
                 MARYLAND, MASSACHUSETTS, MICHIGAN, MINNESOTA, MISSISSIPPI, MISSOURI, MONTANA, NEBRASKA,
                 NEVADA, NEW_HAMPSHIRE, NEW_JERSEY, NEW_MEXICO, NEW_YORK, NORTH_CAROLINA, NORTH_DAKOTA,
                 OHIO, OKLAHOMA, OREGON, PENNSYLVANIA, RHODE_ISLAND, SOUTH_CAROLINA, SOUTH_DAKOTA,
-                TENNESSEE, TEXAS, UTAH, VERMONT, VIRGINIA, WASHINGTON, WEST_VIRGINIA, WISCONSIN, 
+                TENNESSEE, TEXAS, UTAH, VERMONT, VIRGINIA, WASHINGTON, WEST_VIRGINIA, WISCONSIN,
                 WYOMING, DC
             });
             AddUSStatesAlternates();
 
-            AUSTRALIAN_REGIONS = new HashSet<Region>(new Region[] { 
+            AUSTRALIAN_REGIONS = new HashSet<Region>(new Region[] {
                 NSW, QUEENSLAND, SAUSTRALIA, TASMANIA, VICTORIA, WAUSTRALIA, ACT, NORTHERN_TERRITORY
             });
             AddAustralianRegionAlternates();
 
-            NEW_ZEALAND_REGIONS = new HashSet<Region>(new Region[] { 
+            NEW_ZEALAND_REGIONS = new HashSet<Region>(new Region[] {
                 AUCKLAND, BAY_OF_PLENTY, CANTERBURY, HAWKES_BAY, MANAWATU_WANGANUI, NORTHLAND, OTAGO,
                 SOUTHLAND, TARANAKI, WAIKATO, WELLINGTON, WEST_COAST, GISBORNE, MARBOROUGH, NELSON,
                 TASMAN, CHATAM_ISLANDS, NORTH_ISLAND, SOUTH_ISLAND
@@ -1058,63 +1055,63 @@ namespace FTAnalyzer
 
         static void AddIrishRegionAlternates()
         {
-           CARLOW.AddAlternateName("Co Carlow");        
-           CARLOW.AddAlternateName("County Carlow");    
-           CAVAN.AddAlternateName("Co Cavan");         
-           CAVAN.AddAlternateName("County Cavan");     
-           CLARE.AddAlternateName("Co Clare");         
-           CLARE.AddAlternateName("County Clare");     
-           CORK.AddAlternateName("Co Cork");          
-           CORK.AddAlternateName("County Cork");      
-           DONEGAL.AddAlternateName("Co Donegal");       
-           DONEGAL.AddAlternateName("County Donegal");   
-           DUBLIN.AddAlternateName("Co Dublin");        
-           DUBLIN.AddAlternateName("County Dublin");    
-           GALWAY.AddAlternateName("Co Galway");        
-           GALWAY.AddAlternateName("County Galway");    
-           KERRY.AddAlternateName("Co Kerry");         
-           KERRY.AddAlternateName("County Kerry");     
-           KILDARE.AddAlternateName("Co Kildare");       
-           KILDARE.AddAlternateName("County Kildare");   
-           KILKENNY.AddAlternateName("Co Kilkenny");      
-           KILKENNY.AddAlternateName("County Kilkenny");  
-           LAOIS.AddAlternateName("Leix");
-           LAOIS.AddAlternateName("Co Leix");
-           LAOIS.AddAlternateName("County Leix");
-           LAOIS.AddAlternateName("Co Laois");
-           LAOIS.AddAlternateName("County Laois");
-           LAOIS.AddAlternateName("Laoighis");
-           LEITRIM.AddAlternateName("Co Leitrim");       
-           LEITRIM.AddAlternateName("County Leitrim");   
-           LIMERICK.AddAlternateName("Co Limerick");      
-           LIMERICK.AddAlternateName("County Limerick");  
-           LONGFORD.AddAlternateName("Co Longford");      
-           LONGFORD.AddAlternateName("County Longford");  
-           LOUTH.AddAlternateName("Co Louth");         
-           LOUTH.AddAlternateName("County Louth");     
-           MAYO.AddAlternateName("Co Mayo");          
-           MAYO.AddAlternateName("County Mayo");      
-           MEATH.AddAlternateName("Co Meath");         
-           MEATH.AddAlternateName("County Meath");     
-           MONAGHAN.AddAlternateName("Co Monaghan");      
-           MONAGHAN.AddAlternateName("County Monaghan");  
-           OFFALY.AddAlternateName("Co Offaly");        
-           OFFALY.AddAlternateName("County Offaly");    
-           ROSCOMMON.AddAlternateName("Co Roscommon");     
-           ROSCOMMON.AddAlternateName("County Roscommon"); 
-           SLIGO.AddAlternateName("Co Sligo");         
-           SLIGO.AddAlternateName("County Sligo");     
-           TIPPERARY.AddAlternateName("Co Tipperary");        
-           TIPPERARY.AddAlternateName("County Tipperary");    
-           WATERFORD.AddAlternateName("Co Waterford");     
-           WATERFORD.AddAlternateName("County Waterford"); 
-           WESTMEATH.AddAlternateName("Co Westmeath");     
-           WESTMEATH.AddAlternateName("County Westmeath"); 
-           WEXFORD.AddAlternateName("Co Wexford");       
-           WEXFORD.AddAlternateName("County Wexford");   
-           WICKLOW.AddAlternateName("Co Wicklow");       
-           WICKLOW.AddAlternateName("County Wicklow");
-           CONNACHT.AddAlternateName("Connaught");
+            CARLOW.AddAlternateName("Co Carlow");
+            CARLOW.AddAlternateName("County Carlow");
+            CAVAN.AddAlternateName("Co Cavan");
+            CAVAN.AddAlternateName("County Cavan");
+            CLARE.AddAlternateName("Co Clare");
+            CLARE.AddAlternateName("County Clare");
+            CORK.AddAlternateName("Co Cork");
+            CORK.AddAlternateName("County Cork");
+            DONEGAL.AddAlternateName("Co Donegal");
+            DONEGAL.AddAlternateName("County Donegal");
+            DUBLIN.AddAlternateName("Co Dublin");
+            DUBLIN.AddAlternateName("County Dublin");
+            GALWAY.AddAlternateName("Co Galway");
+            GALWAY.AddAlternateName("County Galway");
+            KERRY.AddAlternateName("Co Kerry");
+            KERRY.AddAlternateName("County Kerry");
+            KILDARE.AddAlternateName("Co Kildare");
+            KILDARE.AddAlternateName("County Kildare");
+            KILKENNY.AddAlternateName("Co Kilkenny");
+            KILKENNY.AddAlternateName("County Kilkenny");
+            LAOIS.AddAlternateName("Leix");
+            LAOIS.AddAlternateName("Co Leix");
+            LAOIS.AddAlternateName("County Leix");
+            LAOIS.AddAlternateName("Co Laois");
+            LAOIS.AddAlternateName("County Laois");
+            LAOIS.AddAlternateName("Laoighis");
+            LEITRIM.AddAlternateName("Co Leitrim");
+            LEITRIM.AddAlternateName("County Leitrim");
+            LIMERICK.AddAlternateName("Co Limerick");
+            LIMERICK.AddAlternateName("County Limerick");
+            LONGFORD.AddAlternateName("Co Longford");
+            LONGFORD.AddAlternateName("County Longford");
+            LOUTH.AddAlternateName("Co Louth");
+            LOUTH.AddAlternateName("County Louth");
+            MAYO.AddAlternateName("Co Mayo");
+            MAYO.AddAlternateName("County Mayo");
+            MEATH.AddAlternateName("Co Meath");
+            MEATH.AddAlternateName("County Meath");
+            MONAGHAN.AddAlternateName("Co Monaghan");
+            MONAGHAN.AddAlternateName("County Monaghan");
+            OFFALY.AddAlternateName("Co Offaly");
+            OFFALY.AddAlternateName("County Offaly");
+            ROSCOMMON.AddAlternateName("Co Roscommon");
+            ROSCOMMON.AddAlternateName("County Roscommon");
+            SLIGO.AddAlternateName("Co Sligo");
+            SLIGO.AddAlternateName("County Sligo");
+            TIPPERARY.AddAlternateName("Co Tipperary");
+            TIPPERARY.AddAlternateName("County Tipperary");
+            WATERFORD.AddAlternateName("Co Waterford");
+            WATERFORD.AddAlternateName("County Waterford");
+            WESTMEATH.AddAlternateName("Co Westmeath");
+            WESTMEATH.AddAlternateName("County Westmeath");
+            WEXFORD.AddAlternateName("Co Wexford");
+            WEXFORD.AddAlternateName("County Wexford");
+            WICKLOW.AddAlternateName("Co Wicklow");
+            WICKLOW.AddAlternateName("County Wicklow");
+            CONNACHT.AddAlternateName("Connaught");
         }
 
         static void AddCanadianRegionAlternates()

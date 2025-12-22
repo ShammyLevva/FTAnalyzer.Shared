@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace FTAnalyzer
+﻿namespace FTAnalyzer
 {
     public class DisplayCustomFact(string factname, int indcount, int famcount, bool ignore) : IDisplayCustomFact
     {
@@ -28,7 +25,7 @@ namespace FTAnalyzer
         {
             return Comparer<T>.Create((x, y) =>
             {
-                if(x is not IDisplayCustomFact facX)
+                if (x is not IDisplayCustomFact facX)
                     return ascending ? 1 : -1;
                 if (y is not IDisplayCustomFact facY)
                     return ascending ? 1 : -1;

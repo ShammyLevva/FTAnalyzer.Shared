@@ -15,7 +15,7 @@ namespace FTAnalyzer
         string Relation { get; }
         [ColumnDetail("Relation to Root", 170)]
         string RelationToRoot { get; }
-        
+
         [ColumnDetail("Birth", 60)]
         ColourValues.BMDColours Birth { get; }
         [ColumnDetail("Baptism", 60)]

@@ -2,9 +2,9 @@
 {
     public class StandardisedName
     {
-        public bool IsMale { get; private set; } 
+        public bool IsMale { get; private set; }
         public string Name { get; private set; }
-        
+
         public StandardisedName(int sex, string name)
         {
             IsMale = sex != 1;  // 1 female, 2 male, anything else male

@@ -9,17 +9,17 @@ namespace FTAnalyzer
         [ColumnDetail("Score", 120)]
         int Score { get; }
         [ColumnDetail("Ref", 100)]
-        string IndividualID { get;}
+        string IndividualID { get; }
         [ColumnDetail("Name", 250)]
-        string Name { get;}
+        string Name { get; }
         [ColumnDetail("Forenames", 200)]
         string Forenames { get; }
         [ColumnDetail("Surname", 150)]
         string Surname { get; }
         [ColumnDetail("Birth Date", 225)]
-        FactDate BirthDate { get;}
+        FactDate BirthDate { get; }
         [ColumnDetail("Birth Location", 400)]
-        FactLocation BirthLocation { get;}
+        FactLocation BirthLocation { get; }
         [ColumnDetail("Gender", 100)]
         string Gender { get; }
         [ColumnDetail("Match", 125)]

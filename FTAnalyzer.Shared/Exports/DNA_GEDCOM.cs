@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
+﻿using System.Text;
 #if __PC__
 using FTAnalyzer.Utilities;
-using System.Windows.Forms;
 #elif __MACOS__
 using AppKit;
 #elif __IOS__
@@ -142,10 +138,10 @@ namespace FTAnalyzer.Exports
             foreach (Family fam in families)
             {
                 foreach (Individual child in fam.Children)
-                { 
+                {
                     if (child.RelationType != Individual.DIRECT && child.RelationType != Individual.DESCENDANT) // only write out siblings not directs at this point
                     {
-                        if(_includeDescendants)
+                        if (_includeDescendants)
                             descendants.Add(child); // add to list of all descendants to write out
                         else
                             WriteIndividual(child);
@@ -166,18 +162,18 @@ namespace FTAnalyzer.Exports
         {
             Queue<Individual> queue = new();
             foreach (Individual i in descendants)
-                if(i.IsBloodDirect)
+                if (i.IsBloodDirect)
                     queue.Enqueue(i);
             Individual ind;
             List<Family> descendantFamilies = [];
-            while(queue.Count > 0)
+            while (queue.Count > 0)
             {
                 ind = queue.Dequeue();
-                if(ind.IsBloodDirect)
+                if (ind.IsBloodDirect)
                     WriteIndividual(ind);
-                foreach(Family fam in ind.FamiliesAsSpouse)
+                foreach (Family fam in ind.FamiliesAsSpouse)
                 {
-                    if(fam.Husband is not null && fam.Husband.IsBloodDirect)
+                    if (fam.Husband is not null && fam.Husband.IsBloodDirect)
                         WriteIndividual(fam.Husband);
                     if (fam.Wife is not null && fam.Wife.IsBloodDirect)
                         WriteIndividual(fam.Wife);
@@ -191,19 +187,19 @@ namespace FTAnalyzer.Exports
 
         static void WriteFamilies(List<Family> families)
         {
-            foreach(Family fam in families)
+            foreach (Family fam in families)
             {
                 bool isPrivate = _privatise && fam.FamilyDate.IsAfter(PrivacyDate) &&
                                 ((fam.Husband is not null && fam.Husband.IsAlive(FactDate.TODAY)) ||
                                  (fam.Wife is not null && fam.Wife.IsAlive(FactDate.TODAY))); // if marriage is after privacy date and either party is alive then make marriage private
                 output.WriteLine($"0 @{fam.FamilyID}@ FAM");
-                if(fam.Husband is not null)
+                if (fam.Husband is not null)
                     output.WriteLine($"1 HUSB @{fam.HusbandID}@");
                 if (fam.Wife is not null)
                     output.WriteLine($"1 WIFE @{fam.WifeID}@");
-                foreach(Individual child in fam.Children)
+                foreach (Individual child in fam.Children)
                 {
-                    if(_includeSiblings || child.RelationType == Individual.DIRECT || child.RelationType == Individual.DESCENDANT) // skip siblings if not including
+                    if (_includeSiblings || child.RelationType == Individual.DIRECT || child.RelationType == Individual.DESCENDANT) // skip siblings if not including
                         output.WriteLine($"1 CHIL @{child.IndividualID}@");
                 }
                 if (!isPrivate)
@@ -259,7 +255,7 @@ namespace FTAnalyzer.Exports
                     output.WriteLine($"2 DATE {ind.BirthDate}");
                     output.WriteLine($"2 PLAC {ind.BirthLocation}");
                 }
-                if(ind.DeathDate.IsKnown)
+                if (ind.DeathDate.IsKnown)
                 {
                     output.WriteLine($"1 DEAT");
                     output.WriteLine($"2 DATE {ind.DeathDate}");

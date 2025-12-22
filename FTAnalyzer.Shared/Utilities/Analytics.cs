@@ -1,7 +1,7 @@
-﻿using GoogleAnalyticsTracker.Core;
+﻿using FTAnalyzer.Properties;
+using GoogleAnalyticsTracker.Core;
 using GoogleAnalyticsTracker.Simple;
 using System.Diagnostics;
-using FTAnalyzer.Properties;
 
 namespace FTAnalyzer.Utilities
 {
@@ -32,17 +32,17 @@ namespace FTAnalyzer.Utilities
                             DuplicatesTabEvent = "Duplicates Tab Viewed", LooseBirthsEvent = "Loose Births Tab Viewed", LooseDeathsEvent = "Loose Deaths Tab Viewed",
                             LCReportYearEvent = "LC Year Report Run", NoLCCountryEvent = "No LC Country Clicked", LCDuplicatesEvent = "LC Duplicates Clicked",
                             NoLCCensusEvent = "No LC Census Clicked", LCWebLinkEvent = "LC Weblink Clicked", OptionsEvent = "Options Viewed", DBBackupEvent = "Database Backedup",
-                            DBRestoreEvent = "Database Restored", ShowCensusEvent = "Show on Census", MissingCensusEvent = "Show Missing from Census", 
+                            DBRestoreEvent = "Database Restored", ShowCensusEvent = "Show on Census", MissingCensusEvent = "Show Missing from Census",
                             MissingCensusLocationEvent = "Missing Census Location Clicked", DuplicateCensusEvent = "Duplicate Census Clicked", DataErrorsTabEvent = "Data Errors Tab Viewed",
                             NoChildrenStatusEvent = "No Children Status Clicked", MisMatchedEvent = "Mismatched Children Clicked", UnrecognisedCensusEvent = "Unrecognised Census Ref",
                             ColourBMDEvent = "Colour BMD Report Clicked", ColourCensusEvent = "Colour Census Report Clicked", ExportIndEvent = "Individuals Exported",
-                            ExportFamEvent = "Families Exported", ExportFactsEvent = "Facts Exported", ExportLooseBirthsEvent = "Loose Births Exported", 
+                            ExportFamEvent = "Families Exported", ExportFactsEvent = "Facts Exported", ExportLooseBirthsEvent = "Loose Births Exported",
                             ExportLooseDeathsEvent = "Loose Deaths Exported", ExportSourcesEvent = "Sources Exported", ExportDataErrorsEvent = "Data Errors Exported",
-                            ExportTreeTopsEvent = "Treetops Exported", ExportWorldWarsEvent = "World Wars Exported", TodayClickedEvent = "Todays Events Clicked", 
-                            ShowSurnamesEvent = "Show Surnames Clicked", CousinCountEvent = "Cousins Count Viewed", DirectsReportEvent = "How Many Directs Viewed", 
-                            FacebookSupportEvent = "Visited Facebook Support", FacebookUsersEvent = "Visited Facebook Usergroup", CountriesTabEvent = "Countries Tab Viewed", 
-                            RegionsTabEvent = "Regions Tab Viewed", SubRegionsTabEvent = "SubRegions Tab Viewed", AddressesTabEvent = "Addresses Tab Viewed", 
-                            PlacesTabEvent = "Places Tab Viewed", ExportLocationsEvent ="Locations Exported", GoogleAPIKey = "Get Google API Key",
+                            ExportTreeTopsEvent = "Treetops Exported", ExportWorldWarsEvent = "World Wars Exported", TodayClickedEvent = "Todays Events Clicked",
+                            ShowSurnamesEvent = "Show Surnames Clicked", CousinCountEvent = "Cousins Count Viewed", DirectsReportEvent = "How Many Directs Viewed",
+                            FacebookSupportEvent = "Visited Facebook Support", FacebookUsersEvent = "Visited Facebook Usergroup", CountriesTabEvent = "Countries Tab Viewed",
+                            RegionsTabEvent = "Regions Tab Viewed", SubRegionsTabEvent = "SubRegions Tab Viewed", AddressesTabEvent = "Addresses Tab Viewed",
+                            PlacesTabEvent = "Places Tab Viewed", ExportLocationsEvent = "Locations Exported", GoogleAPIKey = "Get Google API Key",
                             ReadLostCousins = "Read Lost Cousins Records", UpdateLostCousins = "Update Records on Lost Cousins", PreviewLostCousins = "Preview records for update",
                             SoftwareProvider = "Software Provider", SoftwareVersion = "Software Version", LostCousinsStats = "Lost Cousins Statistics",
                             PossiblyMissingChildren = "Possibly Missing Children Viewed", AgedOver99Report = "Aged Over 99 Viewed", AliveAtDate = "Alive at Date",
@@ -50,7 +50,7 @@ namespace FTAnalyzer.Utilities
                             ExportDuplicatesEvent = "Duplicates Exported";
 
         public const string FactsIndividualsEvent = "Individual Facts Viewed", FactsFamiliesEvent = "Family Facts Viewed", LooseInfoEvent = "Loose Info Tab Viewed",
-                            FactsGroupIndividualsEvent = "Various Individuals Facts Viewed", FactsDuplicatesEvent = "Duplicate Facts Viewed", 
+                            FactsGroupIndividualsEvent = "Various Individuals Facts Viewed", FactsDuplicatesEvent = "Duplicate Facts Viewed",
                             FactsCensusRefEvent = "Census References Facts Viewed", FactsSourceEvent = "Facts for Source Viewed", FactsCensusRefIssueEvent = "Census Ref Issue Viewed",
                             BirthdayEffectEvent = "Birthday Effect Report Viewed";
 
@@ -89,7 +89,7 @@ namespace FTAnalyzer.Utilities
                 await tracker.TrackScreenviewAsync(FTAStartupAction);
             }
             catch (Exception e)
-                { Debug.WriteLine(e.Message); }
+            { Debug.WriteLine(e.Message); }
         }
 
         public static Task TrackAction(string category, string action) => TrackActionAsync(category, action, "default");
@@ -101,7 +101,7 @@ namespace FTAnalyzer.Utilities
                 await tracker.TrackScreenviewAsync(category);
             }
             catch (Exception e)
-                { Debug.WriteLine(e.Message); }
+            { Debug.WriteLine(e.Message); }
         }
 
         public static async Task EndProgramAsync()

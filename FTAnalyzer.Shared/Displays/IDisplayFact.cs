@@ -1,5 +1,4 @@
 ﻿#if __PC__
-using System.Drawing;
 #endif
 
 using FTAnalyzer.Utilities;
@@ -28,7 +27,7 @@ namespace FTAnalyzer
         FactDate FactDate { get; }
         [ColumnDetail("Relation", 120)]
         string Relation { get; }
-        [ColumnDetail("Relation to Root", 160)]    
+        [ColumnDetail("Relation to Root", 160)]
         string RelationToRoot { get; }
         [ColumnDetail("Location", 250)]
         FactLocation Location { get; }

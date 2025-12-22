@@ -1,5 +1,5 @@
-﻿using System.Numerics;
-using FTAnalyzer.Utilities;
+﻿using FTAnalyzer.Utilities;
+using System.Numerics;
 
 namespace FTAnalyzer
 {

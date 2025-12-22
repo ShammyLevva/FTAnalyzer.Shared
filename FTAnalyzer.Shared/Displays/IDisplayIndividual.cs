@@ -23,7 +23,7 @@ namespace FTAnalyzer
         FactLocation DeathLocation { get; }
         [ColumnDetail("Occupation", 200)]
         string Occupation { get; }
-        [ColumnDetail("Lifespan",65)]
+        [ColumnDetail("Lifespan", 65)]
         Age LifeSpan { get; }
         [ColumnDetail("Relation", 120)]
         string Relation { get; }

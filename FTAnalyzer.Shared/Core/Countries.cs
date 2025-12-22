@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-#if __PC__
+﻿#if __PC__
 using NetTopologySuite.Geometries;
 #endif
 

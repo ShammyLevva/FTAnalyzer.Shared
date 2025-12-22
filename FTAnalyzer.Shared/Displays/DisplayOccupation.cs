@@ -5,7 +5,7 @@
         public string Occupation { get; }
         public int Count { get; }
 
-        public DisplayOccupation(string occupation,int count)
+        public DisplayOccupation(string occupation, int count)
         {
             Occupation = occupation;
             Count = count;

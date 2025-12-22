@@ -1,5 +1,4 @@
 ﻿#if __PC__
-using System.Drawing;
 using FTAnalyzer.Mapping;
 using FTAnalyzer.Utilities;
 #endif

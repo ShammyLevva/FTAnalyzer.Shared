@@ -1,5 +1,4 @@
-﻿using System;
-using System.Web;
+﻿using System.Web;
 
 namespace FTAnalyzer
 {
@@ -14,7 +13,7 @@ namespace FTAnalyzer
         string SurnameMetaphone { get; set; }
         string ForenameMetaphone { get; set; }
 
-        public enum Status { Good = 1, FuzzyNameAge = 2, NotPrecise = 3, Bad = 4}
+        public enum Status { Good = 1, FuzzyNameAge = 2, NotPrecise = 3, Bad = 4 }
 
         public LostCousin(string name, int birthYear, string reference, int censusYear, string censusCountry, bool ftanalyzer)
         {
@@ -49,7 +48,7 @@ namespace FTAnalyzer
             BirthYear = result;
             Reference = reference;
             int ptr = weblink is null ? -1 : weblink.IndexOf("&p=", StringComparison.Ordinal);
-            WebLink = ptr == -1 || weblink.Length <= ptr+3 ? null : new Uri(HttpUtility.UrlDecode(weblink[(ptr + 3)..]));
+            WebLink = ptr == -1 || weblink.Length <= ptr + 3 ? null : new Uri(HttpUtility.UrlDecode(weblink[(ptr + 3)..]));
             FTAnalyzerFact = ftanalyzer;
             census ??= string.Empty;
             if (census.StartsWith("England", StringComparison.Ordinal))
@@ -104,7 +103,7 @@ namespace FTAnalyzer
         public bool Equals(LostCousin? other)
         {
             if (other is null) return false;
-            if(CensusDate != other.CensusDate || Reference != other.Reference || Math.Abs(BirthYear - other.BirthYear) >= 5)
+            if (CensusDate != other.CensusDate || Reference != other.Reference || Math.Abs(BirthYear - other.BirthYear) >= 5)
                 return false;
             if (Name == other.Name)
                 return true;

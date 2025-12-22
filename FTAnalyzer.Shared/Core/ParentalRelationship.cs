@@ -14,7 +14,7 @@ namespace FTAnalyzer
         {
             get
             {
-                return Father !=null && 
+                return Father != null &&
                       (FatherRelationship == ParentalRelationshipType.NATURAL ||
                        FatherRelationship == ParentalRelationshipType.UNKNOWN ||
                        FatherRelationship == ParentalRelationshipType.PRIVATE);
@@ -25,8 +25,8 @@ namespace FTAnalyzer
         {
             get
             {
-                return Mother is not null && 
-                        (MotherRelationship == ParentalRelationshipType.NATURAL || 
+                return Mother is not null &&
+                        (MotherRelationship == ParentalRelationshipType.NATURAL ||
                          MotherRelationship == ParentalRelationshipType.UNKNOWN ||
                          MotherRelationship == ParentalRelationshipType.PRIVATE);
             }

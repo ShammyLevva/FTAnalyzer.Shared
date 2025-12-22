@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace FTAnalyzer
+﻿namespace FTAnalyzer
 {
     public class CensusDate : FactDate
     {
@@ -31,7 +28,7 @@ namespace FTAnalyzer
         public static readonly CensusDate UKCENSUS1991 = new("21 APR 1991", "UK Census 1991", Countries.UNITED_KINGDOM, "C1991");
         public static readonly CensusDate UKCENSUS2001 = new("29 APR 2001", "UK Census 2001", Countries.UNITED_KINGDOM, "C2001");
         public static readonly CensusDate UKCENSUS2011 = new("27 MAR 2011", "UK Census 2011", Countries.UNITED_KINGDOM, "C2011");
-                     
+
         public static readonly CensusDate EWCENSUS1841 = new("06 JUN 1841", "England & Wales Census 1841", Countries.ENG_WALES, "C1841");
         public static readonly CensusDate EWCENSUS1881 = new("03 APR 1881", "England & Wales Census 1881", Countries.ENG_WALES, "C1881");
         public static readonly CensusDate EWCENSUS1911 = new("02 APR 1911", "England & Wales Census 1911", Countries.ENG_WALES, "C1911");
@@ -39,7 +36,7 @@ namespace FTAnalyzer
         public static readonly CensusDate SCOTCENSUS1881 = new("03 APR 1881", "Scotland Census 1881", Countries.SCOTLAND, "C1881");
         public static readonly CensusDate SCOTCENSUS1931 = new("26 APR 1931", "Scotland Census 1931", Countries.SCOTLAND, "C1931");
         public static readonly CensusDate SCOTCENSUS2022 = new("02 APR 2022", "Scotland Census 2022", Countries.SCOTLAND, "C2021");
-                  
+
         public static readonly CensusDate SCOTVALUATION1855 = new("BET JUL 1854 AND MAY 1855", "Scottish Valuation Roll 1855", Countries.SCOTLAND, "V1855");
         public static readonly CensusDate SCOTVALUATION1865 = new("BET JUL 1864 AND MAY 1865", "Scottish Valuation Roll 1865", Countries.SCOTLAND, "V1865");
         public static readonly CensusDate SCOTVALUATION1875 = new("BET JUL 1874 AND MAY 1875", "Scottish Valuation Roll 1875", Countries.SCOTLAND, "V1875");
@@ -52,10 +49,10 @@ namespace FTAnalyzer
         public static readonly CensusDate SCOTVALUATION1930 = new("BET JUL 1929 AND MAY 1930", "Scottish Valuation Roll 1930", Countries.SCOTLAND, "V1930");
         public static readonly CensusDate SCOTVALUATION1935 = new("BET JUL 1934 AND MAY 1935", "Scottish Valuation Roll 1935", Countries.SCOTLAND, "V1935");
         public static readonly CensusDate SCOTVALUATION1940 = new("BET JUL 1939 AND MAY 1940", "Scottish Valuation Roll 1940", Countries.SCOTLAND, "V1940");
-                      
+
         public static readonly CensusDate IRELANDCENSUS1901 = new("31 MAR 1901", "Ireland Census 1901", Countries.IRELAND, "Ire1901");
         public static readonly CensusDate IRELANDCENSUS1911 = new("02 APR 1911", "Ireland Census 1911", Countries.IRELAND, "Ire1911");
-                     
+
         public static readonly CensusDate USCENSUS1790 = new("BET 2 AUG 1790 AND 1791", "US Federal Census 1790", Countries.UNITED_STATES, "US1790", "5058");
         public static readonly CensusDate USCENSUS1800 = new("BET 4 AUG 1800 AND MAY 1801", "US Federal Census 1800", Countries.UNITED_STATES, "US1800", "7590");
         public static readonly CensusDate USCENSUS1810 = new("BET 6 AUG 1810 AND JUN 1811", "US Federal Census 1810", Countries.UNITED_STATES, "US1810", "7613");
@@ -80,7 +77,7 @@ namespace FTAnalyzer
         public static readonly CensusDate USCENSUS2000 = new("BET 1 APR 2000 AND 31 MAY 2000", "US Federal Census 2000", Countries.UNITED_STATES, "US2000");
         public static readonly CensusDate USCENSUS2010 = new("BET 1 APR 2010 AND 31 MAY 2010", "US Federal Census 2010", Countries.UNITED_STATES, "US2010");
         public static readonly CensusDate USCENSUS2020 = new("BET 1 APR 2020 AND 31 MAY 2020", "US Federal Census 2020", Countries.UNITED_STATES, "US2020");
-                      
+
         public static readonly CensusDate CANADACENSUS1851 = new("BET 1851 AND 1852", "Canadian Census 1851/2", Countries.CANADA, "Can1851");
         public static readonly CensusDate CANADACENSUS1861 = new("1861", "Canadian Census 1861", Countries.CANADA, "Can1861");
         public static readonly CensusDate CANADACENSUS1871 = new("2 APR 1871", "Canadian Census 1871", Countries.CANADA, "Can1871");
@@ -113,8 +110,8 @@ namespace FTAnalyzer
         });
 
         public static readonly ISet<CensusDate> US_FEDERAL_CENSUS = new HashSet<CensusDate>(new CensusDate[] {
-            USCENSUS1790, USCENSUS1800, USCENSUS1810, USCENSUS1820, USCENSUS1830, USCENSUS1840, USCENSUS1850, USCENSUS1860, USCENSUS1870, 
-            USCENSUS1880, USCENSUS1890, USCENSUS1900, USCENSUS1910, USCENSUS1920, USCENSUS1930, USCENSUS1940, USCENSUS1950, USCENSUS1960, 
+            USCENSUS1790, USCENSUS1800, USCENSUS1810, USCENSUS1820, USCENSUS1830, USCENSUS1840, USCENSUS1850, USCENSUS1860, USCENSUS1870,
+            USCENSUS1880, USCENSUS1890, USCENSUS1900, USCENSUS1910, USCENSUS1920, USCENSUS1930, USCENSUS1940, USCENSUS1950, USCENSUS1960,
             USCENSUS1970, USCENSUS1980, USCENSUS1990, USCENSUS2000, USCENSUS2010, USCENSUS2020
         });
 
@@ -128,7 +125,7 @@ namespace FTAnalyzer
         public static readonly ISet<CensusDate> SUPPORTED_CENSUS = new HashSet<CensusDate>(new CensusDate[] {
             UKCENSUS1841, UKCENSUS1851, UKCENSUS1861, UKCENSUS1871, UKCENSUS1881, UKCENSUS1891, UKCENSUS1901, UKCENSUS1911, UKCENSUS1921,
             UKCENSUS1939, UKCENSUS1951, UKCENSUS1961, UKCENSUS1966, UKCENSUS1971, UKCENSUS1981, UKCENSUS1991, UKCENSUS2001,
-            UKCENSUS2011, 
+            UKCENSUS2011,
             USCENSUS1790, USCENSUS1800, USCENSUS1810, USCENSUS1820, USCENSUS1830, USCENSUS1840, USCENSUS1850, USCENSUS1860, USCENSUS1870,
             USCENSUS1880, USCENSUS1890, USCENSUS1900, USCENSUS1910, USCENSUS1920, USCENSUS1930, USCENSUS1940, USCENSUS1950, USCENSUS1960,
             USCENSUS1970, USCENSUS1980, USCENSUS1990, USCENSUS2000, USCENSUS2010, USCENSUS2020,
@@ -144,7 +141,7 @@ namespace FTAnalyzer
         });
 
         public static readonly ISet<CensusDate> VALUATIONROLLS = new HashSet<CensusDate>(new CensusDate[] {
-            SCOTVALUATION1855, SCOTVALUATION1865, SCOTVALUATION1875, SCOTVALUATION1885, SCOTVALUATION1895, SCOTVALUATION1905, 
+            SCOTVALUATION1855, SCOTVALUATION1865, SCOTVALUATION1875, SCOTVALUATION1885, SCOTVALUATION1895, SCOTVALUATION1905,
             SCOTVALUATION1915, SCOTVALUATION1920, SCOTVALUATION1925, SCOTVALUATION1930, SCOTVALUATION1935, SCOTVALUATION1940
         });
 

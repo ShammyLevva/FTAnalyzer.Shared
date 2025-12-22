@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace FTAnalyzer
+﻿namespace FTAnalyzer
 {
     public class Region
     {
@@ -12,7 +10,7 @@ namespace FTAnalyzer
         public string ISOcode { get; set; }
         public Creation RegionType { get; private set; }
         public List<ModernCounty> CountyCodes { get; private set; }
-        
+
         public Region(string region, string country, Creation regionType)
         {
             Country = country;
