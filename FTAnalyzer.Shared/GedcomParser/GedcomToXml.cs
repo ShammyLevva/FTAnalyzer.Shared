@@ -133,13 +133,16 @@ namespace FTAnalyzer
                     nextline = reader.ReadLine();
                     if (FileHandling.Default.RetryFailedLines)
                     {
+                        StringBuilder sb = new();
+                        sb.Append(line);
                         //need to check if nextline is valid if not line=line+nextline and nextline=reader.ReadLine();
                         while (nextline?.Length <= 1 || (nextline?.Length > 1 && (!char.IsNumber(nextline[0]) || !nextline[1].Equals(' '))))
                         {  // concat if next line not a number space combo
-                            line += nextline;
+                            sb.Append(nextline);
                             lineNr++;
                             nextline = reader.ReadLine();
                         }
+                        line = sb.ToString();
                     }
                     // parse the GEDCOM line into five fields: level, iden, tag, xref, valu
                     line = line.Trim();
@@ -159,7 +162,7 @@ namespace FTAnalyzer
 
                             // check the level number
 
-                            if (thislevel > prevlevel && !(thislevel == prevlevel + 1))
+                            if (thislevel > prevlevel && (thislevel != prevlevel + 1))
                                 throw new InvalidGEDCOMException($"Level numbers must increase by 1", line, lineNr);
                             if (thislevel < 0)
                                 throw new InvalidGEDCOMException("Level number must not be negative", line, lineNr);
@@ -187,7 +190,7 @@ namespace FTAnalyzer
                             }
 
                             xref = "";
-                            if (line.StartsWith('@') && tag != "_HASHTAG" & tag != "NAME")
+                            if (line.StartsWith('@') && tag != "_HASHTAG" && tag != "NAME")
                             {
                                 if (!token1.Equals("CONT", StringComparison.Ordinal) && !token1.Equals("CONC", StringComparison.Ordinal))
                                 {
@@ -204,12 +207,15 @@ namespace FTAnalyzer
                             }
                             if (token1.Equals("CONT", StringComparison.Ordinal) || token1.Equals("CONC", StringComparison.Ordinal))
                             {
+                                StringBuilder sb = new();
+                                sb.Append(line);
                                 // check if nextline does not start with a number ie: could be a wrapped line, if so then concatenate
                                 while (nextline is not null && !nextline.Trim().StartsWithNumeric())
                                 {
-                                    line = line + "\n" + nextline.Trim();
+                                    sb.Append($"\n{nextline.Trim()}");
                                     nextline = reader.ReadLine();
                                 }
+                                line = sb.ToString().Trim();
                             }
 
                             value = line;
