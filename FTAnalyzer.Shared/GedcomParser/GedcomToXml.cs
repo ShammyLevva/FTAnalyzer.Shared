@@ -10,7 +10,7 @@ using Foundation;
 
 namespace FTAnalyzer
 {
-    class GedcomToXml
+    static class GedcomToXml
     {
         public static XmlDocument? LoadFile(Stream stream, Encoding encoding, IProgress<string> outputText, bool reportBadLines)
         {
