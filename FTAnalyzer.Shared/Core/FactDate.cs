@@ -10,14 +10,14 @@ namespace FTAnalyzer
 {
     public partial class FactDate : IComparable<FactDate>, IComparable
     {
-        public static readonly DateTime MINDATE = new(1, 1, 1);
-        public static readonly DateTime MAXDATE = new(9999, 12, 31);
+        public static readonly DateTime MINDATE = new(1, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        public static readonly DateTime MAXDATE = new(9999, 12, 31, 0, 0, 0, DateTimeKind.Utc);
         public static readonly IFormatProvider CULTURE = CultureInfo.InvariantCulture;
         public static readonly int MAXYEARS = 110;
         public static readonly int MINYEARS;
         const int LOW = 0;
         const int HIGH = 1;
-         0,0
+        
         public readonly static string FULL = "d MMM yyyy";
         const string SPECIAL_DATE = "SPECIAL";
         const string YEAR = "yyyy";
@@ -379,14 +379,11 @@ namespace FTAnalyzer
                 return "UNKNOWN";
 
             // process date
-            if (str.IndexOf("TO", StringComparison.Ordinal) > 1)
-            {  // contains TO but doesn't start with TO
-                if (!str.StartsWith("FROM", StringComparison.Ordinal))
-                    str = "FROM " + str;
-            }
+            if (str.IndexOf("TO", StringComparison.Ordinal) > 1 && !str.StartsWith("FROM", StringComparison.Ordinal))
+                str = "FROM " + str;
             if (str.StartsWith("FROM", StringComparison.Ordinal))
             {
-                if (str.IndexOf("TO", StringComparison.Ordinal) > 0)
+                if (str.IndexOf("TO", StringComparison.Ordinal) >= 0)
                     str = str.Replace("FROM", "BET").Replace("TO", "AND");
                 else
                 {
@@ -460,7 +457,7 @@ namespace FTAnalyzer
                 int month = 2 + int.Parse(matcher.Groups[2].ToString());
                 if (month > 12) month -= 12;
                 int year = int.Parse(matcher.Groups[3].ToString());
-                return new DateTime(year, month, day).ToString("dd MMMM yyyy");
+                return new DateTime(year, month, day, 0, 0, 0, DateTimeKind.Utc).ToString("dd MMMM yyyy");
             }
             if (str == "WWI")
                 return "BET 28 JUL 1914 AND 11 NOV 1918";
@@ -507,8 +504,8 @@ namespace FTAnalyzer
 
         public FactDate SubtractMonths(int months)
         {
-            DateTime start = new(StartDate.Year, StartDate.Month, StartDate.Day);
-            DateTime end = new(EndDate.Year, EndDate.Month, EndDate.Day);
+            DateTime start = new(StartDate.Year, StartDate.Month, StartDate.Day, 0, 0, 0, DateTimeKind.Utc);
+            DateTime end = new(EndDate.Year, EndDate.Month, EndDate.Day, 0, 0, 0, DateTimeKind.Utc);
             start = StartDate < MINDATE.AddMonths(months) ? MINDATE : start.AddMonths(-months);
             end = EndDate < MINDATE.AddMonths(months) ? MINDATE : end.AddMonths(-months);
             return new FactDate(start, end);
@@ -516,8 +513,8 @@ namespace FTAnalyzer
 
         public FactDate AddEndDateYears(int years)
         {
-            DateTime start = new(StartDate.Year, StartDate.Month, StartDate.Day);
-            DateTime end = new(EndDate.Year, EndDate.Month, EndDate.Day);
+            DateTime start = new(StartDate.Year, StartDate.Month, StartDate.Day, 0, 0, 0, DateTimeKind.Utc);
+            DateTime end = new(EndDate.Year, EndDate.Month, EndDate.Day, 0, 0, 0, DateTimeKind.Utc);
             end = end >= MAXDATE.AddYears(-years) ? MAXDATE : end.AddYears(years);
             return new FactDate(start, end);
         }
@@ -633,7 +630,7 @@ namespace FTAnalyzer
                         fromdate = "01 " + fromdate + processDate[(pos + 8)..];
                     else if (fromdate.Length == 4)
                         fromdate = "01 JAN " + fromdate;
-                    else if (fromdate.Length < 7 && fromdate.IndexOf(' ') > 0)
+                    else if (fromdate.Length < 7 && fromdate.IndexOf(' ') >= 0)
                         fromdate = fromdate + " " + processDate[(pos + 11)..];
                     StartDate = ParseDate(fromdate.Replace("  ", " "), LOW, 0, EndDate.Year);
                     EndDate = ParseDate(todate, HIGH, 0);
@@ -698,7 +695,7 @@ namespace FTAnalyzer
                         gMonth = matcher.Groups[2];
                         gYear = matcher.Groups[3];
                         gDouble = matcher.Groups[4];
-                        if (dateValue.IndexOf('/') > 0)
+                        if (dateValue.IndexOf('/') >= 0)
                             dateValue = dateValue[..dateValue.IndexOf('/')]; // remove the trailing / and 1 or 2 digits
                     }
                     else if (matcher2.Success)
@@ -716,7 +713,7 @@ namespace FTAnalyzer
                         gMonth = matcher3.Groups[2];
                         gYear = matcher3.Groups[3];
                         gDouble = matcher3.Groups[4];
-                        if (dateValue.IndexOf('/') > 0)
+                        if (dateValue.IndexOf('/') >= 0)
                             dateValue = dateValue[..dateValue.IndexOf('/')]; // remove the trailing / and 1 or 2 digits
                     }
                     else if (NonGedcomDate.Default.UseNonGedcomDates)
@@ -751,7 +748,10 @@ namespace FTAnalyzer
                                     gDouble = null;
                                     break;
                             }
-                            string standardFormat = new DateTime(int.Parse(gYear.Value), int.Parse(gMonth.Value), int.Parse(gDay.Value)).ToString("dd MMM yyyy").ToUpper();
+                            string standardFormat = 
+                                new DateTime(int.Parse(gYear.Value), int.Parse(gMonth.Value), int.Parse(gDay.Value), 0, 0, 0, DateTimeKind.Utc)
+                                        .ToString("dd MMM yyyy")
+                                        .ToUpper();
                             dateValue = dateValue.Length > matcher2.Length
                                 ? string.Concat(dateValue.AsSpan()[..matcher2.Index], standardFormat, dateValue.AsSpan(matcher2.Index + matcher2.Length, dateValue.Length))
                                 : standardFormat;
@@ -770,13 +770,14 @@ namespace FTAnalyzer
                 if (day.Length == 0 && month.Length == 0)
                 {
                     date = year.Length == 4 ? DateTime.ParseExact(dateValue, YEAR, CULTURE) : DateTime.ParseExact(dateValue, EARLYYEAR, CULTURE);
-                    dt = highlow == HIGH ? new DateTime(date.Year + adjustment, 12, 31) : new DateTime(date.Year + adjustment, 1, 1);
+                    dt = highlow == HIGH ? new DateTime(date.Year + adjustment, 12, 31, 0, 0, 0, DateTimeKind.Utc)
+                        : new DateTime(date.Year + adjustment, 1, 1, 0, 0, 0, DateTimeKind.Utc);
                 }
                 else if (day.Length == 0 && year.Length > 0)
                 {
                     if (!DateTime.TryParseExact(dateValue, MONTHYEAR, CULTURE, DateTimeStyles.NoCurrentDateDefault, out date))
                         DateTime.TryParseExact(dateValue, MONTHYEAREARLY, CULTURE, DateTimeStyles.NoCurrentDateDefault, out date);
-                    dt = new DateTime(date.Year, date.Month, 1);
+                    dt = new DateTime(date.Year, date.Month, 1, 0, 0, 0, DateTimeKind.Utc);
                     if (dt != MINDATE)
                     {
                         dt = dt.AddMonths(adjustment);
@@ -792,7 +793,7 @@ namespace FTAnalyzer
                 else if (day.Length == 0 && year.Length == 0)
                 {
                     date = DateTime.ParseExact(dateValue, MONTH, CULTURE);
-                    dt = new DateTime(defaultYear, date.Month, 1);
+                    dt = new DateTime(defaultYear, date.Month, 1, 0, 0, 0, DateTimeKind.Utc);
                     if (dt != MAXDATE.AddDays(-30)) // ignore if 1st of Dec 9999
                     {
                         if (highlow == HIGH)
@@ -807,7 +808,7 @@ namespace FTAnalyzer
                 else if (year.Length == 0)
                 {
                     date = DateTime.ParseExact(dateValue, DAYMONTH, CULTURE);
-                    dt = new DateTime(defaultYear, date.Month, date.Day);
+                    dt = new DateTime(defaultYear, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
                 }
                 else if (day.Length > 0 && month.Length > 0 && year.Length > 0)
                 {
@@ -824,7 +825,7 @@ namespace FTAnalyzer
                         throw new FactDateException("Date has normal format but is not a valid date. eg: like 31 NOV 1900 or 29 FEB 1735");
                     }
                     else
-                        dt = new DateTime(date.Year, date.Month, date.Day);
+                        dt = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
                     dt = dt.AddDays(adjustment);
                 }
                 else
@@ -1086,7 +1087,7 @@ namespace FTAnalyzer
         #region Overrides
         public override bool Equals(object? obj)
         {
-            if (obj is null || obj is not FactDate)
+            if (obj is not FactDate)
                 return false;
             FactDate f = (FactDate)obj;
             // two FactDates are equal if same datestring or same start and- enddates
@@ -1117,7 +1118,7 @@ namespace FTAnalyzer
 
         public override int GetHashCode() => base.GetHashCode();
 
-        public int CompareTo(object? that) => CompareTo(that as FactDate);
+        public int CompareTo(object? obj) => CompareTo(obj as FactDate);
 
         public int CompareTo(FactDate? that)
         {

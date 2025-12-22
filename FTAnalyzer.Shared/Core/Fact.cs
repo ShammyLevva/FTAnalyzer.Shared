@@ -1,5 +1,6 @@
 ﻿using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
+using System.Collections.Immutable;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -34,31 +35,26 @@ namespace FTAnalyzer
 
         public const string ANCESTRY_DEATH_CAUSE = "_DCAUSE";
 
-        public static readonly ISet<string> LOOSE_BIRTH_FACTS = new HashSet<string>([
+        public static readonly ImmutableHashSet<string> LOOSE_BIRTH_FACTS = ImmutableHashSet.Create(
             CHRISTENING, BAPTISM, RESIDENCE, WITNESS, EMIGRATION, IMMIGRATION, ARRIVAL, DEPARTURE,
             EDUCATION, DEGREE, ADOPTION, BAR_MITZVAH, BAS_MITZVAH, ADULT_CHRISTENING, CONFIRMATION,
             FIRST_COMMUNION, ORDINATION, NATURALIZATION, GRADUATION, RETIREMENT, LOSTCOUSINS,
             LC_FTA, MARR_CONTRACT, MARR_LICENSE, MARR_SETTLEMENT, MARRIAGE, MARRIAGE_BANN, DEATH,
-            CREMATION, BURIAL, CENSUS, BIRTH_CALC, CENSUS_SUMMARY
-                    ]);
+            CREMATION, BURIAL, CENSUS, BIRTH_CALC, CENSUS_SUMMARY);
 
-        public static readonly ISet<string> LOOSE_DEATH_FACTS = new HashSet<string>([
+        public static readonly ImmutableHashSet<string> LOOSE_DEATH_FACTS = ImmutableHashSet.Create(
             CENSUS, RESIDENCE, WITNESS, EMIGRATION, IMMIGRATION, ARRIVAL, DEPARTURE, EDUCATION,
             DEGREE, ADOPTION, BAR_MITZVAH, BAS_MITZVAH, ADULT_CHRISTENING, CONFIRMATION, FIRST_COMMUNION,
-            ORDINATION, NATURALIZATION, GRADUATION, RETIREMENT, LOSTCOUSINS, LC_FTA, CENSUS_SUMMARY
-                    ]);
+            ORDINATION, NATURALIZATION, GRADUATION, RETIREMENT, LOSTCOUSINS, LC_FTA, CENSUS_SUMMARY);
 
-        public static readonly ISet<string> RANGED_DATE_FACTS = new HashSet<string>([
-            EDUCATION, OCCUPATION, RESIDENCE, RETIREMENT, MILITARY, ELECTION, DEGREE, EMPLOYMENT, MEDICAL_CONDITION
-                    ]);
+        public static readonly ImmutableHashSet<string> RANGED_DATE_FACTS = ImmutableHashSet.Create(
+            EDUCATION, OCCUPATION, RESIDENCE, RETIREMENT, MILITARY, ELECTION, DEGREE, EMPLOYMENT, MEDICAL_CONDITION);
 
-        public static readonly ISet<string> IGNORE_LONG_RANGE = new HashSet<string>([
-            MARRIAGE, CHILDREN
-                    ]);
+        public static readonly ImmutableHashSet<string> IGNORE_LONG_RANGE = ImmutableHashSet.Create(
+            MARRIAGE, CHILDREN);
 
-        public static readonly ISet<string> CREATED_FACTS = new HashSet<string>([
-            CENSUS_FTA, CHILDREN, PARENT, BIRTH_CALC, LC_FTA
-                    ]);
+        public static readonly ImmutableHashSet<string> CREATED_FACTS = ImmutableHashSet.Create(
+            CENSUS_FTA, CHILDREN, PARENT, BIRTH_CALC, LC_FTA);
 
         public static readonly Dictionary<string, string> NON_STANDARD_FACTS = [];
         static readonly Dictionary<string, string> CUSTOM_TAGS = [];
@@ -664,17 +660,17 @@ namespace FTAnalyzer
             XmlNode? adr1 = node.SelectSingleNode("ADDR/ADR1");
             if (adr1 is not null)
                 result = (result.Length > 0) ? adr1.InnerText + ", " + result : adr1.InnerText;
-            string address = string.Empty;
+            StringBuilder address = new();
             if (addr.FirstChild is not null && addr.FirstChild.Value is not null)
-                address = addr.FirstChild.Value;
+                address.Append(addr.FirstChild.Value);
             XmlNodeList? list = node.SelectNodes("ADDR/CONT");
             foreach (XmlNode cont in list)
             {
                 if (cont.FirstChild is not null && cont.FirstChild.Value is not null)
-                    address += " " + cont.FirstChild.Value;
+                    address.Append($" {cont.FirstChild.Value}");
             }
             if (address.Length > 0)
-                result = (result.Length > 0) ? address + ", " + result : address;
+                result = (result.Length > 0) ? $"{address}, {result}" : $"{address}";
             //   ADDR <ADDRESS_LINE> {1:1} p.41
             //+1 CONT <ADDRESS_LINE> {0:3} p.41
             //+1 ADR1 <ADDRESS_LINE1> {0:1} p.41

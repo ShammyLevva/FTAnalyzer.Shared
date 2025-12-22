@@ -102,6 +102,7 @@ namespace FTAnalyzer.Utilities
             }
             return false;
         }
+
         public static bool ContainsLocation(this IList<FactLocation> list, FactLocation loc)
         {
             if (list is not null)
@@ -112,6 +113,7 @@ namespace FTAnalyzer.Utilities
             }
             return false;
         }
+
         public static bool ContainsLocation(this List<IDisplayLocation> list, IDisplayLocation loc)
         {
             if (list is not null)
@@ -168,6 +170,11 @@ namespace FTAnalyzer.Utilities
             foreach (var item in items)
                 if (!self.Contains(item))
                     self.Add(item);
+        }
+
+        public static bool DoubleEquals(double value1, double value2)
+        {
+            return Math.Abs(value1 - value2) < 1e10;
         }
     }
 }

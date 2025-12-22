@@ -361,8 +361,8 @@ namespace FTAnalyzer
             LatitudeM = mpoint.Y;
 #endif
             GeocodeStatus = status;
-            if (status == Geocode.NOT_SEARCHED && (Latitude != 0 || Longitude != 0))
-                status = Geocode.GEDCOM_USER;
+            if (status == Geocode.NOT_SEARCHED && (!ExtensionMethods.DoubleEquals(Latitude,0) || !ExtensionMethods.DoubleEquals(Longitude,0)))
+                GeocodeStatus = Geocode.GEDCOM_USER;
         }
 
         FactLocation(string location)
@@ -372,22 +372,22 @@ namespace FTAnalyzer
             {
                 OriginalText = location;
                 // we need to parse the location string from a little injun to a big injun
-                int comma = location.LastIndexOf(",", StringComparison.Ordinal);
+                int comma = location.LastIndexOf(',');
                 if (comma > 0)
                 {
                     Country = location[(comma + 1)..];
                     location = location[..comma];
-                    comma = location.LastIndexOf(",", StringComparison.Ordinal);
+                    comma = location.LastIndexOf(',');
                     if (comma > 0)
                     {
                         Region = location[(comma + 1)..];
                         location = location[..comma];
-                        comma = location.LastIndexOf(",", StringComparison.Ordinal);
+                        comma = location.LastIndexOf(',');
                         if (comma > 0)
                         {
                             SubRegion = location[(comma + 1)..];
                             location = location[..comma];
-                            comma = location.LastIndexOf(",", StringComparison.Ordinal);
+                            comma = location.LastIndexOf(',');
                             if (comma > 0)
                             {
                                 Address = location[(comma + 1)..];
@@ -492,16 +492,13 @@ namespace FTAnalyzer
                 result = new FactLocation(place, latitude, longitude, status);
                 if (LOCATIONS.TryGetValue(result.ToString(), out temp))
                 {
-                    if (updateLatLong && temp is not null)
-                    {
-                        if (!temp.IsGeoCoded(true) && result.IsGeoCoded(true) || !result.GecodingMatches(temp))
-                        {  // we are updating the old value isn't geocoded so we can overwrite or the new value doesn't match old database value so overwrite
-                            temp.Latitude = result.Latitude;
-                            temp.LatitudeM = result.LatitudeM;
-                            temp.Longitude = result.Longitude;
-                            temp.LongitudeM = result.LongitudeM;
-                            SaveLocationToDatabase(temp);
-                        }
+                    if (updateLatLong && temp is not null && (!temp.IsGeoCoded(true) && result.IsGeoCoded(true) || !result.GecodingMatches(temp)))
+                    {  // we are updating the old value isn't geocoded so we can overwrite or the new value doesn't match old database value so overwrite
+                        temp.Latitude = result.Latitude;
+                        temp.LatitudeM = result.LatitudeM;
+                        temp.Longitude = result.Longitude;
+                        temp.LongitudeM = result.LongitudeM;
+                        SaveLocationToDatabase(temp);
                     }
                     return temp ?? UNKNOWN_LOCATION;
                 }
@@ -520,7 +517,10 @@ namespace FTAnalyzer
         }
 
         bool GecodingMatches(FactLocation temp)
-            => Latitude == temp.Latitude && Longitude == temp.Longitude && LatitudeM == temp.LatitudeM && LongitudeM == temp.LongitudeM;
+            => ExtensionMethods.DoubleEquals(Latitude, temp.Latitude) &&
+               ExtensionMethods.DoubleEquals(Longitude, temp.Longitude) &&
+               ExtensionMethods.DoubleEquals(LatitudeM, temp.LatitudeM) &&
+               ExtensionMethods.DoubleEquals(LongitudeM, temp.LongitudeM);
 
         public bool IsValidLatLong => Latitude >= -90 && Latitude <= 90 && Longitude >= -180 && Longitude <= 180;
 
@@ -596,15 +596,12 @@ namespace FTAnalyzer
                     }
                     else
                         distance = Math.Abs(f.FactDate.BestYear - when.BestYear);
-                    if (distance < limit)
-                    {
-                        if (distance < minDistance)
-                        { // this is a closer date but now check to ensure we aren't overwriting a known country with an unknown one.
-                            if (f.Location.IsKnownCountry || !f.Location.IsKnownCountry && !result.Location.IsKnownCountry)
-                            {
-                                result = f;
-                                minDistance = distance;
-                            }
+                    if (distance < limit && distance < minDistance)
+                    { // this is a closer date but now check to ensure we aren't overwriting a known country with an unknown one.
+                        if (f.Location.IsKnownCountry || !f.Location.IsKnownCountry && !result.Location.IsKnownCountry)
+                        {
+                            result = f;
+                            minDistance = distance;
                         }
                     }
                 }
@@ -721,16 +718,13 @@ namespace FTAnalyzer
 
         void FixUKGBTypos()
         {
-            if (Country == "UK" || Country == "GB")
+            if ((Country == "UK" || Country == "GB") && (Region == "Scotland" || Region == "England" || Region == "Wales"))
             {
-                if (Region == "Scotland" || Region == "England" || Region == "Wales")
-                {
-                    Country = Region;
-                    Region = SubRegion;
-                    SubRegion = Address;
-                    Address = Place;
-                    Place = string.Empty;
-                }
+                Country = Region;
+                Region = SubRegion;
+                SubRegion = Address;
+                Address = Place;
+                Place = string.Empty;
             }
         }
 
@@ -1014,7 +1008,7 @@ namespace FTAnalyzer
                     var angle = east - west;
                     if (angle < 0)
                         angle += 360;
-                    if (west != 0 || east != 0)
+                    if (!ExtensionMethods.DoubleEquals(west, 0) || !ExtensionMethods.DoubleEquals(east, 0))
                         return (int)Math.Abs(Math.Round(Math.Log(pixelWidth * 360f / angle / GLOBE_WIDTH) / Math.Log(2)));
                 }
 #endif
@@ -1075,7 +1069,7 @@ namespace FTAnalyzer
         {
             if (GeocodeStatus == Geocode.UNKNOWN)
                 return true;
-            if (Longitude == 0.0 && Latitude == 0.0)
+            if (ExtensionMethods.DoubleEquals(Longitude, 0) && ExtensionMethods.DoubleEquals(Latitude, 0))
                 return false;
             if (!recheckPartials &&
 #if __PC__
@@ -1093,7 +1087,7 @@ namespace FTAnalyzer
         static string FixNumerics(string addressField, bool returnNumber)
         {
             int pos = addressField.IndexOf(' ');
-            if (pos > 0 & pos < addressField.Length)
+            if (pos > 0 && pos < addressField.Length)
             {
                 string number = addressField[..pos];
                 string name = addressField[(pos + 1)..];
@@ -1151,7 +1145,11 @@ namespace FTAnalyzer
         }
 
 #if __PC__
-        public bool EmptyViewPort => ViewPort.NorthEast.Lat == 0 && ViewPort.NorthEast.Long == 0 && ViewPort.SouthWest.Lat == 0 && ViewPort.SouthWest.Long == 0;
+        public bool EmptyViewPort =>
+            ExtensionMethods.DoubleEquals(ViewPort.NorthEast.Lat, 0) &&
+            ExtensionMethods.DoubleEquals(ViewPort.NorthEast.Long, 0) &&
+            ExtensionMethods.DoubleEquals(ViewPort.SouthWest.Lat, 0) &&
+            ExtensionMethods.DoubleEquals(ViewPort.SouthWest.Long, 0);
 #endif
         //public string OSGridMapReference
         //{
@@ -1176,11 +1174,11 @@ namespace FTAnalyzer
 
         #region Overrides
 
-        public int CompareTo(object? that) => CompareTo(that as FactLocation);
+        public int CompareTo(object? obj) => CompareTo(obj as FactLocation);
 
         public int CompareTo(FactLocation? that) => CompareTo(that, PLACE);
 
-        public int CompareTo(IDisplayLocation? that, int level) => CompareTo(that as FactLocation, level);
+        public int CompareTo(IDisplayLocation? loc, int level) => CompareTo(loc as FactLocation, level);
 
         public virtual int CompareTo(FactLocation? that, int level)
         {
@@ -1207,10 +1205,8 @@ namespace FTAnalyzer
 
         public override string ToString() => GeneralSettings.Default.SkipFixingLocations ? OriginalText : FixedLocation; //return location;
 
-        public override bool Equals(object? obj)
-        {
-            return obj is FactLocation location && CompareTo(location) == 0;
-        }
+        public bool Equals(FactLocation that, int level) => CompareTo(that, level) == 0;
+        public override bool Equals(object? obj) => obj is FactLocation location && CompareTo(location) == 0;
 
         public static bool operator ==(FactLocation a, FactLocation b)
         {
@@ -1226,10 +1222,6 @@ namespace FTAnalyzer
         }
 
         public static bool operator !=(FactLocation a, FactLocation b) => !(a == b);
-
-        public bool Equals(FactLocation that, int level) => CompareTo(that, level) == 0;
-
-        public override int GetHashCode() => base.GetHashCode();
 
         public IComparer<IDisplayLocation> GetComparer(string columnName, bool ascending)
         {

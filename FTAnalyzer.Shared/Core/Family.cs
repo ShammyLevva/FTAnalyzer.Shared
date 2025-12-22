@@ -466,8 +466,7 @@ namespace FTAnalyzer
         {
             if (ind is null) return;
             Individual? spouse = Spouse(ind);
-            if (spouse is not null)
-                spouse.RelationType = relationType;
+            spouse?.RelationType = relationType;
         }
 
         public void SetChildRelation(Queue<Individual> queue, int relationType)
@@ -548,17 +547,15 @@ namespace FTAnalyzer
                 if (dates.Count == 0)
                     return FactDate.UNKNOWN_DATE;
 
-                var averageTicks = 0L;
-                foreach (var fd in dates)
+                long averageTicks = 0L;
+                foreach (FactDate fd in dates)
                     averageTicks += fd.StartDate.Ticks / dates.Count;
                 try
                 {
-                    var averageDate = new DateTime(averageTicks);
+                    DateTime averageDate = new(averageTicks, DateTimeKind.Utc);
                     return new FactDate(averageDate, averageDate);
                 }
-                catch (ArgumentOutOfRangeException)
-                {
-                }
+                catch (ArgumentOutOfRangeException) { }
 
                 return FactDate.UNKNOWN_DATE;
             }

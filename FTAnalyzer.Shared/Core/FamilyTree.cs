@@ -507,7 +507,7 @@ namespace FTAnalyzer
             {
                 string line = reader.ReadLine() ?? string.Empty;
                 string[] values = line.Split(',');
-                if (line.IndexOf(',', StringComparison.Ordinal) > 0 && (values[0] == "1" || values[0] == "2"))
+                if (line.IndexOf(',', StringComparison.Ordinal) >= 0 && (values[0] == "1" || values[0] == "2"))
                 {
                     StandardisedName original = new(values[0] == "2", values[2]);
                     StandardisedName standardised = new(values[1] == "2", values[3]);
@@ -566,7 +566,7 @@ namespace FTAnalyzer
             }
         }
 
-        void RemoveFamiliesWithNoIndividuals() => (families as List<Family>).RemoveAll(x => x.FamilySize == 0);
+        void RemoveFamiliesWithNoIndividuals() => families.RemoveAll(x => x.FamilySize == 0);
 
         void CountUnknownFactTypes(IProgress<string> outputText)
         {
@@ -1193,9 +1193,9 @@ namespace FTAnalyzer
                 month = 12;
             if (month < 1)
                 month = 1;
-            if (month == 2 && day == 29 & !DateTime.IsLeapYear(year))
+            if (month == 2 && day == 29 && !DateTime.IsLeapYear(year))
                 day = 28;
-            return new DateTime(year, month, day);
+            return new DateTime(year, month, day, 0, 0, 0, DateTimeKind.Utc);
         }
 
         static FactDate BaseLivingDate(Individual indiv)
@@ -1554,8 +1554,8 @@ namespace FTAnalyzer
             while (keepLooping)
             {
                 keepLooping = false;
-                IEnumerable<Family> families = AllFamilies.Where(f => f.HasUnknownRelations && f.HasLinkedRelations);
-                foreach (Family f in families)
+                IEnumerable<Family> fams = AllFamilies.Where(f => f.HasUnknownRelations && f.HasLinkedRelations);
+                foreach (Family f in fams)
                 {
                     foreach (Individual i in f.Members)
                     {
@@ -1706,16 +1706,16 @@ namespace FTAnalyzer
                     toadd.LocationName = loc.FixedLocation;
                     toadd.Latitude = loc.Latitude;
                     toadd.Longitude = loc.Longitude;
-                    var individuals = GetIndividualsAtLocation(loc, loc.Level);
+                    var inds = GetIndividualsAtLocation(loc, loc.Level);
                     List<string> factsAtLocation = [];
-                    foreach (Individual ind in individuals)
+                    foreach (Individual ind in inds)
                     {
                         var facts = ind.AllFacts.Where(x => x.Location == loc && !x.Created);
                         foreach (Fact fact in facts)
                             factsAtLocation.Add($"{ind.Name} {fact.FactDateLocation}");
                     }
-                    var families = GetFamiliesAtLocation(loc, loc.Level);
-                    foreach (Family fam in families)
+                    var fams = GetFamiliesAtLocation(loc, loc.Level);
+                    foreach (Family fam in fams)
                     {
                         var facts = fam.Facts.Where(x => x.Location == loc);
                         foreach (Fact fact in facts)
@@ -2249,7 +2249,7 @@ namespace FTAnalyzer
         public static bool FactBeforeBirth(Individual ind, Fact f)
         {
             if (ind is null || f is null) return false;
-            if (f.FactType != Fact.BIRTH & f.FactType != Fact.BIRTH_CALC && Fact.LOOSE_BIRTH_FACTS.Contains(f.FactType) && f.FactDate.IsBefore(ind.BirthDate))
+            if (f.FactType != Fact.BIRTH && f.FactType != Fact.BIRTH_CALC && Fact.LOOSE_BIRTH_FACTS.Contains(f.FactType) && f.FactDate.IsBefore(ind.BirthDate))
             {
                 if (f.FactType == Fact.CHRISTENING || f.FactType == Fact.BAPTISM)
                 {  //due to possible late birth abt qtr reporting use 3 month fudge factor for bapm/chr
@@ -3760,7 +3760,7 @@ namespace FTAnalyzer
                 int nodeyear = int.Parse(dateFields[0]);
                 int nodemonth = int.Parse(dateFields[1]);
                 int nodeday = int.Parse(dateFields[2]);
-                fd = new FactDate(new DateTime(nodeyear, nodemonth, nodeday).ToString("dd MMM yyyy"));
+                fd = new FactDate(new DateTime(nodeyear, nodemonth, nodeday, 0, 0, 0, DateTimeKind.Utc).ToString("dd MMM yyyy"));
             }
             catch (Exception)
             {
@@ -3781,7 +3781,7 @@ namespace FTAnalyzer
                 Encoding encode = Encoding.GetEncoding("utf-8");
                 using var response = await Program.Client.GetStreamAsync(new Uri(URL));
                 using var reader = new StreamReader(response, encode);
-                result = reader.ReadToEnd();
+                result = await reader.ReadToEndAsync();
                 if (!result.Contains("No events found for this query"))
                 {
                     //XmlReader xmlReader = XmlReader.Create(result, new XmlReaderSettings() { XmlResolver = null })

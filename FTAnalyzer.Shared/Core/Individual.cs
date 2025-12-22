@@ -11,8 +11,7 @@ using static FTAnalyzer.ColourValues;
 
 namespace FTAnalyzer
 {
-    public class Individual : IComparable<Individual>,
-        IDisplayIndividual, IDisplayLooseDeath, IDisplayLooseBirth, IExportIndividual,
+    public class Individual : IDisplayLooseDeath, IDisplayLooseBirth, IExportIndividual,
         IDisplayColourCensus, IDisplayColourBMD, IDisplayMissingData, IDisplayLooseInfo,
         IJsonIndividual
     {
@@ -602,9 +601,9 @@ namespace FTAnalyzer
                     try
                     {
                         if (DeathDate.StartDate.Month == 2 && DeathDate.StartDate.Day == 29)
-                            amendedDeath = new DateTime(BirthDate.StartDate.Year, 2, 28); // fix issue with 29th February death dates
+                            amendedDeath = new DateTime(BirthDate.StartDate.Year, 2, 28, 0, 0, 0, DateTimeKind.Utc); // fix issue with 29th February death dates
                         else
-                            amendedDeath = new DateTime(BirthDate.StartDate.Year, DeathDate.StartDate.Month, DeathDate.StartDate.Day); // set death date to be same year as birth
+                            amendedDeath = new DateTime(BirthDate.StartDate.Year, DeathDate.StartDate.Month, DeathDate.StartDate.Day, 0, 0, 0, DateTimeKind.Utc); // set death date to be same year as birth
                         var diff = Math.Abs((amendedDeath - BirthDate.StartDate).Days);
                         Debug.WriteLine($"Processed Individual: {IndividualID}: {Name}, Diff:{diff}, Birth: {BirthDate.StartDate.ToShortDateString()} Death: {DeathDate.StartDate.ToShortDateString()}");
                         if (diff > 180)
@@ -637,10 +636,10 @@ namespace FTAnalyzer
         {
             get
             {
-                string result = string.Empty;
+                StringBuilder result = new();
                 foreach (Family f in FamiliesAsSpouse)
-                    result += f.FamilyID + ",";
-                return result.Length == 0 ? result : result[..^1];
+                    result.Append($"{f.FamilyID},");
+                return result.Length == 0 ? string.Empty : result.ToString()[..^1];
             }
         }
 
@@ -648,10 +647,10 @@ namespace FTAnalyzer
         {
             get
             {
-                string result = string.Empty;
+                StringBuilder result = new();
                 foreach (ParentalRelationship pr in FamiliesAsChild)
-                    result += pr.Family.FamilyID + ",";
-                return result.Length == 0 ? result : result[..^1];
+                    result.Append($"{pr.Family.FamilyID},");
+                return result.Length == 0 ? string.Empty : result.ToString()[..^1];
             }
         }
 
@@ -690,11 +689,11 @@ namespace FTAnalyzer
         {
             get
             {
-                string output = string.Empty;
+                StringBuilder output = new();
                 foreach (Family f in FamiliesAsSpouse)
                     if (!string.IsNullOrEmpty(f.MarriageDate?.ToString()))
-                        output += $"{f.MarriageDate}; ";
-                return output.Length > 0 ? output[..^2] : output; // remove trailing ;
+                        output.Append($"{f.MarriageDate}; ");
+                return output.Length > 0 ? output.ToString()[..^2] : string.Empty; // remove trailing ;
             }
         }
 
@@ -702,11 +701,11 @@ namespace FTAnalyzer
         {
             get
             {
-                string output = string.Empty;
+                StringBuilder output = new();
                 foreach (Family f in FamiliesAsSpouse)
                     if (!string.IsNullOrEmpty(f.MarriageLocation))
-                        output += $"{f.MarriageLocation}; ";
-                return output.Length > 0 ? output[..^2] : output; // remove trailing ;
+                        output.Append($"{f.MarriageLocation}; ");
+                return output.Length > 0 ? output.ToString()[..^2] : string.Empty; // remove trailing ;
             }
         }
 
