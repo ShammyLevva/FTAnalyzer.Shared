@@ -383,7 +383,7 @@ namespace FTAnalyzer
                 str = "FROM " + str;
             if (str.StartsWith("FROM", StringComparison.Ordinal))
             {
-                if (str.IndexOf("TO", StringComparison.Ordinal) >= 0)
+                if (str.Contains("TO"))
                     str = str.Replace("FROM", "BET").Replace("TO", "AND");
                 else
                 {
@@ -630,7 +630,7 @@ namespace FTAnalyzer
                         fromdate = "01 " + fromdate + processDate[(pos + 8)..];
                     else if (fromdate.Length == 4)
                         fromdate = "01 JAN " + fromdate;
-                    else if (fromdate.Length < 7 && fromdate.IndexOf(' ') >= 0)
+                    else if (fromdate.Length < 7 && fromdate.Contains(' '))
                         fromdate = fromdate + " " + processDate[(pos + 11)..];
                     StartDate = ParseDate(fromdate.Replace("  ", " "), LOW, 0, EndDate.Year);
                     EndDate = ParseDate(todate, HIGH, 0);
@@ -695,7 +695,7 @@ namespace FTAnalyzer
                         gMonth = matcher.Groups[2];
                         gYear = matcher.Groups[3];
                         gDouble = matcher.Groups[4];
-                        if (dateValue.IndexOf('/') >= 0)
+                        if (dateValue.Contains('/'))
                             dateValue = dateValue[..dateValue.IndexOf('/')]; // remove the trailing / and 1 or 2 digits
                     }
                     else if (matcher2.Success)
@@ -713,7 +713,7 @@ namespace FTAnalyzer
                         gMonth = matcher3.Groups[2];
                         gYear = matcher3.Groups[3];
                         gDouble = matcher3.Groups[4];
-                        if (dateValue.IndexOf('/') >= 0)
+                        if (dateValue.Contains('/'))
                             dateValue = dateValue[..dateValue.IndexOf('/')]; // remove the trailing / and 1 or 2 digits
                     }
                     else if (NonGedcomDate.Default.UseNonGedcomDates)
