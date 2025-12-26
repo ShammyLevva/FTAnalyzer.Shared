@@ -6,9 +6,6 @@ using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
 using System.Diagnostics;
 using System.Collections.Immutable;
-using static FTAnalyzer.FactLocation;
-
-
 
 #if __PC__
 using FTAnalyzer.Mapping;
@@ -102,9 +99,9 @@ namespace FTAnalyzer
                 { Geocode.OS_50KMATCH, "OS Gazetteer Match" },
                 { Geocode.OS_50KPARTIAL, "Partial Match (Ord Surv)" },
                 { Geocode.OS_50KFUZZY, "Fuzzy Match (Ord Surv)" }
-            }.ToImmutableDictionary();        
+            }.ToImmutableDictionary();
 
-#endregion
+        #endregion
 
         #region Static Constructor
         static FactLocation()

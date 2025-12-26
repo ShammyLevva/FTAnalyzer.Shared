@@ -17,7 +17,7 @@ namespace FTAnalyzer
         public static readonly int MINYEARS;
         const int LOW = 0;
         const int HIGH = 1;
-        
+
         public readonly static string FULL = "d MMM yyyy";
         const string SPECIAL_DATE = "SPECIAL";
         const string YEAR = "yyyy";
@@ -748,7 +748,7 @@ namespace FTAnalyzer
                                     gDouble = null;
                                     break;
                             }
-                            string standardFormat = 
+                            string standardFormat =
                                 new DateTime(int.Parse(gYear.Value), int.Parse(gMonth.Value), int.Parse(gDay.Value), 0, 0, 0, DateTimeKind.Utc)
                                         .ToString("dd MMM yyyy")
                                         .ToUpper();

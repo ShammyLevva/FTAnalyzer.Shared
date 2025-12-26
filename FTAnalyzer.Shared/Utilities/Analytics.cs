@@ -8,7 +8,7 @@ namespace FTAnalyzer.Utilities
     static class Analytics
     {
         static readonly SimpleTracker tracker;
-        
+
         public const string MainFormAction = "Main Form Action", FactsFormAction = "Facts Form Action", CensusTabAction = "Census Tab Action",
                             ReportsAction = "Reports Action", LostCousinsAction = "Lost Cousins Action", GeocodingAction = "Geocoding Action",
                             ExportAction = "Export Action", MapsAction = "Maps Action", CensusSearchAction = "Census Search Action",

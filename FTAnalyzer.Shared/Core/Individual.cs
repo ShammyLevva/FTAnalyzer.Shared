@@ -877,7 +877,7 @@ namespace FTAnalyzer
 
         public int GetMaxAge(FactDate when) => GetAge(when).MaxAge;
 
-        
+
         public int GetMaxAge(DateTime when)
         {
             string now = FactDate.Format(FactDate.FULL, when);
