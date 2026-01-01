@@ -11,6 +11,8 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using FTAnalyzer.Windows;
 using System.Text.Json;
+using System.Collections.Immutable;
+
 
 #if __PC__
 using FTAnalyzer.Forms.Controls;
@@ -1287,7 +1289,7 @@ namespace FTAnalyzer
             }
         }
 
-        static DateTime GetMaxLivingDate(Individual indiv, ISet<string> factTypes)
+        static DateTime GetMaxLivingDate(Individual indiv, ImmutableHashSet<string> factTypes)
         {
             DateTime maxdate = FactDate.MINDATE;
             // having got the families the individual is a parent of
