@@ -41,7 +41,7 @@ namespace FTAnalyzer
         SortableBindingList<DuplicateIndividual> duplicates;
         ConcurrentBag<DuplicateIndividual> buildDuplicates;
         const int DATA_ERROR_GROUPS = 32;
-        static XmlNodeList noteNodes;
+        XmlNodeList noteNodes;
         BigInteger maxAhnentafel;
         Dictionary<string, Individual> individualLookup;
         string rootIndividualID = string.Empty;
@@ -119,10 +119,10 @@ namespace FTAnalyzer
         {
             if (!instance.DocumentLoaded)
                 Debug.WriteLine("Looking up XML without document loaded");
-            if (noteNodes is null || reference is null)
+            if (instance.noteNodes is null || reference is null)
                 return string.Empty;
             var result = new StringBuilder();
-            foreach (XmlNode node in noteNodes)
+            foreach (XmlNode node in instance.noteNodes)
             {
                 if (node.Attributes?["ID"]?.Value == reference.Value)
                 {
@@ -414,7 +414,7 @@ namespace FTAnalyzer
             outputText.Report($"Loaded {counter} Ancestry Tree Tags.\n");
         }
 
-        public static void CleanUpXML() => noteNodes = null;
+        public static void CleanUpXML() => instance.noteNodes = null;
 
         static void LoadGEDCOM_PLAC_Locations(XmlNodeList? list, int startval, IProgress<int> progress, IProgress<string> outputText)
         {

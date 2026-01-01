@@ -1,4 +1,6 @@
-﻿namespace FTAnalyzer
+﻿using FTAnalyzer.Graphics;
+
+namespace FTAnalyzer
 {
     public class DisplayFact : IDisplayFact, IComparable
     {

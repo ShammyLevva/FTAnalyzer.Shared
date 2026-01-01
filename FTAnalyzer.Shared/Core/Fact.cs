@@ -59,7 +59,10 @@ namespace FTAnalyzer
         public static readonly Dictionary<string, string> NON_STANDARD_FACTS = [];
         static readonly Dictionary<string, string> CUSTOM_TAGS = [];
         static readonly HashSet<string> COMMENT_FACTS = [];
-
+        
+        const string UNKNOWNSTRING = "UNKNOWN";
+        const string LCSTRING = "Lost Cousins";
+        const string CENSUSSTRING = "Census";
         static Fact()
         {
             // special tags
@@ -72,13 +75,13 @@ namespace FTAnalyzer
             CUSTOM_TAGS.Add("UNMARRIED", UNMARRIED);
             CUSTOM_TAGS.Add("FRIENDS", UNMARRIED);
             CUSTOM_TAGS.Add("PARTNERS", UNMARRIED);
-            CUSTOM_TAGS.Add("UNKNOWN", UNKNOWN);
+            CUSTOM_TAGS.Add(UNKNOWNSTRING, UNKNOWN);
             CUSTOM_TAGS.Add("UNKNOWN-BEGIN", UNKNOWN);
             CUSTOM_TAGS.Add("ARRIVAL", ARRIVAL);
             CUSTOM_TAGS.Add("DEPARTURE", DEPARTURE);
             CUSTOM_TAGS.Add("RECORD CHANGE", CHANGE);
             CUSTOM_TAGS.Add("*CHNG", CHANGE);
-            CUSTOM_TAGS.Add("LOST COUSINS", LOSTCOUSINS);
+            CUSTOM_TAGS.Add(LCSTRING, LOSTCOUSINS);
             CUSTOM_TAGS.Add("LOSTCOUSINS", LOSTCOUSINS);
             CUSTOM_TAGS.Add("DIED SINGLE", UNMARRIED);
             CUSTOM_TAGS.Add("MISSING", MISSING);
@@ -209,7 +212,7 @@ namespace FTAnalyzer
             CUSTOM_TAGS.Add("PROBATE DATE", PROBATE);
             CUSTOM_TAGS.Add("RESIDENCE", RESIDENCE);
             CUSTOM_TAGS.Add("DIVORCED", DIVORCE);
-            CUSTOM_TAGS.Add("CENSUS", CENSUS);
+            CUSTOM_TAGS.Add(CENSUSSTRING, CENSUS);
             CUSTOM_TAGS.Add("OCCUPATION", OCCUPATION);
             CUSTOM_TAGS.Add("NATURALIZATION", NATURALIZATION);
             CUSTOM_TAGS.Add("NATURALISATION", NATURALIZATION);
@@ -302,7 +305,7 @@ namespace FTAnalyzer
                 BURIAL => "Burial",
                 CASTE => "Caste",
                 CAUSE_OF_DEATH => "Cause of Death",
-                CENSUS => "Census",
+                CENSUS => CENSUSSTRING,
                 CENSUS_FTA => "Census (FTAnalyzer)",
                 CENSUS_SUMMARY => "Census Summary",
                 CHANGE => "Record change",
@@ -348,7 +351,7 @@ namespace FTAnalyzer
                 LEGATEE => "Legatee",
                 LOOSEBIRTH => "Loose birth",
                 LOOSEDEATH => "Loose death",
-                LOSTCOUSINS => "Lost Cousins",
+                LOSTCOUSINS => LCSTRING,
                 MARRIAGE => "Marriage",
                 MARRIAGE_BANN => "Marriage banns",
                 MARR_CONTRACT => "Marriage contract",
@@ -386,13 +389,13 @@ namespace FTAnalyzer
                 SERVICE_NUMBER => "Military service number",
                 SOCIAL_SECURITY => "Social Security number",
                 TITLE => "Title",
-                UNKNOWN => "UNKNOWN",
+                UNKNOWN => UNKNOWNSTRING,
                 UNMARRIED => "Unmarried",
                 WEIGHT => "Weight",
                 WILL => "Will",
                 WITNESS => "Witness",
                 WORLD_EVENT => "World Event",
-                "" => "UNKNOWN",
+                "" => UNKNOWNSTRING,
                 _ => EnhancedTextInfo.ToTitleCase(factType),
             };
         }
@@ -475,7 +478,7 @@ namespace FTAnalyzer
                     if (FactType.Equals(CUSTOM_ATTRIBUTE) || FactType.Equals(CUSTOM_EVENT) || FactType.Equals(CUSTOM_FACT))
                     {
                         string tag = FamilyTree.GetText(node, "TYPE", false).ToUpper();
-                        if (tag.StartsWith("CENSUS") || tag.StartsWith("1939 REGISTER"))
+                        if (tag.StartsWith(CENSUSSTRING) || tag.StartsWith("1939 REGISTER"))
                         {
                             FactType = CENSUS;
                             CheckCensusDate(tag, Location);
@@ -511,7 +514,7 @@ namespace FTAnalyzer
 
                     // only check UK census dates for errors as those are used for colour census
                     if (FactType.Equals(CENSUS) && !nodeText.Contains("STATE CENSUS", StringComparison.CurrentCultureIgnoreCase))
-                        CheckCensusDate("Census", Location);
+                        CheckCensusDate(CENSUSSTRING, Location);
 
                     // need to check residence after setting location
                     if (FactType.Equals(RESIDENCE) && GeneralSettings.Default.UseResidenceAsCensus)
@@ -792,8 +795,8 @@ namespace FTAnalyzer
 
         public List<string> SourcePages { get; private set; }
 
-        public string Country => Location is null ? "UNKNOWN" : Location.Country;
-
+        public string Country => Location is null ? UNKNOWNSTRING : Location.Country;
+            
         public bool CertificatePresent { get; private set; }
 
         #endregion
@@ -883,8 +886,8 @@ namespace FTAnalyzer
                     (tag == "Census 2011" && !FactDate.Overlaps(CensusDate.UKCENSUS2011)) ||
                     (tag == "Census 2021" && (!Location.IsEnglandWales || !FactDate.Overlaps(CensusDate.EWCENSUS2021))) ||
                     (tag == "Census 2022" && (!Location.CensusCountry.Equals(Countries.SCOTLAND) || !FactDate.Overlaps(CensusDate.SCOTCENSUS2022))) ||
-                    (tag == "Census" && !CensusDate.IsUKCensusYear(FactDate, false)) ||
-                    ((tag == "Lost Cousins" || tag == "LostCousins") && !CensusDate.IsLostCousinsCensusYear(FactDate, false))
+                    (tag == CENSUSSTRING && !CensusDate.IsUKCensusYear(FactDate, false)) ||
+                    ((tag == LCSTRING || tag == "LostCousins") && !CensusDate.IsLostCousinsCensusYear(FactDate, false))
                     && FactDate.DateString.Length >= 4)
                 {
                     // if not a census overlay then set date to year and try that instead
@@ -931,7 +934,7 @@ namespace FTAnalyzer
                     return;
                 }
             }
-            if (tag == "Census" || tag == "LostCousins" || tag == "Lost Cousins")
+            if (tag == CENSUSSTRING || tag == "LostCousins" || tag == LCSTRING)
             {
                 TimeSpan ts = FactDate.EndDate - FactDate.StartDate;
                 if (ts.Days > 3650)
@@ -942,7 +945,7 @@ namespace FTAnalyzer
                     return;
                 }
             }
-            if (tag == "Census")
+            if (tag == CENSUSSTRING)
             {
                 if (!CensusDate.IsCensusYear(yearAdjusted, Country, false))
                 {
@@ -960,7 +963,7 @@ namespace FTAnalyzer
                 if (!FactDate.Equals(yearAdjusted))
                     FactDate = yearAdjusted;
             }
-            if (tag == "Lost Cousins" || tag == "LostCousins")
+            if (tag == LCSTRING || tag == "LostCousins")
             {
                 if (GeneralSettings.Default.TolerateInaccurateCensusDate && yearAdjusted.IsKnown && !CensusDate.IsLostCousinsCensusYear(yearAdjusted, true))
                 {

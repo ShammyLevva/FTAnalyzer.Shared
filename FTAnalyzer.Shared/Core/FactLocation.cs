@@ -6,6 +6,8 @@ using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
 using System.Diagnostics;
 using System.Collections.Immutable;
+using FTAnalyzer.Graphics;
+
 
 #if __PC__
 using FTAnalyzer.Mapping;
@@ -82,12 +84,13 @@ namespace FTAnalyzer
 
         static Dictionary<string, string> COUNTRY_SHIFTS = [];
         static Dictionary<string, string> CITY_ADD_COUNTRY = [];
-        public readonly static FactLocation UNKNOWN_LOCATION = new("Unknown", "0.0", "0.0", Geocode.GEDCOM_USER);
+        const string UNKNOWNSTRING = "Unknown";
+        public readonly static FactLocation UNKNOWN_LOCATION = new(UNKNOWNSTRING, "0.0", "0.0", Geocode.GEDCOM_USER);
         public readonly static FactLocation BLANK_LOCATION = new(string.Empty, "0.0", "0.0", Geocode.UNKNOWN);
         public readonly static FactLocation TEMP = new();
         public readonly static ImmutableDictionary<Geocode, string> GEOCODES = new Dictionary<Geocode, string>
             {
-                { Geocode.UNKNOWN, "Unknown" },
+                { Geocode.UNKNOWN, UNKNOWNSTRING },
                 { Geocode.NOT_SEARCHED, "Not Searched" },
                 { Geocode.GEDCOM_USER, "GEDCOM/User Data" },
                 { Geocode.PARTIAL_MATCH, "Partial Match (Google)" },
@@ -313,7 +316,7 @@ namespace FTAnalyzer
         //        case COUNTRY: return "CountryFix";
         //        case REGION: return "RegionFix";
         //        case SUBREGION: return "SubRegionFix";
-        //        default: return "UNKNOWN";
+        //        default: return UNKNOWNSTRING;
         //    }
         //}
 
@@ -470,7 +473,7 @@ namespace FTAnalyzer
             FactLocation? temp;
             if (string.IsNullOrEmpty(place))
                 return BLANK_LOCATION;
-            if (place.Equals("UNKNOWN", StringComparison.CurrentCultureIgnoreCase))
+            if (place.Equals(UNKNOWNSTRING, StringComparison.CurrentCultureIgnoreCase))
                 return UNKNOWN_LOCATION;
             // GEDCOM lat/long will be prefixed with NS and EW which needs to be +/- to work.
             latitude = latitude.Replace("N", "").Replace("S", "-");
@@ -571,7 +574,7 @@ namespace FTAnalyzer
             LOCAL_GOOGLE_FIXES = [];
 
             // set unknown location as unknown so it doesn't keep hassling to be searched
-            LOCATIONS.Add("Unknown", UNKNOWN_LOCATION);
+            LOCATIONS.Add(UNKNOWNSTRING, UNKNOWN_LOCATION);
             if (!GeneralSettings.Default.SkipFixingLocations)
                 LoadConversions(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location));
         }
@@ -585,7 +588,7 @@ namespace FTAnalyzer
         public static Fact BestLocationFact(IEnumerable<Fact> facts, FactDate when, int limit)
         {
             // this returns a Fact for a FactLocation a person was at for a given period
-            Fact result = new("Unknown", Fact.UNKNOWN, FactDate.UNKNOWN_DATE, UNKNOWN_LOCATION);
+            Fact result = new(UNKNOWNSTRING, Fact.UNKNOWN, FactDate.UNKNOWN_DATE, UNKNOWN_LOCATION);
             double minDistance = float.MaxValue;
             double distance;
             foreach (Fact f in facts)
@@ -957,7 +960,7 @@ namespace FTAnalyzer
 
         public bool IsEnglandWales => Countries.IsEnglandWales(Country);
 
-        public string Geocoded => GEOCODES.TryGetValue(GeocodeStatus, out string? result) ? result : "Unknown";
+        public string Geocoded => GEOCODES.TryGetValue(GeocodeStatus, out string? result) ? result : UNKNOWNSTRING;
 
         public static int GeocodedLocations => AllLocations.Count(l => l.IsGeoCoded(false));
 

@@ -29,6 +29,10 @@ namespace FTAnalyzer
         const string FULLEARLY = "d MMM yyy";
         const string DISPLAY = "d MMM yyyy";
         const string CHECKING = "d MMM";
+        const string ABTMAR = "ABT MAR";
+        const string ABTJUN = "ABT JUN";
+        const string ABTSEP = "ABT SEP";
+        const string ABTDEC = "ABT DEC";
 
         public readonly static FactDate UNKNOWN_DATE;
         public readonly static FactDate MARRIAGE_LESS_THAN_13;
@@ -280,56 +284,56 @@ namespace FTAnalyzer
 
             // Quarters
             str = str.Replace("QUARTER", "QTR");
-            str = str.Replace("MAR QTR", "ABT MAR");
+            str = str.Replace("MAR QTR", ABTMAR);
             str = str.Replace("MAR Q ", "ABT MAR ");
-            str = str.Replace("JAN FEB MAR", "ABT MAR");
-            str = str.Replace("JAN-MAR", "ABT MAR");
-            str = str.Replace("JAN-FEB-MAR", "ABT MAR");
-            str = str.Replace("JAN/FEB/MAR", "ABT MAR");
-            str = str.Replace("JAN\\FEB\\MAR", "ABT MAR");
+            str = str.Replace("JAN FEB MAR", ABTMAR);
+            str = str.Replace("JAN-MAR", ABTMAR);
+            str = str.Replace("JAN-FEB-MAR", ABTMAR);
+            str = str.Replace("JAN/FEB/MAR", ABTMAR);
+            str = str.Replace("JAN\\FEB\\MAR", ABTMAR);
             str = str.Replace("1ST", "1");
             str = str.Replace("2ND", "2");
             str = str.Replace("3RD", "3");
             str = str.Replace("4TH", "4");
-            str = str.Replace("Q1", "ABT MAR");
-            str = str.Replace("1Q", "ABT MAR");
-            str = str.Replace("QTR1", "ABT MAR");
+            str = str.Replace("Q1", ABTMAR);
+            str = str.Replace("1Q", ABTMAR);
+            str = str.Replace("QTR1", ABTMAR);
             str = str.Replace("QTR 1 ", "ABT MAR ");
             str = str.Replace("1 QTR ", "ABT MAR ");
-            str = str.Replace("JUN QTR", "ABT JUN");
+            str = str.Replace("JUN QTR", ABTJUN);
             str = str.Replace("JUN Q ", "ABT JUN ");
-            str = str.Replace("APR MAY JUN", "ABT JUN");
-            str = str.Replace("APR-JUN", "ABT JUN");
-            str = str.Replace("APR-MAY-JUN", "ABT JUN");
-            str = str.Replace("APR/MAY/JUN", "ABT JUN");
-            str = str.Replace("APR\\MAY\\JUN", "ABT JUN");
-            str = str.Replace("Q2", "ABT JUN");
-            str = str.Replace("2Q", "ABT JUN");
-            str = str.Replace("QTR2", "ABT JUN");
+            str = str.Replace("APR MAY JUN", ABTJUN);
+            str = str.Replace("APR-JUN", ABTJUN);
+            str = str.Replace("APR-MAY-JUN", ABTJUN);
+            str = str.Replace("APR/MAY/JUN", ABTJUN);
+            str = str.Replace("APR\\MAY\\JUN", ABTJUN);
+            str = str.Replace("Q2", ABTJUN);
+            str = str.Replace("2Q", ABTJUN);
+            str = str.Replace("QTR2", ABTJUN);
             str = str.Replace("QTR 2 ", "ABT JUN ");
             str = str.Replace("2 QTR ", "ABT JUN ");
-            str = str.Replace("SEP QTR", "ABT SEP");
+            str = str.Replace("SEP QTR", ABTSEP);
             str = str.Replace("SEP Q ", "ABT SEP ");
-            str = str.Replace("JUL AUG SEP", "ABT SEP");
-            str = str.Replace("JUL-SEP", "ABT SEP");
-            str = str.Replace("JUL-AUG-SEP", "ABT SEP");
-            str = str.Replace("JUL/AUG/SEP", "ABT SEP");
-            str = str.Replace("JUL\\AUG\\SEP", "ABT SEP");
-            str = str.Replace("Q3", "ABT SEP");
-            str = str.Replace("3Q", "ABT SEP");
-            str = str.Replace("QTR3", "ABT SEP");
+            str = str.Replace("JUL AUG SEP", ABTSEP);
+            str = str.Replace("JUL-SEP", ABTSEP);
+            str = str.Replace("JUL-AUG-SEP", ABTSEP);
+            str = str.Replace("JUL/AUG/SEP", ABTSEP);
+            str = str.Replace("JUL\\AUG\\SEP", ABTSEP);
+            str = str.Replace("Q3", ABTSEP);
+            str = str.Replace("3Q", ABTSEP);
+            str = str.Replace("QTR3", ABTSEP);
             str = str.Replace("QTR 3 ", "ABT SEP ");
             str = str.Replace("3 QTR ", "ABT SEP ");
-            str = str.Replace("DEC QTR", "ABT DEC");
+            str = str.Replace("DEC QTR", ABTDEC);
             str = str.Replace("DEC Q ", "ABT DEC ");
-            str = str.Replace("OCT NOV DEC", "ABT DEC");
-            str = str.Replace("OCT-DEC", "ABT DEC");
-            str = str.Replace("OCT-NOV-DEC", "ABT DEC");
-            str = str.Replace("OCT/NOV/DEC", "ABT DEC");
-            str = str.Replace("OCT\\NOV\\DEC", "ABT DEC");
-            str = str.Replace("Q4", "ABT DEC");
-            str = str.Replace("4Q", "ABT DEC");
-            str = str.Replace("QTR4", "ABT DEC");
+            str = str.Replace("OCT NOV DEC", ABTDEC);
+            str = str.Replace("OCT-DEC", ABTDEC);
+            str = str.Replace("OCT-NOV-DEC", ABTDEC);
+            str = str.Replace("OCT/NOV/DEC", ABTDEC);
+            str = str.Replace("OCT\\NOV\\DEC", ABTDEC);
+            str = str.Replace("Q4", ABTDEC);
+            str = str.Replace("4Q", ABTDEC);
+            str = str.Replace("QTR4", ABTDEC);
             str = str.Replace("QTR 4 ", "ABT DEC ");
             str = str.Replace("4 QTR ", "ABT DEC ");
 
@@ -591,8 +595,8 @@ namespace FTAnalyzer
                 else if (processDate.StartsWith("ABT", StringComparison.Ordinal))
                 {
                     DateType = FactDateType.ABT;
-                    if (processDate.StartsWith("ABT MAR", StringComparison.Ordinal) || processDate.StartsWith("ABT JUN", StringComparison.Ordinal)
-                         || processDate.StartsWith("ABT SEP", StringComparison.Ordinal) || processDate.StartsWith("ABT DEC", StringComparison.Ordinal))
+                    if (processDate.StartsWith(ABTMAR, StringComparison.Ordinal) || processDate.StartsWith(ABTJUN, StringComparison.Ordinal)
+                         || processDate.StartsWith(ABTSEP, StringComparison.Ordinal) || processDate.StartsWith(ABTDEC, StringComparison.Ordinal))
                     {
                         // quarter dates
                         StartDate = ParseDate(dateValue, LOW, -3);
