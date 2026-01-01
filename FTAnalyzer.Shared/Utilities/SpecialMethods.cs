@@ -32,7 +32,7 @@ namespace FTAnalyzer.Utilities
                 Font font = new(FontSettings.Default.SelectedFont.Name, FontSettings.Default.SelectedFont.Size);
                 foreach (Control theControl in GetAllControls(form))
                     if (theControl.Font.Name.Equals(FontSettings.Default.SelectedFont.Name)
-                        && theControl.Font.Size != FontSettings.Default.SelectedFont.Size)
+                        && !ExtensionMethods.DoubleEquals(theControl.Font.Size, FontSettings.Default.SelectedFont.Size))
                     {
                         theControl.Font = font; // change font size only if matching font name and size are different
                         theControl.Refresh();
