@@ -5,6 +5,7 @@ using GoogleAnalyticsTracker.Simple;
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using static FTAnalyzer.Mapping.GeoResponse.CResult.CGeometry;
 
 
 namespace FTAnalyzer.Utilities
@@ -16,7 +17,7 @@ namespace FTAnalyzer.Utilities
         {
             Stack<Control> stack = new();
             stack.Push(aControl);
-            while (stack.Any())
+            while (stack.Count != 0)
             {
                 var nextControl = stack.Pop();
                 foreach (Control childControl in nextControl.Controls)
@@ -123,7 +124,7 @@ namespace FTAnalyzer.Utilities
             return await tracker.TrackAsync(screenViewTrackingParameters).ConfigureAwait(false);
         }
 
-        static readonly string[] SizeSuffixes = { "bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" };
+        static readonly string[] SizeSuffixes = ["bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
 
         public static string SizeSuffix(long value, int decimalPlaces = 1)
         {
@@ -137,6 +138,11 @@ namespace FTAnalyzer.Utilities
                 i++;
             }
             return string.Format("{0:n" + decimalPlaces + "} {1}", dValue, SizeSuffixes[i]);
+        }
+
+        public static bool LatLongIsZero(CLocation loc)
+        {
+            return ExtensionMethods.DoubleEquals(loc.Lat,0) && ExtensionMethods.DoubleEquals(loc.Long,0);
         }
     }
 }

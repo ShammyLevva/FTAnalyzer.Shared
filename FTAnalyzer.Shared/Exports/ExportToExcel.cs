@@ -1,4 +1,6 @@
-﻿using System.Data;
+﻿using FTAnalyzer.Shared.Utilities;
+using Microsoft.Win32;
+using System.Data;
 using System.Text;
 #if __MACOS__
 using AppKit;
@@ -18,7 +20,7 @@ namespace FTAnalyzer.Utilities
                 {
                     string myDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
                     using SaveFileDialog saveFileDialog = new();
-                    string initialDir = RegistrySettings.GetValue("Excel Export Individual Path", myDocuments).ToString() ?? string.Empty;
+                    string initialDir = RegistrySettings.GetRegistryValue("Excel Export Individual Path", myDocuments).ToString() ?? string.Empty;
                     saveFileDialog.InitialDirectory = initialDir ?? myDocuments;
                     saveFileDialog.Filter = "Comma Separated Value (*.csv)|*.csv";
                     saveFileDialog.FilterIndex = 1;
@@ -26,7 +28,7 @@ namespace FTAnalyzer.Utilities
                     if (dr == DialogResult.OK)
                     {
                         string path = Path.GetDirectoryName(saveFileDialog.FileName) ?? string.Empty;
-                        RegistrySettings.SetValue("Excel Export Individual Path", path);
+                        RegistrySettings.SetRegistryValue("Excel Export Individual Path", path, RegistryValueKind.String);
                         WriteFile(dt, saveFileDialog.FileName);
                         UIHelpers.ShowMessage($"File written to {saveFileDialog.FileName}", "FTAnalyzer");
                     }

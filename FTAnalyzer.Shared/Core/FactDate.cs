@@ -33,6 +33,7 @@ namespace FTAnalyzer
         const string ABTJUN = "ABT JUN";
         const string ABTSEP = "ABT SEP";
         const string ABTDEC = "ABT DEC";
+        const string UNKNOWNSTRING = "UNKNOWN";
 
         public readonly static FactDate UNKNOWN_DATE;
         public readonly static FactDate MARRIAGE_LESS_THAN_13;
@@ -64,7 +65,7 @@ namespace FTAnalyzer
                 ["SPACEFIX"] = RegexSpaceFix(),
                 ["QUAKERFIX"] = RegexQuakerFix()
             };
-            UNKNOWN_DATE = new FactDate("UNKNOWN");
+            UNKNOWN_DATE = new FactDate(UNKNOWNSTRING);
             MARRIAGE_LESS_THAN_13 = new FactDate("1600");
             SAME_SEX_MARRIAGE = new FactDate("AFT 1 APR 2001");
             TODAY = new FactDate(DateTime.Now.ToString("dd MMM yyyy", CULTURE));
@@ -93,12 +94,12 @@ namespace FTAnalyzer
             DoubleDate = false;
             SpecialDate = false;
             SpecialDateText = string.Empty;
-            str ??= "UNKNOWN";
+            str ??= UNKNOWNSTRING;
             OriginalString = str;
             // remove any commas in date string
             yearfix = 0;
             DateType = FactDateType.UNK;
-            DateString = str.Length == 0 ? "UNKNOWN" : str.ToUpper();
+            DateString = str.Length == 0 ? UNKNOWNSTRING : str.ToUpper();
             StartDate = MINDATE;
             EndDate = MAXDATE;
             if (!string.IsNullOrEmpty(str))
@@ -107,8 +108,8 @@ namespace FTAnalyzer
                 if (str != SPECIAL_DATE)
                 {
                     str = FixCommonDateFormats(str);
-                    DateString = str.Length == 0 ? "UNKNOWN" : str.ToUpper();
-                    if (!DateString.Equals("UNKNOWN"))
+                    DateString = str.Length == 0 ? UNKNOWNSTRING : str.ToUpper();
+                    if (!DateString.Equals(UNKNOWNSTRING))
                         ProcessDate(DateString, factRef);
                 }
             }
@@ -227,7 +228,7 @@ namespace FTAnalyzer
             str = str.Replace("NOVEMBRE", "NOV");
             str = str.Replace("DECEMBRE", "DEC");
             str = str.Replace(" ET ", " AND ");
-            str = str.Replace("DATE INCONNUE", "UNKNOWN");
+            str = str.Replace("DATE INCONNUE", UNKNOWNSTRING);
             str = str.Replace("PEU ", " "); //french little
             str = str.Replace("REC ", " "); //french census recusement
             str = str.Replace("  ", " ");
@@ -380,7 +381,7 @@ namespace FTAnalyzer
             if (str.EndsWith("AD"))
                 str = str.Replace("AD", "");
             if (str.EndsWith("BCE") || str.EndsWith("BC"))
-                return "UNKNOWN";
+                return UNKNOWNSTRING;
 
             // process date
             if (str.IndexOf("TO", StringComparison.Ordinal) > 1 && !str.StartsWith("FROM", StringComparison.Ordinal))
@@ -530,7 +531,7 @@ namespace FTAnalyzer
             if (StartDate == MINDATE)
             {
                 if (EndDate == MAXDATE)
-                    return "UNKNOWN";
+                    return UNKNOWNSTRING;
                 DateType = FactDateType.BEF;
                 output.Append("BEF ");
             }
@@ -916,7 +917,7 @@ namespace FTAnalyzer
         {
             get
             {
-                if (DateString.Equals("UNKNOWN"))
+                if (DateString.Equals(UNKNOWNSTRING))
                     return UNKNOWN_DATE;
                 if (StartDate == MINDATE)
                     return new FactDate(EndDate, EndDate);
