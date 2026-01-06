@@ -2058,6 +2058,9 @@ namespace FTAnalyzer
 
         public override string ToString() => Reference.Trim();
 
-        public int CompareTo(CensusReference? that) => (that is null) ? 0 : string.Compare(Reference, that.Reference, StringComparison.Ordinal);
+        public int CompareTo(CensusReference? that)
+        {
+            return (that is null) ? 0 : string.Compare(Reference, that.Reference, StringComparison.Ordinal);
+        }
     }
 }
