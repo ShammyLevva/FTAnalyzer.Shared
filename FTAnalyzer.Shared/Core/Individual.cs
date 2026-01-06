@@ -1121,7 +1121,7 @@ namespace FTAnalyzer
                     checkNotes = false;
                     //Debug.WriteLine($"Reached Individual {ToString()} Notes: {notes.Length}");
                     CensusReference cr = new(IndividualID, notes, false);
-                    if (OKtoAddReference(cr, false))
+                    if (OKtoAddReference(cr, false) && cr.Fact is not null)
                     {   // add census fact even if other created census facts exist for that year
                         AddFact(cr.Fact);
                         if (cr.IsLCCensusFact)
@@ -1146,6 +1146,7 @@ namespace FTAnalyzer
 
         void UpdateCensusFactReference(CensusReference cr)
         {
+            if (cr.Fact is null) return;
             Fact? censusFact = GetCensusFact(cr.Fact, false);
             if (censusFact is not null && !censusFact.CensusReference.IsKnownStatus && cr.IsKnownStatus)
                 censusFact.SetCensusReferenceDetails(cr, CensusLocation.UNKNOWN, string.Empty);
