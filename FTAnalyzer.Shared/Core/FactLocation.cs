@@ -6,12 +6,11 @@ using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
 using System.Diagnostics;
 using System.Collections.Immutable;
-using FTAnalyzer.Graphics;
-
-
 #if __PC__
+using FTAnalyzer.Graphics;
 using FTAnalyzer.Mapping;
 #endif
+
 namespace FTAnalyzer
 {
     public partial class FactLocation : IComparable<FactLocation>, IComparable, IDisplayLocation, IDisplayGeocodedLocation
