@@ -43,7 +43,7 @@ namespace FTAnalyzer
         public string Suffix { get; private set; }
         public string FamilySearchID { get; private set; }
         public decimal RelationSort { get; set; }
-        public CommonAncestor CommonAncestor { get; set; }
+        public CommonAncestor? CommonAncestor { get; set; }
         public string UnrecognisedCensusNotes { get; private set; }
         public IList<Fact> Facts { get; private set; }
         public string Alias { get; private set; }

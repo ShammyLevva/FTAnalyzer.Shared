@@ -36,7 +36,7 @@ namespace FTAnalyzer
         Dictionary<StandardisedName, StandardisedName> names;
         Dictionary<string, List<Individual>> unknownIndividualFactTypes;
         Dictionary<string, List<Family>> unknownFamilyFactTypes;
-        SortableBindingList<IDisplayLocation>[] displayLocations;
+        SortableBindingList<IDisplayLocation>[]? displayLocations;
         SortableBindingList<IDisplayLooseDeath>? looseDeaths;
         SortableBindingList<IDisplayLooseBirth>? looseBirths;
         SortableBindingList<IDisplayLooseInfo>? looseInfo;
@@ -340,23 +340,26 @@ namespace FTAnalyzer
         {
             // now iterate through child elements of root
             // finding all individuals
-            XmlNodeList? list = doc.SelectNodes("GED/INDI");
-            int individualMax = list.Count;
             int counter = 0;
-            foreach (XmlNode n in list)
+            XmlNodeList? list = doc.SelectNodes("GED/INDI");
+            if (list is not null)
             {
-                var individual = new Individual(n, outputText);
-                if (individual.IndividualID is null)
-                    outputText.Report("File has invalid GEDCOM data. Individual found with no ID. Search file for 0 @@ INDI\n");
-                else
+                int individualMax = list.Count;
+                foreach (XmlNode n in list)
                 {
-                    // debugging of individuals - outputText.Report($"Loaded Individual: {individual.ToString()}\n");
-                    individuals.Add(individual);
-                    if (!individualLookup.TryAdd(individual.IndividualID, individual))
-                        outputText.Report($"More than one INDI record found with ID value {individual.IndividualID}\n");
-                    AddOccupations(individual);
-                    AddCustomFacts(individual);
-                    progress.Report(100 * counter++ / individualMax);
+                    var individual = new Individual(n, outputText);
+                    if (individual.IndividualID is null)
+                        outputText.Report("File has invalid GEDCOM data. Individual found with no ID. Search file for 0 @@ INDI\n");
+                    else
+                    {
+                        // debugging of individuals - outputText.Report($"Loaded Individual: {individual.ToString()}\n");
+                        individuals.Add(individual);
+                        if (!individualLookup.TryAdd(individual.IndividualID, individual))
+                            outputText.Report($"More than one INDI record found with ID value {individual.IndividualID}\n");
+                        AddOccupations(individual);
+                        AddCustomFacts(individual);
+                        progress.Report(100 * counter++ / individualMax);
+                    }
                 }
             }
             outputText.Report($"Loaded {counter} individuals.\n");
@@ -367,15 +370,18 @@ namespace FTAnalyzer
         {
             // now iterate through child elements of root
             // finding all families
-            XmlNodeList? list = doc.SelectNodes("GED/FAM");
-            int familyMax = list.Count == 0 ? 1 : list.Count;
             int counter = 0;
-            foreach (XmlNode n in list)
+            XmlNodeList? list = doc.SelectNodes("GED/FAM");
+            if (list is not null)
             {
-                Family family = new(n, outputText);
-                families.Add(family);
-                AddCustomFacts(family);
-                progress.Report(100 * counter++ / familyMax);
+                int familyMax = list.Count == 0 ? 1 : list.Count;
+                foreach (XmlNode n in list)
+                {
+                    Family family = new(n, outputText);
+                    families.Add(family);
+                    AddCustomFacts(family);
+                    progress.Report(100 * counter++ / familyMax);
+                }
             }
             outputText.Report($"Loaded {counter} families.\n");
             CheckAllIndividualsAreInAFamily(outputText);
@@ -405,17 +411,19 @@ namespace FTAnalyzer
 
         public static void LoadAncestryTreeTags(XmlDocument doc, IProgress<string> outputText)
         {
-            XmlNodeList? list = doc.SelectNodes("GED/_MTTAG");
-
             int counter = 0;
-            foreach (XmlNode n in list)
+            XmlNodeList? list = doc.SelectNodes("GED/_MTTAG");
+            if (list is not null)
             {
-                string id = n.Attributes.Count > 0 ? n.Attributes[0].Value : string.Empty;
-                XmlNode? xmlNode = n.SelectSingleNode("NAME");
-                string name = xmlNode is null ? string.Empty : xmlNode.InnerText;
-                xmlNode = n.SelectSingleNode("RIN");
-                string rin = xmlNode is null ? string.Empty : xmlNode.InnerText;
-                AncestryTreeTag tag = new(id, name, rin);
+                foreach (XmlNode n in list)
+                {
+                    string id = n.Attributes is not null && n.Attributes.Count > 0 ? n.Attributes[0].Value : string.Empty;
+                    XmlNode? xmlNode = n.SelectSingleNode("NAME");
+                    string name = xmlNode is null ? string.Empty : xmlNode.InnerText;
+                    xmlNode = n.SelectSingleNode("RIN");
+                    string rin = xmlNode is null ? string.Empty : xmlNode.InnerText;
+                    AncestryTreeTag tag = new(id, name, rin);
+                }
             }
             outputText.Report($"Loaded {counter} Ancestry Tree Tags.\n");
         }
@@ -424,8 +432,9 @@ namespace FTAnalyzer
 
         static void LoadGEDCOM_PLAC_Locations(XmlNodeList? list, int startval, IProgress<int> progress, IProgress<string> outputText)
         {
-            int max = list.Count;
+            if (list is null) return;
             int counter = 0;
+            int max = list.Count;
             int value;
             foreach (XmlNode node in list)
             {
@@ -1081,7 +1090,7 @@ namespace FTAnalyzer
             return result;
         }
 
-        static void CheckLooseBirth(Individual indiv, SortableBindingList<IDisplayLooseBirth> result = null)
+        static void CheckLooseBirth(Individual indiv, SortableBindingList<IDisplayLooseBirth>? result = null)
         {
             FactDate birthDate = indiv.BirthDate;
             FactDate? toAdd = null;
@@ -1253,7 +1262,7 @@ namespace FTAnalyzer
             return result;
         }
 
-        static void CheckLooseDeath(Individual indiv, SortableBindingList<IDisplayLooseDeath> result = null)
+        static void CheckLooseDeath(Individual indiv, SortableBindingList<IDisplayLooseDeath>? result = null)
         {
             FactDate deathDate = indiv.DeathDate;
             FactDate? toAdd = null;
@@ -1482,14 +1491,15 @@ namespace FTAnalyzer
         public void SetRelations(string startID, IProgress<string> outputText)
         {
             ClearRelations();
-            RootPerson = GetIndividual(startID);
-            if (RootPerson is null)
+            Individual? root = GetIndividual(startID);
+            if (root is null)
             {
                 startID = individuals[0].IndividualID;
-                RootPerson = GetIndividual(startID);
-                if (RootPerson is null)
+                root = GetIndividual(startID);
+                if (root is null)
                     throw new NotFoundException("Unable to find a Root Person in the file");
             }
+            RootPerson = root;
             Individual ind = RootPerson;
             ind.RelationType = Individual.DIRECT;
             ind.Ahnentafel = 1;
@@ -1593,10 +1603,11 @@ namespace FTAnalyzer
                 {
                     foreach (Family f in i.FamiliesAsSpouse)
                     {
-                        if (i.RelationToRoot is null && f.Spouse(i) is not null && f.Spouse(i).IsBloodDirect)
+                        Individual? spouse = f.Spouse(i);
+                        if (i.RelationToRoot is null && spouse is not null && spouse.IsBloodDirect)
                         {
                             string relation = f.MaritalStatus != Family.MARRIED ? "partner" : i.IsMale ? "husband" : "wife";
-                            i.RelationToRoot = $"{relation} of {f.Spouse(i).RelationToRoot}";
+                            i.RelationToRoot = $"{relation} of {spouse.RelationToRoot}";
                             break;
                         }
                     }

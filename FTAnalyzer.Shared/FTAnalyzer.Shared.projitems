@@ -99,7 +99,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\Relationship.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\ScottishParish.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\StandardisedName.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Core\Statistics.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\SurnameStats.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Events\GoogleWaitingEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\BadFamilySearchDataException.cs" />

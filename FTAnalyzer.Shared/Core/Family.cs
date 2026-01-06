@@ -483,7 +483,7 @@ namespace FTAnalyzer
             }
         }
 
-        public void SetChildrenCommonRelation(Individual parent, CommonAncestor commonAncestor)
+        public void SetChildrenCommonRelation(Individual? parent, CommonAncestor? commonAncestor)
         {
             if (parent is null || commonAncestor is null) return;
             foreach (var child in Children)
