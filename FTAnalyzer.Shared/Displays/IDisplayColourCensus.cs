@@ -1,6 +1,6 @@
 ﻿using FTAnalyzer.Utilities;
 using System.Numerics;
-using static FTAnalyzer.Core.ColourValues;
+using static FTAnalyzer.ColourValues;
 
 namespace FTAnalyzer
 {

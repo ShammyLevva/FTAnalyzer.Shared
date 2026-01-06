@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
-using static FTAnalyzer.Core.ColourValues;
+using static FTAnalyzer.ColourValues;
 
 namespace FTAnalyzer
 {
