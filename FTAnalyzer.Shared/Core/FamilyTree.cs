@@ -3777,6 +3777,7 @@ namespace FTAnalyzer
         {
             string result = string.Empty;
             var doc = new XmlDocument() { XmlResolver = null };
+#if __PC__
             try
             {
                 //HttpWebRequest request = WebRequest.Create(new Uri(URL)) as HttpWebRequest;
@@ -3802,9 +3803,10 @@ namespace FTAnalyzer
                 Debug.WriteLine(e.Message);
                 //log.Error($"Error trying to load data from {URL}\n\n{e.Message}");
             }
+#endif
             return doc;
         }
-        #endregion
+#endregion
 
         #region WorldWars
 
