@@ -2199,12 +2199,7 @@ namespace FTAnalyzer
                     }
                     #endregion
                 }
-#if __MACOS__ || __IOS__
-                catch (Exception)
-                {
-                    catchCount++;
-                }
-#else
+#if __PC__
                 catch (Exception e)
                 {
                     if (catchCount == 0) // prevent multiple displays of the same error - usually resource icon load failures
@@ -2212,6 +2207,11 @@ namespace FTAnalyzer
                         ErrorHandler.Show("FTA_0001", e);
                         catchCount++;
                     }
+                }
+#else
+                catch (Exception)
+                {
+                    catchCount++;
                 }
 #endif
             }
