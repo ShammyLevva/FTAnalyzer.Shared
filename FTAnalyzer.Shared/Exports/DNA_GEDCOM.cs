@@ -1,8 +1,8 @@
 ﻿using System.Text;
-using FTAnalyzer.Shared.Utilities;
 
 #if __PC__
 using FTAnalyzer.Utilities;
+using FTAnalyzer.Shared.Utilities;
 using Microsoft.Win32;
 #elif __MACOS__
 using AppKit;
@@ -28,7 +28,8 @@ namespace FTAnalyzer.Exports
         static AppDelegate App => (AppDelegate)UIApplication.SharedApplication.Delegate;
 #endif
 
-        public static void Export()
+#if __PC__ || __MACOS || __IOS
+       public static void Export()
         {
             int privatise = UIHelpers.ShowYesNo("Do you want living people replaced with 'Private Person' and their details hidden", "Continue Loading?");
             if (privatise != UIHelpers.Cancel)
@@ -60,6 +61,7 @@ namespace FTAnalyzer.Exports
                 }
             }
         }
+#endif
 #if __PC__
         public static void ExportGedcomFile()
         {
@@ -95,6 +97,7 @@ namespace FTAnalyzer.Exports
         // feature not available on iOS
         }
 #endif
+#if __PC__
         static void WriteFile(string filename)
         {
             List<Family> families = [];
@@ -269,5 +272,6 @@ namespace FTAnalyzer.Exports
         }
 
         static void WriteFooter() => output.WriteLine("0 TRLR");
+#endif
     }
 }
