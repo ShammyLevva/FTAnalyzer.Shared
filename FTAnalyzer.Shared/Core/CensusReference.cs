@@ -280,7 +280,7 @@ namespace FTAnalyzer
             CensusLocation = CensusLocation.UNKNOWN;
         }
 
-        public CensusReference(Fact fact, XmlNode node, CensusReference pageRef = null)
+        public CensusReference(Fact fact, XmlNode node, CensusReference? pageRef = null)
             : this()
         {
             Fact = fact;
@@ -2058,6 +2058,6 @@ namespace FTAnalyzer
 
         public override string ToString() => Reference.Trim();
 
-        public int CompareTo(CensusReference? that) => string.Compare(Reference, that.Reference, StringComparison.Ordinal);
+        public int CompareTo(CensusReference? that) => (that is null) ? 0 : string.Compare(Reference, that.Reference, StringComparison.Ordinal);
     }
 }
