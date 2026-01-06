@@ -1,4 +1,8 @@
-﻿namespace FTAnalyzer
+﻿#if !__PC__
+using System.Drawing;
+#endif
+
+namespace FTAnalyzer
 {
     public static class ColourValues
     {

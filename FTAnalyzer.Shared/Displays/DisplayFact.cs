@@ -1,4 +1,6 @@
-﻿using FTAnalyzer.Graphics;
+﻿#if __PC__
+using FTAnalyzer.Graphics;
+#endif
 
 namespace FTAnalyzer
 {

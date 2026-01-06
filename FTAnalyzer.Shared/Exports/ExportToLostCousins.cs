@@ -1,7 +1,9 @@
 ﻿using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
+#if __PC__
 using FTAnalyzer.Windows;
 using HtmlAgilityPack;
+#endif
 
 namespace FTAnalyzer.Exports
 {
@@ -16,7 +18,8 @@ namespace FTAnalyzer.Exports
         {
             if (individuals is null) return 0;
             int recordsAdded = 0;
-            try
+#if __PC__
+           try
             {
                 ToProcess = individuals;
                 int recordsFailed = 0;
@@ -25,7 +28,7 @@ namespace FTAnalyzer.Exports
                 int count = 0;
                 Dictionary<string, string> dummy;
                 Website ??= await LoadWebsiteAncestorsAsync(outputText);
-                SessionList ??= new List<LostCousin>();
+                SessionList ??= [];
                 bool alias = GeneralSettings.Default.ShowAliasInName;
                 GeneralSettings.Default.ShowAliasInName = false; // turn off adding alias in name when exporting
                 foreach (CensusIndividual ind in ToProcess)
@@ -100,6 +103,7 @@ namespace FTAnalyzer.Exports
             {
                 UIHelpers.ShowMessage($"Problem uploading to Lost Cousins error was : {e.Message}");
             }
+#endif
             return recordsAdded;
         }
 
@@ -116,7 +120,7 @@ namespace FTAnalyzer.Exports
         {
             SortableBindingList<IDisplayLostCousin> result = new();
             Website ??= await LoadWebsiteAncestorsAsync(outputText);
-            WebLinks = new List<Uri>();
+            WebLinks = [];
             foreach (LostCousin lostCousin in Website)
             {
                 result.Add(lostCousin);
@@ -129,7 +133,8 @@ namespace FTAnalyzer.Exports
         static async Task<List<LostCousin>> LoadWebsiteAncestorsAsync(IProgress<string> outputText)
         {
             List<LostCousin> websiteList = new();
-            try
+#if __PC__
+           try
             {
                 HtmlAgilityPack.HtmlDocument doc = new();
                 string webData = await Program.LCClient.GetAncestors();
@@ -173,8 +178,9 @@ namespace FTAnalyzer.Exports
             catch (Exception e)
             {
                 outputText.Report($"\nProblem accessing Lost Cousins Website to read current ancestor list. Error message is: {e.Message}\n");
-                return new List<LostCousin>();
+                return [];
             }
+#endif
             return websiteList;
         }
     }
