@@ -428,7 +428,7 @@ namespace FTAnalyzer
                         unknownCensusRef += $" {text}";
                 }
             }
-            if (checksources)
+            if (checksources && Fact is not null)
             {
                 // now check sources to see if census reference is in title page
                 foreach (FactSource fs in Fact.Sources)
@@ -1871,7 +1871,7 @@ namespace FTAnalyzer
                         ? $"{Roll}{(ED.Length > 0 ? $"/{ED}" : "")}/{Page}"
                         : $"Roll: {Roll}{(ED.Length > 0 ? $", ED: {ED}" : "")}, Page: {Page}";
                 }
-                if (Piece.Length > 0)
+                if (Piece.Length > 0 && Fact is not null)
                 {
                     if (Countries.IsEnglandWales(Fact.Location.Country) || Fact.IsOverseasUKCensus(Fact.Location.Country))
                     {
@@ -1904,7 +1904,7 @@ namespace FTAnalyzer
                         }
                     }
                 }
-                else if (Parish.Length > 0)
+                else if (Parish.Length > 0 && Fact is not null)
                 {
                     if (Fact.Location.Country.Equals(Countries.SCOTLAND) && (Fact.FactDate.Overlaps(CensusDate.UKCENSUS1841) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1851) ||
                         Fact.FactDate.Overlaps(CensusDate.UKCENSUS1861) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1871) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1881) ||
@@ -1918,7 +1918,7 @@ namespace FTAnalyzer
                             : $"Parish: {sp.Reference}, ED: {ED}, Page: {Page}";
                     }
                 }
-                else if (RD.Length > 0)
+                else if (RD.Length > 0 && Fact is not null)
                 {
                     if (Fact.Location.IsEnglandWales && Fact.FactDate.Overlaps(CensusDate.UKCENSUS1911))
                         return GeneralSettings.Default.UseCompactCensusRef
