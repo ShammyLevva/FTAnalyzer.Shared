@@ -37,13 +37,13 @@ namespace FTAnalyzer
         Dictionary<string, List<Individual>> unknownIndividualFactTypes;
         Dictionary<string, List<Family>> unknownFamilyFactTypes;
         SortableBindingList<IDisplayLocation>[] displayLocations;
-        SortableBindingList<IDisplayLooseDeath> looseDeaths;
-        SortableBindingList<IDisplayLooseBirth> looseBirths;
-        SortableBindingList<IDisplayLooseInfo> looseInfo;
-        SortableBindingList<DuplicateIndividual> duplicates;
-        ConcurrentBag<DuplicateIndividual> buildDuplicates;
+        SortableBindingList<IDisplayLooseDeath>? looseDeaths;
+        SortableBindingList<IDisplayLooseBirth>? looseBirths;
+        SortableBindingList<IDisplayLooseInfo>? looseInfo;
+        SortableBindingList<DuplicateIndividual>? duplicates;
+        ConcurrentBag<DuplicateIndividual>? buildDuplicates;
         const int DATA_ERROR_GROUPS = 32;
-        XmlNodeList noteNodes;
+        XmlNodeList? noteNodes;
         BigInteger maxAhnentafel;
         Dictionary<string, Individual> individualLookup;
         string rootIndividualID = string.Empty;
@@ -95,7 +95,7 @@ namespace FTAnalyzer
             XmlNodeList? notes = node.SelectNodes("NOTE");
             if (notes?.Count == 0)
                 notes = node.SelectNodes("DATA/TEXT");
-            if (notes?.Count == 0) return string.Empty;
+            if (notes is null || notes.Count == 0) return string.Empty;
             var result = new StringBuilder();
             try
             {
@@ -152,7 +152,8 @@ namespace FTAnalyzer
         static string GetSiblingText(XmlNode firstline, XmlNodeList nodeList)
         {
             var result = new StringBuilder();
-            result.Append(firstline.Value.Trim());
+            if (firstline.Value is not null)
+                result.Append(firstline.Value.Trim());
             foreach (XmlNode child in nodeList)
             {
                 if (child.Name.Equals("CONC"))
@@ -285,9 +286,9 @@ namespace FTAnalyzer
                         break;
                 }
             }
-            if (tempDoc is not null && tempDoc.SelectNodes("GED/INDI").Count > 0)
+            if (tempDoc is not null && tempDoc.SelectNodes("GED/INDI")?.Count > 0)
                 doc = tempDoc;
-            if (doc.SelectNodes("GED/INDI").Count == 0)
+            if (doc.SelectNodes("GED/INDI")?.Count == 0)
             {
                 Loading = false;
                 outputText.Report("Failed to load file no individuals found.");
@@ -318,13 +319,16 @@ namespace FTAnalyzer
         {
             // First iterate through attributes of root finding all sources
             XmlNodeList? list = doc.SelectNodes("GED/SOUR");
-            int sourceMax = list.Count == 0 ? 1 : list.Count;
+            int sourceMax = list is null || list.Count == 0 ? 1 : list.Count;
             int counter = 0;
-            foreach (XmlNode n in list)
+            if (list is not null)
             {
-                var fs = new FactSource(n);
-                sources.Add(fs);
-                progress.Report(100 * counter++ / sourceMax);
+                foreach (XmlNode n in list)
+                {
+                    var fs = new FactSource(n);
+                    sources.Add(fs);
+                    progress.Report(100 * counter++ / sourceMax);
+                }
             }
             outputText.Report($"Loaded {counter} sources.\n");
             progress.Report(100);
@@ -915,7 +919,7 @@ namespace FTAnalyzer
             if (SoloFamilies > 0)
                 outputText.Report($"Added {SoloFamilies} lone individuals as single families.\n");
         }
-#endregion
+        #endregion
 
         #region Properties
 
@@ -3806,7 +3810,7 @@ namespace FTAnalyzer
 #endif
             return doc;
         }
-#endregion
+        #endregion
 
         #region WorldWars
 
