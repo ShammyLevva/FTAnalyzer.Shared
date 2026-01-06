@@ -9,12 +9,12 @@ using System.Xml;
 using System.Numerics;
 using System.Collections.Concurrent;
 using System.Diagnostics;
-using FTAnalyzer.Windows;
 using System.Text.Json;
 using System.Collections.Immutable;
 
 
 #if __PC__
+using FTAnalyzer.Windows;
 using FTAnalyzer.Forms.Controls;
 #elif __MACOS__ || __IOS__
 using FTAnalyzer.ViewControllers;
@@ -446,6 +446,7 @@ namespace FTAnalyzer
 
         static void CreateLostCousinsFacts(IProgress<string> outputText)
         {
+#if __PC__
             try
             {
                 int count = DatabaseHelper.AddLostCousinsFacts();
@@ -455,6 +456,7 @@ namespace FTAnalyzer
             {
                 outputText.Report($"Error loading previously submitted Lost Cousins data. {ex.Message}");
             }
+#endif
         }
 
         public static bool LoadGeoLocationsFromDataBase(IProgress<string> outputText)
@@ -701,10 +703,10 @@ namespace FTAnalyzer
         int LCMissing;
         int LCUploadable;
         int LCInvalidRef;
-#if __PC__
-        readonly string separator = $"————————————————————————————————————————————————————\n";
-#elif __MACOS__
+#if __MACOS__
         readonly string separator = $"————————————————————————————————\n";
+#else
+        readonly string separator = $"————————————————————————————————————————————————————\n";
 #endif
 
         public string UpdateLostCousinsReport(Predicate<Individual> relationFilter)
@@ -913,7 +915,7 @@ namespace FTAnalyzer
             if (SoloFamilies > 0)
                 outputText.Report($"Added {SoloFamilies} lone individuals as single families.\n");
         }
-        #endregion
+#endregion
 
         #region Properties
 
