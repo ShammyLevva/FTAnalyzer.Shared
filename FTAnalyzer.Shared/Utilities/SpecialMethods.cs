@@ -1,11 +1,13 @@
-﻿using FTAnalyzer.Properties;
-using GoogleAnalyticsTracker.Core;
+﻿using GoogleAnalyticsTracker.Core;
 using GoogleAnalyticsTracker.Core.TrackerParameters;
 using GoogleAnalyticsTracker.Simple;
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
+#if __PC__
+using FTAnalyzer.Properties;
 using static FTAnalyzer.Mapping.GeoResponse.CResult.CGeometry;
+#endif
 
 
 namespace FTAnalyzer.Utilities
@@ -140,9 +142,11 @@ namespace FTAnalyzer.Utilities
             return string.Format("{0:n" + decimalPlaces + "} {1}", dValue, SizeSuffixes[i]);
         }
 
+#if __PC__
         public static bool LatLongIsZero(CLocation loc)
         {
             return ExtensionMethods.DoubleEquals(loc.Lat,0) && ExtensionMethods.DoubleEquals(loc.Long,0);
         }
+#endif
     }
 }

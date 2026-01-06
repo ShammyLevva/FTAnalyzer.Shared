@@ -70,13 +70,19 @@ namespace FTAnalyzer.Utilities
             SimpleTrackerEnvironment trackerEnvironment = new(os.Platform.ToString(), os.Version.ToString(), os.VersionString);
             AnalyticsSession analyticsSession = new();
             tracker = new("UA-125850339-2", analyticsSession, trackerEnvironment);
-            AppVersion = MainForm.VERSION;
             OSVersion = SetWindowsVersion(os.Version.ToString());
+#if __PC__
+            AppVersion = MainForm.VERSION;
             bool windowsStoreApp = Application.ExecutablePath.Contains("WindowsApps");
             bool debugging = Application.ExecutablePath.Contains("GitRepo");
             DeploymentType = windowsStoreApp ? "Windows Store" : debugging ? "Development" : "Zip File";
             string resolution = Screen.PrimaryScreen.Bounds.ToString();
             Resolution = resolution.Length > 11 ? resolution[9..^1] : resolution;
+#else
+            AppVersion = "Burial Site";
+            DeploymentType = "Web App";
+            Resolution = "Web App";
+#endif
         }
 
         public static async Task CheckProgramUsageAsync()

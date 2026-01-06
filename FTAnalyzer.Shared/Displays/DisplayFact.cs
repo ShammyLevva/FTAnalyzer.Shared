@@ -47,11 +47,14 @@ namespace FTAnalyzer
         public string GeocodeStatus => Fact.Location.Geocoded;
 #if __PC__
         public Image LocationIcon => GraphicsUtilities.ResizeImageToCurrentScale(FactLocationImage.ErrorIcon(Fact.Location.GeocodeStatus).Icon);
-        public bool Preferred => Fact.Preferred;
-        public bool IgnoredFact => IgnoreFact;
-#elif __MACOS__ || __IOS__
+#endif
+#if __MACOS__ || __IOS__
         public string Preferred => Fact.Preferred ? "Yes" : "No";
         public string IgnoredFact => IgnoreFact ? "Yes" : "No";
+
+#else
+        public bool Preferred => Fact.Preferred;
+        public bool IgnoredFact => IgnoreFact;
 #endif
         public string Relation => Ind is null ? string.Empty : Ind.Relation;
         public string RelationToRoot => Ind is null ? string.Empty : Ind.RelationToRoot;
