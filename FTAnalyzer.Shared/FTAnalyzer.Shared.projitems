@@ -121,6 +121,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\FilterUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\PropertyComparer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\ReadWriteCSV.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilities\RegexPatterns.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\RegistrySettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\ShortDoubleMetaphone.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\SortableBindingList.cs" />
