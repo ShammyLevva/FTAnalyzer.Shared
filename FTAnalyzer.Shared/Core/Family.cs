@@ -464,7 +464,8 @@ namespace FTAnalyzer
         {
             if (ind is null) return;
             Individual? spouse = Spouse(ind);
-            spouse?.RelationType = relationType;
+            if (spouse is not null)
+                spouse.RelationType = relationType;
         }
 
         public void SetChildRelation(Queue<Individual> queue, int relationType)
