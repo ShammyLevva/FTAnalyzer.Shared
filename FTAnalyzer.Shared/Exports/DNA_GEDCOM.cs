@@ -14,6 +14,7 @@ namespace FTAnalyzer.Exports
 {
     public static class DNA_GEDCOM
     {
+#if __PC__ || __MACOS || __IOS
         static readonly FactDate PrivacyDate = new(FactDate.NOW.AddYears(-100).ToString("dd MMM yyyy", FactDate.CULTURE));
         static readonly FamilyTree ft = FamilyTree.Instance;
         static bool _includeSiblings;
@@ -22,6 +23,7 @@ namespace FTAnalyzer.Exports
         static int _privateID;
         static List<Individual> processed;
         static StreamWriter output;
+#endif
 #if __MACOS__
         static AppDelegate App => (AppDelegate)NSApplication.SharedApplication.Delegate;
 #elif __IOS__
