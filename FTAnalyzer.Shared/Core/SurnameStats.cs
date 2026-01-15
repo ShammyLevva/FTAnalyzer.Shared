@@ -1,21 +1,12 @@
 ﻿namespace FTAnalyzer
 {
-    public class SurnameStats : IDisplaySurnames
+    public class SurnameStats(string name) : IDisplaySurnames
     {
-        public string Surname { get; private set; }
-        public int Individuals { get; set; }
-        public int Families { get; set; }
-        public int Marriages { get; set; }
-        public string GOONSpage { get; set; }
-
-        public SurnameStats(string name)
-        {
-            Surname = name;
-            Individuals = 0;
-            Families = 0;
-            Marriages = 0;
-            GOONSpage = string.Empty;
-        }
+        public string Surname { get; private set; } = name;
+        public int Individuals { get; set; } = 0;
+        public int Families { get; set; } = 0;
+        public int Marriages { get; set; } = 0;
+        public string GOONSpage { get; set; } = string.Empty;
 
         public int CompareTo(IDisplaySurnames? other) => string.Compare(Surname, other.Surname, StringComparison.Ordinal);
 

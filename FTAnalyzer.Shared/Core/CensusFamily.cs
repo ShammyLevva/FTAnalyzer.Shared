@@ -26,13 +26,13 @@ namespace FTAnalyzer
 
             if (f.Husband is not null)
                 Husband = new(position++, f.Husband, this, CensusIndividual.HUSBAND);
-            Children = new List<CensusIndividual>();
+            Children = [];
             foreach (Individual child in f.Children)
             {
                 CensusIndividual toAdd = new(position++, child, this, CensusIndividual.CHILD);
                 Children.Add(toAdd);
             }
-            FamilyChildren = new List<CensusIndividual>(Children); // Family children is all children alive or dead at census date
+            FamilyChildren = [.. Children]; // Family children is all children alive or dead at census date
         }
 
         public new IEnumerable<CensusIndividual> Members

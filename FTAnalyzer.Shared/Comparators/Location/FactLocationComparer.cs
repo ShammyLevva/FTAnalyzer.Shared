@@ -1,10 +1,8 @@
 ﻿namespace FTAnalyzer
 {
-    public class FactLocationComparer : Comparer<IDisplayLocation>
+    public class FactLocationComparer(int level) : Comparer<IDisplayLocation>
     {
-        public int Level { get; }
-
-        public FactLocationComparer(int level) => Level = level;
+        public int Level { get; } = level;
 
         public override int Compare(IDisplayLocation? x, IDisplayLocation? y)
         {

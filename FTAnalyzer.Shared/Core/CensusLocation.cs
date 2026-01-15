@@ -3,19 +3,19 @@ using System.Xml;
 
 namespace FTAnalyzer
 {
-    public class CensusLocation
+    public class CensusLocation(string year, string piece, string rd, string parish, string county, string location)
     {
-        static readonly Dictionary<Tuple<string, string>, CensusLocation> CENSUSLOCATIONS = new();
+        static readonly Dictionary<Tuple<string, string>, CensusLocation> CENSUSLOCATIONS = [];
         public readonly static CensusLocation UNKNOWN = new(string.Empty);
         public readonly static CensusLocation SCOTLAND = new(Countries.SCOTLAND);
         public readonly static CensusLocation UNITED_STATES = new(Countries.UNITED_STATES);
         public readonly static CensusLocation CANADA = new(Countries.CANADA);
-        public string Year { get; private set; }
-        public string Piece { get; private set; }
-        public string RegistrationDistrict { get; private set; }
-        public string Parish { get; private set; }
-        public string County { get; private set; }
-        public string Location { get; private set; }
+        public string Year { get; private set; } = year;
+        public string Piece { get; private set; } = piece;
+        public string RegistrationDistrict { get; private set; } = rd;
+        public string Parish { get; private set; } = parish;
+        public string County { get; private set; } = county;
+        public string Location { get; private set; } = location;
 
 #if __PC__
         static CensusLocation() => LoadCensusLocationFile(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location));
@@ -52,16 +52,6 @@ namespace FTAnalyzer
         }
 
         public CensusLocation(string location) : this(string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, location) { }
-
-        public CensusLocation(string year, string piece, string rd, string parish, string county, string location)
-        {
-            Year = year;
-            Piece = piece;
-            RegistrationDistrict = rd;
-            Parish = parish;
-            County = county;
-            Location = location;
-        }
 
         public static CensusLocation GetCensusLocation(string year, string piece)
         {

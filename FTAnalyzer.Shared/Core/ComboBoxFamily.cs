@@ -2,12 +2,8 @@
 
 namespace FTAnalyzer
 {
-    public class ComboBoxFamily : Family
+    public class ComboBoxFamily(Family family) : Family(family)
     {
-        public ComboBoxFamily(Family family)
-            : base(family)
-        { }
-
         public override string ToString()
         {
             StringBuilder result = new();

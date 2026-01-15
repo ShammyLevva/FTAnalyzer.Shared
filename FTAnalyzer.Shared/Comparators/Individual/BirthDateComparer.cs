@@ -1,15 +1,13 @@
 ﻿namespace FTAnalyzer
 {
-    public class BirthDateComparer : Comparer<IDisplayIndividual>
+    public class BirthDateComparer(bool direction) : Comparer<IDisplayIndividual>
     {
         public static readonly bool ASCENDING = true;
         public static readonly bool DESCENDING;
 
         public BirthDateComparer() : this(ASCENDING) { }
 
-        public BirthDateComparer(bool direction) => Direction = direction;
-
-        public bool Direction { get; set; } = ASCENDING;
+        public bool Direction { get; set; } = direction;
 
         public override int Compare(IDisplayIndividual? x, IDisplayIndividual? y)
         {

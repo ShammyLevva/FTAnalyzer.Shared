@@ -1,17 +1,10 @@
 ﻿namespace FTAnalyzer
 {
-    public class AncestryTreeTag
+    public class AncestryTreeTag(string tag, string name, string rin)
     {
-        public string TagID { get; }
-        public string Name { get; }
-        public string RIN { get; }
-
-        public AncestryTreeTag(string tag, string name, string rin)
-        {
-            TagID = tag;
-            Name = name;
-            RIN = rin;
-        }
+        public string TagID { get; } = tag;
+        public string Name { get; } = name;
+        public string RIN { get; } = rin;
 
         public override string ToString() => string.IsNullOrEmpty(RIN) ? $"{TagID} : {Name}" : $"{TagID} : {Name} ({RIN})";
 

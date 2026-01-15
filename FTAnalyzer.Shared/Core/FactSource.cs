@@ -34,7 +34,7 @@ namespace FTAnalyzer
             SourceMedium = FamilyTree.GetText(node, "REPO/CALN/MEDI", true);
             if (!noteRead && SourceMedium.Length == 0)
                 SourceMedium = FamilyTree.GetText(node, "NOTE/CONC", true);
-            Facts = new List<Fact>();
+            Facts = [];
         }
 
         public void AddFact(Fact f)

@@ -1,15 +1,9 @@
 ﻿namespace FTAnalyzer
 {
-    public class NameComparer<T> : IComparer<T>
+    public class NameComparer<T>(bool ascending, bool forenames) : IComparer<T>
     {
-        bool ForenamesFirst { get; }
-        int Ascending { get; }
-
-        public NameComparer(bool ascending, bool forenames)
-        {
-            ForenamesFirst = forenames;
-            Ascending = ascending ? 1 : -1;
-        }
+        bool ForenamesFirst { get; } = forenames;
+        int Ascending { get; } = ascending ? 1 : -1;
 
         public int Compare(T? x, T? y)
         {
