@@ -22,7 +22,7 @@ namespace FTAnalyzer
         public static readonly IList<Region> PREFERRED_REGIONS;
         public static readonly IDictionary<string, Region> VALID_REGIONS;
 
-        public static readonly Dictionary<Region, List<ModernCounty>> CONVERSIONS = new();
+        public static readonly Dictionary<Region, List<ModernCounty>> CONVERSIONS = [];
         public static readonly List<ModernCounty> MODERN_COUNTIES;
 
         #region Modern County List
@@ -679,7 +679,7 @@ namespace FTAnalyzer
         static Regions()
         {
             #region Modern County Setup
-            MODERN_COUNTIES = new List<ModernCounty>(new ModernCounty[] {
+            MODERN_COUNTIES = [
                 OS_ABERDEENSHIRE, OS_ANGUS, OS_ABERDEEN_CITY, OS_ARGYLL_AND_BUTE, OS_BRADFORD, OS_BLACKBURN_WITH_DARWEN,
                 OS_BRACKNELL_FOREST, OS_BARKING_AND_DAGENHAM, OS_BRIDGEND, OS_BEDFORDSHIRE, OS_BLAENAU_GWENT,
                 OS_CITY_OF_BRIGHTON_AND_HOVE, OS_BIRMINGHAM, OS_CENTRAL_BEDFORDSHIRE, OS_BARNSLEY, OS_BUCKINGHAMSHIRE,
@@ -714,7 +714,7 @@ namespace FTAnalyzer
                 OS_CITY_OF_WOLVERHAMPTON, OS_WESTERN_ISLES, OS_WOKINGHAM, OS_WARWICKSHIRE, OS_WEST_LOTHIAN,
                 OS_CITY_OF_WESTMINSTER, OS_WIGAN, OS_WORCESTERSHIRE, OS_TELFORD_AND_WREKIN, OS_WIRRAL, OS_WEST_SUSSEX,
                 OS_WILTSHIRE, OS_WANDSWORTH, OS_WREXHAM, OS_YORK, OS_SOUTHEND_ON_SEA, OS_SLOUGH, OS_STOCKPORT
-            });
+            ];
             #endregion
 
             #region UK Regions
@@ -769,7 +769,7 @@ namespace FTAnalyzer
 
             ISLAND_REGIONS = [JERSEY, ALDERNEY, GUERNSEY, SARK, IOM];
 
-            UK_REGIONS = new HashSet<Region>();
+            UK_REGIONS = [];
             UK_REGIONS.UnionWith(SCOTTISH_REGIONS);
             UK_REGIONS.UnionWith(ENGLISH_REGIONS);
             UK_REGIONS.UnionWith(WELSH_REGIONS);
@@ -778,21 +778,21 @@ namespace FTAnalyzer
             #endregion
 
             #region Overseas Regions
-            IRISH_REGIONS = new HashSet<Region>(new Region[] {
+            IRISH_REGIONS = [
                 CARLOW, CAVAN, CLARE, CORK, DONEGAL, DUBLIN, GALWAY, KERRY, KILDARE, KILKENNY, LAOIS, LEITRIM,
                 LIMERICK, LONGFORD, LOUTH, MAYO, MEATH, MONAGHAN, OFFALY, ROSCOMMON, SLIGO, TIPPERARY, WATERFORD,
                 WESTMEATH, WEXFORD, WICKLOW, DUN_LAOGHAIRE, FINGAL, NORTH_TIPPERARY, SOUTH_DUBLIN, SOUTH_TIPPERARY,
                 LEINSTER, MUNSTER, CONNACHT
-            });
+            ];
             AddIrishRegionAlternates();
 
-            CANADIAN_REGIONS = new HashSet<Region>(new Region[] {
+            CANADIAN_REGIONS = [
                 ALBERTA, BRITISH_COLUMBIA, MANITOBA, NEW_BRUNSWICK, NEWFOUNDLAND, NOVA_SCOTIA, ONTARIO,
                 PRINCE_EDWARD, QUEBEC, SASKATCHEWAN, NW_TERRITORIES, NUNAVUT, YUKON
-            });
+            ];
             AddCanadianRegionAlternates();
 
-            US_STATES = new HashSet<Region>(new Region[] {
+            US_STATES = [
                 ALABAMA, ALASKA, ARIZONA, ARKANSAS, CALIFORNIA, COLORADO, CONNECTICUT, DELAWARE, FLORIDA,
                 GEORGIA, HAWAII, IDAHO, ILLINOIS, INDIANA, IOWA, KANSAS, KENTUCKY, LOUISIANA, MAINE,
                 MARYLAND, MASSACHUSETTS, MICHIGAN, MINNESOTA, MISSISSIPPI, MISSOURI, MONTANA, NEBRASKA,
@@ -800,19 +800,17 @@ namespace FTAnalyzer
                 OHIO, OKLAHOMA, OREGON, PENNSYLVANIA, RHODE_ISLAND, SOUTH_CAROLINA, SOUTH_DAKOTA,
                 TENNESSEE, TEXAS, UTAH, VERMONT, VIRGINIA, WASHINGTON, WEST_VIRGINIA, WISCONSIN,
                 WYOMING, DC
-            });
+            ];
             AddUSStatesAlternates();
 
-            AUSTRALIAN_REGIONS = new HashSet<Region>(new Region[] {
-                NSW, QUEENSLAND, SAUSTRALIA, TASMANIA, VICTORIA, WAUSTRALIA, ACT, NORTHERN_TERRITORY
-            });
+            AUSTRALIAN_REGIONS = [NSW, QUEENSLAND, SAUSTRALIA, TASMANIA, VICTORIA, WAUSTRALIA, ACT, NORTHERN_TERRITORY];
             AddAustralianRegionAlternates();
 
-            NEW_ZEALAND_REGIONS = new HashSet<Region>(new Region[] {
+            NEW_ZEALAND_REGIONS = [
                 AUCKLAND, BAY_OF_PLENTY, CANTERBURY, HAWKES_BAY, MANAWATU_WANGANUI, NORTHLAND, OTAGO,
                 SOUTHLAND, TARANAKI, WAIKATO, WELLINGTON, WEST_COAST, GISBORNE, MARBOROUGH, NELSON,
                 TASMAN, CHATAM_ISLANDS, NORTH_ISLAND, SOUTH_ISLAND
-            });
+            ];
             AddNewZealandRegionAlternates();
             #endregion
 
@@ -834,8 +832,8 @@ namespace FTAnalyzer
         #region Lookup Functions
         public static List<ModernCounty> GetCounties(Region lookup)
         {
-            if (CONVERSIONS.ContainsKey(lookup))
-                return CONVERSIONS[lookup];
+            if (CONVERSIONS.TryGetValue(lookup, out List<ModernCounty>? value))
+                return value;
             return [];
         }
 
@@ -844,7 +842,7 @@ namespace FTAnalyzer
             return MODERN_COUNTIES.FirstOrDefault(c => c.CountyCode.Equals(code));
         }
 
-        static void AppendValidRegions(ISet<Region> regions)
+        static void AppendValidRegions(HashSet<Region> regions)
         {
             foreach (Region r in regions)
             {
@@ -2225,8 +2223,8 @@ namespace FTAnalyzer
         static void AddConversion(Region region, ModernCounty county)
         {
             List<ModernCounty> counties;
-            if (CONVERSIONS.ContainsKey(region))
-                counties = CONVERSIONS[region];
+            if (CONVERSIONS.TryGetValue(region, out List<ModernCounty>? value))
+                counties = value;
             else
             {
                 counties = [];

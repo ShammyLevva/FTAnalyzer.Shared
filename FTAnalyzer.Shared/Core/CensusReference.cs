@@ -1636,7 +1636,7 @@ namespace FTAnalyzer
 
         static string GetOriginalPlace(string match, string originalText, string stopText)
         {
-            int spacePos = match.IndexOf(" ", StringComparison.Ordinal);
+            int spacePos = match.IndexOf(' ');
             if (spacePos == -1)
                 return match.ClearWhiteSpace();
             string startPlace = match[..spacePos];

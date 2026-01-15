@@ -69,12 +69,12 @@ namespace FTAnalyzer
 
         void SetMetaphones()
         {
-            int ptr = Name.IndexOf(",", StringComparison.Ordinal);
+            int ptr = Name.IndexOf(',');
             if (ptr > 0)
             {
                 string forenames = ptr + 2 < Name.Length ? Name[(ptr + 2)..] : string.Empty;
                 string surname = Name[..ptr];
-                int pos = forenames.IndexOf(" ", StringComparison.Ordinal);
+                int pos = forenames.IndexOf(' ');
                 string forename = forenames is null ? string.Empty : (pos > 0 ? forenames[..pos] : forenames);
                 ForenameMetaphone = new DoubleMetaphone(forename).PrimaryKey;
                 SurnameMetaphone = new DoubleMetaphone(surname).PrimaryKey;

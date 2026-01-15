@@ -67,16 +67,16 @@ namespace FTAnalyzer
         }
 
         public bool IsBirthCert() => SourceMedium.Contains("Official Document") &&
-                   SourceTitle.ToUpper().Contains(BIRTHCERT);
+                   SourceTitle.Contains(BIRTHCERT, StringComparison.CurrentCultureIgnoreCase);
 
         public bool IsDeathCert() => SourceMedium.Contains("Official Document") &&
-                   SourceTitle.ToUpper().Contains(DEATHCERT);
+                   SourceTitle.Contains(DEATHCERT, StringComparison.CurrentCultureIgnoreCase);
 
         public bool IsMarriageCert() => SourceMedium.Contains("Official Document") &&
-                   SourceTitle.ToUpper().Contains(MARRIAGECERT);
+                   SourceTitle.Contains(MARRIAGECERT, StringComparison.CurrentCultureIgnoreCase);
 
         public bool IsCensusCert() => SourceMedium.Equals("Official Document") &&
-                   SourceTitle.ToUpper().Contains(CENSUSCERT);
+                   SourceTitle.Contains(CENSUSCERT, StringComparison.CurrentCultureIgnoreCase);
 
         public override string ToString() => SourceTitle;
 

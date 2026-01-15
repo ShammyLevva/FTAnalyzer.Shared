@@ -42,7 +42,7 @@
     {
         public bool Equals(IDisplaySurnames? a, IDisplaySurnames? b)
         {
-            return a.Surname.ToUpper() == b.Surname.ToUpper() &&
+            return a.Surname.Equals(b.Surname, StringComparison.CurrentCultureIgnoreCase) &&
                     a.Individuals == b.Individuals &&
                     a.Families == b.Families &&
                     a.Marriages == b.Marriages;
