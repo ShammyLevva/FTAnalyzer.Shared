@@ -7,8 +7,8 @@ namespace FTAnalyzer
 {
     public partial class ScottishParish
     {
-        static readonly Dictionary<string, ScottishParish> SCOTTISHPARISHES = new();
-        static readonly Dictionary<string, string> SCOTTISHPARISHNAMES = new();
+        static readonly Dictionary<string, ScottishParish> SCOTTISHPARISHES = [];
+        static readonly Dictionary<string, string> SCOTTISHPARISHNAMES = [];
         public readonly static ScottishParish UNKNOWN_PARISH = new("UNK", "Unknown", Countries.SCOTLAND);
         public string RegistrationDistrict { get; private set; }
         public FactLocation Location { get; private set; }

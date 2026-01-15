@@ -7,17 +7,17 @@ namespace FTAnalyzer
     {
         // ISO Region codes at https://en.wikipedia.org/wiki/ISO_3166-2
 
-        public static readonly ISet<Region> SCOTTISH_REGIONS;
-        public static readonly ISet<Region> ENGLISH_REGIONS;
-        public static readonly ISet<Region> WELSH_REGIONS;
-        public static readonly ISet<Region> NIRELAND_REGIONS;
-        public static readonly ISet<Region> ISLAND_REGIONS;
-        public static readonly ISet<Region> UK_REGIONS;
-        public static readonly ISet<Region> IRISH_REGIONS;
-        public static readonly ISet<Region> CANADIAN_REGIONS;
-        public static readonly ISet<Region> US_STATES;
-        public static readonly ISet<Region> AUSTRALIAN_REGIONS;
-        public static readonly ISet<Region> NEW_ZEALAND_REGIONS;
+        public static readonly HashSet<Region> SCOTTISH_REGIONS;
+        public static readonly HashSet<Region> ENGLISH_REGIONS;
+        public static readonly HashSet<Region> WELSH_REGIONS;
+        public static readonly HashSet<Region> NIRELAND_REGIONS;
+        public static readonly HashSet<Region> ISLAND_REGIONS;
+        public static readonly HashSet<Region> UK_REGIONS;
+        public static readonly HashSet<Region> IRISH_REGIONS;
+        public static readonly HashSet<Region> CANADIAN_REGIONS;
+        public static readonly HashSet<Region> US_STATES;
+        public static readonly HashSet<Region> AUSTRALIAN_REGIONS;
+        public static readonly HashSet<Region> NEW_ZEALAND_REGIONS;
 
         public static readonly IList<Region> PREFERRED_REGIONS;
         public static readonly IDictionary<string, Region> VALID_REGIONS;
@@ -719,7 +719,7 @@ namespace FTAnalyzer
 
             #region UK Regions
             // List from Scotland's People
-            SCOTTISH_REGIONS = new HashSet<Region>(new Region[]{
+            SCOTTISH_REGIONS = [
                     ABERDEEN, ANGUS, ARGYLL, AYR, BANFF, BERWICK, BUTE, CAITHNESS, CLACKMANNAN, DUMFRIES,
                     DUNBARTON, EAST_LOTHIAN, FIFE, INVERNESS, KINCARDINE, KINROSS, KIRKCUDBRIGHT, LANARK,
                     MIDLOTHIAN, MORAY, NAIRN, ORKNEY, PEEBLES, PERTH, RENFREW, ROSS_CROMARTY, ROXBURGH,
@@ -727,10 +727,10 @@ namespace FTAnalyzer
                     DUMFRIES_GALLOWAY, GRAMPIAN, HIGHLAND, LOTHIAN, STRATHCLYDE, TAYSIDE, WESTERN_ISLES,
                     ABERDEEN_CITY, ARGYLL_BUTE, DUNDEE_CITY, EAST_AYRSHIRE, EDINBURGH_CITY,
                     EAST_DUNBARTONSHIRE, EAST_RENFREW, FALKIRK, GLASGOW_CITY, INVERCLYDE, INVERNESS_CITY
-                });
+                ];
             AddScottishRegionAlternates();
 
-            ENGLISH_REGIONS = new HashSet<Region>(new Region[] {
+            ENGLISH_REGIONS = [
                     BEDS, BERKS, BUCKS, CAMBS, CHESHIRE, CORNWALL, CUMBERLAND, DERBY, DEVON, DORSET,
                     DURHAM, ESSEX, GLOUCS, HANTS, HEREFORD, HERTS, HUNTS, KENT, LANCS, LEICS, LINCS,
                     MIDDLESEX, NORFOLK, NORTHAMPTON, NORTHUMBERLAND, NOTTS, OXFORD, RUTLAND, SHROPS,
@@ -753,26 +753,21 @@ namespace FTAnalyzer
                     WEST_BERKSHIRE, WINDSOR, WAKEFIELD, WALTHAM_FOREST, WARRINGTON, WOLVERHAMPTON,
                     WOKINGHAM, WESTMINSTER, WIGAN, TELFORD, WIRRAL, WEST_SUSSEX, WANDSWORTH, WREXHAM,
                     YORK, SOUTHEND, SLOUGH, STOCKPORT
-            });
+            ];
             AddEnglishRegionAlternates();
 
-            WELSH_REGIONS = new HashSet<Region>(new Region[] {
+            WELSH_REGIONS = [
                     ANGLESEY, BRECON, CAERNARFON, CEREDIGION, CARMARTHEN, DENBIGH, FLINT, GLAMORGAN, MERIONETH,
                     MONMOUTH, MONTGOMERY, PEMBROKE, RADNOR, CLWYD, DYFED, GWENT, GWYNEDD, MID_GLAMORGAN,
                     POWYS, SOUTH_GLAMORGAN, WEST_GLAMORGAN, BLAENAU_GWENT, BRIDGEND, CARDIFF, CAERPHILLY,
                     CONWY, BLAENAU_GWENT, BRIDGEND, CARDIFF, CAERPHILLY, CONWY, MERTHYL, NEATH, RHONDDA,
-                    SWANSEA, TORFAEN, VALE_GLAMORGAN
-            });
+                    SWANSEA, TORFAEN, VALE_GLAMORGAN];
             AddWelshRegionAlternates();
 
-            NIRELAND_REGIONS = new HashSet<Region>(new Region[] {
-                ANTRIM, ARMAGH, DOWN, FERMANAGH, LONDONDERRY, TYRONE, ULSTER
-            });
+            NIRELAND_REGIONS = [ANTRIM, ARMAGH, DOWN, FERMANAGH, LONDONDERRY, TYRONE, ULSTER];
             AddNorthernIrelandRegionAlternates();
 
-            ISLAND_REGIONS = new HashSet<Region>(new Region[] {
-                JERSEY, ALDERNEY, GUERNSEY, SARK, IOM
-            });
+            ISLAND_REGIONS = [JERSEY, ALDERNEY, GUERNSEY, SARK, IOM];
 
             UK_REGIONS = new HashSet<Region>();
             UK_REGIONS.UnionWith(SCOTTISH_REGIONS);
@@ -822,7 +817,7 @@ namespace FTAnalyzer
             #endregion
 
             #region Valid Regions
-            PREFERRED_REGIONS = new List<Region>();
+            PREFERRED_REGIONS = [];
             VALID_REGIONS = new Dictionary<string, Region>();
             AppendValidRegions(UK_REGIONS);
             AppendValidRegions(IRISH_REGIONS);
@@ -841,7 +836,7 @@ namespace FTAnalyzer
         {
             if (CONVERSIONS.ContainsKey(lookup))
                 return CONVERSIONS[lookup];
-            return new List<ModernCounty>();
+            return [];
         }
 
         public static ModernCounty? OS_GetCounty(string code)
@@ -2234,7 +2229,7 @@ namespace FTAnalyzer
                 counties = CONVERSIONS[region];
             else
             {
-                counties = new List<ModernCounty>();
+                counties = [];
                 CONVERSIONS.Add(region, counties);
             }
             if (counties.Contains(county))
