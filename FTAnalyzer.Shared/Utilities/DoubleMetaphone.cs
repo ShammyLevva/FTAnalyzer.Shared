@@ -904,10 +904,10 @@ namespace FTAnalyzer
 		 */
         bool IsWordSlavoGermanic()
         {
-            return (m_word.IndexOf("W", StringComparison.Ordinal) != -1) ||
-                (m_word.IndexOf("K", StringComparison.Ordinal) != -1) ||
-                (m_word.IndexOf("CZ", StringComparison.Ordinal) != -1) ||
-                (m_word.IndexOf("WITZ", StringComparison.Ordinal) != -1);
+            return (m_word.Contains('W')) ||
+                (m_word.Contains('K')) ||
+                (m_word.Contains("CZ")) ||
+                (m_word.Contains("WITZ"));
         }
 
         /**

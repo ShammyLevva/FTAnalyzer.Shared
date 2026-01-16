@@ -11,17 +11,17 @@ namespace FTAnalyzer.Utilities
         readonly List<T> originalData;
 
         public SortableBindingList()
-            : base(new List<T>())
+            : base([])
         {
-            originalData = new List<T>();
-            comparers = new Dictionary<Type, PropertyComparer<T>>();
+            originalData = [];
+            comparers = [];
         }
 
         public SortableBindingList(IEnumerable<T> enumeration)
-            : base(new List<T>(enumeration))
+            : base([.. enumeration])
         {
-            originalData = new List<T>(enumeration);
-            comparers = new Dictionary<Type, PropertyComparer<T>>();
+            originalData = [.. enumeration];
+            comparers = [];
         }
 
         protected override bool SupportsSortingCore => true;
@@ -81,7 +81,7 @@ namespace FTAnalyzer.Utilities
 
         public T? Find(Predicate<T> predicate)
         {
-            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
+            ArgumentNullException.ThrowIfNull(predicate);
             foreach (T item in this)
             {
                 if (predicate(item)) return item;
@@ -119,7 +119,7 @@ namespace FTAnalyzer.Utilities
             int total_elements = right - left + 1; //BODMAS rule
             int right_start = mid + 1;
             int temp_location = left;
-            List<T> tempList = new();
+            List<T> tempList = [];
 
             while ((left <= mid) && right_start <= right)
             {

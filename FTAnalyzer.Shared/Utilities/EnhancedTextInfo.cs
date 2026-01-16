@@ -50,7 +50,7 @@ namespace FTAnalyzer.Utilities
 
         public static string ConvertStringArrayToString(string[] array)
         {
-            char[] charsToTrim = { ',', '.', ' ' };
+            char[] charsToTrim = [',', '.', ' '];
             StringBuilder builder = new();
             foreach (string value in array)
             {

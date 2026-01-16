@@ -20,7 +20,7 @@ namespace FTAnalyzer.Utilities
 {
     public class FilterList<T> : SortableBindingList<T>
     {
-        readonly List<T> allItems = new();
+        readonly List<T> allItems = [];
 
         public FilterList()
         {
@@ -31,8 +31,7 @@ namespace FTAnalyzer.Utilities
 
         public void Filter(Predicate<T> filter)
         {
-            if (filter is null)
-                throw new ArgumentNullException(nameof(filter));
+            ArgumentNullException.ThrowIfNull(filter);
 
             ApplyFilter(filter);
             if (IsSortedCore)
