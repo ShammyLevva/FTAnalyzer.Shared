@@ -11,10 +11,7 @@
 namespace FTAnalyzer
 {
 
-    public class AnselInputStreamReader : StreamReader
+    public class AnselInputStreamReader(Stream input) : StreamReader(input, new AnselEncoding())
     {
-        public AnselInputStreamReader(Stream input) : base(input, new AnselEncoding())
-        {
-        }
     }
 }

@@ -11,8 +11,7 @@
 
 namespace FTAnalyzer
 {
-    public class AnselOutputStreamWriter : StreamWriter
+    public class AnselOutputStreamWriter(Stream output) : StreamWriter(output, new AnselEncoding())
     {
-        public AnselOutputStreamWriter(Stream output) : base(output, new AnselEncoding()) { }
     }
 }
