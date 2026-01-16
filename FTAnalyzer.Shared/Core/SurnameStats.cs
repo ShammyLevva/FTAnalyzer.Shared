@@ -14,40 +14,54 @@
         {
             return columnName switch
             {
-                "Surname" => CompareComparableProperty<IDisplaySurnames>(f => f.Surname, ascending),
-                "Individuals" => CompareComparableProperty<IDisplaySurnames>(f => f.Individuals, ascending),
-                "Families" => CompareComparableProperty<IDisplaySurnames>(f => f.Families, ascending),
-                "Marriages" => CompareComparableProperty<IDisplaySurnames>(f => f.Marriages, ascending),
-                _ => CompareComparableProperty<IDisplaySurnames>(f => f.Surname, ascending),
+                "Surname" => CompareComparableProperty(f => f.Surname, ascending),
+                "Individuals" => CompareComparableProperty(f => f.Individuals, ascending),
+                "Families" => CompareComparableProperty(f => f.Families, ascending),
+                "Marriages" => CompareComparableProperty(f => f.Marriages, ascending),
+                _ => CompareComparableProperty(f => f.Surname, ascending),
             };
         }
 
-        static Comparer<T> CompareComparableProperty<T>(Func<IDisplaySurnames, IComparable> accessor, bool ascending)
+        static IComparer<IDisplaySurnames> CompareComparableProperty(
+            Func<IDisplaySurnames, IComparable> accessor,
+            bool ascending)
         {
-            return Comparer<T>.Create((x, y) =>
+            return Comparer<IDisplaySurnames>.Create((x, y) =>
             {
-                if (x is not IDisplaySurnames surX)
-                    return ascending ? 1 : -1;
-                if (x is not IDisplaySurnames surY)
-                    return ascending ? 1 : -1;
-                var c1 = accessor(surX);
-                var c2 = accessor(surY);
+                if (x is null && y is null) return 0;
+                if (x is null) return ascending ? -1 : 1;
+                if (y is null) return ascending ? 1 : -1;
+
+                var c1 = accessor(x);
+                var c2 = accessor(y);
                 var result = c1.CompareTo(c2);
                 return ascending ? result : -result;
             });
         }
     }
 
-    public class SurnameStatsComparer : IEqualityComparer<IDisplaySurnames>
+    public sealed class SurnameStatsComparer : IEqualityComparer<IDisplaySurnames>
     {
         public bool Equals(IDisplaySurnames? a, IDisplaySurnames? b)
         {
-            return a.Surname.Equals(b.Surname, StringComparison.CurrentCultureIgnoreCase) &&
-                    a.Individuals == b.Individuals &&
-                    a.Families == b.Families &&
-                    a.Marriages == b.Marriages;
+            if (ReferenceEquals(a, b)) return true;
+            if (a is null || b is null) return false;
+
+            return string.Equals(a.Surname, b.Surname, StringComparison.CurrentCultureIgnoreCase)
+                   && a.Individuals == b.Individuals
+                   && a.Families == b.Families
+                   && a.Marriages == b.Marriages;
         }
 
-        public int GetHashCode(IDisplaySurnames obj) => base.GetHashCode();
+        public int GetHashCode(IDisplaySurnames obj)
+        {
+            ArgumentNullException.ThrowIfNull(obj);
+
+            return HashCode.Combine(
+                obj.Surname?.ToUpperInvariant(),
+                obj.Individuals,
+                obj.Families,
+                obj.Marriages);
+        }
     }
 }
