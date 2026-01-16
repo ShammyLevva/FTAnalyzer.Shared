@@ -3668,7 +3668,7 @@ namespace FTAnalyzer
         #endregion
 
         #region Today
-        public void AddTodaysFacts(DateTime chosenDate, bool wholeMonth, int stepSize, IProgress<int> progress, IProgress<string> outputText)
+        public async void AddTodaysFacts(DateTime chosenDate, bool wholeMonth, int stepSize, IProgress<int> progress, IProgress<string> outputText)
         {
             string dateDesc;
             var sb = new StringBuilder();
@@ -3697,7 +3697,7 @@ namespace FTAnalyzer
             if (GeneralSettings.Default.ShowWorldEvents)
             {
                 int earliestYear = todaysFacts.Count > 0 ? todaysFacts[0].FactDate.StartDate.Year : 1752; // if no facts show world events for Gregorian calendar to today
-                List<DisplayFact> worldEvents = AddWorldEvents(earliestYear, chosenDate, wholeMonth, stepSize, progress);
+                List<DisplayFact> worldEvents = await AddWorldEvents(earliestYear, chosenDate, wholeMonth, stepSize, progress);
                 todaysFacts.AddRange(worldEvents);
                 todaysFacts.Sort();
             }
@@ -3708,7 +3708,7 @@ namespace FTAnalyzer
             progress.Report(100);
         }
 
-        public static List<DisplayFact> AddWorldEvents(int earliestYear, DateTime chosenDate, bool wholeMonth, int stepSize, IProgress<int> progress)
+        public async static Task<List<DisplayFact>> AddWorldEvents(int earliestYear, DateTime chosenDate, bool wholeMonth, int stepSize, IProgress<int> progress)
         {
             // use Wikipedia API at vizgr.org/historical-events/ to find what happened on that date in the past
             var events = new List<DisplayFact>();
@@ -3727,7 +3727,7 @@ namespace FTAnalyzer
                              "&end_date=" + year.ToString() + chosenDate.ToString("MM", CultureInfo.InvariantCulture) + "31" :
                             @"https://www.vizgr.org/historical-events/search.php?links=true&format=xml&begin_date=" + year.ToString() + chosenDate.ToString("MMdd", CultureInfo.InvariantCulture) +
                             "&end_date=" + year.ToString() + chosenDate.ToString("MMdd", CultureInfo.InvariantCulture);
-                    XmlDocument doc = GetWikipediaData(URL).Result;
+                    XmlDocument doc = await GetWikipediaData(URL);
                     eventDate = wholeMonth ? new FactDate(CreateDate(year, chosenDate.Month, 1), CreateDate(year, chosenDate.Month + 1, 1).AddDays(-1)) :
                                              new FactDate(CreateDate(year, chosenDate.Month, chosenDate.Day), CreateDate(year, chosenDate.Month, chosenDate.Day));
                     if (doc.InnerText.Length > 0)
