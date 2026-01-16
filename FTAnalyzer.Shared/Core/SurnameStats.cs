@@ -10,7 +10,7 @@
 
         public int CompareTo(IDisplaySurnames? other) => string.Compare(Surname, other.Surname, StringComparison.Ordinal);
 
-        public IComparer<IDisplaySurnames> GetComparer(string columnName, bool ascending)
+        public Comparer<IDisplaySurnames> GetComparer(string columnName, bool ascending)
         {
             return columnName switch
             {
@@ -22,7 +22,7 @@
             };
         }
 
-        static IComparer<IDisplaySurnames> CompareComparableProperty(
+        static Comparer<IDisplaySurnames> CompareComparableProperty(
             Func<IDisplaySurnames, IComparable> accessor,
             bool ascending)
         {
