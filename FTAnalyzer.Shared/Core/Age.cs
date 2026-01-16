@@ -3,10 +3,8 @@ using System.Text.RegularExpressions;
 
 namespace FTAnalyzer
 {
-    public class Age : IComparable<Age>, IComparable
+    public partial class Age : IComparable<Age>, IComparable
     {
-        //static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(typeof(Age));
-
         public int MinAge { get; private set; }
         public int MaxAge { get; private set; }
         public FactDate CalculatedBirthDate { get; private set; }
@@ -45,8 +43,7 @@ namespace FTAnalyzer
                 _age = $">= {MinAge}"; // if age over maximum return maximum
         }
 
-        const string pattern = @"^(?<year>\d{1,3}y)? ?(?<month>\d{1,2}m)? ?(?<day>\d{1,2}d)?$";
-        static readonly Regex ydm = new(pattern, RegexOptions.Compiled);
+        static readonly Regex ydm = RegexPatterns.AgeRegex();
 
         public Age(string gedcomAge, FactDate when)
             : this()
