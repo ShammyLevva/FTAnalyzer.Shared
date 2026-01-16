@@ -45,7 +45,7 @@ namespace FTAnalyzer.Exports
                     }
                     else if (ind.CensusReference is not null && ind.CensusReference.IsValidLostCousinsReference())
                     {
-                        dummy = new();
+                        dummy = [];
                         string reference = Program.LCClient.GetCensusSpecificFields(dummy, ind);
                         LostCousin lc = new($"{ind.SurnameAtDate(ind.CensusDate)}, {ind.Forenames}", ind.BirthDate.BestYear, reference, ind.CensusDate.BestYear, ind.CensusCountry, true);
                         if (Website.Contains(lc))
@@ -118,7 +118,7 @@ namespace FTAnalyzer.Exports
 
         public static async Task<SortableBindingList<IDisplayLostCousin>> VerifyAncestorsAsync(IProgress<string> outputText)
         {
-            SortableBindingList<IDisplayLostCousin> result = new();
+            SortableBindingList<IDisplayLostCousin> result = [];
             Website ??= await LoadWebsiteAncestorsAsync(outputText);
             WebLinks = [];
             foreach (LostCousin lostCousin in Website)
@@ -132,7 +132,7 @@ namespace FTAnalyzer.Exports
 
         static async Task<List<LostCousin>> LoadWebsiteAncestorsAsync(IProgress<string> outputText)
         {
-            List<LostCousin> websiteList = new();
+            List<LostCousin> websiteList = [];
 #if __PC__
            try
             {

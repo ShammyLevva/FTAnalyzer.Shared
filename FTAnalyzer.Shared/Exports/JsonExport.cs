@@ -10,8 +10,8 @@ namespace FTAnalyzer.Exports
         public static string VersionNumber => "1.0.0";
         public string Filename { get; } = filename;
         public static string ExportDate => DateTime.Now.ToString("dd MMM yyyy HH:mm");
-        public List<IJsonIndividual> Individuals { get; } = new List<IJsonIndividual>(ft.AllIndividuals);
-        public List<IJsonFamily> Families { get; } = new List<IJsonFamily>(ft.AllFamilies);
+        public List<IJsonIndividual> Individuals { get; } = [.. ft.AllIndividuals];
+        public List<IJsonFamily> Families { get; } = [.. ft.AllFamilies];
 
         #endregion
 
