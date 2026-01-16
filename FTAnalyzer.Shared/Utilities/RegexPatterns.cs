@@ -401,5 +401,8 @@ namespace FTAnalyzer.Utilities
 
         [GeneratedRegex(HAS_NUMBERS, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
         internal static partial Regex HasNumbers();
+
+        [GeneratedRegex(@"(.*)\(.*\)", RegexOptions.Compiled)]
+        internal static partial Regex GazateerSlash();
     }
 }
