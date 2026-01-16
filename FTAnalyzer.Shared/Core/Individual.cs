@@ -1330,7 +1330,7 @@ namespace FTAnalyzer
             if (country.Equals(Countries.CANADA))
                 return ((int)Can1851 + (int)Can1861 + (int)Can1871 + (int)Can1881 + (int)Can1891 + (int)Can1901 + (int)Can1906 + (int)Can1911 + (int)Can1916 + (int)Can1921) > 0;
             if (country.Equals(Countries.IRELAND))
-                return ((int)Ire1901 + (int)Ire1911) > 0;
+                return ((int)Ire1901 + (int)Ire1911 + (int)Ire1926) > 0;
             if (country.Equals(Countries.SCOTLAND))
                 return (ukCensus + (int)V1855 + (int)V1865 + (int)V1875 + (int)V1885 + (int)V1895 + (int)V1905 + (int)V1915 + (int)V1920 + (int)V1925 + (int)V1930 + (int)V1935 + (int)V1940) > 0;
             return ukCensus > 0;
@@ -1394,6 +1394,7 @@ namespace FTAnalyzer
         public CensusColours Ire1901 => ColourCensusReport(CensusDate.IRELANDCENSUS1901);
 
         public CensusColours Ire1911 => ColourCensusReport(CensusDate.IRELANDCENSUS1911);
+        public CensusColours Ire1926 => ColourCensusReport(CensusDate.IRELANDCENSUS1926);
 
         public CensusColours US1790 => ColourCensusReport(CensusDate.USCENSUS1790);
 
@@ -1827,6 +1828,7 @@ namespace FTAnalyzer
                 "US1950" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.US1950, ascending),
                 "Ire1901" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.Ire1901, ascending),
                 "Ire1911" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.Ire1911, ascending),
+                "Ire1926" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.Ire1926, ascending),
                 "Can1851" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.Can1851, ascending),
                 "Can1861" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.Can1861, ascending),
                 "Can1871" => CompareComparableProperty<IDisplayColourCensus>(i => (int)i.Can1871, ascending),

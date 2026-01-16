@@ -78,6 +78,9 @@ namespace FTAnalyzer
         [ColumnDetail("1911", 40)]
         CensusColours Ire1911 { get; }
 
+        [ColumnDetail("1926", 40)]
+        CensusColours Ire1926 { get; }
+
         [ColumnDetail("1851", 40)]
         CensusColours Can1851 { get; }
         [ColumnDetail("1861", 40)]
