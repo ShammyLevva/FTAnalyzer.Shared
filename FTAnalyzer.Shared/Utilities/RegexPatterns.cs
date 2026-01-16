@@ -109,6 +109,7 @@ namespace FTAnalyzer.Utilities
         const string LC_CENSUS_PATTERN_SCOT = @"(\d{1,5}-?[AB12]?)\/(\d{1,3})\/(\d{1,3}).*?Scotland 1881";
         const string LC_CENSUS_PATTERN_1940US = @"(T627[-_])(\d{1,5}-?[AB]?)\/(\d{1,2}[AB]?-\d{1,2}[AB]?)\/(\d{1,3}[AB]?).*?US 1880";
         const string LC_CENSUS_PATTERN_1881CANADA = @"(\d{1,5})\/(\d{0,4}[A-Z]{0,4})\/(\d{0,3})\/(\d{1,3})\/?(\d{1,3})?.*?Canada 1881";
+        const string LC_ED_PATTERN = @"\d{1,3}[A-Z]?";
 
         const string PEOPLEFINDERS = @"Full Background Report";
         const string HAS_NUMBERS = @"\\d";
@@ -392,6 +393,9 @@ namespace FTAnalyzer.Utilities
         [GeneratedRegex(LC_CENSUS_PATTERN_1881CANADA, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
         internal static partial Regex LcCensusPattern1881Canada();
 
+        [GeneratedRegex(LC_ED_PATTERN, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        internal static partial Regex LcEdRegex(); 
+        
         [GeneratedRegex(PEOPLEFINDERS, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
         internal static partial Regex Peoplefinders();
 

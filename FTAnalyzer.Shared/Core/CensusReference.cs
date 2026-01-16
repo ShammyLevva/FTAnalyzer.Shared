@@ -1919,8 +1919,6 @@ namespace FTAnalyzer
             else if (Roll.StartsWith("M_T0627_", StringComparison.Ordinal)) Roll = Roll[8..];
         }
 
-        static readonly Regex LCEDregex = new(@"\d{1,3}[A-Z]?", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
         public bool IsValidLostCousinsReference()
         {
             if (Status != ReferenceStatus.GOOD)
@@ -1973,7 +1971,7 @@ namespace FTAnalyzer
                 ED = ED.TrimStart('0');
                 Page = Page.TrimStart('0');
                 if (!Page.IsNumeric()) return false;
-                Match match = LCEDregex.Match(ED); //also check d{1,3}[A-Z]? format
+                Match match = RegexPatterns.LcEdRegex().Match(ED); //also check d{1,3}[A-Z]? format
                 if (!match.Success) return false; // check last to only do regex calc if everything else is ok
             }
             else if (CensusYear.Overlaps(CensusDate.CANADACENSUS1881) && Country == Countries.CANADA)
