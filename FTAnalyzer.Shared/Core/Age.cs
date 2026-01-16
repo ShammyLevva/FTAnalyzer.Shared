@@ -43,13 +43,11 @@ namespace FTAnalyzer
                 _age = $">= {MinAge}"; // if age over maximum return maximum
         }
 
-        static readonly Regex ydm = RegexPatterns.AgeRegex();
-
         public Age(string gedcomAge, FactDate when)
             : this()
         {
             // parse ages from gedcom
-            Match matcher = ydm.Match(gedcomAge);
+            Match matcher = RegexPatterns.AgeRegex().Match(gedcomAge);
             if (matcher.Success)
             {
                 GEDCOM_Age = gedcomAge;

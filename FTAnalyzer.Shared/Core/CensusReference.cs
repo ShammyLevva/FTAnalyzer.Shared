@@ -114,117 +114,6 @@ namespace FTAnalyzer
         const string PEOPLEFINDERS = @"Full Background Report";
         const string HAS_NUMBERS = @"\d";
 
-        static readonly Dictionary<string, Regex> censusRegexs;
-
-        static CensusReference()
-        {
-            censusRegexs = new Dictionary<string, Regex>
-            {
-                ["EW_CENSUS_PATTERN"] = new Regex(EW_CENSUS_PATTERN, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_PATTERN1"] = new Regex(EW_CENSUS_PATTERN1, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_PATTERN2"] = new Regex(EW_CENSUS_PATTERN2, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_PATTERN3"] = new Regex(EW_CENSUS_PATTERN3, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_PATTERN4"] = new Regex(EW_CENSUS_PATTERN4, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_PATTERN5"] = new Regex(EW_CENSUS_PATTERN5, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_PATTERN6"] = new Regex(EW_CENSUS_PATTERN6, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_PATTERN7"] = new Regex(EW_CENSUS_PATTERN7, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_PATTERN8"] = new Regex(EW_CENSUS_PATTERN8, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_PATTERN9"] = new Regex(EW_CENSUS_PATTERN9, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_PATTERN10"] = new Regex(EW_CENSUS_PATTERN10, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_PATTERN11"] = new Regex(EW_CENSUS_PATTERN11, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_PATTERN12"] = new Regex(EW_CENSUS_PATTERN12, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_PATTERN13"] = new Regex(EW_CENSUS_PATTERN13, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_PATTERN14"] = new Regex(EW_CENSUS_PATTERN14, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_PATTERN15"] = new Regex(EW_CENSUS_PATTERN15, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_PATTERN16"] = new Regex(EW_CENSUS_PATTERN16, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-
-                ["EW_CENSUS_PATTERN_FH"] = new Regex(EW_CENSUS_PATTERN_FH, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_PATTERN_FH2"] = new Regex(EW_CENSUS_PATTERN_FH2, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_PATTERN_FH3"] = new Regex(EW_CENSUS_PATTERN_FH3, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_PATTERN_FS1"] = new Regex(EW_CENSUS_PATTERN_FS1, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-
-                ["EW_MISSINGCLASS_PATTERN"] = new Regex(EW_MISSINGCLASS_PATTERN, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_MISSINGCLASS_PATTERN2"] = new Regex(EW_MISSINGCLASS_PATTERN2, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-
-                ["EW_CENSUS_1841_51_PATTERN"] = new Regex(EW_CENSUS_1841_51_PATTERN, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_1841_51_PATTERN2"] = new Regex(EW_CENSUS_1841_51_PATTERN2, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_1841_51_PATTERN2A"] = new Regex(EW_CENSUS_1841_51_PATTERN2A, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_1841_51_PATTERN3"] = new Regex(EW_CENSUS_1841_51_PATTERN3, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_1841_51_PATTERN4"] = new Regex(EW_CENSUS_1841_51_PATTERN4, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_1841_51_PATTERN5"] = new Regex(EW_CENSUS_1841_51_PATTERN5, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_1841_51_PATTERN6"] = new Regex(EW_CENSUS_1841_51_PATTERN6, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_1841_51_PATTERN6A"] = new Regex(EW_CENSUS_1841_51_PATTERN6A, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_1841_51_PATTERN7"] = new Regex(EW_CENSUS_1841_51_PATTERN7, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_1841_51_PATTERN8"] = new Regex(EW_CENSUS_1841_51_PATTERN8, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_1841_51_PATTERN_FH"] = new Regex(EW_CENSUS_1841_51_PATTERN_FH, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_1841_51_PATTERN_FH2"] = new Regex(EW_CENSUS_1841_51_PATTERN_FH2, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_1841_51_PATTERN_FH3"] = new Regex(EW_CENSUS_1841_51_PATTERN_FH3, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_1841_51_PATTERN_FH4"] = new Regex(EW_CENSUS_1841_51_PATTERN_FH4, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-
-                ["EW_CENSUS_1911_1921_PATTERN"] = new Regex(EW_CENSUS_1911_1921_PATTERN, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_1911_1921_PATTERN2"] = new Regex(EW_CENSUS_1911_1921_PATTERN2, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_1911_1921_PATTERN3"] = new Regex(EW_CENSUS_1911_1921_PATTERN3, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_1911_1921_PATTERN4"] = new Regex(EW_CENSUS_1911_1921_PATTERN4, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_1911_1921_PATTERN5"] = new Regex(EW_CENSUS_1911_1921_PATTERN5, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_1911_1921_PATTERN6"] = new Regex(EW_CENSUS_1911_1921_PATTERN6, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_1911_1921_PATTERN7"] = new Regex(EW_CENSUS_1911_1921_PATTERN7, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_CENSUS_1911_1921_PATTERN8"] = new Regex(EW_CENSUS_1911_1921_PATTERN8, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-
-                ["EW_1939_REGISTER_PATTERN1"] = new Regex(EW_1939_REGISTER_PATTERN1, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_1939_REGISTER_PATTERN2"] = new Regex(EW_1939_REGISTER_PATTERN2, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["EW_1939_REGISTER_PATTERN3"] = new Regex(EW_1939_REGISTER_PATTERN3, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-
-                ["SCOT_CENSUSYEAR_PATTERN"] = new Regex(SCOT_CENSUSYEAR_PATTERN, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["SCOT_CENSUSYEAR_PATTERN2"] = new Regex(SCOT_CENSUSYEAR_PATTERN2, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["SCOT_CENSUSYEAR_PATTERN3"] = new Regex(SCOT_CENSUSYEAR_PATTERN3, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["SCOT_CENSUSYEAR_PATTERN4"] = new Regex(SCOT_CENSUSYEAR_PATTERN4, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["SCOT_CENSUS_PATTERN"] = new Regex(SCOT_CENSUS_PATTERN, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["SCOT_CENSUS_PATTERN2"] = new Regex(SCOT_CENSUS_PATTERN2, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["SCOT_CENSUS_PATTERN3"] = new Regex(SCOT_CENSUS_PATTERN3, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["SCOT_CENSUS_PATTERN4"] = new Regex(SCOT_CENSUS_PATTERN4, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["SCOT_CENSUS_PATTERN5"] = new Regex(SCOT_CENSUS_PATTERN5, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-
-                ["US_CENSUS_PATTERN"] = new Regex(US_CENSUS_PATTERN, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["US_CENSUS_PATTERN1A"] = new Regex(US_CENSUS_PATTERN1A, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["US_CENSUS_PATTERN2"] = new Regex(US_CENSUS_PATTERN2, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["US_CENSUS_PATTERN3"] = new Regex(US_CENSUS_PATTERN3, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["US_CENSUS_PATTERN3A"] = new Regex(US_CENSUS_PATTERN3A, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["US_CENSUS_PATTERN3B"] = new Regex(US_CENSUS_PATTERN3B, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["US_CENSUS_PATTERN3C"] = new Regex(US_CENSUS_PATTERN3C, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["US_CENSUS_PATTERN4"] = new Regex(US_CENSUS_PATTERN4, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["US_CENSUS_PATTERN5"] = new Regex(US_CENSUS_PATTERN5, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["US_CENSUS_PATTERN6"] = new Regex(US_CENSUS_PATTERN6, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["US_CENSUS_PATTERN7"] = new Regex(US_CENSUS_PATTERN7, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["US_CENSUS_PATTERN8"] = new Regex(US_CENSUS_PATTERN8, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["US_CENSUS_PATTERN9"] = new Regex(US_CENSUS_PATTERN9, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["US_CENSUS_1940_PATTERN"] = new Regex(US_CENSUS_1940_PATTERN, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["US_CENSUS_1940_PATTERN2"] = new Regex(US_CENSUS_1940_PATTERN2, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["US_CENSUS_1940_PATTERN3"] = new Regex(US_CENSUS_1940_PATTERN3, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["US_CENSUS_1940_PATTERN4"] = new Regex(US_CENSUS_1940_PATTERN4, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["US_CENSUS_T62X_PATTERN1"] = new Regex(US_CENSUS_T62X_PATTERN1, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["US_CENSUS_TX_PATTERN1"] = new Regex(US_CENSUS_TX_PATTERN1, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["US_CENSUS_MX_PATTERN1"] = new Regex(US_CENSUS_MX_PATTERN1, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-
-                ["CANADA_CENSUS_PATTERN"] = new Regex(CANADA_CENSUS_PATTERN, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["CANADA_CENSUS_PATTERN1"] = new Regex(CANADA_CENSUS_PATTERN1, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["CANADA_CENSUS_PATTERN2"] = new Regex(CANADA_CENSUS_PATTERN2, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["CANADA_CENSUS_PATTERN3"] = new Regex(CANADA_CENSUS_PATTERN3, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["CANADA_CENSUS_PATTERN4"] = new Regex(CANADA_CENSUS_PATTERN4, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["CANADA_CENSUS_PATTERN5"] = new Regex(CANADA_CENSUS_PATTERN5, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["CANADA_CENSUS_PATTERN6"] = new Regex(CANADA_CENSUS_PATTERN6, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["CANADA_CENSUS_PATTERN7"] = new Regex(CANADA_CENSUS_PATTERN7, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-
-                ["LC_CENSUS_PATTERN_EW"] = new Regex(LC_CENSUS_PATTERN_EW, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["LC_CENSUS_PATTERN_1911_EW"] = new Regex(LC_CENSUS_PATTERN_1911_EW, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["LC_CENSUS_PATTERN_SCOT"] = new Regex(LC_CENSUS_PATTERN_SCOT, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["LC_CENSUS_PATTERN_1940US"] = new Regex(LC_CENSUS_PATTERN_1940US, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["LC_CENSUS_PATTERN_1881CANADA"] = new Regex(LC_CENSUS_PATTERN_1881CANADA, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-
-                ["PEOPLEFINDERS"] = new Regex(PEOPLEFINDERS, RegexOptions.Compiled | RegexOptions.IgnoreCase),
-                ["HAS_NUMBERS"] = new Regex(HAS_NUMBERS, RegexOptions.Compiled | RegexOptions.IgnoreCase)
-            };
-        }
-
         public enum ReferenceStatus { BLANK = 0, UNRECOGNISED = 1, INCOMPLETE = 2, GOOD = 3 };
         public static readonly CensusReference UNKNOWN = new();
         const string MISSING = "Missing";
@@ -500,7 +389,94 @@ namespace FTAnalyzer
             if (output is null)
                 return;
             Stopwatch timer = Stopwatch.StartNew();
-            Match matcher = censusRegexs[patternName].Match(text);
+            Match matcher = patternName switch
+            {
+                "EW_CENSUS_PATTERN" => RegexPatterns.EwCensusPattern().Match(text),
+                "EW_CENSUS_PATTERN1" => RegexPatterns.EwCensusPattern1().Match(text),
+                "EW_CENSUS_PATTERN2" => RegexPatterns.EwCensusPattern2().Match(text),
+                "EW_CENSUS_PATTERN_FH" => RegexPatterns.EwCensusPatternFh().Match(text),
+                "EW_CENSUS_PATTERN_FH2" => RegexPatterns.EwCensusPatternFh2().Match(text),
+                "EW_CENSUS_PATTERN_FH3" => RegexPatterns.EwCensusPatternFh3().Match(text),
+                "EW_CENSUS_PATTERN_FS1" => RegexPatterns.EwCensusPatternFs1().Match(text),
+                "EW_CENSUS_1841_51_PATTERN" => RegexPatterns.EwCensus184151Pattern().Match(text),
+                "EW_CENSUS_1841_51_PATTERN2" => RegexPatterns.EwCensus184151Pattern2().Match(text),
+                "EW_CENSUS_1841_51_PATTERN2A" => RegexPatterns.EwCensus184151Pattern2A().Match(text),
+                "EW_CENSUS_1841_51_PATTERN3" => RegexPatterns.EwCensus184151Pattern3().Match(text),
+                "EW_CENSUS_1841_51_PATTERN4" => RegexPatterns.EwCensus184151Pattern4().Match(text),
+                "EW_CENSUS_1841_51_PATTERN5" => RegexPatterns.EwCensus184151Pattern5().Match(text),
+                "EW_CENSUS_1841_51_PATTERN6" => RegexPatterns.EwCensus184151Pattern6().Match(text),
+                "EW_CENSUS_1841_51_PATTERN6A" => RegexPatterns.EwCensus184151Pattern6A().Match(text),
+                "EW_CENSUS_1841_51_PATTERN7" => RegexPatterns.EwCensus184151Pattern7().Match(text),
+                "EW_CENSUS_1841_51_PATTERN8" => RegexPatterns.EwCensus184151Pattern8().Match(text),
+                "EW_CENSUS_1841_51_PATTERN_FH" => RegexPatterns.EwCensus184151PatternFh().Match(text),
+                "EW_CENSUS_1841_51_PATTERN_FH2" => RegexPatterns.EwCensus184151PatternFh2().Match(text),
+                "EW_CENSUS_1841_51_PATTERN_FH3" => RegexPatterns.EwCensus184151PatternFh3().Match(text),
+                "EW_CENSUS_1841_51_PATTERN_FH4" => RegexPatterns.EwCensus184151PatternFh4().Match(text),
+                "EW_CENSUS_1911_1921_PATTERN" => RegexPatterns.EwCensus19111921Pattern().Match(text),
+                "EW_CENSUS_1911_1921_PATTERN2" => RegexPatterns.EwCensus19111921Pattern2().Match(text),
+                "EW_CENSUS_1911_1921_PATTERN3" => RegexPatterns.EwCensus19111921Pattern3().Match(text),
+                "EW_CENSUS_1911_1921_PATTERN4" => RegexPatterns.EwCensus19111921Pattern4().Match(text),
+                "EW_CENSUS_1911_1921_PATTERN5" => RegexPatterns.EwCensus19111921Pattern5().Match(text),
+                "EW_CENSUS_1911_1921_PATTERN6" => RegexPatterns.EwCensus19111921Pattern6().Match(text),
+                "EW_CENSUS_1911_1921_PATTERN7" => RegexPatterns.EwCensus19111921Pattern7().Match(text),
+                "EW_CENSUS_1911_1921_PATTERN8" => RegexPatterns.EwCensus19111921Pattern8().Match(text),
+                "EW_CENSUS_PATTERN3" => RegexPatterns.EwCensusPattern3().Match(text),
+                "EW_CENSUS_PATTERN4" => RegexPatterns.EwCensusPattern4().Match(text),
+                "EW_CENSUS_PATTERN5" => RegexPatterns.EwCensusPattern5().Match(text),
+                "EW_CENSUS_PATTERN6" => RegexPatterns.EwCensusPattern6().Match(text),
+                "EW_CENSUS_PATTERN7" => RegexPatterns.EwCensusPattern7().Match(text),
+                "EW_CENSUS_PATTERN8" => RegexPatterns.EwCensusPattern8().Match(text),
+                "EW_CENSUS_PATTERN9" => RegexPatterns.EwCensusPattern9().Match(text),
+                "EW_CENSUS_PATTERN10" => RegexPatterns.EwCensusPattern10().Match(text),
+                "EW_CENSUS_PATTERN11" => RegexPatterns.EwCensusPattern11().Match(text),
+                "EW_CENSUS_PATTERN12" => RegexPatterns.EwCensusPattern12().Match(text),
+                "EW_CENSUS_PATTERN13" => RegexPatterns.EwCensusPattern13().Match(text),
+                "EW_CENSUS_PATTERN14" => RegexPatterns.EwCensusPattern14().Match(text),
+                "EW_CENSUS_PATTERN15" => RegexPatterns.EwCensusPattern15().Match(text),
+                "EW_1939_REGISTER_PATTERN1" => RegexPatterns.Ew1939RegisterPattern1().Match(text),
+                "EW_1939_REGISTER_PATTERN2" => RegexPatterns.Ew1939RegisterPattern2().Match(text),
+                "EW_1939_REGISTER_PATTERN3" => RegexPatterns.Ew1939RegisterPattern3().Match(text),
+                "SCOT_CENSUSYEAR_PATTERN" => RegexPatterns.ScotCensusyearPattern().Match(text),
+                "SCOT_CENSUSYEAR_PATTERN2" => RegexPatterns.ScotCensusyearPattern2().Match(text),
+                "SCOT_CENSUSYEAR_PATTERN3" => RegexPatterns.ScotCensusyearPattern3().Match(text),
+                "SCOT_CENSUSYEAR_PATTERN4" => RegexPatterns.ScotCensusyearPattern4().Match(text),
+                "SCOT_CENSUS_PATTERN" => RegexPatterns.ScotCensusPattern().Match(text),
+                "SCOT_CENSUS_PATTERN2" => RegexPatterns.ScotCensusPattern2().Match(text),
+                "SCOT_CENSUS_PATTERN3" => RegexPatterns.ScotCensusPattern3().Match(text),
+                "SCOT_CENSUS_PATTERN4" => RegexPatterns.ScotCensusPattern4().Match(text),
+                "SCOT_CENSUS_PATTERN5" => RegexPatterns.ScotCensusPattern5().Match(text),
+                "US_CENSUS_PATTERN1A" => RegexPatterns.UsCensusPattern1A().Match(text),
+                "US_CENSUS_PATTERN2" => RegexPatterns.UsCensusPattern2().Match(text),
+                "US_CENSUS_PATTERN3" => RegexPatterns.UsCensusPattern3().Match(text),
+                "US_CENSUS_PATTERN4" => RegexPatterns.UsCensusPattern4().Match(text),
+                "US_CENSUS_PATTERN5" => RegexPatterns.UsCensusPattern5().Match(text),
+                "US_CENSUS_PATTERN6" => RegexPatterns.UsCensusPattern6().Match(text),
+                "US_CENSUS_PATTERN7" => RegexPatterns.UsCensusPattern7().Match(text),
+                "US_CENSUS_PATTERN8" => RegexPatterns.UsCensusPattern8().Match(text),
+                "US_CENSUS_PATTERN9" => RegexPatterns.UsCensusPattern9().Match(text),
+                "US_CENSUS_1940_PATTERN" => RegexPatterns.UsCensus1940Pattern().Match(text),
+                "US_CENSUS_1940_PATTERN2" => RegexPatterns.UsCensus1940Pattern2().Match(text),
+                "US_CENSUS_1940_PATTERN3" => RegexPatterns.UsCensus1940Pattern3().Match(text),
+                "US_CENSUS_1940_PATTERN4" => RegexPatterns.UsCensus1940Pattern4().Match(text),
+                "US_CENSUS_T62X_PATTERN1" => RegexPatterns.UsCensusT62XPattern1().Match(text),
+                "US_CENSUS_TX_PATTERN1" => RegexPatterns.UsCensusTxPattern1().Match(text),
+                "US_CENSUS_MX_PATTERN1" => RegexPatterns.UsCensusMxPattern1().Match(text),
+                "CANADA_CENSUS_PATTERN" => RegexPatterns.CanadaCensusPattern().Match(text),
+                "CANADA_CENSUS_PATTERN2" => RegexPatterns.CanadaCensusPattern2().Match(text),
+                "CANADA_CENSUS_PATTERN3" => RegexPatterns.CanadaCensusPattern3().Match(text),
+                "CANADA_CENSUS_PATTERN4" => RegexPatterns.CanadaCensusPattern4().Match(text),
+                "CANADA_CENSUS_PATTERN5" => RegexPatterns.CanadaCensusPattern5().Match(text),
+                "CANADA_CENSUS_PATTERN6" => RegexPatterns.CanadaCensusPattern6().Match(text),
+                "CANADA_CENSUS_PATTERN7" => RegexPatterns.CanadaCensusPattern7().Match(text),
+                "LC_CENSUS_PATTERN_EW" => RegexPatterns.LcCensusPatternEw().Match(text),
+                "LC_CENSUS_PATTERN_1911_EW" => RegexPatterns.LcCensusPattern1911Ew().Match(text),
+                "LC_CENSUS_PATTERN_SCOT" => RegexPatterns.LcCensusPatternScot().Match(text),
+                "LC_CENSUS_PATTERN_1940US" => RegexPatterns.LcCensusPattern1940Us().Match(text),
+                "LC_CENSUS_PATTERN_1881CANADA" => RegexPatterns.LcCensusPattern1881Canada().Match(text),
+                "EW_MISSINGCLASS_PATTERN" => RegexPatterns.EwMissingclassPattern().Match(text),
+                "EW_MISSINGCLASS_PATTERN2" => RegexPatterns.EwMissingclassPattern2().Match(text),
+                _ => Match.Empty
+            };
             timer.Stop();
             string success = matcher.Success ? "***** MATCH *****" : "no match";
             output.Report($"Took {timer.Elapsed}s to process {patternName} resulting in {success}.\n");
@@ -600,13 +576,13 @@ namespace FTAnalyzer
             string text = ClearCommonPhrases(originalText);
             if (text.Length == 0)
                 return false;
-            Match matcher = censusRegexs["HAS_NUMBERS"].Match(text);
+            Match matcher = RegexPatterns.HasNumbers().Match(text);
             if (!matcher.Success)
                 return false; // skip checking if string has no digits
-            matcher = censusRegexs["PEOPLEFINDERS"].Match(text);
+            matcher = RegexPatterns.Peoplefinders().Match(text);
             if (matcher.Success)
                 return false; // skip checking if it's a peoplefinders.com result  
-            matcher = censusRegexs["EW_CENSUS_PATTERN"].Match(text);
+            matcher = RegexPatterns.EwCensusPattern().Match(text);
             if (matcher.Success)
             {
                 Class = $"RG{matcher.Groups[1]}";
@@ -616,7 +592,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_PATTERN1"].Match(text);
+            matcher = RegexPatterns.EwCensusPattern1().Match(text);
             if (matcher.Success)
             {
                 Class = $"RG{matcher.Groups[1]}";
@@ -626,7 +602,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_PATTERN2"].Match(text);
+            matcher = RegexPatterns.EwCensusPattern2().Match(text);
             if (matcher.Success)
             {
                 Class = $"RG{matcher.Groups[1]}";
@@ -636,7 +612,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.INCOMPLETE, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_PATTERN_FH"].Match(text);
+            matcher = RegexPatterns.EwCensusPatternFh().Match(text);
             if (matcher.Success)
             {
                 Class = $"RG{matcher.Groups[1]}";
@@ -646,7 +622,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_PATTERN_FH2"].Match(text);
+            matcher = RegexPatterns.EwCensusPatternFh2().Match(text);
             if (matcher.Success)
             {
                 Class = $"RG{matcher.Groups[1]}";
@@ -657,7 +633,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_PATTERN_FH3"].Match(text);
+            matcher = RegexPatterns.EwCensusPatternFh3().Match(text);
             if (matcher.Success)
             {
                 Class = $"RG{matcher.Groups[1]}";
@@ -668,7 +644,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_PATTERN_FS1"].Match(text);
+            matcher = RegexPatterns.EwCensusPatternFs1().Match(text);
             if (matcher.Success)
             {
                 Class = GetUKCensusClass(matcher.Groups[1].ToString());
@@ -678,7 +654,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_1841_51_PATTERN"].Match(text);
+            matcher = RegexPatterns.EwCensus184151Pattern().Match(text);
             if (matcher.Success)
             {
                 Class = "HO107";
@@ -688,7 +664,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_1841_51_PATTERN2"].Match(text);
+            matcher = RegexPatterns.EwCensus184151Pattern2().Match(text);
             if (matcher.Success)
             {
                 Class = "HO107";
@@ -699,7 +675,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_1841_51_PATTERN2A"].Match(text);
+            matcher = RegexPatterns.EwCensus184151Pattern2A().Match(text);
             if (matcher.Success)
             {
                 Class = "HO107";
@@ -710,7 +686,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_1841_51_PATTERN3"].Match(text);
+            matcher = RegexPatterns.EwCensus184151Pattern3().Match(text);
             if (matcher.Success)
             {
                 Class = "HO107";
@@ -721,7 +697,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_1841_51_PATTERN4"].Match(text);
+            matcher = RegexPatterns.EwCensus184151Pattern4().Match(text);
             if (matcher.Success)
             {
                 Class = "HO107";
@@ -732,7 +708,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.INCOMPLETE, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_1841_51_PATTERN5"].Match(text);
+            matcher = RegexPatterns.EwCensus184151Pattern5().Match(text);
             if (matcher.Success)
             {
                 Class = "HO107";
@@ -743,7 +719,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.INCOMPLETE, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_1841_51_PATTERN6"].Match(text);
+            matcher = RegexPatterns.EwCensus184151Pattern6().Match(text);
             if (matcher.Success)
             {
                 Class = "HO107";
@@ -763,7 +739,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), status, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_1841_51_PATTERN6A"].Match(text);
+            matcher = RegexPatterns.EwCensus184151Pattern6A().Match(text);
             if (matcher.Success)
             {
                 Class = "HO107";
@@ -774,7 +750,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_1841_51_PATTERN7"].Match(text);
+            matcher = RegexPatterns.EwCensus184151Pattern7().Match(text);
             if (matcher.Success)
             {
                 Class = "HO107";
@@ -785,7 +761,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_1841_51_PATTERN8"].Match(text);
+            matcher = RegexPatterns.EwCensus184151Pattern8().Match(text);
             if (matcher.Success)
             {
                 Class = "HO107";
@@ -796,7 +772,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_1841_51_PATTERN_FH"].Match(text);
+            matcher = RegexPatterns.EwCensus184151PatternFh().Match(text);
             if (matcher.Success)
             {
                 Class = "HO107";
@@ -807,7 +783,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_1841_51_PATTERN_FH2"].Match(text);
+            matcher = RegexPatterns.EwCensus184151PatternFh2().Match(text);
             if (matcher.Success)
             {
                 Class = "HO107";
@@ -818,7 +794,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_1841_51_PATTERN_FH3"].Match(text);
+            matcher = RegexPatterns.EwCensus184151PatternFh3().Match(text);
             if (matcher.Success)
             {
                 Class = "HO107";
@@ -829,7 +805,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_1841_51_PATTERN_FH4"].Match(text);
+            matcher = RegexPatterns.EwCensus184151PatternFh4().Match(text);
             if (matcher.Success)
             {
                 Class = "HO107";
@@ -839,7 +815,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.INCOMPLETE, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_1911_1921_PATTERN"].Match(text);
+            matcher = RegexPatterns.EwCensus19111921Pattern().Match(text);
             if (matcher.Success)
             {
                 Class = "RG14";
@@ -848,7 +824,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_1911_1921_PATTERN2"].Match(text);
+            matcher = RegexPatterns.EwCensus19111921Pattern2().Match(text);
             if (matcher.Success)
             {
                 Class = "RG14";
@@ -857,7 +833,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_1911_1921_PATTERN3"].Match(text);
+            matcher = RegexPatterns.EwCensus19111921Pattern3().Match(text);
             if (matcher.Success)
             {
                 Class = "RG14";
@@ -866,7 +842,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_1911_1921_PATTERN4"].Match(text);
+            matcher = RegexPatterns.EwCensus19111921Pattern4().Match(text);
             if (matcher.Success)
             {
                 Class = "RG14";
@@ -875,7 +851,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.INCOMPLETE, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_1911_1921_PATTERN5"].Match(text);
+            matcher = RegexPatterns.EwCensus19111921Pattern5().Match(text);
             if (matcher.Success)
             {
                 Class = "RG14";
@@ -884,7 +860,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_1911_1921_PATTERN6"].Match(text);
+            matcher = RegexPatterns.EwCensus19111921Pattern6().Match(text);
             if (matcher.Success)
             {
                 Class = "RG14";
@@ -894,7 +870,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, Countries.ENG_WALES, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_1911_1921_PATTERN7"].Match(text);
+            matcher = RegexPatterns.EwCensus19111921Pattern7().Match(text);
             if (matcher.Success)
             {
                 Class = "RG78";
@@ -903,7 +879,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.INCOMPLETE, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_1911_1921_PATTERN8"].Match(text);
+            matcher = RegexPatterns.EwCensus19111921Pattern8().Match(text);
             if (matcher.Success)
             {
                 Class = "RG78";
@@ -912,7 +888,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.INCOMPLETE, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_PATTERN3"].Match(text);
+            matcher = RegexPatterns.EwCensusPattern3().Match(text);
             if (matcher.Success)
             {
                 Class = GetUKCensusClass(matcher.Groups[1].ToString());
@@ -923,7 +899,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_PATTERN4"].Match(text);
+            matcher = RegexPatterns.EwCensusPattern4().Match(text);
             if (matcher.Success)
             {
                 Class = GetUKCensusClass(matcher.Groups[1].ToString());
@@ -933,7 +909,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_PATTERN5"].Match(text);
+            matcher = RegexPatterns.EwCensusPattern5().Match(text);
             if (matcher.Success)
             {
                 Class = GetUKCensusClass(matcher.Groups[1].ToString());
@@ -943,7 +919,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.INCOMPLETE, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_PATTERN6"].Match(text);
+            matcher = RegexPatterns.EwCensusPattern6().Match(text);
             if (matcher.Success)
             {
                 Class = GetUKCensusClass(matcher.Groups[1].ToString());
@@ -954,7 +930,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_PATTERN7"].Match(text);
+            matcher = RegexPatterns.EwCensusPattern7().Match(text);
             if (matcher.Success)
             {
                 Class = GetUKCensusClass(matcher.Groups[1].ToString());
@@ -964,7 +940,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_PATTERN8"].Match(text);
+            matcher = RegexPatterns.EwCensusPattern8().Match(text);
             if (matcher.Success)
             {
                 Class = GetUKCensusClass(matcher.Groups[1].ToString());
@@ -974,7 +950,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.INCOMPLETE, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_PATTERN9"].Match(text);
+            matcher = RegexPatterns.EwCensusPattern9().Match(text);
             if (matcher.Success)
             {
                 Class = GetUKCensusClass(matcher.Groups[1].ToString());
@@ -985,7 +961,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_PATTERN10"].Match(text);
+            matcher = RegexPatterns.EwCensusPattern10().Match(text);
             if (matcher.Success)
             {
                 Class = GetUKCensusClass(matcher.Groups[1].ToString());
@@ -995,7 +971,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_PATTERN11"].Match(text);
+            matcher = RegexPatterns.EwCensusPattern11().Match(text);
             if (matcher.Success)
             {
                 Class = GetUKCensusClass(matcher.Groups[1].ToString());
@@ -1005,7 +981,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.INCOMPLETE, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_PATTERN12"].Match(text);
+            matcher = RegexPatterns.EwCensusPattern12().Match(text);
             if (matcher.Success)
             {
                 Class = matcher.Groups[1].ToString();
@@ -1015,7 +991,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_PATTERN13"].Match(text);
+            matcher = RegexPatterns.EwCensusPattern13().Match(text);
             if (matcher.Success)
             {
                 Class = matcher.Groups[1].ToString();
@@ -1028,7 +1004,7 @@ namespace FTAnalyzer
                     return true;
                 }
             }
-            matcher = censusRegexs["EW_CENSUS_PATTERN14"].Match(text);
+            matcher = RegexPatterns.EwCensusPattern14().Match(text);
             if (matcher.Success)
             {
                 Folio = matcher.Groups[1].ToString();
@@ -1038,7 +1014,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_PATTERN15"].Match(text);
+            matcher = RegexPatterns.EwCensusPattern15().Match(text);
             if (matcher.Success)
             {
                 Class = matcher.Groups[1].ToString();
@@ -1048,7 +1024,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_CENSUS_PATTERN16"].Match(text);
+            matcher = RegexPatterns.EwCensusPattern16().Match(text);
             if (matcher.Success)
             {
                 Class = matcher.Groups[1].ToString();
@@ -1058,7 +1034,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_1939_REGISTER_PATTERN1"].Match(text);
+            matcher = RegexPatterns.Ew1939RegisterPattern1().Match(text);
             if (matcher.Success)
             {
                 Class = "RG101";
@@ -1070,7 +1046,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, Countries.ENG_WALES, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_1939_REGISTER_PATTERN2"].Match(text);
+            matcher = RegexPatterns.Ew1939RegisterPattern2().Match(text);
             if (matcher.Success)
             {
                 Class = "RG101";
@@ -1081,7 +1057,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, Countries.ENG_WALES, ReferenceStatus.INCOMPLETE, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_1939_REGISTER_PATTERN3"].Match(text);
+            matcher = RegexPatterns.Ew1939RegisterPattern3().Match(text);
             if (matcher.Success)
             {
                 Class = "RG101";
@@ -1092,7 +1068,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, Countries.ENG_WALES, ReferenceStatus.INCOMPLETE, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["SCOT_CENSUSYEAR_PATTERN"].Match(text);
+            matcher = RegexPatterns.ScotCensusyearPattern().Match(text);
             if (matcher.Success)
             {
                 Class = "SCOT";
@@ -1105,7 +1081,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, Countries.SCOTLAND, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["SCOT_CENSUSYEAR_PATTERN2"].Match(text);
+            matcher = RegexPatterns.ScotCensusyearPattern2().Match(text);
             if (matcher.Success)
             {
                 Class = "SCOT";
@@ -1118,7 +1094,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, Countries.SCOTLAND, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["SCOT_CENSUSYEAR_PATTERN3"].Match(text);
+            matcher = RegexPatterns.ScotCensusyearPattern3().Match(text);
             if (matcher.Success)
             {
                 Class = "SCOT";
@@ -1131,7 +1107,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, Countries.SCOTLAND, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["SCOT_CENSUSYEAR_PATTERN4"].Match(text);
+            matcher = RegexPatterns.ScotCensusyearPattern4().Match(text);
             if (matcher.Success)
             {
                 Class = "SCOT";
@@ -1144,7 +1120,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, Countries.SCOTLAND, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["SCOT_CENSUS_PATTERN"].Match(text);
+            matcher = RegexPatterns.ScotCensusPattern().Match(text);
             if (matcher.Success)
             {
                 Class = "SCOT";
@@ -1155,7 +1131,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, Countries.SCOTLAND, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["SCOT_CENSUS_PATTERN2"].Match(text);
+            matcher = RegexPatterns.ScotCensusPattern2().Match(text);
             if (matcher.Success)
             {
                 Class = "SCOT";
@@ -1166,7 +1142,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, Countries.SCOTLAND, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["SCOT_CENSUS_PATTERN3"].Match(text);
+            matcher = RegexPatterns.ScotCensusPattern3().Match(text);
             if (matcher.Success)
             {
                 Class = "SCOT";
@@ -1177,7 +1153,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, Countries.SCOTLAND, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["SCOT_CENSUS_PATTERN4"].Match(text);
+            matcher = RegexPatterns.ScotCensusPattern4().Match(text);
             if (matcher.Success)
             {
                 Class = "SCOT";
@@ -1190,7 +1166,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, Countries.SCOTLAND, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["SCOT_CENSUS_PATTERN5"].Match(text);
+            matcher = RegexPatterns.ScotCensusPattern5().Match(text);
             if (matcher.Success)
             {
                 Class = "SCOT";
@@ -1203,7 +1179,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, Countries.SCOTLAND, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["US_CENSUS_PATTERN"].Match(text);
+            matcher = RegexPatterns.UsCensusPattern().Match(text);
             if (matcher.Success)
             {
                 Class = $"US{matcher.Groups[1]}";
@@ -1214,7 +1190,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["US_CENSUS_PATTERN1A"].Match(text);
+            matcher = RegexPatterns.UsCensusPattern1A().Match(text);
             if (matcher.Success)
             {
                 Class = $"US{matcher.Groups[1]}";
@@ -1226,7 +1202,7 @@ namespace FTAnalyzer
                 if (Roll.StartsWith("T627", StringComparison.Ordinal)) Roll = Roll[5..];
                 return true;
             }
-            matcher = censusRegexs["US_CENSUS_PATTERN2"].Match(text);
+            matcher = RegexPatterns.UsCensusPattern2().Match(text);
             if (matcher.Success)
             {
                 Class = $"US{matcher.Groups[1]}";
@@ -1237,7 +1213,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["US_CENSUS_PATTERN3"].Match(text);
+            matcher = RegexPatterns.UsCensusPattern3().Match(text);
             if (matcher.Success)
             {
                 Class = $"US{matcher.Groups[1]}";
@@ -1248,7 +1224,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["US_CENSUS_PATTERN3A"].Match(text);
+            matcher = RegexPatterns.UsCensusPattern3A().Match(text);
             if (matcher.Success)
             {
                 Class = $"US{matcher.Groups[1]}";
@@ -1259,7 +1235,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.INCOMPLETE, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["US_CENSUS_PATTERN3B"].Match(text);
+            matcher = RegexPatterns.UsCensusPattern3B().Match(text);
             if (matcher.Success)
             {
                 Class = $"US{matcher.Groups[1]}";
@@ -1270,7 +1246,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.INCOMPLETE, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["US_CENSUS_PATTERN3C"].Match(text);
+            matcher = RegexPatterns.UsCensusPattern3C().Match(text);
             if (matcher.Success)
             {
                 Class = $"US{matcher.Groups[1]}";
@@ -1281,7 +1257,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.INCOMPLETE, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["US_CENSUS_PATTERN4"].Match(text);
+            matcher = RegexPatterns.UsCensusPattern4().Match(text);
             if (matcher.Success)
             {
                 Class = $"US{matcher.Groups[1]}";
@@ -1291,7 +1267,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["US_CENSUS_PATTERN5"].Match(text);
+            matcher = RegexPatterns.UsCensusPattern5().Match(text);
             if (matcher.Success)
             {
                 Class = $"US{matcher.Groups[1]}";
@@ -1301,7 +1277,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.INCOMPLETE, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["US_CENSUS_PATTERN6"].Match(text);
+            matcher = RegexPatterns.UsCensusPattern6().Match(text);
             if (matcher.Success)
             {
                 Class = $"US{matcher.Groups[1]}";
@@ -1312,7 +1288,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["US_CENSUS_PATTERN7"].Match(text);
+            matcher = RegexPatterns.UsCensusPattern7().Match(text);
             if (matcher.Success)
             {
                 Class = $"US{matcher.Groups[1]}";
@@ -1322,7 +1298,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.INCOMPLETE, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["US_CENSUS_PATTERN8"].Match(text);
+            matcher = RegexPatterns.UsCensusPattern8().Match(text);
             if (matcher.Success)
             {
                 Class = $"US{matcher.Groups[1]}";
@@ -1332,7 +1308,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.INCOMPLETE, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["US_CENSUS_PATTERN9"].Match(text);
+            matcher = RegexPatterns.UsCensusPattern9().Match(text);
             if (matcher.Success)
             {
                 Class = $"US{matcher.Groups[1]}";
@@ -1342,7 +1318,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.INCOMPLETE, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["US_CENSUS_1940_PATTERN"].Match(text);
+            matcher = RegexPatterns.UsCensus1940Pattern().Match(text);
             if (matcher.Success)
             {
                 Class = "US1940";
@@ -1352,7 +1328,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["US_CENSUS_1940_PATTERN2"].Match(text);
+            matcher = RegexPatterns.UsCensus1940Pattern2().Match(text);
             if (matcher.Success)
             {
                 Class = "US1940";
@@ -1362,7 +1338,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["US_CENSUS_1940_PATTERN3"].Match(text);
+            matcher = RegexPatterns.UsCensus1940Pattern3().Match(text);
             if (matcher.Success)
             {
                 Class = "US1940";
@@ -1373,7 +1349,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["US_CENSUS_1940_PATTERN4"].Match(text);
+            matcher = RegexPatterns.UsCensus1940Pattern4().Match(text);
             if (matcher.Success)
             {
                 Class = "US1940";
@@ -1383,7 +1359,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["US_CENSUS_T62X_PATTERN1"].Match(text);
+            matcher = RegexPatterns.UsCensusT62XPattern1().Match(text);
             if (matcher.Success)
             {
                 var tCode = matcher.Groups[2].ToString();
@@ -1406,7 +1382,7 @@ namespace FTAnalyzer
                     return true;
                 }
             }
-            matcher = censusRegexs["US_CENSUS_TX_PATTERN1"].Match(text);
+            matcher = RegexPatterns.UsCensusTxPattern1().Match(text);
             if (matcher.Success)
             {
                 Class = $"US1880";
@@ -1416,7 +1392,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(false, false, Countries.UNITED_STATES, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["US_CENSUS_MX_PATTERN1"].Match(text);
+            matcher = RegexPatterns.UsCensusMxPattern1().Match(text);
             if (matcher.Success)
             {
                 var tCode = matcher.Groups[1].ToString();
@@ -1443,7 +1419,7 @@ namespace FTAnalyzer
                     return true;
                 }
             }
-            matcher = censusRegexs["CANADA_CENSUS_PATTERN"].Match(text);
+            matcher = RegexPatterns.CanadaCensusPattern().Match(text);
             if (matcher.Success)
             {
                 Class = $"CAN{matcher.Groups[1]}";
@@ -1454,7 +1430,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(false, false, Countries.CANADA, ReferenceStatus.INCOMPLETE, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["CANADA_CENSUS_PATTERN1"].Match(text);
+            matcher = RegexPatterns.CanadaCensusPattern1().Match(text);
             if (matcher.Success)
             {
                 Class = $"CAN{matcher.Groups[1]}";
@@ -1465,7 +1441,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(false, false, Countries.CANADA, ReferenceStatus.INCOMPLETE, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["CANADA_CENSUS_PATTERN2"].Match(text);
+            matcher = RegexPatterns.CanadaCensusPattern2().Match(text);
             if (matcher.Success)
             {
                 Class = $"CAN{matcher.Groups[1]}";
@@ -1476,7 +1452,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(false, false, Countries.CANADA, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["CANADA_CENSUS_PATTERN3"].Match(text);
+            matcher = RegexPatterns.CanadaCensusPattern3().Match(text);
             if (matcher.Success)
             {
                 Class = $"CAN{matcher.Groups[1]}";
@@ -1488,7 +1464,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(false, false, Countries.CANADA, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["CANADA_CENSUS_PATTERN4"].Match(text);
+            matcher = RegexPatterns.CanadaCensusPattern4().Match(text);
             if (matcher.Success)
             {
                 Class = $"CAN{matcher.Groups[1]}";
@@ -1501,7 +1477,7 @@ namespace FTAnalyzer
                 URL = $"https://www.bac-lac.gc.ca/eng/census/{matcher.Groups[1]}/Pages/item.aspx?itemid={item}";
                 return true;
             }
-            matcher = censusRegexs["CANADA_CENSUS_PATTERN5"].Match(text);
+            matcher = RegexPatterns.CanadaCensusPattern5().Match(text);
             if (matcher.Success)
             {
                 Class = $"CAN{matcher.Groups[1]}";
@@ -1513,7 +1489,7 @@ namespace FTAnalyzer
                 URL = $"https://www.bac-lac.gc.ca/eng/census/{matcher.Groups[1]}/Pages/item.aspx?itemid={item}";
                 return true;
             }
-            matcher = censusRegexs["CANADA_CENSUS_PATTERN6"].Match(text);
+            matcher = RegexPatterns.CanadaCensusPattern6().Match(text);
             if (matcher.Success)
             {
                 Class = $"CAN{matcher.Groups[1]}";
@@ -1524,7 +1500,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(false, false, Countries.CANADA, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["CANADA_CENSUS_PATTERN7"].Match(text);
+            matcher = RegexPatterns.CanadaCensusPattern7().Match(text);
             if (matcher.Success)
             {
                 Class = $"CAN{matcher.Groups[1]}";
@@ -1534,7 +1510,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(false, false, Countries.CANADA, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["LC_CENSUS_PATTERN_EW"].Match(text);
+            matcher = RegexPatterns.LcCensusPatternEw().Match(text);
             if (matcher.Success)
             {
                 if (matcher.Groups[4].ToString().Equals("1881"))
@@ -1547,7 +1523,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, true, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["LC_CENSUS_PATTERN_1911_EW"].Match(text);
+            matcher = RegexPatterns.LcCensusPattern1911Ew().Match(text);
             if (matcher.Success)
             {
                 Class = "RG14";
@@ -1556,7 +1532,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, true, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["LC_CENSUS_PATTERN_SCOT"].Match(text);
+            matcher = RegexPatterns.LcCensusPatternScot().Match(text);
             if (matcher.Success)
             {
                 Class = "RG11";
@@ -1566,7 +1542,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, true, Countries.SCOTLAND, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["LC_CENSUS_PATTERN_1940US"].Match(text);
+            matcher = RegexPatterns.LcCensusPattern1940Us().Match(text);
             if (matcher.Success)
             {
                 Class = "US1940";
@@ -1576,7 +1552,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(false, true, Countries.UNITED_STATES, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["LC_CENSUS_PATTERN_1881CANADA"].Match(text);
+            matcher = RegexPatterns.LcCensusPattern1881Canada().Match(text);
             if (matcher.Success)
             {
                 Class = "CAN1881";
@@ -1596,7 +1572,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(false, true, Countries.UNITED_STATES, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_MISSINGCLASS_PATTERN"].Match(text);
+            matcher = RegexPatterns.EwMissingclassPattern().Match(text);
             if (matcher.Success)
             {
                 Piece = matcher.Groups[1].ToString();
@@ -1605,7 +1581,7 @@ namespace FTAnalyzer
                 SetFlagsandCountry(true, false, Countries.ENG_WALES, ReferenceStatus.INCOMPLETE, matcher.Value);
                 return true;
             }
-            matcher = censusRegexs["EW_MISSINGCLASS_PATTERN2"].Match(text);
+            matcher = RegexPatterns.EwMissingclassPattern2().Match(text);
             if (matcher.Success)
             {
                 Piece = matcher.Groups[1].ToString();
