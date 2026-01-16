@@ -1,15 +1,9 @@
 ﻿namespace FTAnalyzer
 {
-    public class DisplayOccupation : IDisplayOccupation
+    public class DisplayOccupation(string occupation, int count) : IDisplayOccupation
     {
-        public string Occupation { get; }
-        public int Count { get; }
-
-        public DisplayOccupation(string occupation, int count)
-        {
-            Occupation = occupation;
-            Count = count;
-        }
+        public string Occupation { get; } = occupation;
+        public int Count { get; } = count;
 
         public int CompareTo(IDisplayOccupation? that) => string.Compare(Occupation, that.Occupation, StringComparison.Ordinal);
 

@@ -1,16 +1,9 @@
 ﻿namespace FTAnalyzer
 {
-    public class DisplayGreatStats
+    public class DisplayGreatStats(string relation, decimal sort, int count)
     {
-        public string RelationToRoot { get; }
-        public decimal RelationSort { get; }
-        public int Count { get; }
-
-        public DisplayGreatStats(string relation, decimal sort, int count)
-        {
-            RelationToRoot = relation;
-            RelationSort = sort;
-            Count = count;
-        }
+        public string RelationToRoot { get; } = relation;
+        public decimal RelationSort { get; } = sort;
+        public int Count { get; } = count;
     }
 }

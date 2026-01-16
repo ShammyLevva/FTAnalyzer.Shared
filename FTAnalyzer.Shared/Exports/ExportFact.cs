@@ -1,15 +1,10 @@
 ﻿namespace FTAnalyzer
 {
-    public class ExportFact
+    public class ExportFact(Individual ind, Fact f)
     {
-        public Individual Ind { get; set; }
-        public Fact F { get; set; }
+        public Individual Ind { get; set; } = ind;
+        public Fact F { get; set; } = f;
 
-        public ExportFact(Individual ind, Fact f)
-        {
-            Ind = ind;
-            F = f;
-        }
         public string ID { get { return Ind.IndividualID; } }
         public string Forenames { get { return Ind.Forenames; } }
         public string Surname { get { return Ind.Surname; } }

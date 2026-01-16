@@ -1,18 +1,11 @@
 ﻿namespace FTAnalyzer
 {
-    public class DisplayDuplicateIndividual : IDisplayDuplicateIndividual
+    public class DisplayDuplicateIndividual(DuplicateIndividual dup) : IDisplayDuplicateIndividual
     {
-        Individual IndA { get; }
-        Individual IndB { get; }
-        public int Score { get; private set; }
+        Individual IndA { get; } = dup.IndividualA;
+        Individual IndB { get; } = dup.IndividualB;
+        public int Score { get; private set; } = dup.Score;
         public bool IgnoreNonDuplicate { get; set; }
-
-        public DisplayDuplicateIndividual(DuplicateIndividual dup)
-        {
-            IndA = dup.IndividualA;
-            IndB = dup.IndividualB;
-            Score = dup.Score;
-        }
 
         public string IndividualID => IndA.IndividualID;
         public string Name => IndA.Name;

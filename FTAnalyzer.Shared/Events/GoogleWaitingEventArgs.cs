@@ -1,9 +1,7 @@
 ﻿namespace FTAnalyzer.Events
 {
-    public class GoogleWaitingEventArgs : EventArgs
+    public class GoogleWaitingEventArgs(string message) : EventArgs
     {
-        public string Message { get; private set; }
-
-        public GoogleWaitingEventArgs(string message) => this.Message = message;
+        public string Message { get; private set; } = message;
     }
 }
