@@ -112,7 +112,7 @@ namespace FTAnalyzer.Utilities
         const string LC_ED_PATTERN = @"\d{1,3}[A-Z]?";
 
         const string PEOPLEFINDERS = @"Full Background Report";
-        const string HAS_NUMBERS = @"\\d";
+        const string HAS_NUMBERS = @"\d";
 
         [GeneratedRegex(CHILDREN_STATUS_PATTERN1, RegexOptions.Compiled)]
         internal static partial Regex ChildrenStatusPattern1();
