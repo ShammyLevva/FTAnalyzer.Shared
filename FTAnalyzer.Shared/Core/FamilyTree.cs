@@ -1680,7 +1680,7 @@ namespace FTAnalyzer
             foreach (FactLocation loc in allLocations)
             {
                 FactLocation c = loc.GetLocation(level);
-                if (!c.IsBlank && !result.ContainsLocation(c))
+                if (!c.IsBlank && !result.ContainsLocation(c) && !c.Equals(FactLocation.UNKNOWN_LOCATION))
                     result.Add(c);
             }
             result.Sort(new FactLocationComparer(level));
