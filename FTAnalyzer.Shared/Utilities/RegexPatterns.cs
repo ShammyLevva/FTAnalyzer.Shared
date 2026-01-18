@@ -25,7 +25,7 @@ namespace FTAnalyzer.Utilities
         const string EW_CENSUS_PATTERN13 = @"(RG *\d{1,2})-(\d{1,5})-(\d{1,4}[a-z]?)-(\d{1,3})";
         const string EW_CENSUS_PATTERN14 = @"Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3}).*?(RG *\d{1,2})\/(\d{1,5})";
         const string EW_CENSUS_PATTERN15 = @"(RG *\d{1,2})\/(\d{1,5})\/(\d{1,4}[a-z]?)\/(\d{1,3})";
-        const string EW_CENSUS_PATTERN16 = @"(RG *\d{1,2}) *(\d{1,5}) *(\d{1,4}[a-z]?) *(\d{1,3})";
+        const string EW_CENSUS_PATTERN16 = @"(RG *\d{1,2}) +(\d{1,5}) +(\d{1,4}[a-z]?) +(\d{1,3})";
 
         const string EW_CENSUS_PATTERN_FH = @"RG *(\d{1,2})\/(\d{1,5}) F(olio)? ?(\d{1,4}[a-z]?) P(age)? ?(\d{1,3})";
         const string EW_CENSUS_PATTERN_FH2 = @"RG *(\d{1,2})\/(\d{1,5}) ED *(\d{1,4}[a-z]?) F(olio)? ?(\d{1,4}[a-z]?) P(age)? ?(\d{1,3})";
@@ -51,14 +51,14 @@ namespace FTAnalyzer.Utilities
         const string EW_CENSUS_1841_51_PATTERN_FH3 = @"HO *107\/(\d{1,5}) .*?F(olio)? *(\d{1,4}[a-z]?)\/(\d{1,4}) P(age)? *(\d{1,3})";
         const string EW_CENSUS_1841_51_PATTERN_FH4 = @"HO *107\/(\d{1,5}) .*?F(olio)? *(\d{1,4}[a-z]?) P(age)? *(\d{1,3})";
 
-        const string EW_CENSUS_1911_1921_PATTERN = @"RG *1[4-5]\/?( *Piece *)?(\d{1,6}) .*?SN *(\d{1,4})";
-        const string EW_CENSUS_1911_1921_PATTERN2 = @"19[1-2]1 Census.*? *Piece *(\d{1,6}) *SN *(\d{1,4})";
-        const string EW_CENSUS_1911_1921_PATTERN3 = @"Census *19[1-2]1.*? *Piece *(\d{1,6}) *SN *(\d{1,4})";
-        const string EW_CENSUS_1911_1921_PATTERN4 = @"RG *1[4-5]\/? *Piece *(\d{1,6})$";
-        const string EW_CENSUS_1911_1921_PATTERN5 = @"RG *1[4-5]\/? *Piece *(\d{1,6}) *Page *(\d{1,3})";
-        const string EW_CENSUS_1911_1921_PATTERN6 = @"RG *1[4-5]\/? *RD *(\d{1,4}) *ED *(\d{1,3}) (\d{1,5})";
-        const string EW_CENSUS_1911_1921_PATTERN7 = @"RG *78\/? *Piece *(\d{1,6}) .*?SN *(\d{1,4})";
-        const string EW_CENSUS_1911_1921_PATTERN8 = @"RG *78\/? *Piece *(\d{1,5})";
+        const string EW_CENSUS_1911_1921_PATTERN = @"(RG *1[4-5])\/?( *Piece *)?(\d{1,6}) .*?SN *(\d{1,4})";
+        const string EW_CENSUS_1911_1921_PATTERN2 = @"(19[1-2]1) Census.*? *Piece *(\d{1,6}) *SN *(\d{1,4})";
+        const string EW_CENSUS_1911_1921_PATTERN3 = @"Census *(19[1-2]1).*? *Piece *(\d{1,6}) *SN *(\d{1,4})";
+        const string EW_CENSUS_1911_1921_PATTERN4 = @"(RG *1[4-5])\/? *Piece *(\d{1,6})$";
+        const string EW_CENSUS_1911_1921_PATTERN5 = @"(RG *1[4-5])\/? *Piece *(\d{1,6}) *Page *(\d{1,3})";
+        const string EW_CENSUS_1911_1921_PATTERN6 = @"(RG *1[4-5])\/? *RD *(\d{1,4}) *ED *(\d{1,3}) (\d{1,5})";
+        const string EW_CENSUS_1911_PATTERN1 = @"RG *78\/? *Piece *(\d{1,6}) .*?SN *(\d{1,4})";
+        const string EW_CENSUS_1911_PATTERN2 = @"RG *78\/? *Piece *(\d{1,5})";
 
         const string EW_1939_REGISTER_PATTERN1 = @"RG *101\/?\\? *(\d{1,6}[A-Z]?) *.\/?\\? *(\d{1,3}) *.\/?\\? *(\d{1,3}).+(\b[A-Z]{4}\b)";
         const string EW_1939_REGISTER_PATTERN2 = @"RG *101\/?\\? *(\d{1,6}[A-Z]?).*? ED ([A-Z]{4}) RD (.*?) Marital";
@@ -252,11 +252,11 @@ namespace FTAnalyzer.Utilities
         [GeneratedRegex(EW_CENSUS_1911_1921_PATTERN6, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
         internal static partial Regex EwCensus19111921Pattern6();
 
-        [GeneratedRegex(EW_CENSUS_1911_1921_PATTERN7, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
-        internal static partial Regex EwCensus19111921Pattern7();
+        [GeneratedRegex(EW_CENSUS_1911_PATTERN1, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        internal static partial Regex EwCensus1911Pattern1();
 
-        [GeneratedRegex(EW_CENSUS_1911_1921_PATTERN8, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
-        internal static partial Regex EwCensus19111921Pattern8();
+        [GeneratedRegex(EW_CENSUS_1911_PATTERN2, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        internal static partial Regex EwCensus1911Pattern2();
 
         [GeneratedRegex(EW_1939_REGISTER_PATTERN1, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
         internal static partial Regex Ew1939RegisterPattern1();
