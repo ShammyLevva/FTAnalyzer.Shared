@@ -153,7 +153,10 @@ namespace FTAnalyzer
             else
             {
                 CensusYear = GetCensusYearFromReference();
-                CensusLocation = CensusLocation.GetCensusLocation(CensusYear.StartDate.Year.ToString(), Piece);
+                if (CensusYear.StartDate.Year == 1921)
+                    CensusLocation = CensusLocation.Get1921CensusLocation(RD, SD);
+                else
+                    CensusLocation = CensusLocation.GetCensusLocation(CensusYear.StartDate.Year.ToString(), Piece);
                 URL = GetCensusURLFromReference();
             }
         }

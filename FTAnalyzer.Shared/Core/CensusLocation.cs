@@ -55,7 +55,16 @@ namespace FTAnalyzer
 
         public static CensusLocation GetCensusLocation(string year, string piece)
         {
+            if (piece == "MISSING") return UNKNOWN;
             Tuple<string, string> key = new(year, piece);
+            CENSUSLOCATIONS.TryGetValue(key, out CensusLocation? result);
+            return result ?? UNKNOWN;
+        }
+        public static CensusLocation Get1921CensusLocation(string regDistrict, string subDistrict)
+        {
+            if (regDistrict == "MISSING") return UNKNOWN;
+            string piece = $"{regDistrict}/{subDistrict}";
+            Tuple<string, string> key = new("1921", piece);
             CENSUSLOCATIONS.TryGetValue(key, out CensusLocation? result);
             return result ?? UNKNOWN;
         }
