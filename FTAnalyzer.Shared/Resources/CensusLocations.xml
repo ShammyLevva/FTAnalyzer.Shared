@@ -10,12 +10,11 @@
 	<Location Year="1921" Piece="3B/2" RD="Fulham" Parish="North East Fulham" County="London">North East Fulham, London</Location>
 	<Location Year="1921" Piece="3B/3" RD="Fulham" Parish="South Fulham" County="London">South Fulham, London</Location>
 	<Location Year="1921" Piece="4/1" RD="Chelsea" Parish="Chelsea North" County="London">Chelsea North, London</Location>
-	<Location Year="1921" Piece="4/1" RD="Chelsea" Parish="Chelsea South" County="London">Chelsea South, London</Location>
 	<Location Year="1921" Piece="4/2" RD="Chelsea" Parish="Chelsea South" County="London">Chelsea South, London</Location>
-	<Location Year="1921" Piece="5/1" RD="St George's Hanover Square" Parish="Mayfair & Knightsbridge" County="London">Mayfair & Knightsbridge, London</Location>
+	<Location Year="1921" Piece="5/1" RD="St George's Hanover Square" Parish="Mayfair and Knightsbridge" County="London">Mayfair and Knightsbridge, London</Location>
 	<Location Year="1921" Piece="5/2" RD="St George's Hanover Square" Parish="Victoria" County="London">Victoria, London</Location>
 	<Location Year="1921" Piece="6/1" RD="St Martin" Parish="Strand" County="London">Strand, London</Location>
-	<Location Year="1921" Piece="6/2" RD="St Martin" Parish="St James & St Anne" County="London">St James & St Anne, London</Location>
+	<Location Year="1921" Piece="6/2" RD="St Martin" Parish="St James and St Anne" County="London">St James and St Anne, London</Location>
 	<Location Year="1921" Piece="7/1" RD="St Marylebone" Parish="All Souls" County="London">All Souls, London</Location>
 	<Location Year="1921" Piece="7/2" RD="St Marylebone" Parish="St Mary" County="London">St Mary, London</Location>
 	<Location Year="1921" Piece="7/3" RD="St Marylebone" Parish="North Marylebone" County="London">North Marylebone, London</Location>
@@ -36,7 +35,7 @@
 	<Location Year="1921" Piece="11/3" RD="Hackney" Parish="Central Hackney" County="London">Central Hackney, London</Location>
 	<Location Year="1921" Piece="11/4" RD="Hackney" Parish="South West Hackney" County="London">South West Hackney, London</Location>
 	<Location Year="1921" Piece="11/5" RD="Hackney" Parish="South East Hackney" County="London">South East Hackney, London</Location>
-	<Location Year="1921" Piece="12/1" RD="St Giles" Parish="St Giles & Bloomsbury" County="London">St Giles & Bloomsbury, London</Location>
+	<Location Year="1921" Piece="12/1" RD="St Giles" Parish="St Giles and Bloomsbury" County="London">St Giles and Bloomsbury, London</Location>
 	<Location Year="1921" Piece="14/1" RD="Holborn" Parish="Holborn" County="London">Holborn, London</Location>
 	<Location Year="1921" Piece="14/2" RD="Holborn" Parish="Clerkenwell" County="London">Clerkenwell, London</Location>
 	<Location Year="1921" Piece="14/3" RD="Holborn" Parish="St Luke" County="London">St Luke, London</Location>
@@ -47,7 +46,7 @@
 	<Location Year="1921" Piece="17/2" RD="Bethnal Green" Parish="Bethnal Green South West" County="London">Bethnal Green South West, London</Location>
 	<Location Year="1921" Piece="18/1" RD="Whitechapel" Parish="Whitechapel First" County="London">Whitechapel First, London</Location>
 	<Location Year="1921" Piece="18/2" RD="Whitechapel" Parish="Whitechapel Second" County="London">Whitechapel Second, London</Location>
-	<Location Year="1921" Piece="19/1" RD="St George in the East" Parish="St George & St John" County="London">St George & St John, London</Location>
+	<Location Year="1921" Piece="19/1" RD="St George in the East" Parish="St George and St John" County="London">St George and St John, London</Location>
 	<Location Year="1921" Piece="20/1" RD="Stepney" Parish="Stepney West" County="London">Stepney West, London</Location>
 	<Location Year="1921" Piece="20/2" RD="Stepney" Parish="Stepney East" County="London">Stepney East, London</Location>
 	<Location Year="1921" Piece="21/1" RD="Mile End Old Town" Parish="Mile End Old Town South Western" County="London">Mile End Old Town South Western, London</Location>
@@ -55,7 +54,7 @@
 	<Location Year="1921" Piece="22/1" RD="Poplar" Parish="Bow" County="London">Bow, London</Location>
 	<Location Year="1921" Piece="22/2" RD="Poplar" Parish="Bromley" County="London">Bromley, London</Location>
 	<Location Year="1921" Piece="22/3" RD="Poplar" Parish="Poplar" County="London">Poplar, London</Location>
-	<Location Year="1921" Piece="23/1" RD="Southwark" Parish="Christchurch & St Saviour" County="London">Christchurch & St Saviour, London</Location>
+	<Location Year="1921" Piece="23/1" RD="Southwark" Parish="Christchurch and St Saviour" County="London">Christchurch and St Saviour, London</Location>
 	<Location Year="1921" Piece="23/2" RD="Southwark" Parish="St George the Martyr" County="London">St George the Martyr, London</Location>
 	<Location Year="1921" Piece="23/3" RD="Southwark" Parish="Newington North" County="London">Newington North, London</Location>
 	<Location Year="1921" Piece="23/4" RD="Southwark" Parish="Newington South" County="London">Newington South, London</Location>
@@ -140,7 +139,7 @@
 	<Location Year="1921" Piece="45/1" RD="Strood" Parish="Northfleet" County="Kent">Northfleet, Kent</Location>
 	<Location Year="1921" Piece="45/2" RD="Strood" Parish="Strood" County="Kent">Strood, Kent</Location>
 	<Location Year="1921" Piece="46/1" RD="Hoo" Parish="Hoo" County="Kent">Hoo, Kent</Location>
-	<Location Year="1921" Piece="47/1" RD="Medway" Parish="Rochester & Chatham" County="Kent">Rochester & Chatham, Kent</Location>
+	<Location Year="1921" Piece="47/1" RD="Medway" Parish="Rochester and Chatham" County="Kent">Rochester and Chatham, Kent</Location>
 	<Location Year="1921" Piece="47/2" RD="Medway" Parish="Gillingham" County="Kent">Gillingham, Kent</Location>
 	<Location Year="1921" Piece="48/1" RD="Malling" Parish="Aylesford" County="Kent">Aylesford, Kent</Location>
 	<Location Year="1921" Piece="48/2" RD="Malling" Parish="Wrotham" County="Kent">Wrotham, Kent</Location>
@@ -233,10 +232,10 @@
 	<Location Year="1921" Piece="87/3" RD="Midhurst" Parish="Harting" County="Sussex">Harting, Sussex</Location>
 	<Location Year="1921" Piece="88/1" RD="Westbourne" Parish="Westbourne" County="Sussex">Westbourne, Sussex</Location>
 	<Location Year="1921" Piece="89/1" RD="Havant" Parish="Havant" County="Hampshire">Havant, Hampshire</Location>
-	<Location Year="1921" Piece="90/1" RD="Portsmouth" Parish="North End & Buckland" County="Hampshire">North End & Buckland, Hampshire</Location>
-	<Location Year="1921" Piece="90/2" RD="Portsmouth" Parish="Kingston & East Southsea" County="Hampshire">Kingston & East Southsea, Hampshire</Location>
-	<Location Year="1921" Piece="90/3" RD="Portsmouth" Parish="Portsea & Landport" County="Hampshire">Portsea & Landport, Hampshire</Location>
-	<Location Year="1921" Piece="90/4" RD="Portsmouth" Parish="Portsmouth & Mid Southsea" County="Hampshire">Portsmouth & Mid Southsea, Hampshire</Location>
+	<Location Year="1921" Piece="90/1" RD="Portsmouth" Parish="North End and Buckland" County="Hampshire">North End and Buckland, Hampshire</Location>
+	<Location Year="1921" Piece="90/2" RD="Portsmouth" Parish="Kingston and East Southsea" County="Hampshire">Kingston and East Southsea, Hampshire</Location>
+	<Location Year="1921" Piece="90/3" RD="Portsmouth" Parish="Portsea and Landport" County="Hampshire">Portsea and Landport, Hampshire</Location>
+	<Location Year="1921" Piece="90/4" RD="Portsmouth" Parish="Portsmouth and Mid Southsea" County="Hampshire">Portsmouth and Mid Southsea, Hampshire</Location>
 	<Location Year="1921" Piece="91/1" RD="Alverstoke" Parish="Alverstoke" County="Hampshire">Alverstoke, Hampshire</Location>
 	<Location Year="1921" Piece="92/1" RD="Fareham" Parish="Fareham" County="Hampshire">Fareham, Hampshire</Location>
 	<Location Year="1921" Piece="92/2" RD="Fareham" Parish="Titchfield" County="Hampshire">Titchfield, Hampshire</Location>
@@ -437,7 +436,7 @@
 	<Location Year="1921" Piece="174/1" RD="Bedford" Parish="Riseley" County="Bedfordshire">Riseley, Bedfordshire</Location>
 	<Location Year="1921" Piece="174/2" RD="Bedford" Parish="Harrold" County="Bedfordshire">Harrold, Bedfordshire</Location>
 	<Location Year="1921" Piece="174/3" RD="Bedford" Parish="Bedford Borough" County="Bedfordshire">Bedford Borough, Bedfordshire</Location>
-	<Location Year="1921" Piece="174/4" RD="Bedford" Parish="Kempston & Cardington" County="Bedfordshire">Kempston & Cardington, Bedfordshire</Location>
+	<Location Year="1921" Piece="174/4" RD="Bedford" Parish="Kempston and Cardington" County="Bedfordshire">Kempston and Cardington, Bedfordshire</Location>
 	<Location Year="1921" Piece="175/1" RD="Biggleswade" Parish="Biggleswade" County="Bedfordshire">Biggleswade, Bedfordshire</Location>
 	<Location Year="1921" Piece="175/2" RD="Biggleswade" Parish="Stotfold" County="Bedfordshire">Stotfold, Bedfordshire</Location>
 	<Location Year="1921" Piece="176/1" RD="Ampthill" Parish="Shillington" County="Bedfordshire">Shillington, Bedfordshire</Location>
@@ -767,8 +766,8 @@
 	<Location Year="1921" Piece="299/4" RD="Redruth" Parish="Camborne" County="Cornwall">Camborne, Cornwall</Location>
 	<Location Year="1921" Piece="299/5" RD="Redruth" Parish="Phillack" County="Cornwall">Phillack, Cornwall</Location>
 	<Location Year="1921" Piece="300/1" RD="Penzance" Parish="Uny Lelant" County="Cornwall">Uny Lelant, Cornwall</Location>
-	<Location Year="1921" Piece="300/3" RD="Penzance" Parish="Marazion" County="Cornwall">Marazion, Cornwall</Location>
 	<Location Year="1921" Piece="300/2" RD="Penzance" Parish="St Ives" County="Cornwall">St Ives, Cornwall</Location>
+	<Location Year="1921" Piece="300/3" RD="Penzance" Parish="Marazion" County="Cornwall">Marazion, Cornwall</Location>
 	<Location Year="1921" Piece="300/4" RD="Penzance" Parish="Penzance" County="Cornwall">Penzance, Cornwall</Location>
 	<Location Year="1921" Piece="300/5" RD="Penzance" Parish="St Just in Penwith" County="Cornwall">St Just in Penwith, Cornwall</Location>
 	<Location Year="1921" Piece="300/6" RD="Penzance" Parish="St Buryan" County="Cornwall">St Buryan, Cornwall</Location>
@@ -830,7 +829,7 @@
 	<Location Year="1921" Piece="319/3" RD="Bristol" Parish="Bedminster" County="Gloucestershire">Bedminster, Gloucestershire</Location>
 	<Location Year="1921" Piece="319/4" RD="Bristol" Parish="Knowle" County="Gloucestershire">Knowle, Gloucestershire</Location>
 	<Location Year="1921" Piece="319/5" RD="Bristol" Parish="St George" County="Gloucestershire">St George, Gloucestershire</Location>
-	<Location Year="1921" Piece="319/6" RD="Bristol" Parish="St Philip & St Jacob" County="Gloucestershire">St Philip & St Jacob, Gloucestershire</Location>
+	<Location Year="1921" Piece="319/6" RD="Bristol" Parish="St Philip and St Jacob" County="Gloucestershire">St Philip and St Jacob, Gloucestershire</Location>
 	<Location Year="1921" Piece="319/7" RD="Bristol" Parish="Stapleton" County="Gloucestershire">Stapleton, Gloucestershire</Location>
 	<Location Year="1921" Piece="319/8" RD="Bristol" Parish="Ashley" County="Gloucestershire">Ashley, Gloucestershire</Location>
 	<Location Year="1921" Piece="319/9" RD="Bristol" Parish="Westbury on Trym" County="Gloucestershire">Westbury on Trym, Gloucestershire</Location>
@@ -1272,7 +1271,7 @@
 	<Location Year="1921" Piece="461/2" RD="Bolton" Parish="South West Bolton" County="Lancashire">South West Bolton, Lancashire</Location>
 	<Location Year="1921" Piece="461/3" RD="Bolton" Parish="Halliwell" County="Lancashire">Halliwell, Lancashire</Location>
 	<Location Year="1921" Piece="461/4" RD="Bolton" Parish="Horwich" County="Lancashire">Horwich, Lancashire</Location>
-	<Location Year="1921" Piece="461/5" RD="Bolton" Parish="Great Bolton & Lever" County="Lancashire">Great Bolton & Lever, Lancashire</Location>
+	<Location Year="1921" Piece="461/5" RD="Bolton" Parish="Great Bolton and Lever" County="Lancashire">Great Bolton and Lever, Lancashire</Location>
 	<Location Year="1921" Piece="461/6" RD="Bolton" Parish="Little Bolton" County="Lancashire">Little Bolton, Lancashire</Location>
 	<Location Year="1921" Piece="461/7" RD="Bolton" Parish="Turton" County="Lancashire">Turton, Lancashire</Location>
 	<Location Year="1921" Piece="462/1" RD="Bury" Parish="Ramsbottom" County="Lancashire">Ramsbottom, Lancashire</Location>
@@ -1323,9 +1322,9 @@
 	<Location Year="1921" Piece="470/1" RD="Rochdale" Parish="Milnrow" County="Lancashire">Milnrow, Lancashire</Location>
 	<Location Year="1921" Piece="470/2" RD="Rochdale" Parish="Castleton No. 1" County="Lancashire">Castleton No. 1, Lancashire</Location>
 	<Location Year="1921" Piece="470/3" RD="Rochdale" Parish="Castleton No. 2" County="Lancashire">Castleton No. 2, Lancashire</Location>
-	<Location Year="1921" Piece="470/4" RD="Rochdale" Parish="Spotland & Norden" County="Lancashire">Spotland & Norden, Lancashire</Location>
+	<Location Year="1921" Piece="470/4" RD="Rochdale" Parish="Spotland and Norden" County="Lancashire">Spotland and Norden, Lancashire</Location>
 	<Location Year="1921" Piece="470/5" RD="Rochdale" Parish="Wardleworth" County="Lancashire">Wardleworth, Lancashire</Location>
-	<Location Year="1921" Piece="470/6" RD="Rochdale" Parish="Whitworth & Wardle" County="Lancashire">Whitworth & Wardle, Lancashire</Location>
+	<Location Year="1921" Piece="470/6" RD="Rochdale" Parish="Whitworth and Wardle" County="Lancashire">Whitworth and Wardle, Lancashire</Location>
 	<Location Year="1921" Piece="470/7" RD="Rochdale" Parish="Littleborough" County="Lancashire">Littleborough, Lancashire</Location>
 	<Location Year="1921" Piece="471/1" RD="Haslingden" Parish="Rawtenstall" County="Lancashire">Rawtenstall, Lancashire</Location>
 	<Location Year="1921" Piece="471/2" RD="Haslingden" Parish="Bacup" County="Lancashire">Bacup, Lancashire</Location>
@@ -1516,7 +1515,7 @@
 	<Location Year="1921" Piece="512/1" RD="Doncaster" Parish="Barnbrough" County="Yorkshire (West Riding)">Barnbrough, Yorkshire (West Riding)</Location>
 	<Location Year="1921" Piece="512/2" RD="Doncaster" Parish="Campsall" County="Yorkshire (West Riding)">Campsall, Yorkshire (West Riding)</Location>
 	<Location Year="1921" Piece="512/3" RD="Doncaster" Parish="Doncaster" County="Yorkshire (West Riding)">Doncaster, Yorkshire (West Riding)</Location>
-	<Location Year="1921" Piece="512/4" RD="Doncaster" Parish="Bawtry & Tickhill" County="Yorkshire (West Riding)">Bawtry & Tickhill, Yorkshire (West Riding)</Location>
+	<Location Year="1921" Piece="512/4" RD="Doncaster" Parish="Bawtry and Tickhill" County="Yorkshire (West Riding)">Bawtry and Tickhill, Yorkshire (West Riding)</Location>
 	<Location Year="1921" Piece="513/1" RD="Thorne" Parish="Epworth" County="Yorkshire (West Riding)">Epworth, Yorkshire (West Riding)</Location>
 	<Location Year="1921" Piece="513/2" RD="Thorne" Parish="Thorne" County="Yorkshire (West Riding)">Thorne, Yorkshire (West Riding)</Location>
 	<Location Year="1921" Piece="513/3" RD="Thorne" Parish="Crowle" County="Yorkshire (West Riding)">Crowle, Yorkshire (West Riding)</Location>
@@ -1691,7 +1690,7 @@
 	<Location Year="1921" Piece="565/3" RD="Alnwick" Parish="Embleton" County="Northumberland">Embleton, Northumberland</Location>
 	<Location Year="1921" Piece="566/1" RD="Belford" Parish="Belford" County="Northumberland">Belford, Northumberland</Location>
 	<Location Year="1921" Piece="567/1" RD="Berwick upon Tweed" Parish="Berwick upon Tweed" County="Northumberland">Berwick upon Tweed, Northumberland</Location>
-	<Location Year="1921" Piece="567/2" RD="Berwick upon Tweed" Parish="Norhamshire & Islandshire" County="Northumberland">Norhamshire & Islandshire, Northumberland</Location>
+	<Location Year="1921" Piece="567/2" RD="Berwick upon Tweed" Parish="Norhamshire and Islandshire" County="Northumberland">Norhamshire and Islandshire, Northumberland</Location>
 	<Location Year="1921" Piece="568/1" RD="Glendale" Parish="Ford" County="Northumberland">Ford, Northumberland</Location>
 	<Location Year="1921" Piece="568/2" RD="Glendale" Parish="Wooler" County="Northumberland">Wooler, Northumberland</Location>
 	<Location Year="1921" Piece="569/1" RD="Rothbury" Parish="Rothbury" County="Northumberland">Rothbury, Northumberland</Location>
