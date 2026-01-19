@@ -1176,6 +1176,9 @@ namespace FTAnalyzer
                     else
                         minEnd = birthDate.EndDate;
                 }
+                DateTime deathEnd = indiv.DeathDate.EndDate;
+                if (minEnd > deathEnd)
+                    minEnd = deathEnd;
                 if (birthDate.StartDate > minStart)
                     minStart = birthDate.StartDate;
                 // force min & max years with odd dates to be min & max dates
