@@ -1176,6 +1176,9 @@ namespace FTAnalyzer
                     else
                         minEnd = birthDate.EndDate;
                 }
+                DateTime deathEnd = indiv.DeathDate.EndDate;
+                if (minEnd > deathEnd)
+                    minEnd = deathEnd;
                 if (birthDate.StartDate > minStart)
                     minStart = birthDate.StartDate;
                 // force min & max years with odd dates to be min & max dates
@@ -2205,7 +2208,7 @@ namespace FTAnalyzer
                                 double daysDiff = child.BirthDate.DaysDifference(previousBirth);
                                 if (daysDiff >= 10 && daysDiff <= 168)
                                     errors[(int)Dataerror.SIBLING_TOO_SOON].Add(new DataError((int)Dataerror.SIBLING_TOO_SOON, Fact.FactError.ERROR, child, $"Child {child.Name} of {ind.Name} born too soon, only {daysDiff} days after sibling."));
-                                if (daysDiff > 168 && daysDiff < 300)
+                                if (daysDiff > 168 && daysDiff < 270)
                                     errors[(int)Dataerror.SIBLING_PROB_TOO_SOON].Add(new DataError((int)Dataerror.SIBLING_PROB_TOO_SOON, Fact.FactError.QUESTIONABLE, ind, $"Child {child.Name} of {ind.Name} born very soon after sibling, only {daysDiff} days later."));
                                 previousBirth = child.BirthDate;
                             }

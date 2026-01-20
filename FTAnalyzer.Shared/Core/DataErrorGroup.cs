@@ -34,7 +34,7 @@
                 "Male Wifes and Female Husbands",
                 "Couples with same surnames",
                 "Child born too soon after sibling",
-                "Child likely born too soon after sibling",
+                "Child born very soon after sibling",
                 "Date is in the future"
             ];
 
