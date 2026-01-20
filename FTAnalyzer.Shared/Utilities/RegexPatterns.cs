@@ -9,21 +9,21 @@ namespace FTAnalyzer.Utilities
         const string AGE_PATTERN = @"^(?<year>\d{1,3}y)? ?(?<month>\d{1,2}m)? ?(?<day>\d{1,2}d)?$";
 
         // Census reference patterns moved from CensusReference
-        const string EW_CENSUS_PATTERN = @"RG *(\d{1,3}) *\/?Piece *(\d{1,5}) *\/?Folio *(\d{1,4}[a-z]?) *\/?Page *(\d{1,3})";
-        const string EW_CENSUS_PATTERN1 = @"RG *(\d{1,3}) *Piece\/Folio *(\d{1,5})[\/ ]*(\d{1,4}[a-z]?) *Page *(\d{1,3})";
+        const string EW_CENSUS_PATTERN = @"RG *(\d{1,3}) *\/?Piece *(\d{1,5}) *\/?Folio *(\d{1,4}[a-z]?).*?\/?Page *(\d{1,3})";
+        const string EW_CENSUS_PATTERN1 = @"RG *(\d{1,3}) *Piece\/Folio *(\d{1,5})[\/ ]*(\d{1,4}[a-z]?).*?Page *(\d{1,3})";
         const string EW_CENSUS_PATTERN2 = @"RG *(\d{1,3}) *Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?)";
-        const string EW_CENSUS_PATTERN3 = @"(\d{4}) .*?Census.*? *Piece *(\d{1,5}) *Book *(\d{1,3}).*?Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3})";
-        const string EW_CENSUS_PATTERN4 = @"(\d{4}) .*?Census.*? *Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3})";
+        const string EW_CENSUS_PATTERN3 = @"(\d{4}) .*?Census.*? *Piece *(\d{1,5}) *Book *(\d{1,3}).*?Folio *(\d{1,4}[a-z]?).*?Page *(\d{1,3})";
+        const string EW_CENSUS_PATTERN4 = @"(\d{4}) .*?Census.*? *Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?).*?Page *(\d{1,3})";
         const string EW_CENSUS_PATTERN5 = @"(\d{4}) .*?Census.*? *Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?)";
-        const string EW_CENSUS_PATTERN6 = @"Census *(\d{4}).*? *Piece *(\d{1,5}) *Book *(\d{1,3}).*?Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3})";
-        const string EW_CENSUS_PATTERN7 = @"Census *(\d{4}).*? *Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3})";
+        const string EW_CENSUS_PATTERN6 = @"Census *(\d{4}).*? *Piece *(\d{1,5}) *Book *(\d{1,3}).*?Folio *(\d{1,4}[a-z]?).*?Page *(\d{1,3})";
+        const string EW_CENSUS_PATTERN7 = @"Census *(\d{4}).*? *Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?).*?Page *(\d{1,3})";
         const string EW_CENSUS_PATTERN8 = @"Census *(\d{4}).*? *Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?)";
-        const string EW_CENSUS_PATTERN9 = @"(\d{4}) *- *.*? *Piece *(\d{1,5}) *Book *(\d{1,3}).*?Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3})";
-        const string EW_CENSUS_PATTERN10 = @"(\d{4}) *- *.*? *Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3})";
+        const string EW_CENSUS_PATTERN9 = @"(\d{4}) *- *.*? *Piece *(\d{1,5}) *Book *(\d{1,3}).*?Folio *(\d{1,4}[a-z]?).*?Page *(\d{1,3})";
+        const string EW_CENSUS_PATTERN10 = @"(\d{4}) *- *.*? *Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?).*?Page *(\d{1,3})";
         const string EW_CENSUS_PATTERN11 = @"(\d{4}) *- *.*? *Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?)";
-        const string EW_CENSUS_PATTERN12 = @"Piece (RG\d{1,2})\/(\d{1,5}).*? *Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3})";
+        const string EW_CENSUS_PATTERN12 = @"Piece (RG\d{1,2})\/(\d{1,5}).*? *Folio *(\d{1,4}[a-z]?).*?Page *(\d{1,3})";
         const string EW_CENSUS_PATTERN13 = @"(RG *\d{1,2})-(\d{1,5})-(\d{1,4}[a-z]?)-(\d{1,3})";
-        const string EW_CENSUS_PATTERN14 = @"Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3}).*?(RG *\d{1,2})\/(\d{1,5})";
+        const string EW_CENSUS_PATTERN14 = @"Folio *(\d{1,4}[a-z]?).*?Page *(\d{1,3}).*?(RG *\d{1,2})\/(\d{1,5})";
         const string EW_CENSUS_PATTERN15 = @"(RG *\d{1,2})\/(\d{1,5})\/(\d{1,4}[a-z]?)\/(\d{1,3})";
         const string EW_CENSUS_PATTERN16 = @"(RG *\d{1,2}) +(\d{1,5}) +(\d{1,4}[a-z]?) +(\d{1,3})";
 
