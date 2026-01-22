@@ -721,7 +721,7 @@ namespace FTAnalyzer
         readonly string separator = $"————————————————————————————————————————————————————\n";
 #endif
 
-        public string UpdateLostCousinsReport(Predicate<Individual> relationFilter)
+        public async Task<string> UpdateLostCousinsReport(Predicate<Individual> relationFilter)
         {
             StringBuilder output = new();
             output.Append("Lost Cousins facts recorded:\n\n");
