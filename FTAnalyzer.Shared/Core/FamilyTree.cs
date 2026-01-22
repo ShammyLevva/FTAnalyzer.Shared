@@ -3671,7 +3671,7 @@ namespace FTAnalyzer
         #endregion
 
         #region Today
-        public async void AddTodaysFacts(DateTime chosenDate, bool wholeMonth, int stepSize, IProgress<int> progress, IProgress<string> outputText)
+        public async Task<string> AddTodaysFacts(DateTime chosenDate, bool wholeMonth, int stepSize, IProgress<int> progress)
         {
             string dateDesc;
             var sb = new StringBuilder();
@@ -3694,6 +3694,7 @@ namespace FTAnalyzer
                     if (!f.Created && !f.IsCensusFact && f.FactType != Fact.OCCUPATION && f.FactDate.IsExact && f.FactDate.StartDate.Month == chosenDate.Month)
                         if (wholeMonth || f.FactDate.StartDate.Day == chosenDate.Day)
                             todaysFacts.Add(new DisplayFact(i, f));
+                count++;
                 progress.Report(30 * count / indCount);
             }
             todaysFacts.Sort(); // need to sort facts to get correct earliest date
@@ -3707,8 +3708,8 @@ namespace FTAnalyzer
             foreach (DisplayFact f in todaysFacts)
                 sb.Append(f + @"\line ");
             sb.Append('}');
-            outputText.Report(sb.ToString());
             progress.Report(100);
+            return sb.ToString();
         }
 
         public async static Task<List<DisplayFact>> AddWorldEvents(int earliestYear, DateTime chosenDate, bool wholeMonth, int stepSize, IProgress<int> progress)
@@ -3719,7 +3720,7 @@ namespace FTAnalyzer
             FactDate eventDate;
             int barMinimum = earliestYear;
             int barRange = chosenDate.Year - earliestYear;
-            progress.Report(50);
+            progress.Report(30);
             for (int year = earliestYear; year <= chosenDate.Year; year++)
             {
                 int diff = chosenDate.Year - year;
