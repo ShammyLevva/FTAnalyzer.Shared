@@ -715,11 +715,7 @@ namespace FTAnalyzer
         int LCMissing;
         int LCUploadable;
         int LCInvalidRef;
-#if __MACOS__
         readonly string separator = $"————————————————————————————————\n";
-#else
-        readonly string separator = $"————————————————————————————————————————————————————\n";
-#endif
 
         public async Task<string> UpdateLostCousinsReport(Predicate<Individual> relationFilter)
         {
