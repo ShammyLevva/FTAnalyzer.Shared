@@ -783,7 +783,7 @@ namespace FTAnalyzer
             {
                 Class = "RG78";
                 Piece = matcher.Groups[1].ToString();
-                Schedule = "Missing";
+                Schedule = MISSING;
                 SetFlagsandCountry(true, false, GetCensusReferenceCountry(Class, Piece), ReferenceStatus.INCOMPLETE, matcher.Value);
                 return true;
             }
@@ -794,8 +794,8 @@ namespace FTAnalyzer
                 Book = matcher.Groups[1].ToString();
                 ED = matcher.Groups[2].ToString();
                 Schedule = matcher.Groups[3].ToString();
-                RD = "Missing";
-                SD = "Missing";
+                RD = MISSING;
+                SD = MISSING;
                 SetFlagsandCountry(true, false, Countries.ENG_WALES, ReferenceStatus.INCOMPLETE, matcher.Value);
                 return true;
             }
@@ -963,7 +963,7 @@ namespace FTAnalyzer
                 Class = "RG101";
                 Piece = matcher.Groups[1].ToString();
                 ED = matcher.Groups[2].ToString();
-                Page = "Missing";
+                Page = MISSING;
                 Schedule = matcher.Groups[3].ToString();
                 SetFlagsandCountry(true, false, Countries.ENG_WALES, ReferenceStatus.INCOMPLETE, matcher.Value);
                 return true;
@@ -973,9 +973,9 @@ namespace FTAnalyzer
             {
                 Class = "RG101";
                 Piece = matcher.Groups[1].ToString();
-                ED = "Missing";
-                Page = "Missing";
-                Schedule = "Missing";
+                ED = MISSING;
+                Page = MISSING;
+                Schedule = MISSING;
                 SetFlagsandCountry(true, false, Countries.ENG_WALES, ReferenceStatus.INCOMPLETE, matcher.Value);
                 return true;
             }
