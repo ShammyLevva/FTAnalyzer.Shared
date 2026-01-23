@@ -8,7 +8,7 @@ namespace FTAnalyzer
         string IndividualID { get; }
         [ColumnDetail("Forenames", 100)]
         string Forenames { get; }
-        [ColumnDetail("Surnames", 100)]
+        [ColumnDetail("Surnames", 75)]
         string Surname { get; }
         [ColumnDetail("Birth Date", 170)]
         FactDate BirthDate { get; }
