@@ -12,8 +12,8 @@ using System.Diagnostics;
 using System.Text.Json;
 using System.Collections.Immutable;
 
+
 #if __PC__
-using FTAnalyzer.Windows;
 using FTAnalyzer.Forms.Controls;
 #elif __MACOS__ || __IOS__
 using FTAnalyzer.ViewControllers;

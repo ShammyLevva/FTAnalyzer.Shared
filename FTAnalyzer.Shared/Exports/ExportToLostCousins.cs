@@ -1,7 +1,6 @@
 ﻿using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
 #if __PC__
-using FTAnalyzer.Windows;
 using HtmlAgilityPack;
 #endif
 
