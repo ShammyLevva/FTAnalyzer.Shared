@@ -62,6 +62,7 @@ namespace FTAnalyzer.Utilities
         const string EW_CENSUS_1921_PATTERN1 = @"RG *15\/? *(\d{1,6}) *ED (\d{1,4}) *Sch *(\d{1,4})";
 
         const string EW_1939_REGISTER_PATTERN1 = @"RG *101\/?\\? *(\d{1,6}[A-Z]?) *.\/?\\? *(\d{1,3}) *.\/?\\? *(\d{1,3}).+(\b[A-Z]{4}\b)";
+        const string EW_1939_REGISTER_PATTERN1A = @"RG *101\/?\\? *(\d{1,6}[A-Z]?) *.\/?\\? *(\d{1,3}) *.\/?\\? *(\d{1,3})";
         const string EW_1939_REGISTER_PATTERN2 = @"RG *101\/?\\? *(\d{1,6}[A-Z]?).*? ED ([A-Z]{4}) RD (.*?) Marital";
         const string EW_1939_REGISTER_PATTERN3 = @"RG *101\/?\\? *(\d{1,6}[A-Z]?)";
 
@@ -264,6 +265,9 @@ namespace FTAnalyzer.Utilities
 
         [GeneratedRegex(EW_1939_REGISTER_PATTERN1, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
         internal static partial Regex Ew1939RegisterPattern1();
+
+        [GeneratedRegex(EW_1939_REGISTER_PATTERN1A, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        internal static partial Regex Ew1939RegisterPattern1A();
 
         [GeneratedRegex(EW_1939_REGISTER_PATTERN2, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
         internal static partial Regex Ew1939RegisterPattern2();

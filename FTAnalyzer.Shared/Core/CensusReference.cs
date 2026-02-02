@@ -11,7 +11,7 @@ namespace FTAnalyzer
     {
         public enum ReferenceStatus { BLANK = 0, UNRECOGNISED = 1, INCOMPLETE = 2, GOOD = 3 };
         public static readonly CensusReference UNKNOWN = new();
-        const string MISSING = "Missing";
+        public static string MISSING = "Missing";
 
         string unknownCensusRef;
         string Place { get; set; }
@@ -954,6 +954,17 @@ namespace FTAnalyzer
                 Schedule = matcher.Groups[3].ToString();
                 string letterCode = matcher.Groups[4].ToString();
                 ED = CheckLetterCode(letterCode);
+                SetFlagsandCountry(true, false, Countries.ENG_WALES, ReferenceStatus.GOOD, matcher.Value);
+                return true;
+            }
+            matcher = RegexPatterns.Ew1939RegisterPattern1A().Match(text);
+            if (matcher.Success)
+            {
+                Class = "RG101";
+                Piece = matcher.Groups[1].ToString();
+                Page = matcher.Groups[2].ToString();
+                Schedule = matcher.Groups[3].ToString();
+                ED = MISSING;
                 SetFlagsandCountry(true, false, Countries.ENG_WALES, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
