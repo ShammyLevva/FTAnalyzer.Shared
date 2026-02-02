@@ -4,6 +4,13 @@ namespace FTAnalyzer
     {
         public int Compare(CensusIndividual? i1, CensusIndividual? i2)
         {
+            // Handle null cases - null is considered less than non-null
+            if (i1 is null && i2 is null)
+                return 0;
+            if (i1 is null)
+                return -1;
+            if (i2 is null)
+                return 1;
             if (i1.CensusStatus == i2.CensusStatus)
                 // same status so sort by date
                 return SortBirthdate(i1, i2);

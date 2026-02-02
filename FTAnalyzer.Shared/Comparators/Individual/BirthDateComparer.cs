@@ -11,7 +11,8 @@
 
         public override int Compare(IDisplayIndividual? x, IDisplayIndividual? y)
         {
-            if (x is null && y is null) return 1;
+            if (x is null && y is null)
+                return 0;
             IDisplayIndividual? a = x, b = y;
             if (Direction == DESCENDING)
             {
