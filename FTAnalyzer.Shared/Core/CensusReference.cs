@@ -11,7 +11,7 @@ namespace FTAnalyzer
     {
         public enum ReferenceStatus { BLANK = 0, UNRECOGNISED = 1, INCOMPLETE = 2, GOOD = 3 };
         public static readonly CensusReference UNKNOWN = new();
-        public static string MISSING = "Missing";
+        public const string MISSING = "Missing";
 
         string unknownCensusRef;
         string Place { get; set; }
