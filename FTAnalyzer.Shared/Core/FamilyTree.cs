@@ -1167,11 +1167,14 @@ namespace FTAnalyzer
                 }
                 if (birthDate.EndDate <= minEnd && birthDate.EndDate != FactDate.MAXDATE)
                 {  // check for BEF XXXX types that are prevalent in my tree
-                    if (birthDate.StartDate == FactDate.MINDATE && birthDate.EndDate.TryAddYears(1) <= minEnd)
+                    if (birthDate.StartDate == FactDate.MINDATE && birthDate.EndDate.TryAddYears(1) <= minEnd && minEnd != FactDate.MAXDATE)
                         minEnd = birthDate.EndDate.TryAddYears(1);
                     else
                         minEnd = birthDate.EndDate;
                 }
+                // fix for BEF dates to ensure new date isn't just the day before eg: BEF 9 OCT 1803 becoming BEF 8 OCT 1803
+                if (birthDate.StartDate == FactDate.MINDATE && minEnd == birthDate.EndDate)
+                    minEnd= minEnd.AddDays(1); 
                 DateTime deathEnd = indiv.DeathDate.EndDate;
                 if (minEnd > deathEnd)
                     minEnd = deathEnd;
@@ -1185,7 +1188,7 @@ namespace FTAnalyzer
                 if (minEnd.Month == 1 && minEnd.Day == 1 && birthDate.EndDate.Month == 12 && birthDate.EndDate.Day == 31)
                     minEnd = minEnd.TryAddYears(1).AddDays(-1); // year has rounded to 1st Jan when was upper year.
                 baseDate = new FactDate(minStart, minEnd);
-                if (birthDate != baseDate)
+                if (birthDate != baseDate && minStart <= minEnd)
                     toAdd = baseDate;
             }
             if (toAdd is not null && toAdd != birthDate && toAdd.DistanceSquared(birthDate) > 1)
