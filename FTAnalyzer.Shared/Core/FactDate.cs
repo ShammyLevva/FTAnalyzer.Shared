@@ -754,7 +754,7 @@ namespace FTAnalyzer
                                     break;
                             }
                             string standardFormat =
-                                new DateTime(int.Parse(gYear.Value), int.Parse(gMonth.Value), int.Parse(gDay.Value), 0, 0, 0, DateTimeKind.Utc)
+                                new DateTime(int.Parse(gYear!.Value), int.Parse(gMonth!.Value), int.Parse(gDay!.Value), 0, 0, 0, DateTimeKind.Utc)
                                         .ToString("dd MMM yyyy")
                                         .ToUpper();
                             dateValue = dateValue.Length > matcher2.Length
@@ -859,7 +859,7 @@ namespace FTAnalyzer
             if (gDouble is null)  // normal date so its valid double date
                 return true;
             // check if valid double date if so set double date to true
-            string doubleyear = gDouble.ToString().Trim();
+            string doubleyear = gDouble.Value.Trim();
             if (doubleyear.Length == 4)
                 doubleyear = doubleyear[2..];
             if (doubleyear.Length == 3)
