@@ -37,31 +37,31 @@ namespace FTAnalyzer
         public const int METAPHONE_KEY_LENGTH = 4;//The length of the metaphone keys produced.  4 is sweet spot
 
         ///StringBuilders used to construct the keys
-        readonly StringBuilder m_primaryKey;
-        readonly StringBuilder m_alternateKey;
+        readonly StringBuilder _primaryKey;
+        readonly StringBuilder _alternateKey;
 
         ///Actual keys, populated after construction
-        string m_primaryKeyString, m_alternateKeyString;
+        string _primaryKeyString, _alternateKeyString;
 
         ///Variables to track the key length w/o having to grab the .Length attr
-        int m_primaryKeyLength, m_alternateKeyLength;
+        int _primaryKeyLength, _alternateKeyLength;
 
-        ///Working copy of the word, and the orFamilySearchnal word
-        string m_word, m_orFamilySearchnalWord;
+        ///Working copy of the word, and the original word
+        string _word, _originalWord;
 
         ///Length and last valid zero-based index into word
-        int m_length, m_last;
+        int _length, _last;
 
         ///Flag indicating if an alternate metaphone key was computed for the word
-        bool m_hasAlternate;
+        bool _hasAlternate;
 
         /// <summary>Default ctor, initializes by computing the keys of an empty string,
         ///     which are both empty strings</summary>
         public DoubleMetaphone()
         {
             //Leave room at the end for writing a bit beyond the length; keys are chopped at the end anyway
-            m_primaryKey = new StringBuilder(METAPHONE_KEY_LENGTH + 2);
-            m_alternateKey = new StringBuilder(METAPHONE_KEY_LENGTH + 2);
+            _primaryKey = new StringBuilder(METAPHONE_KEY_LENGTH + 2);
+            _alternateKey = new StringBuilder(METAPHONE_KEY_LENGTH + 2);
 
             ComputeKeys("");
         }
@@ -74,21 +74,21 @@ namespace FTAnalyzer
         public DoubleMetaphone(string word)
         {
             //Leave room at the end for writing a bit beyond the length; keys are chopped at the end anyway
-            m_primaryKey = new StringBuilder(METAPHONE_KEY_LENGTH + 2);
-            m_alternateKey = new StringBuilder(METAPHONE_KEY_LENGTH + 2);
+            _primaryKey = new StringBuilder(METAPHONE_KEY_LENGTH + 2);
+            _alternateKey = new StringBuilder(METAPHONE_KEY_LENGTH + 2);
 
             ComputeKeys(word);
         }
 
         /// <summary>The primary metaphone key for the current word</summary>
-        public string PrimaryKey => m_primaryKeyString;
+        public string PrimaryKey => _primaryKeyString;
 
         /// <summary>The alternate metaphone key for the current word, or null if the current
         ///     word does not have an alternate key by Double Metaphone</summary>
-        public string? AlternateKey => m_hasAlternate ? m_alternateKeyString : null;
+        public string? AlternateKey => _hasAlternate ? _alternateKeyString : null;
 
-        /// <summary>OrFamilySearchnal word for which the keys were computed</summary>
-        public string Word => m_orFamilySearchnalWord;
+        /// <summary>Original word for which the keys were computed</summary>
+        public string Word => _originalWord;
 
         /// <summary>Static wrapper around the class, enables computation of metaphone keys
         ///     without instantiating a class.</summary>
@@ -113,44 +113,44 @@ namespace FTAnalyzer
         public void ComputeKeys(string word)
         {
             word ??= string.Empty;
-            m_primaryKey.Length = 0;
-            m_alternateKey.Length = 0;
+            _primaryKey.Length = 0;
+            _alternateKey.Length = 0;
 
-            m_primaryKeyString = "";
-            m_alternateKeyString = "";
+            _primaryKeyString = "";
+            _alternateKeyString = "";
 
-            m_primaryKeyLength = m_alternateKeyLength = 0;
+            _primaryKeyLength = _alternateKeyLength = 0;
 
-            m_hasAlternate = false;
+            _hasAlternate = false;
 
-            m_orFamilySearchnalWord = word;
+            _originalWord = word;
 
             //Copy word to an internal working buffer so it can be modified
-            m_word = word;
+            _word = word;
 
-            m_length = m_word.Length;
+            _length = _word.Length;
 
             //Compute last valid index into word
-            m_last = m_length - 1;
+            _last = _length - 1;
 
             //Padd with four spaces, so word can be over-indexed without fear of exception
-            m_word = string.Concat(m_word, "     ");
+            _word = string.Concat(_word, "     ");
 
             //Convert to upper case, since metaphone is not case sensitive
-            m_word = m_word.ToUpper();
+            _word = _word.ToUpper();
 
             //Now build the keys
             BuildMetaphoneKeys();
         }
 
         /**
-		 * Internal impl of double metaphone algorithm.  Populates m_primaryKey and m_alternateKey.  Modified copy-past of
-		 * Phillips' orFamilySearchnal code
+		 * Internal impl of double metaphone algorithm.  Populates _primaryKey and _alternateKey.  Modified copy-past of
+		 * Phillips' original code
 		 */
         void BuildMetaphoneKeys()
         {
             int current = 0;
-            if (m_length < 1)
+            if (_length < 1)
                 return;
 
             //skip these when at start of word
@@ -158,19 +158,19 @@ namespace FTAnalyzer
                 current += 1;
 
             //Initial 'X' is pronounced 'Z' e.g. 'Xavier'
-            if (m_word[0] == 'X')
+            if (_word[0] == 'X')
             {
                 AddMetaphoneCharacter("S"); //'Z' maps to 'S'
                 current += 1;
             }
 
             ///////////main loop//////////////////////////
-            while ((m_primaryKeyLength < METAPHONE_KEY_LENGTH) || (m_alternateKeyLength < METAPHONE_KEY_LENGTH))
+            while ((_primaryKeyLength < METAPHONE_KEY_LENGTH) || (_alternateKeyLength < METAPHONE_KEY_LENGTH))
             {
-                if (current >= m_length)
+                if (current >= _length)
                     break;
 
-                switch (m_word[current])
+                switch (_word[current])
                 {
                     case 'A':
                     case 'E':
@@ -189,13 +189,13 @@ namespace FTAnalyzer
                         //"-mb", e.g", "dumb", already skipped over...
                         AddMetaphoneCharacter("P");
 
-                        if (m_word[current + 1] == 'B')
+                        if (_word[current + 1] == 'B')
                             current += 2;
                         else
                             current += 1;
                         break;
 
-                    case 'Ç':
+                    case 'ï¿½':
                         AddMetaphoneCharacter("S");
                         current += 1;
                         break;
@@ -205,7 +205,7 @@ namespace FTAnalyzer
                         if ((current > 1)
                             && !IsVowel(current - 2)
                             && AreStringsAt((current - 1), 3, "ACH")
-                            && ((m_word[current + 2] != 'I') && ((m_word[current + 2] != 'E')
+                            && ((_word[current + 2] != 'I') && ((_word[current + 2] != 'E')
                                                                   || AreStringsAt((current - 2), 6, "BACHER", "MACHER"))))
                         {
                             AddMetaphoneCharacter("K");
@@ -294,12 +294,12 @@ namespace FTAnalyzer
                         }
 
                         //double 'C', but not if e.g. 'McClellan'
-                        if (AreStringsAt(current, 2, "CC") && !((current == 1) && (m_word[0] == 'M')))
+                        if (AreStringsAt(current, 2, "CC") && !((current == 1) && (_word[0] == 'M')))
                             //'bellocchio' but not 'bacchus'
                             if (AreStringsAt((current + 2), 1, "I", "E", "H") && !AreStringsAt((current + 2), 2, "HU"))
                             {
                                 //'accident', 'accede' 'succeed'
-                                if (((current == 1) && (m_word[current - 1] == 'A'))
+                                if (((current == 1) && (_word[current - 1] == 'A'))
                                     || AreStringsAt((current - 1), 5, "UCCEE", "UCCES"))
                                     AddMetaphoneCharacter("KS");
                                 //'bacci', 'bertucci', other italian
@@ -377,7 +377,7 @@ namespace FTAnalyzer
                         break;
 
                     case 'F':
-                        if (m_word[current + 1] == 'F')
+                        if (_word[current + 1] == 'F')
                             current += 2;
                         else
                             current += 1;
@@ -385,7 +385,7 @@ namespace FTAnalyzer
                         break;
 
                     case 'G':
-                        if (m_word[current + 1] == 'H')
+                        if (_word[current + 1] == 'H')
                         {
                             if ((current > 0) && !IsVowel(current - 1))
                             {
@@ -399,7 +399,7 @@ namespace FTAnalyzer
                                 //'ghislane', ghiradelli
                                 if (current == 0)
                                 {
-                                    if (m_word[current + 2] == 'I')
+                                    if (_word[current + 2] == 'I')
                                         AddMetaphoneCharacter("J");
                                     else
                                         AddMetaphoneCharacter("K");
@@ -421,13 +421,13 @@ namespace FTAnalyzer
                             {
                                 //e.g., 'laugh', 'McLaughlin', 'cough', 'gough', 'rough', 'tough'
                                 if ((current > 2)
-                                    && (m_word[current - 1] == 'U')
+                                    && (_word[current - 1] == 'U')
                                     && AreStringsAt((current - 3), 1, "C", "G", "L", "R", "T"))
                                 {
                                     AddMetaphoneCharacter("F");
                                 }
                                 else
-                                    if ((current > 0) && m_word[current - 1] != 'I')
+                                    if ((current > 0) && _word[current - 1] != 'I')
                                     AddMetaphoneCharacter("K");
 
                                 current += 2;
@@ -435,7 +435,7 @@ namespace FTAnalyzer
                             }
                         }
 
-                        if (m_word[current + 1] == 'N')
+                        if (_word[current + 1] == 'N')
                         {
                             if ((current == 1) && IsVowel(0) && !IsWordSlavoGermanic())
                             {
@@ -444,7 +444,7 @@ namespace FTAnalyzer
                             else
                                 //not e.g. 'cagney'
                                 if (!AreStringsAt((current + 2), 2, "EY")
-                                    && (m_word[current + 1] != 'Y') && !IsWordSlavoGermanic())
+                                    && (_word[current + 1] != 'Y') && !IsWordSlavoGermanic())
                             {
                                 AddMetaphoneCharacter("N", "KN");
                             }
@@ -464,7 +464,7 @@ namespace FTAnalyzer
 
                         //-ges-,-gep-,-gel-, -gie- at beginning
                         if ((current == 0)
-                            && ((m_word[current + 1] == 'Y')
+                            && ((_word[current + 1] == 'Y')
                                  || AreStringsAt((current + 1), 2, "ES", "EP", "EB", "EL", "EY", "IB", "IL", "IN", "IE", "EI", "ER")))
                         {
                             AddMetaphoneCharacter("K", "J");
@@ -473,7 +473,7 @@ namespace FTAnalyzer
                         }
 
                         // -ger-,  -gy-
-                        if ((AreStringsAt((current + 1), 2, "ER") || (m_word[current + 1] == 'Y'))
+                        if ((AreStringsAt((current + 1), 2, "ER") || (_word[current + 1] == 'Y'))
                             && !AreStringsAt(0, 6, "DANGER", "RANGER", "MANGER")
                             && !AreStringsAt((current - 1), 1, "E", "I")
                             && !AreStringsAt((current - 1), 3, "RGY", "OGY"))
@@ -500,7 +500,7 @@ namespace FTAnalyzer
                             break;
                         }
 
-                        if (m_word[current + 1] == 'G')
+                        if (_word[current + 1] == 'G')
                             current += 2;
                         else
                             current += 1;
@@ -523,7 +523,7 @@ namespace FTAnalyzer
                         //obvious spanish, 'jose', 'san jacinto'
                         if (AreStringsAt(current, 4, "JOSE") || AreStringsAt(0, 4, "SAN "))
                         {
-                            if (((current == 0) && (m_word[current + 4] == ' ')) || AreStringsAt(0, 4, "SAN "))
+                            if (((current == 0) && (_word[current + 4] == ' ')) || AreStringsAt(0, 4, "SAN "))
                                 AddMetaphoneCharacter("H");
                             else
                             {
@@ -539,24 +539,24 @@ namespace FTAnalyzer
                             //spanish pron. of e.g. 'bajador'
                             if (IsVowel(current - 1)
                                 && !IsWordSlavoGermanic()
-                                && ((m_word[current + 1] == 'A') || (m_word[current + 1] == 'O')))
+                                && ((_word[current + 1] == 'A') || (_word[current + 1] == 'O')))
                             AddMetaphoneCharacter("J", "H");
                         else
-                            if (current == m_last)
+                            if (current == _last)
                             AddMetaphoneCharacter("J", " ");
                         else
                             if (!AreStringsAt((current + 1), 1, "L", "T", "K", "S", "N", "M", "B", "Z")
                                 && !AreStringsAt((current - 1), 1, "S", "K", "L"))
                             AddMetaphoneCharacter("J");
 
-                        if (m_word[current + 1] == 'J')//it could happen!
+                        if (_word[current + 1] == 'J')//it could happen!
                             current += 2;
                         else
                             current += 1;
                         break;
 
                     case 'K':
-                        if (m_word[current + 1] == 'K')
+                        if (_word[current + 1] == 'K')
                             current += 2;
                         else
                             current += 1;
@@ -564,12 +564,12 @@ namespace FTAnalyzer
                         break;
 
                     case 'L':
-                        if (m_word[current + 1] == 'L')
+                        if (_word[current + 1] == 'L')
                         {
                             //spanish e.g. 'cabrillo', 'gallegos'
-                            if (((current == (m_length - 3))
+                            if (((current == (_length - 3))
                                  && AreStringsAt((current - 1), 4, "ILLO", "ILLA", "ALLE"))
-                                || ((AreStringsAt((m_last - 1), 2, "AS", "OS") || AreStringsAt(m_last, 1, "A", "O"))
+                                || ((AreStringsAt((_last - 1), 2, "AS", "OS") || AreStringsAt(_last, 1, "A", "O"))
                                     && AreStringsAt((current - 1), 4, "ALLE")))
                             {
                                 AddMetaphoneCharacter("L", " ");
@@ -585,9 +585,9 @@ namespace FTAnalyzer
 
                     case 'M':
                         if ((AreStringsAt((current - 1), 3, "UMB")
-                             && (((current + 1) == m_last) || AreStringsAt((current + 2), 2, "ER")))
+                             && (((current + 1) == _last) || AreStringsAt((current + 2), 2, "ER")))
                             //'dumb','thumb'
-                            || (m_word[current + 1] == 'M'))
+                            || (_word[current + 1] == 'M'))
                             current += 2;
                         else
                             current += 1;
@@ -595,20 +595,20 @@ namespace FTAnalyzer
                         break;
 
                     case 'N':
-                        if (m_word[current + 1] == 'N')
+                        if (_word[current + 1] == 'N')
                             current += 2;
                         else
                             current += 1;
                         AddMetaphoneCharacter("N");
                         break;
 
-                    case (char)165: // 'Ñ'
+                    case (char)165: // 'ï¿½'
                         current += 1;
                         AddMetaphoneCharacter("N");
                         break;
 
                     case 'P':
-                        if (m_word[current + 1] == 'H')
+                        if (_word[current + 1] == 'H')
                         {
                             AddMetaphoneCharacter("F");
                             current += 2;
@@ -624,7 +624,7 @@ namespace FTAnalyzer
                         break;
 
                     case 'Q':
-                        if (m_word[current + 1] == 'Q')
+                        if (_word[current + 1] == 'Q')
                             current += 2;
                         else
                             current += 1;
@@ -633,7 +633,7 @@ namespace FTAnalyzer
 
                     case 'R':
                         //french e.g. 'rogier', but exclude 'hochmeier'
-                        if ((current == m_last)
+                        if ((current == _last)
                             && !IsWordSlavoGermanic()
                             && AreStringsAt((current - 2), 2, "IE")
                             && !AreStringsAt((current - 4), 2, "ME", "MA"))
@@ -641,7 +641,7 @@ namespace FTAnalyzer
                         else
                             AddMetaphoneCharacter("R");
 
-                        if (m_word[current + 1] == 'R')
+                        if (_word[current + 1] == 'R')
                             current += 2;
                         else
                             current += 1;
@@ -702,8 +702,8 @@ namespace FTAnalyzer
                         if (AreStringsAt(current, 2, "SC"))
                         {
                             //Schlesinger's rule
-                            if (m_word[current + 2] == 'H')
-                                //dutch orFamilySearchn, e.g. 'school', 'schooner'
+                            if (_word[current + 2] == 'H')
+                                //dutch origin, e.g. 'school', 'schooner'
                                 if (AreStringsAt((current + 3), 2, "OO", "ER", "EN", "UY", "ED", "EM"))
                                 {
                                     //'schermerhorn', 'schenker'
@@ -718,7 +718,7 @@ namespace FTAnalyzer
                                 }
                                 else
                                 {
-                                    if ((current == 0) && !IsVowel(3) && (m_word[3] != 'W'))
+                                    if ((current == 0) && !IsVowel(3) && (_word[3] != 'W'))
                                         AddMetaphoneCharacter("X", "S");
                                     else
                                         AddMetaphoneCharacter("X");
@@ -739,7 +739,7 @@ namespace FTAnalyzer
                         }
 
                         //french e.g. 'resnais', 'artois'
-                        if ((current == m_last) && AreStringsAt((current - 2), 2, "AI", "OI"))
+                        if ((current == _last) && AreStringsAt((current - 2), 2, "AI", "OI"))
                             AddMetaphoneCharacter("", "S");
                         else
                             AddMetaphoneCharacter("S");
@@ -791,7 +791,7 @@ namespace FTAnalyzer
                         break;
 
                     case 'V':
-                        if (m_word[current + 1] == 'V')
+                        if (_word[current + 1] == 'V')
                             current += 2;
                         else
                             current += 1;
@@ -819,7 +819,7 @@ namespace FTAnalyzer
                         }
 
                         //Arnow should match Arnoff
-                        if (((current == m_last) && IsVowel(current - 1))
+                        if (((current == _last) && IsVowel(current - 1))
                             || AreStringsAt((current - 1), 5, "EWSKI", "EWSKY", "OWSKI", "OWSKY")
                             || AreStringsAt(0, 3, "SCH"))
                         {
@@ -842,7 +842,7 @@ namespace FTAnalyzer
 
                     case 'X':
                         //french e.g. breaux
-                        if (!((current == m_last)
+                        if (!((current == _last)
                               && (AreStringsAt((current - 3), 3, "IAU", "EAU")
                                    || AreStringsAt((current - 2), 2, "AU", "OU"))))
                             AddMetaphoneCharacter("KS");
@@ -855,21 +855,21 @@ namespace FTAnalyzer
 
                     case 'Z':
                         //chinese pinyin e.g. 'zhao'
-                        if (m_word[current + 1] == 'H')
+                        if (_word[current + 1] == 'H')
                         {
                             AddMetaphoneCharacter("J");
                             current += 2;
                             break;
                         }
                         if (AreStringsAt((current + 1), 2, "ZO", "ZI", "ZA")
-                            || (IsWordSlavoGermanic() && ((current > 0) && m_word[current - 1] != 'T')))
+                            || (IsWordSlavoGermanic() && ((current > 0) && _word[current - 1] != 'T')))
                         {
                             AddMetaphoneCharacter("S", "TS");
                         }
                         else
                             AddMetaphoneCharacter("S");
 
-                        if (m_word[current + 1] == 'Z')
+                        if (_word[current + 1] == 'Z')
                             current += 2;
                         else
                             current += 1;
@@ -882,32 +882,32 @@ namespace FTAnalyzer
             }
 
             //Finally, chop off the keys at the proscribed length
-            if (m_primaryKeyLength > METAPHONE_KEY_LENGTH)
+            if (_primaryKeyLength > METAPHONE_KEY_LENGTH)
             {
-                m_primaryKey.Length = METAPHONE_KEY_LENGTH;
+                _primaryKey.Length = METAPHONE_KEY_LENGTH;
             }
 
-            if (m_alternateKeyLength > METAPHONE_KEY_LENGTH)
+            if (_alternateKeyLength > METAPHONE_KEY_LENGTH)
             {
-                m_alternateKey.Length = METAPHONE_KEY_LENGTH;
+                _alternateKey.Length = METAPHONE_KEY_LENGTH;
             }
 
-            m_primaryKeyString = m_primaryKey.ToString();
-            m_alternateKeyString = m_alternateKey.ToString();
+            _primaryKeyString = _primaryKey.ToString();
+            _alternateKeyString = _alternateKey.ToString();
         }
 
         /**
-		 * Returns true if m_word is classified as "slavo-germanic" by Phillips' algorithm
+		 * Returns true if _word is classified as "slavo-germanic" by Phillips' algorithm
 		 * 
 		 * @return true if word contains strings that Lawrence's algorithm considers indicative of
-		 *         slavo-germanic orFamilySearchn; else false
+		 *         slavo-germanic origin; else false
 		 */
         bool IsWordSlavoGermanic()
         {
-            return (m_word.Contains('W')) ||
-                (m_word.Contains('K')) ||
-                (m_word.Contains("CZ")) ||
-                (m_word.Contains("WITZ"));
+            return (_word.Contains('W')) ||
+                (_word.Contains('K')) ||
+                (_word.Contains("CZ")) ||
+                (_word.Contains("WITZ"));
         }
 
         /**
@@ -915,14 +915,14 @@ namespace FTAnalyzer
 		 * 
 		 * @param pos    Position at which to check for a vowel
 		 * 
-		 * @return True if m_word[pos] is a Roman vowel, else false
+		 * @return True if _word[pos] is a Roman vowel, else false
 		 */
         bool IsVowel(int pos)
         {
-            if ((pos < 0) || (pos >= m_length))
+            if ((pos < 0) || (pos >= _length))
                 return false;
 
-            char it = m_word[pos];
+            char it = _word[pos];
 
             return (it == 'E') || (it == 'A') || (it == 'I') || (it == 'O') || (it == 'U') || (it == 'Y');
         }
@@ -957,8 +957,8 @@ namespace FTAnalyzer
                 int idx = 0;
                 while (idx < primaryCharacter.Length)
                 {
-                    m_primaryKey.Length++;
-                    m_primaryKey[m_primaryKeyLength++] = primaryCharacter[idx++];
+                    _primaryKey.Length++;
+                    _primaryKey[_primaryKeyLength++] = primaryCharacter[idx++];
                 }
             }
 
@@ -969,14 +969,14 @@ namespace FTAnalyzer
                 //append the primary string as long as it wasn't zero length and isn't a space character
                 if (alternateCharacter.Length > 0)
                 {
-                    m_hasAlternate = true;
+                    _hasAlternate = true;
                     if (alternateCharacter[0] != ' ')
                     {
                         int idx = 0;
                         while (idx < alternateCharacter.Length)
                         {
-                            m_alternateKey.Length++;
-                            m_alternateKey[m_alternateKeyLength++] = alternateCharacter[idx++];
+                            _alternateKey.Length++;
+                            _alternateKey[_alternateKeyLength++] = alternateCharacter[idx++];
                         }
                     }
                 }
@@ -988,8 +988,8 @@ namespace FTAnalyzer
                         int idx = 0;
                         while (idx < primaryCharacter.Length)
                         {
-                            m_alternateKey.Length++;
-                            m_alternateKey[m_alternateKeyLength++] = primaryCharacter[idx++];
+                            _alternateKey.Length++;
+                            _alternateKey[_alternateKeyLength++] = primaryCharacter[idx++];
                         }
                     }
                 }
@@ -1000,8 +1000,8 @@ namespace FTAnalyzer
                 int idx = 0;
                 while (idx < primaryCharacter.Length)
                 {
-                    m_alternateKey.Length++;
-                    m_alternateKey[m_alternateKeyLength++] = primaryCharacter[idx++];
+                    _alternateKey.Length++;
+                    _alternateKey[_alternateKeyLength++] = primaryCharacter[idx++];
                 }
             }
         }
@@ -1010,11 +1010,11 @@ namespace FTAnalyzer
 		 * Tests if any of the strings passed as variable arguments are at the given start position and
 		 * length within word
 		 * 
-		 * @param start   Start position in m_word
-		 * @param length  Length of substring starting at start in m_word to compare to the given strings
-		 * @param strings params array of zero or more strings for which to search in m_word
+		 * @param start   Start position in _word
+		 * @param length  Length of substring starting at start in _word to compare to the given strings
+		 * @param strings params array of zero or more strings for which to search in _word
 		 * 
-		 * @return true if any one string in the strings array was found in m_word at the given position
+		 * @return true if any one string in the strings array was found in _word at the given position
 		 *         and length
 		 */
         bool AreStringsAt(int start, int length, params string[] strings)
@@ -1026,7 +1026,7 @@ namespace FTAnalyzer
                 return false;
             }
 
-            string target = m_word.Substring(start, length);
+            string target = _word.Substring(start, length);
 
             for (int idx = 0; idx < strings.Length; idx++)
             {
