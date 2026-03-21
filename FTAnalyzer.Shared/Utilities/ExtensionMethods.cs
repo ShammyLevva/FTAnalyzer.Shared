@@ -91,7 +91,7 @@ namespace FTAnalyzer.Utilities
             }
             return false;
         }
-
+#if !BURIAL_SITES
         public static bool ContainsLocation(this IList<FactLocation> list, FactLocation loc)
         {
             if (list is not null)
@@ -165,7 +165,7 @@ namespace FTAnalyzer.Utilities
             }
             return false;
         }
-
+#endif
         public static void AddUnique<T>(this IList<T> self, IEnumerable<T> items)
         {
             foreach (var item in items)

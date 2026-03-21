@@ -43,7 +43,7 @@ namespace FTAnalyzer
         public readonly static DateTime NOW;
 
         static readonly Dictionary<string, Regex> _datePatterns;
-        static Regex _regex;
+        static Regex _regex = null!;
 
         static FactDate()
         {
@@ -84,7 +84,7 @@ namespace FTAnalyzer
         public string SpecialDateText { get; private set; }
 
         public string OriginalString { get; private set; }
-        string DoubleDateError;
+        string DoubleDateError = string.Empty;
 
         public bool DoubleDate { get; private set; } // Is a pre 1752 date bet 1 Jan and 25 Mar eg: 1735/36.
         int yearfix;
@@ -999,7 +999,7 @@ namespace FTAnalyzer
             return StartDate.Year == factDate.StartDate.Year;
         }
 
-        public bool CensusYearMatches(CensusDate censusDate)
+        public bool CensusYearMatches(FactDate censusDate)
         {
             if (IsAfter(censusDate)) return false; // if the date is after the census date then it can't be a census record
             if (censusDate is null) return false;
@@ -1045,7 +1045,7 @@ namespace FTAnalyzer
 
         double DaysSpan => EndDate.Subtract(StartDate).TotalDays;
 
-        public int MonthsDifference(CensusDate when)
+        public int MonthsDifference(FactDate when)
         {
             if (when is null) return 0;
             if (DaysSpan > 366)
@@ -1127,6 +1127,8 @@ namespace FTAnalyzer
 
         public int CompareTo(FactDate? that)
         {
+            if (that is null)
+                return 1;
             if (Equals(that))
                 return 0;
             return StartDate.Equals(that.StartDate) ? EndDate.CompareTo(that.EndDate) : StartDate.CompareTo(that.StartDate);
