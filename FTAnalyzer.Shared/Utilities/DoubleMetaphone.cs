@@ -41,13 +41,13 @@ namespace FTAnalyzer
         readonly StringBuilder _alternateKey;
 
         ///Actual keys, populated after construction
-        string _primaryKeyString, _alternateKeyString;
+        string _primaryKeyString = string.Empty, _alternateKeyString = string.Empty;
 
         ///Variables to track the key length w/o having to grab the .Length attr
         int _primaryKeyLength, _alternateKeyLength;
 
         ///Working copy of the word, and the original word
-        string _word, _originalWord;
+        string _word = string.Empty, _originalWord = string.Empty;
 
         ///Length and last valid zero-based index into word
         int _length, _last;
@@ -55,28 +55,14 @@ namespace FTAnalyzer
         ///Flag indicating if an alternate metaphone key was computed for the word
         bool _hasAlternate;
 
-        /// <summary>Default ctor, initializes by computing the keys of an empty string,
-        ///     which are both empty strings</summary>
-        public DoubleMetaphone()
-        {
-            //Leave room at the end for writing a bit beyond the length; keys are chopped at the end anyway
-            _primaryKey = new StringBuilder(METAPHONE_KEY_LENGTH + 2);
-            _alternateKey = new StringBuilder(METAPHONE_KEY_LENGTH + 2);
-
-            ComputeKeys("");
-        }
-
         /// <summary>Constructs a new DoubleMetaphone object, and initializes it with
         ///     the metaphone keys for a given word</summary>
-        /// 
         /// <param name="word">Word with which to initialize the object.  Computes the metaphone keys
         ///     of this word.</param>
-        public DoubleMetaphone(string word)
+        public DoubleMetaphone(string word = "")
         {
-            //Leave room at the end for writing a bit beyond the length; keys are chopped at the end anyway
             _primaryKey = new StringBuilder(METAPHONE_KEY_LENGTH + 2);
             _alternateKey = new StringBuilder(METAPHONE_KEY_LENGTH + 2);
-
             ComputeKeys(word);
         }
 
@@ -97,7 +83,7 @@ namespace FTAnalyzer
         /// <param name="primaryKey">Ref to var to receive primary metaphone key</param>
         /// <param name="alternateKey">Ref to var to receive alternate metaphone key, or be set to null if
         ///     word has no alternate key by double metaphone</param>
-        public static void GetDoubleMetaphone(string word, ref string primaryKey, ref string alternateKey)
+        public static void GetDoubleMetaphone(string word, ref string primaryKey, ref string? alternateKey)
         {
             DoubleMetaphone mp = new(word);
 
@@ -116,8 +102,8 @@ namespace FTAnalyzer
             _primaryKey.Length = 0;
             _alternateKey.Length = 0;
 
-            _primaryKeyString = "";
-            _alternateKeyString = "";
+            _primaryKeyString = string.Empty;
+            _alternateKeyString = string.Empty;
 
             _primaryKeyLength = _alternateKeyLength = 0;
 
@@ -928,17 +914,6 @@ namespace FTAnalyzer
         }
 
         /**
-		 * Appends the given metaphone character to the primary and alternate keys
-		 * 
-		 * @param primaryCharacter
-		 *               Character to append
-		 */
-        void AddMetaphoneCharacter(string primaryCharacter)
-        {
-            AddMetaphoneCharacter(primaryCharacter, null);
-        }
-
-        /**
 		 * Appends a metaphone character to the primary, and a possibly different alternate,
 		 * metaphone keys for the word.
 		 * 
@@ -949,7 +924,7 @@ namespace FTAnalyzer
 		 *               Alternate character to append to alternate key.  May be null or a zero-length string,
 		 *               in which case the primary character will be appended to the alternate key instead
 		 */
-        void AddMetaphoneCharacter(string primaryCharacter, string alternateCharacter)
+        void AddMetaphoneCharacter(string primaryCharacter, string? alternateCharacter = null)
         {
             //Is the primary character valid?
             if (primaryCharacter.Length > 0)
@@ -1017,25 +992,17 @@ namespace FTAnalyzer
 		 * @return true if any one string in the strings array was found in _word at the given position
 		 *         and length
 		 */
-        bool AreStringsAt(int start, int length, params string[] strings)
+        bool AreStringsAt(int start, int length, params ReadOnlySpan<string> strings)
         {
             if (start < 0)
-            {
-                //Sometimes, as a result of expressions like "current - 2" for start, 
-                //start ends up negative.  Since no string can be present at a negative offset, this is always false
                 return false;
-            }
 
-            string target = _word.Substring(start, length);
-
-            for (int idx = 0; idx < strings.Length; idx++)
+            string target = _word[start..(start + length)];
+            foreach (string s in strings)
             {
-                if (strings[idx] == target)
-                {
+                if (s == target)
                     return true;
-                }
             }
-
             return false;
         }
     }
