@@ -26,6 +26,7 @@ namespace FTAnalyzer
         { }
 #endif
         public Age(FactDate birthdate, FactDate deathdate)
+            : this()
         {
             MinAge = GetAge(birthdate.EndDate, deathdate.StartDate);
             MaxAge = GetAge(birthdate.StartDate, deathdate.EndDate);
