@@ -100,8 +100,23 @@ namespace FTAnalyzer
 
         public override string ToString() => _age;
 
-        public int CompareTo(Age? that) =>
-            MinAge == that.MinAge ? MaxAge - that.MaxAge : MinAge - that.MinAge;
+        public int CompareTo(Age? that)
+        {
+            // 1. Check for null: An instance is always greater than null
+            if (that is null) return 1;
+
+            // 2. Optimization: Check if they are the exact same instance
+            if (ReferenceEquals(this, that)) return 0;
+
+            // 3. Your comparison logic
+            if (MinAge != that.MinAge)
+                return MinAge - that.MinAge;
+
+            int result = MinAge.CompareTo(that.MinAge);
+            if (result == 0)
+                result = MaxAge.CompareTo(that.MaxAge);
+            return result;
+        }
 
         public int CompareTo(object? that) => CompareTo(that as Age);
 
