@@ -22,19 +22,13 @@ namespace FTAnalyzer
         }
 #if FTAnalyzer
         public Age(Individual ind, FactDate when)
-            : this()
+            : this(ind.BirthDate, when.IsAfter(ind.DeathDate) ? ind.DeathDate : when)
+        { }
+#endif
+        public Age(FactDate birthdate, FactDate deathdate)
         {
-            if (when.IsAfter(ind.DeathDate))
-                when = ind.DeathDate;
-
-            //Logger.Debug($"Calculating Age for {ind.Name} on {when}");
-            //Logger.Debug($"Min age: birth enddate: {ind.BirthDate.EndDate} to startdate: {when.StartDate}");
-            //Logger.Debug($"Max age: birth startdate: {ind.BirthDate.StartDate} to enddate: {when.EndDate}");
-
-            MinAge = GetAge(ind.BirthDate.EndDate, when.StartDate);
-            MaxAge = GetAge(ind.BirthDate.StartDate, when.EndDate);
-
-            //Logger.Debug($"Calculated minage: {MinAge} calculated maxage: {MaxAge}");
+            MinAge = GetAge(birthdate.EndDate, deathdate.StartDate);
+            MaxAge = GetAge(birthdate.StartDate, deathdate.EndDate);
             if (MinAge == FactDate.MINYEARS)
                 _age = (MaxAge == FactDate.MAXYEARS) ? "Unknown" : MaxAge == 0 ? "< 1" : $"<= {MaxAge}";
             else if (MaxAge < FactDate.MAXYEARS)
@@ -42,7 +36,7 @@ namespace FTAnalyzer
             else
                 _age = $">= {MinAge}"; // if age over maximum return maximum
         }
-#endif
+
         public Age(string gedcomAge, FactDate when)
             : this()
         {
