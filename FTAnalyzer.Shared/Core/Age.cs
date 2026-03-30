@@ -20,11 +20,9 @@ namespace FTAnalyzer
             GEDCOM_Age = string.Empty;
             CalculatedBirthDate = FactDate.UNKNOWN_DATE;
         }
-#if FTAnalyzer
         public Age(Individual ind, FactDate when)
             : this(ind.BirthDate, when.IsAfter(ind.DeathDate) ? ind.DeathDate : when)
         { }
-#endif
         public Age(FactDate birthdate, FactDate deathdate)
             : this()
         {
