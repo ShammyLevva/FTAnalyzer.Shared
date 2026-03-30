@@ -20,7 +20,7 @@ namespace FTAnalyzer
             GEDCOM_Age = string.Empty;
             CalculatedBirthDate = FactDate.UNKNOWN_DATE;
         }
-
+#if FTAnalyzer
         public Age(Individual ind, FactDate when)
             : this()
         {
@@ -42,7 +42,7 @@ namespace FTAnalyzer
             else
                 _age = $">= {MinAge}"; // if age over maximum return maximum
         }
-
+#endif
         public Age(string gedcomAge, FactDate when)
             : this()
         {
