@@ -3457,7 +3457,7 @@ namespace FTAnalyzer
             }
             try
             {
-                duplicates = [with([.. buildDuplicates])];
+                duplicates = [.. buildDuplicates];
                 maximum.Report(MaxDuplicateScore());
                 DeserializeNonDuplicates();
                 return BuildDuplicateList(value, progress, progressText);
