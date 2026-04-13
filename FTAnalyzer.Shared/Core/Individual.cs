@@ -251,7 +251,7 @@ namespace FTAnalyzer
                 Locations = [.. i.Locations];
                 FamiliesAsChild = [.. i.FamiliesAsChild];
                 FamiliesAsSpouse = [.. i.FamiliesAsSpouse];
-                preferredFacts = new Dictionary<string, Fact>(i.preferredFacts);
+                preferredFacts = [with(i.preferredFacts)];
             }
         }
         #endregion

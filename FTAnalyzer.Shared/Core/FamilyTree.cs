@@ -1496,9 +1496,7 @@ namespace FTAnalyzer
             if (root is null)
             {
                 startID = individuals[0].IndividualID;
-                root = GetIndividual(startID);
-                if (root is null)
-                    throw new NotFoundException("Unable to find a Root Person in the file");
+                root = GetIndividual(startID) ?? throw new NotFoundException("Unable to find a Root Person in the file");
             }
             RootPerson = root;
             Individual ind = RootPerson;
@@ -3459,7 +3457,7 @@ namespace FTAnalyzer
             }
             try
             {
-                duplicates = new SortableBindingList<DuplicateIndividual>([.. buildDuplicates]);
+                duplicates = [with([.. buildDuplicates])];
                 maximum.Report(MaxDuplicateScore());
                 DeserializeNonDuplicates();
                 return BuildDuplicateList(value, progress, progressText);

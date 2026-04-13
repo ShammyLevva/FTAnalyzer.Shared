@@ -36,5 +36,7 @@ namespace FTAnalyzer
         new int MarriageCount { get; }
         new int FactsCount { get; }
         new int SourcesCount { get; }
+        string ForenameMetaphone { get; }
+        string SurnameMetaphone { get; }
     }
 }
