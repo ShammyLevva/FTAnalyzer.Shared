@@ -4,6 +4,9 @@
     {
         public override int Compare(ExportReferrals? x, ExportReferrals? y)
         {
+            if (x is null && y is null) return 0;
+            if (x is null) return -1;
+            if (y is null) return 1;
             if (x.ShortCode.Equals(y.ShortCode))
             {
                 if (x.Census.Equals(y.Census))

@@ -1,6 +1,6 @@
 ﻿namespace FTAnalyzer
 {
-    class CensusIndividualComparer : IEqualityComparer<CensusIndividual>
+    public class CensusIndividualComparer : IEqualityComparer<CensusIndividual>
     {
         public bool Equals(CensusIndividual? x, CensusIndividual? y)
         {

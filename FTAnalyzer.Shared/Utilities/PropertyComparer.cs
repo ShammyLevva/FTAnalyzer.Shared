@@ -6,7 +6,7 @@ namespace FTAnalyzer.Utilities
 {
     public class PropertyComparer<T> : IComparer<T>
     {
-        readonly IComparer comparer;
+        IComparer comparer;
         PropertyDescriptor propertyDescriptor;
         int reverse;
 
@@ -37,7 +37,12 @@ namespace FTAnalyzer.Utilities
 
         #endregion
 
-        void SetPropertyDescriptor(PropertyDescriptor descriptor) => propertyDescriptor = descriptor;
+        void SetPropertyDescriptor(PropertyDescriptor descriptor)
+        {
+            propertyDescriptor = descriptor;
+            Type comparerForPropertyType = typeof(Comparer<>).MakeGenericType(descriptor.PropertyType);
+            comparer = comparerForPropertyType.InvokeMember("Default", BindingFlags.Static | BindingFlags.GetProperty | BindingFlags.Public, null, null, null) as IComparer;
+        }
 
         void SetListSortDirection(ListSortDirection direction) => reverse = direction == ListSortDirection.Ascending ? 1 : -1;
 
