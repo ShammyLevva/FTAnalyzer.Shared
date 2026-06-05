@@ -235,14 +235,14 @@ namespace FTAnalyzer
                 unknownFamilyFactTypes.Add(factType, []);
         }
 
-        public XmlDocument? LoadTreeHeader(string filename, FileStream stream, IProgress<string> outputText)
+        public XmlDocument? LoadTreeHeader(string filename, FileStream stream, IProgress<string> outputText, IProgress<int>? parseProgress = null)
         {
             Loading = true;
             ResetData();
             rootIndividualID = string.Empty;
             outputText.Report($"Loading file {filename}\n");
             Encoding encoding = GedcomToXml.GetFileEncoding(stream);
-            XmlDocument? doc = GedcomToXml.LoadFile(stream, encoding, outputText, true);
+            XmlDocument? doc = GedcomToXml.LoadFile(stream, encoding, outputText, true, parseProgress);
             if (doc is null)
             {
                 Loading = false;

@@ -12,13 +12,13 @@ namespace FTAnalyzer
 {
     static class GedcomToXml
     {
-        public static XmlDocument? LoadFile(Stream stream, Encoding encoding, IProgress<string> outputText, bool reportBadLines)
+        public static XmlDocument? LoadFile(Stream stream, Encoding encoding, IProgress<string> outputText, bool reportBadLines, IProgress<int>? parseProgress = null)
         {
             XmlDocument? doc;
-            MemoryStream cloned = CloneStream(stream);
+            MemoryStream cloned = CloneStream(stream, parseProgress);
             using (var reader = new StreamReader(FileHandling.Default.RetryFailedLines ? CheckInvalidCR(cloned) : cloned, encoding))
             {
-                doc = Parse(reader, outputText, reportBadLines);
+                doc = Parse(reader, outputText, reportBadLines, parseProgress);
             }
             if (doc?.SelectNodes("GED/INDI").Count == 0)
             { // if there is a problem with the file return with opposite line ends
@@ -29,13 +29,13 @@ namespace FTAnalyzer
             return doc;
         }
 
-        public static XmlDocument? LoadAnselFile(Stream stream, IProgress<string> outputText, bool reportBadLines)
+        public static XmlDocument? LoadAnselFile(Stream stream, IProgress<string> outputText, bool reportBadLines, IProgress<int>? parseProgress = null)
         {
             XmlDocument? doc;
-            MemoryStream cloned = CloneStream(stream);
+            MemoryStream cloned = CloneStream(stream, parseProgress);
             using (var reader = new AnselInputStreamReader(FileHandling.Default.RetryFailedLines ? CheckInvalidCR(cloned) : cloned))
             {
-                doc = Parse(reader, outputText, reportBadLines);
+                doc = Parse(reader, outputText, reportBadLines, parseProgress);
             }
             if (doc?.SelectNodes("GED/INDI").Count == 0)
             {
@@ -47,11 +47,33 @@ namespace FTAnalyzer
             return doc;
         }
 
-        static MemoryStream CloneStream(Stream stream)
+        static MemoryStream CloneStream(Stream stream, IProgress<int>? progress = null)
         {
             MemoryStream mstream = new();
             stream.Position = 0;
-            stream.CopyTo(mstream);
+            if (progress is null || stream.Length == 0)
+            {
+                stream.CopyTo(mstream);
+            }
+            else
+            {
+                long total = stream.Length;
+                byte[] buffer = new byte[81920];
+                int read;
+                long done = 0;
+                int lastPct = -1;
+                while ((read = stream.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    mstream.Write(buffer, 0, read);
+                    done += read;
+                    int pct = (int)(done * 100 / total);
+                    if (pct != lastPct)
+                    {
+                        progress.Report(pct);
+                        lastPct = pct;
+                    }
+                }
+            }
             mstream.Position = 0;
             return mstream;
         }
@@ -105,9 +127,10 @@ namespace FTAnalyzer
         //    return outfs;
         //}
 
-        static XmlDocument? Parse(StreamReader reader, IProgress<string> outputText, bool reportBadLines)
+        static XmlDocument? Parse(StreamReader reader, IProgress<string> outputText, bool reportBadLines, IProgress<int>? parseProgress = null)
         {
             long lineNr = 0;
+            long streamLength = reader.BaseStream.Length;
             int badLineCount = 0;
             int badLineMax = 30;
             string? line, nextline;
@@ -130,6 +153,8 @@ namespace FTAnalyzer
                 while (line is not null)
                 {
                     lineNr++;
+                    if (parseProgress is not null && lineNr % 1000 == 0 && streamLength > 0)
+                        parseProgress.Report((int)(reader.BaseStream.Position * 100 / streamLength));
                     nextline = reader.ReadLine();
                     if (FileHandling.Default.RetryFailedLines)
                     {
@@ -150,7 +175,7 @@ namespace FTAnalyzer
                     {
                         try
                         {
-                            line = line.Replace('–', '-').Replace('—', '-').Replace("&nbsp;", " ").Replace(" * **Data is already there***", ""); // "data is already there" is some Ancestry anomaly
+                            line = line.Replace('ï¿½', '-').Replace('ï¿½', '-').Replace("&nbsp;", " ").Replace(" * **Data is already there***", ""); // "data is already there" is some Ancestry anomaly
                             cpos1 = line.IndexOf(' ');
                             if (cpos1 < 0) throw new InvalidGEDCOMException($"No space found in line: '{line}'", line, lineNr);
 
