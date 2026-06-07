@@ -684,11 +684,11 @@ namespace FTAnalyzer
                 outputText.Report("No census references loaded as option to Skip Census Reference checking is turned on");
             else
             {
-                outputText.Report($"\nFound {censusReferences} census references in file and {blankCensusRefs} facts missing a census reference");
+                outputText.Report($"\nFound {censusReferences} facts with good census references and {blankCensusRefs} facts missing a census reference");
                 if (partialCensusRefs > 0)
-                    outputText.Report($", with {partialCensusRefs} references with partial details");
+                    outputText.Report($", with {partialCensusRefs} facts with references with incomplete details");
                 if (unrecognisedCensusRefs > 0)
-                    outputText.Report($" and {unrecognisedCensusRefs} references that were unrecognised");
+                    outputText.Report($" and {unrecognisedCensusRefs} facts with references that were unrecognised");
             }
             outputText.Report($"\nFound {lostCousinsTotal} Lost Cousins facts in GEDCOM File ({lostCousinsFacts} good, ");
             if (lostCousinsWarnAllow > 0)
