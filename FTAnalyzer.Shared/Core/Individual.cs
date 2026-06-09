@@ -123,7 +123,7 @@ namespace FTAnalyzer
             surnameMetaphone = new DoubleMetaphone(Surname);
             Notes = FamilyTree.GetNotes(node);
             StandardisedName = FamilyTree.Instance.GetStandardisedName(IsMale, Forename);
-            Fact nameFact = new(IndividualID, Fact.INDI, FactDate.UNKNOWN_DATE, FactLocation.BLANK_LOCATION, Name, true, true, this);
+            Fact nameFact = new(Fact.INDI, FactDate.UNKNOWN_DATE, FactLocation.BLANK_LOCATION, Name, true, true, this);
             AddFact(nameFact);
             // Individual attributes
             AddFacts(node, Fact.NAME, outputText);
@@ -251,7 +251,7 @@ namespace FTAnalyzer
                 Locations = [.. i.Locations];
                 FamiliesAsChild = [.. i.FamiliesAsChild];
                 FamiliesAsSpouse = [.. i.FamiliesAsSpouse];
-                preferredFacts = new(i.preferredFacts);
+                preferredFacts = [with(i.preferredFacts)];
             }
         }
         #endregion
@@ -944,7 +944,7 @@ namespace FTAnalyzer
                             if (f.GedcomAge is not null && f.GedcomAge.CalculatedBirthDate != FactDate.UNKNOWN_DATE)
                             {
                                 string reason = $"Calculated from {f} with Age: {f.GedcomAge.GEDCOM_Age}";
-                                Fact calculatedBirth = new(IndividualID, Fact.BIRTH_CALC, f.GedcomAge.CalculatedBirthDate, FactLocation.UNKNOWN_LOCATION, reason, false, true);
+                                Fact calculatedBirth = new(Fact.BIRTH_CALC, f.GedcomAge.CalculatedBirthDate, FactLocation.UNKNOWN_LOCATION, reason, false, true);
                                 AddFact(calculatedBirth);
                             }
                         }
@@ -981,7 +981,7 @@ namespace FTAnalyzer
                 {
                     Fact f = new(n, this, preferredFact, FactDate.UNKNOWN_DATE, outputText); // write out death fact with unknown date
                     AddFact(f);
-                    f = new Fact(string.Empty, Fact.UNMARRIED, FactDate.UNKNOWN_DATE, FactLocation.UNKNOWN_LOCATION, string.Empty, true, true);
+                    f = new Fact(Fact.UNMARRIED, FactDate.UNKNOWN_DATE, FactLocation.UNKNOWN_LOCATION, string.Empty, true, true);
                     AddFact(f);
                 }
             }
@@ -1041,7 +1041,7 @@ namespace FTAnalyzer
                 {
                     foreach (FactSource s in f.Sources)
                     {
-                        CensusReference cr = new(IndividualID, $"{s.SourceTitle} {s.SourceText}", true);
+                        CensusReference cr = new($"{s.SourceTitle} {s.SourceText}", true);
                         if (OKtoAddReference(cr, true))
                         {
                             cr.Fact.Sources.Add(s);
@@ -1062,7 +1062,7 @@ namespace FTAnalyzer
         {
             if (!IsLostCousinsEntered((CensusDate)cr.Fact.FactDate))
             {
-                Fact lcFact = new("LostCousins", Fact.LC_FTA, cr.Fact.FactDate, cr.Fact.Location, "Lost Cousins fact created by FTAnalyzer by recognising census ref " + cr.Reference, false, true);
+                Fact lcFact = new(Fact.LC_FTA, cr.Fact.FactDate, cr.Fact.Location, "Lost Cousins fact created by FTAnalyzer by recognising census ref " + cr.Reference, false, true);
                 if (toAdd is null)
                     AddFact(lcFact);
                 else
@@ -1120,7 +1120,7 @@ namespace FTAnalyzer
                 {
                     checkNotes = false;
                     //Debug.WriteLine($"Reached Individual {ToString()} Notes: {notes.Length}");
-                    CensusReference cr = new(IndividualID, notes, false);
+                    CensusReference cr = new(notes, false);
                     if (OKtoAddReference(cr, false) && cr.Fact is not null)
                     {   // add census fact even if other created census facts exist for that year
                         AddFact(cr.Fact);
@@ -1205,7 +1205,7 @@ namespace FTAnalyzer
                 else
                     description = $"Female but appears as husband in family {family.FamilyRef} check family for swapped husband and wife";
             }
-            var gender = new Fact(family.FamilyID, Fact.GENDER, FactDate.UNKNOWN_DATE, null, description, true, true);
+            Fact gender = new(Fact.GENDER, FactDate.UNKNOWN_DATE, null, description, true, true);
             gender.SetError((int)FamilyTree.Dataerror.MALE_WIFE_FEMALE_HUSBAND, Fact.FactError.ERROR, description);
             AddFact(gender);
         }

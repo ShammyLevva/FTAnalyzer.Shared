@@ -96,10 +96,10 @@ namespace FTAnalyzer
             fact.SetCensusReferenceDetails(this, CensusLocation, string.Empty);
         }
 
-        public CensusReference(string individualID, string notes, bool source)
+        public CensusReference(string notes, bool source)
             : this()
         {
-            Fact = new Fact(individualID, Fact.CENSUS_FTA, FactDate.UNKNOWN_DATE, FactLocation.UNKNOWN_LOCATION, string.Empty, false, true);
+            Fact = new Fact(Fact.CENSUS_FTA, FactDate.UNKNOWN_DATE, FactLocation.UNKNOWN_LOCATION, string.Empty, false, true);
             if (GetCensusReference(notes))
             {
                 if (Class.Length > 0)

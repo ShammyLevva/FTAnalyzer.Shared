@@ -404,7 +404,7 @@ namespace FTAnalyzer
 
         #region Constructors
 
-        Fact(string reference, bool preferred)
+        Fact(bool preferred)
         {
             FactType = string.Empty;
             FactDate = FactDate.UNKNOWN_DATE;
@@ -425,7 +425,7 @@ namespace FTAnalyzer
         }
 
         public Fact(XmlNode node, Family family, bool preferred, IProgress<string> outputText)
-            : this(family.FamilyRef, preferred)
+            : this(preferred)
         {
             Individual = null;
             Family = family;
@@ -433,14 +433,14 @@ namespace FTAnalyzer
         }
 
         public Fact(XmlNode node, Individual ind, bool preferred, FactDate deathdate, IProgress<string> outputText)
-            : this(ind.IndividualID, preferred)
+            : this(preferred)
         {
             Individual = ind;
             Family = null;
             CreateFact(node, ind.IndividualRef, preferred, deathdate, outputText);
         }
-        public Fact(string factRef, string factType, FactDate date, FactLocation loc, string comment = "", bool preferred = true, bool createdByFTA = false, Individual ind = null)
-            : this(factRef, preferred)
+        public Fact(string factType, FactDate date, FactLocation loc, string comment = "", bool preferred = true, bool createdByFTA = false, Individual ind = null)
+            : this(preferred)
         {
             FactType = factType;
             FactDate = date ?? FactDate.UNKNOWN_DATE;

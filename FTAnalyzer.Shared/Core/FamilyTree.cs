@@ -1195,7 +1195,7 @@ namespace FTAnalyzer
             {
                 // we have a date to change and its not the same 
                 // range as the existing death date
-                Fact looseBirth = new(indiv.IndividualID, Fact.LOOSEBIRTH, toAdd, FactLocation.UNKNOWN_LOCATION);
+                Fact looseBirth = new(Fact.LOOSEBIRTH, toAdd, FactLocation.UNKNOWN_LOCATION);
                 indiv.AddFact(looseBirth);
                 result?.Add(indiv);
             }
@@ -1299,7 +1299,7 @@ namespace FTAnalyzer
             {
                 // we have a date to change and its not the same 
                 // range as the existing death date
-                Fact looseDeath = new(indiv.IndividualID, Fact.LOOSEDEATH, toAdd, FactLocation.UNKNOWN_LOCATION);
+                Fact looseDeath = new(Fact.LOOSEDEATH, toAdd, FactLocation.UNKNOWN_LOCATION);
                 indiv.AddFact(looseDeath);
                 result?.Add(indiv);
             }
@@ -3741,7 +3741,7 @@ namespace FTAnalyzer
                             string desc = FixWikiFormatting(descNode.InnerText);
                             XmlNode? dateNode = worldEvent.SelectSingleNode("date");
                             fd = GetWikiDate(dateNode, eventDate);
-                            var f = new Fact("Wikipedia", Fact.WORLD_EVENT, fd, FactLocation.UNKNOWN_LOCATION, desc, true, true);
+                            var f = new Fact(Fact.WORLD_EVENT, fd, FactLocation.UNKNOWN_LOCATION, desc, true, true);
                             var df = new DisplayFact(null, string.Empty, string.Empty, f);
                             events.Add(df);
                         }
