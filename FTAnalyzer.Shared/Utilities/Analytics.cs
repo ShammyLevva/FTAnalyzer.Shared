@@ -1,13 +1,17 @@
-﻿using FTAnalyzer.Properties;
-using GoogleAnalyticsTracker.Core;
-using GoogleAnalyticsTracker.Simple;
+using FTAnalyzer.Properties;
 using System.Diagnostics;
+using System.Globalization;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace FTAnalyzer.Utilities
 {
     static class Analytics
     {
-        static readonly SimpleTracker tracker;
+        const string MeasurementId = "G-Z0N9CSMN19";
+        static readonly HttpClient _httpClient = new();
+        static string _apiSecret = string.Empty;
 
         public const string MainFormAction = "Main Form Action", FactsFormAction = "Facts Form Action", CensusTabAction = "Census Tab Action",
                             ReportsAction = "Reports Action", LostCousinsAction = "Lost Cousins Action", GeocodingAction = "Geocoding Action",
@@ -67,16 +71,13 @@ namespace FTAnalyzer.Utilities
             }
             GUID = Settings.Default.GUID;
             OperatingSystem os = Environment.OSVersion;
-            SimpleTrackerEnvironment trackerEnvironment = new(os.Platform.ToString(), os.Version.ToString(), os.VersionString);
-            AnalyticsSession analyticsSession = new();
-            tracker = new("UA-125850339-2", analyticsSession, trackerEnvironment);
             OSVersion = SetWindowsVersion(os.Version.ToString());
 #if __PC__
             AppVersion = MainForm.VERSION;
             bool windowsStoreApp = Application.ExecutablePath.Contains("WindowsApps");
             bool debugging = Application.ExecutablePath.Contains("GitRepo");
             DeploymentType = windowsStoreApp ? "Windows Store" : debugging ? "Development" : "Zip File";
-            string resolution = Screen.PrimaryScreen.Bounds.ToString();
+            string resolution = Screen.PrimaryScreen?.Bounds.ToString() ?? string.Empty;
             Resolution = resolution.Length > 11 ? resolution[9..^1] : resolution;
 #else
             AppVersion = "Burial Site";
@@ -85,38 +86,49 @@ namespace FTAnalyzer.Utilities
 #endif
         }
 
-        public static async Task CheckProgramUsageAsync()
-        {
-            try
-            {
-                await tracker.TrackEventAsync(FTAStartupAction, LoadProgramEvent, AppVersion);
-                await tracker.TrackScreenviewAsync(FTAStartupAction);
-            }
-            catch (Exception e)
-            { Debug.WriteLine(e.Message); }
-        }
+        public static void Initialize(string apiSecret) => _apiSecret = apiSecret;
 
-        public static Task TrackAction(string category, string action) => TrackActionAsync(category, action, "default");
-        public static async Task TrackActionAsync(string category, string action, string value)
-        {
-            try
-            {
-                await tracker.TrackEventAsync(category, action, value);
-                await tracker.TrackScreenviewAsync(category);
-            }
-            catch (Exception e)
-            { Debug.WriteLine(e.Message); }
-        }
+        public static async Task CheckProgramUsageAsync()
+            => await SendEventAsync(FTAStartupAction, LoadProgramEvent, AppVersion);
+
+        public static Task TrackAction(string category, string action)
+            => TrackActionAsync(category, action, "default");
+
+        public static Task TrackActionAsync(string category, string action, string value)
+            => SendEventAsync(category, action, value);
 
         public static async Task EndProgramAsync()
         {
+            TimeSpan duration = DateTime.Now - Settings.Default.StartTime;
+            await SendEventAsync(FTAShutdownAction, UsageEvent, duration.ToString("c"));
+        }
+
+        static async Task SendEventAsync(string category, string action, string label)
+        {
+            if (string.IsNullOrEmpty(_apiSecret)) return;
             try
             {
-                TimeSpan duration = DateTime.Now - Settings.Default.StartTime;
-                await SpecialMethods.TrackEventAsync(tracker, FTAShutdownAction, UsageEvent, duration.ToString("c"));
+                Ga4Payload payload = new(GUID, GUID,
+                [
+                    new("ftanalyzer_action", new Dictionary<string, string>
+                    {
+                        ["category"] = category,
+                        ["action"] = action,
+                        ["label"] = label,
+                        ["app_version"] = AppVersion,
+                        ["deployment_type"] = DeploymentType,
+                        ["os_version"] = OSVersion,
+                        ["screen_resolution"] = Resolution,
+                        ["language"] = CultureInfo.CurrentUICulture.EnglishName
+                    })
+                ]);
+                string json = JsonSerializer.Serialize(payload);
+                using StringContent content = new(json, Encoding.UTF8, "application/json");
+                await _httpClient.PostAsync(
+                    $"https://www.google-analytics.com/mp/collect?measurement_id={MeasurementId}&api_secret={_apiSecret}",
+                    content);
             }
-            catch (Exception e)
-            { Debug.WriteLine(e.Message); }
+            catch (Exception e) { Debug.WriteLine(e.Message); }
         }
 
         static string SetWindowsVersion(string version)
@@ -146,11 +158,19 @@ namespace FTAnalyzer.Utilities
             if (version.StartsWith("10.0.22621")) return "Windows 11 (22H2)";
             if (version.StartsWith("10.0.22631")) return "Windows 11 (23H2)";
             if (version.StartsWith("10.0.26100")) return "Windows 11 (24H2)";
-            if (version.StartsWith("10.0.22631")) return "Windows 11 (25H2)";
             if (result.Length == 0)
                 return version;
             result += Environment.Is64BitOperatingSystem ? " (x64)" : " (x86)";
             return result;
         }
     }
+
+    record Ga4Payload(
+        [property: JsonPropertyName("client_id")] string ClientId,
+        [property: JsonPropertyName("user_id")] string UserId,
+        [property: JsonPropertyName("events")] Ga4Event[] Events);
+
+    record Ga4Event(
+        [property: JsonPropertyName("name")] string Name,
+        [property: JsonPropertyName("params")] Dictionary<string, string> Params);
 }

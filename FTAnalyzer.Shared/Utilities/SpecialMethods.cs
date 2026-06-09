@@ -1,8 +1,4 @@
-﻿using GoogleAnalyticsTracker.Core;
-using GoogleAnalyticsTracker.Core.TrackerParameters;
-using GoogleAnalyticsTracker.Simple;
-using System.Diagnostics;
-using System.Globalization;
+﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 #if __PC__
 using FTAnalyzer.Properties;
@@ -80,50 +76,6 @@ namespace FTAnalyzer.Utilities
                 }
             }
             process?.Dispose();
-        }
-
-        public static async Task<TrackingResult> TrackEventAsync(this SimpleTracker tracker, string category, string action, string label, long value = 1)
-        {
-            var eventTrackingParameters = new EventTracking
-            {
-                ClientId = Analytics.GUID,
-                UserId = Analytics.GUID,
-                ApplicationName = "FTAnalyzer",
-                ApplicationVersion = Analytics.AppVersion,
-                Category = category,
-                Action = action,
-                Label = label,
-                Value = value,
-                ScreenName = category,
-                CacheBuster = tracker.AnalyticsSession.GenerateCacheBuster(),
-                ScreenResolution = Analytics.Resolution,
-                CustomDimension1 = Analytics.DeploymentType,
-                CustomDimension2 = Analytics.OSVersion,
-                CustomDimension3 = Analytics.GUID,
-                GoogleAdWordsId = "201-455-7333",
-                UserLanguage = CultureInfo.CurrentUICulture.EnglishName
-            };
-            return await tracker.TrackAsync(eventTrackingParameters).ConfigureAwait(false);
-        }
-
-        public static async Task<TrackingResult> TrackScreenviewAsync(this SimpleTracker tracker, string screen)
-        {
-            var screenViewTrackingParameters = new ScreenviewTracking
-            {
-                ClientId = Analytics.GUID,
-                UserId = Analytics.GUID,
-                ApplicationName = "FTAnalyzer",
-                ApplicationVersion = Analytics.AppVersion,
-                ScreenName = screen,
-                CacheBuster = tracker.AnalyticsSession.GenerateCacheBuster(),
-                ScreenResolution = Analytics.Resolution,
-                CustomDimension1 = Analytics.DeploymentType,
-                CustomDimension2 = Analytics.OSVersion,
-                CustomDimension3 = Analytics.GUID,
-                GoogleAdWordsId = "201-455-7333",
-                UserLanguage = CultureInfo.CurrentUICulture.EnglishName
-            };
-            return await tracker.TrackAsync(screenViewTrackingParameters).ConfigureAwait(false);
         }
 
         static readonly string[] SizeSuffixes = ["bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
