@@ -15,15 +15,20 @@ namespace FTAnalyzer
         public static XmlDocument? LoadFile(Stream stream, Encoding encoding, IProgress<string> outputText, bool reportBadLines, IProgress<int>? parseProgress = null)
         {
             XmlDocument? doc;
-            MemoryStream cloned = CloneStream(stream, parseProgress);
-            using (var reader = new StreamReader(FileHandling.Default.RetryFailedLines ? CheckInvalidCR(cloned) : cloned, encoding))
+            Stream cloned = PrepareStream(stream, parseProgress);
+            bool retryFailed = FileHandling.Default.RetryFailedLines;
+            // leaveOpen only when we're passing the original seekable stream directly (no CheckInvalidCR wrapper),
+            // so the stream stays open if a retry parse is needed.
+            bool leaveOpen = stream.CanSeek && !retryFailed;
+            using (StreamReader reader = new(retryFailed ? CheckInvalidCR(cloned) : cloned, encoding, detectEncodingFromByteOrderMarks: false, bufferSize: -1, leaveOpen: leaveOpen))
             {
                 doc = Parse(reader, outputText, reportBadLines, parseProgress);
             }
             if (doc?.SelectNodes("GED/INDI").Count == 0)
             { // if there is a problem with the file return with opposite line ends
-                cloned = CloneStream(stream);
-                using var reader = new StreamReader(FileHandling.Default.RetryFailedLines ? cloned : CheckInvalidCR(cloned), encoding);
+                cloned = PrepareStream(stream);
+                retryFailed = FileHandling.Default.RetryFailedLines;
+                using StreamReader reader = new(retryFailed ? cloned : CheckInvalidCR(cloned), encoding, detectEncodingFromByteOrderMarks: false, bufferSize: -1, leaveOpen: false);
                 doc = Parse(reader, outputText, false);
             }
             return doc;
@@ -32,25 +37,34 @@ namespace FTAnalyzer
         public static XmlDocument? LoadAnselFile(Stream stream, IProgress<string> outputText, bool reportBadLines, IProgress<int>? parseProgress = null)
         {
             XmlDocument? doc;
-            MemoryStream cloned = CloneStream(stream, parseProgress);
-            using (var reader = new AnselInputStreamReader(FileHandling.Default.RetryFailedLines ? CheckInvalidCR(cloned) : cloned))
+            Stream cloned = PrepareStream(stream, parseProgress);
+            bool retryFailed = FileHandling.Default.RetryFailedLines;
+            bool leaveOpen = stream.CanSeek && !retryFailed;
+            using (AnselInputStreamReader reader = new(retryFailed ? CheckInvalidCR(cloned) : cloned, leaveOpen))
             {
                 doc = Parse(reader, outputText, reportBadLines, parseProgress);
             }
             if (doc?.SelectNodes("GED/INDI").Count == 0)
             {
                 // if there is a problem with the file return with opposite line ends
-                cloned = CloneStream(stream);
-                using var reader = new AnselInputStreamReader(FileHandling.Default.RetryFailedLines ? cloned : CheckInvalidCR(cloned));
+                cloned = PrepareStream(stream);
+                retryFailed = FileHandling.Default.RetryFailedLines;
+                using AnselInputStreamReader reader = new(retryFailed ? cloned : CheckInvalidCR(cloned), leaveOpen: false);
                 doc = Parse(reader, outputText, false);
             }
             return doc;
         }
 
-        static MemoryStream CloneStream(Stream stream, IProgress<int>? progress = null)
+        // For seekable streams (FileStream from disk), avoids copying to MemoryStream — which would throw
+        // IOException for files larger than ~2 GB. Falls back to a MemoryStream copy for non-seekable streams.
+        static Stream PrepareStream(Stream stream, IProgress<int>? progress = null)
         {
+            if (stream.CanSeek)
+            {
+                stream.Position = 0;
+                return stream;
+            }
             MemoryStream mstream = new();
-            stream.Position = 0;
             if (progress is null || stream.Length == 0)
             {
                 stream.CopyTo(mstream);
@@ -78,32 +92,9 @@ namespace FTAnalyzer
             return mstream;
         }
 
-        static MemoryStream CheckInvalidCR(Stream infs)
-        {
-            MemoryStream outfs = new();
-            long streamLength = infs.Length;
-            byte b;
-            while (infs.Position < streamLength)
-            {
-                b = (byte)infs.ReadByte();
-                if (b == 0x0d)
-                {
-                    var x = infs.ReadByte();
-                    if (x >= 0)
-                    {
-                        b = (byte)x;
-                        if (b == 0x0a)// we have 0x0d 0x0a so write the 0x0d so that normal write works.
-                            outfs.WriteByte(0x0d);
-                        else
-                            outfs.WriteByte(b);
-                    }
-                }
-                else
-                    outfs.WriteByte(b);
-            }
-            outfs.Position = 0;
-            return outfs;
-        }
+        // Returns a streaming wrapper that filters CR bytes on-the-fly with no buffering,
+        // avoiding OutOfMemoryException on files larger than ~2 GB.
+        static Stream CheckInvalidCR(Stream infs) => new CrFilterStream(infs);
 
         //static MemoryStream CheckSpuriousOD(MemoryStream infs)
         //{
@@ -469,6 +460,49 @@ namespace FTAnalyzer
                     enc = Encoding.Unicode;
             }
             return enc;
+        }
+
+        // Streaming CR filter — replicates CheckInvalidCR logic without buffering the whole file.
+        // \r\n → \r (StreamReader treats \r as a line ending); bare \r → dropped.
+        // Length/Position are forwarded from inner so Parse's progress reporting still works.
+        // The inner stream is NOT disposed here; lifetime is managed by the caller.
+        sealed class CrFilterStream(Stream inner) : Stream
+        {
+            public override bool CanRead => true;
+            public override bool CanSeek => false;
+            public override bool CanWrite => false;
+            public override long Length => inner.Length;
+            public override long Position { get => inner.Position; set => throw new NotSupportedException(); }
+            public override void Flush() { }
+            public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
+            public override void SetLength(long value) => throw new NotSupportedException();
+            public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
+
+            public override int Read(byte[] buffer, int offset, int count)
+            {
+                int written = 0;
+                while (written < count)
+                {
+                    int b = inner.ReadByte();
+                    if (b < 0) break;
+                    if (b == 0x0d)
+                    {
+                        int next = inner.ReadByte();
+                        if (next < 0) break; // trailing bare \r at EOF — drop it
+                        if (next == 0x0a)
+                            buffer[offset + written++] = 0x0d; // \r\n → emit \r, consume \n
+                        else
+                            buffer[offset + written++] = (byte)next; // bare \r → drop, emit what followed
+                    }
+                    else
+                    {
+                        buffer[offset + written++] = (byte)b;
+                    }
+                }
+                return written;
+            }
+
+            protected override void Dispose(bool disposing) => base.Dispose(disposing);
         }
     }
 }
