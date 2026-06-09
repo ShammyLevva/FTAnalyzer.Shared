@@ -319,6 +319,8 @@ namespace FTAnalyzer
                 "EW_CENSUS_1911_PATTERN1" => RegexPatterns.EwCensus1911Pattern1().Match(text),
                 "EW_CENSUS_1911_PATTERN2" => RegexPatterns.EwCensus1911Pattern2().Match(text),
                 "EW_CENSUS_1921_PATTERN1" => RegexPatterns.EwCensus1921Pattern1().Match(text),
+                "EW_CENSUS_1921_PATTERN2" => RegexPatterns.EwCensus1921Pattern2().Match(text),
+                "EW_CENSUS_1921_PATTERN3" => RegexPatterns.EwCensus1921Pattern3().Match(text),
                 "EW_CENSUS_PATTERN3" => RegexPatterns.EwCensusPattern3().Match(text),
                 "EW_CENSUS_PATTERN4" => RegexPatterns.EwCensusPattern4().Match(text),
                 "EW_CENSUS_PATTERN5" => RegexPatterns.EwCensusPattern5().Match(text),
@@ -791,9 +793,36 @@ namespace FTAnalyzer
             if (matcher.Success)
             {
                 Class = "RG15";
-                Book = matcher.Groups[1].ToString();
-                ED = matcher.Groups[2].ToString();
-                Schedule = matcher.Groups[3].ToString();
+                Piece = matcher.Groups[2].ToString();
+                ED = matcher.Groups[3].ToString();
+                Schedule = matcher.Groups[4].ToString();
+                Book = matcher.Groups[5].ToString();
+                RD = MISSING;
+                SD = MISSING;
+                SetFlagsandCountry(true, false, Countries.ENG_WALES, ReferenceStatus.GOOD, matcher.Value);
+                return true;
+            }
+            matcher = RegexPatterns.EwCensus1921Pattern2().Match(text);
+            if (matcher.Success)
+            {
+                Class = "RG15";
+                Piece = matcher.Groups[2].ToString();
+                ED = matcher.Groups[3].ToString();
+                Schedule = matcher.Groups[4].ToString();
+                Book = MISSING;
+                RD = MISSING;
+                SD = MISSING;
+                SetFlagsandCountry(true, false, Countries.ENG_WALES, ReferenceStatus.GOOD, matcher.Value);
+                return true;
+            }
+            matcher = RegexPatterns.EwCensus1921Pattern3().Match(text);
+            if (matcher.Success)
+            {
+                Class = "RG15";
+                Piece = matcher.Groups[2].ToString();
+                ED = matcher.Groups[3].ToString();
+                Schedule = MISSING;
+                Book = MISSING;
                 RD = MISSING;
                 SD = MISSING;
                 SetFlagsandCountry(true, false, Countries.ENG_WALES, ReferenceStatus.INCOMPLETE, matcher.Value);

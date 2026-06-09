@@ -7,8 +7,12 @@
 
         public int Compare(T? x, T? y)
         {
+            if (x is null && y is null) return 0;
             var ind1 = x as Individual;
             var ind2 = y as Individual;
+            if (ind1 is null && ind2 is null) return 0;
+            if (ind1 is null) return Ascending * -1;
+            if (ind2 is null) return Ascending * 1;
 
             if (ForenamesFirst)
             {
