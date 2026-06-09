@@ -421,7 +421,6 @@ namespace FTAnalyzer
             Created = false;
             Tag = string.Empty;
             Preferred = preferred;
-            Reference = reference;
             SourcePages = [];
         }
 
@@ -701,7 +700,6 @@ namespace FTAnalyzer
 
         #region Properties
 
-        string Reference { get; set; }
         string Tag { get; set; }
         public Age GedcomAge { get; private set; }
         public bool Created { get; protected set; }
