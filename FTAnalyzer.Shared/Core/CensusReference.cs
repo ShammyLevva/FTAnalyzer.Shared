@@ -247,7 +247,8 @@ namespace FTAnalyzer
                                 .Replace(")", " ").Replace("{", " ").Replace("}", " ")
                                 .Replace("«b»", " ").Replace("«i»", " ").Replace("«/b»", " ")
                                 .Replace("«/i»", " ").Replace(@"\i", " ").Replace(@"\i0", " ")
-                                .Replace("&nbsp", " ").Replace(";", " ")
+                                .Replace("&nbsp", " ").Replace(";", " ").Replace(@"<b>", " ")
+                                .Replace(@"</b>", " ").Replace(@"<i>", " ").Replace(@"</i>", " ")
                                 .ClearWhiteSpace();
             return output.Replace("Registration District", "RD", StringComparison.OrdinalIgnoreCase)
                         .Replace("RegistrationDistrict", "RD", StringComparison.OrdinalIgnoreCase)
@@ -1838,13 +1839,13 @@ namespace FTAnalyzer
                         }
                         if (Fact.FactDate.Overlaps(CensusDate.UKCENSUS1911))
                         {
-                            if (Schedule.Length > 0)
+                            if (Schedule.Length > 0 && Schedule != MISSING)
                                 return GeneralSettings.Default.UseCompactCensusRef ? $"{Piece}/{Schedule}" : $"Piece: {Piece}, Schedule: {Schedule}";
                             return GeneralSettings.Default.UseCompactCensusRef ? $"{Piece}/{Page}" : $"Piece: {Piece}, Page: {Page}";
                         }
                         if (Fact.FactDate.Overlaps(CensusDate.UKCENSUS1921))
                         {
-                            if (Schedule.Length > 0)
+                            if (Schedule.Length > 0 && Schedule != MISSING)
                                 return GeneralSettings.Default.UseCompactCensusRef ? $"{Piece}/{ED}/{Schedule}" : $"Piece: {Piece}, ED: {ED}, Schedule: {Schedule}";
                             return GeneralSettings.Default.UseCompactCensusRef ? $"{Piece}/{ED}/{Page}" : $"Piece: {Piece}, ED {ED}, Page: {Page}";
                         }
