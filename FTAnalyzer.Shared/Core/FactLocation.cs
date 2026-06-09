@@ -575,7 +575,7 @@ namespace FTAnalyzer
         public static Fact BestLocationFact(IEnumerable<Fact> facts, FactDate when, int limit)
         {
             // this returns a Fact for a FactLocation a person was at for a given period
-            Fact result = new(UNKNOWNSTRING, Fact.UNKNOWN, FactDate.UNKNOWN_DATE, UNKNOWN_LOCATION);
+            Fact result = new(Fact.UNKNOWN, FactDate.UNKNOWN_DATE, UNKNOWN_LOCATION);
             double minDistance = float.MaxValue;
             double distance;
             foreach (Fact f in facts)

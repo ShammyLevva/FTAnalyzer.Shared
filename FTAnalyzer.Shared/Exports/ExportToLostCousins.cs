@@ -109,7 +109,7 @@ namespace FTAnalyzer.Exports
         static void AddLostCousinsFact(CensusIndividual ind)
         {
             FactLocation location = FactLocation.GetLocation(ind.CensusCountry);
-            Fact f = new(ind.CensusRef, Fact.LC_FTA, ind.CensusDate, location, string.Empty, true, true);
+            Fact f = new(Fact.LC_FTA, ind.CensusDate, location, string.Empty, true, true);
             Individual? person = FamilyTree.Instance.GetIndividual(ind.IndividualID); // get the individual not the census indvidual
             if (person is not null && !person.HasLostCousinsFactAtDate(ind.CensusDate))
                 person.AddFact(f);

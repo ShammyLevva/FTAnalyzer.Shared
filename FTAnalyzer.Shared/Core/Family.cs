@@ -135,7 +135,7 @@ namespace FTAnalyzer
             Husband = f.Husband is null ? null : new Individual(f.Husband);
             Wife = f.Wife is null ? null : new Individual(f.Wife);
             Children = [.. f.Children];
-            _preferredFacts = new Dictionary<string, Fact>(f._preferredFacts);
+            _preferredFacts = [with(f._preferredFacts)];
             ExpectedTotal = f.ExpectedTotal;
             ExpectedAlive = f.ExpectedAlive;
             ExpectedDead = f.ExpectedDead;
@@ -186,10 +186,10 @@ namespace FTAnalyzer
                     childrenComment = $"{titlecase} parent of {child.IndividualID}: {child.Name}";
                 }
 
-                Fact parentFact = new(parent.IndividualID, Fact.PARENT, child.BirthDate, child.BirthLocation, parentComment, true, true);
+                Fact parentFact = new(Fact.PARENT, child.BirthDate, child.BirthLocation, parentComment, true, true);
                 child.AddFact(parentFact);
 
-                Fact childrenFact = new(child.IndividualID, Fact.CHILDREN, child.BirthDate, child.BirthLocation, childrenComment, true, true);
+                Fact childrenFact = new(Fact.CHILDREN, child.BirthDate, child.BirthLocation, childrenComment, true, true);
                 parent.AddFact(childrenFact);
             }
         }
@@ -244,7 +244,7 @@ namespace FTAnalyzer
                 {
                     if (te.Message == "UNMARRIED" || te.Message == "NEVER MARRIED" || te.Message == "NOT MARRIED")
                     {
-                        Fact f = new(string.Empty, Fact.UNMARRIED, FactDate.UNKNOWN_DATE, FactLocation.UNKNOWN_LOCATION, string.Empty, true, true);
+                        Fact f = new(Fact.UNMARRIED, FactDate.UNKNOWN_DATE, FactLocation.UNKNOWN_LOCATION, string.Empty, true, true);
                         Husband?.AddFact(f);
                         Wife?.AddFact(f);
                         Facts.Add(f);
