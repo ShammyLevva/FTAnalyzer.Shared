@@ -356,7 +356,7 @@ namespace FTAnalyzer
             {
                 List<IDisplayFact> allGeocodedFacts = [];
                 foreach (Fact f in AllFacts)
-                    if (f.Location.IsGeoCoded(false) && f.Location.GeocodeStatus != FactLocation.Geocode.UNKNOWN)
+                    if (f.Location.IsKnown && f.Location.IsGeoCoded(false) && f.Location.GeocodeStatus != FactLocation.Geocode.UNKNOWN)
                         allGeocodedFacts.Add(new DisplayFact(this, f));
                 allGeocodedFacts.Sort();
                 return allGeocodedFacts;
@@ -369,14 +369,14 @@ namespace FTAnalyzer
             {
                 List<IDisplayFact> allLifeLineFacts = [];
                 foreach (Fact f in AllFacts)
-                    if (f.Location.IsGeoCoded(false) && f.Location.GeocodeStatus != FactLocation.Geocode.UNKNOWN && f.FactType != Fact.LC_FTA && f.FactType != Fact.LOSTCOUSINS)
+                    if (f.Location.IsKnown && f.Location.IsGeoCoded(false) && f.Location.GeocodeStatus != FactLocation.Geocode.UNKNOWN && f.FactType != Fact.LC_FTA && f.FactType != Fact.LOSTCOUSINS)
                         allLifeLineFacts.Add(new DisplayFact(this, f));
                 allLifeLineFacts.Sort();
                 return allLifeLineFacts;
             }
         }
 
-        public int GeoLocationCount => AllFacts.Count(f => f.Location.IsGeoCoded(false) && f.Location.GeocodeStatus != FactLocation.Geocode.UNKNOWN);
+        public int GeoLocationCount => AllFacts.Count(f => f.Location.IsKnown && f.Location.IsGeoCoded(false) && f.Location.GeocodeStatus != FactLocation.Geocode.UNKNOWN);
 
         public string Gender
         {
