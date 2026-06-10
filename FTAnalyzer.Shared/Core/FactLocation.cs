@@ -1064,6 +1064,8 @@ namespace FTAnalyzer
                 return true;
             if (ExtensionMethods.DoubleEquals(Longitude, 0) && ExtensionMethods.DoubleEquals(Latitude, 0))
                 return false;
+            if (ExtensionMethods.DoubleEquals(LongitudeM, 0) && ExtensionMethods.DoubleEquals(LatitudeM, 0))
+                return false;
             if (!recheckPartials &&
 #if __PC__
                 MappingSettings.Default.IncludePartials &&
