@@ -376,7 +376,7 @@ namespace FTAnalyzer
             }
         }
 
-        public int GeoLocationCount => AllGeocodedFacts.Count;
+        public int GeoLocationCount => AllFacts.Count(f => f.Location.IsGeoCoded(false) && f.Location.GeocodeStatus != FactLocation.Geocode.UNKNOWN);
 
         public string Gender
         {

@@ -175,7 +175,7 @@ namespace FTAnalyzer.Utilities
 
         public static bool DoubleEquals(double value1, double value2)
         {
-            return Math.Abs(value1 - value2) < 1e10;
+            return Math.Abs(value1 - value2) < 1e-10;
         }
     }
 }
