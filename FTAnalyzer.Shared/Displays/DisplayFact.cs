@@ -37,6 +37,7 @@ namespace FTAnalyzer
         public double Longitude => Fact.Location.Longitude;
         public string Comment => Fact.Comment;
         public string IndividualID => Ind is null ? string.Empty : Ind.IndividualID;
+        public string Name => $"{Forenames} {Surname}";
         public Age AgeAtFact => Ind?.GetAge(Fact.FactDate, Fact.FactType) ?? Age.BIRTH;
         public int SourcesCount => Fact.SourcesCount;
         public string SourceList => Fact.SourceList;

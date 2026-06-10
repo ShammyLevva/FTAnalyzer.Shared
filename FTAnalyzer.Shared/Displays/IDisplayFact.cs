@@ -13,6 +13,8 @@ namespace FTAnalyzer
 #endif
         [ColumnDetail("Ref", 60)]
         string IndividualID { get; }
+        [ColumnDetail("Name", 150)]
+        string Name { get; }
         [ColumnDetail("Surname", 75)]
         string Surname { get; }
         [ColumnDetail("Forenames", 100)]
