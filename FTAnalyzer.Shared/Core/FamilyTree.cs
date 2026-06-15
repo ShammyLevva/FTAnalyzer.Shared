@@ -347,7 +347,7 @@ namespace FTAnalyzer
                 foreach (XmlNode n in list)
                 {
                     var individual = new Individual(n, outputText);
-                    if (individual.IndividualID is null)
+                    if (string.IsNullOrEmpty(individual.IndividualID))
                         outputText.Report("File has invalid GEDCOM data. Individual found with no ID. Search file for 0 @@ INDI\n");
                     else
                     {

@@ -10,6 +10,8 @@ namespace FTAnalyzer
             if (rootPerson.Equals(indToFind))
                 return "root person";
             CommonAncestor? commonAncestor = indToFind.CommonAncestor;
+            if (commonAncestor is null)
+                return "unknown relation";
             long rootDistance = (long)(BigInteger.Log(commonAncestor.Ind.Ahnentafel) / Math.Log(2.0));
             long toFindDistance = commonAncestor.Distance;
 

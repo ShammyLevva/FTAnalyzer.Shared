@@ -286,11 +286,11 @@ namespace FTAnalyzer
 
         static void AddGoogleFixes(Dictionary<Tuple<int, string>, string> dictionary, XmlNode n, int level)
         {
-            string fromstr = n.Attributes["from"].Value;
-            string to = n.Attributes["to"].Value;
-            Tuple<int, string> from = new(level, fromstr.ToUpperInvariant());
-            if (from is not null && fromstr.Length > 0 && to is not null)
+            string fromstr = n.Attributes["from"]?.Value ?? string.Empty;
+            string to = n.Attributes["to"]?.Value ?? string.Empty;
+            if (fromstr.Length > 0 && to.Length > 0)
             {
+                Tuple<int, string> from = new(level, fromstr.ToUpperInvariant());
                 dictionary.TryAdd(from, to);
             }
         }

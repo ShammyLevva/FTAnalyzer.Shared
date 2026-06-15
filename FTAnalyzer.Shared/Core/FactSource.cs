@@ -21,7 +21,7 @@ namespace FTAnalyzer
         public FactSource(XmlNode node)
         {
             bool noteRead = false;
-            SourceID = node.Attributes["ID"].Value;
+            SourceID = node.Attributes["ID"]?.Value ?? string.Empty;
             SourceTitle = FamilyTree.GetText(node, "TITL", true);
             Publication = FamilyTree.GetText(node, "PUBL", true);
             Author = FamilyTree.GetText(node, "AUTH", true);

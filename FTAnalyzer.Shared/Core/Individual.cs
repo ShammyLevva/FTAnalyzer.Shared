@@ -89,7 +89,7 @@ namespace FTAnalyzer
         public Individual(XmlNode node, IProgress<string> outputText)
             : this()
         {
-            IndividualID = node.Attributes["ID"].Value;
+            IndividualID = node.Attributes["ID"]?.Value ?? string.Empty;
             Name = FamilyTree.GetText(node, "NAME", false);
             Gender = FamilyTree.GetText(node, "SEX", false);
             XmlNode? nameNode = node?.SelectSingleNode("NAME");

@@ -52,7 +52,7 @@ namespace FTAnalyzer
             {
                 XmlNode? eHusband = node.SelectSingleNode("HUSB");
                 XmlNode? eWife = node.SelectSingleNode("WIFE");
-                FamilyID = node.Attributes["ID"].Value;
+                FamilyID = node.Attributes["ID"]?.Value ?? string.Empty;
                 string husbandID = eHusband?.Attributes["REF"]?.Value ?? string.Empty;
                 string wifeID = eWife?.Attributes["REF"]?.Value ?? string.Empty;
                 Husband = ft.GetIndividual(husbandID);
