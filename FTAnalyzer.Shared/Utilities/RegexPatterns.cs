@@ -59,8 +59,8 @@ namespace FTAnalyzer.Utilities
         const string EW_CENSUS_1911_1921_PATTERN6 = @"(RG *1[4-5])\/? *RD *(\d{1,4}) *ED *(\d{1,3}) (\d{1,5})";
         const string EW_CENSUS_1911_PATTERN1 = @"RG *78\/? *Piece *(\d{1,6}) .*?SN *(\d{1,4})";
         const string EW_CENSUS_1911_PATTERN2 = @"RG *78\/? *Piece *(\d{1,5})";
-        const string EW_CENSUS_1921_PATTERN1 = @"RG *15\/? *(Piece)? *(\d{1,6}) *ED (\d{1,4}) *Sch *(\d{1,4}) *Book *(\d{1,6})";
-        const string EW_CENSUS_1921_PATTERN2 = @"RG *15\/? *(Piece)? *(\d{1,6}) *ED (\d{1,4}) *Sch *(\d{1,4})";
+        const string EW_CENSUS_1921_PATTERN1 = @"RG *15\/? *(Piece)? *(\d{1,6}) *ED (\d{1,4}) *SN *(\d{1,4}) *Book *(\d{1,6})";
+        const string EW_CENSUS_1921_PATTERN2 = @"RG *15\/? *(Piece)? *(\d{1,6}) *ED (\d{1,4}) *SN *(\d{1,4})";
         const string EW_CENSUS_1921_PATTERN3 = @"RG *15\/? *(Piece)? *(\d{1,6}) *ED (\d{1,4})$";
         const string EW_CENSUS_1921_PATTERN4 = @"RG *15\/? *(Piece)? *(\d{1,6}) *ED (\d{1,4}) *Page *(\d{1,3})";
 
