@@ -135,7 +135,7 @@ namespace FTAnalyzer
             Husband = f.Husband is null ? null : new Individual(f.Husband);
             Wife = f.Wife is null ? null : new Individual(f.Wife);
             Children = [.. f.Children];
-            _preferredFacts = [with(f._preferredFacts)];
+            _preferredFacts = new Dictionary<string, Fact>(f._preferredFacts);
             ExpectedTotal = f.ExpectedTotal;
             ExpectedAlive = f.ExpectedAlive;
             ExpectedDead = f.ExpectedDead;

@@ -251,7 +251,7 @@ namespace FTAnalyzer
                 Locations = [.. i.Locations];
                 FamiliesAsChild = [.. i.FamiliesAsChild];
                 FamiliesAsSpouse = [.. i.FamiliesAsSpouse];
-                preferredFacts = [with(i.preferredFacts)];
+                preferredFacts = new(i.preferredFacts);
             }
         }
         #endregion
