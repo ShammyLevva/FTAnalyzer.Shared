@@ -61,6 +61,7 @@ namespace FTAnalyzer.Utilities
         public static string DeploymentType { get; }
         public static string GUID { get; }
         public static string Resolution { get; }
+        static readonly string _sessionId = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
 
         static Analytics()
         {
@@ -119,7 +120,9 @@ namespace FTAnalyzer.Utilities
                         ["deployment_type"] = DeploymentType,
                         ["os_version"] = OSVersion,
                         ["screen_resolution"] = Resolution,
-                        ["language"] = CultureInfo.CurrentUICulture.EnglishName
+                        ["language"] = CultureInfo.CurrentUICulture.EnglishName,
+                        ["session_id"] = _sessionId,
+                        ["engagement_time_msec"] = "1"
                     })
                 ]);
                 string json = JsonSerializer.Serialize(payload);
