@@ -1,4 +1,4 @@
-﻿using FTAnalyzer.Properties;
+using FTAnalyzer.Properties;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -81,7 +81,7 @@ namespace FTAnalyzer
         public string Reference => GeneralSettings.Default.UseCompactCensusRef ? $"{Name}/{RegistrationDistrict}" : $"{Name}, RD: {RegistrationDistrict}";
 
         public override string ToString() => $"RD: {RegistrationDistrict} Parish: {Name} Region: {Region}";
-        [GeneratedRegex("\\d{1,3}-\\d{1,2}?[AB]?", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-GB")]
+        [GeneratedRegex("\\d{1,3}-\\d{1,2}?[AB]?", RegexOptions.IgnoreCase, "en-GB")]
         private static partial Regex RegexParish();
     }
 }

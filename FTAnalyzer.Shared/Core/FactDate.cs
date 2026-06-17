@@ -1,4 +1,4 @@
-﻿using FTAnalyzer.Properties;
+using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
 using System.Diagnostics;
 using System.Globalization;
@@ -1144,40 +1144,40 @@ namespace FTAnalyzer
 
         public static Regex NonGEDCOMDateFormatRegex
         {
-            get => _regex ?? new Regex(NonGedcomDate.Default.Regex, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            get => _regex ?? new Regex(NonGedcomDate.Default.Regex, RegexOptions.IgnoreCase);
 
             set => _regex = value;
         }
 
-        [GeneratedRegex("^(\\d{0,2} )?([A-Z]{0,3}) *(\\d{0,4})$", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-GB")]
+        [GeneratedRegex("^(\\d{0,2} )?([A-Z]{0,3}) *(\\d{0,4})$", RegexOptions.IgnoreCase, "en-GB")]
         private static partial Regex RegexDatePattern();
-        [GeneratedRegex("^INT (\\d{0,2} )?([A-Z]{0,3}) *(\\d{0,4}) .*$", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-GB")]
+        [GeneratedRegex("^INT (\\d{0,2} )?([A-Z]{0,3}) *(\\d{0,4}) .*$", RegexOptions.IgnoreCase, "en-GB")]
         private static partial Regex RegexInterpretedDatePattern();
-        [GeneratedRegex("^(\\d{3})$", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-GB")]
+        [GeneratedRegex("^(\\d{3})$", RegexOptions.IgnoreCase, "en-GB")]
         private static partial Regex RegexEarlyDatePattern();
-        [GeneratedRegex("^(\\d{0,2} )?([A-Z]{0,3}) *(\\d{0,4})/(\\d{0,2})$", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-GB")]
+        [GeneratedRegex("^(\\d{0,2} )?([A-Z]{0,3}) *(\\d{0,4})/(\\d{0,2})$", RegexOptions.IgnoreCase, "en-GB")]
         private static partial Regex RegexDoubleDatePattern1();
-        [GeneratedRegex("^(\\d{0,2} )?([A-Z]{0,3}) *(\\d{4})/(\\d{4})$", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-GB")]
+        [GeneratedRegex("^(\\d{0,2} )?([A-Z]{0,3}) *(\\d{4})/(\\d{4})$", RegexOptions.IgnoreCase, "en-GB")]
         private static partial Regex RegexDoubleDatePattern2();
-        [GeneratedRegex("^(\\d{0,2} )?([A-Z]{0,3}) *(\\d{3})/(\\d{2,3})$", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-GB")]
+        [GeneratedRegex("^(\\d{0,2} )?([A-Z]{0,3}) *(\\d{3})/(\\d{2,3})$", RegexOptions.IgnoreCase, "en-GB")]
         private static partial Regex RegexDoubleDatePattern3();
-        [GeneratedRegex("(\\d{1,2})(?:ST|ND|RD|TH)(.*)", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-GB")]
+        [GeneratedRegex("(\\d{1,2})(?:ST|ND|RD|TH)(.*)", RegexOptions.IgnoreCase, "en-GB")]
         private static partial Regex RegexPostfix();
-        [GeneratedRegex("(\\d{4}) *- *(\\d{4})", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-GB")]
+        [GeneratedRegex("(\\d{4}) *- *(\\d{4})", RegexOptions.IgnoreCase, "en-GB")]
         private static partial Regex RegexBetweenFix1();
-        [GeneratedRegex("([A-Z]{0,3}) *(\\d{4}) *- *([A-Z]{0,3}) *(\\d{4})", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-GB")]
+        [GeneratedRegex("([A-Z]{0,3}) *(\\d{4}) *- *([A-Z]{0,3}) *(\\d{4})", RegexOptions.IgnoreCase, "en-GB")]
         private static partial Regex RegexBetweenFix2();
-        [GeneratedRegex("(\\d{0,2} )?([A-Z]{0,3}) *(\\d{4}) *- *(\\d{0,2} )?([A-Z]{0,3}) *(\\d{4})", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-GB")]
+        [GeneratedRegex("(\\d{0,2} )?([A-Z]{0,3}) *(\\d{4}) *- *(\\d{0,2} )?([A-Z]{0,3}) *(\\d{4})", RegexOptions.IgnoreCase, "en-GB")]
         private static partial Regex RegexBetweenFix3();
-        [GeneratedRegex("(\\d{1,2}) *- *(\\d{1,2} )?([A-Z]{0,3}) *(\\d{4})", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-GB")]
+        [GeneratedRegex("(\\d{1,2}) *- *(\\d{1,2} )?([A-Z]{0,3}) *(\\d{4})", RegexOptions.IgnoreCase, "en-GB")]
         private static partial Regex RegexBetweenFix4();
-        [GeneratedRegex("(\\d{1,2} )?([A-Z]{0,3}) *- *(\\d{1,2} )?([A-Z]{0,3}) *(\\d{4})", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-GB")]
+        [GeneratedRegex("(\\d{1,2} )?([A-Z]{0,3}) *- *(\\d{1,2} )?([A-Z]{0,3}) *(\\d{4})", RegexOptions.IgnoreCase, "en-GB")]
         private static partial Regex RegexBetweenFix5();
-        [GeneratedRegex("^([A-Z]{3}) *(\\d{1,2} )(\\d{4})$", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-GB")]
+        [GeneratedRegex("^([A-Z]{3}) *(\\d{1,2} )(\\d{4})$", RegexOptions.IgnoreCase, "en-GB")]
         private static partial Regex RegexUSDateFix();
-        [GeneratedRegex("^(\\d{1,2}) *([A-Z]{3}) *(\\d{0,4})$", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-GB")]
+        [GeneratedRegex("^(\\d{1,2}) *([A-Z]{3}) *(\\d{0,4})$", RegexOptions.IgnoreCase, "en-GB")]
         private static partial Regex RegexSpaceFix();
-        [GeneratedRegex("^(\\d{1,2})D (\\d{1,2})M (\\d{0,4})$", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-GB")]
+        [GeneratedRegex("^(\\d{1,2})D (\\d{1,2})M (\\d{0,4})$", RegexOptions.IgnoreCase, "en-GB")]
         private static partial Regex RegexQuakerFix();
     }
 }

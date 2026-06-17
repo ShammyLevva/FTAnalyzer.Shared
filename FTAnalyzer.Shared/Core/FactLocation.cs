@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -1274,7 +1274,7 @@ namespace FTAnalyzer
             });
         }
 
-        [GeneratedRegex("\\d+[A-Za-z]?", RegexOptions.Compiled)]
+        [GeneratedRegex("\\d+[A-Za-z]?")]
         private static partial Regex RegexNumericFix();
         #endregion
     }

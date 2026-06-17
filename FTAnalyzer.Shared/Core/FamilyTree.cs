@@ -1,4 +1,4 @@
-﻿using FTAnalyzer.Filters;
+using FTAnalyzer.Filters;
 using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
 using System.Globalization;
@@ -3837,11 +3837,11 @@ namespace FTAnalyzer
 
         #endregion
 
-        [GeneratedRegex("<a href=.*</a>", RegexOptions.Compiled)]
+        [GeneratedRegex("<a href=.*</a>")]
         private static partial Regex RegexLinks();
-        [GeneratedRegex("{{.*}}", RegexOptions.Compiled)]
+        [GeneratedRegex("{{.*}}")]
         private static partial Regex RegexBrackets();
-        [GeneratedRegex("(.*)quot(.*)quot(.*)", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-GB")]
+        [GeneratedRegex("(.*)quot(.*)quot(.*)", RegexOptions.IgnoreCase, "en-GB")]
         private static partial Regex RegexQuotes();
     }
 }

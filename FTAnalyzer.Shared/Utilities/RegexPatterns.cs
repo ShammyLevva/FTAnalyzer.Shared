@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 
 namespace FTAnalyzer.Utilities
 {
@@ -119,310 +119,310 @@ namespace FTAnalyzer.Utilities
         const string PEOPLEFINDERS = @"Full Background Report";
         const string HAS_NUMBERS = @"\d";
 
-        [GeneratedRegex(CHILDREN_STATUS_PATTERN1, RegexOptions.Compiled)]
+        [GeneratedRegex(CHILDREN_STATUS_PATTERN1)]
         internal static partial Regex ChildrenStatusPattern1();
 
-        [GeneratedRegex(CHILDREN_STATUS_PATTERN2, RegexOptions.Compiled)]
+        [GeneratedRegex(CHILDREN_STATUS_PATTERN2)]
         internal static partial Regex ChildrenStatusPattern2();
 
-        [GeneratedRegex(AGE_PATTERN, RegexOptions.Compiled)]
+        [GeneratedRegex(AGE_PATTERN)]
         internal static partial Regex AgeRegex();
 
-        [GeneratedRegex(EW_CENSUS_PATTERN, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_PATTERN, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensusPattern();
 
-        [GeneratedRegex(EW_CENSUS_PATTERN1, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_PATTERN1, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensusPattern1();
 
-        [GeneratedRegex(EW_CENSUS_PATTERN2, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_PATTERN2, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensusPattern2();
 
-        [GeneratedRegex(EW_CENSUS_PATTERN3, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_PATTERN3, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensusPattern3();
 
-        [GeneratedRegex(EW_CENSUS_PATTERN4, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_PATTERN4, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensusPattern4();
 
-        [GeneratedRegex(EW_CENSUS_PATTERN5, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_PATTERN5, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensusPattern5();
 
-        [GeneratedRegex(EW_CENSUS_PATTERN6, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_PATTERN6, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensusPattern6();
 
-        [GeneratedRegex(EW_CENSUS_PATTERN7, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_PATTERN7, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensusPattern7();
 
-        [GeneratedRegex(EW_CENSUS_PATTERN8, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_PATTERN8, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensusPattern8();
 
-        [GeneratedRegex(EW_CENSUS_PATTERN9, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_PATTERN9, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensusPattern9();
 
-        [GeneratedRegex(EW_CENSUS_PATTERN10, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_PATTERN10, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensusPattern10();
 
-        [GeneratedRegex(EW_CENSUS_PATTERN11, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_PATTERN11, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensusPattern11();
 
-        [GeneratedRegex(EW_CENSUS_PATTERN12, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_PATTERN12, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensusPattern12();
 
-        [GeneratedRegex(EW_CENSUS_PATTERN13, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_PATTERN13, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensusPattern13();
 
-        [GeneratedRegex(EW_CENSUS_PATTERN14, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_PATTERN14, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensusPattern14();
 
-        [GeneratedRegex(EW_CENSUS_PATTERN15, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_PATTERN15, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensusPattern15();
 
-        [GeneratedRegex(EW_CENSUS_PATTERN16, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_PATTERN16, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensusPattern16();
 
-        [GeneratedRegex(EW_CENSUS_PATTERN_FH, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_PATTERN_FH, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensusPatternFh();
 
-        [GeneratedRegex(EW_CENSUS_PATTERN_FH2, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_PATTERN_FH2, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensusPatternFh2();
 
-        [GeneratedRegex(EW_CENSUS_PATTERN_FH3, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_PATTERN_FH3, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensusPatternFh3();
 
-        [GeneratedRegex(EW_CENSUS_PATTERN_FS1, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_PATTERN_FS1, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensusPatternFs1();
 
-        [GeneratedRegex(EW_MISSINGCLASS_PATTERN, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_MISSINGCLASS_PATTERN, RegexOptions.IgnoreCase)]
         internal static partial Regex EwMissingclassPattern();
 
-        [GeneratedRegex(EW_MISSINGCLASS_PATTERN2, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_MISSINGCLASS_PATTERN2, RegexOptions.IgnoreCase)]
         internal static partial Regex EwMissingclassPattern2();
 
-        [GeneratedRegex(EW_CENSUS_1841_51_PATTERN, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_1841_51_PATTERN, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensus184151Pattern();
 
-        [GeneratedRegex(EW_CENSUS_1841_51_PATTERN2, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_1841_51_PATTERN2, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensus184151Pattern2();
 
-        [GeneratedRegex(EW_CENSUS_1841_51_PATTERN2A, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_1841_51_PATTERN2A, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensus184151Pattern2A();
 
-        [GeneratedRegex(EW_CENSUS_1841_51_PATTERN3, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_1841_51_PATTERN3, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensus184151Pattern3();
 
-        [GeneratedRegex(EW_CENSUS_1841_51_PATTERN4, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_1841_51_PATTERN4, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensus184151Pattern4();
 
-        [GeneratedRegex(EW_CENSUS_1841_51_PATTERN5, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_1841_51_PATTERN5, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensus184151Pattern5();
 
-        [GeneratedRegex(EW_CENSUS_1841_51_PATTERN6, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_1841_51_PATTERN6, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensus184151Pattern6();
 
-        [GeneratedRegex(EW_CENSUS_1841_51_PATTERN6A, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_1841_51_PATTERN6A, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensus184151Pattern6A();
 
-        [GeneratedRegex(EW_CENSUS_1841_51_PATTERN7, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_1841_51_PATTERN7, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensus184151Pattern7();
 
-        [GeneratedRegex(EW_CENSUS_1841_51_PATTERN8, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_1841_51_PATTERN8, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensus184151Pattern8();
 
-        [GeneratedRegex(EW_CENSUS_1841_51_PATTERN_FH, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_1841_51_PATTERN_FH, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensus184151PatternFh();
 
-        [GeneratedRegex(EW_CENSUS_1841_51_PATTERN_FH2, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_1841_51_PATTERN_FH2, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensus184151PatternFh2();
 
-        [GeneratedRegex(EW_CENSUS_1841_51_PATTERN_FH3, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_1841_51_PATTERN_FH3, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensus184151PatternFh3();
 
-        [GeneratedRegex(EW_CENSUS_1841_51_PATTERN_FH4, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_1841_51_PATTERN_FH4, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensus184151PatternFh4();
 
-        [GeneratedRegex(EW_CENSUS_1911_1921_PATTERN, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_1911_1921_PATTERN, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensus19111921Pattern();
 
-        [GeneratedRegex(EW_CENSUS_1911_1921_PATTERN2, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_1911_1921_PATTERN2, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensus19111921Pattern2();
 
-        [GeneratedRegex(EW_CENSUS_1911_1921_PATTERN3, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_1911_1921_PATTERN3, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensus19111921Pattern3();
 
-        [GeneratedRegex(EW_CENSUS_1911_1921_PATTERN4, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_1911_1921_PATTERN4, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensus19111921Pattern4();
 
-        [GeneratedRegex(EW_CENSUS_1911_1921_PATTERN5, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_1911_1921_PATTERN5, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensus19111921Pattern5();
 
-        [GeneratedRegex(EW_CENSUS_1911_1921_PATTERN6, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_1911_1921_PATTERN6, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensus19111921Pattern6();
 
-        [GeneratedRegex(EW_CENSUS_1911_PATTERN1, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_1911_PATTERN1, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensus1911Pattern1();
 
-        [GeneratedRegex(EW_CENSUS_1911_PATTERN2, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_1911_PATTERN2, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensus1911Pattern2();
 
-        [GeneratedRegex(EW_CENSUS_1921_PATTERN1, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_1921_PATTERN1, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensus1921Pattern1();
 
-        [GeneratedRegex(EW_CENSUS_1921_PATTERN2, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_1921_PATTERN2, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensus1921Pattern2();
 
-        [GeneratedRegex(EW_CENSUS_1921_PATTERN3, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_1921_PATTERN3, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensus1921Pattern3();
 
-        [GeneratedRegex(EW_CENSUS_1921_PATTERN4, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_CENSUS_1921_PATTERN4, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensus1921Pattern4();
 
-        [GeneratedRegex(EW_1939_REGISTER_PATTERN1, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_1939_REGISTER_PATTERN1, RegexOptions.IgnoreCase)]
         internal static partial Regex Ew1939RegisterPattern1();
 
-        [GeneratedRegex(EW_1939_REGISTER_PATTERN1A, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_1939_REGISTER_PATTERN1A, RegexOptions.IgnoreCase)]
         internal static partial Regex Ew1939RegisterPattern1A();
 
-        [GeneratedRegex(EW_1939_REGISTER_PATTERN2, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_1939_REGISTER_PATTERN2, RegexOptions.IgnoreCase)]
         internal static partial Regex Ew1939RegisterPattern2();
 
-        [GeneratedRegex(EW_1939_REGISTER_PATTERN3, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(EW_1939_REGISTER_PATTERN3, RegexOptions.IgnoreCase)]
         internal static partial Regex Ew1939RegisterPattern3();
 
-        [GeneratedRegex(SCOT_CENSUSYEAR_PATTERN, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(SCOT_CENSUSYEAR_PATTERN, RegexOptions.IgnoreCase)]
         internal static partial Regex ScotCensusyearPattern();
 
-        [GeneratedRegex(SCOT_CENSUSYEAR_PATTERN2, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(SCOT_CENSUSYEAR_PATTERN2, RegexOptions.IgnoreCase)]
         internal static partial Regex ScotCensusyearPattern2();
 
-        [GeneratedRegex(SCOT_CENSUSYEAR_PATTERN3, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(SCOT_CENSUSYEAR_PATTERN3, RegexOptions.IgnoreCase)]
         internal static partial Regex ScotCensusyearPattern3();
 
-        [GeneratedRegex(SCOT_CENSUSYEAR_PATTERN4, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(SCOT_CENSUSYEAR_PATTERN4, RegexOptions.IgnoreCase)]
         internal static partial Regex ScotCensusyearPattern4();
 
-        [GeneratedRegex(SCOT_CENSUS_PATTERN, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(SCOT_CENSUS_PATTERN, RegexOptions.IgnoreCase)]
         internal static partial Regex ScotCensusPattern();
 
-        [GeneratedRegex(SCOT_CENSUS_PATTERN2, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(SCOT_CENSUS_PATTERN2, RegexOptions.IgnoreCase)]
         internal static partial Regex ScotCensusPattern2();
 
-        [GeneratedRegex(SCOT_CENSUS_PATTERN3, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(SCOT_CENSUS_PATTERN3, RegexOptions.IgnoreCase)]
         internal static partial Regex ScotCensusPattern3();
 
-        [GeneratedRegex(SCOT_CENSUS_PATTERN4, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(SCOT_CENSUS_PATTERN4, RegexOptions.IgnoreCase)]
         internal static partial Regex ScotCensusPattern4();
 
-        [GeneratedRegex(SCOT_CENSUS_PATTERN5, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(SCOT_CENSUS_PATTERN5, RegexOptions.IgnoreCase)]
         internal static partial Regex ScotCensusPattern5();
 
-        [GeneratedRegex(US_CENSUS_PATTERN, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(US_CENSUS_PATTERN, RegexOptions.IgnoreCase)]
         internal static partial Regex UsCensusPattern();
 
-        [GeneratedRegex(US_CENSUS_PATTERN1A, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(US_CENSUS_PATTERN1A, RegexOptions.IgnoreCase)]
         internal static partial Regex UsCensusPattern1A();
 
-        [GeneratedRegex(US_CENSUS_PATTERN2, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(US_CENSUS_PATTERN2, RegexOptions.IgnoreCase)]
         internal static partial Regex UsCensusPattern2();
 
-        [GeneratedRegex(US_CENSUS_PATTERN3, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(US_CENSUS_PATTERN3, RegexOptions.IgnoreCase)]
         internal static partial Regex UsCensusPattern3();
 
-        [GeneratedRegex(US_CENSUS_PATTERN3A, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(US_CENSUS_PATTERN3A, RegexOptions.IgnoreCase)]
         internal static partial Regex UsCensusPattern3A();
 
-        [GeneratedRegex(US_CENSUS_PATTERN3B, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(US_CENSUS_PATTERN3B, RegexOptions.IgnoreCase)]
         internal static partial Regex UsCensusPattern3B();
 
-        [GeneratedRegex(US_CENSUS_PATTERN3C, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(US_CENSUS_PATTERN3C, RegexOptions.IgnoreCase)]
         internal static partial Regex UsCensusPattern3C();
 
-        [GeneratedRegex(US_CENSUS_PATTERN4, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(US_CENSUS_PATTERN4, RegexOptions.IgnoreCase)]
         internal static partial Regex UsCensusPattern4();
 
-        [GeneratedRegex(US_CENSUS_PATTERN5, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(US_CENSUS_PATTERN5, RegexOptions.IgnoreCase)]
         internal static partial Regex UsCensusPattern5();
 
-        [GeneratedRegex(US_CENSUS_PATTERN6, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(US_CENSUS_PATTERN6, RegexOptions.IgnoreCase)]
         internal static partial Regex UsCensusPattern6();
 
-        [GeneratedRegex(US_CENSUS_PATTERN7, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(US_CENSUS_PATTERN7, RegexOptions.IgnoreCase)]
         internal static partial Regex UsCensusPattern7();
 
-        [GeneratedRegex(US_CENSUS_PATTERN8, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(US_CENSUS_PATTERN8, RegexOptions.IgnoreCase)]
         internal static partial Regex UsCensusPattern8();
 
-        [GeneratedRegex(US_CENSUS_PATTERN9, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(US_CENSUS_PATTERN9, RegexOptions.IgnoreCase)]
         internal static partial Regex UsCensusPattern9();
 
-        [GeneratedRegex(US_CENSUS_1940_PATTERN, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(US_CENSUS_1940_PATTERN, RegexOptions.IgnoreCase)]
         internal static partial Regex UsCensus1940Pattern();
 
-        [GeneratedRegex(US_CENSUS_1940_PATTERN2, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(US_CENSUS_1940_PATTERN2, RegexOptions.IgnoreCase)]
         internal static partial Regex UsCensus1940Pattern2();
 
-        [GeneratedRegex(US_CENSUS_1940_PATTERN3, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(US_CENSUS_1940_PATTERN3, RegexOptions.IgnoreCase)]
         internal static partial Regex UsCensus1940Pattern3();
 
-        [GeneratedRegex(US_CENSUS_1940_PATTERN4, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(US_CENSUS_1940_PATTERN4, RegexOptions.IgnoreCase)]
         internal static partial Regex UsCensus1940Pattern4();
 
-        [GeneratedRegex(US_CENSUS_T62X_PATTERN1, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(US_CENSUS_T62X_PATTERN1, RegexOptions.IgnoreCase)]
         internal static partial Regex UsCensusT62XPattern1();
 
-        [GeneratedRegex(US_CENSUS_TX_PATTERN1, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(US_CENSUS_TX_PATTERN1, RegexOptions.IgnoreCase)]
         internal static partial Regex UsCensusTxPattern1();
 
-        [GeneratedRegex(US_CENSUS_MX_PATTERN1, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(US_CENSUS_MX_PATTERN1, RegexOptions.IgnoreCase)]
         internal static partial Regex UsCensusMxPattern1();
 
-        [GeneratedRegex(CANADA_CENSUS_PATTERN, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(CANADA_CENSUS_PATTERN, RegexOptions.IgnoreCase)]
         internal static partial Regex CanadaCensusPattern();
 
-        [GeneratedRegex(CANADA_CENSUS_PATTERN1, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(CANADA_CENSUS_PATTERN1, RegexOptions.IgnoreCase)]
         internal static partial Regex CanadaCensusPattern1();
 
-        [GeneratedRegex(CANADA_CENSUS_PATTERN2, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(CANADA_CENSUS_PATTERN2, RegexOptions.IgnoreCase)]
         internal static partial Regex CanadaCensusPattern2();
 
-        [GeneratedRegex(CANADA_CENSUS_PATTERN3, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(CANADA_CENSUS_PATTERN3, RegexOptions.IgnoreCase)]
         internal static partial Regex CanadaCensusPattern3();
 
-        [GeneratedRegex(CANADA_CENSUS_PATTERN4, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(CANADA_CENSUS_PATTERN4, RegexOptions.IgnoreCase)]
         internal static partial Regex CanadaCensusPattern4();
 
-        [GeneratedRegex(CANADA_CENSUS_PATTERN5, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(CANADA_CENSUS_PATTERN5, RegexOptions.IgnoreCase)]
         internal static partial Regex CanadaCensusPattern5();
 
-        [GeneratedRegex(CANADA_CENSUS_PATTERN6, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(CANADA_CENSUS_PATTERN6, RegexOptions.IgnoreCase)]
         internal static partial Regex CanadaCensusPattern6();
 
-        [GeneratedRegex(CANADA_CENSUS_PATTERN7, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(CANADA_CENSUS_PATTERN7, RegexOptions.IgnoreCase)]
         internal static partial Regex CanadaCensusPattern7();
 
-        [GeneratedRegex(LC_CENSUS_PATTERN_EW, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(LC_CENSUS_PATTERN_EW, RegexOptions.IgnoreCase)]
         internal static partial Regex LcCensusPatternEw();
 
-        [GeneratedRegex(LC_CENSUS_PATTERN_1911_EW, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(LC_CENSUS_PATTERN_1911_EW, RegexOptions.IgnoreCase)]
         internal static partial Regex LcCensusPattern1911Ew();
 
-        [GeneratedRegex(LC_CENSUS_PATTERN_SCOT, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(LC_CENSUS_PATTERN_SCOT, RegexOptions.IgnoreCase)]
         internal static partial Regex LcCensusPatternScot();
 
-        [GeneratedRegex(LC_CENSUS_PATTERN_1940US, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(LC_CENSUS_PATTERN_1940US, RegexOptions.IgnoreCase)]
         internal static partial Regex LcCensusPattern1940Us();
 
-        [GeneratedRegex(LC_CENSUS_PATTERN_1881CANADA, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(LC_CENSUS_PATTERN_1881CANADA, RegexOptions.IgnoreCase)]
         internal static partial Regex LcCensusPattern1881Canada();
 
-        [GeneratedRegex(LC_ED_PATTERN, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(LC_ED_PATTERN, RegexOptions.IgnoreCase)]
         internal static partial Regex LcEdRegex();
 
-        [GeneratedRegex(PEOPLEFINDERS, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(PEOPLEFINDERS, RegexOptions.IgnoreCase)]
         internal static partial Regex Peoplefinders();
 
-        [GeneratedRegex(HAS_NUMBERS, RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        [GeneratedRegex(HAS_NUMBERS, RegexOptions.IgnoreCase)]
         internal static partial Regex HasNumbers();
 
-        [GeneratedRegex(@"(.*)\(.*\)", RegexOptions.Compiled)]
+        [GeneratedRegex(@"(.*)\(.*\)")]
         internal static partial Regex GazateerSlash();
     }
 }
