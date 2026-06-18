@@ -6,7 +6,7 @@ namespace FTAnalyzer
 {
     public class DataError : IDisplayDataError
     {
-        public DataError(int errorType, Fact.FactError errorLevel, Individual ind, string description)
+        public DataError(int errorType, Fact.FactError errorLevel, Individual? ind, string description)
         {
             ErrorType = DataErrorGroup.ErrorDescription(errorType);
 #if __PC__
@@ -29,11 +29,11 @@ namespace FTAnalyzer
             family = fam;
         }
 
-        readonly Individual individual;
-        readonly Family family;
+        readonly Individual? individual;
+        readonly Family? family;
 
 #if __PC__
-        public System.Drawing.Image Icon { get; private set; }
+        public Image Icon { get; private set; }
 #endif
         public string ErrorType { get; private set; }
         public string Reference => individual is null ? family.FamilyID : individual.IndividualID;

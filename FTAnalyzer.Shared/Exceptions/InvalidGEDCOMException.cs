@@ -3,7 +3,7 @@
     [Serializable]
     public class InvalidGEDCOMException : Exception
     {
-        string OriginalLine { get; }
+        string OriginalLine { get; } = string.Empty;
         long LineNumber { get; }
 
         public InvalidGEDCOMException(string message, string line, long lineNumber)

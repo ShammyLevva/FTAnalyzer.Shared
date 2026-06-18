@@ -36,13 +36,14 @@ namespace FTAnalyzer
                 using (XmlReader reader = XmlReader.Create(sreader, new XmlReaderSettings() { XmlResolver = null }))
                     xmlDoc.Load(reader);
                 //xmlDoc.Validate(something);
-                foreach (XmlNode n in xmlDoc.SelectNodes("CensusLocations/Location"))
+                foreach (XmlNode n in xmlDoc.SelectNodes("CensusLocations/Location") ?? [])
                 {
-                    string year = n.Attributes["Year"].Value;
-                    string piece = n.Attributes["Piece"].Value;
-                    string RD = n.Attributes["RD"].Value;
-                    string parish = n.Attributes["Parish"].Value;
-                    string county = n.Attributes["County"].Value;
+                    if (n.Attributes is null) continue;
+                    string year = n.Attributes["Year"]?.Value ?? string.Empty;
+                    string piece = n.Attributes["Piece"]?.Value ?? string.Empty;
+                    string RD = n.Attributes["RD"]?.Value ?? string.Empty;
+                    string parish = n.Attributes["Parish"]?.Value ?? string.Empty;
+                    string county = n.Attributes["County"]?.Value ?? string.Empty;
                     string location = n.InnerText;
                     CensusLocation cl = new(year, piece, RD, parish, county, location);
                     CENSUSLOCATIONS.Add(new Tuple<string, string>(year, piece), cl);
