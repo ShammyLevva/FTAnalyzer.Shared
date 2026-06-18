@@ -36,10 +36,10 @@ namespace FTAnalyzer
         public Image Icon { get; private set; }
 #endif
         public string ErrorType { get; private set; }
-        public string Reference => individual is null ? family.FamilyID : individual.IndividualID;
-        public string Name => individual is null ? family.FamilyName : individual.Name;
-        public string Forenames => individual is null ? family.Forenames : individual.Forenames;
-        public string Surname => individual is null ? family.Surname : individual.Surname;
+        public string Reference => individual is null ? family!.FamilyID : individual.IndividualID;
+        public string Name => individual is null ? family!.FamilyName : individual.Name;
+        public string Forenames => individual is null ? family!.Forenames : individual.Forenames;
+        public string Surname => individual is null ? family!.Surname : individual.Surname;
         public string Description { get; private set; }
         public FactDate Born => individual is null ? FactDate.UNKNOWN_DATE : individual.BirthDate;
         public FactDate Died => individual is null ? FactDate.UNKNOWN_DATE : individual.DeathDate;
