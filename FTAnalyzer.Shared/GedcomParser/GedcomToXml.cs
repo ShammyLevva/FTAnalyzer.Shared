@@ -25,7 +25,7 @@ namespace FTAnalyzer
             {
                 doc = Parse(reader, outputText, reportBadLines, parseProgress);
             }
-            if (doc?.SelectNodes("GED/INDI").Count == 0)
+            if ((doc?.SelectNodes("GED/INDI")?.Count ?? 0) == 0)
             { // if there is a problem with the file return with opposite line ends
                 cloned = PrepareStream(stream);
                 retryFailed = FileHandling.Default.RetryFailedLines;
@@ -45,7 +45,7 @@ namespace FTAnalyzer
             {
                 doc = Parse(reader, outputText, reportBadLines, parseProgress);
             }
-            if (doc?.SelectNodes("GED/INDI").Count == 0)
+            if ((doc?.SelectNodes("GED/INDI")?.Count ?? 0) == 0)
             {
                 // if there is a problem with the file return with opposite line ends
                 cloned = PrepareStream(stream);
@@ -249,7 +249,7 @@ namespace FTAnalyzer
                             }
 
                             // insert any necessary closing tags
-                            while (thislevel <= prevlevel)
+                            while (thislevel <= prevlevel && node is not null)
                             {
                                 stack.Pop();
                                 node = node.ParentNode;
@@ -259,20 +259,20 @@ namespace FTAnalyzer
                             if (!tag.Equals("TRLR", StringComparison.Ordinal))
                             {
                                 XmlNode newNode = document.CreateElement(tag);
-                                node.AppendChild(newNode);
+                                node?.AppendChild(newNode);
                                 node = newNode;
 
                                 if (!string.IsNullOrEmpty(iden))
                                 {
                                     XmlAttribute attr = document.CreateAttribute("ID");
                                     attr.Value = iden;
-                                    node.Attributes.Append(attr);
+                                    node.Attributes?.Append(attr);
                                 }
                                 if (!string.IsNullOrEmpty(xref))
                                 {
                                     XmlAttribute attr = document.CreateAttribute("REF");
                                     attr.Value = xref;
-                                    node.Attributes.Append(attr);
+                                    node.Attributes?.Append(attr);
                                 }
                                 stack.Push(tag);
                                 prevlevel = thislevel;
@@ -281,7 +281,7 @@ namespace FTAnalyzer
                             if (value.Length > 0)
                             {
                                 XmlText text = document.CreateTextNode(value);
-                                node.AppendChild(text);
+                                node?.AppendChild(text);
                             }
                         }
                         catch (InvalidGEDCOMException ige)
