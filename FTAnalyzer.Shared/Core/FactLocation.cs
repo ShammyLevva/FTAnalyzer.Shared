@@ -257,7 +257,7 @@ namespace FTAnalyzer
         {
             foreach (Region region in Regions.UK_REGIONS)
             {
-                if (region.CountyCodes.Count == 0 &&
+                if ((region.CountyCodes?.Count ?? 0) == 0 &&
                     (region.Country == Countries.ENGLAND || region.Country == Countries.WALES || region.Country == Countries.SCOTLAND))
                     Debug.WriteLine($"Missing Conversions for region: {region}");
             }
@@ -1020,7 +1020,7 @@ namespace FTAnalyzer
 #if __PC__
                 if (ViewPort is not null)
                 {
-                    double pixelWidth = Screen.PrimaryScreen.Bounds.Width;  // tweak to get best results as required 
+                    double pixelWidth = Screen.PrimaryScreen?.Bounds.Width ?? 1920;  // tweak to get best results as required
                     double GLOBE_WIDTH = 512; // a constant in Google's map projection
                     var west = ViewPort.SouthWest.Long / 100000;
                     var east = ViewPort.NorthEast.Long / 100000;
