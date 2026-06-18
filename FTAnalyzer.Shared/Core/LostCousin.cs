@@ -1,4 +1,4 @@
-﻿using System.Web;
+using System.Web;
 
 namespace FTAnalyzer
 {
@@ -69,12 +69,12 @@ namespace FTAnalyzer
 
         void SetMetaphones()
         {
-            int ptr = Name.IndexOf(',');
+            int ptr = Name.IndexOf(',', StringComparison.Ordinal);
             if (ptr > 0)
             {
                 string forenames = ptr + 2 < Name.Length ? Name[(ptr + 2)..] : string.Empty;
                 string surname = Name[..ptr];
-                int pos = forenames.IndexOf(' ');
+                int pos = forenames.IndexOf(' ', StringComparison.Ordinal);
                 string forename = forenames is null ? string.Empty : (pos > 0 ? forenames[..pos] : forenames);
                 ForenameMetaphone = new DoubleMetaphone(forename).PrimaryKey;
                 SurnameMetaphone = new DoubleMetaphone(surname).PrimaryKey;
@@ -93,8 +93,8 @@ namespace FTAnalyzer
             string output = reference;
             if (output.Length > 24)
                 output = output[23..]; // strip the leading &census_code=XXXX&ref1=
-            output = output.Replace("&ref2=", "/").Replace("&ref3=", "/").Replace("&ref4=", "/").Replace("&ref5=", "/");
-            output = output.Replace("//", "/").Replace("//", "/").TrimEnd('/');
+            output = output.Replace("&ref2=", "/", StringComparison.Ordinal).Replace("&ref3=", "/", StringComparison.Ordinal).Replace("&ref4=", "/", StringComparison.Ordinal).Replace("&ref5=", "/", StringComparison.Ordinal);
+            output = output.Replace("//", "/", StringComparison.Ordinal).Replace("//", "/", StringComparison.Ordinal).TrimEnd('/');
             return output;
         }
 

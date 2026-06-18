@@ -1,4 +1,4 @@
-﻿#if __PC__
+#if __PC__
 using FTAnalyzer.Graphics;
 #endif
 
@@ -74,7 +74,7 @@ namespace FTAnalyzer
         {
             if (obj is null) return false;
             DisplayFact that = (DisplayFact)obj;
-            return FactHash.Equals(that.FactHash); //this.Ind.Equals(that.Ind) && this.Fact.Equals(that.Fact);
+            return FactHash.Equals(that.FactHash, StringComparison.OrdinalIgnoreCase); //this.Ind.Equals(that.Ind, StringComparison.OrdinalIgnoreCase) && this.Fact.Equals(that.Fact, StringComparison.OrdinalIgnoreCase);
         }
 
         public override int GetHashCode() => base.GetHashCode();

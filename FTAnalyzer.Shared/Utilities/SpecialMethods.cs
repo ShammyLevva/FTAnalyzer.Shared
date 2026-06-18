@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 #if __PC__
 using FTAnalyzer.Properties;
@@ -30,7 +30,7 @@ namespace FTAnalyzer.Utilities
             {
                 Font font = new(FontSettings.Default.SelectedFont.Name, FontSettings.Default.SelectedFont.Size);
                 foreach (Control theControl in GetAllControls(form))
-                    if (theControl.Font.Name.Equals(FontSettings.Default.SelectedFont.Name)
+                    if (theControl.Font.Name.Equals(FontSettings.Default.SelectedFont.Name, StringComparison.OrdinalIgnoreCase)
                         && !ExtensionMethods.DoubleEquals(theControl.Font.Size, FontSettings.Default.SelectedFont.Size))
                     {
                         theControl.Font = font; // change font size only if matching font name and size are different
@@ -59,7 +59,7 @@ namespace FTAnalyzer.Utilities
                 // hack because of this: https://github.com/dotnet/corefx/issues/10361
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
-                    url = url.Replace("&", "^&");
+                    url = url.Replace("&", "^&", StringComparison.Ordinal);
                     Process.Start(new ProcessStartInfo("cmd", $"/c start {url}") { CreateNoWindow = true });
                 }
                 else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))

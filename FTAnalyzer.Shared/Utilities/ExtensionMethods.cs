@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 
 namespace FTAnalyzer.Utilities
 {
@@ -32,8 +32,8 @@ namespace FTAnalyzer.Utilities
 
         public static string Between(this string value, char startChar, char endChar)
         {
-            int pos1 = value.IndexOf(startChar) + 1;
-            int pos2 = value.IndexOf(endChar);
+            int pos1 = value.IndexOf(startChar, StringComparison.OrdinalIgnoreCase) + 1;
+            int pos2 = value.IndexOf(endChar, StringComparison.OrdinalIgnoreCase);
             if (pos1 == -1 || pos2 == -1 || pos1 >= pos2)
                 return string.Empty;
             return value[pos1..pos2];

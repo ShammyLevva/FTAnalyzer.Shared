@@ -166,8 +166,8 @@ namespace FTAnalyzer
                     {
                         try
                         {
-                            line = line.Replace('�', '-').Replace('�', '-').Replace("&nbsp;", " ").Replace(" * **Data is already there***", ""); // "data is already there" is some Ancestry anomaly
-                            cpos1 = line.IndexOf(' ');
+                            line = line.Replace('�', '-').Replace('�', '-').Replace("&nbsp;", " ", StringComparison.Ordinal).Replace(" * **Data is already there***", "", StringComparison.Ordinal); // "data is already there" is some Ancestry anomaly
+                            cpos1 = line.IndexOf(' ', StringComparison.Ordinal);
                             if (cpos1 < 0) throw new InvalidGEDCOMException($"No space found in line: '{line}'", line, lineNr);
 
                             level = FirstWord(line);
@@ -411,7 +411,7 @@ namespace FTAnalyzer
         static string FirstWord(string inp)
         {
             int i;
-            i = inp.IndexOf(' ');
+            i = inp.IndexOf(' ', StringComparison.Ordinal);
             return i == 0 ? FirstWord(inp.Trim()) : i < 0 ? inp : inp[..i].Trim();
         }
 
@@ -422,7 +422,7 @@ namespace FTAnalyzer
         static string Remainder(string inp)
         {
             int i;
-            i = inp.IndexOf(' ');
+            i = inp.IndexOf(' ', StringComparison.Ordinal);
             return i == 0 ? Remainder(inp.Trim()) : i < 0 ? "" : inp[(i + 1)..].Trim();
         }
 

@@ -1,4 +1,4 @@
-﻿namespace FTAnalyzer
+namespace FTAnalyzer
 {
     public class CensusIndividualComparer : IEqualityComparer<CensusIndividual>
     {
@@ -8,12 +8,12 @@
                 return true;
             if (x is null || y is null)
                 return false;
-            return x.IndividualID.Equals(y.IndividualID);
+            return x.IndividualID.Equals(y.IndividualID, StringComparison.OrdinalIgnoreCase);
         }
 
         public int GetHashCode(CensusIndividual obj)    
         {
-            return obj?.IndividualID.GetHashCode() ?? 0;
+            return obj?.IndividualID.GetHashCode(StringComparison.OrdinalIgnoreCase) ?? 0;
         }
     }
 }

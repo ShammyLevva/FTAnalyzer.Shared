@@ -1,4 +1,4 @@
-﻿using FTAnalyzer.Properties;
+using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
 #if __PC__
 using HtmlAgilityPack;
@@ -32,7 +32,7 @@ namespace FTAnalyzer.Exports
                 GeneralSettings.Default.ShowAliasInName = false; // turn off adding alias in name when exporting
                 foreach (CensusIndividual ind in ToProcess)
                 {
-                    if (ind.LCAge.Equals("Unknown"))
+                    if (ind.LCAge.Equals("Unknown", StringComparison.OrdinalIgnoreCase))
                     {
                         outputText.Report($"Record {++count} of {ToProcess.Count}: {ind.CensusDate} - Cannot determine age at census {ind.CensusString}.\n");
                         recordsFailed++;
@@ -152,7 +152,7 @@ namespace FTAnalyzer.Exports
                             if (columns[0].ChildNodes.Count == 5)
                             {
                                 HtmlAttribute notesNode = columns[0].ChildNodes[3].Attributes["title"];
-                                ftanalyzer = notesNode is not null && notesNode.Value.Contains("Added_By_FTAnalyzer");
+                                ftanalyzer = notesNode is not null && notesNode.Value.Contains("Added_By_FTAnalyzer", StringComparison.OrdinalIgnoreCase);
                             }
                             string birthYear = columns[2].InnerText.ClearWhiteSpace();
                             if (columns[4].ChildNodes.Count > 4)

@@ -1,4 +1,4 @@
-﻿using FTAnalyzer.Properties;
+using FTAnalyzer.Properties;
 
 namespace FTAnalyzer
 {
@@ -73,7 +73,7 @@ namespace FTAnalyzer
         public System.Windows.Forms.DataGridViewCellStyle CellStyle { get; set; }
 #endif
         public bool IsValidLocation(string location) =>
-            !CensusLocation.IsKnownCountry || Countries.IsUnitedKingdom(location) ? CensusLocation.IsUnitedKingdom : CensusLocation.Country.Equals(location);
+            !CensusLocation.IsKnownCountry || Countries.IsUnitedKingdom(location) ? CensusLocation.IsUnitedKingdom : CensusLocation.Country.Equals(location, StringComparison.OrdinalIgnoreCase);
 
         public override string ToString() => $"{IndividualID}: {Name} b.{BirthDate}";
 

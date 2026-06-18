@@ -1,4 +1,4 @@
-﻿using FTAnalyzer.Utilities;
+using FTAnalyzer.Utilities;
 using System.Xml;
 
 namespace FTAnalyzer
@@ -66,17 +66,17 @@ namespace FTAnalyzer
             }
         }
 
-        public bool IsBirthCert() => SourceMedium.Contains("Official Document") &&
-                   SourceTitle.Contains(BIRTHCERT, StringComparison.CurrentCultureIgnoreCase);
+        public bool IsBirthCert() => SourceMedium.Contains("Official Document", StringComparison.OrdinalIgnoreCase) &&
+                   SourceTitle.Contains(BIRTHCERT, StringComparison.OrdinalIgnoreCase);
 
-        public bool IsDeathCert() => SourceMedium.Contains("Official Document") &&
-                   SourceTitle.Contains(DEATHCERT, StringComparison.CurrentCultureIgnoreCase);
+        public bool IsDeathCert() => SourceMedium.Contains("Official Document", StringComparison.OrdinalIgnoreCase) &&
+                   SourceTitle.Contains(DEATHCERT, StringComparison.OrdinalIgnoreCase);
 
-        public bool IsMarriageCert() => SourceMedium.Contains("Official Document") &&
-                   SourceTitle.Contains(MARRIAGECERT, StringComparison.CurrentCultureIgnoreCase);
+        public bool IsMarriageCert() => SourceMedium.Contains("Official Document", StringComparison.OrdinalIgnoreCase) &&
+                   SourceTitle.Contains(MARRIAGECERT, StringComparison.OrdinalIgnoreCase);
 
-        public bool IsCensusCert() => SourceMedium.Equals("Official Document") &&
-                   SourceTitle.Contains(CENSUSCERT, StringComparison.CurrentCultureIgnoreCase);
+        public bool IsCensusCert() => SourceMedium.Equals("Official Document", StringComparison.OrdinalIgnoreCase) &&
+                   SourceTitle.Contains(CENSUSCERT, StringComparison.OrdinalIgnoreCase);
 
         public override string ToString() => SourceTitle;
 

@@ -98,7 +98,7 @@ namespace FTAnalyzer.Exports
             }
             catch (Exception e)
             {
-                if (e.Message.Contains("UNIQUE constraint failed:")) // already written so silently ignore adding to database.
+                if (e.Message.Contains("UNIQUE constraint failed:", StringComparison.OrdinalIgnoreCase)) // already written so silently ignore adding to database.
                     return true;
                 outputText.Report($"Problem accessing Lost Cousins Website to send record below. Error message is: {e.Message}\n");
                 return false;

@@ -890,10 +890,10 @@ namespace FTAnalyzer
 		 */
         bool IsWordSlavoGermanic()
         {
-            return (_word.Contains('W')) ||
-                (_word.Contains('K')) ||
-                (_word.Contains("CZ")) ||
-                (_word.Contains("WITZ"));
+            return (_word.Contains('W', StringComparison.OrdinalIgnoreCase)) ||
+                (_word.Contains('K', StringComparison.OrdinalIgnoreCase)) ||
+                (_word.Contains("CZ", StringComparison.OrdinalIgnoreCase)) ||
+                (_word.Contains("WITZ", StringComparison.OrdinalIgnoreCase));
         }
 
         /**

@@ -1,4 +1,4 @@
-﻿namespace FTAnalyzer
+namespace FTAnalyzer
 {
     public class DuplicateIndividual
     {
@@ -29,9 +29,9 @@
             int score = 0;
             if (indA is not null && indB is not null)
             {
-                if (indA.Surname.Equals(indB.Surname) && indA.Surname != Individual.UNKNOWN_NAME)
+                if (indA.Surname.Equals(indB.Surname, StringComparison.OrdinalIgnoreCase) && indA.Surname != Individual.UNKNOWN_NAME)
                     score += 20;
-                if (indA.Forename.Equals(indB.Forename) && indA.Forename != Individual.UNKNOWN_NAME)
+                if (indA.Forename.Equals(indB.Forename, StringComparison.OrdinalIgnoreCase) && indA.Forename != Individual.UNKNOWN_NAME)
                     score += 20;
             }
             return score;
@@ -43,36 +43,36 @@
                 return;
             if (IndividualA.BirthLocation.Equals(IndividualB.BirthLocation))
                 Score += 75;
-            if (IndividualA.BirthLocation.Country.Equals(IndividualB.BirthLocation.Country))
+            if (IndividualA.BirthLocation.Country.Equals(IndividualB.BirthLocation.Country, StringComparison.OrdinalIgnoreCase))
                 Score += 10;
-            if (IndividualA.BirthLocation.Region.Equals(IndividualB.BirthLocation.Region))
+            if (IndividualA.BirthLocation.Region.Equals(IndividualB.BirthLocation.Region, StringComparison.OrdinalIgnoreCase))
                 Score += 10;
-            if (IndividualA.BirthLocation.SubRegion.Equals(IndividualB.BirthLocation.SubRegion))
+            if (IndividualA.BirthLocation.SubRegion.Equals(IndividualB.BirthLocation.SubRegion, StringComparison.OrdinalIgnoreCase))
                 Score += 20;
-            if (IndividualA.BirthLocation.Address.Equals(IndividualB.BirthLocation.Address))
+            if (IndividualA.BirthLocation.Address.Equals(IndividualB.BirthLocation.Address, StringComparison.OrdinalIgnoreCase))
                 Score += 40;
-            if (IndividualA.BirthLocation.Place.Equals(IndividualB.BirthLocation.Place))
+            if (IndividualA.BirthLocation.Place.Equals(IndividualB.BirthLocation.Place, StringComparison.OrdinalIgnoreCase))
                 Score += 40;
 
-            if (IndividualA.BirthLocation.CountryMetaphone.Equals(IndividualB.BirthLocation.CountryMetaphone))
+            if (IndividualA.BirthLocation.CountryMetaphone.Equals(IndividualB.BirthLocation.CountryMetaphone, StringComparison.OrdinalIgnoreCase))
                 Score += 5;
-            if (IndividualA.BirthLocation.RegionMetaphone.Equals(IndividualB.BirthLocation.RegionMetaphone))
+            if (IndividualA.BirthLocation.RegionMetaphone.Equals(IndividualB.BirthLocation.RegionMetaphone, StringComparison.OrdinalIgnoreCase))
                 Score += 5;
-            if (IndividualA.BirthLocation.SubRegionMetaphone.Equals(IndividualB.BirthLocation.SubRegionMetaphone))
+            if (IndividualA.BirthLocation.SubRegionMetaphone.Equals(IndividualB.BirthLocation.SubRegionMetaphone, StringComparison.OrdinalIgnoreCase))
                 Score += 10;
-            if (IndividualA.BirthLocation.AddressMetaphone.Equals(IndividualB.BirthLocation.AddressMetaphone))
+            if (IndividualA.BirthLocation.AddressMetaphone.Equals(IndividualB.BirthLocation.AddressMetaphone, StringComparison.OrdinalIgnoreCase))
                 Score += 20;
-            if (IndividualA.BirthLocation.PlaceMetaphone.Equals(IndividualB.BirthLocation.PlaceMetaphone))
+            if (IndividualA.BirthLocation.PlaceMetaphone.Equals(IndividualB.BirthLocation.PlaceMetaphone, StringComparison.OrdinalIgnoreCase))
                 Score += 20;
 
             if (IndividualA.BirthLocation.IsKnownCountry && IndividualB.BirthLocation.IsKnownCountry &&
-                !IndividualA.BirthLocation.Country.Equals(IndividualB.BirthLocation.Country))
+                !IndividualA.BirthLocation.Country.Equals(IndividualB.BirthLocation.Country, StringComparison.OrdinalIgnoreCase))
                 Score -= 250;
         }
 
         void GenderScore()
         { // values may need tweaked
-            if (IndividualA.Gender.Equals(IndividualB.Gender))
+            if (IndividualA.Gender.Equals(IndividualB.Gender, StringComparison.OrdinalIgnoreCase))
                 Score += 50; // identical genders
             else if (IndividualA.GenderMatches(IndividualB))
                 Score += 20; // matches on unknown

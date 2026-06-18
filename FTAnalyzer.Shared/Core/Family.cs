@@ -1,4 +1,4 @@
-﻿using FTAnalyzer.Exports;
+using FTAnalyzer.Exports;
 using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
 using System.Numerics;
@@ -369,7 +369,7 @@ namespace FTAnalyzer
         {
             get
             {
-                if (FamilyType.Equals(SOLOINDIVIDUAL))
+                if (FamilyType.Equals(SOLOINDIVIDUAL, StringComparison.OrdinalIgnoreCase))
                 {
                     var name = Husband?.Name ?? Wife?.Name ?? string.Empty;
                     return $"Solo Family {FamilyID}: {name}";
@@ -390,7 +390,7 @@ namespace FTAnalyzer
 
         public bool ContainsSurname(string surname, bool ignoreCase) =>
                 ignoreCase ? Members.Any(x => x.Surname.Equals(surname, StringComparison.OrdinalIgnoreCase)) :
-                             Members.Any(x => x.Surname.Equals(surname));
+                             Members.Any(x => x.Surname.Equals(surname, StringComparison.OrdinalIgnoreCase));
 
         public bool On1911Census
         {
@@ -572,7 +572,7 @@ namespace FTAnalyzer
 
         public bool BothParentsAlive(FactDate when)
         {
-            if (Husband is null || Wife is null || FamilyType.Equals(SOLOINDIVIDUAL))
+            if (Husband is null || Wife is null || FamilyType.Equals(SOLOINDIVIDUAL, StringComparison.OrdinalIgnoreCase))
                 return false;
             return Husband.IsAlive(when) && Wife.IsAlive(when) && Husband.GetAge(when).MinAge > 13 && Wife.GetAge(when).MinAge > 13;
         }

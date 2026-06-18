@@ -1,4 +1,4 @@
-﻿namespace FTAnalyzer
+namespace FTAnalyzer
 {
     public class CensusDate : FactDate
     {
@@ -212,7 +212,7 @@
             US_FEDERAL_CENSUS.FirstOrDefault(cd => cd.PropertyName == reference) ?? UNKNOWN_DATE;
 
         public static FactDate GetCanadianCensusDateFromReference(string reference) =>
-            CANADIAN_CENSUS.FirstOrDefault(cd => cd.PropertyName.ToUpper().Equals(reference)) ?? UNKNOWN_DATE;
+            CANADIAN_CENSUS.FirstOrDefault(cd => cd.PropertyName.ToUpper().Equals(reference, StringComparison.OrdinalIgnoreCase)) ?? UNKNOWN_DATE;
 
         public static FactDate GetUKCensusDateFromYear(string year) =>
             UK_CENSUS.FirstOrDefault(cd => cd.PropertyName == $"C{year}") ?? UNKNOWN_DATE;

@@ -1,4 +1,4 @@
-﻿namespace FTAnalyzer
+namespace FTAnalyzer
 {
     public class NameComparer<T>(bool ascending, bool forenames) : IComparer<T>
     {
@@ -16,17 +16,17 @@
 
             if (ForenamesFirst)
             {
-                if (ind1.Forenames.Equals(ind2.Forenames))
+                if (ind1.Forenames.Equals(ind2.Forenames, StringComparison.OrdinalIgnoreCase))
                 {
-                    if (ind1.Surname.Equals(ind2.Surname))
+                    if (ind1.Surname.Equals(ind2.Surname, StringComparison.OrdinalIgnoreCase))
                         return Ascending * ind1.BirthDate.CompareTo(ind2.BirthDate);
                     return Ascending * string.Compare(ind1.Surname, ind2.Surname, StringComparison.Ordinal);
                 }
                 return Ascending * string.Compare(ind1.Forenames, ind2.Forenames, StringComparison.Ordinal);
             }
-            if (ind1.Surname.Equals(ind2.Surname))
+            if (ind1.Surname.Equals(ind2.Surname, StringComparison.OrdinalIgnoreCase))
             {
-                if (ind1.Forenames.Equals(ind2.Forenames))
+                if (ind1.Forenames.Equals(ind2.Forenames, StringComparison.OrdinalIgnoreCase))
                     return Ascending * ind1.BirthDate.CompareTo(ind2.BirthDate);
                 return Ascending * string.Compare(ind1.Forenames, ind2.Forenames, StringComparison.Ordinal);
             }

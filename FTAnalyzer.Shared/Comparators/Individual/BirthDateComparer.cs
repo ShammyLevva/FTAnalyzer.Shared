@@ -1,4 +1,4 @@
-﻿namespace FTAnalyzer
+namespace FTAnalyzer
 {
     public class BirthDateComparer(bool direction) : Comparer<IDisplayIndividual>
     {
@@ -22,7 +22,7 @@
             if (a is null) return -1;
             if (b is null) return 1;
             return a.BirthDate.Equals(b.BirthDate)
-                ? a.Surname.Equals(b.Surname)
+                ? a.Surname.Equals(b.Surname, StringComparison.OrdinalIgnoreCase)
                     ? string.Compare(a.Forenames, b.Forenames, StringComparison.Ordinal)
                     : string.Compare(a.Surname, b.Surname, StringComparison.Ordinal)
                 : a.BirthDate.CompareTo(b.BirthDate);

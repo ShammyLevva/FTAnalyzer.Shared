@@ -70,7 +70,7 @@ namespace FTAnalyzer
             if (rd is null) return false;
             if (int.TryParse(rd, out _))
                 return true;
-            rd = rd.ToLower().Replace(" ", "-").Replace("/", "-");
+            rd = rd.ToLower().Replace(" ", "-", StringComparison.Ordinal).Replace("/", "-", StringComparison.Ordinal);
             Match match = ParishRegex.Match(rd);
             return match.Success;
         }

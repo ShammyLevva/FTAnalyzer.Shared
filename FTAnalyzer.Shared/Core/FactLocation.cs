@@ -460,11 +460,11 @@ namespace FTAnalyzer
             FactLocation? temp;
             if (string.IsNullOrEmpty(place))
                 return BLANK_LOCATION;
-            if (place.Equals(UNKNOWNSTRING, StringComparison.CurrentCultureIgnoreCase))
+            if (place.Equals(UNKNOWNSTRING, StringComparison.OrdinalIgnoreCase))
                 return UNKNOWN_LOCATION;
             // GEDCOM lat/long will be prefixed with NS and EW which needs to be +/- to work.
-            latitude = latitude.Replace("N", "").Replace("S", "-");
-            longitude = longitude.Replace("W", "-").Replace("E", "");
+            latitude = latitude.Replace("N", "", StringComparison.Ordinal).Replace("S", "-", StringComparison.Ordinal);
+            longitude = longitude.Replace("W", "-", StringComparison.Ordinal).Replace("E", "", StringComparison.Ordinal);
             if (LOCATIONS.TryGetValue(place, out FactLocation? result))
             {  // found location now check if we need to update its geocoding
                 if (updateLatLong && result is not null && !result.IsGeoCoded(true))
@@ -686,27 +686,27 @@ namespace FTAnalyzer
                 Place = char.ToUpper(Place[0]) + Place[1..];
         }
 
-        void FixRegionFullStops() => Region = Region.Replace(".", " ").Trim();
+        void FixRegionFullStops() => Region = Region.Replace(".", " ", StringComparison.Ordinal).Trim();
 
-        void FixCountryFullStops() => Country = Country.Replace(".", " ").Trim();
+        void FixCountryFullStops() => Country = Country.Replace(".", " ", StringComparison.Ordinal).Trim();
 
         void FixMultipleSpacesAmpersandsCommas()
         {
-            while (Country.Contains("  "))
-                Country = Country.Replace("  ", " ");
-            while (Region.Contains("  "))
-                Region = Region.Replace("  ", " ");
-            while (SubRegion.Contains("  "))
-                SubRegion = SubRegion.Replace("  ", " ");
-            while (Address.Contains("  "))
-                Address = Address.Replace("  ", " ");
-            while (Place.Contains("  "))
-                Place = Place.Replace("  ", " ");
-            Country = Country.Replace("&", "and").Replace(",", "").Trim();
-            Region = Region.Replace("&", "and").Replace(",", "").Trim();
-            SubRegion = SubRegion.Replace("&", "and").Replace(",", "").Trim();
-            Address = Address.Replace("&", "and").Replace(",", "").Trim();
-            Place = Place.Replace("&", "and").Replace(",", "").Trim();
+            while (Country.Contains("  ", StringComparison.OrdinalIgnoreCase))
+                Country = Country.Replace("  ", " ", StringComparison.Ordinal);
+            while (Region.Contains("  ", StringComparison.OrdinalIgnoreCase))
+                Region = Region.Replace("  ", " ", StringComparison.Ordinal);
+            while (SubRegion.Contains("  ", StringComparison.OrdinalIgnoreCase))
+                SubRegion = SubRegion.Replace("  ", " ", StringComparison.Ordinal);
+            while (Address.Contains("  ", StringComparison.OrdinalIgnoreCase))
+                Address = Address.Replace("  ", " ", StringComparison.Ordinal);
+            while (Place.Contains("  ", StringComparison.OrdinalIgnoreCase))
+                Place = Place.Replace("  ", " ", StringComparison.Ordinal);
+            Country = Country.Replace("&", "and", StringComparison.Ordinal).Replace(",", "", StringComparison.Ordinal).Trim();
+            Region = Region.Replace("&", "and", StringComparison.Ordinal).Replace(",", "", StringComparison.Ordinal).Trim();
+            SubRegion = SubRegion.Replace("&", "and", StringComparison.Ordinal).Replace(",", "", StringComparison.Ordinal).Trim();
+            Address = Address.Replace("&", "and", StringComparison.Ordinal).Replace(",", "", StringComparison.Ordinal).Trim();
+            Place = Place.Replace("&", "and", StringComparison.Ordinal).Replace(",", "", StringComparison.Ordinal).Trim();
         }
 
         void FixUKGBTypos()
@@ -737,7 +737,7 @@ namespace FTAnalyzer
 
         string FixRegionTypos(string toFix)
         {
-            if (Country == Countries.AUSTRALIA && toFix.Equals("WA"))
+            if (Country == Countries.AUSTRALIA && toFix.Equals("WA", StringComparison.OrdinalIgnoreCase))
                 return "Western Australia"; // fix for WA = Washington
             REGION_TYPOS.TryGetValue(toFix, out string? result);
             if (!string.IsNullOrEmpty(result))
@@ -788,14 +788,14 @@ namespace FTAnalyzer
 
         void FixDoubleLocations()
         {
-            if (Country.Equals(Region))
+            if (Country.Equals(Region, StringComparison.OrdinalIgnoreCase))
             {
                 Region = SubRegion;
                 SubRegion = Address;
                 Address = Place;
                 Place = string.Empty;
             }
-            if (Region.Equals(SubRegion))
+            if (Region.Equals(SubRegion, StringComparison.OrdinalIgnoreCase))
             {
                 SubRegion = Address;
                 Address = Place;
@@ -1081,7 +1081,7 @@ namespace FTAnalyzer
 
         static string FixNumerics(string addressField, bool returnNumber)
         {
-            int pos = addressField.IndexOf(' ');
+            int pos = addressField.IndexOf(' ', StringComparison.Ordinal);
             if (pos > 0 && pos < addressField.Length)
             {
                 string number = addressField[..pos];
@@ -1095,7 +1095,7 @@ namespace FTAnalyzer
 
         public bool CensusCountryMatches(string s, bool includeUnknownCountries)
         {
-            if (Country.Equals(s))
+            if (Country.Equals(s, StringComparison.OrdinalIgnoreCase))
                 return true;
             if (includeUnknownCountries)
             {

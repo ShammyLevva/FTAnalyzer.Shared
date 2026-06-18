@@ -394,7 +394,7 @@ namespace FTAnalyzer
             private set
             {
                 string name = value;
-                int startPos = name.IndexOf('/'), endPos = name.LastIndexOf('/');
+                int startPos = name.IndexOf('/', StringComparison.Ordinal), endPos = name.LastIndexOf('/');
                 if (startPos >= 0 && endPos > startPos)
                 {
                     Surname = name.Substring(startPos + 1, endPos - startPos - 1);
@@ -405,14 +405,14 @@ namespace FTAnalyzer
                     Surname = UNKNOWN_NAME;
                     _forenames = name;
                 }
-                if (string.IsNullOrEmpty(Surname) || Surname.Equals("mnu", StringComparison.CurrentCultureIgnoreCase) ||
-                    Surname.Equals("lnu", StringComparison.CurrentCultureIgnoreCase) ||
-                    Surname == "[--?--]" || Surname.Equals("unk", StringComparison.CurrentCultureIgnoreCase) ||
+                if (string.IsNullOrEmpty(Surname) || Surname.Equals("mnu", StringComparison.OrdinalIgnoreCase) ||
+                    Surname.Equals("lnu", StringComparison.OrdinalIgnoreCase) ||
+                    Surname == "[--?--]" || Surname.Equals("unk", StringComparison.OrdinalIgnoreCase) ||
                   ((Surname[0] == '.' || Surname[0] == '?' || Surname[0] == '_') && Surname.Distinct().Count() == 1)) // if all chars are same and is . ? or _
                     Surname = UNKNOWN_NAME;
                 if (!(!GeneralSettings.Default.TreatFemaleSurnamesAsUnknown || IsMale || !Surname.StartsWith('(') || !Surname.EndsWith(')')))
                     Surname = UNKNOWN_NAME;
-                if (string.IsNullOrEmpty(_forenames) || _forenames.Equals("unk", StringComparison.CurrentCultureIgnoreCase) || _forenames == "[--?--]" ||
+                if (string.IsNullOrEmpty(_forenames) || _forenames.Equals("unk", StringComparison.OrdinalIgnoreCase) || _forenames == "[--?--]" ||
                   ((_forenames[0] == '.' || _forenames[0] == '?' || _forenames[0] == '_') && _forenames.Distinct().Count() == 1))
                     _forenames = UNKNOWN_NAME;
                 MarriedName = Surname;
@@ -445,7 +445,7 @@ namespace FTAnalyzer
             {
                 if (_forenames is null)
                     return string.Empty;
-                int pos = _forenames.IndexOf(' ');
+                int pos = _forenames.IndexOf(' ', StringComparison.Ordinal);
                 return pos > 0 ? _forenames[pos..].Trim() : string.Empty;
             }
         }
@@ -717,7 +717,7 @@ namespace FTAnalyzer
 
         #region Boolean Tests
 
-        public bool IsMale => _gender.Equals("M");
+        public bool IsMale => _gender.Equals("M", StringComparison.OrdinalIgnoreCase);
 
         public bool IsInFamily => Infamily;
 
@@ -804,9 +804,9 @@ namespace FTAnalyzer
                     Fact? censusFact = GetCensusFact(f);
                     if (censusFact is not null)
                     {
-                        if (when.Country.Equals(Countries.SCOTLAND) && Countries.IsEnglandWales(censusFact.Country))
+                        if (when.Country.Equals(Countries.SCOTLAND, StringComparison.OrdinalIgnoreCase) && Countries.IsEnglandWales(censusFact.Country))
                             return false;
-                        if (censusFact.Country.Equals(Countries.SCOTLAND) && Countries.IsEnglandWales(when.Country))
+                        if (censusFact.Country.Equals(Countries.SCOTLAND, StringComparison.OrdinalIgnoreCase) && Countries.IsEnglandWales(when.Country))
                             return false;
                         if (Countries.IsUnitedKingdom(when.Country) && (Countries.IsUnitedKingdom(censusFact.Country) || censusFact.IsOverseasUKCensus(censusFact.Country)))
                             return true;
@@ -1086,22 +1086,22 @@ namespace FTAnalyzer
                 if (allowspace && c == ' ')
                     output.Append(c);
             }
-            var result = output.ToString().Replace("--", "-").Replace("--", "-").Replace("--", "-");
+            var result = output.ToString().Replace("--", "-", StringComparison.Ordinal).Replace("--", "-", StringComparison.Ordinal).Replace("--", "-", StringComparison.Ordinal);
             return result == "-" ? UNKNOWN_NAME : result;
         }
 
         static string RemoveQuoted(string input)
         {
-            string output = input.Replace("UNKNOWN", "");
-            int startptr = input.IndexOf('\'');
-            if (startptr == -1) startptr = input.IndexOf('\"');
+            string output = input.Replace("UNKNOWN", "", StringComparison.Ordinal);
+            int startptr = input.IndexOf('\'', StringComparison.Ordinal);
+            if (startptr == -1) startptr = input.IndexOf('\"', StringComparison.Ordinal);
             if (startptr != -1)
             {
                 int endptr = input.IndexOf('\'', startptr);
                 if (endptr == -1) endptr = input.IndexOf('\"', startptr);
                 output = (startptr < input.Length ? input[..startptr] : string.Empty) + (endptr < input.Length ? input[endptr..] : string.Empty);
             }
-            output = output.Replace("--", "").Replace('\'', ' ').Replace('\"', ' ').Replace("  ", " ").Replace("  ", " ");
+            output = output.Replace("--", "", StringComparison.Ordinal).Replace('\'', ' ').Replace('\"', ' ').Replace("  ", " ", StringComparison.Ordinal).Replace("  ", " ", StringComparison.Ordinal);
             return output.TrimEnd('-').Trim();
         }
 
@@ -1193,7 +1193,7 @@ namespace FTAnalyzer
         {
             if (family is null) return;
             string description;
-            if (Gender.Equals("U"))
+            if (Gender.Equals("U", StringComparison.OrdinalIgnoreCase))
             {
                 string spouse = pHusband ? "husband" : "wife";
                 description = $"Unknown gender but appears as a {spouse} in family {family.FamilyRef} check gender setting";
@@ -1325,13 +1325,13 @@ namespace FTAnalyzer
         {
             if (country is null) return false;
             int ukCensus = (int)C1841 + (int)C1851 + (int)C1861 + (int)C1871 + (int)C1881 + (int)C1891 + (int)C1901 + (int)C1911 + (int)C1921 + (int)C1939;
-            if (country.Equals(Countries.UNITED_STATES))
+            if (country.Equals(Countries.UNITED_STATES, StringComparison.OrdinalIgnoreCase))
                 return ((int)US1790 + (int)US1800 + (int)US1810 + (int)US1810 + (int)US1820 + (int)US1830 + (int)US1840 + (int)US1850 + (int)US1860 + (int)US1870 + (int)US1880 + (int)US1890 + (int)US1900 + (int)US1910 + (int)US1920 + (int)US1930 + (int)US1940 + (int)US1950) > 0;
-            if (country.Equals(Countries.CANADA))
+            if (country.Equals(Countries.CANADA, StringComparison.OrdinalIgnoreCase))
                 return ((int)Can1851 + (int)Can1861 + (int)Can1871 + (int)Can1881 + (int)Can1891 + (int)Can1901 + (int)Can1906 + (int)Can1911 + (int)Can1916 + (int)Can1921) > 0;
-            if (country.Equals(Countries.IRELAND))
+            if (country.Equals(Countries.IRELAND, StringComparison.OrdinalIgnoreCase))
                 return ((int)Ire1901 + (int)Ire1911 + (int)Ire1926) > 0;
-            if (country.Equals(Countries.SCOTLAND))
+            if (country.Equals(Countries.SCOTLAND, StringComparison.OrdinalIgnoreCase))
                 return (ukCensus + (int)V1855 + (int)V1865 + (int)V1875 + (int)V1885 + (int)V1895 + (int)V1905 + (int)V1915 + (int)V1920 + (int)V1925 + (int)V1930 + (int)V1935 + (int)V1940) > 0;
             return ukCensus > 0;
         }
@@ -1339,11 +1339,11 @@ namespace FTAnalyzer
         public bool OutOfCountryOnAllCensus(string country)
         {
             if (country is null) return false;
-            if (country.Equals(Countries.UNITED_STATES))
+            if (country.Equals(Countries.UNITED_STATES, StringComparison.OrdinalIgnoreCase))
                 return CheckOutOfCountry("US1");
-            if (country.Equals(Countries.CANADA))
+            if (country.Equals(Countries.CANADA, StringComparison.OrdinalIgnoreCase))
                 return CheckOutOfCountry("Can1");
-            if (country.Equals(Countries.IRELAND))
+            if (country.Equals(Countries.IRELAND, StringComparison.OrdinalIgnoreCase))
                 return CheckOutOfCountry("Ire1");
             return CheckOutOfCountry("C1");
         }
@@ -1719,7 +1719,7 @@ namespace FTAnalyzer
             // then date of birth.
             if (that is null)
                 return -1;
-            int res = string.Compare(Surname, that.Surname, StringComparison.CurrentCulture);
+            int res = string.Compare(Surname, that.Surname, StringComparison.Ordinal);
             if (res == 0)
             {
                 res = string.Compare(_forenames, that._forenames, StringComparison.Ordinal);

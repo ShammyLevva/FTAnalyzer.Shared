@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 
 namespace FTAnalyzer.Exports
 {
@@ -45,7 +45,7 @@ namespace FTAnalyzer.Exports
                 // Implement special handling for values that contain comma or quote
                 // Enclose in quotes and double up any double quotes
                 if (value.IndexOfAny(['"', ',']) != -1)
-                    builder.AppendFormat("\"{0}\"", value.Replace("\"", "\"\""));
+                    builder.AppendFormat("\"{0}\"", value.Replace("\"", "\"\"", StringComparison.Ordinal));
                 else
                     builder.Append(value);
                 firstColumn = false;
@@ -114,7 +114,7 @@ namespace FTAnalyzer.Exports
                         pos++;
                     }
                     value = row.LineText[start..pos];
-                    value = value.Replace("\"\"", "\"");
+                    value = value.Replace("\"\"", "\"", StringComparison.Ordinal);
                 }
                 else
                 {
