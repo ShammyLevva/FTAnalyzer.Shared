@@ -5,6 +5,7 @@ using System.Xml;
 using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Collections.Immutable;
 #if __PC__
 using FTAnalyzer.Graphics;
@@ -555,6 +556,7 @@ namespace FTAnalyzer
 
         public static IEnumerable<FactLocation> AllLocations => LOCATIONS.Values;
 
+        [MemberNotNull(nameof(LOCATIONS), nameof(LOCAL_GOOGLE_FIXES))]
         public static void ResetLocations()
         {
             COUNTRY_TYPOS = [];
