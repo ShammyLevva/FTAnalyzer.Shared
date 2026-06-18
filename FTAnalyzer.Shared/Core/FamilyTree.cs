@@ -24,7 +24,7 @@ namespace FTAnalyzer
     public partial class FamilyTree
     {
         #region Variables
-        static FamilyTree instance;
+        static FamilyTree? instance;
 
         List<FactSource> sources;
         List<Individual> individuals;
