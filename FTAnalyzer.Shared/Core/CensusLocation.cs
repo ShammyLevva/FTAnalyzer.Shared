@@ -36,7 +36,8 @@ namespace FTAnalyzer
                 using (XmlReader reader = XmlReader.Create(sreader, new XmlReaderSettings() { XmlResolver = null }))
                     xmlDoc.Load(reader);
                 //xmlDoc.Validate(something);
-                foreach (XmlNode n in xmlDoc.SelectNodes("CensusLocations/Location") ?? [])
+                if (xmlDoc.SelectNodes("CensusLocations/Location") is not XmlNodeList nodeList) return;
+                foreach (XmlNode n in nodeList)
                 {
                     if (n.Attributes is null) continue;
                     string year = n.Attributes["Year"]?.Value ?? string.Empty;
