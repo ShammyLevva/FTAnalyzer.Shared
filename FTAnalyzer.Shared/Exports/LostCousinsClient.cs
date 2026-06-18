@@ -18,13 +18,11 @@ namespace FTAnalyzer.Exports
         void SetupHttpClient()
         {
             Cookies = new();
-#pragma warning disable CA2000 // HttpClient takes ownership of the handler and disposes it
             HttpClientHandler handler = new()
             {
                 CookieContainer = Cookies
             };
             Client = new(handler);
-#pragma warning restore CA2000
         }
         public async Task<bool> LostCousinsLoginAsync(string email, string password)
         {
