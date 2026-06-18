@@ -18,11 +18,13 @@ namespace FTAnalyzer.Exports
         void SetupHttpClient()
         {
             Cookies = new();
+#pragma warning disable CA2000 // HttpClient takes ownership of the handler and disposes it
             HttpClientHandler handler = new()
             {
                 CookieContainer = Cookies
             };
             Client = new(handler);
+#pragma warning restore CA2000
         }
         public async Task<bool> LostCousinsLoginAsync(string email, string password)
         {
@@ -43,7 +45,7 @@ namespace FTAnalyzer.Exports
                     { "y", random.Next(1,9).ToString() }
                 };
                 LoggedIn = false;
-                HttpRequestMessage req = new(HttpMethod.Post, uri)
+                using HttpRequestMessage req = new(HttpMethod.Post, uri)
                 {
                     Content = new FormUrlEncodedContent(parameters)
                 };
@@ -87,7 +89,7 @@ namespace FTAnalyzer.Exports
             {
                 Dictionary<string, string> formParams = BuildParameterString(ind);
                 Uri uri = new("https://www.lostcousins.com/pages/members/ancestors/add_ancestor.mhtml");
-                HttpRequestMessage req = new(HttpMethod.Post, uri)
+                using HttpRequestMessage req = new(HttpMethod.Post, uri)
                 {
                     Content = new FormUrlEncodedContent(formParams)
                 };

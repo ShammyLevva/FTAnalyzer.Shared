@@ -1,3 +1,4 @@
+#pragma warning disable CA2000 // Modeless WinForms forms are owned by the Windows message loop; lifetime is managed externally
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 #if __PC__
