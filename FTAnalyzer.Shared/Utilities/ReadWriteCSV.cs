@@ -10,7 +10,7 @@ namespace FTAnalyzer.Exports
     /// </summary>
     public class CsvRow : List<string>
     {
-        public string LineText { get; set; }
+        public string LineText { get; set; } = string.Empty;
     }
 
     /// <summary>
@@ -76,7 +76,7 @@ namespace FTAnalyzer.Exports
         public bool ReadRow(CsvRow row)
         {
             if (row is null) return false;
-            row.LineText = ReadLine();
+            row.LineText = ReadLine() ?? string.Empty;
             if (string.IsNullOrEmpty(row.LineText))
                 return false;
 

@@ -21,8 +21,8 @@ namespace FTAnalyzer.Exports
         static bool _includeDescendants;
         static bool _privatise;
         static int _privateID;
-        static List<Individual> processed;
-        static StreamWriter output;
+        static List<Individual> processed = [];
+        static StreamWriter output = StreamWriter.Null;
 #endif
 #if __MACOS__
         static AppDelegate App => (AppDelegate)NSApplication.SharedApplication.Delegate;
