@@ -4,9 +4,9 @@ namespace FTAnalyzer
 {
     public class LostCousin : IEquatable<LostCousin>, IDisplayLostCousin
     {
-        public string Name { get; }
+        public string Name { get; } = string.Empty;
         public int BirthYear { get; }
-        public string Reference { get; }
+        public string Reference { get; } = string.Empty;
         public CensusDate CensusDate { get; }
         public Uri WebLink { get; }
         public bool FTAnalyzerFact { get; }
