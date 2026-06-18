@@ -58,7 +58,7 @@ namespace FTAnalyzer
                 if (IsValidIndividual(Wife, censusDone, true, checkCensus))
                 {
                     result = true;
-                    facts.AddRange(Wife.PersonalFacts);
+                    facts.AddRange(Wife!.PersonalFacts);
                 }
                 else
                     Wife = null;
@@ -67,7 +67,7 @@ namespace FTAnalyzer
                 if (IsValidIndividual(Husband, censusDone, true, checkCensus))
                 {
                     result = true;
-                    facts.AddRange(Husband.PersonalFacts);
+                    facts.AddRange(Husband!.PersonalFacts);
                 }
                 else
                     Husband = null;

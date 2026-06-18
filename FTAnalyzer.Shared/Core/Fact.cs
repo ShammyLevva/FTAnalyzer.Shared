@@ -59,7 +59,7 @@ namespace FTAnalyzer
         public static readonly Dictionary<string, string> NON_STANDARD_FACTS = [];
         static readonly Dictionary<string, string> CUSTOM_TAGS = [];
         static readonly HashSet<string> COMMENT_FACTS = [];
-        
+
         const string UNKNOWNSTRING = "UNKNOWN";
         const string LCSTRING = "Lost Cousins";
         const string CENSUSSTRING = "Census";
@@ -439,7 +439,7 @@ namespace FTAnalyzer
             Family = null;
             CreateFact(node, ind.IndividualRef, preferred, deathdate, outputText);
         }
-        public Fact(string factType, FactDate date, FactLocation loc, string comment = "", bool preferred = true, bool createdByFTA = false, Individual ind = null)
+        public Fact(string factType, FactDate date, FactLocation loc, string comment = "", bool preferred = true, bool createdByFTA = false, Individual? ind = null)
             : this(preferred)
         {
             FactType = factType;
@@ -451,7 +451,7 @@ namespace FTAnalyzer
             Individual = ind;
         }
 
-        void CreateFact(XmlNode node, string reference, bool preferred, FactDate deathdate, IProgress<string> outputText)
+        void CreateFact(XmlNode? node, string reference, bool preferred, FactDate? deathdate, IProgress<string> outputText)
         {
             if (node is not null)
             {
@@ -525,60 +525,64 @@ namespace FTAnalyzer
 
                     // now iterate through source elements of the fact finding all sources
                     XmlNodeList? list = node.SelectNodes("SOUR");
-                    foreach (XmlNode n in list)
+                    if (list is not null)
                     {
-                        if (n.Attributes["REF"] is not null)
-                        {   // only process sources with a reference
-                            string srcref = n.Attributes["REF"].Value;
-                            FactSource? source = ft.GetSource(srcref);
-                            string pageText = FamilyTree.GetText(n, "PAGE", true); // Source page text
-                            if (source is not null)
-                            {
-                                Sources.Add(source);
-                                source.AddFact(this);
-                                if (!SourcePages.Contains(pageText))
-                                    SourcePages.Add(pageText);
-                            }
-                            else
-                                outputText.Report($"Source {srcref} not found.\n");
-                            if (IsCensusFact)
-                            {
-                                CensusReference cr = new(this, n, CensusReference); //pass in existing reference so as to not lose any unknown references
-                                // only update census reference if new one is better
-                                if (cr.IsKnownStatus && !CensusReference.IsKnownStatus)
-                                    CensusReference = cr;
-                                else if (cr.IsGoodStatus && !CensusReference.IsGoodStatus)
-                                    CensusReference = cr;
+                        foreach (XmlNode n in list)
+                        {
+                            XmlNode? refNode = n.Attributes?["REF"];
+                            if (refNode is not null)
+                            {   // only process sources with a reference
+                                string srcref = refNode.Value ?? string.Empty;
+                                FactSource? source = ft.GetSource(srcref);
+                                string pageText = FamilyTree.GetText(n, "PAGE", true); // Source page text
+                                if (source is not null)
+                                {
+                                    Sources.Add(source);
+                                    source.AddFact(this);
+                                    if (!SourcePages.Contains(pageText))
+                                        SourcePages.Add(pageText);
+                                }
+                                else
+                                    outputText.Report($"Source {srcref} not found.\n");
+                                if (IsCensusFact)
+                                {
+                                    CensusReference cr = new(this, n, CensusReference); //pass in existing reference so as to not lose any unknown references
+                                                                                        // only update census reference if new one is better
+                                    if (cr.IsKnownStatus && !CensusReference.IsKnownStatus)
+                                        CensusReference = cr;
+                                    else if (cr.IsGoodStatus && !CensusReference.IsGoodStatus)
+                                        CensusReference = cr;
+                                }
                             }
                         }
-                    }
-                    // if we have checked the sources and no census ref see if its been added as a comment to this fact
-                    if (IsCensusFact)
-                    {
-                        CheckForSharedFacts(node);
-                        if (!CensusReference.IsKnownStatus)
-                            CensusReference = new(this, node, CensusReference); //pass in existing reference so as to not lose any unknown references
-                        else if (!CensusReference.IsGoodStatus)
-                            CensusReference.CheckFullUnknownReference(CensusReference.Status);
-                    }
-                    if (GeneralSettings.Default.ConvertResidenceFacts && FactType.Equals(RESIDENCE, StringComparison.OrdinalIgnoreCase) && CensusReference.IsKnownStatus)
-                        FactType = CENSUS; // change fact type if option set and residence has a valid census reference
-                    if (FactType == DEATH)
-                    {
-                        Comment = FamilyTree.GetText(node, "CAUS", true);
-                        if (node.FirstChild is not null && node.FirstChild.Value == "Y" && FactDate.IsUnknown)
-                            FactDate = new FactDate(FactDate.MINDATE, FactDate.NOW); // if death flag set as Y then death before today.
-                    }
-                    string age = FamilyTree.GetText(node, "AGE", false);
-                    if (age.Length > 0)
-                        GedcomAge = new Age(age, FactDate);
-                    CertificatePresent = SetCertificatePresent();
-                    if (FactDate.SpecialDate) //check special date is ok
-                    {
-                        //if (FactType == DEATH || FactType == MARRIAGE)
-                        //    throw;
-                        //string message = (node is null) ? string.Empty : node.InnerText + ". ";
-                        //throw new InvalidXMLFactException($"{message}\n            Error {te.Message} text in {FactTypeDescription} fact - a non death fact.\n");
+                        // if we have checked the sources and no census ref see if its been added as a comment to this fact
+                        if (IsCensusFact)
+                        {
+                            CheckForSharedFacts(node);
+                            if (!CensusReference.IsKnownStatus)
+                                CensusReference = new(this, node, CensusReference); //pass in existing reference so as to not lose any unknown references
+                            else if (!CensusReference.IsGoodStatus)
+                                CensusReference.CheckFullUnknownReference(CensusReference.Status);
+                        }
+                        if (GeneralSettings.Default.ConvertResidenceFacts && FactType.Equals(RESIDENCE, StringComparison.OrdinalIgnoreCase) && CensusReference.IsKnownStatus)
+                            FactType = CENSUS; // change fact type if option set and residence has a valid census reference
+                        if (FactType == DEATH)
+                        {
+                            Comment = FamilyTree.GetText(node, "CAUS", true);
+                            if (node.FirstChild is not null && node.FirstChild.Value == "Y" && FactDate.IsUnknown)
+                                FactDate = new FactDate(FactDate.MINDATE, FactDate.NOW); // if death flag set as Y then death before today.
+                        }
+                        string age = FamilyTree.GetText(node, "AGE", false);
+                        if (age.Length > 0)
+                            GedcomAge = new Age(age, FactDate);
+                        CertificatePresent = SetCertificatePresent();
+                        if (FactDate.SpecialDate) //check special date is ok
+                        {
+                            //if (FactType == DEATH || FactType == MARRIAGE)
+                            //    throw;
+                            //string message = (node is null) ? string.Empty : node.InnerText + ". ";
+                            //throw new InvalidXMLFactException($"{message}\n            Error {te.Message} text in {FactTypeDescription} fact - a non death fact.\n");
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -592,12 +596,16 @@ namespace FTAnalyzer
         void CheckForSharedFacts(XmlNode node)
         {
             XmlNodeList? list = node.SelectNodes("_SHAR");
-            foreach (XmlNode n in list)
+            if (list is not null)
             {
-                string? indref = n.Attributes["REF"]?.Value;
-                //string role = FamilyTree.GetText(n, "ROLE", false);
-                if (indref is not null)
-                    FamilyTree.Instance.AddSharedFact(indref, this);
+                foreach (XmlNode n in list)
+                {
+                    XmlNode? refNode = n.Attributes?["REF"];
+                    string? indref = refNode?.Value;
+                    //string role = FamilyTree.GetText(n, "ROLE", false);
+                    if (indref is not null)
+                        FamilyTree.Instance.AddSharedFact(indref, this);
+                }
             }
         }
 
@@ -677,10 +685,13 @@ namespace FTAnalyzer
             if (addr.FirstChild is not null && addr.FirstChild.Value is not null)
                 address.Append(addr.FirstChild.Value);
             XmlNodeList? list = node.SelectNodes("ADDR/CONT");
-            foreach (XmlNode cont in list)
+            if (list is not null)
             {
-                if (cont.FirstChild is not null && cont.FirstChild.Value is not null)
-                    address.Append($" {cont.FirstChild.Value}");
+                foreach (XmlNode cont in list)
+                {
+                    if (cont.FirstChild is not null && cont.FirstChild.Value is not null)
+                        address.Append($" {cont.FirstChild.Value}");
+                }
             }
             if (address.Length > 0)
                 result = (result.Length > 0) ? $"{address}, {result}" : $"{address}";
@@ -701,7 +712,7 @@ namespace FTAnalyzer
         #region Properties
 
         string Tag { get; set; }
-        public Age GedcomAge { get; private set; }
+        public Age? GedcomAge { get; private set; }
         public bool Created { get; protected set; }
         public bool Preferred { get; private set; }
         public CensusReference CensusReference { get; private set; }
@@ -713,8 +724,8 @@ namespace FTAnalyzer
         public int FactErrorNumber { get; private set; }
         public FactError FactErrorLevel { get; private set; }
         public string FactErrorMessage { get; private set; }
-        public Individual Individual { get; private set; }
-        public Family Family { get; private set; }
+        public Individual? Individual { get; private set; }
+        public Family? Family { get; private set; }
         public string FactTypeDescription => (FactType == UNKNOWN && Tag.Length > 0) ? Tag : GetFactTypeDescription(FactType);
 
         public bool IsMarriageFact =>
@@ -794,7 +805,7 @@ namespace FTAnalyzer
         public List<string> SourcePages { get; private set; }
 
         public string Country => Location is null ? UNKNOWNSTRING : Location.Country;
-            
+
         public bool CertificatePresent { get; private set; }
 
         #endregion

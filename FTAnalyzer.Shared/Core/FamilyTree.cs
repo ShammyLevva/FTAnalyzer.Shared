@@ -981,7 +981,7 @@ namespace FTAnalyzer
             });
         }
 
-        public FactSource? GetSource(string sourceID) => sources.FirstOrDefault(s => s.SourceID == sourceID);
+        public FactSource? GetSource(string sourceID = "") => sources.FirstOrDefault(s => s.SourceID == sourceID);
 
         public Individual? GetIndividual(string? individualID)
         {
