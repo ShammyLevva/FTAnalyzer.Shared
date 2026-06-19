@@ -8,7 +8,7 @@ namespace FTAnalyzer.Utilities
         readonly Dictionary<Type, PropertyComparer<T>> comparers;
         bool isSorted;
         ListSortDirection listSortDirection;
-        PropertyDescriptor propertyDescriptor;
+        PropertyDescriptor? propertyDescriptor;
         readonly List<T> originalData;
 
         public SortableBindingList()
@@ -29,7 +29,7 @@ namespace FTAnalyzer.Utilities
 
         protected override bool IsSortedCore => isSorted;
 
-        protected override PropertyDescriptor SortPropertyCore => propertyDescriptor;
+        protected override PropertyDescriptor? SortPropertyCore => propertyDescriptor;
 
         protected override ListSortDirection SortDirectionCore => listSortDirection;
 
@@ -73,7 +73,7 @@ namespace FTAnalyzer.Utilities
             for (int i = 0; i < count; ++i)
             {
                 T element = this[i];
-                if (prop.GetValue(element).Equals(key))
+                if (prop.GetValue(element)?.Equals(key) == true)
                     return i;
             }
 
@@ -149,10 +149,10 @@ namespace FTAnalyzer.Utilities
         }
 
         #region EventHandler
-        public event EventHandler SortStarted;
+        public event EventHandler? SortStarted;
         public void OnSortStarted() => SortStarted?.Invoke(null, EventArgs.Empty);
 
-        public event EventHandler SortFinished;
+        public event EventHandler? SortFinished;
         public void OnSortFinished() => SortFinished?.Invoke(null, EventArgs.Empty);
 
         public static implicit operator List<T>(SortableBindingList<T> v)

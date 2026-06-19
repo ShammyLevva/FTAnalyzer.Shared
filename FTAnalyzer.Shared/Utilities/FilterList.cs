@@ -34,9 +34,9 @@ namespace FTAnalyzer.Utilities
             ArgumentNullException.ThrowIfNull(filter);
 
             ApplyFilter(filter);
-            if (IsSortedCore)
+            if (IsSortedCore && SortPropertyCore is PropertyDescriptor sortProp)
             {
-                ApplySortCore(SortPropertyCore, SortDirectionCore);
+                ApplySortCore(sortProp, SortDirectionCore);
             }
             OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
         }
