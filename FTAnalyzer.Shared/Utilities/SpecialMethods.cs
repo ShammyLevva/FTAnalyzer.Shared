@@ -31,13 +31,18 @@ namespace FTAnalyzer.Utilities
             {
                 Font font = new(FontSettings.Default.SelectedFont.Name, FontSettings.Default.SelectedFont.Size);
                 foreach (Control theControl in GetAllControls(form))
-                    if (theControl is not Form  // skip form itself — changing form.Font triggers PerformAutoScale (AutoScaleMode.Font) at runtime, re-scaling all control positions
-                        && theControl.Font.Name.Equals(FontSettings.Default.SelectedFont.Name, StringComparison.OrdinalIgnoreCase)
+                {
+                    // Changing a ContainerControl's Font when AutoScaleMode=Font triggers PerformAutoScale at runtime,
+                    // re-scaling all child control positions/sizes relative to the design dimensions.
+                    if (theControl is ContainerControl cc && cc.AutoScaleMode == AutoScaleMode.Font)
+                        continue;
+                    if (theControl.Font.Name.Equals(FontSettings.Default.SelectedFont.Name, StringComparison.OrdinalIgnoreCase)
                         && !ExtensionMethods.DoubleEquals(theControl.Font.Size, FontSettings.Default.SelectedFont.Size))
                     {
                         theControl.Font = font;
                         theControl.Refresh();
                     }
+                }
             }
             catch (Exception e)
             {
