@@ -434,8 +434,7 @@ namespace FTAnalyzer
 
         public static void CleanUpXML()
         {
-            if (instance is not null)
-                instance.noteNodes = null;
+            instance?.noteNodes = null;
         }
 
         static void LoadGEDCOM_PLAC_Locations(XmlNodeList? list, int startval, IProgress<int> progress, IProgress<string> outputText)
@@ -2140,7 +2139,7 @@ namespace FTAnalyzer
                     foreach (ParentalRelationship parents in ind.FamiliesAsChild)
                     {
                         Family asChild = parents.Family;
-                        Individual father = asChild.Husband;
+                        Individual? father = asChild.Husband;
                         if (father is not null && ind.BirthDate.StartDate.Year != 1 && parents.IsNaturalFather)
                         {
                             int minAge = father.GetMinAge(ind.BirthDate);
@@ -2156,7 +2155,7 @@ namespace FTAnalyzer
                                     errors[(int)Dataerror.BIRTH_AFTER_FATHER_DEATH].Add(new DataError((int)Dataerror.BIRTH_AFTER_FATHER_DEATH, ind, $"Father {father.Name} died {father.DeathDate} more than 9 months before individual was born"));
                             }
                         }
-                        Individual mother = asChild.Wife;
+                        Individual? mother = asChild.Wife;
                         if (mother is not null && ind.BirthDate.StartDate.Year != 1 && parents.IsNaturalMother)
                         {
                             int minAge = mother.GetMinAge(ind.BirthDate);

@@ -37,16 +37,16 @@ namespace FTAnalyzer
         public bool Infamily { get; set; }
         public bool IsFlaggedAsLiving { get; private set; }
         public BigInteger Ahnentafel { get; set; }
-        public string BudgieCode { get; set; }
-        public string RelationToRoot { get; set; }
-        public string Title { get; private set; }
-        public string Suffix { get; private set; }
-        public string FamilySearchID { get; private set; }
+        public string BudgieCode { get; set; } = string.Empty;
+        public string RelationToRoot { get; set; } = string.Empty;
+        public string Title { get; private set; } = string.Empty;
+        public string Suffix { get; private set; } = string.Empty;
+        public string FamilySearchID { get; private set; } = string.Empty;
         public decimal RelationSort { get; set; }
         public CommonAncestor? CommonAncestor { get; set; }
-        public string UnrecognisedCensusNotes { get; private set; }
-        public IList<Fact> Facts { get; private set; }
-        public string Alias { get; private set; }
+        public string UnrecognisedCensusNotes { get; private set; } = string.Empty;
+        public IList<Fact> Facts { get; private set; } = [];
+        public string Alias { get; private set; } = string.Empty;
         public IList<FactLocation> Locations { get; }
 
         #region Constructors

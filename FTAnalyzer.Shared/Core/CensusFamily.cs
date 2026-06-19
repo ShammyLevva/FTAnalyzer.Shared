@@ -5,7 +5,7 @@ namespace FTAnalyzer
     public class CensusFamily : Family, IDisplayChildrenStatus
     {
         public CensusDate CensusDate { get; private set; }
-        public FactLocation? BestLocation { get; private set; }
+        public FactLocation BestLocation { get; private set; }
         public new CensusIndividual? Husband { get; private set; }
         public new CensusIndividual? Wife { get; private set; }
         public new List<CensusIndividual> Children { get; private set; }
@@ -18,7 +18,7 @@ namespace FTAnalyzer
         {
             BaseFamily = f;
             CensusDate = censusDate;
-            BestLocation = null;
+            BestLocation = FactLocation.UNKNOWN_LOCATION;
             int position = 1;
 
             if (f.Wife is not null)
@@ -93,7 +93,7 @@ namespace FTAnalyzer
                     }
                 }
                 Children = censusChildren;
-                BestLocation = FactLocation.BestLocation(facts, censusDate);
+                BestLocation = FactLocation.BestLocation(facts, censusDate) ?? FactLocation.UNKNOWN_LOCATION;
             }
             return result;
         }

@@ -16,8 +16,8 @@ namespace FTAnalyzer
         public string FamilyID { get; private set; }
         public IList<Fact> Facts { get; private set; }
         public IList<Individual> Children { get; internal set; }
-        public Individual Husband { get; internal set; }
-        public Individual Wife { get; internal set; }
+        public Individual? Husband { get; internal set; }
+        public Individual? Wife { get; internal set; }
         public int ExpectedTotal { get; internal set; }
         public int ExpectedAlive { get; internal set; }
         public int ExpectedDead { get; internal set; }
