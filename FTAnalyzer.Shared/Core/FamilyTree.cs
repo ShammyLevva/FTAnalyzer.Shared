@@ -9,6 +9,7 @@ using System.Xml;
 using System.Numerics;
 using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Collections.Immutable;
 
@@ -35,7 +36,7 @@ namespace FTAnalyzer
         Dictionary<StandardisedName, StandardisedName> names;
         Dictionary<string, List<Individual>> unknownIndividualFactTypes;
         Dictionary<string, List<Family>> unknownFamilyFactTypes;
-        SortableBindingList<IDisplayLocation>[]? displayLocations;
+        SortableBindingList<IDisplayLocation>?[]? displayLocations;
         SortableBindingList<IDisplayLooseDeath>? looseDeaths;
         SortableBindingList<IDisplayLooseBirth>? looseBirths;
         SortableBindingList<IDisplayLooseInfo>? looseInfo;
@@ -49,8 +50,8 @@ namespace FTAnalyzer
         int SoloFamilies { get; set; }
         int PreMarriageFamilies { get; set; }
         public bool Geocoding { get; set; }
-        public List<NonDuplicate> NonDuplicates { get; private set; }
-        public string Version { get; set; }
+        public List<NonDuplicate>? NonDuplicates { get; private set; }
+        public string Version { get; set; } = string.Empty;
         #endregion
 
         #region Static Functions
@@ -105,7 +106,7 @@ namespace FTAnalyzer
                         result.AppendLine(GetContinuationText(note.ChildNodes));
                         result.AppendLine();
                     }
-                    XmlAttribute? ID = note.Attributes["REF"];
+                    XmlAttribute? ID = note.Attributes?["REF"];
                     if (ID is not null) result.AppendLine(GetNoteRef(ID));
                     result.AppendLine();
                     result.AppendLine();
@@ -118,6 +119,7 @@ namespace FTAnalyzer
 
         static string GetNoteRef(XmlAttribute reference)
         {
+            if (instance is null) return string.Empty;
             if (!instance.DocumentLoaded)
                 Debug.WriteLine("Looking up XML without document loaded");
             if (instance.noteNodes is null || reference is null)
@@ -190,6 +192,9 @@ namespace FTAnalyzer
         #endregion
 
         #region Load Gedcom XML
+        [MemberNotNull(nameof(sources), nameof(individuals), nameof(families), nameof(sharedFacts),
+            nameof(occupations), nameof(names), nameof(unknownIndividualFactTypes), nameof(unknownFamilyFactTypes),
+            nameof(individualLookup), nameof(DataErrorTypes))]
         public void ResetData()
         {
             DataLoaded = false;
@@ -203,7 +208,7 @@ namespace FTAnalyzer
             unknownIndividualFactTypes = [];
             unknownFamilyFactTypes = [];
             DataErrorTypes = [];
-            displayLocations = new SortableBindingList<IDisplayLocation>[5];
+            displayLocations = new SortableBindingList<IDisplayLocation>?[5];
             rootIndividualID = string.Empty;
             SoloFamilies = 0;
             PreMarriageFamilies = 0;
@@ -307,7 +312,7 @@ namespace FTAnalyzer
                 // file has a root individual
                 try
                 {
-                    rootIndividualID = root.Attributes["REF"].Value;
+                    rootIndividualID = root.Attributes?["REF"]?.Value ?? string.Empty;
                 }
                 catch (Exception)
                 { } // don't crash if can't set root individual
@@ -427,7 +432,11 @@ namespace FTAnalyzer
             outputText.Report($"Loaded {counter} Ancestry Tree Tags.\n");
         }
 
-        public static void CleanUpXML() => instance.noteNodes = null;
+        public static void CleanUpXML()
+        {
+            if (instance is not null)
+                instance.noteNodes = null;
+        }
 
         static void LoadGEDCOM_PLAC_Locations(XmlNodeList? list, int startval, IProgress<int> progress, IProgress<string> outputText)
         {
@@ -710,7 +719,7 @@ namespace FTAnalyzer
             outputText.Report("\n");
         }
 
-        Dictionary<CensusDate, int> MissingLCEntries;
+        Dictionary<CensusDate, int> MissingLCEntries = [];
         int LCFound;
         int LCMissing;
         int LCUploadable;
@@ -1487,7 +1496,7 @@ namespace FTAnalyzer
         //    }
         //}
 
-        public Individual RootPerson { get; set; }
+        public Individual? RootPerson { get; set; }
 
         public void SetRelations(string startID, IProgress<string> outputText)
         {
@@ -1667,14 +1676,16 @@ namespace FTAnalyzer
 
         public void ClearLocations()
         {
+            if (displayLocations is null) return;
             for (int i = 0; i < 5; i++)
                 displayLocations[i] = null;
         }
 
         SortableBindingList<IDisplayLocation> GetDisplayLocations(int level)
         {
+            displayLocations ??= new SortableBindingList<IDisplayLocation>?[5];
             List<IDisplayLocation> result = [];
-            //copy to list so that any GetLocation(level) that creates a new location 
+            //copy to list so that any GetLocation(level) that creates a new location
             //won't cause an error due to collection changing
             List<FactLocation> allLocations = [.. FactLocation.AllLocations];
             foreach (FactLocation loc in allLocations)
@@ -1684,19 +1695,20 @@ namespace FTAnalyzer
                     result.Add(c);
             }
             result.Sort(new FactLocationComparer(level));
-            displayLocations[level] = [.. result];
-            return displayLocations[level];
+            SortableBindingList<IDisplayLocation> loaded = [.. result];
+            displayLocations[level] = loaded;
+            return loaded;
         }
 
-        public SortableBindingList<IDisplayLocation> AllDisplayCountries => displayLocations[FactLocation.COUNTRY] ?? GetDisplayLocations(FactLocation.COUNTRY);
+        public SortableBindingList<IDisplayLocation> AllDisplayCountries => displayLocations?[FactLocation.COUNTRY] ?? GetDisplayLocations(FactLocation.COUNTRY);
 
-        public SortableBindingList<IDisplayLocation> AllDisplayRegions => displayLocations[FactLocation.REGION] ?? GetDisplayLocations(FactLocation.REGION);
+        public SortableBindingList<IDisplayLocation> AllDisplayRegions => displayLocations?[FactLocation.REGION] ?? GetDisplayLocations(FactLocation.REGION);
 
-        public SortableBindingList<IDisplayLocation> AllDisplaySubRegions => displayLocations[FactLocation.SUBREGION] ?? GetDisplayLocations(FactLocation.SUBREGION);
+        public SortableBindingList<IDisplayLocation> AllDisplaySubRegions => displayLocations?[FactLocation.SUBREGION] ?? GetDisplayLocations(FactLocation.SUBREGION);
 
-        public SortableBindingList<IDisplayLocation> AllDisplayAddresses => displayLocations[FactLocation.ADDRESS] ?? GetDisplayLocations(FactLocation.ADDRESS);
+        public SortableBindingList<IDisplayLocation> AllDisplayAddresses => displayLocations?[FactLocation.ADDRESS] ?? GetDisplayLocations(FactLocation.ADDRESS);
 
-        public SortableBindingList<IDisplayLocation> AllDisplayPlaces => displayLocations[FactLocation.PLACE] ?? GetDisplayLocations(FactLocation.PLACE);
+        public SortableBindingList<IDisplayLocation> AllDisplayPlaces => displayLocations?[FactLocation.PLACE] ?? GetDisplayLocations(FactLocation.PLACE);
 
         public static List<IDisplayGeocodedLocation> AllGeocodingLocations
         {
@@ -1704,7 +1716,7 @@ namespace FTAnalyzer
             {
                 List<IDisplayGeocodedLocation> result = [];
                 foreach (IDisplayGeocodedLocation loc in FactLocation.AllLocations)
-                    if ((loc as FactLocation).IsKnown)
+                    if (loc is FactLocation fl && fl.IsKnown)
                         result.Add(loc);
                 return result;
             }
@@ -1994,7 +2006,7 @@ namespace FTAnalyzer
                         }
                     }
                     #region Death facts
-                    if (ind.DeathDate.IsKnown)
+                    if (ind.DeathDate is not null && ind.DeathDate.IsKnown)
                     {
                         if (ind.BirthDate.IsAfter(ind.DeathDate))
                             errors[(int)Dataerror.BIRTH_AFTER_DEATH].Add(new DataError((int)Dataerror.BIRTH_AFTER_DEATH, ind, $"Died {ind.DeathDate} before born {ind.BirthDate}"));
@@ -2938,7 +2950,7 @@ namespace FTAnalyzer
                     factdate = FactDate.UNKNOWN_DATE; // errors in facts corrupts loose births or deaths
             }
             string provider = string.Empty;
-            Tuple<string, string> uris = new(null, null);
+            Tuple<string, string> uris = new(string.Empty, string.Empty);
             switch (searchProvider)
             {
                 case 0: uri = BuildAncestryQuery(st, individual, factdate, bmdRegion); provider = "Ancestry"; break;
@@ -3471,6 +3483,7 @@ namespace FTAnalyzer
 
         int MaxDuplicateScore()
         {
+            if (buildDuplicates is null) return 0;
             int score = 0;
             foreach (DuplicateIndividual dup in buildDuplicates)
             {
@@ -3482,6 +3495,7 @@ namespace FTAnalyzer
 
         void IdentifyDuplicates(bool ignoreUnknownTwins, List<Individual> list, CancellationToken ct)
         {
+            if (buildDuplicates is null) return;
             for (var i = 0; i < list.Count; i++)
             {
                 var indA = list[i];
@@ -3527,6 +3541,7 @@ namespace FTAnalyzer
         public SortableBindingList<IDisplayDuplicateIndividual> BuildDuplicateList(int minScore, IProgress<int> progress, IProgress<string> progressText)
         {
             var select = new SortableBindingList<IDisplayDuplicateIndividual>();
+            if (duplicates is null) return select;
             long numDuplicates = duplicates.Count;
             long numProcessed = 0;
             currentPercentage = 0;
@@ -3734,16 +3749,18 @@ namespace FTAnalyzer
                     if (doc.InnerText.Length > 0)
                     {
                         FactDate fd;
-                        XmlNodeList? nodes = doc.SelectNodes("/result/event");
-                        foreach (XmlNode worldEvent in nodes)
+                        if (doc.SelectNodes("/result/event") is XmlNodeList nodes)
                         {
-                            XmlNode? descNode = worldEvent.SelectSingleNode("description");
-                            string desc = FixWikiFormatting(descNode.InnerText);
-                            XmlNode? dateNode = worldEvent.SelectSingleNode("date");
-                            fd = GetWikiDate(dateNode, eventDate);
-                            var f = new Fact(Fact.WORLD_EVENT, fd, FactLocation.UNKNOWN_LOCATION, desc, true, true);
-                            var df = new DisplayFact(null, string.Empty, string.Empty, f);
-                            events.Add(df);
+                            foreach (XmlNode worldEvent in nodes)
+                            {
+                                XmlNode? descNode = worldEvent.SelectSingleNode("description");
+                                string desc = FixWikiFormatting(descNode?.InnerText ?? string.Empty);
+                                XmlNode? dateNode = worldEvent.SelectSingleNode("date");
+                                fd = GetWikiDate(dateNode, eventDate);
+                                var f = new Fact(Fact.WORLD_EVENT, fd, FactLocation.UNKNOWN_LOCATION, desc, true, true);
+                                var df = new DisplayFact(null, string.Empty, string.Empty, f);
+                                events.Add(df);
+                            }
                         }
                     }
                 }
