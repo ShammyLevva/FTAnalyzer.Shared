@@ -31,10 +31,11 @@ namespace FTAnalyzer.Utilities
             {
                 Font font = new(FontSettings.Default.SelectedFont.Name, FontSettings.Default.SelectedFont.Size);
                 foreach (Control theControl in GetAllControls(form))
-                    if (theControl.Font.Name.Equals(FontSettings.Default.SelectedFont.Name, StringComparison.OrdinalIgnoreCase)
+                    if (theControl is not Form  // skip form itself — changing form.Font triggers PerformAutoScale (AutoScaleMode.Font) at runtime, re-scaling all control positions
+                        && theControl.Font.Name.Equals(FontSettings.Default.SelectedFont.Name, StringComparison.OrdinalIgnoreCase)
                         && !ExtensionMethods.DoubleEquals(theControl.Font.Size, FontSettings.Default.SelectedFont.Size))
                     {
-                        theControl.Font = font; // change font size only if matching font name and size are different
+                        theControl.Font = font;
                         theControl.Refresh();
                     }
             }
