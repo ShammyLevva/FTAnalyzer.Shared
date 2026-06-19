@@ -32,10 +32,6 @@ namespace FTAnalyzer.Utilities
                 Font font = new(FontSettings.Default.SelectedFont.Name, FontSettings.Default.SelectedFont.Size);
                 foreach (Control theControl in GetAllControls(form))
                 {
-                    // Changing the Form's Font when AutoScaleMode=Font triggers PerformAutoScale at runtime,
-                    // re-scaling all child control positions/sizes relative to the design dimensions.
-                    if (theControl is Form)
-                        continue;
                     if (theControl.Font.Name.Equals(FontSettings.Default.SelectedFont.Name, StringComparison.OrdinalIgnoreCase)
                         && !ExtensionMethods.DoubleEquals(theControl.Font.Size, FontSettings.Default.SelectedFont.Size))
                     {
