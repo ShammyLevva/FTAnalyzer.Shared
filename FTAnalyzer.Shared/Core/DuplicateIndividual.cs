@@ -129,10 +129,14 @@ namespace FTAnalyzer
             int score = 0;
             if (IndividualA.FamiliesAsChild.Count == 1 && IndividualB.FamiliesAsChild.Count == 1)
             { // both individuals have parents if none of them are shared parents apply a heavy penalty
-                if (IndividualA.FamiliesAsChild[0].Father is not null && IndividualA.FamiliesAsChild[0].Mother is not null &&
-                    IndividualB.FamiliesAsChild[0].Father is not null && IndividualB.FamiliesAsChild[0].Mother is not null &&
-                    !IndividualA.FamiliesAsChild[0].Father.Equals(IndividualB.FamiliesAsChild[0].Father) &&
-                    !IndividualA.FamiliesAsChild[0].Mother.Equals(IndividualB.FamiliesAsChild[0].Mother))
+                Individual? fatherA = IndividualA.FamiliesAsChild[0].Father;
+                Individual? motherA = IndividualA.FamiliesAsChild[0].Mother;
+                Individual? fatherB = IndividualB.FamiliesAsChild[0].Father;
+                Individual? motherB = IndividualB.FamiliesAsChild[0].Mother;
+                if (fatherA is not null && motherA is not null &&
+                    fatherB is not null && motherB is not null &&
+                    !fatherA.Equals(fatherB) &&
+                    !motherA.Equals(motherB))
                     score = -500;
             }
             else if (IndividualA.FamiliesAsChild.Count > 0 && IndividualB.FamiliesAsChild.Count > 0)
