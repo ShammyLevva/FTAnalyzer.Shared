@@ -52,9 +52,9 @@ namespace FTAnalyzer
             {
                 XmlNode? eHusband = node.SelectSingleNode("HUSB");
                 XmlNode? eWife = node.SelectSingleNode("WIFE");
-                FamilyID = node.Attributes["ID"]?.Value ?? string.Empty;
-                string husbandID = eHusband?.Attributes["REF"]?.Value ?? string.Empty;
-                string wifeID = eWife?.Attributes["REF"]?.Value ?? string.Empty;
+                FamilyID = node.Attributes?["ID"]?.Value ?? string.Empty;
+                string husbandID = eHusband?.Attributes?["REF"]?.Value ?? string.Empty;
+                string wifeID = eWife?.Attributes?["REF"]?.Value ?? string.Empty;
                 Husband = ft.GetIndividual(husbandID);
                 Wife = ft.GetIndividual(wifeID);
                 if (Husband is not null && Wife is not null)
@@ -64,12 +64,12 @@ namespace FTAnalyzer
 
                 // now iterate through child elements of eChildren
                 // finding all individuals
-                XmlNodeList? list = node.SelectNodes("CHIL");
+                if (node.SelectNodes("CHIL") is XmlNodeList list)
                 foreach (XmlNode n in list)
                 {
-                    if (n.Attributes["REF"] is not null)
+                    if (n.Attributes?["REF"] is XmlAttribute refAttr)
                     {
-                        Individual? child = ft.GetIndividual(n.Attributes["REF"].Value);
+                        Individual? child = ft.GetIndividual(refAttr.Value);
                         if (child is not null)
                         {
                             XmlNode? fatherNode = n.SelectSingleNode("_FREL");
@@ -196,7 +196,8 @@ namespace FTAnalyzer
 
         void AddFacts(XmlNode node, string factType, IProgress<string> outputText)
         {
-            XmlNodeList? list = node.SelectNodes(factType);
+            if (node.SelectNodes(factType) is not XmlNodeList list)
+                return;
             bool preferredFact = true;
             foreach (XmlNode n in list)
             {
