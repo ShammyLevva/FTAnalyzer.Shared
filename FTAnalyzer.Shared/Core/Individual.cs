@@ -23,7 +23,7 @@ namespace FTAnalyzer
         public string IndividualID { get; private set; }
         string _forenames;
         string _fullname = string.Empty;
-        string _gender;
+        string _gender = string.Empty;
         int _relationType;
         List<Fact>? _allfacts;
         List<Fact>? _allFileFacts;
@@ -87,10 +87,10 @@ namespace FTAnalyzer
         public Individual(XmlNode node, IProgress<string> outputText)
             : this()
         {
-            IndividualID = node.Attributes["ID"]?.Value ?? string.Empty;
+            IndividualID = node.Attributes?["ID"]?.Value ?? string.Empty;
             Name = FamilyTree.GetText(node, "NAME", false);
             Gender = FamilyTree.GetText(node, "SEX", false);
-            XmlNode? nameNode = node?.SelectSingleNode("NAME");
+            XmlNode? nameNode = node.SelectSingleNode("NAME");
 
             Title = FamilyTree.GetText(nameNode, "TITL", false);
             if (string.IsNullOrEmpty(Title))
@@ -892,7 +892,8 @@ namespace FTAnalyzer
         {
             Fact nameFact = GetFacts(Fact.INDI).First();
             // now iterate through source elements of the fact finding all sources
-            XmlNodeList? list = node.SelectNodes("SOUR");
+            if (node.SelectNodes("SOUR") is not XmlNodeList list)
+                return;
             foreach (XmlNode n in list)
             {
                 if (n.Attributes["REF"] is XmlAttribute refAttr)
@@ -914,7 +915,9 @@ namespace FTAnalyzer
 
         void AddFacts(XmlNode node, string factType, IProgress<string> outputText, string? nonStandardFactType)
         {
-            XmlNodeList? list = nonStandardFactType is not null ? node.SelectNodes(nonStandardFactType) : node.SelectNodes(factType);
+            XmlNodeList? rawList = nonStandardFactType is not null ? node.SelectNodes(nonStandardFactType) : node.SelectNodes(factType);
+            if (rawList is not XmlNodeList list)
+                return;
             bool preferredFact = true;
             foreach (XmlNode n in list)
             {
@@ -1542,7 +1545,7 @@ namespace FTAnalyzer
             get
             {
                 Family? fam = Marriages(0);
-                return fam is null ? FactDate.UNKNOWN_DATE : Marriages(0).MarriageDate;
+                return fam is null ? FactDate.UNKNOWN_DATE : fam.MarriageDate;
             }
         }
 
@@ -1551,7 +1554,7 @@ namespace FTAnalyzer
             get
             {
                 Family? fam = Marriages(1);
-                return fam is null ? FactDate.UNKNOWN_DATE : Marriages(1).MarriageDate;
+                return fam is null ? FactDate.UNKNOWN_DATE : fam.MarriageDate;
             }
         }
 
@@ -1560,7 +1563,7 @@ namespace FTAnalyzer
             get
             {
                 Family? fam = Marriages(2);
-                return fam is null ? FactDate.UNKNOWN_DATE : Marriages(2).MarriageDate;
+                return fam is null ? FactDate.UNKNOWN_DATE : fam.MarriageDate;
             }
         }
 
@@ -1569,7 +1572,7 @@ namespace FTAnalyzer
             get
             {
                 Family? fam = Marriages(0);
-                return fam is null ? FactLocation.UNKNOWN_LOCATION : Marriages(0).Location;
+                return fam is null ? FactLocation.UNKNOWN_LOCATION : fam.Location;
             }
         }
 
@@ -1578,7 +1581,7 @@ namespace FTAnalyzer
             get
             {
                 Family? fam = Marriages(1);
-                return fam is null ? FactLocation.UNKNOWN_LOCATION : Marriages(1).Location;
+                return fam is null ? FactLocation.UNKNOWN_LOCATION : fam.Location;
             }
         }
 
@@ -1587,7 +1590,7 @@ namespace FTAnalyzer
             get
             {
                 Family? fam = Marriages(2);
-                return fam is null ? FactLocation.UNKNOWN_LOCATION : Marriages(2).Location;
+                return fam is null ? FactLocation.UNKNOWN_LOCATION : fam.Location;
             }
         }
 

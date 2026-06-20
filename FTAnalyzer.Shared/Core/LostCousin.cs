@@ -8,10 +8,10 @@ namespace FTAnalyzer
         public int BirthYear { get; }
         public string Reference { get; } = string.Empty;
         public CensusDate CensusDate { get; }
-        public Uri WebLink { get; }
+        public Uri? WebLink { get; }
         public bool FTAnalyzerFact { get; }
-        string SurnameMetaphone { get; set; }
-        string ForenameMetaphone { get; set; }
+        string SurnameMetaphone { get; set; } = string.Empty;
+        string ForenameMetaphone { get; set; } = string.Empty;
 
         public enum Status { Good = 1, FuzzyNameAge = 2, NotPrecise = 3, Bad = 4 }
 

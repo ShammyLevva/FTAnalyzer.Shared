@@ -5,7 +5,7 @@
         public string Occupation { get; } = occupation;
         public int Count { get; } = count;
 
-        public int CompareTo(IDisplayOccupation? that) => string.Compare(Occupation, that.Occupation, StringComparison.Ordinal);
+        public int CompareTo(IDisplayOccupation? that) => string.Compare(Occupation, that?.Occupation ?? string.Empty, StringComparison.Ordinal);
 
         public IComparer<IDisplayOccupation> GetComparer(string columnName, bool ascending)
         {
