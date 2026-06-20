@@ -219,38 +219,35 @@ namespace FTAnalyzer
 
         internal Individual(Individual i)
         {
-            if (i is not null)
-            {
-                IndividualID = i.IndividualID;
-                _forenames = i._forenames;
-                Surname = i.Surname;
-                forenameMetaphone = i.forenameMetaphone;
-                surnameMetaphone = i.surnameMetaphone;
-                MarriedName = i.MarriedName;
-                StandardisedName = i.StandardisedName;
-                _fullname = i._fullname;
-                SortedName = i.SortedName;
-                IsFlaggedAsLiving = i.IsFlaggedAsLiving;
-                _gender = i._gender;
-                Alias = i.Alias;
-                Ahnentafel = i.Ahnentafel;
-                BudgieCode = i.BudgieCode;
-                _relationType = i._relationType;
-                RelationToRoot = i.RelationToRoot;
-                FamilySearchID = i.FamilySearchID;
-                Infamily = i.Infamily;
-                Notes = i.Notes;
-                HasParents = i.HasParents;
-                HasOnlyOneParent = i.HasOnlyOneParent;
-                ReferralFamilyID = i.ReferralFamilyID;
-                CommonAncestor = i.CommonAncestor;
-                Facts = [.. i.Facts];
-                ErrorFacts = [.. i.ErrorFacts];
-                Locations = [.. i.Locations];
-                FamiliesAsChild = [.. i.FamiliesAsChild];
-                FamiliesAsSpouse = [.. i.FamiliesAsSpouse];
-                preferredFacts = new(i.preferredFacts);
-            }
+            IndividualID = i.IndividualID;
+            _forenames = i._forenames;
+            Surname = i.Surname;
+            forenameMetaphone = i.forenameMetaphone;
+            surnameMetaphone = i.surnameMetaphone;
+            MarriedName = i.MarriedName;
+            StandardisedName = i.StandardisedName;
+            _fullname = i._fullname;
+            SortedName = i.SortedName;
+            IsFlaggedAsLiving = i.IsFlaggedAsLiving;
+            _gender = i._gender;
+            Alias = i.Alias;
+            Ahnentafel = i.Ahnentafel;
+            BudgieCode = i.BudgieCode;
+            _relationType = i._relationType;
+            RelationToRoot = i.RelationToRoot;
+            FamilySearchID = i.FamilySearchID;
+            Infamily = i.Infamily;
+            Notes = i.Notes;
+            HasParents = i.HasParents;
+            HasOnlyOneParent = i.HasOnlyOneParent;
+            ReferralFamilyID = i.ReferralFamilyID;
+            CommonAncestor = i.CommonAncestor;
+            Facts = [.. i.Facts];
+            ErrorFacts = [.. i.ErrorFacts];
+            Locations = [.. i.Locations];
+            FamiliesAsChild = [.. i.FamiliesAsChild];
+            FamiliesAsSpouse = [.. i.FamiliesAsSpouse];
+            preferredFacts = new(i.preferredFacts);
         }
         #endregion
 
@@ -896,7 +893,7 @@ namespace FTAnalyzer
                 return;
             foreach (XmlNode n in list)
             {
-                if (n.Attributes["REF"] is XmlAttribute refAttr)
+                if (n.Attributes?["REF"] is XmlAttribute refAttr)
                 {   // only process sources with a reference
                     string srcref = refAttr.Value;
                     FactSource? source = FamilyTree.Instance.GetSource(srcref);
@@ -1041,10 +1038,13 @@ namespace FTAnalyzer
                         CensusReference cr = new($"{s.SourceTitle} {s.SourceText}", true);
                         if (OKtoAddReference(cr, true))
                         {
-                            cr.Fact.Sources.Add(s);
-                            toAdd.Add(cr.Fact);
-                            if (cr.IsLCCensusFact)
-                                CreateLCFact(toAdd, cr);
+                            if (cr.Fact is Fact crFact)
+                            {
+                                crFact.Sources.Add(s);
+                                toAdd.Add(crFact);
+                                if (cr.IsLCCensusFact)
+                                    CreateLCFact(toAdd, cr);
+                            }
                         }
                         else
                             UpdateCensusFactReference(cr);
@@ -1057,9 +1057,10 @@ namespace FTAnalyzer
 
         void CreateLCFact(List<Fact>? toAdd, CensusReference cr)
         {
-            if (!IsLostCousinsEntered((CensusDate)cr.Fact.FactDate))
+            if (cr.Fact is not Fact crFact) return;
+            if (!IsLostCousinsEntered((CensusDate)crFact.FactDate))
             {
-                Fact lcFact = new(Fact.LC_FTA, cr.Fact.FactDate, cr.Fact.Location, "Lost Cousins fact created by FTAnalyzer by recognising census ref " + cr.Reference, false, true);
+                Fact lcFact = new(Fact.LC_FTA, crFact.FactDate, crFact.Location, "Lost Cousins fact created by FTAnalyzer by recognising census ref " + cr.Reference, false, true);
                 if (toAdd is null)
                     AddFact(lcFact);
                 else
@@ -1149,7 +1150,7 @@ namespace FTAnalyzer
                 censusFact.SetCensusReferenceDetails(cr, CensusLocation.UNKNOWN, string.Empty);
         }
 
-        bool OKtoAddReference(CensusReference cr, bool includeCreated) => cr.IsKnownStatus && !CensusFactExists(cr.Fact.FactDate, includeCreated) && IsPossiblyAlive(cr.Fact.FactDate);
+        bool OKtoAddReference(CensusReference cr, bool includeCreated) => cr.IsKnownStatus && cr.Fact is not null && !CensusFactExists(cr.Fact.FactDate, includeCreated) && IsPossiblyAlive(cr.Fact.FactDate);
 
         void AddLocation(Fact fact)
         {

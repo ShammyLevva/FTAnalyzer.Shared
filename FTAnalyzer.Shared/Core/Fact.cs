@@ -432,14 +432,14 @@ namespace FTAnalyzer
             CreateFact(node, family.FamilyRef, preferred, null, outputText);
         }
 
-        public Fact(XmlNode node, Individual ind, bool preferred, FactDate deathdate, IProgress<string> outputText)
+        public Fact(XmlNode node, Individual ind, bool preferred, FactDate? deathdate, IProgress<string> outputText)
             : this(preferred)
         {
             Individual = ind;
             Family = null;
             CreateFact(node, ind.IndividualRef, preferred, deathdate, outputText);
         }
-        public Fact(string factType, FactDate date, FactLocation loc, string comment = "", bool preferred = true, bool createdByFTA = false, Individual? ind = null)
+        public Fact(string factType, FactDate date, FactLocation? loc, string comment = "", bool preferred = true, bool createdByFTA = false, Individual? ind = null)
             : this(preferred)
         {
             FactType = factType;
@@ -447,7 +447,7 @@ namespace FTAnalyzer
             Comment = comment;
             Created = createdByFTA;
             Place = string.Empty;
-            Location = loc;
+            Location = loc ?? FactLocation.UNKNOWN_LOCATION;
             Individual = ind;
         }
 
