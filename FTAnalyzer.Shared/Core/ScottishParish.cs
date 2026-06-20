@@ -34,11 +34,15 @@ namespace FTAnalyzer
                 using (XmlReader reader = XmlReader.Create(sreader, new XmlReaderSettings() { XmlResolver = null }))
                     xmlDoc.Load(reader);
                 //xmlDoc.Validate(something);
-                foreach (XmlNode n in xmlDoc.SelectNodes("ScottishParish/ByID/Parish"))
+                if (xmlDoc.SelectNodes("ScottishParish/ByID/Parish") is not XmlNodeList nodeList) return;
+                foreach (XmlNode n in nodeList)
                 {
-                    string region = n.Attributes["Region"].Value;
-                    string name = n.Attributes["Name"].Value;
-                    string RD = n.Attributes["RD"].Value;
+                    XmlAttributeCollection? attrs = n.Attributes;
+                    if (attrs is null) continue;
+                    string region = attrs["Region"]?.Value ?? string.Empty;
+                    string name = attrs["Name"]?.Value ?? string.Empty;
+                    string RD = attrs["RD"]?.Value ?? string.Empty;
+                    if (string.IsNullOrEmpty(RD)) continue;
                     ScottishParish sp = new(RD, name, region);
                     AddParish(RD, sp);
                 }

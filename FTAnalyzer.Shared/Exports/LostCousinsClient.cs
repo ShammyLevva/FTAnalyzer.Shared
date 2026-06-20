@@ -12,16 +12,15 @@ namespace FTAnalyzer.Exports
 
         public LostCousinsClient()
         {
-            SetupHttpClient();
+            Cookies = new();
+            HttpClientHandler handler = new() { CookieContainer = Cookies };
+            Client = new(handler);
         }
 
         void SetupHttpClient()
         {
             Cookies = new();
-            HttpClientHandler handler = new()
-            {
-                CookieContainer = Cookies
-            };
+            HttpClientHandler handler = new() { CookieContainer = Cookies };
             Client = new(handler);
         }
         public async Task<bool> LostCousinsLoginAsync(string email, string password)
@@ -105,7 +104,7 @@ namespace FTAnalyzer.Exports
             }
         }
 
-        string _previousRef;
+        string _previousRef = string.Empty;
 
         Dictionary<string, string> BuildParameterString(CensusIndividual ind)
         {
@@ -159,6 +158,7 @@ namespace FTAnalyzer.Exports
         public string GetCensusSpecificFields(Dictionary<string, string> output, CensusIndividual ind)
         {
             CensusReference? censusRef = ind.CensusReference;
+            if (censusRef is null) return string.Empty;
             if (ind.CensusDate.Overlaps(CensusDate.EWCENSUS1841) && Countries.IsEnglandWales(ind.CensusCountry))
             {
                 output.Add("census_code", "1841");
