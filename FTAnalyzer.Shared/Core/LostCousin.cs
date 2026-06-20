@@ -7,7 +7,7 @@ namespace FTAnalyzer
         public string Name { get; } = string.Empty;
         public int BirthYear { get; }
         public string Reference { get; } = string.Empty;
-        public CensusDate CensusDate { get; }
+        public CensusDate? CensusDate { get; }
         public Uri? WebLink { get; }
         public bool FTAnalyzerFact { get; }
         string SurnameMetaphone { get; set; } = string.Empty;
@@ -48,7 +48,7 @@ namespace FTAnalyzer
             BirthYear = result;
             Reference = reference;
             int ptr = weblink is null ? -1 : weblink.IndexOf("&p=", StringComparison.Ordinal);
-            WebLink = ptr == -1 || weblink.Length <= ptr + 3 ? null : new Uri(HttpUtility.UrlDecode(weblink[(ptr + 3)..]));
+            WebLink = weblink is null || ptr == -1 || weblink.Length <= ptr + 3 ? null : new Uri(HttpUtility.UrlDecode(weblink[(ptr + 3)..]));
             FTAnalyzerFact = ftanalyzer;
             census ??= string.Empty;
             if (census.StartsWith("England", StringComparison.Ordinal))

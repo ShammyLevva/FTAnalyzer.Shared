@@ -232,7 +232,8 @@ namespace FTAnalyzer.Exports
             output.WriteLine($"2 VERS 5.5.1");
             output.WriteLine($"2 FORM LINEAGE - LINKED");
             output.WriteLine($"1 CHAR UTF-8");
-            output.WriteLine($"1 _ROOT @{ft.RootPerson.IndividualID}@");
+            if (ft.RootPerson is not null)
+                output.WriteLine($"1 _ROOT @{ft.RootPerson.IndividualID}@");
         }
 
         static void WriteIndividual(Individual ind)
