@@ -22,11 +22,11 @@ namespace FTAnalyzer
 
         public string IndividualID { get; private set; }
         string _forenames;
-        string _fullname;
+        string _fullname = string.Empty;
         string _gender;
         int _relationType;
-        List<Fact> _allfacts;
-        List<Fact> _allFileFacts;
+        List<Fact>? _allfacts;
+        List<Fact>? _allFileFacts;
         readonly DoubleMetaphone surnameMetaphone;
         readonly DoubleMetaphone forenameMetaphone;
         readonly Dictionary<string, Fact> preferredFacts;
@@ -82,8 +82,6 @@ namespace FTAnalyzer
             FamiliesAsChild = [];
             FamiliesAsSpouse = [];
             preferredFacts = [];
-            _allfacts = null;
-            _allFileFacts = null;
         }
 
         public Individual(XmlNode node, IProgress<string> outputText)
@@ -348,7 +346,7 @@ namespace FTAnalyzer
             }
         }
 
-        public IList<Fact> AllFileFacts => _allFileFacts;
+        public IList<Fact> AllFileFacts => _allFileFacts ?? [];
 
         public IList<IDisplayFact> AllGeocodedFacts
         {
@@ -386,7 +384,7 @@ namespace FTAnalyzer
 
         public bool GenderMatches(Individual that) => Gender == that.Gender || Gender == "U" || that.Gender == "U";
 
-        public string SortedName { get; private set; }
+        public string SortedName { get; private set; } = string.Empty;
 
         public string Name
         {
@@ -432,8 +430,6 @@ namespace FTAnalyzer
         {
             get
             {
-                if (_forenames is null)
-                    return string.Empty;
                 int pos = _forenames.IndexOf(' ', StringComparison.Ordinal);
                 return pos > 0 ? _forenames[..pos] : _forenames;
             }
@@ -443,8 +439,6 @@ namespace FTAnalyzer
         {
             get
             {
-                if (_forenames is null)
-                    return string.Empty;
                 int pos = _forenames.IndexOf(' ', StringComparison.Ordinal);
                 return pos > 0 ? _forenames[pos..].Trim() : string.Empty;
             }
@@ -901,9 +895,9 @@ namespace FTAnalyzer
             XmlNodeList? list = node.SelectNodes("SOUR");
             foreach (XmlNode n in list)
             {
-                if (n.Attributes["REF"] is not null)
+                if (n.Attributes["REF"] is XmlAttribute refAttr)
                 {   // only process sources with a reference
-                    string srcref = n.Attributes["REF"].Value;
+                    string srcref = refAttr.Value;
                     FactSource? source = FamilyTree.Instance.GetSource(srcref);
                     if (source is not null)
                     {
@@ -1058,7 +1052,7 @@ namespace FTAnalyzer
                 AddFact(f);
         }
 
-        void CreateLCFact(List<Fact> toAdd, CensusReference cr)
+        void CreateLCFact(List<Fact>? toAdd, CensusReference cr)
         {
             if (!IsLostCousinsEntered((CensusDate)cr.Fact.FactDate))
             {
@@ -1169,7 +1163,7 @@ namespace FTAnalyzer
         public FactDate GetPreferredFactDate(string factType)
         {
             Fact? f = GetPreferredFact(factType);
-            return (f is null || f.FactDate is null) ? FactDate.UNKNOWN_DATE : f.FactDate;
+            return f is null ? FactDate.UNKNOWN_DATE : f.FactDate;
         }
 
         // Returns all facts of the given type.
@@ -1361,7 +1355,8 @@ namespace FTAnalyzer
             {
                 if (property.Name.StartsWith(prefix, StringComparison.Ordinal))
                 {
-                    int value = (int)property.GetValue(this, null);
+                    if (property.GetValue(this, null) is not int value)
+                        continue;
                     if (value != 0 && value != 6 && value != 7)
                         return false;
                 }
