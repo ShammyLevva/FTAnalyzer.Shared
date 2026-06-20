@@ -1072,8 +1072,9 @@ namespace FTAnalyzer
         public string EqualHash => FactType + UnknownFactHash + FamilyFactHash + FactDate + Location + Comment + IsMarriageFact;
 
         public bool IsValidCensus(FactDate factDate) => FactDate.IsKnown && IsCensusFact && FactDate.FactYearMatches(factDate) && FactDate.IsNotBEForeOrAFTer && FactErrorLevel == FactError.GOOD;
-
         public bool IsValidCensus(CensusDate censusDate) => FactDate.IsKnown && IsCensusFact && FactDate.CensusYearMatches(censusDate) && FactDate.IsNotBEForeOrAFTer && FactErrorLevel == FactError.GOOD;
+        public bool IsAcceptableCensus(FactDate factDate) => FactDate.IsKnown && IsCensusFact && FactDate.FactYearMatches(factDate) && FactDate.IsNotBEForeOrAFTer && (FactErrorLevel == FactError.GOOD || FactErrorLevel == FactError.WARNINGALLOW);
+        public bool IsAcceptableCensus(CensusDate censusDate) => FactDate.IsKnown && IsCensusFact && FactDate.CensusYearMatches(censusDate) && FactDate.IsNotBEForeOrAFTer && (FactErrorLevel == FactError.GOOD || FactErrorLevel == FactError.WARNINGALLOW);
 
         public bool IsValidLostCousins(CensusDate censusDate) =>
             FactDate.IsKnown && (FactType == LOSTCOUSINS || FactType == LC_FTA) &&

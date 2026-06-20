@@ -345,6 +345,8 @@ namespace FTAnalyzer
 
         public IList<Fact> AllFileFacts => _allFileFacts ?? [];
 
+        public IEnumerable<Fact> AllAllowedFacts => Facts.Concat(ErrorFacts.Where(f => f.FactErrorLevel == Fact.FactError.WARNINGALLOW));
+
         public IList<IDisplayFact> AllGeocodedFacts
         {
             get
@@ -768,6 +770,24 @@ namespace FTAnalyzer
             foreach (Fact f in Facts)
             {
                 if (f.IsValidCensus(when))
+                {
+                    if (!checkCountry)
+                        return true;
+                    if (f.Location.CensusCountryMatches(when.Country, includeUnknownCountries))
+                        return true;
+                    if (Countries.IsUnitedKingdom(when.Country) && f.IsOverseasUKCensus(f.Country))
+                        return true;
+                }
+            }
+            return false;
+        }
+
+        public bool IsAcceptableCensusDone(CensusDate? when, bool includeUnknownCountries = true, bool checkCountry = true)
+        {
+            if (when is null) return false;
+            foreach (Fact f in AllAllowedFacts)
+            {
+                if (f.IsAcceptableCensus(when))
                 {
                     if (!checkCountry)
                         return true;
@@ -1277,11 +1297,11 @@ namespace FTAnalyzer
         {
             if (BirthDate.IsAfter(census) || DeathDate.IsBefore(census) || GetAge(census).MinAge >= FactDate.MAXYEARS)
                 return CensusColours.NOT_ALIVE; // not alive - grey
-            if (!IsCensusDone(census))
+            if (!IsAcceptableCensusDone(census))
             {
                 if (IsTaggedMissingCensus(census))
                     return CensusColours.KNOWN_MISSING;
-                if (IsCensusDone(census, true, false) || (Countries.IsUnitedKingdom(census.Country) && IsCensusDone(census.EquivalentUSCensus, true, true)))
+                if (IsAcceptableCensusDone(census, true, false) || (Countries.IsUnitedKingdom(census.Country) && IsAcceptableCensusDone(census.EquivalentUSCensus, true, true)))
                     return CensusColours.OVERSEAS_CENSUS; // checks if on census outside UK in census year or on prior year (to check US census)
                 FactLocation location = BestLocation(census);
                 if (CensusDate.IsLostCousinsCensusYear(census, true) && IsLostCousinsEntered(census) && !OutOfCountryCheck(census, location))
@@ -1359,9 +1379,9 @@ namespace FTAnalyzer
             {
                 if (property.Name.StartsWith(prefix, StringComparison.Ordinal))
                 {
-                    if (property.GetValue(this, null) is not int value)
+                    if (property.GetValue(this, null) is not CensusColours value)
                         continue;
-                    if (value != 0 && value != 6 && value != 7)
+                    if (value != CensusColours.NOT_ALIVE && value != CensusColours.OVERSEAS_CENSUS && value != CensusColours.OUT_OF_COUNTRY)
                         return false;
                 }
             }
