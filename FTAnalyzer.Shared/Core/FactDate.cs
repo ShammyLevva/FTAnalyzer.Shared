@@ -109,7 +109,7 @@ namespace FTAnalyzer
                 {
                     str = FixCommonDateFormats(str);
                     DateString = str.Length == 0 ? UNKNOWNSTRING : str.ToUpper();
-                    if (!DateString.Equals(UNKNOWNSTRING))
+                    if (!DateString.Equals(UNKNOWNSTRING, StringComparison.OrdinalIgnoreCase))
                         ProcessDate(DateString, factRef);
                 }
             }
@@ -134,8 +134,8 @@ namespace FTAnalyzer
             if (str.StartsWith('<') && str.EndsWith('>'))
                 str = str[1..^1];
             str = ReplaceSpecialCharacters(str);
-            str = str.Replace("DIED IN INFANCY", "INFANT");
-            str = str.Replace("INFANCY", "INFANT");
+            str = str.Replace("DIED IN INFANCY", "INFANT", StringComparison.Ordinal);
+            str = str.Replace("INFANCY", "INFANT", StringComparison.Ordinal);
             switch (str)
             {
                 case "SUBMITTED":
@@ -166,220 +166,220 @@ namespace FTAnalyzer
             if (!NonGedcomDate.Default.UseNonGedcomDates || NonGedcomDate.Default.Separator != ".")
                 str = str.Replace('.', ' ');
             if (str.StartsWith('<') && str.EndsWith('>'))
-                str = str.Replace("<", "").Replace(">", "");
+                str = str.Replace("<", "", StringComparison.Ordinal).Replace(">", "", StringComparison.Ordinal);
             // remove date qualifiers first
             str = ReplaceSpecialCharacters(str);
 
-            str = str.Replace("MONDAY", "").Replace("TUESDAY", "").Replace("WEDNESDAY", "").Replace("THURSDAY", "").Replace("FRIDAY", "").Replace("SATURDAY", "").Replace("SUNDAY", "");
+            str = str.Replace("MONDAY", "", StringComparison.Ordinal).Replace("TUESDAY", "", StringComparison.Ordinal).Replace("WEDNESDAY", "", StringComparison.Ordinal).Replace("THURSDAY", "", StringComparison.Ordinal).Replace("FRIDAY", "", StringComparison.Ordinal).Replace("SATURDAY", "", StringComparison.Ordinal).Replace("SUNDAY", "", StringComparison.Ordinal);
 
-            str = str.Replace("JANUARY", "JAN");
-            str = str.Replace("FEBRUARY", "FEB");
-            str = str.Replace("MARCH", "MAR");
-            str = str.Replace("APRIL", "APR");
-            str = str.Replace("APRL", "APR");
-            str = str.Replace("JUNE", "JUN");
-            str = str.Replace("JULY", "JUL");
-            str = str.Replace("AUGUST", "AUG");
-            str = str.Replace("AUGT", "AUG");
-            str = str.Replace("SEPTEMBER", "SEP");
-            str = str.Replace("OCTOBER", "OCT");
-            str = str.Replace("NOVEMBER", "NOV");
-            str = str.Replace("DECEMBER", "DEC");
+            str = str.Replace("JANUARY", "JAN", StringComparison.Ordinal);
+            str = str.Replace("FEBRUARY", "FEB", StringComparison.Ordinal);
+            str = str.Replace("MARCH", "MAR", StringComparison.Ordinal);
+            str = str.Replace("APRIL", "APR", StringComparison.Ordinal);
+            str = str.Replace("APRL", "APR", StringComparison.Ordinal);
+            str = str.Replace("JUNE", "JUN", StringComparison.Ordinal);
+            str = str.Replace("JULY", "JUL", StringComparison.Ordinal);
+            str = str.Replace("AUGUST", "AUG", StringComparison.Ordinal);
+            str = str.Replace("AUGT", "AUG", StringComparison.Ordinal);
+            str = str.Replace("SEPTEMBER", "SEP", StringComparison.Ordinal);
+            str = str.Replace("OCTOBER", "OCT", StringComparison.Ordinal);
+            str = str.Replace("NOVEMBER", "NOV", StringComparison.Ordinal);
+            str = str.Replace("DECEMBER", "DEC", StringComparison.Ordinal);
 
             // fix missing space between month and year for 1000-2999
-            str = str.Replace("JAN1", "JAN 1");
-            str = str.Replace("FEB1", "FEB 1");
-            str = str.Replace("MAR1", "MAR 1");
-            str = str.Replace("APR1", "APR 1");
-            str = str.Replace("JUN1", "JUN 1");
-            str = str.Replace("JUL1", "JUL 1");
-            str = str.Replace("AUG1", "AUG 1");
-            str = str.Replace("SEP1", "SEP 1");
-            str = str.Replace("OCT1", "OCT 1");
-            str = str.Replace("NOV1", "NOV 1");
-            str = str.Replace("DEC1", "DEC 1");
-            str = str.Replace("JAN2", "JAN 2");
-            str = str.Replace("FEB2", "FEB 2");
-            str = str.Replace("MAR2", "MAR 2");
-            str = str.Replace("APR2", "APR 2");
-            str = str.Replace("JUN2", "JUN 2");
-            str = str.Replace("JUL2", "JUL 2");
-            str = str.Replace("AUG2", "AUG 2");
-            str = str.Replace("SEP2", "SEP 2");
-            str = str.Replace("OCT2", "OCT 2");
-            str = str.Replace("NOV2", "NOV 2");
-            str = str.Replace("DEC2", "DEC 2");
+            str = str.Replace("JAN1", "JAN 1", StringComparison.Ordinal);
+            str = str.Replace("FEB1", "FEB 1", StringComparison.Ordinal);
+            str = str.Replace("MAR1", "MAR 1", StringComparison.Ordinal);
+            str = str.Replace("APR1", "APR 1", StringComparison.Ordinal);
+            str = str.Replace("JUN1", "JUN 1", StringComparison.Ordinal);
+            str = str.Replace("JUL1", "JUL 1", StringComparison.Ordinal);
+            str = str.Replace("AUG1", "AUG 1", StringComparison.Ordinal);
+            str = str.Replace("SEP1", "SEP 1", StringComparison.Ordinal);
+            str = str.Replace("OCT1", "OCT 1", StringComparison.Ordinal);
+            str = str.Replace("NOV1", "NOV 1", StringComparison.Ordinal);
+            str = str.Replace("DEC1", "DEC 1", StringComparison.Ordinal);
+            str = str.Replace("JAN2", "JAN 2", StringComparison.Ordinal);
+            str = str.Replace("FEB2", "FEB 2", StringComparison.Ordinal);
+            str = str.Replace("MAR2", "MAR 2", StringComparison.Ordinal);
+            str = str.Replace("APR2", "APR 2", StringComparison.Ordinal);
+            str = str.Replace("JUN2", "JUN 2", StringComparison.Ordinal);
+            str = str.Replace("JUL2", "JUL 2", StringComparison.Ordinal);
+            str = str.Replace("AUG2", "AUG 2", StringComparison.Ordinal);
+            str = str.Replace("SEP2", "SEP 2", StringComparison.Ordinal);
+            str = str.Replace("OCT2", "OCT 2", StringComparison.Ordinal);
+            str = str.Replace("NOV2", "NOV 2", StringComparison.Ordinal);
+            str = str.Replace("DEC2", "DEC 2", StringComparison.Ordinal);
 
             // French
-            str = str.Replace("JANVIER", "JAN");
-            str = str.Replace("JANV", "JAN");
-            str = str.Replace("FEVRIER", "FEB");
-            str = str.Replace("FEVR", "FEB");
-            str = str.Replace("MARS", "MAR");
-            str = str.Replace("AVRIL", "APR");
-            str = str.Replace("AVRL", "APR");
-            str = str.Replace("MAI", "MAY");
-            str = str.Replace("JUIN", "JUN");
-            str = str.Replace("JUILLET", "JUL");
-            str = str.Replace("JUIL", "JUL");
-            str = str.Replace("AOUT", "AUG");
-            str = str.Replace("SEPTEMBRE", "SEP");
-            str = str.Replace("OCTOBRE", "OCT");
-            str = str.Replace("NOVEMBRE", "NOV");
-            str = str.Replace("DECEMBRE", "DEC");
-            str = str.Replace(" ET ", " AND ");
-            str = str.Replace("DATE INCONNUE", UNKNOWNSTRING);
-            str = str.Replace("PEU ", " "); //french little
-            str = str.Replace("REC ", " "); //french census recusement
-            str = str.Replace("  ", " ");
+            str = str.Replace("JANVIER", "JAN", StringComparison.Ordinal);
+            str = str.Replace("JANV", "JAN", StringComparison.Ordinal);
+            str = str.Replace("FEVRIER", "FEB", StringComparison.Ordinal);
+            str = str.Replace("FEVR", "FEB", StringComparison.Ordinal);
+            str = str.Replace("MARS", "MAR", StringComparison.Ordinal);
+            str = str.Replace("AVRIL", "APR", StringComparison.Ordinal);
+            str = str.Replace("AVRL", "APR", StringComparison.Ordinal);
+            str = str.Replace("MAI", "MAY", StringComparison.Ordinal);
+            str = str.Replace("JUIN", "JUN", StringComparison.Ordinal);
+            str = str.Replace("JUILLET", "JUL", StringComparison.Ordinal);
+            str = str.Replace("JUIL", "JUL", StringComparison.Ordinal);
+            str = str.Replace("AOUT", "AUG", StringComparison.Ordinal);
+            str = str.Replace("SEPTEMBRE", "SEP", StringComparison.Ordinal);
+            str = str.Replace("OCTOBRE", "OCT", StringComparison.Ordinal);
+            str = str.Replace("NOVEMBRE", "NOV", StringComparison.Ordinal);
+            str = str.Replace("DECEMBRE", "DEC", StringComparison.Ordinal);
+            str = str.Replace(" ET ", " AND ", StringComparison.Ordinal);
+            str = str.Replace("DATE INCONNUE", UNKNOWNSTRING, StringComparison.Ordinal);
+            str = str.Replace("PEU ", " ", StringComparison.Ordinal); //french little
+            str = str.Replace("REC ", " ", StringComparison.Ordinal); //french census recusement
+            str = str.Replace("  ", " ", StringComparison.Ordinal);
 
             //German
-            str = str.Replace("DEZ", "DEC");
-            str = str.Replace("MARZ", "MAR");
-            str = str.Replace("JUNI", "JUN");
-            str = str.Replace("JULI", "JUL");
-            str = str.Replace("OKT", "OCT");
-            str = str.Replace("JANNER", "JAN");
-            str = str.Replace("JANUAR", "JAN");
-            str = str.Replace("FEBRUAR", "FEB");
-            str = str.Replace("OKTOBER", "OCT");
-            str = str.Replace("DEZEMBER", "DEC");
+            str = str.Replace("DEZ", "DEC", StringComparison.Ordinal);
+            str = str.Replace("MARZ", "MAR", StringComparison.Ordinal);
+            str = str.Replace("JUNI", "JUN", StringComparison.Ordinal);
+            str = str.Replace("JULI", "JUL", StringComparison.Ordinal);
+            str = str.Replace("OKT", "OCT", StringComparison.Ordinal);
+            str = str.Replace("JANNER", "JAN", StringComparison.Ordinal);
+            str = str.Replace("JANUAR", "JAN", StringComparison.Ordinal);
+            str = str.Replace("FEBRUAR", "FEB", StringComparison.Ordinal);
+            str = str.Replace("OKTOBER", "OCT", StringComparison.Ordinal);
+            str = str.Replace("DEZEMBER", "DEC", StringComparison.Ordinal);
 
-            str = str.Replace("SEPT", "SEP"); // avoids confusing french translation by removing T before checking for french
-            str = str.Replace("M01", "JAN");
-            str = str.Replace("M02", "FEB");
-            str = str.Replace("M03", "MAR");
-            str = str.Replace("M04", "APR");
-            str = str.Replace("M05", "MAY");
-            str = str.Replace("M06", "JUN");
-            str = str.Replace("M07", "JUL");
-            str = str.Replace("M08", "AUG");
-            str = str.Replace("M09", "SEP");
-            str = str.Replace("M10", "OCT");
-            str = str.Replace("M11", "NOV");
-            str = str.Replace("M12", "DEC");
+            str = str.Replace("SEPT", "SEP", StringComparison.Ordinal); // avoids confusing french translation by removing T before checking for french
+            str = str.Replace("M01", "JAN", StringComparison.Ordinal);
+            str = str.Replace("M02", "FEB", StringComparison.Ordinal);
+            str = str.Replace("M03", "MAR", StringComparison.Ordinal);
+            str = str.Replace("M04", "APR", StringComparison.Ordinal);
+            str = str.Replace("M05", "MAY", StringComparison.Ordinal);
+            str = str.Replace("M06", "JUN", StringComparison.Ordinal);
+            str = str.Replace("M07", "JUL", StringComparison.Ordinal);
+            str = str.Replace("M08", "AUG", StringComparison.Ordinal);
+            str = str.Replace("M09", "SEP", StringComparison.Ordinal);
+            str = str.Replace("M10", "OCT", StringComparison.Ordinal);
+            str = str.Replace("M11", "NOV", StringComparison.Ordinal);
+            str = str.Replace("M12", "DEC", StringComparison.Ordinal);
 
-            str = str.Replace("ABOUT", "ABT");
-            str = str.Replace("AFTER", "AFT");
-            str = str.Replace("BEFORE", "BEF");
-            str = str.Replace("BETWEEN", "BET");
-            str = str.Replace("BTW", "BET");
-            str = str.Replace("UNTIL", "TO");
-            str = str.Replace("CIRCA", "ABT");
-            str = str.Replace("AROUND", "ABT");
-            str = str.Replace("APPROX", "ABT");
+            str = str.Replace("ABOUT", "ABT", StringComparison.Ordinal);
+            str = str.Replace("AFTER", "AFT", StringComparison.Ordinal);
+            str = str.Replace("BEFORE", "BEF", StringComparison.Ordinal);
+            str = str.Replace("BETWEEN", "BET", StringComparison.Ordinal);
+            str = str.Replace("BTW", "BET", StringComparison.Ordinal);
+            str = str.Replace("UNTIL", "TO", StringComparison.Ordinal);
+            str = str.Replace("CIRCA", "ABT", StringComparison.Ordinal);
+            str = str.Replace("AROUND", "ABT", StringComparison.Ordinal);
+            str = str.Replace("APPROX", "ABT", StringComparison.Ordinal);
 
             // French 
-            str = str.Replace("AVANT", "BEF");
-            str = str.Replace("ENTRE", "BET");
-            str = str.Replace("ENVIRON", "ABT");
-            str = str.Replace("VERS", "ABT");
-            str = str.Replace("APRES", "AFT");
+            str = str.Replace("AVANT", "BEF", StringComparison.Ordinal);
+            str = str.Replace("ENTRE", "BET", StringComparison.Ordinal);
+            str = str.Replace("ENVIRON", "ABT", StringComparison.Ordinal);
+            str = str.Replace("VERS", "ABT", StringComparison.Ordinal);
+            str = str.Replace("APRES", "AFT", StringComparison.Ordinal);
 
-            str = str.Replace("CAL", "ABT");
-            str = str.Replace("EST", "ABT");
-            str = str.Replace("CIR", "ABT");
-            str = str.Replace("PRE", "BEF");
-            str = str.Replace("POST", "AFT");
-            str = str.Replace("CA", "ABT");
+            str = str.Replace("CAL", "ABT", StringComparison.Ordinal);
+            str = str.Replace("EST", "ABT", StringComparison.Ordinal);
+            str = str.Replace("CIR", "ABT", StringComparison.Ordinal);
+            str = str.Replace("PRE", "BEF", StringComparison.Ordinal);
+            str = str.Replace("POST", "AFT", StringComparison.Ordinal);
+            str = str.Replace("CA", "ABT", StringComparison.Ordinal);
 
             // Quarters
-            str = str.Replace("QUARTER", "QTR");
-            str = str.Replace("MAR QTR", ABTMAR);
-            str = str.Replace("MAR Q ", "ABT MAR ");
-            str = str.Replace("JAN FEB MAR", ABTMAR);
-            str = str.Replace("JAN-MAR", ABTMAR);
-            str = str.Replace("JAN-FEB-MAR", ABTMAR);
-            str = str.Replace("JAN/FEB/MAR", ABTMAR);
-            str = str.Replace("JAN\\FEB\\MAR", ABTMAR);
-            str = str.Replace("1ST", "1");
-            str = str.Replace("2ND", "2");
-            str = str.Replace("3RD", "3");
-            str = str.Replace("4TH", "4");
-            str = str.Replace("Q1", ABTMAR);
-            str = str.Replace("1Q", ABTMAR);
-            str = str.Replace("QTR1", ABTMAR);
-            str = str.Replace("QTR 1 ", "ABT MAR ");
-            str = str.Replace("1 QTR ", "ABT MAR ");
-            str = str.Replace("JUN QTR", ABTJUN);
-            str = str.Replace("JUN Q ", "ABT JUN ");
-            str = str.Replace("APR MAY JUN", ABTJUN);
-            str = str.Replace("APR-JUN", ABTJUN);
-            str = str.Replace("APR-MAY-JUN", ABTJUN);
-            str = str.Replace("APR/MAY/JUN", ABTJUN);
-            str = str.Replace("APR\\MAY\\JUN", ABTJUN);
-            str = str.Replace("Q2", ABTJUN);
-            str = str.Replace("2Q", ABTJUN);
-            str = str.Replace("QTR2", ABTJUN);
-            str = str.Replace("QTR 2 ", "ABT JUN ");
-            str = str.Replace("2 QTR ", "ABT JUN ");
-            str = str.Replace("SEP QTR", ABTSEP);
-            str = str.Replace("SEP Q ", "ABT SEP ");
-            str = str.Replace("JUL AUG SEP", ABTSEP);
-            str = str.Replace("JUL-SEP", ABTSEP);
-            str = str.Replace("JUL-AUG-SEP", ABTSEP);
-            str = str.Replace("JUL/AUG/SEP", ABTSEP);
-            str = str.Replace("JUL\\AUG\\SEP", ABTSEP);
-            str = str.Replace("Q3", ABTSEP);
-            str = str.Replace("3Q", ABTSEP);
-            str = str.Replace("QTR3", ABTSEP);
-            str = str.Replace("QTR 3 ", "ABT SEP ");
-            str = str.Replace("3 QTR ", "ABT SEP ");
-            str = str.Replace("DEC QTR", ABTDEC);
-            str = str.Replace("DEC Q ", "ABT DEC ");
-            str = str.Replace("OCT NOV DEC", ABTDEC);
-            str = str.Replace("OCT-DEC", ABTDEC);
-            str = str.Replace("OCT-NOV-DEC", ABTDEC);
-            str = str.Replace("OCT/NOV/DEC", ABTDEC);
-            str = str.Replace("OCT\\NOV\\DEC", ABTDEC);
-            str = str.Replace("Q4", ABTDEC);
-            str = str.Replace("4Q", ABTDEC);
-            str = str.Replace("QTR4", ABTDEC);
-            str = str.Replace("QTR 4 ", "ABT DEC ");
-            str = str.Replace("4 QTR ", "ABT DEC ");
+            str = str.Replace("QUARTER", "QTR", StringComparison.Ordinal);
+            str = str.Replace("MAR QTR", ABTMAR, StringComparison.Ordinal);
+            str = str.Replace("MAR Q ", "ABT MAR ", StringComparison.Ordinal);
+            str = str.Replace("JAN FEB MAR", ABTMAR, StringComparison.Ordinal);
+            str = str.Replace("JAN-MAR", ABTMAR, StringComparison.Ordinal);
+            str = str.Replace("JAN-FEB-MAR", ABTMAR, StringComparison.Ordinal);
+            str = str.Replace("JAN/FEB/MAR", ABTMAR, StringComparison.Ordinal);
+            str = str.Replace("JAN\\FEB\\MAR", ABTMAR, StringComparison.Ordinal);
+            str = str.Replace("1ST", "1", StringComparison.Ordinal);
+            str = str.Replace("2ND", "2", StringComparison.Ordinal);
+            str = str.Replace("3RD", "3", StringComparison.Ordinal);
+            str = str.Replace("4TH", "4", StringComparison.Ordinal);
+            str = str.Replace("Q1", ABTMAR, StringComparison.Ordinal);
+            str = str.Replace("1Q", ABTMAR, StringComparison.Ordinal);
+            str = str.Replace("QTR1", ABTMAR, StringComparison.Ordinal);
+            str = str.Replace("QTR 1 ", "ABT MAR ", StringComparison.Ordinal);
+            str = str.Replace("1 QTR ", "ABT MAR ", StringComparison.Ordinal);
+            str = str.Replace("JUN QTR", ABTJUN, StringComparison.Ordinal);
+            str = str.Replace("JUN Q ", "ABT JUN ", StringComparison.Ordinal);
+            str = str.Replace("APR MAY JUN", ABTJUN, StringComparison.Ordinal);
+            str = str.Replace("APR-JUN", ABTJUN, StringComparison.Ordinal);
+            str = str.Replace("APR-MAY-JUN", ABTJUN, StringComparison.Ordinal);
+            str = str.Replace("APR/MAY/JUN", ABTJUN, StringComparison.Ordinal);
+            str = str.Replace("APR\\MAY\\JUN", ABTJUN, StringComparison.Ordinal);
+            str = str.Replace("Q2", ABTJUN, StringComparison.Ordinal);
+            str = str.Replace("2Q", ABTJUN, StringComparison.Ordinal);
+            str = str.Replace("QTR2", ABTJUN, StringComparison.Ordinal);
+            str = str.Replace("QTR 2 ", "ABT JUN ", StringComparison.Ordinal);
+            str = str.Replace("2 QTR ", "ABT JUN ", StringComparison.Ordinal);
+            str = str.Replace("SEP QTR", ABTSEP, StringComparison.Ordinal);
+            str = str.Replace("SEP Q ", "ABT SEP ", StringComparison.Ordinal);
+            str = str.Replace("JUL AUG SEP", ABTSEP, StringComparison.Ordinal);
+            str = str.Replace("JUL-SEP", ABTSEP, StringComparison.Ordinal);
+            str = str.Replace("JUL-AUG-SEP", ABTSEP, StringComparison.Ordinal);
+            str = str.Replace("JUL/AUG/SEP", ABTSEP, StringComparison.Ordinal);
+            str = str.Replace("JUL\\AUG\\SEP", ABTSEP, StringComparison.Ordinal);
+            str = str.Replace("Q3", ABTSEP, StringComparison.Ordinal);
+            str = str.Replace("3Q", ABTSEP, StringComparison.Ordinal);
+            str = str.Replace("QTR3", ABTSEP, StringComparison.Ordinal);
+            str = str.Replace("QTR 3 ", "ABT SEP ", StringComparison.Ordinal);
+            str = str.Replace("3 QTR ", "ABT SEP ", StringComparison.Ordinal);
+            str = str.Replace("DEC QTR", ABTDEC, StringComparison.Ordinal);
+            str = str.Replace("DEC Q ", "ABT DEC ", StringComparison.Ordinal);
+            str = str.Replace("OCT NOV DEC", ABTDEC, StringComparison.Ordinal);
+            str = str.Replace("OCT-DEC", ABTDEC, StringComparison.Ordinal);
+            str = str.Replace("OCT-NOV-DEC", ABTDEC, StringComparison.Ordinal);
+            str = str.Replace("OCT/NOV/DEC", ABTDEC, StringComparison.Ordinal);
+            str = str.Replace("OCT\\NOV\\DEC", ABTDEC, StringComparison.Ordinal);
+            str = str.Replace("Q4", ABTDEC, StringComparison.Ordinal);
+            str = str.Replace("4Q", ABTDEC, StringComparison.Ordinal);
+            str = str.Replace("QTR4", ABTDEC, StringComparison.Ordinal);
+            str = str.Replace("QTR 4 ", "ABT DEC ", StringComparison.Ordinal);
+            str = str.Replace("4 QTR ", "ABT DEC ", StringComparison.Ordinal);
 
             // post processing tidy ups
-            str = str.Replace("ABT ABT", "ABT"); // fix any ABT X QTR's that will have been changed to ABT ABT
-            str = str.Replace("BET ABT", "ABT"); // fix any BET XXX-XXX QTR's that will have been changed to BET ABT
-            str = str.Replace("ABT1", "ABT 1");
-            str = str.Replace("ABT2", "ABT 2");
-            str = str.Replace("MON", "");
-            str = str.Replace("TUE", "");
-            str = str.Replace("WED", "");
-            str = str.Replace("THU", "");
-            str = str.Replace("FRI", "");
-            str = str.Replace("SAT", "");
-            str = str.Replace("SUN", "");
-            str = str.Replace("BEF BEF", "BEF");
-            str = str.Replace("BEF AFT", "BEF");
-            str = str.Replace("AFT BEF", "AFT");
-            str = str.Replace("AFT AFT", "AFT");
-            str = str.Replace("FROM BEF", "FROM");
-            str = str.Replace("FROM AFT", "FROM");
+            str = str.Replace("ABT ABT", "ABT", StringComparison.Ordinal); // fix any ABT X QTR's that will have been changed to ABT ABT
+            str = str.Replace("BET ABT", "ABT", StringComparison.Ordinal); // fix any BET XXX-XXX QTR's that will have been changed to BET ABT
+            str = str.Replace("ABT1", "ABT 1", StringComparison.Ordinal);
+            str = str.Replace("ABT2", "ABT 2", StringComparison.Ordinal);
+            str = str.Replace("MON", "", StringComparison.Ordinal);
+            str = str.Replace("TUE", "", StringComparison.Ordinal);
+            str = str.Replace("WED", "", StringComparison.Ordinal);
+            str = str.Replace("THU", "", StringComparison.Ordinal);
+            str = str.Replace("FRI", "", StringComparison.Ordinal);
+            str = str.Replace("SAT", "", StringComparison.Ordinal);
+            str = str.Replace("SUN", "", StringComparison.Ordinal);
+            str = str.Replace("BEF BEF", "BEF", StringComparison.Ordinal);
+            str = str.Replace("BEF AFT", "BEF", StringComparison.Ordinal);
+            str = str.Replace("AFT BEF", "AFT", StringComparison.Ordinal);
+            str = str.Replace("AFT AFT", "AFT", StringComparison.Ordinal);
+            str = str.Replace("FROM BEF", "FROM", StringComparison.Ordinal);
+            str = str.Replace("FROM AFT", "FROM", StringComparison.Ordinal);
             if (str.StartsWith("TO"))
             {
-                str = str.Replace("TO BEF", "BEF");
-                str = str.Replace("TO AFT", "AFT");
+                str = str.Replace("TO BEF", "BEF", StringComparison.Ordinal);
+                str = str.Replace("TO AFT", "AFT", StringComparison.Ordinal);
             }
             else
             {
-                str = str.Replace("TO BEF", "TO");
-                str = str.Replace("TO AFT", "TO");
+                str = str.Replace("TO BEF", "TO", StringComparison.Ordinal);
+                str = str.Replace("TO AFT", "TO", StringComparison.Ordinal);
             }
-            str = str.Replace("BET AFT", "BET");
-            str = str.Replace("BET AFT", "BET");
-            str = str.Replace("AND BEF", "AND");
-            str = str.Replace("AND AFT", "AND");
+            str = str.Replace("BET AFT", "BET", StringComparison.Ordinal);
+            str = str.Replace("BET AFT", "BET", StringComparison.Ordinal);
+            str = str.Replace("AND BEF", "AND", StringComparison.Ordinal);
+            str = str.Replace("AND AFT", "AND", StringComparison.Ordinal);
 
             // remove common extra words
-            str = str.Replace("CENSUS", "");
+            str = str.Replace("CENSUS", "", StringComparison.Ordinal);
 
             // deal with CE/AD and BCE or BC date
-            str = str.Replace("B C E", "BCE").Replace("C E", "CE").Replace("B C", "BC").Replace("A D", "AD").TrimEnd();
+            str = str.Replace("B C E", "BCE", StringComparison.Ordinal).Replace("C E", "CE", StringComparison.Ordinal).Replace("B C", "BC", StringComparison.Ordinal).Replace("A D", "AD", StringComparison.Ordinal).TrimEnd();
             if (str.EndsWith("CE"))
-                str = str.Replace("CE", "");
+                str = str.Replace("CE", "", StringComparison.Ordinal);
             if (str.EndsWith("AD"))
-                str = str.Replace("AD", "");
+                str = str.Replace("AD", "", StringComparison.Ordinal);
             if (str.EndsWith("BCE") || str.EndsWith("BC"))
                 return UNKNOWNSTRING;
 
@@ -388,29 +388,29 @@ namespace FTAnalyzer
                 str = "FROM " + str;
             if (str.StartsWith("FROM", StringComparison.Ordinal))
             {
-                if (str.Contains("TO"))
-                    str = str.Replace("FROM", "BET").Replace("TO", "AND");
+                if (str.Contains("TO", StringComparison.OrdinalIgnoreCase))
+                    str = str.Replace("FROM", "BET", StringComparison.Ordinal).Replace("TO", "AND", StringComparison.Ordinal);
                 else
                 {
-                    str = str.Replace("FROM", "AFT"); // year will be one out
+                    str = str.Replace("FROM", "AFT", StringComparison.Ordinal); // year will be one out
                     yearfix = -1;
                 }
             }
             if (str.StartsWith("TO", StringComparison.Ordinal))
             {
-                str = str.Replace("TO", "BEF"); // year will be one out
+                str = str.Replace("TO", "BEF", StringComparison.Ordinal); // year will be one out
                 yearfix = +1;
             }
             if (str.StartsWith('>'))
-                str = str.Replace(">", "AFT ");
+                str = str.Replace(">", "AFT ", StringComparison.Ordinal);
             if (str.StartsWith('<'))
-                str = str.Replace("<", "BEF ");
+                str = str.Replace("<", "BEF ", StringComparison.Ordinal);
             if (str.StartsWith('~'))
-                str = str.Replace("~", "ABT ");
+                str = str.Replace("~", "ABT ", StringComparison.Ordinal);
             if (str.StartsWith("C1", StringComparison.Ordinal) || str.StartsWith("C2", StringComparison.Ordinal) ||
                 str.StartsWith("C 1", StringComparison.Ordinal) || str.StartsWith("C 2", StringComparison.Ordinal))
                 str = "ABT " + str[1..];
-            str = str.Replace("  ", " "); // fix issue if > or < or Cxxx has already got a space
+            str = str.Replace("  ", " ", StringComparison.Ordinal); // fix issue if > or < or Cxxx has already got a space
             Match matcher;
             if (str.StartsWith("INT", StringComparison.Ordinal)) // Interpreted date but we can discard <<Date_Phrase>>
             {
@@ -474,14 +474,14 @@ namespace FTAnalyzer
 
         static string ReplaceSpecialCharacters(string str)
         {
-            str = str.Replace(". ", " "); // even if Non GEDCOM date separator is a dot, dot space is invalid.
-            str = str.Replace("&", " AND ");
-            str = str.Replace("@#DGREGORIAN@", "").Replace("@#DJULIAN@", ""); //.Replace("@#DFRENCH R@", ""); // .Replace("@#DHEBREW@", "")
-            str = str.Replace(",", " ").Replace("(", " ").Replace(")", " ").Replace("?", " ").Replace("!", " ");
-            str = str.Replace("#", " ").Replace("$", " ").Replace("%", " ").Replace("^", " ").Replace("'", " ");
-            str = str.Replace(":", " ").Replace(";", " ").Replace("@", " ").Replace("=", " ").Replace("?", " ");
-            str = str.Replace("~", "ABT ").Replace("<", "BEF ").Replace(">", "AFT ").Replace("#", " ");
-            str = str.Replace(" / ", "/").Replace("\'", " ").Replace("\"", " ").Replace("`", " ").ClearWhiteSpace();
+            str = str.Replace(". ", " ", StringComparison.Ordinal); // even if Non GEDCOM date separator is a dot, dot space is invalid.
+            str = str.Replace("&", " AND ", StringComparison.Ordinal);
+            str = str.Replace("@#DGREGORIAN@", "", StringComparison.Ordinal).Replace("@#DJULIAN@", "", StringComparison.Ordinal); //.Replace("@#DFRENCH R@", "", StringComparison.Ordinal); // .Replace("@#DHEBREW@", "", StringComparison.Ordinal)
+            str = str.Replace(",", " ", StringComparison.Ordinal).Replace("(", " ", StringComparison.Ordinal).Replace(")", " ", StringComparison.Ordinal).Replace("?", " ", StringComparison.Ordinal).Replace("!", " ", StringComparison.Ordinal);
+            str = str.Replace("#", " ", StringComparison.Ordinal).Replace("$", " ", StringComparison.Ordinal).Replace("%", " ", StringComparison.Ordinal).Replace("^", " ", StringComparison.Ordinal).Replace("'", " ", StringComparison.Ordinal);
+            str = str.Replace(":", " ", StringComparison.Ordinal).Replace(";", " ", StringComparison.Ordinal).Replace("@", " ", StringComparison.Ordinal).Replace("=", " ", StringComparison.Ordinal).Replace("?", " ", StringComparison.Ordinal);
+            str = str.Replace("~", "ABT ", StringComparison.Ordinal).Replace("<", "BEF ", StringComparison.Ordinal).Replace(">", "AFT ", StringComparison.Ordinal).Replace("#", " ", StringComparison.Ordinal);
+            str = str.Replace(" / ", "/", StringComparison.Ordinal).Replace("\'", " ", StringComparison.Ordinal).Replace("\"", " ", StringComparison.Ordinal).Replace("`", " ", StringComparison.Ordinal).ClearWhiteSpace();
             return str;
         }
 
@@ -552,7 +552,7 @@ namespace FTAnalyzer
                     DateType = FactDateType.BET;
                     output.Append("BET ");
                 }
-                if (check.Equals("01 JAN"))
+                if (check.Equals("01 JAN", StringComparison.OrdinalIgnoreCase))
                     output.Append(Format(YEAR, StartDate));
                 else
                     output.Append(Format(DISPLAY, StartDate));
@@ -562,7 +562,7 @@ namespace FTAnalyzer
             if (EndDate != MAXDATE && EndDate != StartDate)
             {
                 check = Format(CHECKING, EndDate);
-                if (check.Equals("31 DEC"))
+                if (check.Equals("31 DEC", StringComparison.OrdinalIgnoreCase))
                 {
                     // add 1 day to take it to 1st Jan following year
                     // this makes the range of "bef 1900" change to 
@@ -616,7 +616,7 @@ namespace FTAnalyzer
                     int pos = processDate.IndexOf(" AND ", StringComparison.Ordinal);
                     if (pos == -1)
                     {
-                        pos = processDate.IndexOf('-');
+                        pos = processDate.IndexOf('-', StringComparison.Ordinal);
                         byte[] asciiBytes = Encoding.ASCII.GetBytes(processDate);
                         if (pos == -1)
                             throw new FactDateException("Invalid BETween date no AND found");
@@ -635,9 +635,9 @@ namespace FTAnalyzer
                         fromdate = "01 " + fromdate + processDate[(pos + 8)..];
                     else if (fromdate.Length == 4)
                         fromdate = "01 JAN " + fromdate;
-                    else if (fromdate.Length < 7 && fromdate.Contains(' '))
+                    else if (fromdate.Length < 7 && fromdate.Contains(' ', StringComparison.OrdinalIgnoreCase))
                         fromdate = fromdate + " " + processDate[(pos + 11)..];
-                    StartDate = ParseDate(fromdate.Replace("  ", " "), LOW, 0, EndDate.Year);
+                    StartDate = ParseDate(fromdate.Replace("  ", " ", StringComparison.Ordinal), LOW, 0, EndDate.Year);
                     EndDate = ParseDate(todate, HIGH, 0);
                 }
                 else
@@ -700,8 +700,8 @@ namespace FTAnalyzer
                         gMonth = matcher.Groups[2];
                         gYear = matcher.Groups[3];
                         gDouble = matcher.Groups[4];
-                        if (dateValue.Contains('/'))
-                            dateValue = dateValue[..dateValue.IndexOf('/')]; // remove the trailing / and 1 or 2 digits
+                        if (dateValue.Contains('/', StringComparison.OrdinalIgnoreCase))
+                            dateValue = dateValue[..dateValue.IndexOf('/', StringComparison.Ordinal)]; // remove the trailing / and 1 or 2 digits
                     }
                     else if (matcher2.Success)
                     {
@@ -718,8 +718,8 @@ namespace FTAnalyzer
                         gMonth = matcher3.Groups[2];
                         gYear = matcher3.Groups[3];
                         gDouble = matcher3.Groups[4];
-                        if (dateValue.Contains('/'))
-                            dateValue = dateValue[..dateValue.IndexOf('/')]; // remove the trailing / and 1 or 2 digits
+                        if (dateValue.Contains('/', StringComparison.OrdinalIgnoreCase))
+                            dateValue = dateValue[..dateValue.IndexOf('/', StringComparison.Ordinal)]; // remove the trailing / and 1 or 2 digits
                     }
                     else if (NonGedcomDate.Default.UseNonGedcomDates)
                     {
@@ -917,7 +917,7 @@ namespace FTAnalyzer
         {
             get
             {
-                if (DateString.Equals(UNKNOWNSTRING))
+                if (DateString.Equals(UNKNOWNSTRING, StringComparison.OrdinalIgnoreCase))
                     return UNKNOWN_DATE;
                 if (StartDate == MINDATE)
                     return new FactDate(EndDate, EndDate);
@@ -1096,7 +1096,7 @@ namespace FTAnalyzer
                 return false;
             FactDate f = (FactDate)obj;
             // two FactDates are equal if same datestring or same start and- enddates
-            return DateString.ToUpper().Equals(f.DateString.ToUpper()) ||
+            return DateString.ToUpper().Equals(f.DateString.ToUpper(), StringComparison.OrdinalIgnoreCase) ||
                    StartDate.Equals(f.StartDate) && EndDate.Equals(f.EndDate);
         }
 

@@ -1,4 +1,4 @@
-﻿namespace FTAnalyzer
+namespace FTAnalyzer
 {
     public class LostCousinsReferralComparer : Comparer<ExportReferrals>
     {
@@ -7,13 +7,13 @@
             if (x is null && y is null) return 0;
             if (x is null) return -1;
             if (y is null) return 1;
-            if (x.ShortCode.Equals(y.ShortCode))
+            if (x.ShortCode.Equals(y.ShortCode, StringComparison.OrdinalIgnoreCase))
             {
-                if (x.Census.Equals(y.Census))
+                if (x.Census.Equals(y.Census, StringComparison.OrdinalIgnoreCase))
                 {
-                    if (x.CensusReference.Equals(y.CensusReference))
+                    if (x.CensusReference.Equals(y.CensusReference, StringComparison.OrdinalIgnoreCase))
                     {
-                        if (x.FamilyID.Equals(y.FamilyID))
+                        if (x.FamilyID.Equals(y.FamilyID, StringComparison.OrdinalIgnoreCase))
                         {
                             if (x.Age.Equals(y.Age))
                             {

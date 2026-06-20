@@ -16,12 +16,12 @@
             IndividualB_BirthDate = dup.MatchBirthDate.ToString();
         }
 
-        public string IndividualA_ID { get; set; }
-        public string IndividualA_Name { get; set; }
-        public string IndividualA_BirthDate { get; set; }
-        public string IndividualB_ID { get; set; }
-        public string IndividualB_Name { get; set; }
-        public string IndividualB_BirthDate { get; set; }
+        public string IndividualA_ID { get; set; } = string.Empty;
+        public string IndividualA_Name { get; set; } = string.Empty;
+        public string IndividualA_BirthDate { get; set; } = string.Empty;
+        public string IndividualB_ID { get; set; } = string.Empty;
+        public string IndividualB_Name { get; set; } = string.Empty;
+        public string IndividualB_BirthDate { get; set; } = string.Empty;
 
         public override bool Equals(object? obj)
         {

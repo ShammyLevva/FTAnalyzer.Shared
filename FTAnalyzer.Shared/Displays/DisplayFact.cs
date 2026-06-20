@@ -1,4 +1,4 @@
-﻿#if __PC__
+#if __PC__
 using FTAnalyzer.Graphics;
 #endif
 
@@ -6,8 +6,8 @@ namespace FTAnalyzer
 {
     public class DisplayFact : IDisplayFact, IComparable
     {
-        public string Surname { get; private set; }
-        public string Forenames { get; private set; }
+        public string Surname { get; private set; } = string.Empty;
+        public string Forenames { get; private set; } = string.Empty;
         public Individual? Ind { get; private set; }
         public Fact Fact { get; set; }
         public bool IgnoreFact { get; set; }
@@ -16,7 +16,7 @@ namespace FTAnalyzer
         public Image Icon { get; private set; }
         public Color BackColour { get; set; }
 #endif
-        public DisplayFact(Individual? ind, Fact fact) : this(ind, ind.Surname, ind.Forenames, fact) { }
+        public DisplayFact(Individual? ind, Fact fact) : this(ind, ind?.Surname ?? string.Empty, ind?.Forenames ?? string.Empty, fact) { }
         public DisplayFact(Individual? ind, string surname, string forenames, Fact fact)
         {
             Ind = ind;
@@ -67,14 +67,15 @@ namespace FTAnalyzer
         public int CompareTo(object? obj)
         {
             DisplayFact? that = obj as DisplayFact;
-            return FactDate == that.FactDate && Ind is not null ? Ind.CompareTo(that.Ind) : FactDate.CompareTo(that.FactDate);
+            return FactDate == (that?.FactDate ?? FactDate.UNKNOWN_DATE) && Ind is not null ? 
+                Ind.CompareTo(that?.Ind) : FactDate.CompareTo(that?.FactDate ?? FactDate.UNKNOWN_DATE);
         }
 
         public override bool Equals(object? obj)
         {
             if (obj is null) return false;
             DisplayFact that = (DisplayFact)obj;
-            return FactHash.Equals(that.FactHash); //this.Ind.Equals(that.Ind) && this.Fact.Equals(that.Fact);
+            return FactHash.Equals(that.FactHash, StringComparison.OrdinalIgnoreCase); //this.Ind.Equals(that.Ind, StringComparison.OrdinalIgnoreCase) && this.Fact.Equals(that.Fact, StringComparison.OrdinalIgnoreCase);
         }
 
         public override int GetHashCode() => base.GetHashCode();

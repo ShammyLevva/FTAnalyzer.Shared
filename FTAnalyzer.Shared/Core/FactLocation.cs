@@ -5,6 +5,7 @@ using System.Xml;
 using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Collections.Immutable;
 #if __PC__
 using FTAnalyzer.Graphics;
@@ -41,9 +42,9 @@ namespace FTAnalyzer
         public string PlaceNoNumerics { get; private set; }
         public string FuzzyMatch { get; private set; }
         public string FuzzyNoParishMatch { get; private set; }
-        public string ParishID { get; internal set; }
+        public string? ParishID { get; internal set; }
         public int Level { get; private set; }
-        public Region KnownRegion { get; private set; }
+        public Region? KnownRegion { get; private set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public double LatitudeM { get; set; }
@@ -131,86 +132,98 @@ namespace FTAnalyzer
                 StringReader sreader = new(xml);
                 using (XmlReader reader = XmlReader.Create(sreader, new XmlReaderSettings() { XmlResolver = null }))
                     xmlDoc.Load(reader);
-                foreach (XmlNode n in xmlDoc.SelectNodes("Data/Fixes/CountryTypos/CountryTypo"))
-                {
-                    string from = n.Attributes["from"].Value;
-                    string to = n.Attributes["to"].Value;
-                    if (!string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to))
-                        if (!COUNTRY_TYPOS.TryAdd(from, to))
-                            Debug.WriteLine(string.Format("Error duplicate country typos :{0}", from));
-                }
-                foreach (XmlNode n in xmlDoc.SelectNodes("Data/Fixes/RegionTypos/RegionTypo"))
-                {
-                    string from = n.Attributes["from"].Value;
-                    string to = n.Attributes["to"].Value;
-                    if (!string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to))
-                        if (!REGION_TYPOS.TryAdd(from, to))
-                            Debug.WriteLine(string.Format("Error duplicate region typos :{0}", from));
-                }
-                foreach (XmlNode n in xmlDoc.SelectNodes("Data/Fixes/ChapmanCodes/ChapmanCode"))
-                {  // add Chapman code to Region Typos to convert locations with codes to region text strings
-                    string chapmanCode = n.Attributes["chapmanCode"].Value;
-                    string countyName = n.Attributes["countyName"].Value;
-                    if (!string.IsNullOrEmpty(chapmanCode) && !string.IsNullOrEmpty(countyName))
-                        if (!REGION_TYPOS.TryAdd(chapmanCode, countyName))
-                            Debug.WriteLine(string.Format("Error duplicate region typos adding ChapmanCode :{0}", chapmanCode));
-                }
-                foreach (XmlNode n in xmlDoc.SelectNodes("Data/Fixes/DemoteCountries/CountryToRegion"))
-                {
-                    string from = n.Attributes["region"].Value;
-                    string to = n.Attributes["country"].Value;
-                    if (!string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to))
-                        if (!COUNTRY_SHIFTS.TryAdd(from, to))
-                            Debug.WriteLine(string.Format("Error duplicate country shift :{0}", from));
-                }
-                foreach (XmlNode n in xmlDoc.SelectNodes("Data/Fixes/DemoteCountries/CityAddCountry"))
-                {
-                    string from = n.Attributes["city"].Value;
-                    string to = n.Attributes["country"].Value;
-                    if (!string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to))
+                if (xmlDoc.SelectNodes("Data/Fixes/CountryTypos/CountryTypo") is XmlNodeList countryTypoNodes)
+                    foreach (XmlNode n in countryTypoNodes)
                     {
-                        if (!CITY_ADD_COUNTRY.TryAdd(from, to))
-                            Debug.WriteLine(string.Format("Error duplicate city add country :{0}", from));
-                        if (COUNTRY_SHIFTS.ContainsKey(from)) // also check country shifts for duplicates
-                            Debug.WriteLine(string.Format("Error duplicate city in country shift :{0}", from));
+                        string? from = n.Attributes?["from"]?.Value;
+                        string? to = n.Attributes?["to"]?.Value;
+                        if (!string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to))
+                            if (!COUNTRY_TYPOS.TryAdd(from, to))
+                                Debug.WriteLine(string.Format("Error duplicate country typos :{0}", from));
                     }
-                }
-                foreach (XmlNode n in xmlDoc.SelectNodes("Data/Fixes/DemoteRegions/RegionToParish"))
-                {
-                    string from = n.Attributes["parish"].Value;
-                    string to = n.Attributes["region"].Value;
-                    if (!string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to))
-                        if (!REGION_SHIFTS.TryAdd(from, to))
-                            Debug.WriteLine(string.Format("Error duplicate region shift :{0}", from));
-                }
-                foreach (XmlNode n in xmlDoc.SelectNodes("Data/Lookups/FreeCen/Lookup"))
-                {
-                    string code = n.Attributes["code"].Value;
-                    string county = n.Attributes["county"].Value;
-                    if (!string.IsNullOrEmpty(code) && !string.IsNullOrEmpty(county))
-                        if (!FREECEN_LOOKUP.TryAdd(county, code))
-                            Debug.WriteLine(string.Format("Error duplicate freecen lookup :{0}", county));
-                    }
-                foreach (XmlNode n in xmlDoc.SelectNodes("Data/Lookups/FindMyPast/Lookup"))
-                {
-                    string code = n.Attributes["code"].Value;
-                    string county = n.Attributes["county"].Value;
-                    string country = n.Attributes["country"].Value;
-                    if (!string.IsNullOrEmpty(code) && !string.IsNullOrEmpty(county))
+                if (xmlDoc.SelectNodes("Data/Fixes/RegionTypos/RegionTypo") is XmlNodeList regionTypoNodes)
+                    foreach (XmlNode n in regionTypoNodes)
                     {
-                        Tuple<string, string> result = new(country, code);
-                        if (!FINDMYPAST_LOOKUP.TryAdd(county, result))
-                            Debug.WriteLine(string.Format("Error duplicate FindMyPast lookup :{0}", county));
+                        string? from = n.Attributes?["from"]?.Value;
+                        string? to = n.Attributes?["to"]?.Value;
+                        if (!string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to))
+                            if (!REGION_TYPOS.TryAdd(from, to))
+                                Debug.WriteLine(string.Format("Error duplicate region typos :{0}", from));
                     }
-                }
-                foreach (XmlNode n in xmlDoc.SelectNodes("Data/GoogleGeocodes/CountryFixes/CountryFix"))
-                    AddGoogleFixes(GOOGLE_FIXES, n, COUNTRY);
-                foreach (XmlNode n in xmlDoc.SelectNodes("Data/GoogleGeocodes/RegionFixes/RegionFix"))
-                    AddGoogleFixes(GOOGLE_FIXES, n, REGION);
-                foreach (XmlNode n in xmlDoc.SelectNodes("Data/GoogleGeocodes/SubRegionFixes/SubRegionFix"))
-                    AddGoogleFixes(GOOGLE_FIXES, n, SUBREGION);
-                foreach (XmlNode n in xmlDoc.SelectNodes("Data/GoogleGeocodes/MultiLevelFixes/MultiLevelFix"))
-                    AddGoogleFixes(GOOGLE_FIXES, n, UNKNOWN);
+                if (xmlDoc.SelectNodes("Data/Fixes/ChapmanCodes/ChapmanCode") is XmlNodeList chapmanCodeNodes)
+                    foreach (XmlNode n in chapmanCodeNodes)
+                    {  // add Chapman code to Region Typos to convert locations with codes to region text strings
+                        string? chapmanCode = n.Attributes?["chapmanCode"]?.Value;
+                        string? countyName = n.Attributes?["countyName"]?.Value;
+                        if (!string.IsNullOrEmpty(chapmanCode) && !string.IsNullOrEmpty(countyName))
+                            if (!REGION_TYPOS.TryAdd(chapmanCode, countyName))
+                                Debug.WriteLine(string.Format("Error duplicate region typos adding ChapmanCode :{0}", chapmanCode));
+                    }
+                if (xmlDoc.SelectNodes("Data/Fixes/DemoteCountries/CountryToRegion") is XmlNodeList demoteCountryNodes)
+                    foreach (XmlNode n in demoteCountryNodes)
+                    {
+                        string? from = n.Attributes?["region"]?.Value;
+                        string? to = n.Attributes?["country"]?.Value;
+                        if (!string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to))
+                            if (!COUNTRY_SHIFTS.TryAdd(from, to))
+                                Debug.WriteLine(string.Format("Error duplicate country shift :{0}", from));
+                    }
+                if (xmlDoc.SelectNodes("Data/Fixes/DemoteCountries/CityAddCountry") is XmlNodeList cityAddCountryNodes)
+                    foreach (XmlNode n in cityAddCountryNodes)
+                    {
+                        string? from = n.Attributes?["city"]?.Value;
+                        string? to = n.Attributes?["country"]?.Value;
+                        if (!string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to))
+                        {
+                            if (!CITY_ADD_COUNTRY.TryAdd(from, to))
+                                Debug.WriteLine(string.Format("Error duplicate city add country :{0}", from));
+                            if (COUNTRY_SHIFTS.ContainsKey(from)) // also check country shifts for duplicates
+                                Debug.WriteLine(string.Format("Error duplicate city in country shift :{0}", from));
+                        }
+                    }
+                if (xmlDoc.SelectNodes("Data/Fixes/DemoteRegions/RegionToParish") is XmlNodeList demoteRegionNodes)
+                    foreach (XmlNode n in demoteRegionNodes)
+                    {
+                        string? from = n.Attributes?["parish"]?.Value;
+                        string? to = n.Attributes?["region"]?.Value;
+                        if (!string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to))
+                            if (!REGION_SHIFTS.TryAdd(from, to))
+                                Debug.WriteLine(string.Format("Error duplicate region shift :{0}", from));
+                    }
+                if (xmlDoc.SelectNodes("Data/Lookups/FreeCen/Lookup") is XmlNodeList freeCenNodes)
+                    foreach (XmlNode n in freeCenNodes)
+                    {
+                        string? code = n.Attributes?["code"]?.Value;
+                        string? county = n.Attributes?["county"]?.Value;
+                        if (!string.IsNullOrEmpty(code) && !string.IsNullOrEmpty(county))
+                            if (!FREECEN_LOOKUP.TryAdd(county, code))
+                                Debug.WriteLine(string.Format("Error duplicate freecen lookup :{0}", county));
+                    }
+                if (xmlDoc.SelectNodes("Data/Lookups/FindMyPast/Lookup") is XmlNodeList findMyPastNodes)
+                    foreach (XmlNode n in findMyPastNodes)
+                    {
+                        string? code = n.Attributes?["code"]?.Value;
+                        string? county = n.Attributes?["county"]?.Value;
+                        string? country = n.Attributes?["country"]?.Value;
+                        if (!string.IsNullOrEmpty(code) && !string.IsNullOrEmpty(county) && !string.IsNullOrEmpty(country))
+                        {
+                            Tuple<string, string> result = new(country, code);
+                            if (!FINDMYPAST_LOOKUP.TryAdd(county, result))
+                                Debug.WriteLine(string.Format("Error duplicate FindMyPast lookup :{0}", county));
+                        }
+                    }
+                if (xmlDoc.SelectNodes("Data/GoogleGeocodes/CountryFixes/CountryFix") is XmlNodeList countryFixNodes)
+                    foreach (XmlNode n in countryFixNodes)
+                        AddGoogleFixes(GOOGLE_FIXES, n, COUNTRY);
+                if (xmlDoc.SelectNodes("Data/GoogleGeocodes/RegionFixes/RegionFix") is XmlNodeList regionFixNodes)
+                    foreach (XmlNode n in regionFixNodes)
+                        AddGoogleFixes(GOOGLE_FIXES, n, REGION);
+                if (xmlDoc.SelectNodes("Data/GoogleGeocodes/SubRegionFixes/SubRegionFix") is XmlNodeList subRegionFixNodes)
+                    foreach (XmlNode n in subRegionFixNodes)
+                        AddGoogleFixes(GOOGLE_FIXES, n, SUBREGION);
+                if (xmlDoc.SelectNodes("Data/GoogleGeocodes/MultiLevelFixes/MultiLevelFix") is XmlNodeList multiLevelFixNodes)
+                    foreach (XmlNode n in multiLevelFixNodes)
+                        AddGoogleFixes(GOOGLE_FIXES, n, UNKNOWN);
                 ValidateTypoFixes();
                 ValidateCounties();
                 foreach (KeyValuePair<string, string> kvp in CITY_ADD_COUNTRY)
@@ -244,7 +257,7 @@ namespace FTAnalyzer
         {
             foreach (Region region in Regions.UK_REGIONS)
             {
-                if (region.CountyCodes.Count == 0 &&
+                if ((region.CountyCodes?.Count ?? 0) == 0 &&
                     (region.Country == Countries.ENGLAND || region.Country == Countries.WALES || region.Country == Countries.SCOTLAND))
                     Debug.WriteLine($"Missing Conversions for region: {region}");
             }
@@ -265,14 +278,18 @@ namespace FTAnalyzer
                     StringReader sreader = new(xml);
                     using (XmlReader reader = XmlReader.Create(sreader, new XmlReaderSettings() { XmlResolver = null }))
                         xmlDoc.Load(reader);
-                    foreach (XmlNode n in xmlDoc.SelectNodes("GoogleGeocodes/CountryFixes/CountryFix"))
-                        AddGoogleFixes(LOCAL_GOOGLE_FIXES, n, COUNTRY);
-                    foreach (XmlNode n in xmlDoc.SelectNodes("GoogleGeocodes/RegionFixes/RegionFix"))
-                        AddGoogleFixes(LOCAL_GOOGLE_FIXES, n, REGION);
-                    foreach (XmlNode n in xmlDoc.SelectNodes("GoogleGeocodes/SubRegionFixes/SubRegionFix"))
-                        AddGoogleFixes(LOCAL_GOOGLE_FIXES, n, SUBREGION);
-                    foreach (XmlNode n in xmlDoc.SelectNodes("GoogleGeocodes/MultiLevelFixes/MultiLevelFix"))
-                        AddGoogleFixes(LOCAL_GOOGLE_FIXES, n, UNKNOWN);
+                    if (xmlDoc.SelectNodes("GoogleGeocodes/CountryFixes/CountryFix") is XmlNodeList localCountryFixNodes)
+                        foreach (XmlNode n in localCountryFixNodes)
+                            AddGoogleFixes(LOCAL_GOOGLE_FIXES, n, COUNTRY);
+                    if (xmlDoc.SelectNodes("GoogleGeocodes/RegionFixes/RegionFix") is XmlNodeList localRegionFixNodes)
+                        foreach (XmlNode n in localRegionFixNodes)
+                            AddGoogleFixes(LOCAL_GOOGLE_FIXES, n, REGION);
+                    if (xmlDoc.SelectNodes("GoogleGeocodes/SubRegionFixes/SubRegionFix") is XmlNodeList localSubRegionFixNodes)
+                        foreach (XmlNode n in localSubRegionFixNodes)
+                            AddGoogleFixes(LOCAL_GOOGLE_FIXES, n, SUBREGION);
+                    if (xmlDoc.SelectNodes("GoogleGeocodes/MultiLevelFixes/MultiLevelFix") is XmlNodeList localMultiLevelFixNodes)
+                        foreach (XmlNode n in localMultiLevelFixNodes)
+                            AddGoogleFixes(LOCAL_GOOGLE_FIXES, n, UNKNOWN);
                     progress.Report(string.Format("\nLoaded {0} Google Fixes.", LOCAL_GOOGLE_FIXES.Count));
                 }
             }
@@ -286,8 +303,8 @@ namespace FTAnalyzer
 
         static void AddGoogleFixes(Dictionary<Tuple<int, string>, string> dictionary, XmlNode n, int level)
         {
-            string fromstr = n.Attributes["from"]?.Value ?? string.Empty;
-            string to = n.Attributes["to"]?.Value ?? string.Empty;
+            string fromstr = n.Attributes?["from"]?.Value ?? string.Empty;
+            string to = n.Attributes?["to"]?.Value ?? string.Empty;
             if (fromstr.Length > 0 && to.Length > 0)
             {
                 Tuple<int, string> from = new(level, fromstr.ToUpperInvariant());
@@ -323,6 +340,14 @@ namespace FTAnalyzer
             Place = string.Empty;
             ParishID = null;
             FuzzyMatch = string.Empty;
+            CountryMetaphone = string.Empty;
+            RegionMetaphone = string.Empty;
+            SubRegionMetaphone = string.Empty;
+            AddressMetaphone = string.Empty;
+            PlaceMetaphone = string.Empty;
+            AddressNoNumerics = string.Empty;
+            PlaceNoNumerics = string.Empty;
+            FuzzyNoParishMatch = string.Empty;
             individuals = [];
             Latitude = 0;
             Longitude = 0;
@@ -460,11 +485,11 @@ namespace FTAnalyzer
             FactLocation? temp;
             if (string.IsNullOrEmpty(place))
                 return BLANK_LOCATION;
-            if (place.Equals(UNKNOWNSTRING, StringComparison.CurrentCultureIgnoreCase))
+            if (place.Equals(UNKNOWNSTRING, StringComparison.OrdinalIgnoreCase))
                 return UNKNOWN_LOCATION;
             // GEDCOM lat/long will be prefixed with NS and EW which needs to be +/- to work.
-            latitude = latitude.Replace("N", "").Replace("S", "-");
-            longitude = longitude.Replace("W", "-").Replace("E", "");
+            latitude = latitude.Replace("N", "", StringComparison.Ordinal).Replace("S", "-", StringComparison.Ordinal);
+            longitude = longitude.Replace("W", "-", StringComparison.Ordinal).Replace("E", "", StringComparison.Ordinal);
             if (LOCATIONS.TryGetValue(place, out FactLocation? result))
             {  // found location now check if we need to update its geocoding
                 if (updateLatLong && result is not null && !result.IsGeoCoded(true))
@@ -547,6 +572,7 @@ namespace FTAnalyzer
 
         public static IEnumerable<FactLocation> AllLocations => LOCATIONS.Values;
 
+        [MemberNotNull(nameof(LOCATIONS), nameof(LOCAL_GOOGLE_FIXES))]
         public static void ResetLocations()
         {
             COUNTRY_TYPOS = [];
@@ -686,27 +712,27 @@ namespace FTAnalyzer
                 Place = char.ToUpper(Place[0]) + Place[1..];
         }
 
-        void FixRegionFullStops() => Region = Region.Replace(".", " ").Trim();
+        void FixRegionFullStops() => Region = Region.Replace(".", " ", StringComparison.Ordinal).Trim();
 
-        void FixCountryFullStops() => Country = Country.Replace(".", " ").Trim();
+        void FixCountryFullStops() => Country = Country.Replace(".", " ", StringComparison.Ordinal).Trim();
 
         void FixMultipleSpacesAmpersandsCommas()
         {
-            while (Country.Contains("  "))
-                Country = Country.Replace("  ", " ");
-            while (Region.Contains("  "))
-                Region = Region.Replace("  ", " ");
-            while (SubRegion.Contains("  "))
-                SubRegion = SubRegion.Replace("  ", " ");
-            while (Address.Contains("  "))
-                Address = Address.Replace("  ", " ");
-            while (Place.Contains("  "))
-                Place = Place.Replace("  ", " ");
-            Country = Country.Replace("&", "and").Replace(",", "").Trim();
-            Region = Region.Replace("&", "and").Replace(",", "").Trim();
-            SubRegion = SubRegion.Replace("&", "and").Replace(",", "").Trim();
-            Address = Address.Replace("&", "and").Replace(",", "").Trim();
-            Place = Place.Replace("&", "and").Replace(",", "").Trim();
+            while (Country.Contains("  ", StringComparison.OrdinalIgnoreCase))
+                Country = Country.Replace("  ", " ", StringComparison.Ordinal);
+            while (Region.Contains("  ", StringComparison.OrdinalIgnoreCase))
+                Region = Region.Replace("  ", " ", StringComparison.Ordinal);
+            while (SubRegion.Contains("  ", StringComparison.OrdinalIgnoreCase))
+                SubRegion = SubRegion.Replace("  ", " ", StringComparison.Ordinal);
+            while (Address.Contains("  ", StringComparison.OrdinalIgnoreCase))
+                Address = Address.Replace("  ", " ", StringComparison.Ordinal);
+            while (Place.Contains("  ", StringComparison.OrdinalIgnoreCase))
+                Place = Place.Replace("  ", " ", StringComparison.Ordinal);
+            Country = Country.Replace("&", "and", StringComparison.Ordinal).Replace(",", "", StringComparison.Ordinal).Trim();
+            Region = Region.Replace("&", "and", StringComparison.Ordinal).Replace(",", "", StringComparison.Ordinal).Trim();
+            SubRegion = SubRegion.Replace("&", "and", StringComparison.Ordinal).Replace(",", "", StringComparison.Ordinal).Trim();
+            Address = Address.Replace("&", "and", StringComparison.Ordinal).Replace(",", "", StringComparison.Ordinal).Trim();
+            Place = Place.Replace("&", "and", StringComparison.Ordinal).Replace(",", "", StringComparison.Ordinal).Trim();
         }
 
         void FixUKGBTypos()
@@ -737,7 +763,7 @@ namespace FTAnalyzer
 
         string FixRegionTypos(string toFix)
         {
-            if (Country == Countries.AUSTRALIA && toFix.Equals("WA"))
+            if (Country == Countries.AUSTRALIA && toFix.Equals("WA", StringComparison.OrdinalIgnoreCase))
                 return "Western Australia"; // fix for WA = Washington
             REGION_TYPOS.TryGetValue(toFix, out string? result);
             if (!string.IsNullOrEmpty(result))
@@ -788,14 +814,14 @@ namespace FTAnalyzer
 
         void FixDoubleLocations()
         {
-            if (Country.Equals(Region))
+            if (Country.Equals(Region, StringComparison.OrdinalIgnoreCase))
             {
                 Region = SubRegion;
                 SubRegion = Address;
                 Address = Place;
                 Place = string.Empty;
             }
-            if (Region.Equals(SubRegion))
+            if (Region.Equals(SubRegion, StringComparison.OrdinalIgnoreCase))
             {
                 SubRegion = Address;
                 Address = Place;
@@ -994,7 +1020,7 @@ namespace FTAnalyzer
 #if __PC__
                 if (ViewPort is not null)
                 {
-                    double pixelWidth = Screen.PrimaryScreen.Bounds.Width;  // tweak to get best results as required 
+                    double pixelWidth = Screen.PrimaryScreen?.Bounds.Width ?? 1920;  // tweak to get best results as required
                     double GLOBE_WIDTH = 512; // a constant in Google's map projection
                     var west = ViewPort.SouthWest.Long / 100000;
                     var east = ViewPort.NorthEast.Long / 100000;
@@ -1016,8 +1042,8 @@ namespace FTAnalyzer
                     (GeocodeStatus == Geocode.GEDCOM_USER || GeocodeStatus == Geocode.OS_50KMATCH || GeocodeStatus == Geocode.OS_50KPARTIAL || GeocodeStatus == Geocode.OS_50KFUZZY);
 
         public string FixedLocation { get; set; }
-        public string Address1 { get; set; }
-        public string Place1 { get; set; }
+        public string Address1 { get; set; } = string.Empty;
+        public string Place1 { get; set; } = string.Empty;
         #endregion
 
         #region General Functions
@@ -1081,7 +1107,7 @@ namespace FTAnalyzer
 
         static string FixNumerics(string addressField, bool returnNumber)
         {
-            int pos = addressField.IndexOf(' ');
+            int pos = addressField.IndexOf(' ', StringComparison.Ordinal);
             if (pos > 0 && pos < addressField.Length)
             {
                 string number = addressField[..pos];
@@ -1095,7 +1121,7 @@ namespace FTAnalyzer
 
         public bool CensusCountryMatches(string s, bool includeUnknownCountries)
         {
-            if (Country.Equals(s))
+            if (Country.Equals(s, StringComparison.OrdinalIgnoreCase))
                 return true;
             if (includeUnknownCountries)
             {

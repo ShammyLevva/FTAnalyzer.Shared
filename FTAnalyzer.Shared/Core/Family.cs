@@ -1,4 +1,4 @@
-﻿using FTAnalyzer.Exports;
+using FTAnalyzer.Exports;
 using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
 using System.Numerics;
@@ -16,8 +16,8 @@ namespace FTAnalyzer
         public string FamilyID { get; private set; }
         public IList<Fact> Facts { get; private set; }
         public IList<Individual> Children { get; internal set; }
-        public Individual Husband { get; internal set; }
-        public Individual Wife { get; internal set; }
+        public Individual? Husband { get; internal set; }
+        public Individual? Wife { get; internal set; }
         public int ExpectedTotal { get; internal set; }
         public int ExpectedAlive { get; internal set; }
         public int ExpectedDead { get; internal set; }
@@ -52,9 +52,9 @@ namespace FTAnalyzer
             {
                 XmlNode? eHusband = node.SelectSingleNode("HUSB");
                 XmlNode? eWife = node.SelectSingleNode("WIFE");
-                FamilyID = node.Attributes["ID"]?.Value ?? string.Empty;
-                string husbandID = eHusband?.Attributes["REF"]?.Value ?? string.Empty;
-                string wifeID = eWife?.Attributes["REF"]?.Value ?? string.Empty;
+                FamilyID = node.Attributes?["ID"]?.Value ?? string.Empty;
+                string husbandID = eHusband?.Attributes?["REF"]?.Value ?? string.Empty;
+                string wifeID = eWife?.Attributes?["REF"]?.Value ?? string.Empty;
                 Husband = ft.GetIndividual(husbandID);
                 Wife = ft.GetIndividual(wifeID);
                 if (Husband is not null && Wife is not null)
@@ -64,12 +64,12 @@ namespace FTAnalyzer
 
                 // now iterate through child elements of eChildren
                 // finding all individuals
-                XmlNodeList? list = node.SelectNodes("CHIL");
+                if (node.SelectNodes("CHIL") is XmlNodeList list)
                 foreach (XmlNode n in list)
                 {
-                    if (n.Attributes["REF"] is not null)
+                    if (n.Attributes?["REF"] is XmlAttribute refAttr)
                     {
-                        Individual? child = ft.GetIndividual(n.Attributes["REF"].Value);
+                        Individual? child = ft.GetIndividual(refAttr.Value);
                         if (child is not null)
                         {
                             XmlNode? fatherNode = n.SelectSingleNode("_FREL");
@@ -196,7 +196,8 @@ namespace FTAnalyzer
 
         void AddFacts(XmlNode node, string factType, IProgress<string> outputText)
         {
-            XmlNodeList? list = node.SelectNodes(factType);
+            if (node.SelectNodes(factType) is not XmlNodeList list)
+                return;
             bool preferredFact = true;
             foreach (XmlNode n in list)
             {
@@ -369,7 +370,7 @@ namespace FTAnalyzer
         {
             get
             {
-                if (FamilyType.Equals(SOLOINDIVIDUAL))
+                if (FamilyType.Equals(SOLOINDIVIDUAL, StringComparison.OrdinalIgnoreCase))
                 {
                     var name = Husband?.Name ?? Wife?.Name ?? string.Empty;
                     return $"Solo Family {FamilyID}: {name}";
@@ -390,7 +391,7 @@ namespace FTAnalyzer
 
         public bool ContainsSurname(string surname, bool ignoreCase) =>
                 ignoreCase ? Members.Any(x => x.Surname.Equals(surname, StringComparison.OrdinalIgnoreCase)) :
-                             Members.Any(x => x.Surname.Equals(surname));
+                             Members.Any(x => x.Surname.Equals(surname, StringComparison.OrdinalIgnoreCase));
 
         public bool On1911Census
         {
@@ -572,7 +573,7 @@ namespace FTAnalyzer
 
         public bool BothParentsAlive(FactDate when)
         {
-            if (Husband is null || Wife is null || FamilyType.Equals(SOLOINDIVIDUAL))
+            if (Husband is null || Wife is null || FamilyType.Equals(SOLOINDIVIDUAL, StringComparison.OrdinalIgnoreCase))
                 return false;
             return Husband.IsAlive(when) && Wife.IsAlive(when) && Husband.GetAge(when).MinAge > 13 && Wife.GetAge(when).MinAge > 13;
         }

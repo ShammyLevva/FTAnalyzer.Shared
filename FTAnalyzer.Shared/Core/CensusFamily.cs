@@ -6,8 +6,8 @@ namespace FTAnalyzer
     {
         public CensusDate CensusDate { get; private set; }
         public FactLocation BestLocation { get; private set; }
-        public new CensusIndividual Husband { get; private set; }
-        public new CensusIndividual Wife { get; private set; }
+        public new CensusIndividual? Husband { get; private set; }
+        public new CensusIndividual? Wife { get; private set; }
         public new List<CensusIndividual> Children { get; private set; }
 
         List<CensusIndividual> FamilyChildren { get; set; }
@@ -18,7 +18,7 @@ namespace FTAnalyzer
         {
             BaseFamily = f;
             CensusDate = censusDate;
-            BestLocation = null;
+            BestLocation = FactLocation.UNKNOWN_LOCATION;
             int position = 1;
 
             if (f.Wife is not null)
@@ -58,7 +58,7 @@ namespace FTAnalyzer
                 if (IsValidIndividual(Wife, censusDone, true, checkCensus))
                 {
                     result = true;
-                    facts.AddRange(Wife.PersonalFacts);
+                    facts.AddRange(Wife!.PersonalFacts);
                 }
                 else
                     Wife = null;
@@ -67,7 +67,7 @@ namespace FTAnalyzer
                 if (IsValidIndividual(Husband, censusDone, true, checkCensus))
                 {
                     result = true;
-                    facts.AddRange(Husband.PersonalFacts);
+                    facts.AddRange(Husband!.PersonalFacts);
                 }
                 else
                     Husband = null;
@@ -93,12 +93,12 @@ namespace FTAnalyzer
                     }
                 }
                 Children = censusChildren;
-                BestLocation = FactLocation.BestLocation(facts, censusDate);
+                BestLocation = FactLocation.BestLocation(facts, censusDate) ?? FactLocation.UNKNOWN_LOCATION;
             }
             return result;
         }
 
-        bool IsValidIndividual(CensusIndividual indiv, bool censusDone, bool parentCheck, bool checkCensus)
+        bool IsValidIndividual(CensusIndividual? indiv, bool censusDone, bool parentCheck, bool checkCensus)
         {
             if (indiv is null)
                 return false;

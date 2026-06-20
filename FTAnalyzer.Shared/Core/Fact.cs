@@ -1,4 +1,4 @@
-﻿using FTAnalyzer.Properties;
+using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
 using System.Collections.Immutable;
 using System.Text;
@@ -59,7 +59,7 @@ namespace FTAnalyzer
         public static readonly Dictionary<string, string> NON_STANDARD_FACTS = [];
         static readonly Dictionary<string, string> CUSTOM_TAGS = [];
         static readonly HashSet<string> COMMENT_FACTS = [];
-        
+
         const string UNKNOWNSTRING = "UNKNOWN";
         const string LCSTRING = "Lost Cousins";
         const string CENSUSSTRING = "Census";
@@ -432,14 +432,14 @@ namespace FTAnalyzer
             CreateFact(node, family.FamilyRef, preferred, null, outputText);
         }
 
-        public Fact(XmlNode node, Individual ind, bool preferred, FactDate deathdate, IProgress<string> outputText)
+        public Fact(XmlNode node, Individual ind, bool preferred, FactDate? deathdate, IProgress<string> outputText)
             : this(preferred)
         {
             Individual = ind;
             Family = null;
             CreateFact(node, ind.IndividualRef, preferred, deathdate, outputText);
         }
-        public Fact(string factType, FactDate date, FactLocation loc, string comment = "", bool preferred = true, bool createdByFTA = false, Individual ind = null)
+        public Fact(string factType, FactDate date, FactLocation? loc, string comment = "", bool preferred = true, bool createdByFTA = false, Individual? ind = null)
             : this(preferred)
         {
             FactType = factType;
@@ -447,11 +447,11 @@ namespace FTAnalyzer
             Comment = comment;
             Created = createdByFTA;
             Place = string.Empty;
-            Location = loc;
+            Location = loc ?? FactLocation.UNKNOWN_LOCATION;
             Individual = ind;
         }
 
-        void CreateFact(XmlNode node, string reference, bool preferred, FactDate deathdate, IProgress<string> outputText)
+        void CreateFact(XmlNode? node, string reference, bool preferred, FactDate? deathdate, IProgress<string> outputText)
         {
             if (node is not null)
             {
@@ -474,7 +474,7 @@ namespace FTAnalyzer
                         }
                     }
                     Preferred = preferred;
-                    if (FactType.Equals(CUSTOM_ATTRIBUTE) || FactType.Equals(CUSTOM_EVENT) || FactType.Equals(CUSTOM_FACT))
+                    if (FactType.Equals(CUSTOM_ATTRIBUTE, StringComparison.OrdinalIgnoreCase) || FactType.Equals(CUSTOM_EVENT, StringComparison.OrdinalIgnoreCase) || FactType.Equals(CUSTOM_FACT, StringComparison.OrdinalIgnoreCase))
                     {
                         string tag = FamilyTree.GetText(node, "TYPE", false).ToUpper();
                         if (tag.StartsWith(CENSUSSTRING) || tag.StartsWith("1939 REGISTER"))
@@ -494,10 +494,10 @@ namespace FTAnalyzer
                             Tag = string.IsNullOrEmpty(tag) ? "** Custom Fact with no Fact Type ERROR **" : tag;
                         }
                     }
-                    if (FactType.Equals(NAME))
+                    if (FactType.Equals(NAME, StringComparison.OrdinalIgnoreCase))
                     {
                         string tag = FamilyTree.GetText(node, "TYPE", false).ToUpper();
-                        if (tag.Equals("AKA"))
+                        if (tag.Equals("AKA", StringComparison.OrdinalIgnoreCase))
                             FactType = ALIAS;
                     }
                     var nodeText = FamilyTree.GetText(node, false);
@@ -512,73 +512,77 @@ namespace FTAnalyzer
                         Location.GEDCOMLatLong = true;
 
                     // only check UK census dates for errors as those are used for colour census
-                    if (FactType.Equals(CENSUS) && !nodeText.Contains("STATE CENSUS", StringComparison.CurrentCultureIgnoreCase))
+                    if (FactType.Equals(CENSUS, StringComparison.OrdinalIgnoreCase) && !nodeText.Contains("STATE CENSUS", StringComparison.OrdinalIgnoreCase))
                         CheckCensusDate(CENSUSSTRING, Location);
 
                     // need to check residence after setting location
-                    if (FactType.Equals(RESIDENCE) && GeneralSettings.Default.UseResidenceAsCensus)
+                    if (FactType.Equals(RESIDENCE, StringComparison.OrdinalIgnoreCase) && GeneralSettings.Default.UseResidenceAsCensus)
                         CheckResidenceCensusDate();
 
                     // check Children Status is valid
-                    if (FactType.Equals(CHILDREN1911))
+                    if (FactType.Equals(CHILDREN1911, StringComparison.OrdinalIgnoreCase))
                         CheckValidChildrenStatus(node);
 
                     // now iterate through source elements of the fact finding all sources
                     XmlNodeList? list = node.SelectNodes("SOUR");
-                    foreach (XmlNode n in list)
+                    if (list is not null)
                     {
-                        if (n.Attributes["REF"] is not null)
-                        {   // only process sources with a reference
-                            string srcref = n.Attributes["REF"].Value;
-                            FactSource? source = ft.GetSource(srcref);
-                            string pageText = FamilyTree.GetText(n, "PAGE", true); // Source page text
-                            if (source is not null)
-                            {
-                                Sources.Add(source);
-                                source.AddFact(this);
-                                if (!SourcePages.Contains(pageText))
-                                    SourcePages.Add(pageText);
-                            }
-                            else
-                                outputText.Report($"Source {srcref} not found.\n");
-                            if (IsCensusFact)
-                            {
-                                CensusReference cr = new(this, n, CensusReference); //pass in existing reference so as to not lose any unknown references
-                                // only update census reference if new one is better
-                                if (cr.IsKnownStatus && !CensusReference.IsKnownStatus)
-                                    CensusReference = cr;
-                                else if (cr.IsGoodStatus && !CensusReference.IsGoodStatus)
-                                    CensusReference = cr;
+                        foreach (XmlNode n in list)
+                        {
+                            XmlNode? refNode = n.Attributes?["REF"];
+                            if (refNode is not null)
+                            {   // only process sources with a reference
+                                string srcref = refNode.Value ?? string.Empty;
+                                FactSource? source = ft.GetSource(srcref);
+                                string pageText = FamilyTree.GetText(n, "PAGE", true); // Source page text
+                                if (source is not null)
+                                {
+                                    Sources.Add(source);
+                                    source.AddFact(this);
+                                    if (!SourcePages.Contains(pageText))
+                                        SourcePages.Add(pageText);
+                                }
+                                else
+                                    outputText.Report($"Source {srcref} not found.\n");
+                                if (IsCensusFact)
+                                {
+                                    CensusReference cr = new(this, n, CensusReference); //pass in existing reference so as to not lose any unknown references
+                                                                                        // only update census reference if new one is better
+                                    if (cr.IsKnownStatus && !CensusReference.IsKnownStatus)
+                                        CensusReference = cr;
+                                    else if (cr.IsGoodStatus && !CensusReference.IsGoodStatus)
+                                        CensusReference = cr;
+                                }
                             }
                         }
-                    }
-                    // if we have checked the sources and no census ref see if its been added as a comment to this fact
-                    if (IsCensusFact)
-                    {
-                        CheckForSharedFacts(node);
-                        if (!CensusReference.IsKnownStatus)
-                            CensusReference = new(this, node, CensusReference); //pass in existing reference so as to not lose any unknown references
-                        else if (!CensusReference.IsGoodStatus)
-                            CensusReference.CheckFullUnknownReference(CensusReference.Status);
-                    }
-                    if (GeneralSettings.Default.ConvertResidenceFacts && FactType.Equals(RESIDENCE) && CensusReference.IsKnownStatus)
-                        FactType = CENSUS; // change fact type if option set and residence has a valid census reference
-                    if (FactType == DEATH)
-                    {
-                        Comment = FamilyTree.GetText(node, "CAUS", true);
-                        if (node.FirstChild is not null && node.FirstChild.Value == "Y" && FactDate.IsUnknown)
-                            FactDate = new FactDate(FactDate.MINDATE, FactDate.NOW); // if death flag set as Y then death before today.
-                    }
-                    string age = FamilyTree.GetText(node, "AGE", false);
-                    if (age.Length > 0)
-                        GedcomAge = new Age(age, FactDate);
-                    CertificatePresent = SetCertificatePresent();
-                    if (FactDate.SpecialDate) //check special date is ok
-                    {
-                        //if (FactType == DEATH || FactType == MARRIAGE)
-                        //    throw;
-                        //string message = (node is null) ? string.Empty : node.InnerText + ". ";
-                        //throw new InvalidXMLFactException($"{message}\n            Error {te.Message} text in {FactTypeDescription} fact - a non death fact.\n");
+                        // if we have checked the sources and no census ref see if its been added as a comment to this fact
+                        if (IsCensusFact)
+                        {
+                            CheckForSharedFacts(node);
+                            if (!CensusReference.IsKnownStatus)
+                                CensusReference = new(this, node, CensusReference); //pass in existing reference so as to not lose any unknown references
+                            else if (!CensusReference.IsGoodStatus)
+                                CensusReference.CheckFullUnknownReference(CensusReference.Status);
+                        }
+                        if (GeneralSettings.Default.ConvertResidenceFacts && FactType.Equals(RESIDENCE, StringComparison.OrdinalIgnoreCase) && CensusReference.IsKnownStatus)
+                            FactType = CENSUS; // change fact type if option set and residence has a valid census reference
+                        if (FactType == DEATH)
+                        {
+                            Comment = FamilyTree.GetText(node, "CAUS", true);
+                            if (node.FirstChild is not null && node.FirstChild.Value == "Y" && FactDate.IsUnknown)
+                                FactDate = new FactDate(FactDate.MINDATE, FactDate.NOW); // if death flag set as Y then death before today.
+                        }
+                        string age = FamilyTree.GetText(node, "AGE", false);
+                        if (age.Length > 0)
+                            GedcomAge = new Age(age, FactDate);
+                        CertificatePresent = SetCertificatePresent();
+                        if (FactDate.SpecialDate) //check special date is ok
+                        {
+                            //if (FactType == DEATH || FactType == MARRIAGE)
+                            //    throw;
+                            //string message = (node is null) ? string.Empty : node.InnerText + ". ";
+                            //throw new InvalidXMLFactException($"{message}\n            Error {te.Message} text in {FactTypeDescription} fact - a non death fact.\n");
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -592,12 +596,16 @@ namespace FTAnalyzer
         void CheckForSharedFacts(XmlNode node)
         {
             XmlNodeList? list = node.SelectNodes("_SHAR");
-            foreach (XmlNode n in list)
+            if (list is not null)
             {
-                string? indref = n.Attributes["REF"]?.Value;
-                //string role = FamilyTree.GetText(n, "ROLE", false);
-                if (indref is not null)
-                    FamilyTree.Instance.AddSharedFact(indref, this);
+                foreach (XmlNode n in list)
+                {
+                    XmlNode? refNode = n.Attributes?["REF"];
+                    string? indref = refNode?.Value;
+                    //string role = FamilyTree.GetText(n, "ROLE", false);
+                    if (indref is not null)
+                        FamilyTree.Instance.AddSharedFact(indref, this);
+                }
             }
         }
 
@@ -677,10 +685,13 @@ namespace FTAnalyzer
             if (addr.FirstChild is not null && addr.FirstChild.Value is not null)
                 address.Append(addr.FirstChild.Value);
             XmlNodeList? list = node.SelectNodes("ADDR/CONT");
-            foreach (XmlNode cont in list)
+            if (list is not null)
             {
-                if (cont.FirstChild is not null && cont.FirstChild.Value is not null)
-                    address.Append($" {cont.FirstChild.Value}");
+                foreach (XmlNode cont in list)
+                {
+                    if (cont.FirstChild is not null && cont.FirstChild.Value is not null)
+                        address.Append($" {cont.FirstChild.Value}");
+                }
             }
             if (address.Length > 0)
                 result = (result.Length > 0) ? $"{address}, {result}" : $"{address}";
@@ -701,7 +712,7 @@ namespace FTAnalyzer
         #region Properties
 
         string Tag { get; set; }
-        public Age GedcomAge { get; private set; }
+        public Age? GedcomAge { get; private set; }
         public bool Created { get; protected set; }
         public bool Preferred { get; private set; }
         public CensusReference CensusReference { get; private set; }
@@ -713,8 +724,8 @@ namespace FTAnalyzer
         public int FactErrorNumber { get; private set; }
         public FactError FactErrorLevel { get; private set; }
         public string FactErrorMessage { get; private set; }
-        public Individual Individual { get; private set; }
-        public Family Family { get; private set; }
+        public Individual? Individual { get; private set; }
+        public Family? Family { get; private set; }
         public string FactTypeDescription => (FactType == UNKNOWN && Tag.Length > 0) ? Tag : GetFactTypeDescription(FactType);
 
         public bool IsMarriageFact =>
@@ -744,17 +755,17 @@ namespace FTAnalyzer
                     return true;
                 if (FactDate.CensusYearMatches(CensusDate.EWCENSUS1881) && Countries.IsEnglandWales(Country))
                     return true;
-                if (FactDate.CensusYearMatches(CensusDate.SCOTCENSUS1881) && Country.Equals(Countries.SCOTLAND))
+                if (FactDate.CensusYearMatches(CensusDate.SCOTCENSUS1881) && Country.Equals(Countries.SCOTLAND, StringComparison.OrdinalIgnoreCase))
                     return true;
-                if (FactDate.CensusYearMatches(CensusDate.CANADACENSUS1881) && Country.Equals(Countries.CANADA))
+                if (FactDate.CensusYearMatches(CensusDate.CANADACENSUS1881) && Country.Equals(Countries.CANADA, StringComparison.OrdinalIgnoreCase))
                     return true;
                 if (FactDate.CensusYearMatches(CensusDate.EWCENSUS1911) && Countries.IsEnglandWales(Country))
                     return true;
-                if (FactDate.CensusYearMatches(CensusDate.IRELANDCENSUS1911) && Country.Equals(Countries.IRELAND))
+                if (FactDate.CensusYearMatches(CensusDate.IRELANDCENSUS1911) && Country.Equals(Countries.IRELAND, StringComparison.OrdinalIgnoreCase))
                     return true;
-                if (FactDate.CensusYearMatches(CensusDate.USCENSUS1880) && Country.Equals(Countries.UNITED_STATES))
+                if (FactDate.CensusYearMatches(CensusDate.USCENSUS1880) && Country.Equals(Countries.UNITED_STATES, StringComparison.OrdinalIgnoreCase))
                     return true;
-                if (FactDate.CensusYearMatches(CensusDate.USCENSUS1940) && Country.Equals(Countries.UNITED_STATES))
+                if (FactDate.CensusYearMatches(CensusDate.USCENSUS1940) && Country.Equals(Countries.UNITED_STATES, StringComparison.OrdinalIgnoreCase))
                     return true;
                 return false;
             }
@@ -794,7 +805,7 @@ namespace FTAnalyzer
         public List<string> SourcePages { get; private set; }
 
         public string Country => Location is null ? UNKNOWNSTRING : Location.Country;
-            
+
         public bool CertificatePresent { get; private set; }
 
         #endregion
@@ -883,7 +894,7 @@ namespace FTAnalyzer
                     (tag == "Census 2001" && !FactDate.Overlaps(CensusDate.UKCENSUS2001)) ||
                     (tag == "Census 2011" && !FactDate.Overlaps(CensusDate.UKCENSUS2011)) ||
                     (tag == "Census 2021" && (!Location.IsEnglandWales || !FactDate.Overlaps(CensusDate.EWCENSUS2021))) ||
-                    (tag == "Census 2022" && (!Location.CensusCountry.Equals(Countries.SCOTLAND) || !FactDate.Overlaps(CensusDate.SCOTCENSUS2022))) ||
+                    (tag == "Census 2022" && (!Location.CensusCountry.Equals(Countries.SCOTLAND, StringComparison.OrdinalIgnoreCase) || !FactDate.Overlaps(CensusDate.SCOTCENSUS2022))) ||
                     (tag == CENSUSSTRING && !CensusDate.IsUKCensusYear(FactDate, false)) ||
                     ((tag == LCSTRING || tag == "LostCousins") && !CensusDate.IsLostCousinsCensusYear(FactDate, false))
                     && FactDate.DateString.Length >= 4)
@@ -924,7 +935,7 @@ namespace FTAnalyzer
                     (tag == "Census 2001" && !yearAdjusted.Overlaps(CensusDate.UKCENSUS2001)) ||
                     (tag == "Census 2011" && !yearAdjusted.Overlaps(CensusDate.UKCENSUS2011)) ||
                     (tag == "Census 2021" && (!Location.IsEnglandWales || !yearAdjusted.Overlaps(CensusDate.EWCENSUS2021))) ||
-                    (tag == "Census 2022" && (!Location.CensusCountry.Equals(Countries.SCOTLAND) || !yearAdjusted.Overlaps(CensusDate.SCOTCENSUS2022))))
+                    (tag == "Census 2022" && (!Location.CensusCountry.Equals(Countries.SCOTLAND, StringComparison.OrdinalIgnoreCase) || !yearAdjusted.Overlaps(CensusDate.SCOTCENSUS2022))))
                 {
                     FactErrorMessage = $"UK Census fact error date '{FactDate}' doesn't match '{tag}' tag. Check for incorrect date entered.";
                     FactErrorLevel = FactError.ERROR;
@@ -991,7 +1002,7 @@ namespace FTAnalyzer
                 }
                 else
                 {
-                    int slash = factPlace.IndexOf('/');
+                    int slash = factPlace.IndexOf('/', StringComparison.Ordinal);
                     if (slash >= 0)
                     {
                         Comment = factPlace[..slash].Trim();
@@ -1016,7 +1027,7 @@ namespace FTAnalyzer
                 Comment = factComment;
                 Place = factPlace;
                 if (factType == NAME)
-                    Comment = Comment.Replace("/", "");
+                    Comment = Comment.Replace("/", "", StringComparison.Ordinal);
             }
             Comment = EnhancedTextInfo.ToTitleCase(Comment).Trim();
             if (string.IsNullOrEmpty(latitude))
@@ -1024,10 +1035,10 @@ namespace FTAnalyzer
             if (string.IsNullOrEmpty(longitude))
                 longitude = "0.0";
             FactLocation.Geocode geocode =
-                (latitude.Equals("0.0") && longitude.Equals("0.0")) ? FactLocation.Geocode.NOT_SEARCHED : FactLocation.Geocode.GEDCOM_USER;
+                (latitude.Equals("0.0", StringComparison.OrdinalIgnoreCase) && longitude.Equals("0.0", StringComparison.OrdinalIgnoreCase)) ? FactLocation.Geocode.NOT_SEARCHED : FactLocation.Geocode.GEDCOM_USER;
             if (addrTagText.Length > 0)
             {    //we have an address decide to add it to place or not
-                if (string.IsNullOrEmpty(Place) || addrTagText.Contains(Place))
+                if (string.IsNullOrEmpty(Place) || addrTagText.Contains(Place, StringComparison.OrdinalIgnoreCase))
                     Place = addrTagText;
                 else if (GeneralSettings.Default.ReverseLocations)
                     Place = $"{Place}, {addrTagText}";
@@ -1045,10 +1056,10 @@ namespace FTAnalyzer
         {
             return Sources.Any(fs =>
             {
-                return (FactType.Equals(BIRTH) && fs.IsBirthCert()) ||
-                    (FactType.Equals(DEATH) && fs.IsDeathCert()) ||
-                    (FactType.Equals(MARRIAGE) && fs.IsMarriageCert()) ||
-                    (FactType.Equals(CENSUS) && fs.IsCensusCert());
+                return (FactType.Equals(BIRTH, StringComparison.OrdinalIgnoreCase) && fs.IsBirthCert()) ||
+                    (FactType.Equals(DEATH, StringComparison.OrdinalIgnoreCase) && fs.IsDeathCert()) ||
+                    (FactType.Equals(MARRIAGE, StringComparison.OrdinalIgnoreCase) && fs.IsMarriageCert()) ||
+                    (FactType.Equals(CENSUS, StringComparison.OrdinalIgnoreCase) && fs.IsCensusCert());
             });
         }
 
@@ -1069,7 +1080,7 @@ namespace FTAnalyzer
             FactDate.CensusYearMatches(censusDate) && FactDate.IsNotBEForeOrAFTer && FactErrorLevel == FactError.GOOD;
 
         public bool IsOverseasUKCensus(string country) =>
-            country.Equals(Countries.OVERSEAS_UK) || (!Countries.IsUnitedKingdom(country) && CensusReference is not null && CensusReference.IsUKCensus);
+            country.Equals(Countries.OVERSEAS_UK, StringComparison.OrdinalIgnoreCase) || (!Countries.IsUnitedKingdom(country) && CensusReference is not null && CensusReference.IsUKCensus);
 
         public override string ToString() =>
             FactTypeDescription + ": " + FactDate + (Location.ToString().Length > 0 ? " at " + Location : string.Empty) + (Comment.Length > 0 ? "  (" + Comment + ")" : string.Empty);

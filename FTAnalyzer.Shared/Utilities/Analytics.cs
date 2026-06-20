@@ -75,8 +75,8 @@ namespace FTAnalyzer.Utilities
             OSVersion = SetWindowsVersion(os.Version.ToString());
 #if __PC__
             AppVersion = MainForm.VERSION;
-            bool windowsStoreApp = Application.ExecutablePath.Contains("WindowsApps");
-            bool debugging = Application.ExecutablePath.Contains("GitRepo");
+            bool windowsStoreApp = Application.ExecutablePath.Contains("WindowsApps", StringComparison.OrdinalIgnoreCase);
+            bool debugging = Application.ExecutablePath.Contains("GitRepo", StringComparison.OrdinalIgnoreCase);
             DeploymentType = windowsStoreApp ? "Windows Store" : debugging ? "Development" : "Zip File";
             string resolution = Screen.PrimaryScreen?.Bounds.ToString() ?? string.Empty;
             Resolution = resolution.Length > 11 ? resolution[9..^1] : resolution;

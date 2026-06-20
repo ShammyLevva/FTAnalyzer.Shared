@@ -12,16 +12,15 @@ namespace FTAnalyzer.Exports
 
         public LostCousinsClient()
         {
-            SetupHttpClient();
+            Cookies = new();
+            HttpClientHandler handler = new() { CookieContainer = Cookies };
+            Client = new(handler);
         }
 
         void SetupHttpClient()
         {
             Cookies = new();
-            HttpClientHandler handler = new()
-            {
-                CookieContainer = Cookies
-            };
+            HttpClientHandler handler = new() { CookieContainer = Cookies };
             Client = new(handler);
         }
         public async Task<bool> LostCousinsLoginAsync(string email, string password)
@@ -43,7 +42,7 @@ namespace FTAnalyzer.Exports
                     { "y", random.Next(1,9).ToString() }
                 };
                 LoggedIn = false;
-                HttpRequestMessage req = new(HttpMethod.Post, uri)
+                using HttpRequestMessage req = new(HttpMethod.Post, uri)
                 {
                     Content = new FormUrlEncodedContent(parameters)
                 };
@@ -87,7 +86,7 @@ namespace FTAnalyzer.Exports
             {
                 Dictionary<string, string> formParams = BuildParameterString(ind);
                 Uri uri = new("https://www.lostcousins.com/pages/members/ancestors/add_ancestor.mhtml");
-                HttpRequestMessage req = new(HttpMethod.Post, uri)
+                using HttpRequestMessage req = new(HttpMethod.Post, uri)
                 {
                     Content = new FormUrlEncodedContent(formParams)
                 };
@@ -98,14 +97,14 @@ namespace FTAnalyzer.Exports
             }
             catch (Exception e)
             {
-                if (e.Message.Contains("UNIQUE constraint failed:")) // already written so silently ignore adding to database.
+                if (e.Message.Contains("UNIQUE constraint failed:", StringComparison.OrdinalIgnoreCase)) // already written so silently ignore adding to database.
                     return true;
                 outputText.Report($"Problem accessing Lost Cousins Website to send record below. Error message is: {e.Message}\n");
                 return false;
             }
         }
 
-        string _previousRef;
+        string _previousRef = string.Empty;
 
         Dictionary<string, string> BuildParameterString(CensusIndividual ind)
         {
@@ -159,6 +158,7 @@ namespace FTAnalyzer.Exports
         public string GetCensusSpecificFields(Dictionary<string, string> output, CensusIndividual ind)
         {
             CensusReference? censusRef = ind.CensusReference;
+            if (censusRef is null) return string.Empty;
             if (ind.CensusDate.Overlaps(CensusDate.EWCENSUS1841) && Countries.IsEnglandWales(ind.CensusCountry))
             {
                 output.Add("census_code", "1841");

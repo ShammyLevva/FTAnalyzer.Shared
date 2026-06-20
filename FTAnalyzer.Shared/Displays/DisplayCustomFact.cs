@@ -7,7 +7,7 @@
         public int FamilyCount { get; } = famcount;
         public bool Ignore { get; set; } = ignore;
 
-        public int CompareTo(IDisplayCustomFact? that) => string.Compare(CustomFactName, that.CustomFactName, System.StringComparison.Ordinal);
+        public int CompareTo(IDisplayCustomFact? that) => string.Compare(CustomFactName, that?.CustomFactName ?? string.Empty, StringComparison.Ordinal);
 
         public IComparer<IDisplayCustomFact> GetComparer(string columnName, bool ascending)
         {

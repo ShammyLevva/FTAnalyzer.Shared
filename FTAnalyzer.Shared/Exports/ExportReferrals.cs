@@ -4,7 +4,7 @@
     {
         readonly Individual Individual = ind;
         readonly Fact Fact = f;
-        readonly Fact censusFact = ind.GetCensusFact(f);
+        readonly Fact? censusFact = ind.GetCensusFact(f);
 
         public string CensusReference => censusFact is null
                     ? "Census Not Found"

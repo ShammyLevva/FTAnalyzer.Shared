@@ -6,7 +6,7 @@ namespace FTAnalyzer.Utilities
 {
     public class PropertyComparer<T> : IComparer<T>
     {
-        IComparer comparer;
+        IComparer? comparer;
         PropertyDescriptor propertyDescriptor;
         int reverse;
 
@@ -32,7 +32,7 @@ namespace FTAnalyzer.Utilities
                 return reverse;
             if (string.IsNullOrEmpty(yString))
                 return -1 * reverse;
-            return reverse * comparer.Compare(xValue, yValue);
+            return reverse * (comparer?.Compare(xValue, yValue) ?? 0);
         }
 
         #endregion

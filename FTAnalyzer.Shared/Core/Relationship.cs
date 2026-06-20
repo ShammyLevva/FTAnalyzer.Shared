@@ -104,7 +104,7 @@ namespace FTAnalyzer
         {
             StringBuilder output = new();
             StringBuilder relations = new();
-            output.Append(FamilyTree.Instance.RootPerson.Name);
+            output.Append(FamilyTree.Instance.RootPerson?.Name);
             if (ahnentafel != 1) output.Append("'s ");
             while (ahnentafel != 1)
             {

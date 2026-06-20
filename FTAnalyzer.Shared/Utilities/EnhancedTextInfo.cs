@@ -1,4 +1,4 @@
-﻿using FTAnalyzer.Properties;
+using FTAnalyzer.Properties;
 using System.Globalization;
 using System.Text;
 
@@ -11,40 +11,40 @@ namespace FTAnalyzer.Utilities
         public static string ToTitleCase(string input)
         {
             string output = txtInfo.ToTitleCase(input);
-            output = output.Replace(" At ", " at ")
-                           .Replace(" In ", " in ")
-                           .Replace(" And ", " and ")
-                           .Replace(" Of ", " of ")
-                           .Replace(" For ", " for ")
-                           .Replace(" In ", " in ")
-                           .Replace(" A ", " a ")
-                           .Replace(" An ", " an ")
-                           .Replace(" And ", " and ")
-                           .Replace(" To ", " to ")
-                           .Replace(" On ", " on ")
-                           .Replace(" Or ", " or ")
-                           .Replace(" As ", " as ")
-                           .Replace(" Is ", " is ")
-                           .Replace(" No ", " no ")
-                           .Replace(" Uk ", " UK ")
-                           .Replace(" Usa ", "USA")
-                           .Replace("Wwi ", "WWI")
-                           .Replace("Ww I", "WW I")
-                           .Replace("Wwii ", "WWII")
-                           .Replace("Ww Ii ", "WW II")
-                           .Replace("1St", "1st")
-                           .Replace("1Th", "1th") // 11th
-                           .Replace("2Nd", "2nd")
-                           .Replace("2Th", "2th") // 12th
-                           .Replace("3Rd", "3rd")
-                           .Replace("3Th", "3th") // 13th
-                           .Replace("4Th", "4th")
-                           .Replace("5Th", "5th")
-                           .Replace("6Th", "6th")
-                           .Replace("7Th", "7th")
-                           .Replace("8Th", "8th")
-                           .Replace("9Th", "9th")
-                           .Replace("0Th", "0th");
+            output = output.Replace(" At ", " at ", StringComparison.Ordinal)
+                           .Replace(" In ", " in ", StringComparison.Ordinal)
+                           .Replace(" And ", " and ", StringComparison.Ordinal)
+                           .Replace(" Of ", " of ", StringComparison.Ordinal)
+                           .Replace(" For ", " for ", StringComparison.Ordinal)
+                           .Replace(" In ", " in ", StringComparison.Ordinal)
+                           .Replace(" A ", " a ", StringComparison.Ordinal)
+                           .Replace(" An ", " an ", StringComparison.Ordinal)
+                           .Replace(" And ", " and ", StringComparison.Ordinal)
+                           .Replace(" To ", " to ", StringComparison.Ordinal)
+                           .Replace(" On ", " on ", StringComparison.Ordinal)
+                           .Replace(" Or ", " or ", StringComparison.Ordinal)
+                           .Replace(" As ", " as ", StringComparison.Ordinal)
+                           .Replace(" Is ", " is ", StringComparison.Ordinal)
+                           .Replace(" No ", " no ", StringComparison.Ordinal)
+                           .Replace(" Uk ", " UK ", StringComparison.Ordinal)
+                           .Replace(" Usa ", "USA", StringComparison.Ordinal)
+                           .Replace("Wwi ", "WWI", StringComparison.Ordinal)
+                           .Replace("Ww I", "WW I", StringComparison.Ordinal)
+                           .Replace("Wwii ", "WWII", StringComparison.Ordinal)
+                           .Replace("Ww Ii ", "WW II", StringComparison.Ordinal)
+                           .Replace("1St", "1st", StringComparison.Ordinal)
+                           .Replace("1Th", "1th", StringComparison.Ordinal) // 11th
+                           .Replace("2Nd", "2nd", StringComparison.Ordinal)
+                           .Replace("2Th", "2th", StringComparison.Ordinal) // 12th
+                           .Replace("3Rd", "3rd", StringComparison.Ordinal)
+                           .Replace("3Th", "3th", StringComparison.Ordinal) // 13th
+                           .Replace("4Th", "4th", StringComparison.Ordinal)
+                           .Replace("5Th", "5th", StringComparison.Ordinal)
+                           .Replace("6Th", "6th", StringComparison.Ordinal)
+                           .Replace("7Th", "7th", StringComparison.Ordinal)
+                           .Replace("8Th", "8th", StringComparison.Ordinal)
+                           .Replace("9Th", "9th", StringComparison.Ordinal)
+                           .Replace("0Th", "0th", StringComparison.Ordinal);
             return output;
         }
 
@@ -95,11 +95,11 @@ namespace FTAnalyzer.Utilities
         }
 
         public static string ClearWhiteSpace(this string text) =>
-            text.Replace(Environment.NewLine, " ").Replace("\n", " ")
-                .Replace(";", " ").Replace(":", " ").Replace("~", " ")
-                .Replace("\t", " ").Replace("   ", " ").Replace("   ", " ")
-                .Replace("  ", " ").Replace("  ", " ").Replace("  ", " ")
-                .Replace("  ", " ").Replace("  ", " ").Replace("  ", " ")
+            text.Replace(Environment.NewLine, " ", StringComparison.Ordinal).Replace("\n", " ", StringComparison.Ordinal)
+                .Replace(";", " ", StringComparison.Ordinal).Replace(":", " ", StringComparison.Ordinal).Replace("~", " ", StringComparison.Ordinal)
+                .Replace("\t", " ", StringComparison.Ordinal).Replace("   ", " ", StringComparison.Ordinal).Replace("   ", " ", StringComparison.Ordinal)
+                .Replace("  ", " ", StringComparison.Ordinal).Replace("  ", " ", StringComparison.Ordinal).Replace("  ", " ", StringComparison.Ordinal)
+                .Replace("  ", " ", StringComparison.Ordinal).Replace("  ", " ", StringComparison.Ordinal).Replace("  ", " ", StringComparison.Ordinal)
                 .Trim();
 
         public static string Replace(this string str, string oldValue, string newValue, StringComparison comparison)

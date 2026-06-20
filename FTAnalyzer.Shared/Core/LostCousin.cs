@@ -1,17 +1,17 @@
-﻿using System.Web;
+using System.Web;
 
 namespace FTAnalyzer
 {
     public class LostCousin : IEquatable<LostCousin>, IDisplayLostCousin
     {
-        public string Name { get; }
+        public string Name { get; } = string.Empty;
         public int BirthYear { get; }
-        public string Reference { get; }
-        public CensusDate CensusDate { get; }
-        public Uri WebLink { get; }
+        public string Reference { get; } = string.Empty;
+        public CensusDate? CensusDate { get; }
+        public Uri? WebLink { get; }
         public bool FTAnalyzerFact { get; }
-        string SurnameMetaphone { get; set; }
-        string ForenameMetaphone { get; set; }
+        string SurnameMetaphone { get; set; } = string.Empty;
+        string ForenameMetaphone { get; set; } = string.Empty;
 
         public enum Status { Good = 1, FuzzyNameAge = 2, NotPrecise = 3, Bad = 4 }
 
@@ -48,7 +48,7 @@ namespace FTAnalyzer
             BirthYear = result;
             Reference = reference;
             int ptr = weblink is null ? -1 : weblink.IndexOf("&p=", StringComparison.Ordinal);
-            WebLink = ptr == -1 || weblink.Length <= ptr + 3 ? null : new Uri(HttpUtility.UrlDecode(weblink[(ptr + 3)..]));
+            WebLink = weblink is null || ptr == -1 || weblink.Length <= ptr + 3 ? null : new Uri(HttpUtility.UrlDecode(weblink[(ptr + 3)..]));
             FTAnalyzerFact = ftanalyzer;
             census ??= string.Empty;
             if (census.StartsWith("England", StringComparison.Ordinal))
@@ -69,12 +69,12 @@ namespace FTAnalyzer
 
         void SetMetaphones()
         {
-            int ptr = Name.IndexOf(',');
+            int ptr = Name.IndexOf(',', StringComparison.Ordinal);
             if (ptr > 0)
             {
                 string forenames = ptr + 2 < Name.Length ? Name[(ptr + 2)..] : string.Empty;
                 string surname = Name[..ptr];
-                int pos = forenames.IndexOf(' ');
+                int pos = forenames.IndexOf(' ', StringComparison.Ordinal);
                 string forename = forenames is null ? string.Empty : (pos > 0 ? forenames[..pos] : forenames);
                 ForenameMetaphone = new DoubleMetaphone(forename).PrimaryKey;
                 SurnameMetaphone = new DoubleMetaphone(surname).PrimaryKey;
@@ -93,8 +93,8 @@ namespace FTAnalyzer
             string output = reference;
             if (output.Length > 24)
                 output = output[23..]; // strip the leading &census_code=XXXX&ref1=
-            output = output.Replace("&ref2=", "/").Replace("&ref3=", "/").Replace("&ref4=", "/").Replace("&ref5=", "/");
-            output = output.Replace("//", "/").Replace("//", "/").TrimEnd('/');
+            output = output.Replace("&ref2=", "/", StringComparison.Ordinal).Replace("&ref3=", "/", StringComparison.Ordinal).Replace("&ref4=", "/", StringComparison.Ordinal).Replace("&ref5=", "/", StringComparison.Ordinal);
+            output = output.Replace("//", "/", StringComparison.Ordinal).Replace("//", "/", StringComparison.Ordinal).TrimEnd('/');
             return output;
         }
 
@@ -103,12 +103,14 @@ namespace FTAnalyzer
         public bool Equals(LostCousin? other)
         {
             if (other is null) return false;
-            if (CensusDate != other.CensusDate || Reference != other.Reference || Math.Abs(BirthYear - other.BirthYear) >= 5)
+            if (Reference != other.Reference || Math.Abs(BirthYear - other.BirthYear) >= 5)
                 return false;
-            if (Name == other.Name)
-                return true;
-            if (ForenameMetaphone == other.ForenameMetaphone && SurnameMetaphone == other.SurnameMetaphone)
-                return true;
+            CensusDate? cd = CensusDate;
+            CensusDate? ocd = other.CensusDate;
+            if ((cd is null) != (ocd is null)) return false;
+            if (cd is not null && ocd is not null && cd != ocd) return false;
+            if (Name == other.Name) return true;
+            if (ForenameMetaphone == other.ForenameMetaphone && SurnameMetaphone == other.SurnameMetaphone) return true;
             return false;
         }
 

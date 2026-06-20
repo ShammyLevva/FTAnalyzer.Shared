@@ -1,4 +1,4 @@
-﻿namespace FTAnalyzer
+namespace FTAnalyzer
 {
     public class SurnameStats(string name) : IDisplaySurnames
     {
@@ -8,7 +8,7 @@
         public int Marriages { get; set; } = 0;
         public string GOONSpage { get; set; } = string.Empty;
 
-        public int CompareTo(IDisplaySurnames? other) => string.Compare(Surname, other.Surname, StringComparison.Ordinal);
+        public int CompareTo(IDisplaySurnames? other) => string.Compare(Surname, other?.Surname, StringComparison.Ordinal);
 
         public Comparer<IDisplaySurnames> GetComparer(string columnName, bool ascending)
         {
@@ -47,7 +47,7 @@
             if (ReferenceEquals(a, b)) return true;
             if (a is null || b is null) return false;
 
-            return string.Equals(a.Surname, b.Surname, StringComparison.CurrentCultureIgnoreCase)
+            return string.Equals(a.Surname, b.Surname, StringComparison.OrdinalIgnoreCase)
                    && a.Individuals == b.Individuals
                    && a.Families == b.Families
                    && a.Marriages == b.Marriages;

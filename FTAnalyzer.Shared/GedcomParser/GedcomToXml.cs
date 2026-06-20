@@ -1,3 +1,4 @@
+#pragma warning disable CA2000 // Modeless WinForms forms are owned by the Windows message loop; lifetime is managed externally
 using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
 using System.Diagnostics;
@@ -24,7 +25,7 @@ namespace FTAnalyzer
             {
                 doc = Parse(reader, outputText, reportBadLines, parseProgress);
             }
-            if (doc?.SelectNodes("GED/INDI").Count == 0)
+            if ((doc?.SelectNodes("GED/INDI")?.Count ?? 0) == 0)
             { // if there is a problem with the file return with opposite line ends
                 cloned = PrepareStream(stream);
                 retryFailed = FileHandling.Default.RetryFailedLines;
@@ -44,7 +45,7 @@ namespace FTAnalyzer
             {
                 doc = Parse(reader, outputText, reportBadLines, parseProgress);
             }
-            if (doc?.SelectNodes("GED/INDI").Count == 0)
+            if ((doc?.SelectNodes("GED/INDI")?.Count ?? 0) == 0)
             {
                 // if there is a problem with the file return with opposite line ends
                 cloned = PrepareStream(stream);
@@ -166,8 +167,8 @@ namespace FTAnalyzer
                     {
                         try
                         {
-                            line = line.Replace('�', '-').Replace('�', '-').Replace("&nbsp;", " ").Replace(" * **Data is already there***", ""); // "data is already there" is some Ancestry anomaly
-                            cpos1 = line.IndexOf(' ');
+                            line = line.Replace('�', '-').Replace('�', '-').Replace("&nbsp;", " ", StringComparison.Ordinal).Replace(" * **Data is already there***", "", StringComparison.Ordinal); // "data is already there" is some Ancestry anomaly
+                            cpos1 = line.IndexOf(' ', StringComparison.Ordinal);
                             if (cpos1 < 0) throw new InvalidGEDCOMException($"No space found in line: '{line}'", line, lineNr);
 
                             level = FirstWord(line);
@@ -248,7 +249,7 @@ namespace FTAnalyzer
                             }
 
                             // insert any necessary closing tags
-                            while (thislevel <= prevlevel)
+                            while (thislevel <= prevlevel && node is not null)
                             {
                                 stack.Pop();
                                 node = node.ParentNode;
@@ -258,20 +259,20 @@ namespace FTAnalyzer
                             if (!tag.Equals("TRLR", StringComparison.Ordinal))
                             {
                                 XmlNode newNode = document.CreateElement(tag);
-                                node.AppendChild(newNode);
+                                node?.AppendChild(newNode);
                                 node = newNode;
 
                                 if (!string.IsNullOrEmpty(iden))
                                 {
                                     XmlAttribute attr = document.CreateAttribute("ID");
                                     attr.Value = iden;
-                                    node.Attributes.Append(attr);
+                                    node.Attributes?.Append(attr);
                                 }
                                 if (!string.IsNullOrEmpty(xref))
                                 {
                                     XmlAttribute attr = document.CreateAttribute("REF");
                                     attr.Value = xref;
-                                    node.Attributes.Append(attr);
+                                    node.Attributes?.Append(attr);
                                 }
                                 stack.Push(tag);
                                 prevlevel = thislevel;
@@ -280,7 +281,7 @@ namespace FTAnalyzer
                             if (value.Length > 0)
                             {
                                 XmlText text = document.CreateTextNode(value);
-                                node.AppendChild(text);
+                                node?.AppendChild(text);
                             }
                         }
                         catch (InvalidGEDCOMException ige)
@@ -411,7 +412,7 @@ namespace FTAnalyzer
         static string FirstWord(string inp)
         {
             int i;
-            i = inp.IndexOf(' ');
+            i = inp.IndexOf(' ', StringComparison.Ordinal);
             return i == 0 ? FirstWord(inp.Trim()) : i < 0 ? inp : inp[..i].Trim();
         }
 
@@ -422,7 +423,7 @@ namespace FTAnalyzer
         static string Remainder(string inp)
         {
             int i;
-            i = inp.IndexOf(' ');
+            i = inp.IndexOf(' ', StringComparison.Ordinal);
             return i == 0 ? Remainder(inp.Trim()) : i < 0 ? "" : inp[(i + 1)..].Trim();
         }
 

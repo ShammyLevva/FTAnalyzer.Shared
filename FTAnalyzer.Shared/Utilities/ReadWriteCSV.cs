@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 
 namespace FTAnalyzer.Exports
 {
@@ -10,7 +10,7 @@ namespace FTAnalyzer.Exports
     /// </summary>
     public class CsvRow : List<string>
     {
-        public string LineText { get; set; }
+        public string LineText { get; set; } = string.Empty;
     }
 
     /// <summary>
@@ -45,7 +45,7 @@ namespace FTAnalyzer.Exports
                 // Implement special handling for values that contain comma or quote
                 // Enclose in quotes and double up any double quotes
                 if (value.IndexOfAny(['"', ',']) != -1)
-                    builder.AppendFormat("\"{0}\"", value.Replace("\"", "\"\""));
+                    builder.AppendFormat("\"{0}\"", value.Replace("\"", "\"\"", StringComparison.Ordinal));
                 else
                     builder.Append(value);
                 firstColumn = false;
@@ -76,7 +76,7 @@ namespace FTAnalyzer.Exports
         public bool ReadRow(CsvRow row)
         {
             if (row is null) return false;
-            row.LineText = ReadLine();
+            row.LineText = ReadLine() ?? string.Empty;
             if (string.IsNullOrEmpty(row.LineText))
                 return false;
 
@@ -114,7 +114,7 @@ namespace FTAnalyzer.Exports
                         pos++;
                     }
                     value = row.LineText[start..pos];
-                    value = value.Replace("\"\"", "\"");
+                    value = value.Replace("\"\"", "\"", StringComparison.Ordinal);
                 }
                 else
                 {

@@ -9,7 +9,7 @@
         public List<string> AlternativeNames { get; private set; } = [];
         public string ISOcode { get; set; } = string.Empty;
         public Creation RegionType { get; private set; } = regionType;
-        public List<ModernCounty> CountyCodes { get; private set; } = null;
+        public List<ModernCounty>? CountyCodes { get; private set; }
 
         public void AddAlternateName(string name) => AlternativeNames.Add(name);
 
