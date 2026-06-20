@@ -8,10 +8,10 @@ namespace FTAnalyzer.Exports
 {
     public static class ExportToLostCousins
     {
-        static List<CensusIndividual> ToProcess { get; set; }
-        static List<LostCousin> Website { get; set; }
-        static List<LostCousin> SessionList { get; set; }
-        static List<Uri> WebLinks { get; set; }
+        static List<CensusIndividual>? ToProcess { get; set; }
+        static List<LostCousin>? Website { get; set; }
+        static List<LostCousin>? SessionList { get; set; }
+        static List<Uri>? WebLinks { get; set; }
 
         public static async Task<int> ProcessListAsync(List<CensusIndividual> individuals, IProgress<string> outputText)
         {
@@ -123,8 +123,8 @@ namespace FTAnalyzer.Exports
             foreach (LostCousin lostCousin in Website)
             {
                 result.Add(lostCousin);
-                if (!WebLinks.Contains(lostCousin.WebLink))
-                    WebLinks.Add(lostCousin.WebLink);
+                if (lostCousin.WebLink is not null && !(WebLinks?.Contains(lostCousin.WebLink) == true))
+                    WebLinks?.Add(lostCousin.WebLink);
             }
             return result;
         }

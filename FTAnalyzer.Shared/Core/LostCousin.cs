@@ -103,12 +103,14 @@ namespace FTAnalyzer
         public bool Equals(LostCousin? other)
         {
             if (other is null) return false;
-            if (CensusDate != other.CensusDate || Reference != other.Reference || Math.Abs(BirthYear - other.BirthYear) >= 5)
+            if (Reference != other.Reference || Math.Abs(BirthYear - other.BirthYear) >= 5)
                 return false;
-            if (Name == other.Name)
-                return true;
-            if (ForenameMetaphone == other.ForenameMetaphone && SurnameMetaphone == other.SurnameMetaphone)
-                return true;
+            CensusDate? cd = CensusDate;
+            CensusDate? ocd = other.CensusDate;
+            if ((cd is null) != (ocd is null)) return false;
+            if (cd is not null && ocd is not null && cd != ocd) return false;
+            if (Name == other.Name) return true;
+            if (ForenameMetaphone == other.ForenameMetaphone && SurnameMetaphone == other.SurnameMetaphone) return true;
             return false;
         }
 

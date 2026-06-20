@@ -8,7 +8,7 @@ namespace FTAnalyzer
         public int Marriages { get; set; } = 0;
         public string GOONSpage { get; set; } = string.Empty;
 
-        public int CompareTo(IDisplaySurnames? other) => string.Compare(Surname, other.Surname, StringComparison.Ordinal);
+        public int CompareTo(IDisplaySurnames? other) => string.Compare(Surname, other?.Surname, StringComparison.Ordinal);
 
         public Comparer<IDisplaySurnames> GetComparer(string columnName, bool ascending)
         {

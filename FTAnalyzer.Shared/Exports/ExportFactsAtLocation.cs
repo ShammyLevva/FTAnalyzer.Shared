@@ -2,9 +2,9 @@
 {
     public class ExportFactsAtLocation
     {
-        public string SortableLocation { get; set; }
-        public string LocationName { get; set; }
-        public List<string> FactsAtLocation { get; set; }
+        public string SortableLocation { get; set; } = string.Empty;
+        public string LocationName { get; set; } = string.Empty;
+        public List<string> FactsAtLocation { get; set; } = [];
         public double Latitude { get; set; }
         public double Longitude { get; set; }
     }
@@ -15,7 +15,7 @@
 
         public override int Compare(ExportFactsAtLocation? x, ExportFactsAtLocation? y)
         {
-            return x.SortableLocation.CompareTo(y.SortableLocation);
+            return string.Compare(x?.SortableLocation, y?.SortableLocation, StringComparison.Ordinal);
         }
     }
 }
