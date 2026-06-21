@@ -2092,7 +2092,7 @@ namespace FTAnalyzer
                             var customTypes = unknownIndividualFactTypes.Keys.Union(unknownFamilyFactTypes.Keys);
                             foreach (string tag in customTypes)
                             {
-                                if (f.FactTypeDescription == tag)
+                                if (f.FactTypeDescription == tag && !DatabaseHelper.IgnoreCustomFact(tag))
                                 {
                                     errors[(int)Dataerror.UNKNOWN_FACT_TYPE].Add(
                                         new DataError((int)Dataerror.UNKNOWN_FACT_TYPE, Fact.FactError.QUESTIONABLE,
