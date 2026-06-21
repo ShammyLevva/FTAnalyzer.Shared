@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Collections.Immutable;
+using FTAnalyzer.Web.Properties;
 
 
 #if __PC__
