@@ -2260,6 +2260,20 @@ namespace FTAnalyzer
                             //        new DataError((int)Dataerror.FACT_ERROR, fam, f.FactErrorMessage));
                         }
                     }
+                    if (fam.HasGoodChildrenStatus && fam.On1911Census &&
+                        !fam.FamilyType.Equals(Family.SOLOINDIVIDUAL, StringComparison.OrdinalIgnoreCase) &&
+                        !fam.FamilyType.Equals(Family.PRE_MARRIAGE, StringComparison.OrdinalIgnoreCase))
+                    {
+                        int childrenTotal = fam.Children.Count(c => c.BirthDate.IsBefore(CensusDate.UKCENSUS1911));
+                        int childrenAlive = fam.Children.Count(c => c.IsAlive(CensusDate.UKCENSUS1911) && c.BirthDate.IsBefore(CensusDate.UKCENSUS1911));
+                        int childrenDead = childrenTotal - childrenAlive;
+                        if (fam.ExpectedTotal != childrenTotal || fam.ExpectedAlive != childrenAlive || fam.ExpectedDead != childrenDead)
+                        {
+                            string message = $"Children status (Total:{fam.ExpectedTotal} Alive:{fam.ExpectedAlive} Dead:{fam.ExpectedDead}) doesn't match tree (Total:{childrenTotal} Alive:{childrenAlive} Dead:{childrenDead})";
+                            errors[(int)Dataerror.CHILDRENSTATUS_TOTAL_MISMATCH].Add(
+                                new DataError((int)Dataerror.CHILDRENSTATUS_TOTAL_MISMATCH, fam, message));
+                        }
+                    }
                 }
                 catch (Exception)
                 {
