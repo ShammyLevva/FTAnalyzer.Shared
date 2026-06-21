@@ -33,8 +33,16 @@ namespace FTAnalyzer.Utilities
 
         const string EW_CENSUS_PATTERN_FS1 = @"(\d{4}).*?Census.*?p *(\d{1,3}) *Piece\/Folio *(\d{1,4}[a-z]?)\/(\d{1,3})";
 
+        const string EW_CENSUS_PATTERN_SN = @"RG *(\d{1,3}) *\/?Piece *(\d{1,5}) *\/?Folio *(\d{1,4}[a-z]?).*?\/?SN *(\d{1,4})";
+        const string EW_CENSUS_PATTERN4_SN = @"(\d{4}) .*?Census.*? *Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?).*?SN *(\d{1,4})";
+        const string EW_CENSUS_PATTERN7_SN = @"Census *(\d{4}).*? *Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?).*?SN *(\d{1,4})";
+        const string EW_CENSUS_PATTERN10_SN = @"(\d{4}) *- *.*? *Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?).*?SN *(\d{1,4})";
+        const string EW_CENSUS_PATTERN15_SN = @"(RG *\d{1,2})\/(\d{1,5})\/(\d{1,4}[a-z]?).*?SN *(\d{1,4})";
+        const string EW_CENSUS_1841_51_PATTERN_SN = @"HO *107\/(\d{1,5})\/(\d{1,3}).*?SN *(\d{1,4})";
+
         const string EW_MISSINGCLASS_PATTERN = @"Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3})";
         const string EW_MISSINGCLASS_PATTERN2 = @"Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?)";
+        const string EW_MISSINGCLASS_PATTERN_SN = @"Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?) *SN *(\d{1,4})";
 
         const string EW_CENSUS_1841_51_PATTERN = @"HO *107 *Piece *(\d{1,5}) *Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3})";
         const string EW_CENSUS_1841_51_PATTERN2 = @"HO *107 *Piece *(\d{1,5}) *Book *(\d{1,3}).*?Folio *(\d{1,4}[a-z]?) *Page *(\d{1,3})";
@@ -191,11 +199,32 @@ namespace FTAnalyzer.Utilities
         [GeneratedRegex(EW_CENSUS_PATTERN_FS1, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensusPatternFs1();
 
+        [GeneratedRegex(EW_CENSUS_PATTERN_SN, RegexOptions.IgnoreCase)]
+        internal static partial Regex EwCensusPatternSn();
+
+        [GeneratedRegex(EW_CENSUS_PATTERN4_SN, RegexOptions.IgnoreCase)]
+        internal static partial Regex EwCensusPattern4Sn();
+
+        [GeneratedRegex(EW_CENSUS_PATTERN7_SN, RegexOptions.IgnoreCase)]
+        internal static partial Regex EwCensusPattern7Sn();
+
+        [GeneratedRegex(EW_CENSUS_PATTERN10_SN, RegexOptions.IgnoreCase)]
+        internal static partial Regex EwCensusPattern10Sn();
+
+        [GeneratedRegex(EW_CENSUS_PATTERN15_SN, RegexOptions.IgnoreCase)]
+        internal static partial Regex EwCensusPattern15Sn();
+
+        [GeneratedRegex(EW_CENSUS_1841_51_PATTERN_SN, RegexOptions.IgnoreCase)]
+        internal static partial Regex EwCensus184151PatternSn();
+
         [GeneratedRegex(EW_MISSINGCLASS_PATTERN, RegexOptions.IgnoreCase)]
         internal static partial Regex EwMissingclassPattern();
 
         [GeneratedRegex(EW_MISSINGCLASS_PATTERN2, RegexOptions.IgnoreCase)]
         internal static partial Regex EwMissingclassPattern2();
+
+        [GeneratedRegex(EW_MISSINGCLASS_PATTERN_SN, RegexOptions.IgnoreCase)]
+        internal static partial Regex EwMissingclassPatternSn();
 
         [GeneratedRegex(EW_CENSUS_1841_51_PATTERN, RegexOptions.IgnoreCase)]
         internal static partial Regex EwCensus184151Pattern();
