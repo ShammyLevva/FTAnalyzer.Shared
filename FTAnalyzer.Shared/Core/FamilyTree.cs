@@ -12,7 +12,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Collections.Immutable;
-using FTAnalyzer.Web.Properties;
 
 
 #if __PC__
@@ -862,7 +861,7 @@ namespace FTAnalyzer
             //FilterUtils.AndFilter(FilterUtils.AndFilter(relationFilter, invalidRef), FilterUtils.AndFilter<CensusIndividual>(nameFilter, ageFilter));
 
             List<CensusIndividual> invalidRefIndiv = [.. censusFamilies.SelectMany(f => f.Members).Filter(invalidRefFilter).Distinct(new CensusIndividualComparer())];
-            int missing = MissingLCEntries[censusDate];
+            int missing = MissingLCEntries.TryGetValue(censusDate, out int m) ? m : 0;
             output.Append($"{censusDate}: {missingIndiv.Count} possible {missing - missingIndiv.Count} without valid Lost Cousins details\n");
             return Tuple.Create(missingIndiv, invalidRefIndiv);
         }

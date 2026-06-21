@@ -1,4 +1,4 @@
-using FTAnalyzer.Web.Properties;
+using FTAnalyzer.Properties;
 using System.Globalization;
 using System.Text;
 
