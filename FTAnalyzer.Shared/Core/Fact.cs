@@ -470,6 +470,7 @@ namespace FTAnalyzer
                         }
                         catch (FactDateException e)
                         {
+                            FamilyTree.Instance.IncrementDateErrorCount();
                             outputText.Report(e.Message);
                         }
                     }

@@ -222,6 +222,7 @@ namespace FTAnalyzer
             noteNodes = null;
             maxAhnentafel = 0;
             FactLocation.ResetLocations();
+            _dateErrorCount = 0;
             individualLookup = [];
         }
 
@@ -964,6 +965,10 @@ namespace FTAnalyzer
         public IEnumerable<IDisplayDataError> AllDataErrors => DataErrorTypes.SelectMany(dg => dg.Errors);
 
         public int IndividualCount => individuals.Count;
+
+        int _dateErrorCount;
+        public int DateErrorCount => _dateErrorCount;
+        public void IncrementDateErrorCount() => Interlocked.Increment(ref _dateErrorCount);
 
         public List<Individual> DeadOrAlive => [.. individuals.Filter(x => x.DeathDate.IsKnown && x.IsFlaggedAsLiving)];
 
