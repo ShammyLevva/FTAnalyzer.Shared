@@ -16,7 +16,7 @@
         public string SortableLocation { get { return F.Location.SortableLocation; } }
         public DateTime StartDate { get { return F.FactDate.StartDate; } }
         public DateTime EndDate { get { return F.FactDate.EndDate; } }
-        public int RelationType { get { return Ind.RelationType; } }
+        public RelationshipType RelationType { get { return Ind.RelationType; } }
         public int SourcesCount { get { return F.SourcesCount; } }
     }
 }

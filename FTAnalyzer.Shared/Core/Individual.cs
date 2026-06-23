@@ -15,16 +15,13 @@ namespace FTAnalyzer
         IDisplayColourCensus, IDisplayColourBMD, IDisplayMissingData, IDisplayLooseInfo,
         IJsonIndividual
     {
-        // edefine relation type from direct ancestor to related by marriage and 
-        // MARRIAGEDB ie: married to a direct or blood relation
-        public const int UNKNOWN = 1, DIRECT = 2, DESCENDANT = 4, BLOOD = 8, MARRIEDTODB = 16, MARRIAGE = 32, LINKED = 64, UNSET = 128;
         public const string UNKNOWN_NAME = "UNKNOWN";
 
         public string IndividualID { get; private set; }
         string _forenames;
         string _fullname = string.Empty;
         string _gender = string.Empty;
-        int _relationType;
+        RelationshipType _relationType;
         List<Fact>? _allfacts;
         List<Fact>? _allFileFacts;
         readonly DoubleMetaphone surnameMetaphone;
@@ -68,7 +65,7 @@ namespace FTAnalyzer
             Suffix = string.Empty;
             Ahnentafel = 0;
             BudgieCode = string.Empty;
-            _relationType = UNSET;
+            _relationType = RelationshipType.UNSET;
             RelationToRoot = string.Empty;
             CommonAncestor = null;
             Infamily = false;
@@ -277,17 +274,17 @@ namespace FTAnalyzer
             }
         }
 
-        public int RelationType
+        public RelationshipType RelationType
         {
             get => _relationType;
             set
             {
-                if (_relationType == UNKNOWN || _relationType > value)
+                if (_relationType == RelationshipType.UNKNOWN || _relationType > value)
                     _relationType = value;
             }
         }
 
-        public bool IsBloodDirect => _relationType == BLOOD || _relationType == DIRECT || _relationType == DESCENDANT || _relationType == MARRIEDTODB;
+        public bool IsBloodDirect => _relationType == RelationshipType.BLOOD || _relationType == RelationshipType.DIRECT || _relationType == RelationshipType.DESCENDANT || _relationType == RelationshipType.MARRIEDTODB;
 
         public bool HasNotes => Notes.Length > 0;
         public string HasNotesMac => HasNotes ? "Yes" : "No";
@@ -298,12 +295,12 @@ namespace FTAnalyzer
             {
                 return _relationType switch
                 {
-                    DIRECT => Ahnentafel == 1 ? "Root Person" : "Direct Ancestor",
-                    BLOOD => "Blood Relation",
-                    MARRIAGE => "By Marriage",
-                    MARRIEDTODB => "Marr to Direct/Blood",
-                    DESCENDANT => "Descendant",
-                    LINKED => "Linked by Marriages",
+                    RelationshipType.DIRECT => Ahnentafel == 1 ? "Root Person" : "Direct Ancestor",
+                    RelationshipType.BLOOD => "Blood Relation",
+                    RelationshipType.MARRIAGE => "By Marriage",
+                    RelationshipType.MARRIEDTODB => "Marr to Direct/Blood",
+                    RelationshipType.DESCENDANT => "Descendant",
+                    RelationshipType.LINKED => "Linked by Marriages",
                     _ => "Unknown",
                 };
             }

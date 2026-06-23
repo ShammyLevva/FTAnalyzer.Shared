@@ -22,17 +22,17 @@
         {
             get
             {
-                if (Individual.RelationType == Individual.DIRECT)
+                if (Individual.RelationType == RelationshipType.DIRECT)
                     return "Direct Ancestor";
-                if (Individual.RelationType == Individual.BLOOD)
+                if (Individual.RelationType == RelationshipType.BLOOD)
                     return "Blood Relation";
-                if (Individual.RelationType == Individual.MARRIEDTODB || Individual.RelationType == Individual.MARRIAGE)
+                if (Individual.RelationType == RelationshipType.MARRIEDTODB || Individual.RelationType == RelationshipType.MARRIAGE)
                     return "Marriage";
-                if (Individual.RelationType == Individual.DESCENDANT)
+                if (Individual.RelationType == RelationshipType.DESCENDANT)
                     return "Descendant";
-                if (Individual.RelationType == Individual.LINKED)
+                if (Individual.RelationType == RelationshipType.LINKED)
                     return "Linked";
-                if (Individual.RelationType == Individual.UNKNOWN)
+                if (Individual.RelationType == RelationshipType.UNKNOWN)
                     return "Unknown";
                 return string.Empty;
             }

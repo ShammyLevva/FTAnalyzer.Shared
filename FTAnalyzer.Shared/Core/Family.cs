@@ -336,10 +336,10 @@ namespace FTAnalyzer
             }
         }
 
-        public IEnumerable<int> RelationTypes => Members.Select(m => m.RelationType);
+        public IEnumerable<RelationshipType> RelationTypes => Members.Select(m => m.RelationType);
 
-        public bool HasUnknownRelations => RelationTypes.Contains(Individual.UNKNOWN);
-        public bool HasLinkedRelations => RelationTypes.Contains(Individual.MARRIAGE) || RelationTypes.Contains(Individual.LINKED);
+        public bool HasUnknownRelations => RelationTypes.Contains(RelationshipType.UNKNOWN);
+        public bool HasLinkedRelations => RelationTypes.Contains(RelationshipType.MARRIAGE) || RelationTypes.Contains(RelationshipType.LINKED);
 
         public string FamilyName
         {
@@ -423,13 +423,13 @@ namespace FTAnalyzer
             if (spouse is not null && string.IsNullOrEmpty(spouse.BudgieCode))
                 spouse.BudgieCode = ind.BudgieCode + "*s";
             int directChild = 0;
-            if (ind.RelationType == Individual.DIRECT)
+            if (ind.RelationType == RelationshipType.DIRECT)
             {
                 //first find which child is a direct
                 foreach (var child in Children.OrderBy(c => c.BirthDate))
                 {
                     directChild++;
-                    if (child.RelationType == Individual.DIRECT)
+                    if (child.RelationType == RelationshipType.DIRECT)
                         break;
                 }
             }
@@ -461,7 +461,7 @@ namespace FTAnalyzer
             }
         }
 
-        public void SetSpouseRelation(Individual ind, int relationType)
+        public void SetSpouseRelation(Individual ind, RelationshipType relationType)
         {
             if (ind is null) return;
             Individual? spouse = Spouse(ind);
@@ -473,7 +473,7 @@ namespace FTAnalyzer
 #endif
         }
 
-        public void SetChildRelation(Queue<Individual> queue, int relationType)
+        public void SetChildRelation(Queue<Individual> queue, RelationshipType relationType)
         {
             if (queue is null) return;
             foreach (Individual child in Children)

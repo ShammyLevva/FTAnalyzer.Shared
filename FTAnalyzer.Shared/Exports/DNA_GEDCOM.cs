@@ -124,8 +124,8 @@ namespace FTAnalyzer.Exports
                     foreach (Family asSpouse in ind.FamiliesAsSpouse)
                     {
                         output.WriteLine($"1 FAMS @{asSpouse.FamilyID}@");
-                        var spouse = asSpouse.Spouse(ind);
-                        if (spouse is not null && spouse.RelationType != Individual.DIRECT && spouse.RelationType != Individual.DESCENDANT)
+                        Individual? spouse = asSpouse.Spouse(ind);
+                        if (spouse is not null && spouse.RelationType != RelationshipType.DIRECT && spouse.RelationType != RelationshipType.DESCENDANT)
                             spouses.Add(spouse); // we have a spouse that isn't a direct so is a step relation add to list to write
                         if (!families.Contains(asSpouse))
                             families.Add(asSpouse);
@@ -147,7 +147,7 @@ namespace FTAnalyzer.Exports
             {
                 foreach (Individual child in fam.Children)
                 {
-                    if (child.RelationType != Individual.DIRECT && child.RelationType != Individual.DESCENDANT) // only write out siblings not directs at this point
+                    if (child.RelationType != RelationshipType.DIRECT && child.RelationType != RelationshipType.DESCENDANT) // only write out siblings not directs at this point
                     {
                         if (_includeDescendants)
                             descendants.Add(child); // add to list of all descendants to write out
@@ -207,7 +207,7 @@ namespace FTAnalyzer.Exports
                     output.WriteLine($"1 WIFE @{fam.WifeID}@");
                 foreach (Individual child in fam.Children)
                 {
-                    if (_includeSiblings || child.RelationType == Individual.DIRECT || child.RelationType == Individual.DESCENDANT) // skip siblings if not including
+                    if (_includeSiblings || child.RelationType == RelationshipType.DIRECT || child.RelationType == RelationshipType.DESCENDANT) // skip siblings if not including
                         output.WriteLine($"1 CHIL @{child.IndividualID}@");
                 }
                 if (!isPrivate)

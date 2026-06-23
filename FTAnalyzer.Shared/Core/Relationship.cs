@@ -27,7 +27,7 @@ namespace FTAnalyzer
             {
                 string relation = indToFind.IsMale ? "son" : "daughter";
                 indToFind.RelationSort = -toFindDistance;
-                indToFind.RelationType = Individual.DESCENDANT;
+                indToFind.RelationType = RelationshipType.DESCENDANT;
                 return (commonAncestor.Step ? "step " : string.Empty) + AggrandiseRelationship(relation, toFindDistance, 0);
             }
             // EQUAL DISTANCE - SIBLINGS / PERFECT COUSINS

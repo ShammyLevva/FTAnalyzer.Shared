@@ -251,23 +251,23 @@ namespace FTAnalyzer.Exports
         {
             switch (ind.RelationType)
             {
-                case Individual.DIRECT:
+                case RelationshipType.DIRECT:
                     output.Add("relation_type", "Direct+ancestor");
                     output.Add("descent", ind.Ahnentafel.ToString());
                     break;
-                case Individual.BLOOD:
-                case Individual.DESCENDANT:
+                case RelationshipType.BLOOD:
+                case RelationshipType.DESCENDANT:
                     output.Add("relation_type", "Blood+relative");
                     output.Add("descent", string.Empty);
                     break;
-                case Individual.MARRIAGE:
-                case Individual.MARRIEDTODB:
+                case RelationshipType.MARRIAGE:
+                case RelationshipType.MARRIEDTODB:
                     output.Add("relation_type", "Marriage");
                     output.Add("descent", string.Empty);
                     break;
-                case Individual.UNKNOWN:
-                case Individual.UNSET:
-                case Individual.LINKED:
+                case RelationshipType.UNKNOWN:
+                case RelationshipType.UNSET:
+                case RelationshipType.LINKED:
                     output.Add("relation_type", "Unknown");
                     output.Add("descent", string.Empty);
                     break;
