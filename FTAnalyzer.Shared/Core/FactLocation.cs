@@ -78,7 +78,27 @@ namespace FTAnalyzer
         static Dictionary<string, string> REGION_SHIFTS = [];
         static Dictionary<string, string> FREECEN_LOOKUP = [];
         static Dictionary<string, Tuple<string, string>> FINDMYPAST_LOOKUP = [];
-        static IDictionary<string, FactLocation> LOCATIONS;
+        static IDictionary<string, FactLocation>? _defaultLocations;
+        static readonly AsyncLocal<IDictionary<string, FactLocation>?> _asyncLocations = new();
+
+        static IDictionary<string, FactLocation> LOCATIONS
+        {
+            get => _asyncLocations.Value ?? _defaultLocations!;
+            set
+            {
+                if (_asyncLocations.Value is not null)
+                    _asyncLocations.Value = value;
+                else
+                    _defaultLocations = value;
+            }
+        }
+
+        public static void SetSessionLocations(IDictionary<string, FactLocation> locations)
+        {
+            _asyncLocations.Value = locations;
+        }
+
+        public static IDictionary<string, FactLocation> GetCurrentLocations() => LOCATIONS;
         static Dictionary<Tuple<int, string>, string> GOOGLE_FIXES = [];
         static Dictionary<Tuple<int, string>, string> LOCAL_GOOGLE_FIXES;
 

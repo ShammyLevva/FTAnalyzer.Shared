@@ -25,7 +25,10 @@ namespace FTAnalyzer
 	public partial class FamilyTree
 	{
 		#region Variables
-		static FamilyTree? instance;
+		static FamilyTree? _defaultInstance;
+		static readonly AsyncLocal<FamilyTree?> _asyncInstance = new();
+
+		internal IDictionary<string, FactLocation> SessionLocations { get; set; } = new Dictionary<string, FactLocation>();
 
 		List<FactSource> sources;
 		List<Individual> individuals;
@@ -60,11 +63,14 @@ namespace FTAnalyzer
 
 		public static FamilyTree Instance
 		{
-			get
-			{
-				instance ??= new FamilyTree();
-				return instance;
-			}
+			get => _asyncInstance.Value ?? _defaultInstance ?? (_defaultInstance = new FamilyTree());
+		}
+
+		public static FamilyTree CreateInstance() => new();
+
+		public static void SetInstance(FamilyTree? tree)
+		{
+			_asyncInstance.Value = tree;
 		}
 
 		public bool DocumentLoaded { get; set; }
@@ -119,13 +125,13 @@ namespace FTAnalyzer
 
 		static string GetNoteRef(XmlAttribute reference)
 		{
-			if (instance is null) return string.Empty;
-			if (!instance.DocumentLoaded)
+			if (_defaultInstance is null && _asyncInstance.Value is null) return string.Empty;
+			if (!Instance.DocumentLoaded)
 				Debug.WriteLine("Looking up XML without document loaded");
-			if (instance.noteNodes is null || reference is null)
+			if (Instance.noteNodes is null || reference is null)
 				return string.Empty;
 			var result = new StringBuilder();
-			foreach (XmlNode node in instance.noteNodes)
+			foreach (XmlNode node in Instance.noteNodes)
 			{
 				if (node.Attributes?["ID"]?.Value == reference.Value)
 				{
@@ -222,6 +228,7 @@ namespace FTAnalyzer
 			noteNodes = null;
 			maxAhnentafel = 0;
 			FactLocation.ResetLocations();
+			SessionLocations = FactLocation.GetCurrentLocations();
 			_dateErrorCount = 0;
 			individualLookup = [];
 		}
@@ -435,7 +442,8 @@ namespace FTAnalyzer
 
 		public static void CleanUpXML()
 		{
-			instance?.noteNodes = null;
+			if (_defaultInstance is not null) _defaultInstance.noteNodes = null;
+			if (_asyncInstance.Value is not null) _asyncInstance.Value.noteNodes = null;
 		}
 
 		static void LoadGEDCOM_PLAC_Locations(XmlNodeList? list, int startval, IProgress<int> progress, IProgress<string> outputText)
