@@ -22,9 +22,9 @@
 
         public static Predicate<T> StringFilter<T>(Func<T, string> f, string s) => x => StringMatches(f(x), s);
 
-        public static Predicate<T> IntFilter<T>(Func<T, int> f, int i) => x => f(x) == i;
+        public static Predicate<T> RelationFilter<T>(Func<T, RelationshipType> f, RelationshipType i) => x => f(x) == i;
 
-        public static Predicate<T> FamilyRelationFilter<T>(Func<T, IEnumerable<int>> f, int i) => x => f(x).Contains(i);
+        public static Predicate<T> FamilyRelationFilter<T>(Func<T, IEnumerable<RelationshipType>> f, RelationshipType i) => x => f(x).Contains(i);
 
         public static Predicate<T> DateFilter<T>(Func<T, FactDate> f, FactDate d) => x => f(x).Overlaps(d);
 
