@@ -61,12 +61,9 @@ namespace FTAnalyzer
 
 		FamilyTree() => ResetData();
 
-		public static FamilyTree Instance
-		{
-			get => _asyncInstance.Value ?? _defaultInstance ?? (_defaultInstance = new FamilyTree());
-		}
+        public static FamilyTree Instance => _asyncInstance.Value ?? (_defaultInstance ??= new FamilyTree());
 
-		public static FamilyTree CreateInstance() => new();
+        public static FamilyTree CreateInstance() => new();
 
 		public static void SetInstance(FamilyTree? tree)
 		{
@@ -442,8 +439,8 @@ namespace FTAnalyzer
 
 		public static void CleanUpXML()
 		{
-			if (_defaultInstance is not null) _defaultInstance.noteNodes = null;
-			if (_asyncInstance.Value is not null) _asyncInstance.Value.noteNodes = null;
+			_defaultInstance?.noteNodes = null;
+			_asyncInstance.Value?.noteNodes = null;
 		}
 
 		static void LoadGEDCOM_PLAC_Locations(XmlNodeList? list, int startval, IProgress<int> progress, IProgress<string> outputText)
