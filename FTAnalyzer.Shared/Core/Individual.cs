@@ -1296,7 +1296,7 @@ namespace FTAnalyzer
         }
 
         #region Colour Census 
-        CensusColours ColourCensusReport(CensusDate census)
+        public CensusColours ColourCensusReport(CensusDate census)
         {
             if (BirthDate.IsAfter(census) || DeathDate.IsBefore(census) || GetAge(census).MinAge >= FactDate.MAXYEARS)
                 return CensusColours.NOT_ALIVE; // not alive - grey
