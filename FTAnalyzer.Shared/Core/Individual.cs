@@ -869,6 +869,12 @@ namespace FTAnalyzer
             return false;
         }
 
+        public bool IsLikelyOnCensus(CensusDate when)
+        {
+            if (when is null) return false;
+            return IsPossiblyAlive(when) && GetAge(when).MinAge >= 0 && GetAge(when).MaxAge <= 80;
+        }
+
         #endregion
 
         #region Age Functions
