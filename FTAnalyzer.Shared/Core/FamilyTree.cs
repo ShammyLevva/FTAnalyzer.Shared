@@ -1191,7 +1191,7 @@ namespace FTAnalyzer
 						minEnd = birthDate.EndDate;
 				}
 				// fix for BEF dates to ensure new date isn't just the day before eg: BEF 9 OCT 1803 becoming BEF 8 OCT 1803
-				if (birthDate.StartDate == FactDate.MINDATE && minEnd == birthDate.EndDate)
+				if (birthDate.StartDate == FactDate.MINDATE && minEnd == birthDate.EndDate && minEnd != FactDate.MAXDATE)
 					minEnd = minEnd.AddDays(1);
 				DateTime deathEnd = indiv.DeathDate.EndDate;
 				if (minEnd > deathEnd)
