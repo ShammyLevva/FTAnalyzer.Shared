@@ -2352,9 +2352,27 @@ namespace FTAnalyzer
 		};
 	}
 
+	public static string? GetCensusSearchUri(string censusCountry, int censusYear, Individual person, int censusProvider, string censusRegion)
+	{
+		if (censusYear == 1950 && censusCountry.Equals(Countries.UNITED_STATES, StringComparison.OrdinalIgnoreCase))
+			return null;
+		if (censusYear == 1921 && Countries.IsUnitedKingdom(censusCountry))
+			return null;
+		return censusProvider switch
+		{
+			0 => BuildAncestryCensusQuery(censusCountry, censusYear, person, censusRegion),
+			1 => censusYear == 1939 && censusCountry.Equals(Countries.UNITED_KINGDOM, StringComparison.OrdinalIgnoreCase)
+				? BuildFindMyPast1939Query(person, censusRegion)
+				: BuildFindMyPastCensusQuery(censusCountry, censusYear, person, censusRegion),
+			2 => BuildFreeCenCensusQuery(censusCountry, censusYear, person),
+			3 => BuildFamilySearchCensusQuery(censusCountry, censusYear, person),
+			4 => BuildScotlandsPeopleCensusQuery(censusYear, person),
+			_ => null,
+		};
+	}
+
 	public static void SearchCensus(string censusCountry, int censusYear, Individual person, int censusProvider, string censusRegion)
 	{
-		string? uri = null;
 		string provider = ProviderName(censusProvider);
 		if (censusYear == 1950 && censusCountry.Equals(Countries.UNITED_STATES, StringComparison.OrdinalIgnoreCase))
 		{
@@ -2366,24 +2384,7 @@ namespace FTAnalyzer
 			UIHelpers.ShowMessage("Automated Searching for 1921 census not yet implemented");
 			return;
 		}
-		switch (censusProvider)
-		{
-			case 0:
-				uri = BuildAncestryCensusQuery(censusCountry, censusYear, person, censusRegion);
-				break;
-			case 1:
-				uri = censusYear == 1939 && censusCountry.Equals(Countries.UNITED_KINGDOM, StringComparison.OrdinalIgnoreCase) ? BuildFindMyPast1939Query(person, censusRegion) : BuildFindMyPastCensusQuery(censusCountry, censusYear, person, censusRegion);
-				break;
-			case 2:
-				uri = BuildFreeCenCensusQuery(censusCountry, censusYear, person);
-				break;
-			case 3:
-				uri = BuildFamilySearchCensusQuery(censusCountry, censusYear, person);
-				break;
-			case 4:
-				uri = BuildScotlandsPeopleCensusQuery(censusYear, person);
-				break;
-		}
+		string? uri = GetCensusSearchUri(censusCountry, censusYear, person, censusProvider, censusRegion);
 		if (uri is not null)
 		{
 			SpecialMethods.VisitWebsite(uri);
@@ -2953,10 +2954,8 @@ namespace FTAnalyzer
 
 	public enum SearchType { BIRTH = 0, MARRIAGE = 1, DEATH = 2 };
 
-	public static void SearchBMD(SearchType st, Individual? individual, FactDate factdate, FactLocation factLocation, int searchProvider, string bmdRegion, Individual? spouse)
+	static FactDate ResolveBMDFactDate(SearchType st, Individual individual, FactDate factdate)
 	{
-		if (individual is null) return;
-		string? uri = null;
 		if (factdate.IsUnknown || factdate.DateType.Equals(FactDate.FactDateType.AFT) || factdate.DateType.Equals(FactDate.FactDateType.BEF))
 		{
 			if (st.Equals(SearchType.BIRTH))
@@ -2968,8 +2967,6 @@ namespace FTAnalyzer
 			{
 				if (factdate.StartDate < individual.BirthDate.StartDate.AddYears(GeneralSettings.Default.MinParentalAge))
 					factdate = new FactDate(individual.BirthDate.StartDate.AddYears(GeneralSettings.Default.MinParentalAge), factdate.EndDate);
-				//    CheckLooseMarriage(individual);
-				//    factdate = individual.LooseMarriageDate;
 			}
 			if (st.Equals(SearchType.DEATH))
 			{
@@ -2977,8 +2974,44 @@ namespace FTAnalyzer
 				factdate = individual.LooseDeathDate;
 			}
 			if (factdate.StartDate > factdate.EndDate)
-				factdate = FactDate.UNKNOWN_DATE; // errors in facts corrupts loose births or deaths
+				factdate = FactDate.UNKNOWN_DATE;
 		}
+		return factdate;
+	}
+
+	public static List<string> GetBMDSearchUris(SearchType st, Individual? individual, FactDate factdate, FactLocation factLocation, int searchProvider, string bmdRegion, Individual? spouse)
+	{
+		List<string> result = [];
+		if (individual is null) return result;
+		factdate = ResolveBMDFactDate(st, individual, factdate);
+		switch (searchProvider)
+		{
+			case 0:
+				var u0 = BuildAncestryQuery(st, individual, factdate, bmdRegion);
+				if (!string.IsNullOrEmpty(u0)) result.Add(u0);
+				break;
+			case 1:
+				var u1 = BuildFindMyPastQuery(st, individual, factdate, bmdRegion);
+				if (!string.IsNullOrEmpty(u1)) result.Add(u1);
+				break;
+			case 3:
+				var u3 = BuildFamilySearchQuery(st, individual, factdate, factLocation);
+				if (!string.IsNullOrEmpty(u3)) result.Add(u3);
+				break;
+			case 4:
+				var uris = BuildScotlandsPeopleQuery(st, individual, factdate, spouse);
+				if (!string.IsNullOrEmpty(uris.Item1)) result.Add(uris.Item1);
+				if (!string.IsNullOrEmpty(uris.Item2)) result.Add(uris.Item2);
+				break;
+		}
+		return result;
+	}
+
+	public static void SearchBMD(SearchType st, Individual? individual, FactDate factdate, FactLocation factLocation, int searchProvider, string bmdRegion, Individual? spouse)
+	{
+		if (individual is null) return;
+		factdate = ResolveBMDFactDate(st, individual, factdate);
+		string? uri = null;
 		string provider = string.Empty;
 		Tuple<string, string> uris = new(string.Empty, string.Empty);
 		switch (searchProvider)
