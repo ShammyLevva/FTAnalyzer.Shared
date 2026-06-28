@@ -520,7 +520,7 @@ namespace FTAnalyzer
 		{
 			try
 			{
-				string filename = Path.Combine(startPath, @"Resources\GINAP.txt");
+				string filename = Path.Combine(startPath, "Resources", "GINAP.txt");
 				if (File.Exists(filename))
 					ReadStandardisedNameFile(filename);
 			}
