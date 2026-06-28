@@ -18,6 +18,17 @@ namespace FTAnalyzer
         public string SourceMedium { get; private set; }
         public List<Fact> Facts { get; private set; }
 
+        public FactSource(string sourceID, string sourceTitle)
+        {
+            SourceID = sourceID;
+            SourceTitle = sourceTitle;
+            Publication = string.Empty;
+            Author = string.Empty;
+            SourceText = string.Empty;
+            SourceMedium = string.Empty;
+            Facts = [];
+        }
+
         public FactSource(XmlNode node)
         {
             bool noteRead = false;

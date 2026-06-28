@@ -449,6 +449,12 @@ namespace FTAnalyzer
             Place = string.Empty;
             Location = loc ?? FactLocation.UNKNOWN_LOCATION;
             Individual = ind;
+            if (createdByFTA)
+            {
+                var ftaSource = FamilyTree.Instance.FTASource;
+                ftaSource.AddFact(this);
+                Sources.Add(ftaSource);
+            }
         }
 
         void CreateFact(XmlNode? node, string reference, bool preferred, FactDate? deathdate, IProgress<string> outputText)

@@ -31,6 +31,7 @@ namespace FTAnalyzer
 		internal IDictionary<string, FactLocation> SessionLocations { get; set; } = new Dictionary<string, FactLocation>();
 
 		List<FactSource> sources;
+		public FactSource FTASource { get; private set; } = new("FTA", "FTAnalyzer Generated Fact");
 		List<Individual> individuals;
 		List<Family> families;
 		List<Tuple<string, Fact>> sharedFacts;
@@ -201,6 +202,7 @@ namespace FTAnalyzer
 		public void ResetData()
 		{
 			DataLoaded = false;
+			FTASource = new("FTA", "FTAnalyzer Generated Fact");
 			sources = [];
 			individuals = [];
 			families = [];
