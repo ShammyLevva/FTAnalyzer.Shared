@@ -124,6 +124,8 @@ namespace FTAnalyzer
 
         public static bool IsUnitedKingdom(string country) => UK_COUNTRIES.Contains(country);
 
+        public static IReadOnlyCollection<string> KnownCountries => KNOWN_COUNTRIES;
+
         public static bool IsKnownCountry(string country) => KNOWN_COUNTRIES.Contains(country);
 
         public static bool IsCensusCountry(string country) => CENSUS_COUNTRIES.Contains(country);
