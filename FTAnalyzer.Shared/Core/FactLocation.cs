@@ -1162,7 +1162,7 @@ namespace FTAnalyzer
 
         public bool IsWithinUKBounds => Longitude >= -7.974074 && Longitude <= 1.879409 && Latitude >= 49.814376 && Latitude <= 60.970872;
 
-        public string Bounds
+        public string LocationBias
         {
             get
             {
@@ -1175,7 +1175,7 @@ namespace FTAnalyzer
                     if (!EmptyViewPort)
                     {
                         GeoResponse.CResult.CGeometry.CViewPort latLongViewPort = MapTransforms.ReverseTransformViewport(ViewPort);
-                        result = $"&bounds={latLongViewPort.NorthEast.Lat},{latLongViewPort.NorthEast.Long}|{latLongViewPort.SouthWest.Lat},{latLongViewPort.SouthWest.Long}";
+                        result = $"&locationBias.rectangle.low.latitude={latLongViewPort.SouthWest.Lat}&locationBias.rectangle.low.longitude={latLongViewPort.SouthWest.Long}&locationBias.rectangle.high.latitude={latLongViewPort.NorthEast.Lat}&locationBias.rectangle.high.longitude={latLongViewPort.NorthEast.Long}";
                     }
                 }
 #endif
