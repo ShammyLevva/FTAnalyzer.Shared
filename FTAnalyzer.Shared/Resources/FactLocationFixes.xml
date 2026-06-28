@@ -4,11 +4,11 @@
 		<CountryTypos>
 			<CountryTypo from="US"      to="United States" />
 			<CountryTypo from="U S "    to="United States" />
-			<CountryTypo from="US"      to="United States" />
 			<CountryTypo from="U S A"   to="United States" />
 			<CountryTypo from="America" to="United States" />
 			<CountryTypo from="United States of America" to="United States" />
 			<CountryTypo from="US Of A" to="United States" />
+			<CountryTypo from="Us"      to="United States" />
 			<CountryTypo from="Usa"     to="United States" />
 			<CountryTypo from="usa"     to="United States" />
 			<CountryTypo from="NZ"      to="New Zealand" />
