@@ -119,6 +119,24 @@ namespace FTAnalyzer
             Notes = FamilyTree.GetNotes(node);
             StandardisedName = FamilyTree.Instance.GetStandardisedName(IsMale, Forename);
             Fact nameFact = new(Fact.INDI, FactDate.UNKNOWN_DATE, FactLocation.BLANK_LOCATION, Name, true, true, this);
+            if (nameNode is not null)
+            {
+                FamilyTree ft = FamilyTree.Instance;
+                XmlNodeList? sourceNodes = nameNode.SelectNodes("SOUR");
+                if (sourceNodes is not null)
+                {
+                    foreach (XmlNode sn in sourceNodes)
+                    {
+                        string srcref = sn.Attributes?["REF"]?.Value ?? string.Empty;
+                        FactSource? source = ft.GetSource(srcref);
+                        if (source is not null)
+                        {
+                            nameFact.Sources.Add(source);
+                            source.AddFact(nameFact);
+                        }
+                    }
+                }
+            }
             AddFact(nameFact);
             // Individual attributes
             AddFacts(node, Fact.NAME, outputText);
