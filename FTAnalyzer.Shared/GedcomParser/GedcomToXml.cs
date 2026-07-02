@@ -13,6 +13,12 @@ namespace FTAnalyzer
 {
     static class GedcomToXml
     {
+        // A single logical GEDCOM line (after CONT/CONC joining or tolerant re-joining of broken lines)
+        // never legitimately reaches this size. The cap stops a corrupt or hostile file from
+        // concatenating an unbounded run of malformed lines into one huge string and exhausting memory.
+        // Real-world files are far below this, so parsing behaviour is unchanged for legitimate input.
+        const int MaxLogicalLineLength = 4 * 1024 * 1024;
+
         public static XmlDocument? LoadFile(Stream stream, Encoding encoding, IProgress<string> outputText, bool reportBadLines, IProgress<int>? parseProgress = null)
         {
             XmlDocument? doc;
@@ -160,7 +166,8 @@ namespace FTAnalyzer
                         StringBuilder sb = new();
                         sb.Append(line);
                         //need to check if nextline is valid if not line=line+nextline and nextline=reader.ReadLine();
-                        while (nextline?.Length <= 1 || (nextline?.Length > 1 && (!char.IsNumber(nextline[0]) || !nextline[1].Equals(' '))))
+                        while (sb.Length < MaxLogicalLineLength &&
+                               (nextline?.Length <= 1 || (nextline?.Length > 1 && (!char.IsNumber(nextline[0]) || !nextline[1].Equals(' ')))))
                         {  // concat if next line not a number space combo
                             sb.Append(nextline);
                             lineNr++;
@@ -234,7 +241,7 @@ namespace FTAnalyzer
                                 StringBuilder sb = new();
                                 sb.Append(line);
                                 // check if nextline does not start with a number ie: could be a wrapped line, if so then concatenate
-                                while (nextline is not null && !nextline.Trim().StartsWithNumeric())
+                                while (sb.Length < MaxLogicalLineLength && nextline is not null && !nextline.Trim().StartsWithNumeric())
                                 {
                                     sb.Append($"\n{nextline.Trim()}");
                                     nextline = reader.ReadLine();
