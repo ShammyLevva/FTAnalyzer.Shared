@@ -29,7 +29,11 @@ namespace FTAnalyzer
             { // if there is a problem with the file return with opposite line ends
                 cloned = PrepareStream(stream);
                 retryFailed = FileHandling.Default.RetryFailedLines;
-                using StreamReader reader = new(retryFailed ? cloned : CheckInvalidCR(cloned), encoding, detectEncodingFromByteOrderMarks: false, bufferSize: -1, leaveOpen: false);
+                // This branch picks the raw stream when retryFailed (the inverse of the block above), so
+                // leaveOpen must follow that same inversion — otherwise a caller-side re-parse (e.g.
+                // LoadTreeHeader's charset-based retry) can find the stream already closed.
+                bool leaveOpenRetry = stream.CanSeek && retryFailed;
+                using StreamReader reader = new(retryFailed ? cloned : CheckInvalidCR(cloned), encoding, detectEncodingFromByteOrderMarks: false, bufferSize: -1, leaveOpen: leaveOpenRetry);
                 doc = Parse(reader, outputText, false);
             }
             return doc;
@@ -50,7 +54,10 @@ namespace FTAnalyzer
                 // if there is a problem with the file return with opposite line ends
                 cloned = PrepareStream(stream);
                 retryFailed = FileHandling.Default.RetryFailedLines;
-                using AnselInputStreamReader reader = new(retryFailed ? cloned : CheckInvalidCR(cloned), leaveOpen: false);
+                // See the matching comment in LoadFile: this branch picks the raw stream when retryFailed,
+                // so leaveOpen must follow that inversion to avoid closing a stream the caller still needs.
+                bool leaveOpenRetry = stream.CanSeek && retryFailed;
+                using AnselInputStreamReader reader = new(retryFailed ? cloned : CheckInvalidCR(cloned), leaveOpen: leaveOpenRetry);
                 doc = Parse(reader, outputText, false);
             }
             return doc;
@@ -359,7 +366,9 @@ namespace FTAnalyzer
                         FileStream fileStream = new(tempFile, FileMode.Create, FileAccess.Write);
                         using (StreamWriter writer = new(fileStream))
                         {
-                            using StreamReader reader = new(stream);
+                            // leaveOpen: the caller (Parse's finally block) still owns this stream and may
+                            // need it for a subsequent charset-based re-parse in LoadTreeHeader.
+                            using StreamReader reader = new(stream, Encoding.UTF8, detectEncodingFromByteOrderMarks: true, bufferSize: -1, leaveOpen: true);
                             writer.WriteLine("<html><head><Title>Gedcom File</Title></head><body>");
                             writer.WriteLine("<h4>Line Errors</h4>");
                             writer.WriteLine("<table border='1'><tr><th>Line Number</th><th>Line Contents</th><th>Error Description</th></tr>");
