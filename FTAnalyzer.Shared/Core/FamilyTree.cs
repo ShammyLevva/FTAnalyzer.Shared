@@ -203,7 +203,7 @@ namespace FTAnalyzer
 		{
 			DataLoaded = false;
 			FTASource = new("FTA", "FTAnalyzer Generated Fact");
-			sources = [];
+			sources = [FTASource];
 			individuals = [];
 			families = [];
 			sharedFacts = [];
