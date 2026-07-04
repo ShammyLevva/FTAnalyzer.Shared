@@ -146,6 +146,8 @@ namespace FTAnalyzer
             AddFacts(node, Fact.EDUCATION, outputText);
             AddFacts(node, Fact.EMAIL, outputText);
             AddFacts(node, Fact.FAMILYSEARCH_ID, outputText);
+            if (GeneralSettings.Default.IncludeGenderAsFact)
+                AddFacts(node, Fact.GENDER, outputText);
             AddFacts(node, Fact.HEIGHT, outputText);
             AddFacts(node, Fact.MEDICAL_CONDITION, outputText);
             AddFacts(node, Fact.NAMESAKE, outputText);
