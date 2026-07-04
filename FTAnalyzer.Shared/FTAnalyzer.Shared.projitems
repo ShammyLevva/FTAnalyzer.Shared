@@ -133,6 +133,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Comparators\Census\ColourCensusComparer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\InvalidGEDCOMException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Displays\IColumnComparer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Theme\Colors.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)Resources\BingOSMaps.htm">
