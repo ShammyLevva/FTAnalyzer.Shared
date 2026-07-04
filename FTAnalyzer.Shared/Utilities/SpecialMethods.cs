@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 #if __PC__
-using FTAnalyzer.Properties;
 using static FTAnalyzer.Mapping.GeoResponse.CResult.CGeometry;
 #endif
 
@@ -11,41 +10,10 @@ namespace FTAnalyzer.Utilities
 {
     public static class SpecialMethods
     {
-#if __PC__
-        public static IEnumerable<Control> GetAllControls(Control aControl)
-        {
-            Stack<Control> stack = new();
-            stack.Push(aControl);
-            while (stack.Count != 0)
-            {
-                var nextControl = stack.Pop();
-                foreach (Control childControl in nextControl.Controls)
-                    stack.Push(childControl);
-                yield return nextControl;
-            }
-        }
-
-        public static void SetFonts(Form form)
-        {
-            try
-            {
-                Font font = new(FontSettings.Default.SelectedFont.Name, FontSettings.Default.SelectedFont.Size);
-                foreach (Control theControl in GetAllControls(form))
-                {
-                    if (theControl.Font.Name.Equals(FontSettings.Default.SelectedFont.Name, StringComparison.OrdinalIgnoreCase)
-                        && !ExtensionMethods.DoubleEquals(theControl.Font.Size, FontSettings.Default.SelectedFont.Size))
-                    {
-                        theControl.Font = font;
-                        theControl.Refresh();
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine($"Error processing font: {e.Message}");
-            }
-        }
-#endif
+        // Note: WinForms font-scaling helpers (formerly GetAllControls/SetFonts) moved to
+        // FTAnalyzer.Windows/Utilities/FontScaler.cs — this Shared project holds business
+        // logic used by both FTAnalyzer.Windows and FTAnalyzer.Web, and those methods were
+        // WinForms-only with no Web caller.
         public static void VisitWebsite(string url)
         {
             if (string.IsNullOrEmpty(url)) return;
