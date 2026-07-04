@@ -44,6 +44,11 @@ namespace FTAnalyzer
 		SortableBindingList<IDisplayLooseDeath>? looseDeaths;
 		SortableBindingList<IDisplayLooseBirth>? looseBirths;
 		SortableBindingList<IDisplayLooseInfo>? looseInfo;
+		SortableBindingList<IDisplayIndividual>? displayIndividuals;
+		SortableBindingList<IDisplayFamily>? displayFamilies;
+		SortableBindingList<IDisplaySource>? displaySources;
+		SortableBindingList<IDisplayOccupation>? displayOccupations;
+		SortableBindingList<IDisplayCustomFact>? displayCustomFacts;
 		SortableBindingList<DuplicateIndividual>? duplicates;
 		ConcurrentBag<DuplicateIndividual>? buildDuplicates;
 		const int DATA_ERROR_GROUPS = 32;
@@ -221,6 +226,11 @@ namespace FTAnalyzer
 			duplicates = null;
 			buildDuplicates = null;
 			ClearLocations();
+			displayIndividuals = null;
+			displayFamilies = null;
+			displaySources = null;
+			displayOccupations = null;
+			displayCustomFacts = null;
 #if __PC__
 			TreeViewHandler.Instance.ResetData();
 #endif
@@ -1779,9 +1789,9 @@ namespace FTAnalyzer
 			return result;
 		}
 
-		public SortableBindingList<IDisplayIndividual> AllDisplayIndividuals => [.. individuals];
+		public SortableBindingList<IDisplayIndividual> AllDisplayIndividuals => displayIndividuals ??= [.. individuals];
 
-		public SortableBindingList<IDisplayFamily> AllDisplayFamilies => [.. families];
+		public SortableBindingList<IDisplayFamily> AllDisplayFamilies => displayFamilies ??= [.. families];
 
 		public static SortableBindingList<IDisplayFact> GetSourceDisplayFacts(FactSource source)
 		{
@@ -1813,41 +1823,40 @@ namespace FTAnalyzer
 			return result;
 		}
 
-		public SortableBindingList<IDisplaySource> AllDisplaySources => [.. sources];
+		public SortableBindingList<IDisplaySource> AllDisplaySources => displaySources ??= [.. sources];
 
-		public SortableBindingList<IDisplayOccupation> AllDisplayOccupations
+		public SortableBindingList<IDisplayOccupation> AllDisplayOccupations => displayOccupations ??= GetDisplayOccupations();
+
+		SortableBindingList<IDisplayOccupation> GetDisplayOccupations()
 		{
-			get
-			{
-				var result = new SortableBindingList<IDisplayOccupation>();
-				foreach (string occ in occupations.Keys)
-					result.Add(new DisplayOccupation(occ, occupations[occ].Count));
-				return result;
-			}
+			var result = new SortableBindingList<IDisplayOccupation>();
+			foreach (string occ in occupations.Keys)
+				result.Add(new DisplayOccupation(occ, occupations[occ].Count));
+			return result;
 		}
-		public SortableBindingList<IDisplayCustomFact> AllCustomFacts
+
+		public SortableBindingList<IDisplayCustomFact> AllCustomFacts => displayCustomFacts ??= GetDisplayCustomFacts();
+
+		SortableBindingList<IDisplayCustomFact> GetDisplayCustomFacts()
 		{
-			get
+			var result = new SortableBindingList<IDisplayCustomFact>();
+			foreach (string facttype in unknownIndividualFactTypes.Keys)
 			{
-				var result = new SortableBindingList<IDisplayCustomFact>();
-				foreach (string facttype in unknownIndividualFactTypes.Keys)
-				{
+				bool ignore = DatabaseHelper.IgnoreCustomFact(facttype);
+				int famCount = unknownFamilyFactTypes.TryGetValue(facttype, out List<Family>? value) ? value.Count : 0;
+				var customFact = new DisplayCustomFact(facttype, unknownIndividualFactTypes[facttype].Count, famCount, ignore);
+				result.Add(customFact);
+			}
+			foreach (string facttype in unknownFamilyFactTypes.Keys)
+			{
+				if (!unknownIndividualFactTypes.ContainsKey(facttype))
+				{ // only add family fact type if we've not already added it
 					bool ignore = DatabaseHelper.IgnoreCustomFact(facttype);
-					int famCount = unknownFamilyFactTypes.TryGetValue(facttype, out List<Family>? value) ? value.Count : 0;
-					var customFact = new DisplayCustomFact(facttype, unknownIndividualFactTypes[facttype].Count, famCount, ignore);
+					var customFact = new DisplayCustomFact(facttype, 0, unknownFamilyFactTypes[facttype].Count, ignore);
 					result.Add(customFact);
 				}
-				foreach (string facttype in unknownFamilyFactTypes.Keys)
-				{
-					if (!unknownIndividualFactTypes.ContainsKey(facttype))
-					{ // only add family fact type if we've not already added it
-						bool ignore = DatabaseHelper.IgnoreCustomFact(facttype);
-						var customFact = new DisplayCustomFact(facttype, 0, unknownFamilyFactTypes[facttype].Count, ignore);
-						result.Add(customFact);
-					}
-				}
-				return result;
 			}
+			return result;
 		}
 
 		public SortableBindingList<IDisplayFact> AllDisplayFacts
