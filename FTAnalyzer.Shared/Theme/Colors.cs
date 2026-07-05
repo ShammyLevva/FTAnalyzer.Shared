@@ -14,6 +14,8 @@ namespace FTAnalyzer.Theme
     {
         // ── Light theme (default) ──────────────────────────────────────────
         public static readonly Color PrimaryForestGreen = Color.FromArgb(0x36, 0x4F, 0x29); // --color-primary #364F29
+        public static readonly Color PrimaryForestGreenLight = Color.FromArgb(0x4A, 0x6B, 0x39); // --rz-primary-light #4a6b39
+        public static readonly Color PrimaryForestGreenPale = Color.FromArgb(0x89, 0x9F, 0x7E); // PrimaryForestGreenLight blended ~35% toward white - a soft sage for UI chrome that sits on the dark green header without feeling heavy
         public static readonly Color SecondaryCharcoalBark = Color.FromArgb(0x2A, 0x27, 0x23); // --color-secondary #2A2723
         public static readonly Color AccentWarmBronze = Color.FromArgb(0x80, 0x77, 0x6D); // --color-accent-warm #80776D (non-text only)
         public static readonly Color AccentActionAmber = Color.FromArgb(0xC7, 0x88, 0x2C); // --color-accent-action #C7882C
