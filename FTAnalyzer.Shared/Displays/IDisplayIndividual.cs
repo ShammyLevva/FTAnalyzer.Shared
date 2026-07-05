@@ -5,13 +5,13 @@ namespace FTAnalyzer
 {
     public interface IDisplayIndividual : IColumnComparer<IDisplayIndividual>
     {
-        [ColumnDetail("Ref", 50)]
+        [ColumnDetail("Ref", 70)]
         string IndividualID { get; }
         [ColumnDetail("Forenames", 100)]
         string Forenames { get; }
-        [ColumnDetail("Surname", 75)]
+        [ColumnDetail("Surname", 95)]
         string Surname { get; }
-        [ColumnDetail("Gender", 40, ColumnDetail.ColumnAlignment.Center)]
+        [ColumnDetail("Gender", 70, ColumnDetail.ColumnAlignment.Center)]
         string Gender { get; }
         [ColumnDetail("Birth Date", 170)]
         FactDate BirthDate { get; }
