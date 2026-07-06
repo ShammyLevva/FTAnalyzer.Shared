@@ -47,5 +47,6 @@ namespace FTAnalyzer.Theme
         public static readonly Color DarkWarning = Color.FromArgb(0xC7, 0x88, 0x2C); // --rz-warning (dark) #C7882C
         public static readonly Color DarkInfo = Color.FromArgb(0x4C, 0xC0, 0xD4); // --rz-info (dark) #4CC0D4
         public static readonly Color DarkDanger = Color.FromArgb(0xEF, 0x53, 0x50); // --rz-danger (dark) #EF5350
+        public static readonly Color DarkPrimaryPale = Color.FromArgb(0x5F, 0x7F, 0x47); // DarkPrimary blended ~35% toward DarkBgCard - dark-mode counterpart of PrimaryForestGreenPale, a muted row-selection highlight distinct from the plain dark card background without the header's full brightness
     }
 }
