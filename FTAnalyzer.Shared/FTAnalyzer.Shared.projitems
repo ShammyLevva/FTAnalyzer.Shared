@@ -86,6 +86,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Exports\IJsonIndividual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exports\JsonExport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exports\LostCousinsClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Exports\LostCousinsReconciliation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exports\NonDuplicate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Fact.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\FactDate.cs" />
@@ -130,6 +131,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\Analytics.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\SpecialMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\ColumnDetail.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilities\NicknameMatcher.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Comparators\Census\ColourCensusComparer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\InvalidGEDCOMException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Displays\IColumnComparer.cs" />
