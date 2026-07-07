@@ -265,6 +265,7 @@ namespace FTAnalyzer
             str = str.Replace("BETWEEN", "BET", StringComparison.Ordinal);
             str = str.Replace("BTW", "BET", StringComparison.Ordinal);
             str = str.Replace("UNTIL", "TO", StringComparison.Ordinal);
+            str = str.Replace("TO CIRCA", "TO", StringComparison.Ordinal); // cope with between 1 Jan 1900 to cir Mar 1900
             str = str.Replace("CIRCA", "ABT", StringComparison.Ordinal);
             str = str.Replace("AROUND", "ABT", StringComparison.Ordinal);
             str = str.Replace("APPROX", "ABT", StringComparison.Ordinal);
@@ -278,6 +279,7 @@ namespace FTAnalyzer
 
             str = str.Replace("CAL", "ABT", StringComparison.Ordinal);
             str = str.Replace("EST", "ABT", StringComparison.Ordinal);
+            str = str.Replace("TO CIR", "TO", StringComparison.Ordinal); // cope with between 1 Jan 1900 to cir Mar 1900
             str = str.Replace("CIR", "ABT", StringComparison.Ordinal);
             str = str.Replace("PRE", "BEF", StringComparison.Ordinal);
             str = str.Replace("POST", "AFT", StringComparison.Ordinal);
