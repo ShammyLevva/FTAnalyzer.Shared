@@ -7,8 +7,9 @@ namespace FTAnalyzer.Exports
     /// census reference is the reliable key (it identifies the household/family group on the
     /// census return), with forename matching only needed to disambiguate multiple household
     /// members sharing the same reference. Plain name equality and DoubleMetaphone both fail on
-    /// nickname pairs (Margaret/Maggie are different words, not phonetic variants), so
-    /// NicknameMatcher is tried as well before giving up on a household member.
+    /// nickname pairs (Margaret/Maggie are different words, not phonetic variants), so names are
+    /// also compared via FamilyTree.Instance.GetStandardisedName, which maps name variants to a
+    /// canonical form using the researched GINAP name-standardisation dataset (Resources/GINAP.txt).
     /// </summary>
     public static class LostCousinsReconciliation
     {
@@ -64,7 +65,10 @@ namespace FTAnalyzer.Exports
                 return false;
             if (string.Equals(webForename, candidate.LCForename, StringComparison.OrdinalIgnoreCase))
                 return true;
-            if (NicknameMatcher.AreEquivalent(webForename, candidate.LCForename))
+            // GetStandardisedName maps name variants (Maggie, Margaret, Peggy, Madge, ...) to the
+            // same canonical form via the GINAP dataset, so this catches nicknames metaphone can't.
+            string webStandardised = FamilyTree.Instance.GetStandardisedName(candidate.IsMale, webForename);
+            if (string.Equals(webStandardised, candidate.StandardisedName, StringComparison.OrdinalIgnoreCase))
                 return true;
             return new DoubleMetaphone(webForename).PrimaryKey == new DoubleMetaphone(candidate.LCForename).PrimaryKey;
         }

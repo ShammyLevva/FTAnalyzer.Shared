@@ -1,6 +1,6 @@
 ﻿namespace FTAnalyzer
 {
-    public class StandardisedName
+    public class StandardisedName : IEquatable<StandardisedName>
     {
         public bool IsMale { get; private set; }
         public string Name { get; private set; }
@@ -21,5 +21,14 @@
         {
             return (IsMale ? "Male :" : "Female :") + Name;
         }
+
+        // Used as a Dictionary key (FamilyTree.names) — without value equality every lookup
+        // missed and GetStandardisedName silently returned the input name unchanged.
+        public bool Equals(StandardisedName? other) =>
+            other is not null && IsMale == other.IsMale && string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase);
+
+        public override bool Equals(object? obj) => Equals(obj as StandardisedName);
+
+        public override int GetHashCode() => HashCode.Combine(IsMale, Name.ToUpperInvariant());
     }
 }
