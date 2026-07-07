@@ -116,9 +116,9 @@ namespace FTAnalyzer
 
         public override bool Equals(object? obj) => Equals(obj as LostCousin);
 
-        public override int GetHashCode()
-        {
-            throw new NotImplementedException();
-        }
+        // Equals() always requires Reference to match exactly before considering fuzzy
+        // name/birth-year matches, so hashing on Reference alone keeps the GetHashCode
+        // contract (equal objects hash equal) while still being a reasonable spread.
+        public override int GetHashCode() => Reference.GetHashCode();
     }
 }
