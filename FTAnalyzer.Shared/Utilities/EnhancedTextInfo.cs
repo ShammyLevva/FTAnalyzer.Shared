@@ -66,7 +66,8 @@ namespace FTAnalyzer.Utilities
             text ??= string.Empty;
             foreach (char ch in text)
             {
-                if (ch == 147 || ch == '-' || ch == 8211)
+                // En Dash(150, 8211), or Em Dash(151, 8212)
+                if (ch == 150 || ch== 151 || ch == '-' || ch == 8211 || ch == 8212)
                     sb.Append('-');
                 else if (ch >= ' ' && ch <= 'Z')
                     sb.Append(ch);
