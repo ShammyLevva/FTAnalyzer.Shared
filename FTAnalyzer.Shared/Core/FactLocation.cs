@@ -590,24 +590,60 @@ namespace FTAnalyzer
 
         public static IEnumerable<FactLocation> AllLocations => LOCATIONS.Values;
 
+        static readonly object ConversionsLock = new();
+        static volatile bool _conversionsLoaded;
+
         [MemberNotNull(nameof(LOCATIONS), nameof(LOCAL_GOOGLE_FIXES))]
         public static void ResetLocations()
         {
-            COUNTRY_TYPOS = new(StringComparer.OrdinalIgnoreCase);
-            REGION_TYPOS = new(StringComparer.OrdinalIgnoreCase);
-            COUNTRY_SHIFTS = new(StringComparer.OrdinalIgnoreCase);
-            REGION_SHIFTS = new(StringComparer.OrdinalIgnoreCase);
-            CITY_ADD_COUNTRY = new(StringComparer.OrdinalIgnoreCase);
-            FREECEN_LOOKUP = new(StringComparer.OrdinalIgnoreCase);
-            FINDMYPAST_LOOKUP = new(StringComparer.OrdinalIgnoreCase);
+            // Per-tree state — LOCATIONS is AsyncLocal-backed (per circuit/session on the web app),
+            // so this genuinely needs to run fresh every time a FamilyTree is constructed.
             LOCATIONS = new Dictionary<string, FactLocation>();
-            GOOGLE_FIXES = [];
-            LOCAL_GOOGLE_FIXES = [];
-
             // set unknown location as unknown so it doesn't keep hassling to be searched
             LOCATIONS.Add(UNKNOWNSTRING, UNKNOWN_LOCATION);
-            if (!GeneralSettings.Default.SkipFixingLocations)
-                LoadConversions(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location));
+
+            EnsureConversionsLoaded();
+        }
+
+        // COUNTRY_TYPOS/REGION_TYPOS/etc. are process-wide reference data parsed from the static
+        // FactLocationFixes.xml resource — identical every time, never session-specific. On the web
+        // app FamilyTree is constructed once per circuit (i.e. concurrently, under real traffic),
+        // and re-running LoadConversions on every construction reset+repopulated these *shared
+        // static* dictionaries with no synchronization — a guaranteed race (Dictionary corruption /
+        // "collection was modified" crashes seen repeatedly in production once concurrent circuits
+        // overlapped). Desktop only ever constructs one FamilyTree per process, so it never hit this.
+        // Loading once, guarded by a lock, fixes the race without changing the loaded content.
+        [MemberNotNull(nameof(LOCAL_GOOGLE_FIXES))]
+        static void EnsureConversionsLoaded()
+        {
+            if (_conversionsLoaded)
+            {
+                LOCAL_GOOGLE_FIXES ??= [];
+                return;
+            }
+            lock (ConversionsLock)
+            {
+                if (_conversionsLoaded)
+                {
+                    LOCAL_GOOGLE_FIXES ??= [];
+                    return;
+                }
+
+                COUNTRY_TYPOS = new(StringComparer.OrdinalIgnoreCase);
+                REGION_TYPOS = new(StringComparer.OrdinalIgnoreCase);
+                COUNTRY_SHIFTS = new(StringComparer.OrdinalIgnoreCase);
+                REGION_SHIFTS = new(StringComparer.OrdinalIgnoreCase);
+                CITY_ADD_COUNTRY = new(StringComparer.OrdinalIgnoreCase);
+                FREECEN_LOOKUP = new(StringComparer.OrdinalIgnoreCase);
+                FINDMYPAST_LOOKUP = new(StringComparer.OrdinalIgnoreCase);
+                GOOGLE_FIXES = [];
+                LOCAL_GOOGLE_FIXES = [];
+
+                if (!GeneralSettings.Default.SkipFixingLocations)
+                    LoadConversions(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location));
+
+                _conversionsLoaded = true;
+            }
         }
 
         public static FactLocation BestLocation(IEnumerable<Fact> facts, FactDate when)
