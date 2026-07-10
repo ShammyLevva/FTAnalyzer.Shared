@@ -73,11 +73,11 @@ namespace FTAnalyzer
         readonly string[] _Parts;
         bool _created;
 
-        static Dictionary<string, string> COUNTRY_TYPOS = [];
-        static Dictionary<string, string> REGION_TYPOS = [];
-        static Dictionary<string, string> REGION_SHIFTS = [];
-        static Dictionary<string, string> FREECEN_LOOKUP = [];
-        static Dictionary<string, Tuple<string, string>> FINDMYPAST_LOOKUP = [];
+        static Dictionary<string, string> COUNTRY_TYPOS = new(StringComparer.OrdinalIgnoreCase);
+        static Dictionary<string, string> REGION_TYPOS = new(StringComparer.OrdinalIgnoreCase);
+        static Dictionary<string, string> REGION_SHIFTS = new(StringComparer.OrdinalIgnoreCase);
+        static Dictionary<string, string> FREECEN_LOOKUP = new(StringComparer.OrdinalIgnoreCase);
+        static Dictionary<string, Tuple<string, string>> FINDMYPAST_LOOKUP = new(StringComparer.OrdinalIgnoreCase);
         static IDictionary<string, FactLocation>? _defaultLocations;
         static readonly AsyncLocal<IDictionary<string, FactLocation>?> _asyncLocations = new();
 
@@ -102,8 +102,8 @@ namespace FTAnalyzer
         static Dictionary<Tuple<int, string>, string> GOOGLE_FIXES = [];
         static Dictionary<Tuple<int, string>, string> LOCAL_GOOGLE_FIXES;
 
-        static Dictionary<string, string> COUNTRY_SHIFTS = [];
-        static Dictionary<string, string> CITY_ADD_COUNTRY = [];
+        static Dictionary<string, string> COUNTRY_SHIFTS = new(StringComparer.OrdinalIgnoreCase);
+        static Dictionary<string, string> CITY_ADD_COUNTRY = new(StringComparer.OrdinalIgnoreCase);
         const string UNKNOWNSTRING = "Unknown";
         public readonly static FactLocation UNKNOWN_LOCATION = new(UNKNOWNSTRING, "0.0", "0.0", Geocode.GEDCOM_USER);
         public readonly static FactLocation BLANK_LOCATION = new(string.Empty, "0.0", "0.0", Geocode.UNKNOWN);
@@ -593,13 +593,13 @@ namespace FTAnalyzer
         [MemberNotNull(nameof(LOCATIONS), nameof(LOCAL_GOOGLE_FIXES))]
         public static void ResetLocations()
         {
-            COUNTRY_TYPOS = [];
-            REGION_TYPOS = [];
-            COUNTRY_SHIFTS = [];
-            REGION_SHIFTS = [];
-            CITY_ADD_COUNTRY = [];
-            FREECEN_LOOKUP = [];
-            FINDMYPAST_LOOKUP = [];
+            COUNTRY_TYPOS = new(StringComparer.OrdinalIgnoreCase);
+            REGION_TYPOS = new(StringComparer.OrdinalIgnoreCase);
+            COUNTRY_SHIFTS = new(StringComparer.OrdinalIgnoreCase);
+            REGION_SHIFTS = new(StringComparer.OrdinalIgnoreCase);
+            CITY_ADD_COUNTRY = new(StringComparer.OrdinalIgnoreCase);
+            FREECEN_LOOKUP = new(StringComparer.OrdinalIgnoreCase);
+            FINDMYPAST_LOOKUP = new(StringComparer.OrdinalIgnoreCase);
             LOCATIONS = new Dictionary<string, FactLocation>();
             GOOGLE_FIXES = [];
             LOCAL_GOOGLE_FIXES = [];
@@ -770,13 +770,6 @@ namespace FTAnalyzer
             COUNTRY_TYPOS.TryGetValue(Country, out string? result);
             if (!string.IsNullOrEmpty(result))
                 Country = result;
-            else
-            {
-                string fixCase = EnhancedTextInfo.ToTitleCase(Country.ToLower());
-                COUNTRY_TYPOS.TryGetValue(fixCase, out result);
-                if (!string.IsNullOrEmpty(result))
-                    Country = result;
-            }
         }
 
         string FixRegionTypos(string toFix)
@@ -784,21 +777,12 @@ namespace FTAnalyzer
             if (Country == Countries.AUSTRALIA && toFix.Equals("WA", StringComparison.OrdinalIgnoreCase))
                 return "Western Australia"; // fix for WA = Washington
             REGION_TYPOS.TryGetValue(toFix, out string? result);
-            if (!string.IsNullOrEmpty(result))
-                return result;
-            string fixCase = EnhancedTextInfo.ToTitleCase(toFix.ToLower());
-            REGION_TYPOS.TryGetValue(fixCase, out result);
             return !string.IsNullOrEmpty(result) ? result : toFix;
         }
 
         void ShiftCountryToRegion()
         {
             COUNTRY_SHIFTS.TryGetValue(Country, out string? result);
-            if (string.IsNullOrEmpty(result))
-            {
-                string fixCase = EnhancedTextInfo.ToTitleCase(Country.ToLower());
-                COUNTRY_SHIFTS.TryGetValue(fixCase, out result);
-            }
             if (!string.IsNullOrEmpty(result))
             {
                 Place = (Place + " " + Address).Trim();
@@ -815,11 +799,6 @@ namespace FTAnalyzer
             if (!Countries.IsUnitedKingdom(Country))
                 return; // don't shift regions if not UK
             REGION_SHIFTS.TryGetValue(Region, out string? result);
-            if (string.IsNullOrEmpty(result))
-            {
-                string fixCase = EnhancedTextInfo.ToTitleCase(Region.ToLower());
-                REGION_TYPOS.TryGetValue(fixCase, out result);
-            }
             if (!string.IsNullOrEmpty(result))
             {
                 Place = (Place + " " + Address).Trim();
