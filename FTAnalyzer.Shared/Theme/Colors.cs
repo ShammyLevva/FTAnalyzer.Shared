@@ -21,7 +21,12 @@ namespace FTAnalyzer.Theme
         public static readonly Color AccentActionAmber = Color.FromArgb(0xC7, 0x88, 0x2C); // --color-accent-action #C7882C
         public static readonly Color BgParchment = Color.FromArgb(0xF2, 0xEB, 0xDF); // --color-bg-parchment #F2EBDF
         public static readonly Color GoldDark = Color.FromArgb(0x6B, 0x5A, 0x28); // --color-gold-dark #6B5A28 (light-mode titles/hero)
-        public static readonly Color BgCard = Color.FromArgb(0xFF, 0xFF, 0xFF); // --color-bg-card #FFFFFF
+        // Warm linen/ivory rather than the web app's pure #FFFFFF - WinForms renders card
+        // surfaces (grids, text boxes, dialogs) as flat, harshly-bordered rectangles with none of
+        // the browser's soft shadow/rounding, so pure white read as a stark box against
+        // BgParchment; #FAF7F1 stays in the same warm palette family while keeping enough lift
+        // over parchment to still register as a distinct raised surface.
+        public static readonly Color BgCard = Color.FromArgb(0xFA, 0xF7, 0xF1); // WinForms-only tweak of --color-bg-card (web app keeps #FFFFFF in app.css)
         public static readonly Color Border = Color.FromArgb(0xDD, 0xD7, 0xCC); // --color-border #DDD7CC
         public static readonly Color GenderMale = Color.FromArgb(0x2E, 0x6D, 0xA4); // --color-gender-male #2E6DA4
         public static readonly Color GenderFemale = Color.FromArgb(0xA9, 0x3D, 0x64); // --color-gender-female #A93D64
