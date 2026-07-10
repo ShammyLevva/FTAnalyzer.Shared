@@ -451,9 +451,10 @@ namespace FTAnalyzer
             Individual = ind;
             if (createdByFTA)
             {
-                var ftaSource = FamilyTree.Instance.FTASource;
-                ftaSource.AddFact(this);
-                Sources.Add(ftaSource);
+                // FTASource registration happens in Individual.AddFact when the fact is
+                // actually kept - speculative facts (eg: census reference probes) must not
+                // accumulate in the global FTASource list
+                Sources.Add(FamilyTree.Instance.FTASource);
             }
         }
 

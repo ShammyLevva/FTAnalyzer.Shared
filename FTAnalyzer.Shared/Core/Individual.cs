@@ -1035,6 +1035,8 @@ namespace FTAnalyzer
         {
             if (fact is null)
                 return;
+            if (fact.Created)
+                FamilyTree.Instance.FTASource.AddFact(fact);
             if (FamilyTree.FactBeforeBirth(this, fact))
                 fact.SetError((int)FamilyTree.Dataerror.FACTS_BEFORE_BIRTH, Fact.FactError.ERROR,
                     $"{fact.FactTypeDescription} fact recorded: {fact.FactDate} before individual was born");

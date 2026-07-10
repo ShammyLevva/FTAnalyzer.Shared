@@ -1,4 +1,3 @@
-using FTAnalyzer.Utilities;
 using System.Xml;
 
 namespace FTAnalyzer
@@ -17,6 +16,7 @@ namespace FTAnalyzer
         public string SourceText { get; private set; }
         public string SourceMedium { get; private set; }
         public List<Fact> Facts { get; private set; }
+        readonly HashSet<Fact> _factsSet = []; // reference-equality dedupe, avoids O(n) list scan per add
 
         public FactSource(string sourceID, string sourceTitle)
         {
@@ -50,7 +50,7 @@ namespace FTAnalyzer
 
         public void AddFact(Fact f)
         {
-            if (!Facts.ContainsFact(f))
+            if (_factsSet.Add(f))
                 Facts.Add(f);
         }
 
