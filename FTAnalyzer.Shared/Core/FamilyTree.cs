@@ -2496,7 +2496,7 @@ namespace FTAnalyzer
 		}
 		else if (censusCountry.Equals(Countries.UNITED_STATES, StringComparison.OrdinalIgnoreCase))
 		{
-			CensusDate cd = CensusDate.US_FEDERAL_CENSUS.First(x => x.BestYear == censusYear);
+			CensusDate cd = CensusDate.US_FEDERAL_CENSUS.First(x => x.CensusYear == censusYear);
 			uri.Path = $"search/collections/{cd.AncestryCatalog}/";
 		}
 		else if (censusCountry.Equals(Countries.CANADA, StringComparison.OrdinalIgnoreCase))
