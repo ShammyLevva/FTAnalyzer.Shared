@@ -40,7 +40,96 @@
 			<CountryTypo from="S Wales" to="Wales" />
 			<CountryTypo from="Channel Isles" to="Channel Islands" />
 			<CountryTypo from="Russian Federation" to="Russia" />
+			<CountryTypo from="Danmark" to="Denmark" />
 
+<!-- ============================================================
+     Native-language / endonym translations
+     ============================================================ -->
+
+			<CountryTypo from="Deutschland" to="Germany" />
+			<CountryTypo from="Espana" to="Spain" />
+			<CountryTypo from="España" to="Spain" />
+			<CountryTypo from="Italia" to="Italy" />
+			<CountryTypo from="Nederland" to="Netherlands" />
+			<CountryTypo from="Belgie" to="Belgium" />
+			<CountryTypo from="België" to="Belgium" />
+			<CountryTypo from="Belgique" to="Belgium" />
+			<CountryTypo from="Schweiz" to="Switzerland" />
+			<CountryTypo from="Suisse" to="Switzerland" />
+			<CountryTypo from="Svizzera" to="Switzerland" />
+			<CountryTypo from="Osterreich" to="Austria" />
+			<CountryTypo from="Österreich" to="Austria" />
+			<CountryTypo from="Polska" to="Poland" />
+			<CountryTypo from="Cesko" to="Czech Republic" />
+			<CountryTypo from="Česko" to="Czech Republic" />
+			<CountryTypo from="Czechia" to="Czech Republic" />
+			<CountryTypo from="Slovensko" to="Slovakia" />
+			<CountryTypo from="Magyarorszag" to="Hungary" />
+			<CountryTypo from="Magyarország" to="Hungary" />
+			<CountryTypo from="Romania" to="Romania" />
+			<CountryTypo from="România" to="Romania" />
+			<CountryTypo from="Bulgariya" to="Bulgaria" />
+			<CountryTypo from="Ellada" to="Greece" />
+			<CountryTypo from="Hellas" to="Greece" />
+			<CountryTypo from="Rossiya" to="Russia" />
+			<CountryTypo from="Ukraina" to="Ukraine" />
+			<CountryTypo from="Hrvatska" to="Croatia" />
+			<CountryTypo from="Srbija" to="Serbia" />
+			<CountryTypo from="Slovenija" to="Slovenia" />
+			<CountryTypo from="Bosna i Hercegovina" to="Bosnia and Herzegovina" />
+			<CountryTypo from="Crna Gora" to="Montenegro" />
+			<CountryTypo from="Macedonia" to="North Macedonia" />
+			<CountryTypo from="Makedonija" to="North Macedonia" />
+			<CountryTypo from="Shqiperia" to="Albania" />
+			<CountryTypo from="Shqipëria" to="Albania" />
+			<CountryTypo from="Lietuva" to="Lithuania" />
+			<CountryTypo from="Latvija" to="Latvia" />
+			<CountryTypo from="Eesti" to="Estonia" />
+			<CountryTypo from="Suomi" to="Finland" />
+			<CountryTypo from="Sverige" to="Sweden" />
+			<CountryTypo from="Norge" to="Norway" />
+			<CountryTypo from="Island" to="Iceland" />
+			<CountryTypo from="Ísland" to="Iceland" />
+			<CountryTypo from="Éire" to="Ireland" />
+			<CountryTypo from="Cymru" to="Wales" />
+			<CountryTypo from="Alba" to="Scotland" />
+			<CountryTypo from="Turkiye" to="Turkey" />
+			<CountryTypo from="Türkiye" to="Turkey" />
+			<CountryTypo from="Sakartvelo" to="Georgia" />
+			<CountryTypo from="Hayastan" to="Armenia" />
+			<CountryTypo from="Azerbaycan" to="Azerbaijan" />
+			<CountryTypo from="Nihon" to="Japan" />
+			<CountryTypo from="Nippon" to="Japan" />
+			<CountryTypo from="Zhongguo" to="China" />
+			<CountryTypo from="Hanguk" to="South Korea" />
+			<CountryTypo from="Mongol Uls" to="Mongolia" />
+			<CountryTypo from="Prathet Thai" to="Thailand" />
+			<CountryTypo from="Kampuchea" to="Cambodia" />
+			<CountryTypo from="Bharat" to="India" />
+			<CountryTypo from="Misr" to="Egypt" />
+			<CountryTypo from="Maroc" to="Morocco" />
+			<CountryTypo from="Mexico" to="Mexico" />
+			<CountryTypo from="México" to="Mexico" />
+			<CountryTypo from="Brasil" to="Brazil" />
+			<CountryTypo from="Cote d'Ivoire" to="Ivory Coast" />
+			<CountryTypo from="Côte d'Ivoire" to="Ivory Coast" />
+			<CountryTypo from="Cabo Verde" to="Cape Verde" />
+
+<!-- ============================================================
+     Missing countries: historical / alternate English names
+     ============================================================ -->
+
+			<CountryTypo from="Burma" to="Myanmar" />
+			<CountryTypo from="Persia" to="Iran" />
+			<CountryTypo from="Siam" to="Thailand" />
+			<CountryTypo from="Formosa" to="Taiwan" />
+			<CountryTypo from="Abyssinia" to="Ethiopia" />
+			<CountryTypo from="Zaire" to="Democratic Republic of the Congo" />
+			<CountryTypo from="Rhodesia" to="Zimbabwe" />
+			<CountryTypo from="Dahomey" to="Benin" />
+			<CountryTypo from="Upper Volta" to="Burkina Faso" />
+			
+			
 			<!-- Chapman Codes -->
 			<CountryTypo from="CHI" to="Channel Islands" />
 			<CountryTypo from="ENG" to="England" />
