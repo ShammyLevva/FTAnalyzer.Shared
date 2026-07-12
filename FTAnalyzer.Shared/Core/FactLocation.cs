@@ -590,7 +590,7 @@ namespace FTAnalyzer
 
         public static IEnumerable<FactLocation> AllLocations => LOCATIONS.Values;
 
-        static readonly object ConversionsLock = new();
+        static readonly Lock ConversionsLock = new();
         static volatile bool _conversionsLoaded;
 
         [MemberNotNull(nameof(LOCATIONS), nameof(LOCAL_GOOGLE_FIXES))]
@@ -598,9 +598,11 @@ namespace FTAnalyzer
         {
             // Per-tree state — LOCATIONS is AsyncLocal-backed (per circuit/session on the web app),
             // so this genuinely needs to run fresh every time a FamilyTree is constructed.
-            LOCATIONS = new Dictionary<string, FactLocation>();
-            // set unknown location as unknown so it doesn't keep hassling to be searched
-            LOCATIONS.Add(UNKNOWNSTRING, UNKNOWN_LOCATION);
+            LOCATIONS = new Dictionary<string, FactLocation>
+            {
+                // set unknown location as unknown so it doesn't keep hassling to be searched
+                { UNKNOWNSTRING, UNKNOWN_LOCATION }
+            };
 
             EnsureConversionsLoaded();
         }
@@ -766,9 +768,9 @@ namespace FTAnalyzer
                 Place = char.ToUpper(Place[0]) + Place[1..];
         }
 
-        void FixRegionFullStops() => Region = Region.Replace(".", " ", StringComparison.Ordinal).Trim();
+        void FixRegionFullStops() => Region = Region.Replace(".", " ", StringComparison.Ordinal).Replace("*", " ", StringComparison.Ordinal).Trim();
 
-        void FixCountryFullStops() => Country = Country.Replace(".", " ", StringComparison.Ordinal).Trim();
+        void FixCountryFullStops() => Country = Country.Replace(".", " ", StringComparison.Ordinal).Replace("*", " ", StringComparison.Ordinal).Trim();
 
         void FixMultipleSpacesAmpersandsCommas()
         {
