@@ -37,6 +37,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\CensusReference.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\ComboBoxFamily.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\CommonAncestor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Continents.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Countries.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\DataError.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\DataErrorGroup.cs" />

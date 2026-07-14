@@ -476,6 +476,7 @@ namespace FTAnalyzer
                     FixRegionFullStops();
                     FixCountryFullStops();
                     FixMultipleSpacesAmpersandsCommas();
+                    StripContinent();
                     FixUKGBTypos();
                     FixCountryTypos();
                     Country = EnhancedTextInfo.ToTitleCase(FixRegionTypos(Country).ToLower());
@@ -789,6 +790,21 @@ namespace FTAnalyzer
             SubRegion = SubRegion.Replace("&", "and", StringComparison.Ordinal).Replace(",", "", StringComparison.Ordinal).Trim();
             Address = Address.Replace("&", "and", StringComparison.Ordinal).Replace(",", "", StringComparison.Ordinal).Trim();
             Place = Place.Replace("&", "and", StringComparison.Ordinal).Replace(",", "", StringComparison.Ordinal).Trim();
+        }
+
+        // GEDCOM locations occasionally carry a spurious continent as the "country" segment (e.g.
+        // "Rushton Spencer, Staffordshire, England, Europe"). Strip it and shift everything up a
+        // level before any country-aware fix runs, so those fixes see the real country.
+        void StripContinent()
+        {
+            if (Continents.IsContinent(Country))
+            {
+                Country = Region;
+                Region = SubRegion;
+                SubRegion = Address;
+                Address = Place;
+                Place = string.Empty;
+            }
         }
 
         void FixUKGBTypos()
