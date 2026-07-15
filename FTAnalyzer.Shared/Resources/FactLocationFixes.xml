@@ -41,6 +41,7 @@
 			<CountryTypo from="Channel Isles" to="Channel Islands" />
 			<CountryTypo from="Russian Federation" to="Russia" />
 			<CountryTypo from="Danmark" to="Denmark" />
+			<CountryTypo from="Danemark" to="Denmark" />
 			
 <!-- ============================================================
      Native-language / endonym translations
@@ -63,6 +64,7 @@
 			<CountryTypo from="Cesko" to="Czech Republic" />
 			<CountryTypo from="Česko" to="Czech Republic" />
 			<CountryTypo from="Czechia" to="Czech Republic" />
+			<CountryTypo from="Bohemia" to="Czech Republic" />
 			<CountryTypo from="Slovensko" to="Slovakia" />
 			<CountryTypo from="Magyarorszag" to="Hungary" />
 			<CountryTypo from="Magyarország" to="Hungary" />
