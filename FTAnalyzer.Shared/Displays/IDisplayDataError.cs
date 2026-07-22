@@ -27,6 +27,9 @@ namespace FTAnalyzer
         //        [ColumnDetail("Family", 50)]
         //        string IsFamily { get; }
         //#endif
+#if __WEB__
+        bool IsFamily { get; }
+#endif
         [ColumnDetail("Forenames", 100)]
         string Forenames { get; }
         [ColumnDetail("Surname", 75)]

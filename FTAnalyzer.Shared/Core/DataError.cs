@@ -48,6 +48,8 @@ namespace FTAnalyzer
         public bool IsFamily => individual is null;
 #elif __MACOS__ || __IOS__
         public string IsFamily => individual is null ? "Yes" : "No";
+#elif __WEB__
+        public bool IsFamily => individual is null;
 #endif
         public IComparer<IDisplayDataError> GetComparer(string columnName, bool ascending)
         {
