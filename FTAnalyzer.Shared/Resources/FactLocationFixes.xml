@@ -42,6 +42,8 @@
 			<CountryTypo from="Russian Federation" to="Russia" />
 			<CountryTypo from="Danmark" to="Denmark" />
 			<CountryTypo from="Danemark" to="Denmark" />
+			<CountryTypo from="Zuid-Afrika" to ="South Africa" />
+			<CountryTypo from="Zuid Afrika" to ="South Africa" />
 			
 <!-- ============================================================
      Native-language / endonym translations
