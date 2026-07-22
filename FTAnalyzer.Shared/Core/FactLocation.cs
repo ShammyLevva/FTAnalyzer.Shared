@@ -672,7 +672,10 @@ namespace FTAnalyzer
                     }
                     else
                         distance = Math.Abs(f.FactDate.BestYear - when.BestYear);
-                    if (distance < limit && distance < minDistance)
+                    // On a year-distance tie (e.g. two facts in the same year), fall back to month-level
+                    // precision so the genuinely closer fact wins instead of whichever came first.
+                    bool closerOnTie = distance == minDistance && f.FactDate.DistanceSquared(when) < result.FactDate.DistanceSquared(when);
+                    if (distance < limit && (distance < minDistance || closerOnTie))
                     { // this is a closer date but now check to ensure we aren't overwriting a known country with an unknown one.
                         if (f.Location.IsKnownCountry || !f.Location.IsKnownCountry && !result.Location.IsKnownCountry)
                         {
