@@ -1998,6 +1998,39 @@ namespace FTAnalyzer
 				filter = x => family.Members.Contains(x);
 			return [.. individuals.Filter(filter)];
 		}
+
+		public List<ParentAgeBucket> ParentAgeProfile(Predicate<Individual> relTypeFilter)
+		{
+			// stats[parent, fiveYearBand, childGender] : parent 0=Father 1=Mother, band 3..19 covers ages 15-99,
+			// childGender 0=Male 1=Female 2=Unknown. Bands below 15 or at/above 100 are excluded as unreliable outliers.
+			int[,,] stats = new int[2, 20, 3];
+			HashSet<string> allowedIDs = [.. individuals.Filter(relTypeFilter).Select(i => i.IndividualID)];
+			foreach (Family f in families.Where(f => f.Members.Any(m => allowedIDs.Contains(m.IndividualID))))
+			{
+				foreach (Individual child in f.Children)
+				{
+					if (!child.BirthDate.IsKnown) continue;
+					if (f.Husband is not null && f.Husband.BirthDate.IsKnown)
+						AddParentAge(0, stats, f.Husband.GetAge(child.BirthDate), child.Gender);
+					if (f.Wife is not null && f.Wife.BirthDate.IsKnown)
+						AddParentAge(1, stats, f.Wife.GetAge(child.BirthDate), child.Gender);
+				}
+			}
+			List<ParentAgeBucket> result = [];
+			for (int band = 3; band < 20; band++)
+				result.Add(new ParentAgeBucket(band * 5, band * 5 + 4,
+					stats[0, band, 0], stats[0, band, 1], stats[0, band, 2],
+					stats[1, band, 0], stats[1, band, 1], stats[1, band, 2]));
+			return result;
+		}
+
+		static void AddParentAge(int parent, int[,,] stats, Age age, string gender)
+		{
+			int child = gender == "M" ? 0 : gender == "F" ? 1 : 2;
+			int band = age.MinAge / 5;
+			if (band >= 3 && band < 20)
+				stats[parent, band, child]++;
+		}
 		#endregion
 
 		#region Data Errors
