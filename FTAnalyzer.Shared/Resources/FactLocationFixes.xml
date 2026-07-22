@@ -118,6 +118,8 @@
 			<CountryTypo from="Cote d'Ivoire" to="Ivory Coast" />
 			<CountryTypo from="Côte d'Ivoire" to="Ivory Coast" />
 			<CountryTypo from="Cabo Verde" to="Cape Verde" />
+			<CountryTypo from="Columbia" to="Colombia" />
+			<CountryTypo from="Norvege" to="Norway" />
 
 <!-- ============================================================
      Missing countries: historical / alternate English names

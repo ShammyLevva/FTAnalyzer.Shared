@@ -6,11 +6,11 @@ namespace FTAnalyzer
     // they need stripping before any country-aware fixing runs.
     public static class Continents
     {
-        public const string AFRICA = "Africa", NORTH_AMERICA = "North America", SOUTH_AMERICA = "South America",
+        public const string AFRICA = "Africa", NORTH_AMERICA = "North America", CENTRAL_AMERICA = "Central America", SOUTH_AMERICA = "South America",
             EUROPE = "Europe", ASIA = "Asia", MIDDLE_EAST = "Middle East", OCEANIA = "Oceania", ORIENT = "Orient";
 
         static readonly HashSet<string> KNOWN_CONTINENTS = new([
-            AFRICA, NORTH_AMERICA, SOUTH_AMERICA, EUROPE, ASIA, MIDDLE_EAST, OCEANIA, ORIENT
+            AFRICA, NORTH_AMERICA, CENTRAL_AMERICA, SOUTH_AMERICA, EUROPE, ASIA, MIDDLE_EAST, OCEANIA, ORIENT
         ], StringComparer.OrdinalIgnoreCase);
 
         public static bool IsContinent(string country) => KNOWN_CONTINENTS.Contains(country);
