@@ -722,6 +722,58 @@
 			<RegionTypo from="WI"  to="Wisconsin" />
 			<RegionTypo from="WY"  to="Wyoming" />
 			<RegionType from="Calif" to="California" />
+			<RegionTypo from="AL USA"  to="Alabama" />
+			<RegionTypo from="AK USA"  to="Alaska" />
+			<RegionTypo from="AZ USA"  to="Arizona" />
+			<RegionTypo from="AR USA"  to="Arkansas" />
+			<RegionTypo from="CA USA"  to="California" />
+			<RegionTypo from="CO USA"  to="Colorado" />
+			<RegionTypo from="CT USA"  to="Connecticut" />
+			<RegionTypo from="DE USA"  to="Delaware" />
+			<RegionTypo from="DC USA"  to="District of Columbia" />
+			<RegionTypo from="FL USA"  to="Florida" />
+			<RegionTypo from="GA USA"  to="Georgia" />
+			<RegionTypo from="HI USA"  to="Hawaii" />
+			<RegionTypo from="ID USA"  to="Idaho" />
+			<RegionTypo from="IL USA"  to="Illinois" />
+			<RegionTypo from="IN USA"  to="Indiana" />
+			<RegionTypo from="IA USA"  to="Iowa" />
+			<RegionTypo from="KS USA"  to="Kansas" />
+			<RegionTypo from="KY USA"  to="Kentucky" />
+			<RegionTypo from="LA USA"  to="Louisiana" />
+			<RegionTypo from="ME USA"  to="Maine" />
+			<RegionTypo from="MD USA"  to="Maryland" />
+			<RegionTypo from="MA USA"  to="Massachusetts" />
+			<RegionTypo from="MI USA"  to="Michigan" />
+			<RegionTypo from="MN USA"  to="Minnesota" />
+			<RegionTypo from="MS USA"  to="Mississippi" />
+			<RegionTypo from="MO USA"  to="Missouri" />
+			<RegionTypo from="MT USA"  to="Montana" />
+			<RegionTypo from="NE USA"  to="Nebraska" />
+			<RegionTypo from="NV USA"  to="Nevada" />
+			<RegionTypo from="NJ USA"  to="New Jersey" />
+			<RegionTypo from="NH USA"  to="New Hampshire" />
+			<RegionTypo from="NM USA"  to="New Mexico" />
+			<RegionTypo from="NY USA"  to="New York" />
+			<RegionTypo from="NC USA"  to="North Carolina" />
+			<RegionTypo from="ND USA"  to="North Dakota" />
+			<RegionTypo from="OH USA"  to="Ohio" />
+			<RegionTypo from="OK USA"  to="Oklahoma" />
+			<RegionTypo from="OR USA"  to="Oregon" />
+			<RegionTypo from="PA USA"  to="Pennsylvania" />
+			<RegionTypo from="RI USA"  to="Rhode Island" />
+			<RegionTypo from="SC USA"  to="South Carolina" />
+			<RegionTypo from="SD USA"  to="South Dakota" />
+			<RegionTypo from="TN USA"  to="Tennessee" />
+			<RegionTypo from="TX USA"  to="Texas" />
+			<RegionTypo from="UT USA"  to="Utah" />
+			<RegionTypo from="VT USA"  to="Vermont" />
+			<RegionTypo from="VA USA"  to="Virginia" />
+			<RegionTypo from="WA USA"  to="Washington" />
+			<RegionTypo from="WV USA"  to="West Virginia" />
+			<RegionTypo from="WI USA"  to="Wisconsin" />
+			<RegionTypo from="WY USA"  to="Wyoming" />
+			<RegionType from="Calif" to="California" />
 
 			<!-- Australian Territories abbreviations -->
 			<RegionTypo from="NSW"   to="New South Wales"    />
