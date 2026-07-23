@@ -30,6 +30,10 @@
 			<CountryTypo from="Ceylon"   to="Sri Lanka" />
 			<CountryTypo from="Viet nam" to="Vietnam" />
 			<CountryTypo from="Viet Nam" to="Vietnam" />
+			<CountryTypo from="S Vietnam" to ="Vietnam" />
+			<CountryTypo from="South Vietnam" to ="Vietnam" />
+			<CountryTypo from="N Vietnam" to ="Vietnam" />
+			<CountryTypo from="North Vietnam" to ="Vietnam" />
 			<CountryTypo from="Bosnia" to="Bosnia and Herzegovina" />
 			<CountryTypo from="Herzegovina" to="Bosnia and Herzegovina" />
 			<CountryTypo from="Trinidad" to="Trinidad and Tobago" />
@@ -44,6 +48,8 @@
 			<CountryTypo from="Danemark" to="Denmark" />
 			<CountryTypo from="Zuid-Afrika" to ="South Africa" />
 			<CountryTypo from="Zuid Afrika" to ="South Africa" />
+			<CountryTypo from="S Africa" to ="South Africa" />
+			
 			
 <!-- ============================================================
      Native-language / endonym translations
@@ -94,6 +100,7 @@
 			<CountryTypo from="Norge" to="Norway" />
 			<CountryTypo from="Island" to="Iceland" />
 			<CountryTypo from="Ísland" to="Iceland" />
+			<CountryTypo from="Italie" to="Italy" />
 			<CountryTypo from="Éire" to="Ireland" />
 			<CountryTypo from="Cymru" to="Wales" />
 			<CountryTypo from="Alba" to="Scotland" />
@@ -692,8 +699,8 @@
 			<RegionTypo from="MT"  to="Montana" />
 			<RegionTypo from="NE"  to="Nebraska" />
 			<RegionTypo from="NV"  to="Nevada" />
-			<RegionTypo from="NJ"  to="New Hampshire" />
-			<RegionTypo from="NH"  to="New Jersey" />
+			<RegionTypo from="NJ"  to="New Jersey" />
+			<RegionTypo from="NH"  to="New Hampshire" />
 			<RegionTypo from="NM"  to="New Mexico" />
 			<RegionTypo from="NY"  to="New York" />
 			<RegionTypo from="NC"  to="North Carolina" />
@@ -721,6 +728,7 @@
 			<RegionTypo from="N S W" to="New South Wales"    />
 			<RegionTypo from="SA"    to="South Australia" />
 			<RegionTypo from="VIC"   to="Victoria" />
+			<RegionType from="TAS"   to="Tasmania" />
 			
 		</RegionTypos>
 
@@ -1058,6 +1066,7 @@
 			<CountryToRegion region="Maine"                 country="United States" />
 			<CountryToRegion region="Maryland"              country="United States" />
 			<CountryToRegion region="Massachusetts"         country="United States" />
+			<CountryToRegion region="Massachussetts"		country="United States" />
 			<CountryToRegion region="Michigan"              country="United States" />
 			<CountryToRegion region="Minnesota"             country="United States" />
 			<CountryToRegion region="Mississippi"           country="United States" />
@@ -1102,6 +1111,7 @@
 			<CountryToRegion region="Bavaria"               country="Germany" />
 			<CountryToRegion region="Prussia"               country="Germany" />
 			<CountryToRegion region="Crimea"	            country="Ukraine" />
+			<CountryToRegion region="Natal"				    country="South Africa" />
 
 
 			<!-- Scottish Cities add the Country -->
