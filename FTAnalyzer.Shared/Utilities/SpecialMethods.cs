@@ -30,8 +30,12 @@ namespace FTAnalyzer.Utilities
                 // hack because of this: https://github.com/dotnet/corefx/issues/10361
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
-                    url = url.Replace("&", "^&", StringComparison.Ordinal);
-                    Process.Start(new ProcessStartInfo("cmd", $"/c start {url}") { CreateNoWindow = true });
+                    // launch via explorer.exe rather than cmd.exe so the url is passed as a
+                    // literal argument (ArgumentList) instead of being parsed by a shell -
+                    // avoids command injection via GEDCOM-derived weblink values.
+                    ProcessStartInfo startInfo = new("explorer.exe") { CreateNoWindow = true };
+                    startInfo.ArgumentList.Add(url);
+                    Process.Start(startInfo);
                 }
                 else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 {

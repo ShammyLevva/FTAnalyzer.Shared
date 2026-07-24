@@ -3928,8 +3928,7 @@ namespace FTAnalyzer
 			result = await reader.ReadToEndAsync();
 			if (!result.Contains("No events found for this query", StringComparison.OrdinalIgnoreCase))
 			{
-				//XmlReader xmlReader = XmlReader.Create(result, new XmlReaderSettings() { XmlResolver = null })
-				using XmlTextReader xmlReader = new(new StringReader(result));
+				using XmlReader xmlReader = XmlReader.Create(new StringReader(result), new XmlReaderSettings { XmlResolver = null, DtdProcessing = DtdProcessing.Prohibit });
 				doc.Load(xmlReader);
 			}
 		}
