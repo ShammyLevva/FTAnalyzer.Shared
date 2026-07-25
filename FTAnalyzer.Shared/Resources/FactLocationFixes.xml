@@ -44,6 +44,9 @@
 			<CountryTypo from="S Wales" to="Wales" />
 			<CountryTypo from="Channel Isles" to="Channel Islands" />
 			<CountryTypo from="Russian Federation" to="Russia" />
+			<CountryTypo from="Russland" to="Russia" />
+			<CountryTypo from="Rusland" to="Russia" />
+			<CountryTypo from="Ryssland" to="Russia" />
 			<CountryTypo from="Danmark" to="Denmark" />
 			<CountryTypo from="Danemark" to="Denmark" />
 			<CountryTypo from="Zuid-Afrika" to ="South Africa" />
@@ -1336,6 +1339,110 @@
 			<RegionToParish parish="Worcester"      region="Worcestershire" />
 			<RegionToParish parish="York"           region="Yorkshire" />
 			<RegionToParish parish="Ipswich"        region="Suffolk" />
+			
+			<!-- Australian Cities add the County -->
+			<RegionToParish parish="Sydney"         region="New South Wales" />
+			<RegionToParish parish="Melbourne"      region="Victoria" />
+			<RegionToParish parish="Brisbane"       region="Queensland" />
+			<!-- <RegionToParish parish="Perth"          region="Western Australia" /> would conflict with Scottish Perth --> 
+			<RegionToParish parish="Adelaide"       region="Southern Australia" />
+			<RegionToParish parish="Darwin"         region="Northern Territory" />
+			<RegionToParish parish="Hobart"         region="Tasmania" />
+			
+			<!-- Canadian Cities add the County	-->
+			<RegionToParish parish="Toronto"        region="Ontario" />
+			<RegionToParish parish="Montreal"       region="Quebec" />
+			<RegionToParish parish="Vancouver"     region="British Columbia" /> 
+			<RegionToParish parish="Calgary"        region="Alberta" />
+			<RegionToParish parish="Ottawa"         region="Ontario" />
+			<RegionToParish parish="Edmonton"       region="Alberta" />
+			<RegionToParish parish="Quebec City"    region="Quebec" />
+			<RegionToParish parish="Winnipeg"       region="Manitoba" />
+			<RegionToParish parish="Hamilton"       region="Ontario" />
+			<RegionToParish parish="Kitchener"      region="Ontario" />
+			<RegionToParish parish="Saskatoon"      region="Saskatchewan" />
+			<RegionToParish parish="Regina"         region="Saskatchewan" />
+			<RegionToParish parish="St. John's"      region="Newfoundland" />
+			<RegionToParish parish="Fredericton"     region="New Brunswick" />
+			<RegionToParish parish="Charlottetown"   region="Prince Edward Island" />
+			<RegionToParish parish="Whitehorse"      region="Yukon Territory" />
+			
+			<!-- US Cities add the State-->
+			<RegionToParish parish="Los Angeles"      region="California" />
+			<RegionToParish parish="Chicago"          region="Illinois" />
+			<RegionToParish parish="Houston"          region="Texas" />
+			<RegionToParish parish="Phoenix"          region="Arizona" />
+			<RegionToParish parish="Philadelphia"     region="Pennsylvania" />
+			<RegionToParish parish="San Antonio"      region="Texas" />
+			<RegionToParish parish="San Diego"        region="California" />
+			<RegionToParish parish="Dallas"           region="Texas" />
+			<RegionToParish parish="San Jose"         region="California" />
+			<RegionToParish parish="Austin"           region="Texas" />
+			<RegionToParish parish="Jacksonville"     region="Florida" />
+			<RegionToParish parish="Fort Worth"       region="Texas" />
+			<RegionToParish parish="Columbus"         region="Ohio" />
+			<RegionToParish parish="Charlotte"        region="North Carolina" />
+			<RegionToParish parish="San Francisco"    region="California" />
+			<RegionToParish parish="Indianapolis"     region="Indiana" />
+			<RegionToParish parish="Seattle"          region="Washington" />
+			<RegionToParish parish="Denver"           region="Colorado" />
+			<RegionToParish parish="Washington"       region="District of Columbia" />
+			<RegionToParish parish="Boston"           region="Massachusetts" />
+			<RegionToParish parish="El Paso"          region="Texas" />
+			<RegionToParish parish="Nashville"        region="Tennessee" />
+			<RegionToParish parish="Detroit"          region="Michigan" />
+			<RegionToParish parish="Memphis"          region="Tennessee" />
+			<RegionToParish parish="Portland"         region="Oregon" />
+			<RegionToParish parish="Oklahoma City"    region="Oklahoma" />
+			<RegionToParish parish="Las Vegas"        region="Nevada" />
+			<RegionToParish parish="Louisville"       region="Kentucky" />
+			<RegionToParish parish="Baltimore"        region="Maryland" />
+			<RegionToParish parish="Milwaukee"        region="Wisconsin" />
+			<RegionToParish parish="Albuquerque"      region="New Mexico" />
+			<RegionToParish parish="Tucson"           region="Arizona" />
+			<RegionToParish parish="Fresno"           region="California" />
+			<RegionToParish parish="Sacramento"       region="California" />
+			<RegionToParish parish="Kansas City"      region="Missouri" />
+			<RegionToParish parish="Long Beach"       region="California" />
+			<RegionToParish parish="Mesa"             region="Arizona" />
+			<RegionToParish parish="Atlanta"          region="Georgia" />
+			<RegionToParish parish="Colorado Springs" region="Colorado" />
+			<RegionToParish parish="Virginia Beach"   region="Virginia" />
+			<RegionToParish parish="Raleigh"          region="North Carolina" />
+			<RegionToParish parish="Omaha"            region="Nebraska" />
+			<RegionToParish parish="Miami"            region="Florida" />
+			<RegionToParish parish="Oakland"          region="California" />
+			<RegionToParish parish="Minneapolis"      region="Minnesota" />
+			<RegionToParish parish="Tulsa"            region="Oklahoma" />
+			<RegionToParish parish="Wichita"          region="Kansas" />
+			<RegionToParish parish="New Orleans"      region="Louisiana" />
+			<RegionToParish parish="Pittsburgh"       region="Pennsylvania" />
+			<RegionToParish parish="Cleveland"        region="Ohio" />
+			<RegionToParish parish="Anchorage"        region="Alaska" />
+			<RegionToParish parish="Plano"            region="Texas" />
+			<RegionToParish parish="Lincoln"          region="Nebraska" />
+			<RegionToParish parish="Buffalo"          region="New York" />
+			<RegionToParish parish="Fort Wayne"       region="Indiana" />
+			<RegionToParish parish="Jersey City"      region="New Jersey" />
+			<RegionToParish parish="Chula Vista"      region="California" />
+			<RegionToParish parish="Orlando"          region="Florida" />
+			<RegionToParish parish="St Louis"         region="Missouri" />
+			
+			<!-- New Zealand Counties to Add-->
+			<RegionToParish parish="Auckland"         region="Auckland" />
+			<RegionToParish parish="Wellington"       region="Wellington" />
+			<RegionToParish parish="Christchurch"     region="Canterbury" />
+			<RegionToParish parish="Tauranga"         region="Bay of Plenty" />
+			<RegionToParish parish="Napier"           region="Hawke's Bay" />
+			<RegionToParish parish="Dunedin"          region="Otago" />
+			<RegionToParish parish="Palmerston North" region="Manawatu-Wanganui" />
+			<RegionToParish parish="Rotorua"          region="Bay of Plenty" />
+			<RegionToParish parish="New Plymouth"     region="Taranaki" />
+			<RegionToParish parish="Invercargill"     region="Southland" />
+			<RegionToParish parish="Whangarei"        region="Northland" />
+			<RegionToParish parish="Nelson"           region="Nelson" />
+			<RegionToParish parish="Gisborne"         region="Gisborne" />
+			<RegionToParish parish="Timaru"           region="Canterbury" />
 		</DemoteRegions>
 	</Fixes>
 
