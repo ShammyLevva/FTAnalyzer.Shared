@@ -439,9 +439,12 @@
 			<!-- England -->
 			<RegionTypo from="Beds"          to="Bedfordshire" />
 			<RegionTypo from="Bedford"       to="Bedfordshire" />
+			<RegionTypo from="Berk"          to="Berkshire" />
 			<RegionTypo from="Berks"         to="Berkshire" />
+			<RegionTypo from="Buck"          to="Buckinghamshire" />
 			<RegionTypo from="Bucks"         to="Buckinghamshire" />
 			<RegionTypo from="Buckingham"    to="Buckinghamshire" />
+			<RegionTypo from="Camb"          to="Cambridgeshire" />
 			<RegionTypo from="Cambs"         to="Cambridgeshire" />
 			<RegionTypo from="Cambridge"     to="Cambridgeshire" />
 			<RegionTypo from="Ches"          to="Cheshire" />
@@ -453,14 +456,19 @@
 			<RegionTypo from="Glous"         to="Gloucestershire" />
 			<RegionTypo from="Glos"          to="Gloucestershire" />
 			<RegionTypo from="Gloucester"    to="Gloucestershire" />
+			<RegionTypo from="Hamp"          to="Hampshire" />
 			<RegionTypo from="Hants"         to="Hampshire" />
 			<RegionTypo from="Hereford"      to="Herefordshire" />
+			<RegionTypo from="Hert"          to="Hertfordshire" />
 			<RegionTypo from="Herts"         to="Hertfordshire" />
+			<RegionTypo from="Hunt"          to="Huntingdonshire" />
 			<RegionTypo from="Hunts"         to="Huntingdonshire" />
 			<RegionTypo from="Lancs"         to="Lancashire" />
 			<RegionTypo from="Lancaster"     to="Lancashire" />
+			<RegionTypo from="Leic"          to="Leicestershire" />
 			<RegionTypo from="Leics"         to="Leicestershire" />
 			<RegionTypo from="Leicester"     to="Leicestershire" />
+			<RegionTypo from="Linc"          to="Lincolnshire" />
 			<RegionTypo from="Lincs"         to="Lincolnshire" />
 			<RegionTypo from="Lincoln"       to="Lincolnshire" />
 			<RegionTypo from="Middx"         to="Middlesex" />
@@ -473,9 +481,11 @@
 			<RegionTypo from="Rutlandshire"  to="Rutland" />
 			<RegionTypo from="Rut"           to="Rutland" />
 			<RegionTypo from="Salop"         to="Shropshire" />
+			<RegionTypo from="Shrop"         to="Shropshire" />
 			<RegionTypo from="Shrops"        to="Shropshire" />
 			<RegionTypo from="Somt"          to="Somerset" />
 			<RegionTypo from="Somer"         to="Somerset" />
+			<RegionTypo from="Staff"         to="Staffordshire" />
 			<RegionTypo from="Staffs"        to="Staffordshire" />
 			<RegionTypo from="SX"            to="Sussex" />
 			<RegionTypo from="West Sussex"   to="Sussex" />
@@ -483,7 +493,9 @@
 			<RegionTypo from="Warks"         to="Warwickshire" />
 			<RegionTypo from="Warwick"       to="Warwickshire" />
 			<RegionTypo from="Wmld"          to="Westmorland" />
+			<RegionTypo from="Wilt"          to="Wiltshire" />
 			<RegionTypo from="Wilts"         to="Wiltshire" />
+			<RegionTypo from="Worc"          to="Worcestershire" />
 			<RegionTypo from="Worcs"         to="Worcestershire" />
 			<RegionTypo from="Yorks"         to="Yorkshire" />
 			<RegionTypo from="East Riding Yorkshire"      to="East Yorkshire" />
@@ -1195,6 +1207,7 @@
 			<CityAddCountry city="City of London"      country="England" />
 			<CityAddCountry city="City of Westminster" country="England" />
 			<CityAddCountry city="London"              country="England" />
+			<CityAddCountry city="Lndn"                country="England" />
 			<CityAddCountry city="Coventry"            country="England" />
 			<CityAddCountry city="Derby"               country="England" />
 			<CityAddCountry city="Durham"              country="England" />
