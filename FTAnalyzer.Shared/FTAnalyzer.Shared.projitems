@@ -98,6 +98,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\FamilySearch.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\FamilyTree.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Individual.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\ParentAgeBucket.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\ParentalRelationship.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Region.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Regions.cs" />

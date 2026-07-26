@@ -1520,10 +1520,16 @@ namespace FTAnalyzer
         {
             get
             {
-                FactDate baptism = GetPreferredFactDate(Fact.BAPTISM);
-                FactDate christening = GetPreferredFactDate(Fact.CHRISTENING);
-                BMDColours baptismStatus = baptism.DateStatus(true);
-                BMDColours christeningStatus = christening.DateStatus(true);
+                Fact? baptismFact = GetPreferredFact(Fact.BAPTISM);
+                Fact? christeningFact = GetPreferredFact(Fact.CHRISTENING);
+                // Unlike Marriage (where no spouse recorded is a genuine dead end), a missing baptism/
+                // christening fact doesn't mean the event never happened - it usually just means the
+                // record hasn't been found yet, so it's still worth searching for. UNKNOWN_DATE (not
+                // EMPTY) is used for "neither recorded at all" for that reason.
+                if (baptismFact is null && christeningFact is null)
+                    return BMDColours.UNKNOWN_DATE;
+                BMDColours baptismStatus = baptismFact is null ? BMDColours.EMPTY : baptismFact.FactDate.DateStatus(false);
+                BMDColours christeningStatus = christeningFact is null ? BMDColours.EMPTY : christeningFact.FactDate.DateStatus(false);
                 if (baptismStatus.Equals(BMDColours.EMPTY))
                     return christeningStatus;
                 if (christeningStatus.Equals(BMDColours.EMPTY))
@@ -1683,10 +1689,14 @@ namespace FTAnalyzer
         {
             get
             {
-                FactDate cremation = GetPreferredFactDate(Fact.CREMATION);
-                FactDate burial = GetPreferredFactDate(Fact.BURIAL);
-                BMDColours cremationStatus = cremation.DateStatus(true);
-                BMDColours burialStatus = burial.DateStatus(true);
+                Fact? cremationFact = GetPreferredFact(Fact.CREMATION);
+                Fact? burialFact = GetPreferredFact(Fact.BURIAL);
+                // See BaptChri - a missing cremation/burial fact is still worth searching for, so
+                // "neither recorded at all" uses UNKNOWN_DATE rather than the dead-end EMPTY colour.
+                if (cremationFact is null && burialFact is null)
+                    return BMDColours.UNKNOWN_DATE;
+                BMDColours cremationStatus = cremationFact is null ? BMDColours.EMPTY : cremationFact.FactDate.DateStatus(false);
+                BMDColours burialStatus = burialFact is null ? BMDColours.EMPTY : burialFact.FactDate.DateStatus(false);
                 if (cremationStatus.Equals(BMDColours.EMPTY))
                     return burialStatus;
                 if (burialStatus.Equals(BMDColours.EMPTY))

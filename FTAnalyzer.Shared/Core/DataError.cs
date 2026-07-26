@@ -44,7 +44,7 @@ namespace FTAnalyzer
         public FactDate Born => individual is null ? FactDate.UNKNOWN_DATE : individual.BirthDate;
         public FactDate Died => individual is null ? FactDate.UNKNOWN_DATE : individual.DeathDate;
 
-#if __PC__
+#if __PC__ || __WEB__
         public bool IsFamily => individual is null;
 #elif __MACOS__ || __IOS__
         public string IsFamily => individual is null ? "Yes" : "No";
