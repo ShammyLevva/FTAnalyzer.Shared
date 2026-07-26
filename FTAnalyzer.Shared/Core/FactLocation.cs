@@ -1144,8 +1144,14 @@ namespace FTAnalyzer
                 return true;
             if (ExtensionMethods.DoubleEquals(Longitude, 0) && ExtensionMethods.DoubleEquals(Latitude, 0))
                 return false;
+#if __PC__
+            // LatitudeM/LongitudeM are only ever populated on desktop (the OS grid-reference
+            // transform above is __PC__-only), so this check is meaningless on web - nothing
+            // there ever sets them, which would otherwise fail every web-geocoded location
+            // regardless of match quality.
             if (ExtensionMethods.DoubleEquals(LongitudeM, 0) && ExtensionMethods.DoubleEquals(LatitudeM, 0))
                 return false;
+#endif
             if (!recheckPartials &&
 #if __PC__
                 MappingSettings.Default.IncludePartials &&
