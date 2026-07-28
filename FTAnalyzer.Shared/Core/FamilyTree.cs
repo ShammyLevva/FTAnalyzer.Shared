@@ -1633,7 +1633,7 @@ namespace FTAnalyzer
 					foreach (Family f in i.FamiliesAsSpouse)
 					{
 						Individual? spouse = f.Spouse(i);
-						if (i.RelationToRoot is null && spouse is not null && spouse.IsBloodDirect)
+						if (i.RelationToRoot is null && spouse is not null && spouse.IsBloodDirectMarried)
 						{
 							string relation = f.MaritalStatus != Family.MARRIED ? "partner" : i.IsMale ? "husband" : "wife";
 							i.RelationToRoot = $"{relation} of {spouse.RelationToRoot}";

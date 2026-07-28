@@ -16,7 +16,7 @@
         public Age Age => Individual.GetAge(Fact.FactDate);
         public string Census => censusFact is null ? Fact.ToString() : censusFact.ToString();
         public string CensusDate => Fact.FactDate.ToString();
-        public bool Include => Individual.IsBloodDirect;
+        public bool Include => Individual.IsBloodDirectMarried;
 
         public string RelationType
         {

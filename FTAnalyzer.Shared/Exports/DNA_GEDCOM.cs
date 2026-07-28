@@ -170,20 +170,20 @@ namespace FTAnalyzer.Exports
         {
             Queue<Individual> queue = new();
             foreach (Individual i in descendants)
-                if (i.IsBloodDirect)
+                if (i.IsBloodDirectMarried)
                     queue.Enqueue(i);
             Individual ind;
             List<Family> descendantFamilies = [];
             while (queue.Count > 0)
             {
                 ind = queue.Dequeue();
-                if (ind.IsBloodDirect)
+                if (ind.IsBloodDirectMarried)
                     WriteIndividual(ind);
                 foreach (Family fam in ind.FamiliesAsSpouse)
                 {
-                    if (fam.Husband is not null && fam.Husband.IsBloodDirect)
+                    if (fam.Husband is not null && fam.Husband.IsBloodDirectMarried)
                         WriteIndividual(fam.Husband);
-                    if (fam.Wife is not null && fam.Wife.IsBloodDirect)
+                    if (fam.Wife is not null && fam.Wife.IsBloodDirectMarried)
                         WriteIndividual(fam.Wife);
                     foreach (Individual child in fam.Children)
                         queue.Enqueue(child);

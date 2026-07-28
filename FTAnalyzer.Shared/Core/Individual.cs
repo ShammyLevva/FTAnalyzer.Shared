@@ -304,7 +304,8 @@ namespace FTAnalyzer
             }
         }
 
-        public bool IsBloodDirect => _relationType == RelationshipType.BLOOD || _relationType == RelationshipType.DIRECT || _relationType == RelationshipType.DESCENDANT || _relationType == RelationshipType.MARRIEDTODB;
+        public bool IsBloodDirect => _relationType == RelationshipType.BLOOD || _relationType == RelationshipType.DIRECT || _relationType == RelationshipType.DESCENDANT;
+        public bool IsBloodDirectMarried => _relationType == RelationshipType.BLOOD || _relationType == RelationshipType.DIRECT || _relationType == RelationshipType.DESCENDANT || _relationType == RelationshipType.MARRIEDTODB;
 
         public bool HasNotes => Notes.Length > 0;
         public string HasNotesMac => HasNotes ? "Yes" : "No";
