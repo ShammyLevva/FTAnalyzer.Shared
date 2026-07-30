@@ -128,6 +128,27 @@ namespace FTAnalyzer
 
         public static bool IsKnownCountry(string country) => KNOWN_COUNTRIES.Contains(country);
 
+        // Georgia the country and Georgia the US state share a name, and US-centric GEDCOM
+        // entries routinely just write "Georgia" (or "Savannah, Georgia") and leave USA implied.
+        // KNOWN_COUNTRIES deliberately omits Georgia to avoid this exact clash. When the source
+        // data spells out "United States"/"USA" alongside it, parsing is unambiguous - Georgia
+        // ends up correctly nested as a region under Country=United States (see Regions.GEORGIA).
+        // FactLocationFixes.xml even has a <CountryToRegion region="Georgia" country="United
+        // States" /> rule that would auto-promote a bare "Georgia" the same way when USA is
+        // missing - but that rule is commented out, deliberately: a bare "Georgia" defaults to the
+        // literal country reading rather than assuming every mention means the US state. The one
+        // exception is "<city>, Georgia" for a recognised large Georgia city (see
+        // FactLocation.ShiftGeorgiaCityToRegion and the Georgia CityAddCountry entries in
+        // FactLocationFixes.xml) - unambiguous once "Georgia" is already given, so those are
+        // promoted to the US state reading even with USA missing. Whatever the source data ends up
+        // parsing to, a literal Country="Georgia" must never be flagged as unknown/garbage data
+        // just because it isn't in KNOWN_COUNTRIES (which can never safely include "Georgia" itself
+        // - that would make the state case ambiguous with the country case at every other
+        // IsKnownCountry call site). Callers that need to treat "Georgia" as a legitimate country
+        // should check this alongside IsKnownCountry rather than adding it to KNOWN_COUNTRIES.
+        public static bool IsGeorgiaCountry(string? country) =>
+            string.Equals(country, "Georgia", StringComparison.OrdinalIgnoreCase);
+
         public static bool IsCensusCountry(string country) => CENSUS_COUNTRIES.Contains(country);
 
         public static bool IsEnglandWales(string country) =>

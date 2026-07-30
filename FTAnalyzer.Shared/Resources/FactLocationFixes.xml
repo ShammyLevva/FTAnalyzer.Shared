@@ -1272,6 +1272,31 @@
 			<CityAddCountry city="Belfast"     country="Northern Ireland" />
 			<CityAddCountry city="Lisburn"     country="Northern Ireland" />
 			<CityAddCountry city="Newry"       country="Northern Ireland" />
+
+			<!-- Large Georgia (USA) cities - NOT merged into COUNTRY_SHIFTS like the entries above
+			     (see FactLocation.LoadConversions). Only used to recognise "<city>, Georgia"
+			     specifically - see FactLocation.ShiftGeorgiaCityToRegion - where "Georgia" is
+			     already unambiguous, so there's no clash risk from that alone. Names that are
+			     themselves far more famous as somewhere else entirely (Rome, Athens, Dublin,
+			     Albany, Decatur, Brunswick, Roswell) are deliberately left off this list rather
+			     than relying on "Georgia" being present to disambiguate. -->
+			<CityAddCountry city="Atlanta"          country="Georgia" />
+			<CityAddCountry city="Savannah"         country="Georgia" />
+			<CityAddCountry city="Augusta"          country="Georgia" />
+			<CityAddCountry city="Macon"            country="Georgia" />
+			<CityAddCountry city="Marietta"         country="Georgia" />
+			<CityAddCountry city="Valdosta"         country="Georgia" />
+			<CityAddCountry city="Dalton"           country="Georgia" />
+			<CityAddCountry city="Gainesville"      country="Georgia" />
+			<CityAddCountry city="Newnan"           country="Georgia" />
+			<CityAddCountry city="LaGrange"         country="Georgia" />
+			<CityAddCountry city="Waycross"         country="Georgia" />
+			<CityAddCountry city="Thomasville"      country="Georgia" />
+			<CityAddCountry city="Milledgeville"    country="Georgia" />
+			<CityAddCountry city="Statesboro"       country="Georgia" />
+			<CityAddCountry city="Warner Robins"    country="Georgia" />
+			<CityAddCountry city="Griffin"          country="Georgia" />
+			<CityAddCountry city="Sandy Springs"    country="Georgia" />
 		</DemoteCountries>
 
 		<DemoteRegions>

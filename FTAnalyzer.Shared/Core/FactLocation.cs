@@ -246,7 +246,10 @@ namespace FTAnalyzer
                 ValidateCounties();
                 foreach (KeyValuePair<string, string> kvp in CITY_ADD_COUNTRY)
                 {
-                    if (!COUNTRY_SHIFTS.ContainsKey(kvp.Key))
+                    // Georgia (USA) city entries are deliberately excluded from this blanket bare-
+                    // city-name merge - see the comment above them in FactLocationFixes.xml and
+                    // ShiftGeorgiaCityToRegion, which is the only place they're consulted.
+                    if (!COUNTRY_SHIFTS.ContainsKey(kvp.Key) && !Countries.IsGeorgiaCountry(kvp.Value))
                         COUNTRY_SHIFTS.Add(kvp.Key, kvp.Value);
                 }
                 //COUNTRY_SHIFTS = COUNTRY_SHIFTS.Concat(CITY_ADD_COUNTRY).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
@@ -481,6 +484,7 @@ namespace FTAnalyzer
                     FixCountryTypos();
                     Country = EnhancedTextInfo.ToTitleCase(FixRegionTypos(Country).ToLower());
                     ShiftCountryToRegion();
+                    ShiftGeorgiaCityToRegion();
                     Region = FixRegionTypos(Region);
                     ShiftRegionToParish();
                     FixDoubleLocations();
@@ -851,6 +855,31 @@ namespace FTAnalyzer
             }
         }
 
+        // Georgia the country and Georgia the US state share a name (see Countries.IsGeorgiaCountry)
+        // - a bare "Georgia" is deliberately left as the literal country reading (the
+        // CountryToRegion rule that would blindly reclassify every mention as the US state is
+        // switched off in FactLocationFixes.xml). But "<city>, Georgia" is unambiguous whenever
+        // the city is a recognised large Georgia city - promote those specifically, the same way
+        // ShiftCountryToRegion promotes a whole country, just gated on Region too. Reuses
+        // CITY_ADD_COUNTRY's "Georgia" entries (see the comment above them in
+        // FactLocationFixes.xml) rather than a separate list, since it's the same city ->
+        // state/country mapping either way.
+        void ShiftGeorgiaCityToRegion()
+        {
+            if (!Countries.IsGeorgiaCountry(Country))
+                return;
+            CITY_ADD_COUNTRY.TryGetValue(Region, out string? result);
+            if (Countries.IsGeorgiaCountry(result))
+            {
+                Place = (Place + " " + Address).Trim();
+                Address = SubRegion;
+                SubRegion = Region;
+                Region = Country;
+                Country = Countries.UNITED_STATES;
+                if (Level < PLACE) Level++; // we have moved up a level
+            }
+        }
+
         void ShiftRegionToParish()
         {
             if (!Countries.IsUnitedKingdom(Country))
@@ -1021,7 +1050,9 @@ namespace FTAnalyzer
 
         public string PlaceNumeric => FixNumerics(Place, true);
 
-        public bool IsKnownCountry => Countries.IsKnownCountry(Country);
+        // See the Georgia note above Countries.IsGeorgiaCountry - a location whose Country is
+        // literally "Georgia" is a legitimate (if ambiguous) country, not garbage/unknown data.
+        public bool IsKnownCountry => Countries.IsKnownCountry(Country) || Countries.IsGeorgiaCountry(Country);
 
         public bool IsUnitedKingdom => Countries.IsUnitedKingdom(Country);
 
