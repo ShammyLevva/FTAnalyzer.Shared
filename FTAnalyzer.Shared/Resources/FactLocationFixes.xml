@@ -962,11 +962,12 @@
 			<CountryToRegion region="Caithness"           country="Scotland" />
 			<CountryToRegion region="Clackmannanshire"    country="Scotland" />
 			<CountryToRegion region="Dumfries-shire"      country="Scotland" />
+			<CountryToRegion region="Dumfries"            country="Scotland" />
 			<CountryToRegion region="Dunbartonshire"      country="Scotland" />
-			<CountryToRegion region="Dumbartonshire"      country="Scotland" />
 			<CountryToRegion region="East Lothian"        country="Scotland" />
 			<CountryToRegion region="Fife"                country="Scotland" />
 			<CountryToRegion region="Inverness-shire"     country="Scotland" />
+			<CountryToRegion region="Inverness"           country="Scotland" />
 			<CountryToRegion region="Kincardineshire"     country="Scotland" />
 			<CountryToRegion region="Kinross-shire"       country="Scotland" />
 			<CountryToRegion region="Kirkcudbrightshire"  country="Scotland" />
