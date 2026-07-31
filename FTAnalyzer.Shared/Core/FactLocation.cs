@@ -483,6 +483,7 @@ namespace FTAnalyzer
                     FixUKGBTypos();
                     FixCountryTypos();
                     Country = EnhancedTextInfo.ToTitleCase(FixRegionTypos(Country).ToLower());
+                    FixMissingCommaBeforeCountry();
                     ShiftCountryToRegion();
                     ShiftGeorgiaCityToRegion();
                     Region = FixRegionTypos(Region);
@@ -839,6 +840,48 @@ namespace FTAnalyzer
                 return "Western Australia"; // fix for WA = Washington
             REGION_TYPOS.TryGetValue(toFix, out string? result);
             return !string.IsNullOrEmpty(result) ? result : toFix;
+        }
+
+        // GEDCOM data occasionally omits the comma before a trailing country name - e.g.
+        // "California USA" or "London England" instead of "California, USA"/"London, England" -
+        // which otherwise parses as one unrecognisable Country value instead of a proper
+        // Region/Country split. Tries the longest trailing run of words first (so "United States"
+        // matches before falling back to just "States"), and splits off the first known country
+        // found: the recognised words become the new Country, and everything before them becomes
+        // the new Region, cascading Region/SubRegion/Address/Place down a level exactly like
+        // ShiftCountryToRegion. Also accepts Countries.IsGeorgiaCountry, not just IsKnownCountry -
+        // "Atlanta Georgia" (missing comma) splits into Country="Georgia"/Region="Atlanta" here,
+        // then ShiftGeorgiaCityToRegion (which runs right after) finishes promoting it to the US
+        // state reading, same as if the comma had been there all along.
+        //
+        // Guarded against false positives (e.g. "Bank of China", "Church of Scotland" ending up
+        // split into a nonsense Region "Bank of"/"Church of") by requiring the leftover's own last
+        // word to be at least 3 characters - a leftover ending in a short connector word like "of"/
+        // "in"/"at" is a strong signal the trailing country-like word is part of a longer phrase,
+        // not a genuine missing comma. Real place names essentially never end that way.
+        void FixMissingCommaBeforeCountry()
+        {
+            string[] words = Country.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            for (int wordCount = words.Length - 1; wordCount >= 1; wordCount--)
+            {
+                string[] leftoverWords = words[..^wordCount];
+                if (leftoverWords[^1].Length < 3)
+                    continue;
+
+                string candidate = string.Join(' ', words[^wordCount..]);
+                COUNTRY_TYPOS.TryGetValue(candidate, out string? typoFixed);
+                string resolvedCountry = typoFixed ?? candidate;
+                if (!Countries.IsKnownCountry(resolvedCountry) && !Countries.IsGeorgiaCountry(resolvedCountry))
+                    continue;
+
+                Place = (Place + " " + Address).Trim();
+                Address = SubRegion;
+                SubRegion = Region;
+                Region = string.Join(' ', leftoverWords);
+                Country = resolvedCountry;
+                if (Level < PLACE) Level++; // we have moved up a level
+                return;
+            }
         }
 
         void ShiftCountryToRegion()

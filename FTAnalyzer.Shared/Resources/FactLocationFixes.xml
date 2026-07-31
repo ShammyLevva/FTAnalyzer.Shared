@@ -24,6 +24,9 @@
 			<CountryTypo from="Eire"    to="Ireland" />
 			<CountryTypo from="Scot"    to="Scotland" />
 			<CountryType from="Wal"     to="Wales" />
+			<CountryTypo from="Wales UK" to="Wales" />
+			<CountryTypo from="England UK" to="England" />
+			<CountryType from="Scotland UK" to="Scotland" />
 			<CountryTypo from="Holland" to="Netherlands" />
 			<CountryTypo from="The Netherlands" to="Netherlands" />
 			<CountryTypo from="St Lucia" to="Saint Lucia" />
