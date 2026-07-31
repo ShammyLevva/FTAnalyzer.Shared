@@ -963,6 +963,7 @@
 			<CountryToRegion region="Clackmannanshire"    country="Scotland" />
 			<CountryToRegion region="Dumfries-shire"      country="Scotland" />
 			<CountryToRegion region="Dunbartonshire"      country="Scotland" />
+			<CountryToRegion region="Dumbartonshire"      country="Scotland" />
 			<CountryToRegion region="East Lothian"        country="Scotland" />
 			<CountryToRegion region="Fife"                country="Scotland" />
 			<CountryToRegion region="Inverness-shire"     country="Scotland" />
@@ -970,6 +971,7 @@
 			<CountryToRegion region="Kinross-shire"       country="Scotland" />
 			<CountryToRegion region="Kirkcudbrightshire"  country="Scotland" />
 			<CountryToRegion region="Lanarkshire"         country="Scotland" />
+			<CountryToRegion region="Lanark"			  country="Scotland" />
 			<CountryToRegion region="Midlothian"          country="Scotland" />
 			<CountryToRegion region="Moray"               country="Scotland" />
 			<CountryToRegion region="Nairn"               country="Scotland" />
@@ -977,6 +979,7 @@
 			<CountryToRegion region="Peebles"             country="Scotland" />
 			<CountryToRegion region="Perthshire"          country="Scotland" />
 			<CountryToRegion region="Renfrewshire"        country="Scotland" />
+			<CountryToRegion region="Renfrew"             country="Scotland" />
 			<CountryToRegion region="Ross and Cromarty"   country="Scotland" />
 			<CountryToRegion region="Roxburgh"            country="Scotland" />
 			<CountryToRegion region="Selkirk"             country="Scotland" />
