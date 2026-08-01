@@ -744,7 +744,7 @@ namespace FTAnalyzer
         {
             get
             {
-                if (FactType == CENSUS || FactType == CENSUS_FTA) return true;
+                if (FactType == CENSUS || FactType == CENSUS_FTA || FactType == CENSUS_SUMMARY) return true;
                 if (FactType == RESIDENCE && GeneralSettings.Default.UseResidenceAsCensus)
                     return CensusDate.IsCensusYear(FactDate, Country, GeneralSettings.Default.TolerateInaccurateCensusDate);
                 return false;
