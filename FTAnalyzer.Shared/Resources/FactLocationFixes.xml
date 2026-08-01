@@ -55,6 +55,7 @@
 			<CountryTypo from="Zuid-Afrika" to ="South Africa" />
 			<CountryTypo from="Zuid Afrika" to ="South Africa" />
 			<CountryTypo from="S Africa" to ="South Africa" />
+			<CountryTypo from="Algerie" to="Algeria" />
 			
 			
 <!-- ============================================================
