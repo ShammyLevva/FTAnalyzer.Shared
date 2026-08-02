@@ -1195,13 +1195,10 @@ namespace FTAnalyzer
 								minEnd = CreateDate(fam.Wife.DeathDate.EndDate.Year, 1, 1);
 					}
 				}
+				// BEF/AFT is a strict boundary (unlike ABT, which already has its own built-in
+				// variance by precision) - never suggest a range extending past the recorded date.
 				if (birthDate.EndDate <= minEnd && birthDate.EndDate != FactDate.MAXDATE)
-				{  // check for BEF XXXX types that are prevalent in my tree
-					if (birthDate.StartDate == FactDate.MINDATE && birthDate.EndDate.TryAddYears(1) <= minEnd && minEnd != FactDate.MAXDATE)
-						minEnd = birthDate.EndDate.TryAddYears(1);
-					else
-						minEnd = birthDate.EndDate;
-				}
+					minEnd = birthDate.EndDate;
 				// fix for BEF dates to ensure new date isn't just the day before eg: BEF 9 OCT 1803 becoming BEF 8 OCT 1803
 				if (birthDate.StartDate == FactDate.MINDATE && minEnd == birthDate.EndDate && minEnd != FactDate.MAXDATE)
 					minEnd = minEnd.AddDays(1);
@@ -1309,11 +1306,8 @@ namespace FTAnalyzer
 						// so add to the list of loose deaths
 						if (minDeath < deathDate.EndDate)
 							toAdd = new FactDate(maxLiving, minDeath);
-						else if (deathDate.DateType == FactDate.FactDateType.BEF && minDeath != FactDate.MAXDATE
-							  && deathDate.EndDate != FactDate.MAXDATE
-							  && deathDate.EndDate.TryAddYears(1) == minDeath)
-							toAdd = new FactDate(maxLiving, minDeath);
 						else
+							// BEF/AFT is a strict boundary - never suggest a range past the recorded date.
 							toAdd = new FactDate(maxLiving, deathDate.EndDate);
 					}
 					else if (minDeath < deathDate.EndDate)
@@ -1381,14 +1375,10 @@ namespace FTAnalyzer
 		static DateTime GetMinDeathDate(Individual indiv)
 		{
 			FactDate deathDate = indiv.DeathDate;
-			FactDate.FactDateType deathDateType = deathDate.DateType;
-			FactDate.FactDateType birthDateType = indiv.BirthDate.DateType;
 			DateTime minDeath = FactDate.MAXDATE;
 			if (indiv.BirthDate.IsKnown && indiv.BirthDate.EndDate.Year < 9999) // filter out births where no year specified
 			{
 				minDeath = CreateDate(indiv.BirthDate.EndDate.Year + FactDate.MAXYEARS, 12, 31);
-				if (birthDateType == FactDate.FactDateType.BEF)
-					minDeath = minDeath.TryAddYears(1);
 				if (minDeath > FactDate.NOW) // 110 years after birth is after todays date so we set to ignore
 					minDeath = FactDate.MAXDATE;
 			}
@@ -1397,8 +1387,7 @@ namespace FTAnalyzer
 				minDeath = burialDate.EndDate;
 			if (minDeath <= deathDate.EndDate)
 				return minDeath;
-			if (deathDateType == FactDate.FactDateType.BEF && minDeath != FactDate.MAXDATE)
-				return minDeath;
+			// BEF/AFT is a strict boundary - never suggest a minimum death date past the recorded one.
 			return deathDate.EndDate;
 		}
 
