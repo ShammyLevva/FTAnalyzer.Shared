@@ -1882,102 +1882,109 @@ namespace FTAnalyzer
         public bool IsKnownStatus => Status.Equals(ReferenceStatus.GOOD) || Status.Equals(ReferenceStatus.INCOMPLETE);
         public bool IsGoodStatus => Status.Equals(ReferenceStatus.GOOD);
 
-        public string Reference
+        public string Reference => BuildReference(GeneralSettings.Default.UseCompactCensusRef);
+
+        /// <summary>
+        /// Reference in compact slash form regardless of the user's display preference. Lost Cousins'
+        /// own website always shows references this way, so matching a scraped My Ancestors entry
+        /// against a local individual (LostCousinsReconciliation) must compare like for like rather
+        /// than depending on GeneralSettings.Default.UseCompactCensusRef.
+        /// </summary>
+        public string CompactReference => BuildReference(true);
+
+        string BuildReference(bool compact)
         {
-            get
+            if (Family.Length > 0)
             {
-                if (Family.Length > 0)
-                {
-                    if (Roll.Length > 0)
-                    {
-                        return GeneralSettings.Default.UseCompactCensusRef ? $"{Roll}/{Page}/{Family}" : $"Roll: {Roll}, Page: {Page}, Family: {Family}";
-                    }
-                    return GeneralSettings.Default.UseCompactCensusRef
-                        ? $"{ED}/{SD}/{Page}/{Family}"
-                        : $"District: {ED}, Sub-District: {SD}, Page: {Page}, Family: {Family}";
-                }
                 if (Roll.Length > 0)
                 {
-                    return GeneralSettings.Default.UseCompactCensusRef
-                        ? $"{Roll}{(ED.Length > 0 ? $"/{ED}" : "")}/{Page}"
-                        : $"Roll: {Roll}{(ED.Length > 0 ? $", ED: {ED}" : "")}, Page: {Page}";
+                    return compact ? $"{Roll}/{Page}/{Family}" : $"Roll: {Roll}, Page: {Page}, Family: {Family}";
                 }
-                if (Piece.Length > 0 && Fact is not null)
-                {
-                    if (Countries.IsEnglandWales(Fact.Location.Country) || Fact.IsOverseasUKCensus(Fact.Location.Country))
-                    {
-                        if (Fact.FactDate.Overlaps(CensusDate.UKCENSUS1851) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1861) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1871) ||
-                            Fact.FactDate.Overlaps(CensusDate.UKCENSUS1881) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1891) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1901))
-                        {
-                            if (Page.Length > 0)
-                                return GeneralSettings.Default.UseCompactCensusRef
-                                    ? $"{Piece}/{Folio}/{Page}"
-                                    : $"Piece: {Piece}, Folio: {Folio}, Page: {Page}";
-                            if (Schedule.Length > 0 && Schedule != MISSING)
-                                return GeneralSettings.Default.UseCompactCensusRef
-                                    ? $"{Piece}/{Folio}/SN{Schedule}"
-                                    : $"Piece: {Piece}, Folio: {Folio}, Schedule: {Schedule}";
-                            return GeneralSettings.Default.UseCompactCensusRef
-                                ? $"{Piece}/{Folio}"
-                                : $"Piece: {Piece}, Folio: {Folio}";
-                        }
-                        if (Fact.FactDate.Overlaps(CensusDate.UKCENSUS1841))
-                        {
-                            if (Book.Length > 0)
-                                return GeneralSettings.Default.UseCompactCensusRef
-                                    ? $"{Piece}/{Book}/{Folio}/{Page}"
-                                    : $"Piece: {Piece}, Book: {Book}, Folio: {Folio}, Page: {Page}";
-                            if (GeneralSettings.Default.UseCompactCensusRef)
-                                return $"{Piece}/see image/{Folio}/{Page}";
-                            return $"Piece: {Piece}, Book: see census image (stamped on the census page after the piece number), Folio: {Folio}, Page: {Page}";
-                        }
-                        if (Fact.FactDate.Overlaps(CensusDate.UKCENSUS1911))
-                        {
-                            if (Schedule.Length > 0 && Schedule != MISSING)
-                                return GeneralSettings.Default.UseCompactCensusRef ? $"{Piece}/{Schedule}" : $"Piece: {Piece}, Schedule: {Schedule}";
-                            return GeneralSettings.Default.UseCompactCensusRef ? $"{Piece}/{Page}" : $"Piece: {Piece}, Page: {Page}";
-                        }
-                        if (Fact.FactDate.Overlaps(CensusDate.UKCENSUS1921))
-                        {
-                            if (Schedule.Length > 0 && Schedule != MISSING)
-                                return GeneralSettings.Default.UseCompactCensusRef ? $"{Piece}/{ED}/{Schedule}" : $"Piece: {Piece}, ED: {ED}, Schedule: {Schedule}";
-                            return GeneralSettings.Default.UseCompactCensusRef ? $"{Piece}/{ED}/{Page}" : $"Piece: {Piece}, ED {ED}, Page: {Page}";
-                        }
-                        if (Fact.FactDate.Overlaps(CensusDate.UKCENSUS1939))
-                        {
-                            return GeneralSettings.Default.UseCompactCensusRef
-                                ? $"RG101/{Piece}/{Page}/{Schedule} ({ED})"
-                                : $"Piece: {Piece}, Page: {Page}, Schedule {Schedule}, ED: {ED}";
-                        }
-                    }
-                }
-                else if (Parish.Length > 0 && Fact is not null)
-                {
-                    if (Fact.Location.Country.Equals(Countries.SCOTLAND, StringComparison.OrdinalIgnoreCase) && (Fact.FactDate.Overlaps(CensusDate.UKCENSUS1841) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1851) ||
-                        Fact.FactDate.Overlaps(CensusDate.UKCENSUS1861) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1871) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1881) ||
-                        Fact.FactDate.Overlaps(CensusDate.UKCENSUS1891) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1901) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1911)))
-                    {
-                        ScottishParish sp = ScottishParish.FindParishFromID(Parish);
-                        if (GeneralSettings.Default.UseCompactCensusRef)
-                            return sp == ScottishParish.UNKNOWN_PARISH ? $"{Parish}/{ED}/{Page}" : $"{sp.Reference}/{ED}/{Page}";
-                        return sp == ScottishParish.UNKNOWN_PARISH
-                            ? $"Parish: {Parish}, ED: {ED}, Page: {Page}"
-                            : $"Parish: {sp.Reference}, ED: {ED}, Page: {Page}";
-                    }
-                }
-                else if (RD.Length > 0 && Fact is not null)
-                {
-                    if (Fact.Location.IsEnglandWales && Fact.FactDate.Overlaps(CensusDate.UKCENSUS1911))
-                        return GeneralSettings.Default.UseCompactCensusRef
-                            ? $"{RD}/{ED}/{Schedule}"
-                            : $"RD: {RD}, ED: {ED}, Schedule: {Schedule}";
-                }
-                if (unknownCensusRef.Length > 0)
-                    return unknownCensusRef;
-                //if (ReferenceText.Length > 0)
-                //  log.Warn("Census reference text not generated for :" + ReferenceText);
-                return string.Empty;
+                return compact
+                    ? $"{ED}/{SD}/{Page}/{Family}"
+                    : $"District: {ED}, Sub-District: {SD}, Page: {Page}, Family: {Family}";
             }
+            if (Roll.Length > 0)
+            {
+                return compact
+                    ? $"{Roll}{(ED.Length > 0 ? $"/{ED}" : "")}/{Page}"
+                    : $"Roll: {Roll}{(ED.Length > 0 ? $", ED: {ED}" : "")}, Page: {Page}";
+            }
+            if (Piece.Length > 0 && Fact is not null)
+            {
+                if (Countries.IsEnglandWales(Fact.Location.Country) || Fact.IsOverseasUKCensus(Fact.Location.Country))
+                {
+                    if (Fact.FactDate.Overlaps(CensusDate.UKCENSUS1851) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1861) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1871) ||
+                        Fact.FactDate.Overlaps(CensusDate.UKCENSUS1881) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1891) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1901))
+                    {
+                        if (Page.Length > 0)
+                            return compact
+                                ? $"{Piece}/{Folio}/{Page}"
+                                : $"Piece: {Piece}, Folio: {Folio}, Page: {Page}";
+                        if (Schedule.Length > 0 && Schedule != MISSING)
+                            return compact
+                                ? $"{Piece}/{Folio}/SN{Schedule}"
+                                : $"Piece: {Piece}, Folio: {Folio}, Schedule: {Schedule}";
+                        return compact
+                            ? $"{Piece}/{Folio}"
+                            : $"Piece: {Piece}, Folio: {Folio}";
+                    }
+                    if (Fact.FactDate.Overlaps(CensusDate.UKCENSUS1841))
+                    {
+                        if (Book.Length > 0)
+                            return compact
+                                ? $"{Piece}/{Book}/{Folio}/{Page}"
+                                : $"Piece: {Piece}, Book: {Book}, Folio: {Folio}, Page: {Page}";
+                        if (compact)
+                            return $"{Piece}/see image/{Folio}/{Page}";
+                        return $"Piece: {Piece}, Book: see census image (stamped on the census page after the piece number), Folio: {Folio}, Page: {Page}";
+                    }
+                    if (Fact.FactDate.Overlaps(CensusDate.UKCENSUS1911))
+                    {
+                        if (Schedule.Length > 0 && Schedule != MISSING)
+                            return compact ? $"{Piece}/{Schedule}" : $"Piece: {Piece}, Schedule: {Schedule}";
+                        return compact ? $"{Piece}/{Page}" : $"Piece: {Piece}, Page: {Page}";
+                    }
+                    if (Fact.FactDate.Overlaps(CensusDate.UKCENSUS1921))
+                    {
+                        if (Schedule.Length > 0 && Schedule != MISSING)
+                            return compact ? $"{Piece}/{ED}/{Schedule}" : $"Piece: {Piece}, ED: {ED}, Schedule: {Schedule}";
+                        return compact ? $"{Piece}/{ED}/{Page}" : $"Piece: {Piece}, ED {ED}, Page: {Page}";
+                    }
+                    if (Fact.FactDate.Overlaps(CensusDate.UKCENSUS1939))
+                    {
+                        return compact
+                            ? $"RG101/{Piece}/{Page}/{Schedule} ({ED})"
+                            : $"Piece: {Piece}, Page: {Page}, Schedule {Schedule}, ED: {ED}";
+                    }
+                }
+            }
+            else if (Parish.Length > 0 && Fact is not null)
+            {
+                if (Fact.Location.Country.Equals(Countries.SCOTLAND, StringComparison.OrdinalIgnoreCase) && (Fact.FactDate.Overlaps(CensusDate.UKCENSUS1841) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1851) ||
+                    Fact.FactDate.Overlaps(CensusDate.UKCENSUS1861) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1871) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1881) ||
+                    Fact.FactDate.Overlaps(CensusDate.UKCENSUS1891) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1901) || Fact.FactDate.Overlaps(CensusDate.UKCENSUS1911)))
+                {
+                    ScottishParish sp = ScottishParish.FindParishFromID(Parish);
+                    if (compact)
+                        return sp == ScottishParish.UNKNOWN_PARISH ? $"{Parish}/{ED}/{Page}" : $"{sp.GetReference(true)}/{ED}/{Page}";
+                    return sp == ScottishParish.UNKNOWN_PARISH
+                        ? $"Parish: {Parish}, ED: {ED}, Page: {Page}"
+                        : $"Parish: {sp.GetReference(false)}, ED: {ED}, Page: {Page}";
+                }
+            }
+            else if (RD.Length > 0 && Fact is not null)
+            {
+                if (Fact.Location.IsEnglandWales && Fact.FactDate.Overlaps(CensusDate.UKCENSUS1911))
+                    return compact
+                        ? $"{RD}/{ED}/{Schedule}"
+                        : $"RD: {RD}, ED: {ED}, Schedule: {Schedule}";
+            }
+            if (unknownCensusRef.Length > 0)
+                return unknownCensusRef;
+            //if (ReferenceText.Length > 0)
+            //  log.Warn("Census reference text not generated for :" + ReferenceText);
+            return string.Empty;
         }
 
         void FixUS1940Prefix()

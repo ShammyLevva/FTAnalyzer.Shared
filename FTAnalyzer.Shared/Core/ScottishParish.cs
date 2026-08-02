@@ -82,7 +82,8 @@ namespace FTAnalyzer
         public static ScottishParish FindParishFromID(string RD) => SCOTTISHPARISHES.ContainsKey(RD.ToLower()) ? SCOTTISHPARISHES[RD.ToLower()] : UNKNOWN_PARISH;
         public static string FindParishFromName(string parish) => SCOTTISHPARISHNAMES.TryGetValue(parish, out string? value) ? value : UNKNOWN_PARISH.Name;
 
-        public string Reference => GeneralSettings.Default.UseCompactCensusRef ? $"{Name}/{RegistrationDistrict}" : $"{Name}, RD: {RegistrationDistrict}";
+        public string Reference => GetReference(GeneralSettings.Default.UseCompactCensusRef);
+        public string GetReference(bool compact) => compact ? $"{Name}/{RegistrationDistrict}" : $"{Name}, RD: {RegistrationDistrict}";
 
         public override string ToString() => $"RD: {RegistrationDistrict} Parish: {Name} Region: {Region}";
         [GeneratedRegex("\\d{1,3}-\\d{1,2}?[AB]?", RegexOptions.IgnoreCase, "en-GB")]

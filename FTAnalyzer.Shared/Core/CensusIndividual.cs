@@ -13,6 +13,7 @@ namespace FTAnalyzer
         public string FamilyID => Family.FamilyID;
         public FactLocation CensusLocation => IsCensusDone(CensusDate) ? BestLocation(CensusDate) : Family.BestLocation;
         public string CensusRef => CensusReference is null ? string.Empty : CensusReference.Reference.Trim();
+        public string CompactCensusRef => CensusReference is null ? string.Empty : CensusReference.CompactReference.Trim();
         public CensusDate CensusDate => Family.CensusDate;
         public Age Age => GetAge(CensusDate);
         public string CensusSurname => Family.Surname;

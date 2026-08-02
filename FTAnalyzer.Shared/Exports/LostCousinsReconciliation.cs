@@ -40,7 +40,9 @@ namespace FTAnalyzer.Exports
 
         static LostCousin? FindMatch(CensusIndividual candidate, Dictionary<string, List<LostCousin>> websiteByReference)
         {
-            string candidateRef = candidate.CensusRef;
+            // Lost Cousins' own website always shows references in compact slash form, regardless of
+            // this user's "Use compact census references" display preference - compare like for like.
+            string candidateRef = candidate.CompactCensusRef;
             if (string.IsNullOrWhiteSpace(candidateRef))
                 return null;
             if (!websiteByReference.TryGetValue(Normalise(candidateRef), out List<LostCousin>? group))
