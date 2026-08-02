@@ -1297,6 +1297,10 @@ namespace FTAnalyzer
 			if (deathDate.EndDate.Year - deathDate.StartDate.Year > 1)
 			{
 				DateTime maxLiving = GetMaxLivingDate(indiv, Fact.LOOSE_DEATH_FACTS);
+				// don't manufacture month/day precision the recorded date never had -
+				// e.g. a "BET 1816 AND 1891" record shouldn't become "BET 1 MAR 1816 AND 1891"
+				if (deathDate.StartDate is { Month: 1, Day: 1 } && maxLiving is not { Month: 1, Day: 1 })
+					maxLiving = CreateDate(maxLiving.Year, 1, 1);
 				DateTime minDeath = GetMinDeathDate(indiv);
 				if (minDeath != FactDate.MAXDATE)
 				{   // we don't have a minimum death date so can't proceed - individual may still be alive
