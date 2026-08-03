@@ -2079,8 +2079,17 @@ namespace FTAnalyzer
 						bool added = false;
 						if (f.FactErrorNumber != 0)
 						{
+							// Pass the fact's own FactErrorLevel through - the (errorType, ind,
+							// description) overload used here previously defaults to
+							// Fact.FactError.ERROR regardless of the fact's actual level, so a
+							// WARNINGALLOW-level fact (e.g. RESIDENCE_CENSUS_DATE) got a red
+							// error icon here from this generic branch, then ALSO matched the
+							// RESIDENCE_CENSUS_DATE-specific check below (which does pass the
+							// correct level) - showing as both an error and a warning for the
+							// same fact. Passing the level here makes that later check fully
+							// redundant, so it's removed rather than left to fire twice.
 							errors[f.FactErrorNumber].Add(
-								new DataError(f.FactErrorNumber, ind, f.FactErrorMessage));
+								new DataError(f.FactErrorNumber, f.FactErrorLevel, ind, f.FactErrorMessage));
 							added = true;
 						}
 						else if (f.FactType == Fact.LOSTCOUSINS || f.FactType == Fact.LC_FTA)
@@ -2117,12 +2126,6 @@ namespace FTAnalyzer
 									added = true;
 								}
 							}
-						}
-						if (f.FactErrorLevel == Fact.FactError.WARNINGALLOW && f.FactType == Fact.RESIDENCE)
-						{
-							errors[(int)Dataerror.RESIDENCE_CENSUS_DATE].Add(
-									new DataError((int)Dataerror.RESIDENCE_CENSUS_DATE, f.FactErrorLevel, ind, f.FactErrorMessage));
-							added = true;
 						}
 						if (!added)
 							errors[(int)Dataerror.FACT_ERROR].Add(new DataError((int)Dataerror.FACT_ERROR, f.FactErrorLevel, ind, f.FactErrorMessage));
