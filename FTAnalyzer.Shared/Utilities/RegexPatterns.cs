@@ -121,7 +121,7 @@ namespace FTAnalyzer.Utilities
         const string LC_CENSUS_PATTERN_1911_EW = @"(\d{1,5})\/(\d{1,3}).*?England & Wales 1911";
         const string LC_CENSUS_PATTERN_SCOT = @"(\d{1,5}-?[AB12]?)\/(\d{1,3})\/(\d{1,3}).*?Scotland 1881";
         const string LC_CENSUS_PATTERN_1940US = @"(\d{1,5}-?[AB]?)\/(\d{1,2}[AB]?-\d{1,2}[AB]?)\/(\d{1,3}[AB]?).*?US 1940";
-        const string LC_CENSUS_PATTERN_1881CANADA = @"(\d{1,5})\/(\d{1,3})\/(\d{1,3}).*?Canada 1881";
+        const string LC_CENSUS_PATTERN_1881CANADA = @"(?<![\d\/])(\d{1,5})\/(\d{1,3})\/(\d{1,3})(?![\d\/]).*?Canada 1881";
         const string LC_ED_PATTERN = @"\d{1,3}[A-Z]?";
 
         const string PEOPLEFINDERS = @"Full Background Report";
