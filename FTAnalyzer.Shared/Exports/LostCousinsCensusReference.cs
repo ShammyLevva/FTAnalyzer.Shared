@@ -25,6 +25,32 @@ namespace FTAnalyzer.Exports
                 if (reference.CensusYear.Overlaps(CensusDate.USCENSUS1940))
                     return $"{reference.Roll.TrimStart('0')}/{reference.ED}/{reference.Page}";
             }
+            // BuildReference's Scotland branch returns "ParishName/RD/ED/Page" (via
+            // ScottishParish.GetReference(true)) for general display, but Lost Cousins' own SCT1
+            // schema (LostCousinsClient.GetCensusSpecificFields) only ever stores the bare
+            // "RD/ED/Page" - no parish name field exists on the website at all, so the two can never
+            // compare equal regardless of any trimming/casing.
+            if (reference.Country == Countries.SCOTLAND && reference.CensusYear.Overlaps(CensusDate.SCOTCENSUS1881))
+            {
+                string rd = ScottishParish.FindParishFromID(reference.Parish).RegistrationDistrict;
+                return $"{rd}/{reference.ED.TrimStart('0')}/{reference.Page.TrimStart('0')}";
+            }
+            // Lost Cousins' 0ENG schema for 1911 only has a Piece/Schedule pair (no Page field at
+            // all). CensusReference.IsValidLostCousinsReference applies this same Piece prefix
+            // stripping and the Schedule "9999" fallback (used when a citation only captured a page
+            // number, not a schedule) - but only on the upload-validation path, never during normal
+            // parsing, so BuildReference's un-trimmed Piece/Schedule (or its Piece/Page fallback,
+            // which Lost Cousins has no matching field for) silently fails to match.
+            if (Countries.IsEnglandWales(reference.Country) && reference.CensusYear.Overlaps(CensusDate.EWCENSUS1911))
+            {
+                string piece = reference.Piece;
+                if (piece.StartsWith("RG14", StringComparison.Ordinal)) piece = piece[4..];
+                else if (piece.StartsWith("PN", StringComparison.Ordinal)) piece = piece[2..];
+                piece = piece.TrimStart('0');
+                string schedule = reference.Schedule == CensusReference.MISSING ? string.Empty : reference.Schedule.TrimStart('0');
+                if (schedule.Length == 0 && reference.Page.Length > 0) schedule = "9999";
+                return $"{piece}/{schedule}";
+            }
             return reference.CompactReference;
         }
     }
