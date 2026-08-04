@@ -1994,6 +1994,10 @@ namespace FTAnalyzer
             else if (Roll.StartsWith("T0627_", StringComparison.Ordinal)) Roll = Roll[6..];
             else if (Roll.StartsWith("M_T627_", StringComparison.Ordinal)) Roll = Roll[7..];
             else if (Roll.StartsWith("M_T0627_", StringComparison.Ordinal)) Roll = Roll[8..];
+            // Otherwise a leading zero (e.g. "03764") never matches the Lost Cousins website's own
+            // un-padded reference for the same roll, so Reconcile's exact-string comparison silently
+            // fails for every person on that census page - independent of name/birth-year agreement.
+            Roll = Roll.TrimStart('0');
         }
 
         public bool IsValidLostCousinsReference()
