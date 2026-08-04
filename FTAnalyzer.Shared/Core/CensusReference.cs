@@ -1589,9 +1589,9 @@ namespace FTAnalyzer
             if (matcher.Success)
             {
                 Class = "US1940";
-                Roll = matcher.Groups[2].ToString();
-                ED = matcher.Groups[3].ToString();
-                Page = matcher.Groups[4].ToString();
+                Roll = matcher.Groups[1].ToString();
+                ED = matcher.Groups[2].ToString();
+                Page = matcher.Groups[3].ToString();
                 SetFlagsandCountry(false, true, Countries.UNITED_STATES, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
