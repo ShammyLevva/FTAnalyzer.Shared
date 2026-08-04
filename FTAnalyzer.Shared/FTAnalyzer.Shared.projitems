@@ -88,6 +88,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Exports\IJsonIndividual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exports\JsonExport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exports\LostCousinsClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Exports\LostCousinsCensusReference.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exports\LostCousinsReconciliation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exports\NonDuplicate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Fact.cs" />

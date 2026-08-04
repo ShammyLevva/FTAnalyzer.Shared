@@ -42,7 +42,10 @@ namespace FTAnalyzer.Exports
         {
             // Lost Cousins' own website always shows references in compact slash form, regardless of
             // this user's "Use compact census references" display preference - compare like for like.
-            string candidateRef = candidate.CompactCensusRef;
+            // Built via LostCousinsCensusReference, not candidate.CompactCensusRef directly, since
+            // Lost Cousins' own reference doesn't always contain the same fields CensusReference's
+            // general-purpose display string does (see LostCousinsCensusReference for why).
+            string candidateRef = LostCousinsCensusReference.Build(candidate.CensusReference);
             if (string.IsNullOrWhiteSpace(candidateRef))
                 return null;
             if (!websiteByReference.TryGetValue(Normalise(candidateRef), out List<LostCousin>? group))
