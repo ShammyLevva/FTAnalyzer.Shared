@@ -51,6 +51,18 @@ namespace FTAnalyzer.Exports
                 if (schedule.Length == 0 && reference.Page.Length > 0) schedule = "9999";
                 return $"{piece}/{schedule}";
             }
+            // Lost Cousins' own reference for this census is "District/Page/Family" - three plain
+            // numbers - but the common Ancestry citation for this census only ever captures the
+            // microfilm Roll number (e.g. "Roll: C_13283"), a completely different identifier the
+            // District can't be derived from. This only produces a matchable reference when a
+            // citation captured the District explicitly (CensusReference's own "District NNN"
+            // pattern, or one already written in this District/Page/Family format - see
+            // Instructions#lc-reference-formats); otherwise it falls through unchanged below.
+            if (reference.Country == Countries.CANADA && reference.CensusYear.Overlaps(CensusDate.CANADACENSUS1881)
+                && reference.ED.Length > 0)
+            {
+                return $"{reference.ED.TrimStart('0')}/{reference.Page.TrimStart('0')}/{reference.Family.TrimStart('0')}";
+            }
             return reference.CompactReference;
         }
     }

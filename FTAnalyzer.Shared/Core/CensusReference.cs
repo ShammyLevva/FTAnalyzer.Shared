@@ -1601,18 +1601,9 @@ namespace FTAnalyzer
                 Class = "CAN1881";
                 CensusYear = CensusDate.CANADACENSUS1881;
                 ED = matcher.Groups[1].ToString();
-                SD = matcher.Groups[2].ToString();
-                if (matcher.Groups[5].Length > 0)
-                {
-                    Page = matcher.Groups[4].ToString();
-                    Family = matcher.Groups[5].ToString();
-                }
-                else
-                {
-                    Page = matcher.Groups[3].ToString();
-                    Family = matcher.Groups[4].ToString();
-                }
-                SetFlagsandCountry(false, true, Countries.UNITED_STATES, ReferenceStatus.GOOD, matcher.Value);
+                Page = matcher.Groups[2].ToString();
+                Family = matcher.Groups[3].ToString();
+                SetFlagsandCountry(false, true, Countries.CANADA, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
             matcher = RegexPatterns.EwMissingclassPattern().Match(text);
