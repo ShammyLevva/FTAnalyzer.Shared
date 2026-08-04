@@ -596,6 +596,12 @@ namespace FTAnalyzer
 
         public static IEnumerable<FactLocation> AllLocations => LOCATIONS.Values;
 
+        // Gates whether the desktop/web mapping UI offers the USGS historical topo map option -
+        // over-inclusive on purpose (loose CONUS+AK+HI+PR box), since a false positive just makes
+        // the option selectable rather than producing wrong data.
+        public static bool HasUSLocations =>
+            AllLocations.Any(l => l.IsValidLatLong && l.IsWithinUSBounds && (l.Latitude != 0 || l.Longitude != 0));
+
         static readonly Lock ConversionsLock = new();
         static volatile bool _conversionsLoaded;
 
@@ -1277,6 +1283,13 @@ namespace FTAnalyzer
         #endregion
 
         public bool IsWithinUKBounds => Longitude >= -7.974074 && Longitude <= 1.879409 && Latitude >= 49.814376 && Latitude <= 60.970872;
+
+        public bool IsWithinUSBounds => IsInUSBounds(Latitude, Longitude);
+
+        // Separate from IsWithinUSBounds (an instance property, so it can't share that name) - lets
+        // callers gate arbitrary lat/lng pairs that aren't backed by a FactLocation, e.g. a DTO.
+        public static bool IsInUSBounds(double latitude, double longitude) =>
+            longitude is >= -179.15 and <= -65.0 && latitude is >= 17.5 and <= 71.5;
 
         public string LocationBias
         {

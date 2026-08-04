@@ -131,6 +131,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\RegistrySettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\ShortDoubleMetaphone.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\SortableBindingList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilities\UsgsHistoricalMap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\Analytics.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\SpecialMethods.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\ColumnDetail.cs" />
