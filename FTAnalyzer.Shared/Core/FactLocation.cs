@@ -6,6 +6,7 @@ using FTAnalyzer.Properties;
 using FTAnalyzer.Utilities;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Collections.Concurrent;
 using System.Collections.Immutable;
 #if __PC__
 using FTAnalyzer.Graphics;
@@ -69,7 +70,15 @@ namespace FTAnalyzer
 #if __PC__
         public GeoResponse.CResult.CGeometry.CViewPort ViewPort { get; set; }
 #endif
-        readonly Dictionary<string, Individual> individuals;
+        // ConcurrentDictionary, not Dictionary: UNKNOWN_LOCATION/BLANK_LOCATION/TEMP below are
+        // process-wide static singletons (every individual in every tree, on every Blazor circuit,
+        // gets a name Fact located at BLANK_LOCATION - see Individual's constructor), so this
+        // instance's own dictionary is genuinely shared across concurrent circuits for those three
+        // locations. A plain Dictionary corrupted under that concurrent AddIndividual traffic
+        // whenever multiple users' GEDCOMs loaded at once (e.g. right after a deploy, when every
+        // active circuit reconnects and auto-restores simultaneously) - see the 2026-07-10 incident
+        // for the same class of bug in a different static dictionary.
+        readonly ConcurrentDictionary<string, Individual> individuals;
         readonly string[] _Parts;
         bool _created;
 
@@ -369,7 +378,7 @@ namespace FTAnalyzer
             AddressNoNumerics = string.Empty;
             PlaceNoNumerics = string.Empty;
             FuzzyNoParishMatch = string.Empty;
-            individuals = [];
+            individuals = new();
             Latitude = 0;
             Longitude = 0;
             LatitudeM = 0;
@@ -1199,8 +1208,10 @@ namespace FTAnalyzer
 
         public void AddIndividual(Individual ind)
         {
-            if (ind is not null && !individuals.ContainsKey(ind.IndividualID))
-                individuals.Add(ind.IndividualID, ind);
+            // TryAdd is atomic (check-and-insert in one step) - the previous ContainsKey-then-Add
+            // was a classic TOCTOU race even before considering thread-safety of the collection itself.
+            if (ind is not null)
+                individuals.TryAdd(ind.IndividualID, ind);
         }
 
         public IList<string> Surnames
