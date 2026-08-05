@@ -30,6 +30,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Comparators\Location\FactLocationComparer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Age.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\AncestryTreeTag.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\CanadianCensusDistrict.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\CensusDate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\CensusFamily.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\CensusIndividual.cs" />
@@ -174,6 +175,9 @@
     </Content>
     <Content Include="$(MSBuildThisFileDirectory)Resources\OS50kGazetteer.txt" />
     <Content Include="$(MSBuildThisFileDirectory)Resources\ScottishParishes.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)Resources\CanadianCensusDistricts1881.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="$(MSBuildThisFileDirectory)Resources\Geocodes-Empty.s3db">

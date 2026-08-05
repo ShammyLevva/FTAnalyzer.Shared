@@ -14,7 +14,7 @@ namespace FTAnalyzer
         public const string MISSING = "Missing";
 
         string unknownCensusRef;
-        string Place { get; set; }
+        public string Place { get; internal set; }
         public string Class { get; internal set; }
         public string Roll { get; internal set; }
         public string Piece { get; internal set; }

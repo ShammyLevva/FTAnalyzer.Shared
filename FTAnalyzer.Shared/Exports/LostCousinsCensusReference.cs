@@ -54,14 +54,25 @@ namespace FTAnalyzer.Exports
             // Lost Cousins' own reference for this census is "District/Page/Family" - three plain
             // numbers - but the common Ancestry citation for this census only ever captures the
             // microfilm Roll number (e.g. "Roll: C_13283"), a completely different identifier the
-            // District can't be derived from. This only produces a matchable reference when a
-            // citation captured the District explicitly (CensusReference's own "District NNN"
-            // pattern, or one already written in this District/Page/Family format - see
-            // Instructions#lc-reference-formats); otherwise it falls through unchanged below.
-            if (reference.Country == Countries.CANADA && reference.CensusYear.Overlaps(CensusDate.CANADACENSUS1881)
-                && reference.ED.Length > 0)
+            // District can't be derived from (LAC's own reel ranges cover several districts each).
+            // What that citation DOES capture is the "Census Place" text - e.g. "Woodlands,
+            // Marquette, Manitoba" - and CanadianCensusDistrict resolves the township/sub-district
+            // name (the first segment) against LAC's own district finding aid to recover the
+            // District, using the province (the last segment) to disambiguate same-named
+            // sub-districts. Falls through unchanged if neither the District nor a resolvable place
+            // name is available (e.g. a citation already written in District/Page/Family format -
+            // see Instructions#lc-reference-formats - still works via the ED it was parsed into).
+            if (reference.Country == Countries.CANADA && reference.CensusYear.Overlaps(CensusDate.CANADACENSUS1881))
             {
-                return $"{reference.ED.TrimStart('0')}/{reference.Page.TrimStart('0')}/{reference.Family.TrimStart('0')}";
+                string ed = reference.ED;
+                if (ed.Length == 0 && reference.Place.Length > 0)
+                {
+                    string[] parts = reference.Place.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+                    if (parts.Length > 0)
+                        ed = CanadianCensusDistrict.FindDistrictNumber(parts[0], parts[^1]);
+                }
+                if (ed.Length > 0)
+                    return $"{ed.TrimStart('0')}/{reference.Page.TrimStart('0')}/{reference.Family.TrimStart('0')}";
             }
             return reference.CompactReference;
         }
