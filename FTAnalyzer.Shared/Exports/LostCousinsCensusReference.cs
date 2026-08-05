@@ -20,14 +20,17 @@ namespace FTAnalyzer.Exports
             if (reference is null) return string.Empty;
             if (Countries.IsEnglandWales(reference.Country) && reference.CensusYear.Overlaps(CensusDate.EWCENSUS1841))
             {
-                // Lost Cousins' 1841 schema (census_code=1841, see GetCensusSpecificFields) is a
-                // plain Piece/Book/Folio/Page - any field the citation didn't capture is left blank
-                // server-side. BuildReference's compact form instead substitutes "see image" text
-                // when Book is blank (a hint for the user - see Instructions#lc-reference-formats -
-                // not a stored value) which can never match Lost Cousins' own blank field, and most
-                // 1841 citations have no book number at all, so this is the common case, not an edge
-                // case. Build the plain field list directly instead, dropping the MISSING sentinel
-                // the same way the 1911 branch below already does for Schedule.
+                // Lost Cousins' 1841 schema (census_code=1841, see GetCensusSpecificFields) is
+                // Piece/Book/Folio/Page - and the live "Add an Ancestor" form marks all four as
+                // required, so a citation with no Book number can never match regardless of how this
+                // string is built (Lost Cousins' own stored reference will always have a real Book
+                // value, and ours has none). What this fixes is narrower: BuildReference's compact
+                // display form substitutes literal "see image" text when Book is blank (a hint for
+                // the user - see Instructions#lc-reference-formats - not a stored value), and that
+                // text must never leak into a comparison string even though the comparison was
+                // already doomed to fail - the old behaviour was merely wrong for the wrong reason.
+                // Build the plain field list directly, dropping the MISSING sentinel the same way the
+                // 1911 branch below already does for Schedule.
                 return JoinFields(reference.Piece, NonMissing(reference.Book), NonMissing(reference.Folio), reference.Page);
             }
             if (Countries.IsEnglandWales(reference.Country) && reference.CensusYear.Overlaps(CensusDate.EWCENSUS1881))
