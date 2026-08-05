@@ -18,6 +18,26 @@ namespace FTAnalyzer.Exports
         public static string Build(CensusReference? reference)
         {
             if (reference is null) return string.Empty;
+            if (Countries.IsEnglandWales(reference.Country) && reference.CensusYear.Overlaps(CensusDate.EWCENSUS1841))
+            {
+                // Lost Cousins' 1841 schema (census_code=1841, see GetCensusSpecificFields) is a
+                // plain Piece/Book/Folio/Page - any field the citation didn't capture is left blank
+                // server-side. BuildReference's compact form instead substitutes "see image" text
+                // when Book is blank (a hint for the user - see Instructions#lc-reference-formats -
+                // not a stored value) which can never match Lost Cousins' own blank field, and most
+                // 1841 citations have no book number at all, so this is the common case, not an edge
+                // case. Build the plain field list directly instead, dropping the MISSING sentinel
+                // the same way the 1911 branch below already does for Schedule.
+                return JoinFields(reference.Piece, NonMissing(reference.Book), NonMissing(reference.Folio), reference.Page);
+            }
+            if (Countries.IsEnglandWales(reference.Country) && reference.CensusYear.Overlaps(CensusDate.EWCENSUS1881))
+            {
+                // Lost Cousins' 1881 schema (census_code=RG11) is Piece/Folio/Page only - no
+                // Schedule field exists on the website at all - but BuildReference's compact form
+                // falls back to a "Piece/Folio/SN{Schedule}" form when Page wasn't captured, which
+                // has no equivalent to match against. Build the plain field list directly instead.
+                return JoinFields(reference.Piece, reference.Folio, reference.Page);
+            }
             if (reference.Country == Countries.UNITED_STATES)
             {
                 if (reference.CensusYear.Overlaps(CensusDate.USCENSUS1880))
@@ -52,16 +72,22 @@ namespace FTAnalyzer.Exports
                 return $"{piece}/{schedule}";
             }
             // Lost Cousins' own reference for this census is "District/Page/Family" - three plain
-            // numbers - but the common Ancestry citation for this census only ever captures the
-            // microfilm Roll number (e.g. "Roll: C_13283"), a completely different identifier the
-            // District can't be derived from (LAC's own reel ranges cover several districts each).
-            // What that citation DOES capture is the "Census Place" text - e.g. "Woodlands,
-            // Marquette, Manitoba" - and CanadianCensusDistrict resolves the township/sub-district
-            // name (the first segment) against LAC's own district finding aid to recover the
-            // District, using the province (the last segment) to disambiguate same-named
-            // sub-districts. Falls through unchanged if neither the District nor a resolvable place
-            // name is available (e.g. a citation already written in District/Page/Family format -
-            // see Instructions#lc-reference-formats - still works via the ED it was parsed into).
+            // numbers. Despite GetCensusSpecificFields sending a Sub-District as a separate ref2
+            // field on upload, live testing against a real Lost Cousins account (see
+            // CensusReferenceCanadaTests in UnitTests/CensusReferenceTest.cs) confirmed the website's
+            // own stored/scraped reference never has a separate Sub-District segment - it's either
+            // ignored server-side or folded away - so Sub-District must NOT be included here despite
+            // what the upload schema implies. The common Ancestry citation for this census only ever
+            // captures the microfilm Roll number (e.g. "Roll: C_13283") instead, a completely
+            // different identifier the District can't be derived from (LAC's own reel ranges cover
+            // several districts each). What that citation DOES capture is the "Census Place" text -
+            // e.g. "Woodlands, Marquette, Manitoba" - and CanadianCensusDistrict resolves the
+            // township/sub-district name (the first segment) against LAC's own district finding aid
+            // to recover the District, using the province (the last segment) to disambiguate
+            // same-named sub-districts. Falls through unchanged if neither the District nor a
+            // resolvable place name is available (e.g. a citation already written in
+            // District/Page/Family format - see Instructions#lc-reference-formats - still works via
+            // the ED it was parsed into).
             if (reference.Country == Countries.CANADA && reference.CensusYear.Overlaps(CensusDate.CANADACENSUS1881))
             {
                 string ed = reference.ED;
@@ -72,9 +98,22 @@ namespace FTAnalyzer.Exports
                         ed = CanadianCensusDistrict.FindDistrictNumber(parts[0], parts[^1]);
                 }
                 if (ed.Length > 0)
-                    return $"{ed.TrimStart('0')}/{reference.Page.TrimStart('0')}/{reference.Family.TrimStart('0')}";
+                    return JoinFields(ed.TrimStart('0'), reference.Page.TrimStart('0'), reference.Family.TrimStart('0'));
             }
             return reference.CompactReference;
         }
+
+        // Lost Cousins collapses a blank field to nothing rather than an empty slot (see
+        // LostCousin.FixReference, which replaces "&refN=" markers with "/" then collapses the
+        // resulting "//" - i.e. exactly this filter-then-join), so building a reference to compare
+        // against a scraped website entry must drop blanks the same way rather than embedding an
+        // empty segment (or, worse, a display-only placeholder - see NonMissing below).
+        static string JoinFields(params string[] fields) => string.Join('/', fields.Where(f => f.Length > 0));
+
+        // CensusReference sets a field to the literal sentinel "Missing" (CensusReference.MISSING)
+        // when a citation was recognised but a particular field couldn't be parsed out of it at all -
+        // that sentinel is meant for display (e.g. BuildReference's compact form), never as a value
+        // to compare against Lost Cousins' own blank field, so treat it as blank here too.
+        static string NonMissing(string field) => field == CensusReference.MISSING ? string.Empty : field;
     }
 }
