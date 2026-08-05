@@ -5,10 +5,6 @@ using System.Diagnostics;
 using System.Text;
 using System.Xml;
 
-#if __MACOS__
-using Foundation;
-#endif
-
 namespace FTAnalyzer
 {
     static class GedcomToXml
@@ -338,28 +334,15 @@ namespace FTAnalyzer
             }
             finally
             {
-#if !__IOS__
                 if (badLineCount > 0 && reportBadLines)
                     ShowBadLines(reader.BaseStream, lineErrors);
-#endif
                 reader.Close();
             }
             return document;
         }
 
-#if __MACOS__
-        static readonly NSObject Invoker = new NSObject();
-#endif
         static void ShowBadLines(Stream stream, Dictionary<long, Tuple<string, string>> lineErrors)
         {
-#if __MACOS__
-            if (!NSThread.IsMain)
-            {
-                
-                Invoker.InvokeOnMainThread(() => ShowBadLines(stream, lineErrors));
-                return;
-            }
-#endif
             try
             {
                 int result = UIHelpers.ShowYesNo("Would you like to view the line error report?", "FTAnalyzer");

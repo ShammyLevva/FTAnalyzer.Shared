@@ -16,8 +16,6 @@ using System.Collections.Immutable;
 
 #if __PC__
 using FTAnalyzer.Forms.Controls;
-#elif __MACOS__ || __IOS__
-using FTAnalyzer.ViewControllers;
 #endif
 
 namespace FTAnalyzer
@@ -2290,8 +2288,12 @@ namespace FTAnalyzer
 					}
 				}
 #else
-                catch (Exception)
+                // Web has no modal error dialog to show, but unexpected exceptions here shouldn't
+                // vanish without a trace the way they previously did - at least log them once.
+                catch (Exception e)
                 {
+                    if (catchCount == 0)
+                        Debug.WriteLine($"FTA_0001: {e}");
                     catchCount++;
                 }
 #endif

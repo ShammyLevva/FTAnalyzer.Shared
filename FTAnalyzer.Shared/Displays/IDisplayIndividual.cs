@@ -45,13 +45,8 @@ namespace FTAnalyzer
         string BudgieCode { get; }
         [ColumnDetail("Ahnentafel", 70, ColumnDetail.ColumnAlignment.Right)]
         BigInteger Ahnentafel { get; }
-#if __PC__
         [ColumnDetail("Has Notes", 60, ColumnDetail.ColumnAlignment.Center)]
         bool HasNotes { get; }
-#elif __MACOS__
-        [ColumnDetail("Has Notes", 60, ColumnDetail.ColumnAlignment.Center)]
-        string HasNotesMac { get; }
-#endif
         [ColumnDetail("Num Facts", 60, ColumnDetail.ColumnAlignment.Right)]
         int FactsCount { get; }
         [ColumnDetail("Num Sources", 60, ColumnDetail.ColumnAlignment.Right)]

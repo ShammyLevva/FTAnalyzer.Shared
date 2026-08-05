@@ -17,11 +17,25 @@ namespace FTAnalyzer
         public string County { get; private set; } = county;
         public string Location { get; private set; } = location;
 
-#if __PC__
-        static CensusLocation() => LoadCensusLocationFile(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location));
-#elif __MACOS__
-        static CensusLocation() => LoadCensusLocationFile(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location), ".."));
-#endif
+        static readonly Lock LoadLock = new();
+        static volatile bool _loaded;
+
+        // Lazy, on-demand, lock-guarded load using the entry assembly's own directory - same
+        // pattern as CanadianCensusDistrict.EnsureLoaded()/ScottishParish.EnsureLoaded(). Deliberately
+        // NOT a "#if __PC__ static constructor" (the previous approach): FTAnalyzer.Web defines
+        // __WEB__, not __PC__, so that static constructor's body was empty there and
+        // LoadCensusLocationFile() never actually ran under the web app.
+        static void EnsureLoaded()
+        {
+            if (_loaded) return;
+            lock (LoadLock)
+            {
+                if (_loaded) return;
+                LoadCensusLocationFile(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location));
+                _loaded = true;
+            }
+        }
+
         public static void LoadCensusLocationFile(string? startPath)
         {
             #region Census Locations
@@ -58,6 +72,7 @@ namespace FTAnalyzer
         public static CensusLocation GetCensusLocation(string year, string piece)
         {
             if (piece == "Missing") return UNKNOWN;
+            EnsureLoaded();
             Tuple<string, string> key = new(year, piece);
             CENSUSLOCATIONS.TryGetValue(key, out CensusLocation? result);
             return result ?? UNKNOWN;
@@ -65,6 +80,7 @@ namespace FTAnalyzer
         public static CensusLocation Get1921CensusLocation(string regDistrict, string subDistrict)
         {
             if (regDistrict == "Missing") return UNKNOWN;
+            EnsureLoaded();
             string piece = $"{regDistrict}/{subDistrict}";
             Tuple<string, string> key = new("1921", piece);
             CENSUSLOCATIONS.TryGetValue(key, out CensusLocation? result);

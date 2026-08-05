@@ -2,10 +2,6 @@ using FTAnalyzer.Shared.Utilities;
 using Microsoft.Win32;
 using System.Data;
 using System.Text;
-#if __MACOS__
-using AppKit;
-using static FTAnalyzer.UIHelpers;
-#endif
 
 namespace FTAnalyzer.Utilities
 {
@@ -39,21 +35,6 @@ namespace FTAnalyzer.Utilities
             catch (Exception ex)
             {
                 UIHelpers.ShowMessage(ex.Message, "FTAnalyzer");
-            }
-        }
-#elif __MACOS__
-        public static void Export(DataTable dt, string exportType)
-        {
-            var dlg = NSSavePanel.SavePanel;
-            dlg.Title = "Export data to Excel";
-            dlg.AllowedFileTypes = new string[] { "csv" };
-            dlg.Message = "Select location to export file to";
-            dlg.NameFieldStringValue = exportType;
-            var result = dlg.RunModal();
-            if (result == 1) // ok
-            {
-                WriteFile(dt, dlg.Url.Path);
-                ShowMessage($"File written to {dlg.Url.Path}", "FTAnalyzer");
             }
         }
 #endif

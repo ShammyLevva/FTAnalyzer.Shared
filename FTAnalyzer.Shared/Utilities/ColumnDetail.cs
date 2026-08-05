@@ -1,9 +1,4 @@
-﻿#if __PC__
-#elif __MACOS__
-using AppKit;
-#endif
-
-namespace FTAnalyzer.Utilities
+﻿namespace FTAnalyzer.Utilities
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Method)]
 
@@ -14,8 +9,6 @@ namespace FTAnalyzer.Utilities
 #if __PC__
         public DataGridViewContentAlignment Alignment { get; }
         public ColumnType TypeofColumn { get; }
-#elif __MACOS__
-        public NSTextAlignment Alignment { get; }
 #endif
         public ColumnDetail(string name, float width, ColumnAlignment alignment = ColumnAlignment.Left, ColumnType columnType = ColumnType.TextBox)
         {
@@ -28,13 +21,6 @@ namespace FTAnalyzer.Utilities
                 case ColumnAlignment.Left: Alignment = DataGridViewContentAlignment.MiddleLeft; break;
                 case ColumnAlignment.Right: Alignment = DataGridViewContentAlignment.MiddleRight; break;
                 case ColumnAlignment.Center: Alignment = DataGridViewContentAlignment.MiddleCenter; break;
-            }
-#elif __MACOS__
-            switch (alignment)
-            {
-                case ColumnAlignment.Left : Alignment = NSTextAlignment.Left; break;
-                case ColumnAlignment.Right: Alignment = NSTextAlignment.Right; break;
-                case ColumnAlignment.Center: Alignment = NSTextAlignment.Center; break;
             }
 #endif
         }

@@ -146,11 +146,7 @@ namespace FTAnalyzer
             // load conversions from XML file
             #region Fact Location Fixes
             if (startPath is null) return;
-#if __MACOS__
-            string filename = Path.Combine(startPath, "..", "Resources", "FactLocationFixes.xml");
-#else
             string filename = Path.Combine(startPath, "Resources", "FactLocationFixes.xml");
-#endif
             Debug.WriteLine($"Loading factlocation fixes from: {filename}");
             if (File.Exists(filename) && !GeneralSettings.Default.SkipFixingLocations) // don't load file if skipping fixing locations
             {

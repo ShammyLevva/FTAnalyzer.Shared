@@ -16,11 +16,26 @@ namespace FTAnalyzer
         public string Region { get; private set; }
 
         static readonly Regex ParishRegex = RegexParish();
-#if __PC__
-        static ScottishParish() => LoadScottishParishes(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location));
-#elif __MACOS__
-        static ScottishParish() => LoadScottishParishes(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location), ".."));
-#endif
+
+        static readonly Lock LoadLock = new();
+        static volatile bool _loaded;
+
+        // Lazy, on-demand, lock-guarded load using the entry assembly's own directory - same
+        // pattern as CanadianCensusDistrict.EnsureLoaded(). Deliberately NOT a "#if __PC__ static
+        // constructor" (the previous approach): FTAnalyzer.Web defines __WEB__, not __PC__, so that
+        // static constructor's body was empty there and LoadScottishParishes() never actually ran
+        // under the web app.
+        static void EnsureLoaded()
+        {
+            if (_loaded) return;
+            lock (LoadLock)
+            {
+                if (_loaded) return;
+                LoadScottishParishes(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location));
+                _loaded = true;
+            }
+        }
+
         public static void LoadScottishParishes(string? startPath)
         {
             // load Scottish Parishes from XML file
@@ -79,8 +94,16 @@ namespace FTAnalyzer
             return match.Success;
         }
 
-        public static ScottishParish FindParishFromID(string RD) => SCOTTISHPARISHES.ContainsKey(RD.ToLower()) ? SCOTTISHPARISHES[RD.ToLower()] : UNKNOWN_PARISH;
-        public static string FindParishFromName(string parish) => SCOTTISHPARISHNAMES.TryGetValue(parish, out string? value) ? value : UNKNOWN_PARISH.Name;
+        public static ScottishParish FindParishFromID(string RD)
+        {
+            EnsureLoaded();
+            return SCOTTISHPARISHES.ContainsKey(RD.ToLower()) ? SCOTTISHPARISHES[RD.ToLower()] : UNKNOWN_PARISH;
+        }
+        public static string FindParishFromName(string parish)
+        {
+            EnsureLoaded();
+            return SCOTTISHPARISHNAMES.TryGetValue(parish, out string? value) ? value : UNKNOWN_PARISH.Name;
+        }
 
         public string Reference => GetReference(GeneralSettings.Default.UseCompactCensusRef);
         public string GetReference(bool compact) => compact ? $"{Name}/{RegistrationDistrict}" : $"{Name}, RD: {RegistrationDistrict}";

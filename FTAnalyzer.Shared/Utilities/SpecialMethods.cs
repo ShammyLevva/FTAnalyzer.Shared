@@ -70,11 +70,11 @@ namespace FTAnalyzer.Utilities
         }
 
 #if __PC__
-        public static bool LatLongIsZero(CLocation loc) 
+        public static bool LatLongIsZero(CLocation loc)
             => ExtensionMethods.DoubleEquals(loc.Lat, 0) && ExtensionMethods.DoubleEquals(loc.Long, 0);
-
-        public static bool LatLongIsZero(FactLocation loc) 
-            => ExtensionMethods.DoubleEquals(loc.Latitude, 0) && ExtensionMethods.DoubleEquals(loc.Longitude, 0);
 #endif
+
+        public static bool LatLongIsZero(FactLocation loc)
+            => ExtensionMethods.DoubleEquals(loc.Latitude, 0) && ExtensionMethods.DoubleEquals(loc.Longitude, 0);
     }
 }

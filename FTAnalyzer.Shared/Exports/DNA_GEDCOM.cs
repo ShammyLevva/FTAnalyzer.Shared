@@ -4,17 +4,13 @@
 using FTAnalyzer.Utilities;
 using FTAnalyzer.Shared.Utilities;
 using Microsoft.Win32;
-#elif __MACOS__
-using AppKit;
-#elif __IOS__
-using UIKit;
 #endif
 
 namespace FTAnalyzer.Exports
 {
     public static class DNA_GEDCOM
     {
-#if __PC__ || __MACOS || __IOS
+#if __PC__
         static readonly FactDate PrivacyDate = new(FactDate.NOW.AddYears(-100).ToString("dd MMM yyyy", FactDate.CULTURE));
         static readonly FamilyTree ft = FamilyTree.Instance;
         static bool _includeSiblings;
@@ -23,14 +19,7 @@ namespace FTAnalyzer.Exports
         static int _privateID;
         static List<Individual> processed = [];
         static StreamWriter output = StreamWriter.Null;
-#endif
-#if __MACOS__
-        static AppDelegate App => (AppDelegate)NSApplication.SharedApplication.Delegate;
-#elif __IOS__
-        static AppDelegate App => (AppDelegate)UIApplication.SharedApplication.Delegate;
-#endif
 
-#if __PC__ || __MACOS || __IOS
        public static void Export()
         {
             int privatise = UIHelpers.ShowYesNo("Do you want living people replaced with 'Private Person' and their details hidden", "Continue Loading?");
@@ -63,8 +52,7 @@ namespace FTAnalyzer.Exports
                 }
             }
         }
-#endif
-#if __PC__
+
         public static void ExportGedcomFile()
         {
             string myDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
@@ -81,25 +69,7 @@ namespace FTAnalyzer.Exports
                 WriteFile(saveFileDialog.FileName);
             }
         }
-#elif __MACOS__
-        public static void ExportGedcomFile()
-        {
-            var dlg = NSSavePanel.SavePanel;
-            dlg.Title = "Export GEDCOM File of skeleton tree";
-            dlg.AllowedFileTypes = new string[] { "ged" };
-            dlg.Message = "Select location to export GEDCOM file to";
-            dlg.NameFieldStringValue = "Minimalist DNA GEDCOM";
-            var response = dlg.RunModal();
-            if (response == 1)
-                WriteFile(dlg.Url.Path);
-         }
-#elif __IOS__
-        public static void ExportGedcomFile()
-        {
-        // feature not available on iOS
-        }
-#endif
-#if __PC__
+
         static void WriteFile(string filename)
         {
             List<Family> families = [];

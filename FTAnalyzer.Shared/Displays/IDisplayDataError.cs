@@ -20,13 +20,6 @@ namespace FTAnalyzer
         FactDate Born { get; }
         [ColumnDetail("Died", 150)]
         FactDate Died { get; }
-        //#if __PC__
-        //        [ColumnDetail("Family", 50)]
-        //        bool IsFamily { get; }
-        //#elif __MACOS__ || __IOS__
-        //        [ColumnDetail("Family", 50)]
-        //        string IsFamily { get; }
-        //#endif
 #if __WEB__
         bool IsFamily { get; }
 #endif

@@ -1,7 +1,4 @@
-﻿#if __PC__
-#endif
-
-using FTAnalyzer.Utilities;
+﻿using FTAnalyzer.Utilities;
 
 namespace FTAnalyzer
 {
@@ -59,17 +56,10 @@ namespace FTAnalyzer
         double Latitude { get; }
         [ColumnDetail("Long", 60)]
         double Longitude { get; }
-#if __PC__
         [ColumnDetail("Preferred Fact", 100, ColumnDetail.ColumnAlignment.Right)]
         bool Preferred { get; }
         [ColumnDetail("Ignored Fact", 80, ColumnDetail.ColumnAlignment.Right)]
         bool IgnoredFact { get; }
-#elif __MACOS__
-        [ColumnDetail("Preferred Fact", 100, ColumnDetail.ColumnAlignment.Right)]
-        string Preferred { get; }
-        [ColumnDetail("Ignored Fact", 80, ColumnDetail.ColumnAlignment.Right)]
-        string IgnoredFact { get; }
-#endif
         [ColumnDetail("Error Comment", 2500, ColumnDetail.ColumnAlignment.Left)]
         string ErrorComment { get; }
     }
