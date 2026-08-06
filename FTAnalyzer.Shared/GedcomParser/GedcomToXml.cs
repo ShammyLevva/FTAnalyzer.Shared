@@ -2,12 +2,13 @@
 using FTAnalyzer.Utilities;
 using FTAnalyzer.Properties;
 using System.Diagnostics;
+using System.Net;
 using System.Text;
 using System.Xml;
 
 namespace FTAnalyzer
 {
-    static class GedcomToXml
+    public static class GedcomToXml
     {
         // A single logical GEDCOM line (after CONT/CONC joining or tolerant re-joining of broken lines)
         // never legitimately reaches this size. The cap stops a corrupt or hostile file from
@@ -290,7 +291,15 @@ namespace FTAnalyzer
 
                             if (value.Length > 0)
                             {
-                                XmlText text = document.CreateTextNode(value);
+                                // Some exporters (e.g. Family Tree Maker) incorrectly HTML/XML-escape values
+                                // when writing GEDCOM - which is plain text and needs no such escaping - so
+                                // "&" in a name/place/note comes through the file as the literal characters
+                                // "&amp;". We store this value directly via CreateTextNode (not by serialising
+                                // and re-parsing XML text), so that literal "&amp;" is never decoded and shows
+                                // up as-is everywhere the value is displayed. HtmlDecode only touches
+                                // recognised entities (&amp; &lt; &gt; &quot; &#39; etc.) and leaves a genuine
+                                // standalone "&" untouched, so this is safe for files without the quirk too.
+                                XmlText text = document.CreateTextNode(WebUtility.HtmlDecode(value));
                                 node?.AppendChild(text);
                             }
                         }
