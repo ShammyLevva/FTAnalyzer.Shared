@@ -10,6 +10,11 @@ namespace FTAnalyzer.Exports
     /// nickname pairs (Margaret/Maggie are different words, not phonetic variants), so names are
     /// also compared via FamilyTree.Instance.GetStandardisedName, which maps name variants to a
     /// canonical form using the researched GINAP name-standardisation dataset (Resources/GINAP.txt).
+    /// A reference isn't always unique to one household, though - EW1841's Piece/Book/Folio/Page
+    /// identifies a whole census PAGE, which can hold more than one family (a second dwelling, a
+    /// lodger recorded under a different surname) - so surname is also checked, both to pick the
+    /// right website entry for a candidate and to resolve two different candidates that both
+    /// independently matched the SAME website entry (see Reconcile's dedup step).
     /// </summary>
     public static class LostCousinsReconciliation
     {
@@ -19,7 +24,7 @@ namespace FTAnalyzer.Exports
             IReadOnlyList<LostCousin> websiteAncestors, IReadOnlyList<CensusIndividual> candidates)
         {
             List<CensusIndividual> stillMissing = [];
-            List<Match> confirmed = [];
+            List<Match> allMatches = [];
 
             Dictionary<string, List<LostCousin>> websiteByReference = websiteAncestors
                 .Where(w => !string.IsNullOrWhiteSpace(w.Reference))
@@ -30,10 +35,25 @@ namespace FTAnalyzer.Exports
             {
                 LostCousin? match = FindMatch(candidate, websiteByReference);
                 if (match is not null)
-                    confirmed.Add(new Match(candidate, match));
+                    allMatches.Add(new Match(candidate, match));
                 else
                     stillMissing.Add(candidate);
             }
+
+            // Two different candidates can independently satisfy FindMatch for the SAME website
+            // entry - a shared reference spanning more than one household (see class doc comment)
+            // means candidate A's own FindMatch call might grab candidate B's rightful entry (or
+            // vice versa) via the surname-blind fallback tier inside FindMatch. Rather than let an
+            // arbitrary one win, prefer whichever candidate's surname actually agrees with the
+            // website entry's; the loser goes back into stillMissing instead of keeping a wrong
+            // "confirmed" match - which, via CreateConfirmationFact, would otherwise write a
+            // fabricated Lost Cousins fact onto the wrong person.
+            List<Match> confirmed = [.. allMatches
+                .GroupBy(m => m.WebsiteEntry)
+                .Select(g => g.OrderByDescending(m => SurnamesMatch(m.WebsiteEntry, m.Individual)).First())];
+
+            HashSet<CensusIndividual> confirmedIndividuals = [.. confirmed.Select(m => m.Individual)];
+            stillMissing.AddRange(allMatches.Select(m => m.Individual).Where(i => !confirmedIndividuals.Contains(i)));
 
             return (stillMissing, confirmed);
         }
@@ -60,7 +80,11 @@ namespace FTAnalyzer.Exports
             if (sameCensus.Count == 1)
                 return sameCensus[0];
 
-            return sameCensus.FirstOrDefault(w => NamesMatch(w, candidate) && BirthYearsAgree(w, candidate));
+            // Prefer a website entry whose surname actually agrees over the surname-blind fallback -
+            // a shared reference can span more than one household (see class doc comment), so
+            // forename+birth-year alone isn't always enough to avoid grabbing someone else's entry.
+            return sameCensus.FirstOrDefault(w => NamesMatch(w, candidate) && SurnamesMatch(w, candidate) && BirthYearsAgree(w, candidate))
+                ?? sameCensus.FirstOrDefault(w => NamesMatch(w, candidate) && BirthYearsAgree(w, candidate));
         }
 
         static bool BirthYearsAgree(LostCousin website, CensusIndividual candidate) =>
@@ -81,15 +105,18 @@ namespace FTAnalyzer.Exports
             return new DoubleMetaphone(webForename).PrimaryKey == new DoubleMetaphone(candidate.LCForename).PrimaryKey;
         }
 
-        // Only needed for FindPossibleMatches below - Reconcile's own FindMatch never needs a surname
-        // check because the census reference it already matched on identifies the household (and
-        // therefore the surname) implicitly; forename alone then disambiguates household members.
-        // FindPossibleMatches has no reference to narrow by, so without this it would happily match
-        // any same-forename, same-birth-year person on the same census anywhere in the tree.
+        // Used both by FindMatch/Reconcile above (a shared reference can span more than one
+        // household, so forename+birth-year alone isn't always a safe disambiguator - see class doc
+        // comment) and by FindPossibleMatches below (which has no reference to narrow by at all, so
+        // without this it would happily match any same-forename, same-birth-year person anywhere in
+        // the tree). Compares against the candidate's OWN SurnameAtDate rather than CensusSurname
+        // (the family's surname) - correctly walks a woman's marriage history up to the census date
+        // herself, rather than depending on the CensusFamily grouping (Husband/Wife/eldest child) she
+        // happens to have been placed in already being right.
         static bool SurnamesMatch(LostCousin website, CensusIndividual candidate)
         {
             string webSurname = ExtractSurname(website.Name);
-            string candidateSurname = candidate.CensusSurname;
+            string candidateSurname = candidate.SurnameAtDate(candidate.CensusDate);
             if (string.IsNullOrEmpty(webSurname) || string.IsNullOrEmpty(candidateSurname))
                 return false;
             if (string.Equals(webSurname, candidateSurname, StringComparison.OrdinalIgnoreCase))
