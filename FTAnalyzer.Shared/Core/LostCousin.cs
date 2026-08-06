@@ -10,8 +10,12 @@ namespace FTAnalyzer
         public CensusDate? CensusDate { get; }
         public Uri? WebLink { get; }
         public bool FTAnalyzerFact { get; }
-        string SurnameMetaphone { get; set; } = string.Empty;
-        string ForenameMetaphone { get; set; } = string.Empty;
+        // Widened from private to internal so LostCousinsReconciliation can reuse these already-
+        // computed keys instead of reconstructing a DoubleMetaphone from this Name on every single
+        // comparison it makes against a candidate - pure visibility change, no behaviour difference
+        // for any existing (private) caller within this class.
+        internal string SurnameMetaphone { get; private set; } = string.Empty;
+        internal string ForenameMetaphone { get; private set; } = string.Empty;
 
         public enum Status { Good = 1, FuzzyNameAge = 2, NotPrecise = 3, Bad = 4 }
 

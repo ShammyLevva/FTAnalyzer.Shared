@@ -20,11 +20,48 @@ namespace FTAnalyzer.Exports
     {
         public readonly record struct Match(CensusIndividual Individual, LostCousin WebsiteEntry);
 
+        // Per-run memoization for the per-candidate values NamesMatch/SurnamesMatch need -
+        // SurnameAtDate walks a woman's marriage history (a LINQ sort) on every call, and the
+        // metaphone keys involve constructing a new DoubleMetaphone, so recomputing either of these
+        // for the same candidate on every single comparison (this class does an O(candidates ×
+        // website entries) style comparison, so the same candidate is compared against many website
+        // entries) is wasteful - with several thousand records this was measurably slow. Scoped to
+        // one Reconcile/FindPossibleMatches call, not shared across calls, so there's no staleness
+        // risk if the underlying tree changes between calls.
+        sealed class CandidateNameCache
+        {
+            readonly Dictionary<CensusIndividual, string> _surnameAtDate = [];
+            readonly Dictionary<CensusIndividual, string> _forenameMetaphone = [];
+            readonly Dictionary<CensusIndividual, string> _surnameMetaphone = [];
+
+            public string SurnameAtDate(CensusIndividual c)
+            {
+                if (!_surnameAtDate.TryGetValue(c, out string? surname))
+                    _surnameAtDate[c] = surname = c.SurnameAtDate(c.CensusDate);
+                return surname;
+            }
+
+            public string ForenameMetaphone(CensusIndividual c)
+            {
+                if (!_forenameMetaphone.TryGetValue(c, out string? key))
+                    _forenameMetaphone[c] = key = new DoubleMetaphone(c.LCForename).PrimaryKey;
+                return key;
+            }
+
+            public string SurnameMetaphone(CensusIndividual c)
+            {
+                if (!_surnameMetaphone.TryGetValue(c, out string? key))
+                    _surnameMetaphone[c] = key = new DoubleMetaphone(SurnameAtDate(c)).PrimaryKey;
+                return key;
+            }
+        }
+
         public static (List<CensusIndividual> StillMissing, List<Match> ConfirmedOnWebsite) Reconcile(
             IReadOnlyList<LostCousin> websiteAncestors, IReadOnlyList<CensusIndividual> candidates)
         {
             List<CensusIndividual> stillMissing = [];
             List<Match> allMatches = [];
+            CandidateNameCache cache = new();
 
             Dictionary<string, List<LostCousin>> websiteByReference = websiteAncestors
                 .Where(w => !string.IsNullOrWhiteSpace(w.Reference))
@@ -33,7 +70,7 @@ namespace FTAnalyzer.Exports
 
             foreach (CensusIndividual candidate in candidates)
             {
-                LostCousin? match = FindMatch(candidate, websiteByReference);
+                LostCousin? match = FindMatch(candidate, websiteByReference, cache);
                 if (match is not null)
                     allMatches.Add(new Match(candidate, match));
                 else
@@ -50,7 +87,7 @@ namespace FTAnalyzer.Exports
             // fabricated Lost Cousins fact onto the wrong person.
             List<Match> confirmed = [.. allMatches
                 .GroupBy(m => m.WebsiteEntry)
-                .Select(g => g.OrderByDescending(m => SurnamesMatch(m.WebsiteEntry, m.Individual)).First())];
+                .Select(g => g.OrderByDescending(m => SurnamesMatch(m.WebsiteEntry, m.Individual, cache)).First())];
 
             HashSet<CensusIndividual> confirmedIndividuals = [.. confirmed.Select(m => m.Individual)];
             stillMissing.AddRange(allMatches.Select(m => m.Individual).Where(i => !confirmedIndividuals.Contains(i)));
@@ -58,7 +95,7 @@ namespace FTAnalyzer.Exports
             return (stillMissing, confirmed);
         }
 
-        static LostCousin? FindMatch(CensusIndividual candidate, Dictionary<string, List<LostCousin>> websiteByReference)
+        static LostCousin? FindMatch(CensusIndividual candidate, Dictionary<string, List<LostCousin>> websiteByReference, CandidateNameCache cache)
         {
             // Lost Cousins' own website always shows references in compact slash form, regardless of
             // this user's "Use compact census references" display preference - compare like for like.
@@ -83,14 +120,14 @@ namespace FTAnalyzer.Exports
             // Prefer a website entry whose surname actually agrees over the surname-blind fallback -
             // a shared reference can span more than one household (see class doc comment), so
             // forename+birth-year alone isn't always enough to avoid grabbing someone else's entry.
-            return sameCensus.FirstOrDefault(w => NamesMatch(w, candidate) && SurnamesMatch(w, candidate) && BirthYearsAgree(w, candidate))
-                ?? sameCensus.FirstOrDefault(w => NamesMatch(w, candidate) && BirthYearsAgree(w, candidate));
+            return sameCensus.FirstOrDefault(w => NamesMatch(w, candidate, cache) && SurnamesMatch(w, candidate, cache) && BirthYearsAgree(w, candidate))
+                ?? sameCensus.FirstOrDefault(w => NamesMatch(w, candidate, cache) && BirthYearsAgree(w, candidate));
         }
 
         static bool BirthYearsAgree(LostCousin website, CensusIndividual candidate) =>
             website.BirthYear <= 0 || !candidate.BirthDate.IsKnown || Math.Abs(website.BirthYear - candidate.BirthDate.StartDate.Year) <= 5;
 
-        static bool NamesMatch(LostCousin website, CensusIndividual candidate)
+        static bool NamesMatch(LostCousin website, CensusIndividual candidate, CandidateNameCache cache)
         {
             string webForename = ExtractForename(website.Name);
             if (string.IsNullOrEmpty(webForename) || string.IsNullOrEmpty(candidate.LCForename))
@@ -102,26 +139,29 @@ namespace FTAnalyzer.Exports
             string webStandardised = FamilyTree.Instance.GetStandardisedName(candidate.IsMale, webForename);
             if (string.Equals(webStandardised, candidate.StandardisedName, StringComparison.OrdinalIgnoreCase))
                 return true;
-            return new DoubleMetaphone(webForename).PrimaryKey == new DoubleMetaphone(candidate.LCForename).PrimaryKey;
+            // website.ForenameMetaphone was already computed once in LostCousin.SetMetaphones - only
+            // the candidate side needs computing (and caching) here.
+            return website.ForenameMetaphone == cache.ForenameMetaphone(candidate);
         }
 
         // Used both by FindMatch/Reconcile above (a shared reference can span more than one
         // household, so forename+birth-year alone isn't always a safe disambiguator - see class doc
         // comment) and by FindPossibleMatches below (which has no reference to narrow by at all, so
         // without this it would happily match any same-forename, same-birth-year person anywhere in
-        // the tree). Compares against the candidate's OWN SurnameAtDate rather than CensusSurname
-        // (the family's surname) - correctly walks a woman's marriage history up to the census date
-        // herself, rather than depending on the CensusFamily grouping (Husband/Wife/eldest child) she
-        // happens to have been placed in already being right.
-        static bool SurnamesMatch(LostCousin website, CensusIndividual candidate)
+        // the tree). Compares against the candidate's OWN SurnameAtDate (via cache) rather than
+        // CensusSurname (the family's surname) - correctly walks a woman's marriage history up to the
+        // census date herself, rather than depending on the CensusFamily grouping (Husband/Wife/
+        // eldest child) she happens to have been placed in already being right.
+        static bool SurnamesMatch(LostCousin website, CensusIndividual candidate, CandidateNameCache cache)
         {
             string webSurname = ExtractSurname(website.Name);
-            string candidateSurname = candidate.SurnameAtDate(candidate.CensusDate);
+            string candidateSurname = cache.SurnameAtDate(candidate);
             if (string.IsNullOrEmpty(webSurname) || string.IsNullOrEmpty(candidateSurname))
                 return false;
             if (string.Equals(webSurname, candidateSurname, StringComparison.OrdinalIgnoreCase))
                 return true;
-            return new DoubleMetaphone(webSurname).PrimaryKey == new DoubleMetaphone(candidateSurname).PrimaryKey;
+            // website.SurnameMetaphone was already computed once in LostCousin.SetMetaphones.
+            return website.SurnameMetaphone == cache.SurnameMetaphone(candidate);
         }
 
         // LostCousin.Name is "Surname, Forename(s)" (see LostCousin.SetMetaphones).
@@ -197,6 +237,7 @@ namespace FTAnalyzer.Exports
         {
             List<CensusIndividual> uncited = [.. allCensusIndividuals.Where(c =>
                 c.CensusReference is null || c.CensusReference.Status != CensusReference.ReferenceStatus.GOOD)];
+            CandidateNameCache cache = new();
 
             List<PossibleMatch> result = [];
             foreach (LostCousin website in unmatchedWebsiteEntries)
@@ -207,9 +248,9 @@ namespace FTAnalyzer.Exports
                     website.CensusDate is null || website.CensusDate == c.CensusDate)];
 
                 CensusIndividual? match =
-                    UniqueMatch(sameCensus, c => FullNameMatches(website, c) && SurnamesMatch(website, c) && ExactBirthYear(website, c))
-                    ?? UniqueMatch(sameCensus, c => FullNameMatches(website, c) && SurnamesMatch(website, c) && BirthYearsAgree(website, c))
-                    ?? UniqueMatch(sameCensus, c => NamesMatch(website, c) && SurnamesMatch(website, c) && BirthYearsAgree(website, c));
+                    UniqueMatch(sameCensus, c => FullNameMatches(website, c) && SurnamesMatch(website, c, cache) && ExactBirthYear(website, c))
+                    ?? UniqueMatch(sameCensus, c => FullNameMatches(website, c) && SurnamesMatch(website, c, cache) && BirthYearsAgree(website, c))
+                    ?? UniqueMatch(sameCensus, c => NamesMatch(website, c, cache) && SurnamesMatch(website, c, cache) && BirthYearsAgree(website, c));
                 if (match is not null)
                     result.Add(new PossibleMatch(match, website));
             }
