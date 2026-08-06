@@ -106,6 +106,62 @@ namespace FTAnalyzer.Exports
             return reference.CompactReference;
         }
 
+        // For an unmatched Lost Cousins entry, the exact note text that (if added to that person's
+        // source citation) CensusReference's own parsing will recognise and rebuild into this same
+        // reference - a documented last-resort format already used for Canada 1881 (see
+        // Instructions#lc-reference-formats). Round-trip correctness (this exact output, fed back in
+        // as a citation, parses to GOOD with the same field values) is checked directly against
+        // CensusReference's real parsing path in LostCousinsCensusReferenceSuggestionTest - anyone
+        // changing either side must keep both in sync.
+        //
+        // Lost Cousins itself supports nine censuses (see the "Add an Ancestor" form's own drop-
+        // down); this method only offers a quick-fix note for the four where the format captures
+        // every field CensusReference's LC_CENSUS_PATTERN_* matcher needs, in the same field order
+        // Lost Cousins' own website reference already comes in (see Utilities/RegexPatterns.cs). The
+        // other five all fall through to the explanatory message below, for three different reasons:
+        //  - England & Wales 1841 has no such format at all - it only captures 3 numbers (Piece/
+        //    Folio/Page) with no field for the Book number 1841 also needs, so feeding it Lost
+        //    Cousins' own 4-number reference would silently misread Book as Folio and drop Page.
+        //  - Scotland 1881's format takes a Parish name/ID, not the numeric Registration District
+        //    Lost Cousins' own reference shows - and there's no reliable way back from one RD to a
+        //    single parish (several parishes can share one).
+        //  - US 1880 has no such format defined at all.
+        //  - Ireland 1911 and Newfoundland 1921 aren't matched by Family Tree Analyzer at all yet
+        //    (see Instructions#lc-reference-formats) - there's no LC_CENSUS_PATTERN for either, so
+        //    no note could ever help regardless of format. Newfoundland has no CensusDate constant
+        //    at all (website.CensusDate is null for it), which the fallthrough below handles the
+        //    same way as any other unrecognised value.
+        //
+        // websiteReference is stripped of every whitespace character first, not just collapsed -
+        // LC_CENSUS_PATTERN_* requires the digits and slashes to run together with nothing in
+        // between, and nothing guarantees the website's own page rendering never puts a stray space
+        // around a separator (ClearWhiteSpace, applied when this value was scraped, only collapses
+        // repeated whitespace, it doesn't remove single spaces).
+        public static string? SuggestedCitationNote(string websiteReference, CensusDate? censusDate)
+        {
+            if (string.IsNullOrWhiteSpace(websiteReference)) return null;
+            string reference = new string(websiteReference.Where(c => !char.IsWhiteSpace(c)).ToArray());
+            // Reference equality, not CensusDate.Equals (inherited from FactDate, which compares only
+            // the calendar date): two unrelated censuses can fall on the same calendar date - England
+            // & Wales 1881 and Scotland 1881 were both taken the night of "03 APR 1881", and England
+            // & Wales 1911 and Ireland 1911 both on "02 APR 1911" - so EWCENSUS1881.Equals(
+            // SCOTCENSUS1881) and EWCENSUS1911.Equals(IRELANDCENSUS1911) are both true even though
+            // each pair has an incompatible reference format. Value equality would have this method
+            // hand back an England & Wales-formatted note for a Scottish or Irish entry. Every
+            // CensusDate relevant here (including website.CensusDate, which only ever gets assigned
+            // one of these exact static fields - see LostCousin's constructors) is a fixed singleton,
+            // so comparing by reference is both safe and exact.
+            string? suffix =
+                ReferenceEquals(censusDate, CensusDate.EWCENSUS1881) ? "England & Wales 1881" :
+                ReferenceEquals(censusDate, CensusDate.EWCENSUS1911) ? "England & Wales 1911" :
+                ReferenceEquals(censusDate, CensusDate.CANADACENSUS1881) ? "Canada 1881" :
+                ReferenceEquals(censusDate, CensusDate.USCENSUS1940) ? "US 1940" :
+                null;
+            return suffix is not null
+                ? $"{reference} {suffix}"
+                : "No quick-fix note for this census - see the reference format guide";
+        }
+
         // Lost Cousins collapses a blank field to nothing rather than an empty slot (see
         // LostCousin.FixReference, which replaces "&refN=" markers with "/" then collapses the
         // resulting "//" - i.e. exactly this filter-then-join), so building a reference to compare
