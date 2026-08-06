@@ -121,6 +121,15 @@ namespace FTAnalyzer.Utilities
         const string LC_CENSUS_PATTERN_1911_EW = @"(\d{1,5})\/(\d{1,3}).*?England & Wales 1911";
         const string LC_CENSUS_PATTERN_SCOT = @"(\d{1,5}-?[AB12]?)\/(\d{1,3})\/(\d{1,3}).*?Scotland 1881";
         const string LC_CENSUS_PATTERN_1940US = @"(\d{1,5}-?[AB]?)\/(\d{1,2}[AB]?-\d{1,2}[AB]?)\/(\d{1,3}[AB]?).*?US 1940";
+        // Only 2 numbers (Roll/Page) unlike every other LC_CENSUS_PATTERN_* here, all of which have
+        // a 3rd or 4th number to anchor against - so this needs its own lookaround guard (extending
+        // LC_CENSUS_PATTERN_1881CANADA's) to stop it grabbing the middle of an unrelated longer
+        // number run rather than a genuine standalone "Roll/Page" pair. Also excludes a hyphen, not
+        // just a digit or slash: caught by LcCensusPattern1940USRegressionTests' deliberately-wrong-
+        // suffix case "1141/8-14/9A US 1880" - the 1940 pattern's hyphenated ED format ("8-14") would
+        // otherwise let this one match "1141/8" out of the middle, since a hyphen satisfied the
+        // narrower [\d\/]-only guard LC_CENSUS_PATTERN_1881CANADA uses.
+        const string LC_CENSUS_PATTERN_1880US = @"(?<![\d\/-])(\d{1,5})\/(\d{1,4}[ABCD]?)(?![\d\/-]).*?US 1880";
         const string LC_CENSUS_PATTERN_1881CANADA = @"(?<![\d\/])(\d{1,5})\/(\d{1,3})\/(\d{1,3})(?![\d\/]).*?Canada 1881";
         const string LC_ED_PATTERN = @"\d{1,3}[A-Z]?";
 
@@ -438,6 +447,9 @@ namespace FTAnalyzer.Utilities
 
         [GeneratedRegex(LC_CENSUS_PATTERN_1940US, RegexOptions.IgnoreCase)]
         internal static partial Regex LcCensusPattern1940Us();
+
+        [GeneratedRegex(LC_CENSUS_PATTERN_1880US, RegexOptions.IgnoreCase)]
+        internal static partial Regex LcCensusPattern1880Us();
 
         [GeneratedRegex(LC_CENSUS_PATTERN_1881CANADA, RegexOptions.IgnoreCase)]
         internal static partial Regex LcCensusPattern1881Canada();

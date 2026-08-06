@@ -115,10 +115,10 @@ namespace FTAnalyzer.Exports
         // changing either side must keep both in sync.
         //
         // Lost Cousins itself supports nine censuses (see the "Add an Ancestor" form's own drop-
-        // down); this method offers a quick-fix note for six of them, using whichever existing
+        // down); this method offers a quick-fix note for seven of them, using whichever existing
         // CensusReference pattern accepts a bare number-only reference in the same field order Lost
         // Cousins' own website reference already comes in (see Utilities/RegexPatterns.cs) - the LC-
-        // specific LC_CENSUS_PATTERN_* ones for the four that need a trailing "<census> <year>" hint
+        // specific LC_CENSUS_PATTERN_* ones for the five that need a trailing "<census> <year>" hint
         // to disambiguate, plus one general-purpose pattern that doesn't need one at all:
         //  - Scotland 1881 uses LC_CENSUS_PATTERN_SCOT's Registration District number directly as
         //    the Parish field - which reads oddly given the field name, but matches how
@@ -126,19 +126,20 @@ namespace FTAnalyzer.Exports
         //    parish name/ID, and ScottishParishes.xml gives every RD its own single parish (verified:
         //    zero duplicate RD values across all 1197 entries) - so RD round-trips through it
         //    exactly, with no ambiguity to resolve.
+        //  - US 1880 uses LC_CENSUS_PATTERN_1880US, added specifically for this - unlike every
+        //    general-purpose US census pattern (which all require an Enumeration District Lost
+        //    Cousins' own 1880 reference never has), this one only needs Roll/Page, with a
+        //    lookaround guard (matching LC_CENSUS_PATTERN_1881CANADA's) so a bare 2-number pattern
+        //    can't grab the middle of some unrelated longer number run.
         //  - England & Wales 1841 uses EW_CENSUS_1841_51_PATTERN8 ("HO107/Piece/Book/Folio/Page"),
         //    a bare slash-separated form that (unlike the LC-specific pattern for 1881/1911, which
         //    only has room for 3 numbers) already captures all 4 fields 1841 needs, in the same
         //    order Lost Cousins' own reference has them.
-        // The other three fall through to the explanatory message below, for two different reasons:
-        //  - US 1880 has no such format defined at all - every existing US census pattern requires
-        //    an Enumeration District field, which Lost Cousins' own 1880 reference never has (it's
-        //    Roll/Page only).
-        //  - Ireland 1911 and Newfoundland 1921 aren't matched by Family Tree Analyzer at all yet
-        //    (see Instructions#lc-reference-formats) - there's no CensusReference pattern for either,
-        //    so no note could ever help regardless of format. Newfoundland has no CensusDate
-        //    constant at all (website.CensusDate is null for it), which the fallthrough below
-        //    handles the same way as any other unrecognised value.
+        // Ireland 1911 and Newfoundland 1921 fall through to the explanatory message below - neither
+        // is matched by Family Tree Analyzer at all yet (see Instructions#lc-reference-formats),
+        // there's no CensusReference pattern for either, so no note could ever help regardless of
+        // format. Newfoundland has no CensusDate constant at all (website.CensusDate is null for
+        // it), which the fallthrough below handles the same way as any other unrecognised value.
         //
         // websiteReference is stripped of every whitespace character first, not just collapsed -
         // every pattern below requires the digits and slashes to run together with nothing in
@@ -170,6 +171,7 @@ namespace FTAnalyzer.Exports
                 ReferenceEquals(censusDate, CensusDate.CANADACENSUS1881) ? "Canada 1881" :
                 ReferenceEquals(censusDate, CensusDate.USCENSUS1940) ? "US 1940" :
                 ReferenceEquals(censusDate, CensusDate.SCOTCENSUS1881) ? "Scotland 1881" :
+                ReferenceEquals(censusDate, CensusDate.USCENSUS1880) ? "US 1880" :
                 null;
             return suffix is not null
                 ? $"{reference} {suffix}"

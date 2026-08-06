@@ -382,6 +382,7 @@ namespace FTAnalyzer
                 "LC_CENSUS_PATTERN_1911_EW" => RegexPatterns.LcCensusPattern1911Ew().Match(text),
                 "LC_CENSUS_PATTERN_SCOT" => RegexPatterns.LcCensusPatternScot().Match(text),
                 "LC_CENSUS_PATTERN_1940US" => RegexPatterns.LcCensusPattern1940Us().Match(text),
+                "LC_CENSUS_PATTERN_1880US" => RegexPatterns.LcCensusPattern1880Us().Match(text),
                 "LC_CENSUS_PATTERN_1881CANADA" => RegexPatterns.LcCensusPattern1881Canada().Match(text),
                 "EW_MISSINGCLASS_PATTERN" => RegexPatterns.EwMissingclassPattern().Match(text),
                 "EW_MISSINGCLASS_PATTERN_SN" => RegexPatterns.EwMissingclassPatternSn().Match(text),
@@ -483,6 +484,7 @@ namespace FTAnalyzer
             WriteTimer("LC_CENSUS_PATTERN_1911_EW", text, output);
             WriteTimer("LC_CENSUS_PATTERN_SCOT", text, output);
             WriteTimer("LC_CENSUS_PATTERN_1940US", text, output);
+            WriteTimer("LC_CENSUS_PATTERN_1880US", text, output);
             WriteTimer("LC_CENSUS_PATTERN_1881CANADA", text, output);
             WriteTimer("EW_MISSINGCLASS_PATTERN", text, output);
             WriteTimer("EW_MISSINGCLASS_PATTERN_SN", text, output);
@@ -1592,6 +1594,15 @@ namespace FTAnalyzer
                 Roll = matcher.Groups[1].ToString();
                 ED = matcher.Groups[2].ToString();
                 Page = matcher.Groups[3].ToString();
+                SetFlagsandCountry(false, true, Countries.UNITED_STATES, ReferenceStatus.GOOD, matcher.Value);
+                return true;
+            }
+            matcher = RegexPatterns.LcCensusPattern1880Us().Match(text);
+            if (matcher.Success)
+            {
+                Class = "US1880";
+                Roll = matcher.Groups[1].ToString();
+                Page = matcher.Groups[2].ToString();
                 SetFlagsandCountry(false, true, Countries.UNITED_STATES, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
