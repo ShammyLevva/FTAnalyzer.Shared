@@ -70,6 +70,18 @@ namespace FTAnalyzer
                 return null;
             }
         }
+
+        // The reference Lost Cousins actually needs for THIS person - always the head of household's
+        // own citation (see CensusFamily.HeadOfHousehold), even for a household member whose own
+        // citation correctly captured a different census page the household overflowed onto. Falls
+        // back to this person's own CensusReference if the family has no resolvable head, or the head
+        // has none of their own recorded (nothing better to defer to) - a no-op for the head of
+        // household themselves, since HeadOfHousehold resolves to this same instance. Used only for
+        // building/matching a Lost Cousins reference (LostCousinsCensusReference.Build,
+        // LostCousinsClient.GetCensusSpecificFields) - CensusReference itself (and everything derived
+        // from it for display, e.g. CensusRef/CompactCensusRef) deliberately still reflects this
+        // person's OWN citation, so a mismatch between the two can be seen and diagnosed.
+        public CensusReference? HouseholdCensusReference => Family.HeadOfHousehold?.CensusReference ?? CensusReference;
 #if __PC__
         public System.Windows.Forms.DataGridViewCellStyle CellStyle { get; set; } = new();
 #endif

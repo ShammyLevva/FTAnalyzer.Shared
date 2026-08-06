@@ -44,8 +44,11 @@ namespace FTAnalyzer.Exports
             // this user's "Use compact census references" display preference - compare like for like.
             // Built via LostCousinsCensusReference, not candidate.CompactCensusRef directly, since
             // Lost Cousins' own reference doesn't always contain the same fields CensusReference's
-            // general-purpose display string does (see LostCousinsCensusReference for why).
-            string candidateRef = LostCousinsCensusReference.Build(candidate.CensusReference);
+            // general-purpose display string does (see LostCousinsCensusReference for why). Built from
+            // HouseholdCensusReference, not CensusReference - Lost Cousins pins every household member
+            // to the head of household's own reference, even for someone whose own citation correctly
+            // captured a different (typically later) census page the household overflowed onto.
+            string candidateRef = LostCousinsCensusReference.Build(candidate.HouseholdCensusReference);
             if (string.IsNullOrWhiteSpace(candidateRef))
                 return null;
             if (!websiteByReference.TryGetValue(Normalise(candidateRef), out List<LostCousin>? group))
@@ -153,6 +156,14 @@ namespace FTAnalyzer.Exports
         /// (same first forename, birth years a year or two apart) are exactly the case a first-
         /// forename-only match can't tell apart, and picking the wrong one sends the user to fix the
         /// wrong person's citation, which is worse than no suggestion at all.
+        ///
+        /// Every tier requires SurnamesMatch, even the full-name tiers below - a household member
+        /// whose own citation isn't good enough to build a reference (why they're in the uncited pool
+        /// in the first place) is being searched for across the WHOLE tree, not just their own
+        /// household, so an unrelated person elsewhere in the tree who happens to share a forename and
+        /// birth year (a married-name daughter, an unrelated same-name family) is a real risk without
+        /// it - see the regression test for a real case this produced (a household's "Martha" wrongly
+        /// suggested as an unrelated "Martha Pennington").
         /// </summary>
         public static List<PossibleMatch> FindPossibleMatches(
             IReadOnlyList<LostCousin> unmatchedWebsiteEntries, IReadOnlyList<CensusIndividual> allCensusIndividuals)
@@ -169,8 +180,8 @@ namespace FTAnalyzer.Exports
                     website.CensusDate is null || website.CensusDate == c.CensusDate)];
 
                 CensusIndividual? match =
-                    UniqueMatch(sameCensus, c => FullNameMatches(website, c) && ExactBirthYear(website, c))
-                    ?? UniqueMatch(sameCensus, c => FullNameMatches(website, c) && BirthYearsAgree(website, c))
+                    UniqueMatch(sameCensus, c => FullNameMatches(website, c) && SurnamesMatch(website, c) && ExactBirthYear(website, c))
+                    ?? UniqueMatch(sameCensus, c => FullNameMatches(website, c) && SurnamesMatch(website, c) && BirthYearsAgree(website, c))
                     ?? UniqueMatch(sameCensus, c => NamesMatch(website, c) && SurnamesMatch(website, c) && BirthYearsAgree(website, c));
                 if (match is not null)
                     result.Add(new PossibleMatch(match, website));

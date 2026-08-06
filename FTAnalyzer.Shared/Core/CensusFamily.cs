@@ -143,6 +143,15 @@ namespace FTAnalyzer
             }
         }
 
+        // Proxy for "head of household" - Lost Cousins requires every member of a household to share
+        // the SAME census reference, always the head of household's own, even for a member whose own
+        // citation correctly captured a different (typically later) census page the household
+        // overflowed onto. Same fallback order as Surname above (Husband, then Wife, then eldest
+        // child) - won't catch an unrelated boarder/lodger recorded on the same census page under a
+        // different family group, but is a decent proxy for the common case. See
+        // CensusIndividual.HouseholdCensusReference, the only consumer.
+        public CensusIndividual? HeadOfHousehold => Husband ?? Wife ?? Children.FirstOrDefault();
+
         public int ChildrenAlive => FamilyChildren.Count(x => x.IsAlive(CensusDate));
 
         public int ChildrenDead => FamilyChildren.Count(x => !x.IsAlive(CensusDate) && x.BirthDate.IsBefore(CensusDate));

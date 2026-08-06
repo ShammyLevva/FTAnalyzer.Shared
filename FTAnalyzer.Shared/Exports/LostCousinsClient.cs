@@ -157,7 +157,14 @@ namespace FTAnalyzer.Exports
 
         public string GetCensusSpecificFields(Dictionary<string, string> output, CensusIndividual ind)
         {
-            CensusReference? censusRef = ind.CensusReference;
+            // Lost Cousins pins every household member to the head of household's own reference, even
+            // for someone whose own citation correctly captured a different (typically later) census
+            // page the household overflowed onto - see CensusIndividual.HouseholdCensusReference. This
+            // also keeps the "similar" flag below correct for consecutive uploads of the same
+            // household: without it, two siblings on different physical pages would build different
+            // newRef values here and never be flagged as similar even though Lost Cousins treats them
+            // as the same household entry.
+            CensusReference? censusRef = ind.HouseholdCensusReference;
             if (censusRef is null) return string.Empty;
             if (ind.CensusDate.Overlaps(CensusDate.EWCENSUS1841) && Countries.IsEnglandWales(ind.CensusCountry))
             {
