@@ -115,25 +115,33 @@ namespace FTAnalyzer.Exports
         // changing either side must keep both in sync.
         //
         // Lost Cousins itself supports nine censuses (see the "Add an Ancestor" form's own drop-
-        // down); this method only offers a quick-fix note for the four where the format captures
-        // every field CensusReference's LC_CENSUS_PATTERN_* matcher needs, in the same field order
-        // Lost Cousins' own website reference already comes in (see Utilities/RegexPatterns.cs). The
-        // other five all fall through to the explanatory message below, for three different reasons:
-        //  - England & Wales 1841 has no such format at all - it only captures 3 numbers (Piece/
-        //    Folio/Page) with no field for the Book number 1841 also needs, so feeding it Lost
-        //    Cousins' own 4-number reference would silently misread Book as Folio and drop Page.
-        //  - Scotland 1881's format takes a Parish name/ID, not the numeric Registration District
-        //    Lost Cousins' own reference shows - and there's no reliable way back from one RD to a
-        //    single parish (several parishes can share one).
-        //  - US 1880 has no such format defined at all.
+        // down); this method offers a quick-fix note for six of them, using whichever existing
+        // CensusReference pattern accepts a bare number-only reference in the same field order Lost
+        // Cousins' own website reference already comes in (see Utilities/RegexPatterns.cs) - the LC-
+        // specific LC_CENSUS_PATTERN_* ones for the four that need a trailing "<census> <year>" hint
+        // to disambiguate, plus one general-purpose pattern that doesn't need one at all:
+        //  - Scotland 1881 uses LC_CENSUS_PATTERN_SCOT's Registration District number directly as
+        //    the Parish field - which reads oddly given the field name, but matches how
+        //    ScottishParish.FindParishFromID already works: it's keyed by RD, not by a separate
+        //    parish name/ID, and ScottishParishes.xml gives every RD its own single parish (verified:
+        //    zero duplicate RD values across all 1197 entries) - so RD round-trips through it
+        //    exactly, with no ambiguity to resolve.
+        //  - England & Wales 1841 uses EW_CENSUS_1841_51_PATTERN8 ("HO107/Piece/Book/Folio/Page"),
+        //    a bare slash-separated form that (unlike the LC-specific pattern for 1881/1911, which
+        //    only has room for 3 numbers) already captures all 4 fields 1841 needs, in the same
+        //    order Lost Cousins' own reference has them.
+        // The other three fall through to the explanatory message below, for two different reasons:
+        //  - US 1880 has no such format defined at all - every existing US census pattern requires
+        //    an Enumeration District field, which Lost Cousins' own 1880 reference never has (it's
+        //    Roll/Page only).
         //  - Ireland 1911 and Newfoundland 1921 aren't matched by Family Tree Analyzer at all yet
-        //    (see Instructions#lc-reference-formats) - there's no LC_CENSUS_PATTERN for either, so
-        //    no note could ever help regardless of format. Newfoundland has no CensusDate constant
-        //    at all (website.CensusDate is null for it), which the fallthrough below handles the
-        //    same way as any other unrecognised value.
+        //    (see Instructions#lc-reference-formats) - there's no CensusReference pattern for either,
+        //    so no note could ever help regardless of format. Newfoundland has no CensusDate
+        //    constant at all (website.CensusDate is null for it), which the fallthrough below
+        //    handles the same way as any other unrecognised value.
         //
         // websiteReference is stripped of every whitespace character first, not just collapsed -
-        // LC_CENSUS_PATTERN_* requires the digits and slashes to run together with nothing in
+        // every pattern below requires the digits and slashes to run together with nothing in
         // between, and nothing guarantees the website's own page rendering never puts a stray space
         // around a separator (ClearWhiteSpace, applied when this value was scraped, only collapses
         // repeated whitespace, it doesn't remove single spaces).
@@ -141,6 +149,11 @@ namespace FTAnalyzer.Exports
         {
             if (string.IsNullOrWhiteSpace(websiteReference)) return null;
             string reference = new string(websiteReference.Where(c => !char.IsWhiteSpace(c)).ToArray());
+            // England & Wales 1841 needs a literal "HO107/" prefix instead of a trailing "<census>
+            // <year>" hint - EW_CENSUS_1841_51_PATTERN8 doesn't look for one at all, and there's no
+            // 3-number LC-specific pattern to disambiguate from the way the other years need.
+            if (ReferenceEquals(censusDate, CensusDate.EWCENSUS1841))
+                return $"HO107/{reference}";
             // Reference equality, not CensusDate.Equals (inherited from FactDate, which compares only
             // the calendar date): two unrelated censuses can fall on the same calendar date - England
             // & Wales 1881 and Scotland 1881 were both taken the night of "03 APR 1881", and England
@@ -156,6 +169,7 @@ namespace FTAnalyzer.Exports
                 ReferenceEquals(censusDate, CensusDate.EWCENSUS1911) ? "England & Wales 1911" :
                 ReferenceEquals(censusDate, CensusDate.CANADACENSUS1881) ? "Canada 1881" :
                 ReferenceEquals(censusDate, CensusDate.USCENSUS1940) ? "US 1940" :
+                ReferenceEquals(censusDate, CensusDate.SCOTCENSUS1881) ? "Scotland 1881" :
                 null;
             return suffix is not null
                 ? $"{reference} {suffix}"
