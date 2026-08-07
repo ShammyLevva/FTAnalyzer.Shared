@@ -212,7 +212,17 @@ namespace FTAnalyzer
 			sharedFacts = [];
 			//ancestryTreeTags = [];
 			occupations = [];
-			names = [];
+			// Not reset to [] like everything else here - names holds the GINAP nickname-
+			// standardisation dataset (Fred/Frederic, Maggie/Margaret, ...), loaded once via
+			// LoadStandardisedNames and otherwise unrelated to the tree being loaded. Clearing it on
+			// every GEDCOM parse (ResetData runs at the start of every LoadTreeHeader call) silently
+			// discarded it forever, since nothing ever reloads it afterwards - GetStandardisedName
+			// then always returned its input unchanged, breaking nickname-aware name matching
+			// (Individual.StandardisedName, LostCousinsReconciliation.NamesMatch, duplicate
+			// detection) for every tree loaded after the first. ??= keeps names non-null (satisfying
+			// [MemberNotNull] below) on the very first call, from the constructor, before
+			// LoadStandardisedNames has run - and is a no-op on every later reset.
+			names ??= [];
 			unknownIndividualFactTypes = [];
 			unknownFamilyFactTypes = [];
 			DataErrorTypes = [];
@@ -551,7 +561,13 @@ namespace FTAnalyzer
 				{
 					StandardisedName original = new(values[0] == "2", values[2]);
 					StandardisedName standardised = new(values[1] == "2", values[3]);
-					names.Add(original, standardised);
+					// TryAdd, not Add: GINAP.txt has at least one literal duplicate line (e.g.
+					// "Catherin"/female appears twice). Add would throw on the second occurrence,
+					// and since nothing catches it inside this loop, that exception used to propagate
+					// up to LoadStandardisedNames' try/catch and abort the read entirely - silently
+					// discarding every remaining line in the file, not just the duplicate. First
+					// occurrence wins; a genuine future duplicate is data noise, not worth failing on.
+					names.TryAdd(original, standardised);
 				}
 			}
 		}

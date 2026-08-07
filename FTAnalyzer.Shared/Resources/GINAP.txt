@@ -3476,7 +3476,6 @@ sex-o,sex-s,gname-o,gname-s
 1,1,Mrye,Mary
 1,1,Ursual,Ursula
 1,1,Wliza,Elizabet
-1,1,Catherin,Katherin
 1,1,Catarina,Katherin
 1,1,Isabell,Isabella
 1,1,Katerina,Katherin
