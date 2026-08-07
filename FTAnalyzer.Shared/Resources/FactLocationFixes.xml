@@ -22,11 +22,13 @@
 			<CountryTypo from="Great Britain"    to="England" />
 			<CountryTypo from="Aust"    to="Australia" />
 			<CountryTypo from="Eire"    to="Ireland" />
+			<CountryTypo from="Ire"     to="Ireland" />
 			<CountryTypo from="Scot"    to="Scotland" />
 			<CountryType from="Wal"     to="Wales" />
-			<CountryTypo from="Wales UK" to="Wales" />
-			<CountryTypo from="England UK" to="England" />
+			<CountryTypo from="Wales UK"    to="Wales" />
+			<CountryTypo from="England UK"  to="England" />
 			<CountryType from="Scotland UK" to="Scotland" />
+			<CountryTypo from="Ireland UK"  to="Ireland" />
 			<CountryTypo from="Holland" to="Netherlands" />
 			<CountryTypo from="The Netherlands" to="Netherlands" />
 			<CountryTypo from="St Lucia" to="Saint Lucia" />
@@ -45,6 +47,7 @@
 			<CountryTypo from="West Germany" to="Germany" />
 			<CountryTypo from="N Wales" to="Wales" />
 			<CountryTypo from="S Wales" to="Wales" />
+			<CountryType from="Western Isles" to="Scotland" />
 			<CountryTypo from="Channel Isles" to="Channel Islands" />
 			<CountryTypo from="Russian Federation" to="Russia" />
 			<CountryTypo from="Russland" to="Russia" />
@@ -56,7 +59,7 @@
 			<CountryTypo from="Zuid Afrika" to ="South Africa" />
 			<CountryTypo from="S Africa" to ="South Africa" />
 			<CountryTypo from="Algerie" to="Algeria" />
-			
+					
 			
 <!-- ============================================================
      Native-language / endonym translations
