@@ -113,6 +113,14 @@ namespace FTAnalyzer
 
         static Dictionary<string, string> COUNTRY_SHIFTS = new(StringComparer.OrdinalIgnoreCase);
         static Dictionary<string, string> CITY_ADD_COUNTRY = new(StringComparer.OrdinalIgnoreCase);
+        // Declared ahead of UNKNOWN_LOCATION/BLANK_LOCATION/TEMP below deliberately - those construct
+        // FactLocation instances as part of their OWN static field initializers, which now reach
+        // StripTrailingPostcode() unconditionally. Static field initializers run in textual order, so
+        // if this field were declared after them (as it originally was, alongside numericFix further
+        // down), it would still be null the first time StripTrailingPostcode() runs - a
+        // NullReferenceException in the type initializer, caught by a unit test.
+        static readonly Regex trailingPostcode = RegexTrailingPostcode();
+
         const string UNKNOWNSTRING = "Unknown";
         public readonly static FactLocation UNKNOWN_LOCATION = new(UNKNOWNSTRING, "0.0", "0.0", Geocode.GEDCOM_USER);
         public readonly static FactLocation BLANK_LOCATION = new(string.Empty, "0.0", "0.0", Geocode.UNKNOWN);
@@ -478,6 +486,7 @@ namespace FTAnalyzer
                 else
                 {
                     TrimLocations();
+                    StripTrailingPostcode();
                     if (!GeneralSettings.Default.AllowEmptyLocations)
                         FixEmptyFields();
                     RemoveDiacritics();
@@ -824,6 +833,85 @@ namespace FTAnalyzer
                 Address = Place;
                 Place = string.Empty;
             }
+        }
+
+        // GEDCOM locations sometimes carry a UK postcode tacked onto the end of a segment - either as
+        // its own comma-separated "level" (e.g. "6 Sussex Road, SK3 0JL") or appended straight onto a
+        // place name with no comma of its own (e.g. "Abbey Wood, London SE2"). Postcodes aren't part
+        // of the Country/Region/SubRegion/Address/Place hierarchy this app models, and left in place
+        // the comma-split above misreads a postcode-only segment as if it WERE the country. Run before
+        // FixEmptyFields() so a segment that turns out to be nothing but a postcode collapses away via
+        // the existing empty-field cascade rather than sticking around as a bogus "Country".
+        //
+        // Built from the standard UK postcode grammar (area letter(s) + district digit(s) + optional
+        // unit code), not a loose "letters then digits" guess, and anchored to the very end of each
+        // field - this keeps false positives rare even for a bare outward/district code like "SE2"/
+        // "E8" with no unit code attached. It can't be perfect: a trailing road reference shaped like a
+        // district code (e.g. "...via M25") would also match. Accepted tradeoff - real trailing
+        // postcodes are far more common in genealogy place names than that specific coincidence, and a
+        // full postcode's unit code (digit+letter+letter, e.g. "0JL") essentially never occurs by
+        // chance, so the common case is effectively risk-free.
+        void StripTrailingPostcode()
+        {
+            string strippedCountry = StripPostcodeField(Country, out bool countryWasBareLondonCode);
+            string strippedRegion = StripPostcodeField(Region, out bool regionWasBareLondonCode);
+            string strippedSubRegion = StripPostcodeField(SubRegion, out bool subRegionWasBareLondonCode);
+            string strippedAddress = StripPostcodeField(Address, out bool addressWasBareLondonCode);
+            string strippedPlace = StripPostcodeField(Place, out bool placeWasBareLondonCode);
+
+            // "15 Some Road, Hackney, E8" is a common real-world way to write a London address - the
+            // postcode area letters (E/EC/N/NW/SE/SW/W/WC are exclusively London, no other UK postal
+            // area uses them) stand in for "London" entirely, occupying their own segment with nothing
+            // else alongside them. Stripped as above that segment just vanishes, leaving no trace it
+            // was ever a London address at all - so when a segment turns out to be nothing BUT a bare
+            // London-area code, and "London" isn't already spelled out somewhere else in this location,
+            // put "London" back in its place instead of letting it collapse away to empty.
+            if (countryWasBareLondonCode || regionWasBareLondonCode || subRegionWasBareLondonCode || addressWasBareLondonCode || placeWasBareLondonCode)
+            {
+                bool mentionsLondon = ContainsLondon(strippedCountry) || ContainsLondon(strippedRegion) || ContainsLondon(strippedSubRegion) || ContainsLondon(strippedAddress) || ContainsLondon(strippedPlace);
+                if (!mentionsLondon)
+                {
+                    if (countryWasBareLondonCode) strippedCountry = "London";
+                    else if (regionWasBareLondonCode) strippedRegion = "London";
+                    else if (subRegionWasBareLondonCode) strippedSubRegion = "London";
+                    else if (addressWasBareLondonCode) strippedAddress = "London";
+                    else if (placeWasBareLondonCode) strippedPlace = "London";
+                }
+            }
+
+            Country = strippedCountry;
+            Region = strippedRegion;
+            SubRegion = strippedSubRegion;
+            Address = strippedAddress;
+            Place = strippedPlace;
+        }
+
+        static bool ContainsLondon(string field) => field.Contains("London", StringComparison.OrdinalIgnoreCase);
+
+        // wasBareLondonCode is true only when the ENTIRE field was a London-area postcode with nothing
+        // else in the segment (e.g. field == "E8") - a code embedded in a longer field that already has
+        // other text (e.g. "London SE2", or a hypothetical "Pimlico SW1") leaves that other text behind
+        // as-is and never sets this flag, since there's nothing ambiguous left to fill in for those.
+        static string StripPostcodeField(string field, out bool wasBareLondonCode)
+        {
+            Match match = trailingPostcode.Match(field);
+            wasBareLondonCode = false;
+            if (!match.Success) return field;
+            string remainder = field[..match.Index].TrimEnd();
+            if (remainder.Length == 0 && IsLondonAreaCode(match.Value))
+                wasBareLondonCode = true;
+            return remainder;
+        }
+
+        static bool IsLondonAreaCode(string matchedPostcode)
+        {
+            int i = 0;
+            while (i < matchedPostcode.Length && char.IsLetter(matchedPostcode[i])) i++;
+            return matchedPostcode[..i].ToUpperInvariant() switch
+            {
+                "E" or "EC" or "N" or "NW" or "SE" or "SW" or "W" or "WC" => true,
+                _ => false
+            };
         }
 
         void FixUKGBTypos()
@@ -1456,6 +1544,9 @@ namespace FTAnalyzer
 
         [GeneratedRegex("\\d+[A-Za-z]?")]
         private static partial Regex RegexNumericFix();
+
+        [GeneratedRegex(@"\b(?:[A-Za-z][0-9]{1,2}|[A-Za-z][A-HJ-Ya-hj-y][0-9]{1,2}|[A-Za-z][0-9][A-Za-z]|[A-Za-z][A-HJ-Ya-hj-y][0-9][A-Za-z]?)(?:\s?[0-9][A-Za-z]{2})?\s*$")]
+        private static partial Regex RegexTrailingPostcode();
         #endregion
     }
 }
