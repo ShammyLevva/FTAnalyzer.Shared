@@ -1180,11 +1180,15 @@
 			<CountryToRegion region="Tasmania"              country="Australia" />
 			<CountryToRegion region="Queensland"            country="Australia" />
 			<CountryToRegion region="Victoria"              country="Australia" />
+			
+			<!-- New Zealand Cities add the County -->
+			<CountryToRegion region="Aukland"				country="New Zealand" />
 
 			<!-- Other Countries -->
 			<CountryToRegion region="Aargau"                country="Switzerland" />
 			<CountryToRegion region="Bavaria"               country="Germany" />
 			<CountryToRegion region="Prussia"               country="Germany" />
+			<CountryToRegion region="Preußen"               country="Germany" />
 			<CountryToRegion region="Crimea"	            country="Ukraine" />
 			<CountryToRegion region="Natal"				    country="South Africa" />
 
@@ -1390,11 +1394,10 @@
 			<RegionToParish parish="Sydney"         region="New South Wales" />
 			<RegionToParish parish="Melbourne"      region="Victoria" />
 			<RegionToParish parish="Brisbane"       region="Queensland" />
-			<!-- <RegionToParish parish="Perth"          region="Western Australia" /> would conflict with Scottish Perth --> 
 			<RegionToParish parish="Adelaide"       region="Southern Australia" />
 			<RegionToParish parish="Darwin"         region="Northern Territory" />
 			<RegionToParish parish="Hobart"         region="Tasmania" />
-			
+						
 			<!-- Canadian Cities add the County	-->
 			<RegionToParish parish="Toronto"        region="Ontario" />
 			<RegionToParish parish="Montreal"       region="Quebec" />
