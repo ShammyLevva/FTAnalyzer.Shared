@@ -97,15 +97,38 @@ namespace FTAnalyzer.Exports
 
         static LostCousin? FindMatch(CensusIndividual candidate, Dictionary<string, List<LostCousin>> websiteByReference, CandidateNameCache cache)
         {
+            // Lost Cousins pins every household member to the head of household's own reference, even
+            // for someone whose own citation correctly captured a different (typically later) census
+            // page the household overflowed onto - so the head's reference (HouseholdCensusReference)
+            // is tried first, exactly as before.
+            string householdRef = LostCousinsCensusReference.Build(candidate.HouseholdCensusReference);
+            LostCousin? match = FindMatchByReference(candidate, householdRef, websiteByReference, cache);
+            if (match is not null)
+                return match;
+
+            // CensusFamily.HeadOfHousehold picks whoever is simply alive at the census date (Husband,
+            // else Wife, else eldest child) - it has no way to check that person was actually
+            // enumerated WITH this family that year. A parent who'd remarried and was living in a
+            // completely different household by the census date is still picked as head, silently
+            // overriding every child's own correct reference with an unrelated one - a real case, not
+            // a hypothetical (see LostCousinsReconciliationTest.
+            // Reconcile_FallsBackToOwnReferenceWhenHeadOfHouseholdWasElsewhereThatCensus).
+            // Falling back to the individual's own reference here means a genuine match isn't thrown
+            // away just because the household-reference guess didn't hold for this person - the
+            // surname/name/birth-year checks below still guard against a coincidental collision, same
+            // as they do for the household-reference attempt above.
+            string ownRef = LostCousinsCensusReference.Build(candidate.CensusReference);
+            return ownRef == householdRef ? null : FindMatchByReference(candidate, ownRef, websiteByReference, cache);
+        }
+
+        static LostCousin? FindMatchByReference(CensusIndividual candidate, string candidateRef,
+            Dictionary<string, List<LostCousin>> websiteByReference, CandidateNameCache cache)
+        {
             // Lost Cousins' own website always shows references in compact slash form, regardless of
             // this user's "Use compact census references" display preference - compare like for like.
             // Built via LostCousinsCensusReference, not candidate.CompactCensusRef directly, since
             // Lost Cousins' own reference doesn't always contain the same fields CensusReference's
-            // general-purpose display string does (see LostCousinsCensusReference for why). Built from
-            // HouseholdCensusReference, not CensusReference - Lost Cousins pins every household member
-            // to the head of household's own reference, even for someone whose own citation correctly
-            // captured a different (typically later) census page the household overflowed onto.
-            string candidateRef = LostCousinsCensusReference.Build(candidate.HouseholdCensusReference);
+            // general-purpose display string does (see LostCousinsCensusReference for why).
             if (string.IsNullOrWhiteSpace(candidateRef))
                 return null;
             if (!websiteByReference.TryGetValue(Normalise(candidateRef), out List<LostCousin>? group))
