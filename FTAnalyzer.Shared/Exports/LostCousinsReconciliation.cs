@@ -33,6 +33,7 @@ namespace FTAnalyzer.Exports
             readonly Dictionary<CensusIndividual, string> _surnameAtDate = [];
             readonly Dictionary<CensusIndividual, string> _forenameMetaphone = [];
             readonly Dictionary<CensusIndividual, string> _surnameMetaphone = [];
+            readonly Dictionary<CensusIndividual, string> _maidenSurnameMetaphone = [];
 
             public string SurnameAtDate(CensusIndividual c)
             {
@@ -52,6 +53,13 @@ namespace FTAnalyzer.Exports
             {
                 if (!_surnameMetaphone.TryGetValue(c, out string? key))
                     _surnameMetaphone[c] = key = new DoubleMetaphone(SurnameAtDate(c)).PrimaryKey;
+                return key;
+            }
+
+            public string MaidenSurnameMetaphone(CensusIndividual c)
+            {
+                if (!_maidenSurnameMetaphone.TryGetValue(c, out string? key))
+                    _maidenSurnameMetaphone[c] = key = new DoubleMetaphone(c.Surname).PrimaryKey;
                 return key;
             }
         }
@@ -178,13 +186,36 @@ namespace FTAnalyzer.Exports
         static bool SurnamesMatch(LostCousin website, CensusIndividual candidate, CandidateNameCache cache)
         {
             string webSurname = ExtractSurname(website.Name);
-            string candidateSurname = cache.SurnameAtDate(candidate);
-            if (string.IsNullOrEmpty(webSurname) || string.IsNullOrEmpty(candidateSurname))
+            if (string.IsNullOrEmpty(webSurname))
+                return false;
+
+            string marriedSurname = cache.SurnameAtDate(candidate);
+            if (SurnameFormMatches(webSurname, marriedSurname, website.SurnameMetaphone, cache.SurnameMetaphone(candidate)))
+                return true;
+
+            // Lost Cousins doesn't require a member to enter a woman's surname exactly as it
+            // appears on the census - some members correct an entry to her maiden name (as
+            // recorded in their own family tree), even though the census itself, and this
+            // candidate's own citation, record her married name at that date. A real report: "Jane
+            // Bassett" on the 1911 census, corrected to "Jane Smith" (her maiden name) on Lost
+            // Cousins, with a perfect reference match to her husband - the reference-based match
+            // succeeded, but the surname check rejected it because Bassett/Smith share no sound in
+            // common. Falling back to her own birth surname here means a genuinely correct
+            // reference match isn't rejected just because of that choice. Skipped when it's the
+            // same string as the married name already checked above (the common case - avoids
+            // rebuilding an identical metaphone key for nothing).
+            string maidenSurname = candidate.Surname;
+            return !string.Equals(maidenSurname, marriedSurname, StringComparison.OrdinalIgnoreCase) &&
+                SurnameFormMatches(webSurname, maidenSurname, website.SurnameMetaphone, cache.MaidenSurnameMetaphone(candidate));
+        }
+
+        static bool SurnameFormMatches(string webSurname, string candidateSurname, string webMetaphone, string candidateMetaphone)
+        {
+            if (string.IsNullOrEmpty(candidateSurname))
                 return false;
             if (string.Equals(webSurname, candidateSurname, StringComparison.OrdinalIgnoreCase))
                 return true;
-            // website.SurnameMetaphone was already computed once in LostCousin.SetMetaphones.
-            return website.SurnameMetaphone == cache.SurnameMetaphone(candidate);
+            return webMetaphone == candidateMetaphone;
         }
 
         // LostCousin.Name is "Surname, Forename(s)" (see LostCousin.SetMetaphones).
