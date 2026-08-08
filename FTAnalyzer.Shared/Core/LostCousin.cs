@@ -1,5 +1,3 @@
-using System.Web;
-
 namespace FTAnalyzer
 {
     public class LostCousin : IEquatable<LostCousin>, IDisplayLostCousin
@@ -51,8 +49,11 @@ namespace FTAnalyzer
             _ = int.TryParse(birthYear, out int result);
             BirthYear = result;
             Reference = reference;
-            int ptr = weblink is null ? -1 : weblink.IndexOf("&p=", StringComparison.Ordinal);
-            WebLink = weblink is null || ptr == -1 || weblink.Length <= ptr + 3 ? null : new Uri(HttpUtility.UrlDecode(weblink[(ptr + 3)..]));
+            // Kept exactly as scraped - including whatever affiliate/tracking wrapper Lost Cousins'
+            // own page puts around the destination - rather than unwrapping it down to just the
+            // final URL. This is the link Lost Cousins itself put on the page, so it's shown to the
+            // user verbatim rather than rewritten.
+            WebLink = Uri.TryCreate(weblink, UriKind.Absolute, out Uri? parsedLink) ? parsedLink : null;
             FTAnalyzerFact = ftanalyzer;
             census ??= string.Empty;
             if (census.StartsWith("England", StringComparison.Ordinal))
