@@ -11,17 +11,24 @@
 			<CountryTypo from="Us"      to="United States" />
 			<CountryTypo from="Usa"     to="United States" />
 			<CountryTypo from="usa"     to="United States" />
+			<CountryType from="Stati Uniti" to="United States" />
 			<CountryTypo from="NZ"      to="New Zealand" />
 			<CountryTypo from="N Z"     to="New Zealand" />
+			<CountryType from="Nuova Zelanda" to="New Zealand" />
 			<CountryTypo from="UK"      to="England" />
 			<CountryTypo from="U K"     to="England" />
+			<CountryType from="Regno Unito" to="England" />
+			<CountryTypo from="United Kingdom" to="England" />
+			<CountryType from="Royaume-Uni" to="England" />
 			<CountryTypo from="Eng"     to="England" />
 			<CountryTypo from="Engl"    to="England" />
 			<CountryTypo from="GB"      to="England" />
 			<CountryTypo from="G B"     to="England" />
 			<CountryTypo from="Great Britain"    to="England" />
 			<CountryTypo from="Aust"    to="Australia" />
+			<CountryType from="Australie" to="Australia" />
 			<CountryTypo from="Eire"    to="Ireland" />
+			<CountryTypo from="Irland"  to="Ireland" />
 			<CountryTypo from="Ire"     to="Ireland" />
 			<CountryTypo from="Scot"    to="Scotland" />
 			<CountryType from="Wal"     to="Wales" />
