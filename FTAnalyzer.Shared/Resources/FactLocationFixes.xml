@@ -18,7 +18,6 @@
 			<CountryTypo from="UK"      to="England" />
 			<CountryTypo from="U K"     to="England" />
 			<CountryType from="Regno Unito" to="England" />
-			<CountryTypo from="United Kingdom" to="England" />
 			<CountryType from="Royaume-Uni" to="England" />
 			<CountryTypo from="Eng"     to="England" />
 			<CountryTypo from="Engl"    to="England" />
