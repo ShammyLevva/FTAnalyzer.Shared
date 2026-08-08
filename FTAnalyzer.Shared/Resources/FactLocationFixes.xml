@@ -17,8 +17,6 @@
 			<CountryType from="Nuova Zelanda" to="New Zealand" />
 			<CountryTypo from="UK"      to="England" />
 			<CountryTypo from="U K"     to="England" />
-			<CountryType from="Regno Unito" to="England" />
-			<CountryType from="Royaume-Uni" to="England" />
 			<CountryTypo from="Eng"     to="England" />
 			<CountryTypo from="Engl"    to="England" />
 			<CountryTypo from="GB"      to="England" />
