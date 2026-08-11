@@ -131,6 +131,14 @@ namespace FTAnalyzer.Utilities
         // narrower [\d\/]-only guard LC_CENSUS_PATTERN_1881CANADA uses.
         const string LC_CENSUS_PATTERN_1880US = @"(?<![\d\/-])(\d{1,5})\/(\d{1,4}[ABCD]?)(?![\d\/-]).*?US 1880";
         const string LC_CENSUS_PATTERN_1881CANADA = @"(?<![\d\/])(\d{1,5})\/(\d{1,3})\/(\d{1,3})(?![\d\/]).*?Canada 1881";
+        // The National Archives of Ireland's own reel identifier, always 9 digits, appears
+        // unprefixed in both the old census.nationalarchives.ie viewer's URL
+        // ("reels/nai002247382/") and the current derilinx.com viewer's ("image/nai002247382.pdf")
+        // immediately after the literal "nai" - a distinctive enough prefix that (unlike every
+        // other LC_CENSUS_PATTERN_* above) it needs no "<census> <year>" suffix hint to disambiguate
+        // from another census's citation. Leading zeros are significant (it's a fixed-width field on
+        // Lost Cousins' own site) so, unlike every other pattern here, nothing trims them.
+        const string IRELAND_CENSUS_1911_PATTERN = @"nai(\d{9})";
         const string LC_ED_PATTERN = @"\d{1,3}[A-Z]?";
 
         const string PEOPLEFINDERS = @"Full Background Report";
@@ -453,6 +461,9 @@ namespace FTAnalyzer.Utilities
 
         [GeneratedRegex(LC_CENSUS_PATTERN_1881CANADA, RegexOptions.IgnoreCase)]
         internal static partial Regex LcCensusPattern1881Canada();
+
+        [GeneratedRegex(IRELAND_CENSUS_1911_PATTERN, RegexOptions.IgnoreCase)]
+        internal static partial Regex IrelandCensus1911Pattern();
 
         [GeneratedRegex(LC_ED_PATTERN, RegexOptions.IgnoreCase)]
         internal static partial Regex LcEdRegex();

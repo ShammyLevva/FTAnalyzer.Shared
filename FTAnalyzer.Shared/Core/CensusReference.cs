@@ -384,6 +384,7 @@ namespace FTAnalyzer
                 "LC_CENSUS_PATTERN_1940US" => RegexPatterns.LcCensusPattern1940Us().Match(text),
                 "LC_CENSUS_PATTERN_1880US" => RegexPatterns.LcCensusPattern1880Us().Match(text),
                 "LC_CENSUS_PATTERN_1881CANADA" => RegexPatterns.LcCensusPattern1881Canada().Match(text),
+                "IRELAND_CENSUS_1911_PATTERN" => RegexPatterns.IrelandCensus1911Pattern().Match(text),
                 "EW_MISSINGCLASS_PATTERN" => RegexPatterns.EwMissingclassPattern().Match(text),
                 "EW_MISSINGCLASS_PATTERN_SN" => RegexPatterns.EwMissingclassPatternSn().Match(text),
                 "EW_MISSINGCLASS_PATTERN2" => RegexPatterns.EwMissingclassPattern2().Match(text),
@@ -486,6 +487,7 @@ namespace FTAnalyzer
             WriteTimer("LC_CENSUS_PATTERN_1940US", text, output);
             WriteTimer("LC_CENSUS_PATTERN_1880US", text, output);
             WriteTimer("LC_CENSUS_PATTERN_1881CANADA", text, output);
+            WriteTimer("IRELAND_CENSUS_1911_PATTERN", text, output);
             WriteTimer("EW_MISSINGCLASS_PATTERN", text, output);
             WriteTimer("EW_MISSINGCLASS_PATTERN_SN", text, output);
             WriteTimer("EW_MISSINGCLASS_PATTERN2", text, output);
@@ -1606,6 +1608,15 @@ namespace FTAnalyzer
                 SetFlagsandCountry(false, true, Countries.UNITED_STATES, ReferenceStatus.GOOD, matcher.Value);
                 return true;
             }
+            matcher = RegexPatterns.IrelandCensus1911Pattern().Match(text);
+            if (matcher.Success)
+            {
+                Class = "IRL1911";
+                CensusYear = CensusDate.IRELANDCENSUS1911;
+                Piece = matcher.Groups[1].ToString();
+                SetFlagsandCountry(false, true, Countries.IRELAND, ReferenceStatus.GOOD, matcher.Value);
+                return true;
+            }
             matcher = RegexPatterns.LcCensusPattern1881Canada().Match(text);
             if (matcher.Success)
             {
@@ -1722,6 +1733,8 @@ namespace FTAnalyzer
                 return CensusDate.UKCENSUS1911;
             if (Class.Equals("RG15", StringComparison.OrdinalIgnoreCase))
                 return CensusDate.UKCENSUS1921;
+            if (Class.Equals("IRL1911", StringComparison.OrdinalIgnoreCase))
+                return CensusDate.IRELANDCENSUS1911;
             if (Class.Equals("RG101", StringComparison.OrdinalIgnoreCase))
                 return CensusDate.UKCENSUS1939;
             if (Class.StartsWith("US", StringComparison.Ordinal))
@@ -1733,6 +1746,9 @@ namespace FTAnalyzer
 
         string GetCensusURLFromReference()
         {
+            if (Country.Equals(Countries.IRELAND, StringComparison.OrdinalIgnoreCase) &&
+                CensusYear.Overlaps(CensusDate.IRELANDCENSUS1911) && Piece.Length > 0)
+                return $"https://nai.prod.derilinx.com/census/image/nai{Piece}.pdf";
             if (CensusDate.IsUKCensusYear(CensusYear, true))
             {
                 string year = CensusYear.StartDate.Year.ToString();
@@ -1960,6 +1976,14 @@ namespace FTAnalyzer
                             : $"Piece: {Piece}, Page: {Page}, Schedule {Schedule}, ED: {ED}";
                     }
                 }
+                else if (Fact.Location.Country.Equals(Countries.IRELAND, StringComparison.OrdinalIgnoreCase) &&
+                    Fact.FactDate.Overlaps(CensusDate.IRELANDCENSUS1911))
+                {
+                    // Just the National Archives of Ireland's own reel number - no Folio/Page/Schedule
+                    // split exists for this census, and (unlike every other Piece above) it's never
+                    // trimmed since its leading zeros are significant.
+                    return compact ? Piece : $"National Archives of Ireland reel: {Piece}";
+                }
             }
             else if (Parish.Length > 0 && Fact is not null)
             {
@@ -2062,6 +2086,10 @@ namespace FTAnalyzer
             }
             else if (CensusYear.Overlaps(CensusDate.IRELANDCENSUS1911) && Country == Countries.IRELAND)
             {
+                // The National Archives of Ireland's reel number is a fixed-width 9-digit field on
+                // Lost Cousins' own site - unlike every other census here, leading zeros are
+                // significant, so this must only check the shape, never trim or reformat it.
+                if (Piece.Length != 9 || !Piece.IsNumeric()) return false;
             }
             else if (CensusYear.Overlaps(CensusDate.EWCENSUS1911) && Countries.IsEnglandWales(Country))
             {

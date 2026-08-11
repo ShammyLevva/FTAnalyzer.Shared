@@ -103,6 +103,13 @@ namespace FTAnalyzer.Exports
                 if (ed.Length > 0)
                     return JoinFields(ed.TrimStart('0'), reference.Page.TrimStart('0'), reference.Family.TrimStart('0'));
             }
+            // Lost Cousins' IRL1 schema for 1911 stores just the National Archives of Ireland's own
+            // 9-digit reel identifier - no Piece/Folio/Page/Schedule split the way every other census
+            // here has. Leading zeros are significant (it's the literal fixed-width reel number
+            // printed in the archive's own URL, e.g. "002247382"), so - unlike every other field this
+            // method builds - it must never be trimmed.
+            if (reference.Country == Countries.IRELAND && reference.CensusYear.Overlaps(CensusDate.IRELANDCENSUS1911))
+                return reference.Piece;
             return reference.CompactReference;
         }
 
@@ -135,11 +142,14 @@ namespace FTAnalyzer.Exports
         //    a bare slash-separated form that (unlike the LC-specific pattern for 1881/1911, which
         //    only has room for 3 numbers) already captures all 4 fields 1841 needs, in the same
         //    order Lost Cousins' own reference has them.
-        // Ireland 1911 and Newfoundland 1921 fall through to the explanatory message below - neither
-        // is matched by Family Tree Analyzer at all yet (see Instructions#lc-reference-formats),
-        // there's no CensusReference pattern for either, so no note could ever help regardless of
-        // format. Newfoundland has no CensusDate constant at all (website.CensusDate is null for
-        // it), which the fallthrough below handles the same way as any other unrecognised value.
+        //  - Ireland 1911 uses IRELAND_CENSUS_1911_PATTERN, which needs no "<census> <year>" suffix
+        //    hint at all - the literal "nai" prefix in front of the National Archives of Ireland's
+        //    9-digit reel number is already distinctive enough on its own.
+        // Newfoundland 1921 falls through to the explanatory message below - it isn't matched by
+        // Family Tree Analyzer at all yet (see Instructions#lc-reference-formats), there's no
+        // CensusReference pattern for it, so no note could ever help regardless of format. It also
+        // has no CensusDate constant at all (website.CensusDate is null for it), which the
+        // fallthrough below handles the same way as any other unrecognised value.
         //
         // websiteReference is stripped of every whitespace character first, not just collapsed -
         // every pattern below requires the digits and slashes to run together with nothing in
@@ -155,6 +165,11 @@ namespace FTAnalyzer.Exports
             // 3-number LC-specific pattern to disambiguate from the way the other years need.
             if (ReferenceEquals(censusDate, CensusDate.EWCENSUS1841))
                 return $"HO107/{reference}";
+            // Ireland 1911 needs a literal "nai" prefix instead of a trailing "<census> <year>" hint -
+            // IRELAND_CENSUS_1911_PATTERN doesn't look for one at all, since the prefix alone is
+            // already distinctive enough to disambiguate from every other census's citation.
+            if (ReferenceEquals(censusDate, CensusDate.IRELANDCENSUS1911))
+                return $"nai{reference}";
             // Reference equality, not CensusDate.Equals (inherited from FactDate, which compares only
             // the calendar date): two unrelated censuses can fall on the same calendar date - England
             // & Wales 1881 and Scotland 1881 were both taken the night of "03 APR 1881", and England
