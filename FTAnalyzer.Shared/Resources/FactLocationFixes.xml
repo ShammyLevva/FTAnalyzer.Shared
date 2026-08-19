@@ -63,7 +63,16 @@
 			<CountryTypo from="Zuid Afrika" to ="South Africa" />
 			<CountryTypo from="S Africa" to ="South Africa" />
 			<CountryTypo from="Algerie" to="Algeria" />
-					
+			<CountryTypo from="Switz" to ="Switzerland" />
+			<CountryTypo from="Schweiz" to ="Switzerland" />
+			<CountryTypo from="Suisse" to ="Switzerland" />
+			<CountryTypo from="Svizzera" to ="Switzerland" />
+			<CountryTypo from="Spanje" to ="Spain" />
+			<CountryTypo from="Espagne" to ="Spain" />
+			<CountryTypo from="Italia" to ="Italy" />
+			<CountryTypo from="Italien" to ="Italy" />
+			<CountryTypo from="Balarus" to ="Belarus" />
+			<CountryTypo from="Turquie" to ="Turkey" />
 			
 <!-- ============================================================
      Native-language / endonym translations
