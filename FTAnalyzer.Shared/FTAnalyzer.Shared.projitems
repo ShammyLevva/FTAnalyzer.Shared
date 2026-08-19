@@ -84,6 +84,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Exports\IExportIndividual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exports\ExportFactsAtLocation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exports\IExportReferrals.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Exports\IrishCensusHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exports\KmlExporter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exports\IJsonFamily.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exports\IJsonIndividual.cs" />
