@@ -808,7 +808,39 @@
 			<RegionTypo from="WV USA"  to="West Virginia" />
 			<RegionTypo from="WI USA"  to="Wisconsin" />
 			<RegionTypo from="WY USA"  to="Wyoming" />
-			<RegionType from="Calif" to="California" />
+			<RegionTypo from="Calif" to="California" />
+			<RegionTypo from="Wva" to="West Virginia" />
+			<RegionTypo from="Wisc" to="Wisconsin" />
+			<RegionTypo from="Wyo" to="Wyoming" />
+			<RegionTypo from="Wash" to="Washington" />
+			<RegionTypo from="Virg" to="Virginia" />
+			<RegionTypo from="Verm" to="Vermont" />
+			<RegionTypo from="Tex" to="Texas" />
+			<RegionTypo from="Tenn" to="Tennessee" />
+			<RegionTypo from="S Dak" to="South Dakota" />
+			<RegionTypo from="S Car" to="South Carolina" />
+			<RegionTypo from="N Dak" to="North Dakota" />
+			<RegionTypo from="N Car" to="North Carolina" />
+			<RegionTypo from="Ndak" to="North Dakota" />
+			<RegionTypo from="Ncar" to="North Carolina" />
+			<RegionTypo from="Sdak" to="South Dakota" />
+			<RegionTypo from="Scar" to="South Carolina" />
+			<RegionTypo from="R I" to="Rhode Island" />
+			<RegionTypo from="Penn" to="Pennsylvania" />
+			<RegionTypo from="Ore" to="Oregon" />
+			<RegionTypo from="Okla" to="Oklahoma" />
+			<RegionTypo from="Mass" to="Massachusetts" />
+			<RegionTypo from="Ark" to="Arkansas" />
+			<RegionTypo from="Colo" to="Colorado" />
+			<RegionTypo from="Conn" to="Connecticut" />
+			<RegionTypo from="Del" to="Delaware" />
+			<RegionTypo from="D C" to="District of Columbia" />
+			<RegionTypo from="Tenn" to="Tennessee" />
+			<RegionTypo from="Ill" to="Illinois" />
+			<RegionTypo from="Ind" to="Indiana" />
+			<RegionTypo from="Nmex" to="New Mexico" />
+			<RegionTypo from="Cali" to="California" />
+			<RegionTypo from="Calif" to="California" />
 
 			<!-- Australian Territories abbreviations -->
 			<RegionTypo from="NSW"   to="New South Wales"    />
