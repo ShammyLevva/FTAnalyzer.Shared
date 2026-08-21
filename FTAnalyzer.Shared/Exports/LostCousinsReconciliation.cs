@@ -86,21 +86,40 @@ namespace FTAnalyzer.Exports
             }
 
             // Two different candidates can independently satisfy FindMatch for the SAME website
-            // entry - a shared reference spanning more than one household (see class doc comment)
-            // means candidate A's own FindMatch call might grab candidate B's rightful entry (or
-            // vice versa) via the surname-blind fallback tier inside FindMatch. Rather than let an
-            // arbitrary one win, prefer whichever candidate's surname actually agrees with the
-            // website entry's; the loser goes back into stillMissing instead of keeping a wrong
-            // "confirmed" match - which, via CreateConfirmationFact, would otherwise write a
-            // fabricated Lost Cousins fact onto the wrong person.
+            // entry - most commonly every member of one household sharing that household's own
+            // reference (FindMatchByReference's sameCensus.Count==1 shortcut hands the sole website
+            // entry back to whichever household member asks first, with no name check at all) but
+            // also a shared reference spanning more than one household (see class doc comment).
+            // Rather than let an arbitrary one win, prefer whichever candidate's name actually
+            // agrees with the website entry's; the loser goes back into stillMissing instead of
+            // keeping a wrong "confirmed" match - which, via CreateConfirmationFact, would otherwise
+            // write a fabricated Lost Cousins fact onto the wrong person.
             List<Match> confirmed = [.. allMatches
                 .GroupBy(m => m.WebsiteEntry)
-                .Select(g => g.OrderByDescending(m => SurnamesMatch(m.WebsiteEntry, m.Individual, cache)).First())];
+                .Select(g => g.OrderByDescending(m => MatchQuality(m, cache)).First())];
 
             HashSet<CensusIndividual> confirmedIndividuals = [.. confirmed.Select(m => m.Individual)];
             stillMissing.AddRange(allMatches.Select(m => m.Individual).Where(i => !confirmedIndividuals.Contains(i)));
 
             return (stillMissing, confirmed);
+        }
+
+        // Ranks a candidate's fit against the website entry it matched, for picking the right one
+        // out of a household sharing a reference. Surname alone isn't enough to tell family members
+        // apart - a father and son (or any two people sharing a surname) tie on it every time, which
+        // previously let the household head win by iteration order regardless of whose forename the
+        // website entry actually named (see Reconcile_PicksHouseholdMemberWhoseNameActuallyMatches,
+        // a real report: "Southern, Peter" matched to his father John purely because John was
+        // processed first). Forename+surname agreement outranks surname alone, which in turn
+        // outranks neither - birth year only breaks a tie between two same-forename candidates
+        // (e.g. a father and son who share both names).
+        static int MatchQuality(Match match, CandidateNameCache cache)
+        {
+            bool names = NamesMatch(match.WebsiteEntry, match.Individual, cache);
+            bool surnames = SurnamesMatch(match.WebsiteEntry, match.Individual, cache);
+            if (names && surnames)
+                return BirthYearsAgree(match.WebsiteEntry, match.Individual) ? 3 : 2;
+            return surnames ? 1 : 0;
         }
 
         static LostCousin? FindMatch(CensusIndividual candidate, Dictionary<string, List<LostCousin>> websiteByReference, CandidateNameCache cache)
