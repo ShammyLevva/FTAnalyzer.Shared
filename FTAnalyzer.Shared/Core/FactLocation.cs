@@ -486,6 +486,7 @@ namespace FTAnalyzer
                 else
                 {
                     TrimLocations();
+                    StripDashOnlyFields();
                     StripTrailingPostcode();
                     if (!GeneralSettings.Default.AllowEmptyLocations)
                         FixEmptyFields();
@@ -743,6 +744,33 @@ namespace FTAnalyzer
             Address = Address.Trim();
             Place = Place.Trim();
         }
+
+        // Some GEDCOM data uses a lone dash as a placeholder for "nothing here" - on its own
+        // ("-"), padded with spaces ("  -  "), doubled ("- -"), or using an em/en dash instead of a
+        // plain hyphen. TrimLocations() only strips leading/trailing whitespace, so a placeholder
+        // dash is non-whitespace content that survives it and occupies a level that should
+        // otherwise be blank and cascade away via FixEmptyFields() below. Blank the field only when
+        // EVERY remaining character is a dash or whitespace - real place names that merely contain
+        // a dash (e.g. "Fontenay-le-Comte") have other letters alongside it and are left untouched.
+        void StripDashOnlyFields()
+        {
+            Country = StripIfDashOnly(Country);
+            Region = StripIfDashOnly(Region);
+            SubRegion = StripIfDashOnly(SubRegion);
+            Address = StripIfDashOnly(Address);
+            Place = StripIfDashOnly(Place);
+        }
+
+        static string StripIfDashOnly(string field)
+            => field.Length > 0 && field.All(c => char.IsWhiteSpace(c) || IsDashCharacter(c)) ? string.Empty : field;
+
+        // Covers hyphen-minus and every common Unicode dash/minus lookalike a user might paste in
+        // (en dash, em dash, and their less common Unicode-punctuation-dash relatives), not just "-".
+        static bool IsDashCharacter(char c) => c switch
+        {
+            '-' or '‐' or '‑' or '‒' or '–' or '—' or '―' or '−' => true,
+            _ => false
+        };
 
         void FixEmptyFields()
         {
