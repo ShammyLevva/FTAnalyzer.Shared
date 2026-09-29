@@ -485,6 +485,7 @@ namespace FTAnalyzer
                 }
                 else
                 {
+                    RemoveExclamationMarks();
                     TrimLocations();
                     StripDashOnlyFields();
                     StripTrailingPostcode();
@@ -743,6 +744,22 @@ namespace FTAnalyzer
             SubRegion = SubRegion.Trim();
             Address = Address.Trim();
             Place = Place.Trim();
+        }
+
+        // A lone exclamation mark, or several, never carries meaning in a place name the way a dash
+        // can (a real place name can legitimately contain a dash, e.g. "Fontenay-le-Comte" - there's
+        // no equivalent legitimate use of "!"), so unlike StripDashOnlyFields() below this strips it
+        // wherever it occurs, not just when it's the field's entire content. Runs before
+        // TrimLocations() so any whitespace left behind by the removal (leading/trailing, or a run
+        // of spaces where "!" used to sit) gets cleaned up by the trim/multiple-space passes that
+        // follow rather than needing its own cleanup here.
+        void RemoveExclamationMarks()
+        {
+            Country = Country.Replace("!", "", StringComparison.Ordinal);
+            Region = Region.Replace("!", "", StringComparison.Ordinal);
+            SubRegion = SubRegion.Replace("!", "", StringComparison.Ordinal);
+            Address = Address.Replace("!", "", StringComparison.Ordinal);
+            Place = Place.Replace("!", "", StringComparison.Ordinal);
         }
 
         // Some GEDCOM data uses a lone dash as a placeholder for "nothing here" - on its own
