@@ -49,11 +49,7 @@ namespace FTAnalyzer.Exports
                 req.Content.Headers.Clear();
                 req.Content.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
                 HttpResponseMessage response = await Client.SendAsync(req);
-                if (response?.StatusCode == HttpStatusCode.OK)
-                {
-                    IEnumerable<Cookie> cookies = Cookies.GetCookies(uri).Cast<Cookie>();
-                    LoggedIn = cookies.Count() == 2 && (cookies.Any(x => x.Name == "lostcousins_user_login" || x.Name == "lostcousins_user_login"));
-                }
+                LoggedIn = IsMembersAreaResponse(response);
             }
             catch (Exception e)
             {
@@ -61,6 +57,21 @@ namespace FTAnalyzer.Exports
                 return false;
             }
             return LoggedIn;
+        }
+
+        // The site keeps the login in its server-side session (the MY_SESSION_ID cookie). Its
+        // lostcousins_user_login cookie is only set for members whose "Auto Log-in on each visit?"
+        // preference is Yes - for everyone else the site actively clears it - so that cookie can't
+        // be used to judge success. Instead follow where the login lands: a successful login
+        // redirects via check_login.mhtml to /pages/members/home.mhtml, while a wrong
+        // email/password re-renders /pages/login/ and a members-area request without a valid
+        // session is redirected back to /pages/login/ too.
+        public static bool IsMembersAreaResponse(HttpResponseMessage? response)
+        {
+            if (response?.StatusCode != HttpStatusCode.OK)
+                return false;
+            string? finalPath = response.RequestMessage?.RequestUri?.AbsolutePath;
+            return finalPath is not null && finalPath.StartsWith("/pages/members/", StringComparison.OrdinalIgnoreCase);
         }
 
         public async Task<string> GetAncestors()
