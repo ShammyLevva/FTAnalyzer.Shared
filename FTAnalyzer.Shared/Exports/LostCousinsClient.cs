@@ -265,17 +265,20 @@ namespace FTAnalyzer.Exports
             SetupHttpClient();
         }
 
+        // The values are plain text with real spaces: FormUrlEncodedContent does the encoding. A "+" written here reaches Lost Cousins
+        // as a literal plus ("Blood+relative"), a relationship it has no points for, so every match the entry should make scored 0
+        // ("unknown"): 11,573 entries from v10 onwards, put right on the site on 12 Nov 2026.
         static void AddLCDescendantStatus(Dictionary<string, string> output, CensusIndividual ind)
         {
             switch (ind.RelationType)
             {
                 case RelationshipType.DIRECT:
-                    output.Add("relation_type", "Direct+ancestor");
+                    output.Add("relation_type", "Direct ancestor");
                     output.Add("descent", ind.Ahnentafel.ToString());
                     break;
                 case RelationshipType.BLOOD:
                 case RelationshipType.DESCENDANT:
-                    output.Add("relation_type", "Blood+relative");
+                    output.Add("relation_type", "Blood relative");
                     output.Add("descent", string.Empty);
                     break;
                 case RelationshipType.MARRIAGE:
