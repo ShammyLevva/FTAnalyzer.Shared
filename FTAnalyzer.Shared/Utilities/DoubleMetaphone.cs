@@ -123,7 +123,7 @@ namespace FTAnalyzer
             _word = string.Concat(_word, "     ");
 
             //Convert to upper case, since metaphone is not case sensitive
-            _word = _word.ToUpper();
+            _word = _word.ToUpperInvariant(); // not the machine's culture: Turkish would turn i into a dotted capital I
 
             //Now build the keys
             BuildMetaphoneKeys();
@@ -181,7 +181,7 @@ namespace FTAnalyzer
                             current += 1;
                         break;
 
-                    case '�':
+                    case 'Ç': // C-cedilla (written as an escape: the literal was lost to an encoding mix-up and never matched)
                         AddMetaphoneCharacter("S");
                         current += 1;
                         break;
@@ -588,7 +588,7 @@ namespace FTAnalyzer
                         AddMetaphoneCharacter("N");
                         break;
 
-                    case (char)165: // '�'
+                    case 'Ñ': // N-tilde (was (char)165, which is the yen sign, so it never matched)
                         current += 1;
                         AddMetaphoneCharacter("N");
                         break;
